@@ -1,0 +1,290 @@
+/* ****************************************************************************
+ * Copyright (C) 2007 Hx Technologies, Inc.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * $Id: AbstractServlet.java,v 1.1.1.1 2007/10/18 15:58:37 kpearce Exp $
+ * Last Revised By   : $Author: kpearce $
+ * Last Checked In   : $Date: 2007/10/18 15:58:37 $
+ * Last Version      : $Revision: 1.1.1.1 $
+ *
+ * Original Author   : Rafael Chargel
+ * Origin            : Hx Technologies Inc.
+ *
+ *****************************************************************************/
+package com.hxti.xebra.com;
+
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+
+import javax.imageio.spi.IIORegistry;
+import javax.servlet.ServletException;
+
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Result;
+import javax.xml.transform.Source;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
+
+import org.apache.log4j.Logger;
+import org.apache.log4j.PropertyConfigurator;
+import org.w3c.dom.Document;
+
+import com.hxti.dicom.io.DicomImageReaderSpi;
+import com.hxti.dicom.util.ErrorMessages;
+import com.hxti.xebra.util.ServerProperties;
+
+/**
+ * This class is used to implement a subset of servlet methods in order to enhance
+ * server security.  By extending this class, many of the servlet methods have already
+ * been implemented to throw errors.  Only a newly defined 
+ * {@link #processRequest(HttpServletRequest, HttpServletResponse)} method needs to be
+ * implemented by the extending classes.  This method is set up to be called by both
+ * the GET and POST requests.
+ * 
+ * @author Rafael Chargel
+ * @version $Revision: 1.1.1.1 $
+ */
+public abstract class AbstractServlet extends HttpServlet
+{
+    // get logger
+    protected Logger logger = Logger.getLogger(AbstractServlet.class);
+    
+	/**
+	 * This method is overriden in order to load the Log4J properties file.
+	 * 
+	 * @throws ServletException 
+	 *         thrown if there is an error initializing the servlet.
+	 *
+	 * @see javax.servlet.GenericServlet#init()
+	 */
+	public void init() throws ServletException
+	{
+        if (IIORegistry.getDefaultInstance().getServiceProviderByClass(DicomImageReaderSpi.class) == null)
+        {       
+            this.logger.info("Registering service provider");
+            IIORegistry.getDefaultInstance().registerServiceProvider(new DicomImageReaderSpi());
+        }
+		String prefix	= getServletContext().getRealPath("/");
+		String filename	= getInitParameter("jog4j");
+		
+		if (filename != null && filename.length() > 0)
+		{
+			PropertyConfigurator.configure(prefix + filename);
+		}
+	}
+    
+    /**
+     * Authenticates the user.
+     *
+     * @param request The HTTP Servlet Request.
+     * @param response The HTTP Servlet Response.
+     * 
+     * @return Returns <code>true</code> if the user was successfully 
+     *         authenticated; <code>false</code> otherwise.
+     *         
+     * @throws IOException
+     */
+    public boolean authenticate(HttpServletRequest request, HttpServletResponse response)
+            throws IOException
+    {         
+        if(!ServerProperties.getSingletonInstance().getPermission().userPermitted(request, response))
+        {
+            return false;
+        }
+        return true;
+    }
+	
+	/**
+	 * This method outputs the supplied <code>Document</code> object to the servlet
+	 * response.  If there is an error in sending the response, an Internal Server Error
+	 * is thrown by the Application Server.
+	 * 
+	 * @param doc 
+	 *        The <code>Document</code> to send.
+	 *        
+	 * @param response
+	 *        The <code>HttpServletResponse</code> object that contains the response 
+	 *        the servlet returns to the client.
+	 * 
+	 * @throws IllegalStateException
+	 *         this is thrown if the Servlet attempts to write to the response, after it has
+	 *         been committed.
+	 */
+	public static void sendResponse(Document doc, HttpServletResponse response)
+			throws IllegalStateException
+	{
+		try
+		{
+			Source source = new DOMSource(doc);
+
+			response.setContentType("text/xml");
+			response.setHeader("Content-disposition", "inline; filename=response.xml");
+			
+			BufferedOutputStream out = new BufferedOutputStream(response.getOutputStream(),
+					ServerProperties.getSingletonInstance().getDefaultDataBuffer());
+			
+			Result result = new StreamResult(out);
+			Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			transformer.setOutputProperty(OutputKeys.INDENT, "yes");
+			
+			transformer.transform(source, result);
+			
+			out.flush();
+			out.close();
+		}
+		catch (Throwable t)
+		{
+			t.printStackTrace();
+			try
+			{
+				response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
+						t.getMessage());
+			}
+			catch (IllegalStateException exc)
+			{
+				exc.printStackTrace();
+				throw exc;
+			}
+			catch (Throwable t2)
+			{
+				t2.printStackTrace();
+				IllegalStateException exc = new IllegalStateException(t2.getMessage());
+				exc.initCause(t2);
+				throw exc;
+			}
+		}
+	}
+	
+	/**
+	 * This method is called by both <code>doGet</code> and <code>doPost</code>.  This is 
+	 * the method that actually processes the request to the servlet, allowing only one method
+	 * to be overriden, instead of having to override two different methods.
+	 * 
+	 * @param request 
+	 *        The <code>HttpServletRequest</code> object that contains the request 
+	 *        the client made of the servlet.
+	 *        
+	 * @param response
+	 *        The <code>HttpServletResponse</code> object that contains the response 
+	 *        the servlet returns to the client.
+	 *        
+	 * @see #doGet(HttpServletRequest, HttpServletResponse)
+	 * @see #doPost(HttpServletRequest, HttpServletResponse)
+	 * 
+	 * @throws ServletException if the request for the TRACE cannot be handled.
+	 * @throws IOException if an input or output error occurs while the servlet 
+	 *         is handling the TRACE request.
+	 */
+	protected abstract void processRequest(HttpServletRequest request, HttpServletResponse response)
+		throws ServletException, IOException;
+	
+	/**
+	 * Performed during a <code>GET</code> request.  This method has been overriden 
+	 * to point to the {@link #processRequest(HttpServletRequest, HttpServletResponse)} 
+	 * method.
+	 * 
+	 * @param request 
+	 *        The <code>HttpServletRequest</code> object that contains the request 
+	 *        the client made of the servlet.
+	 *        
+	 * @param response
+	 *        The <code>HttpServletResponse</code> object that contains the response 
+	 *        the servlet returns to the client.
+	 * 
+	 * @see #processRequest(HttpServletRequest, HttpServletResponse)
+	 */
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) 
+		throws ServletException, IOException
+	{
+        if (authenticate(request, response))
+        {
+            processRequest(request, response);
+        }
+	}
+	
+	/**
+	 * Performed during a <code>POST</code> request.  This method has been overriden 
+	 * to point to the {@link #processRequest(HttpServletRequest, HttpServletResponse)} 
+	 * method.
+	 * 
+	 * @param request 
+	 *        The <code>HttpServletRequest</code> object that contains the request 
+	 *        the client made of the servlet.
+	 *        
+	 * @param response
+	 *        The <code>HttpServletResponse</code> object that contains the response 
+	 *        the servlet returns to the client.
+	 * 
+	 * @see #processRequest(HttpServletRequest, HttpServletResponse)
+	 */
+	protected void doPost(HttpServletRequest request, HttpServletResponse response) 
+		throws ServletException, IOException
+	{
+        if (authenticate(request, response))
+        {
+            processRequest(request, response);
+        }
+	}
+	
+	/**
+	 * Performed during a <code>PUT</code> request, similar to sending a file via
+	 * <code>FTP</code>.  This method has been overriden to send error code <code>405 - 
+	 * Method Not Allowed</code>.
+	 * 
+	 * @param request 
+	 *        The <code>HttpServletRequest</code> object that contains the request 
+	 *        the client made of the servlet.
+	 *        
+	 * @param response
+	 *        The <code>HttpServletResponse</code> object that contains the response 
+	 *        the servlet returns to the client.
+	 * 
+	 * @see #processRequest(HttpServletRequest, HttpServletResponse)
+	 */
+	protected void doPut(HttpServletRequest request, HttpServletResponse response) 
+		throws ServletException, IOException
+	{
+		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, 
+				ErrorMessages.METHOD_NOT_ALLOWED_ERROR);
+	}
+	
+	/**
+	 * Performed during a <code>DELETE</code> request, which allows a client to
+	 * delete a file from the server. This method has been overriden to send error 
+	 * code <code>405 - Method Not Allowed</code>.
+	 * 
+	 * @param request 
+	 *        The <code>HttpServletRequest</code> object that contains the request 
+	 *        the client made of the servlet.
+	 *        
+	 * @param response
+	 *        The <code>HttpServletResponse</code> object that contains the response 
+	 *        the servlet returns to the client.
+	 * 
+	 * @see #processRequest(HttpServletRequest, HttpServletResponse)
+	 */
+	protected void doDelete(HttpServletRequest request, HttpServletResponse response) 
+		throws ServletException, IOException
+	{
+		response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, 
+				ErrorMessages.METHOD_NOT_ALLOWED_ERROR);
+	}
+}

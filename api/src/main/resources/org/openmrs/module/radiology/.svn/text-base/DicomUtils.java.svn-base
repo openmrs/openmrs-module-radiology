@@ -1,0 +1,356 @@
+package org.openmrs.module.radiology;
+
+import java.io.File;
+import java.io.IOException;
+import java.sql.SQLException;
+import java.util.Calendar;
+import java.util.Date;
+
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.sax.TransformerHandler;
+import javax.xml.transform.stream.StreamResult;
+
+import org.apache.log4j.Logger;
+import org.dcm4che2.data.BasicDicomObject;
+import org.dcm4che2.data.DicomObject;
+import org.dcm4che2.data.SpecificCharacterSet;
+import org.dcm4che2.data.Tag;
+import org.dcm4che2.data.VR;
+import org.dcm4che2.io.ContentHandlerAdapter;
+import org.dcm4che2.io.DicomInputStream;
+import org.dcm4che2.io.SAXWriter;
+import org.openmrs.Order;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.Study.Modality;
+import org.openmrs.module.radiology.Study.PerformedStatuses;
+import org.openmrs.module.radiology.Study.ScheduledStatuses;
+import org.xml.sax.SAXException;
+
+import com.hxti.edge.pacs.exception.PersistException;
+import com.hxti.xebra.util.XebraInterface;
+
+public class DicomUtils {
+
+	private static Logger log = Logger.getLogger(DicomUtils.class);
+
+	private static void debug(String message) {
+		if (log.isDebugEnabled())
+			log.debug(message);
+	}
+
+	/**
+	 * Search in the configured MPPS directory for a DICOM file whose study UID
+	 * matches studyPrefix + o.getOrderId()
+	 * 
+	 * @param o
+	 *            the order from which to extract orderID
+	 * @param tag
+	 *            the tag to return
+	 * 
+	 * @return the value of the attribute marked by tag
+	 * @throws IOException
+	 */
+	public static String findDCM(Order o, int[] tag) throws IOException {
+		File f = new File(Utils.mppsDir());
+		String status = "?";
+		String[] list = f.list();
+		SpecificCharacterSet scs = new SpecificCharacterSet(
+				Utils.specificCharacterSet());
+		int arg1 = 0;
+		for (String string : list) {
+			DicomObject d = null;
+			DicomInputStream dis = null;
+			try {
+				dis = new DicomInputStream(new File(f, string));
+				d = (dis).readDicomObject();
+
+				if ((Utils.studyPrefix() + o.getOrderId().toString())
+						.compareTo(d.get(Tag.ScheduledStepAttributesSequence)
+								.getDicomObject().get(Tag.StudyInstanceUID)
+								.getValueAsString(scs, arg1)) == 0) {
+					status = d.get(tag).getValueAsString(scs, arg1);
+				}
+			} catch (IOException e) {
+				throw e;
+			} finally {
+				if (dis != null)
+					try {
+						dis.close();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+			}
+		}
+		return status;
+	}
+
+	/**
+	 * Search in the configured MWL directory for a XML file whose name matches
+	 * o.getOrderId()+ ".xml"
+	 * 
+	 * @param o
+	 *            the order from which to extract orderID
+	 * @param tag
+	 *            the tag to return
+	 * 
+	 * @return the value of the attribute marked by tag
+	 * @throws Exception
+	 */
+	public static String findXML(Order o, int[] tag) throws Exception {
+		String status = "?";
+		SpecificCharacterSet scs = new SpecificCharacterSet(
+				Utils.specificCharacterSet());
+		int arg1 = 0;
+		DicomObject d = null;
+		try {
+			String _ = File.separator;
+			d = new BasicDicomObject();
+			SAXParserFactory f = SAXParserFactory.newInstance();
+			SAXParser p1 = f.newSAXParser();
+			ContentHandlerAdapter ch = new ContentHandlerAdapter(d);
+			String pathname = Utils.mwlDir() + _ + o.getOrderId() + ".xml";
+			p1.parse(new File(pathname), ch);
+
+			status = d.get(tag).getValueAsString(scs, arg1);
+
+		} catch (Exception e) {
+			throw e;
+		}
+		return status;
+	}
+
+	public static String orderPriority(Order o) throws Exception {
+		int[] p = { Tag.RequestedProcedurePriority };
+		return findXML(o, p);
+	}
+
+	/**
+	 * 
+	 * @param o
+	 *            order to be searched
+	 * @return String of the status that appears on this order (o) MPPS file
+	 * @throws IOException
+	 */
+	public static String orderStatus(Order o) throws IOException {
+		int[] p = { Tag.PerformedProcedureStepStatus };
+		return findDCM(o, p);
+	}
+
+	/**
+	 * Writes o to MWL file in XML format
+	 * 
+	 * @throws Exception
+	 *             multiple ones, but just handled as one in the controller
+	 */
+	public static void write(Order o, Study s, File file)
+			throws TransformerConfigurationException,
+			TransformerFactoryConfigurationError, SAXException, IOException {
+
+		BasicDicomObject workitem = new BasicDicomObject();
+		BasicDicomObject rpcs = new BasicDicomObject();
+		BasicDicomObject spss = new BasicDicomObject();
+		BasicDicomObject spcs = new BasicDicomObject();
+		workitem.putString(Tag.SpecificCharacterSet, VR.CS,
+				Utils.specificCharacterSet());
+		workitem.putString(Tag.AccessionNumber, VR.SH, "");
+		try {
+			workitem.putString(
+					Tag.ReferringPhysicianName,
+					VR.PN,
+					o.getOrderer().getPersonName().getFullName()
+							.replace(' ', '^'));
+		} catch (Exception e) {
+			debug("Not saving referring physician");
+		}
+		workitem.putSequence(Tag.ReferencedStudySequence);
+		workitem.putSequence(Tag.ReferencedPatientSequence);
+		try {
+			workitem.putString(Tag.PatientName, VR.PN, o.getPatient()
+					.getPersonName().getFullName().replace(' ', '^'));
+			workitem.putString(Tag.PatientID, VR.LO, o.getPatient()
+					.getPatientIdentifier().getIdentifier());
+			workitem.putString(Tag.PatientBirthDate, VR.DA,
+					Utils.plain(o.getPatient().getBirthdate()));
+			workitem.putString(Tag.PatientSex, VR.CS, o.getPatient()
+					.getGender());
+		} catch (Exception e) {
+			debug("Not saving patient details");
+		}
+		workitem.putString(Tag.PatientWeight, VR.DS, "");
+		workitem.putString(Tag.MedicalAlerts, VR.LO, "");
+		workitem.putString(Tag.Allergies, VR.LO, "");
+		workitem.putString(Tag.PregnancyStatus, VR.US, "");
+		workitem.putString(Tag.StudyInstanceUID, VR.UI,
+				Utils.studyPrefix() + s.getId());
+		try {
+			workitem.putString(Tag.RequestingPhysician, VR.PN, o.getOrderer()
+					.getPersonName().getFullName().replace(' ', '^'));
+		} catch (Exception e) {
+			debug("Not saving requesting physician");
+		}
+		try {
+			workitem.putString(Tag.RequestedProcedureDescription, VR.LO,
+					o.getInstructions());
+		} catch (Exception e) {
+			debug("Not saving order instructions");
+		}
+		// Requested Procedure Code Sequence - I Left !, requires coding scheme
+		// (SNOMED, DCM, etc) selection
+		rpcs.putString(Tag.CodeValue, VR.SH, "!");
+		rpcs.putString(Tag.CodingSchemeDesignator, VR.SH, "!");
+		rpcs.putString(Tag.CodeMeaning, VR.LO, "!");
+		workitem.putNestedDicomObject(Tag.RequestedProcedureCodeSequence, rpcs);
+
+		workitem.putString(Tag.AdmissionID, VR.LO, "");
+		workitem.putString(Tag.SpecialNeeds, VR.LO, "");
+		workitem.putString(Tag.CurrentPatientLocation, VR.LO, "");
+		workitem.putString(Tag.PatientState, VR.LO, "");
+
+		// Scheduled Procedure Step Sequence
+		// ! requires form enhancement, multiple steps
+		spss.putString(Tag.Modality, VR.CS,
+				Modality.values()[s.getModality()].toString());
+		spss.putString(Tag.RequestedContrastAgent, VR.LO, "");
+		spss.putString(Tag.ScheduledStationAETitle, VR.AE, Utils.aeTitle());
+		try {
+			spss.putString(Tag.ScheduledProcedureStepStartDate, VR.DA,
+					Utils.plain(o.getStartDate()));
+			spss.putString(Tag.ScheduledProcedureStepStartTime, VR.TM,
+					Utils.time(o.getStartDate()));
+			spss.putString(Tag.ScheduledPerformingPhysicianName, VR.PN, "!");
+			spss.putString(Tag.ScheduledProcedureStepDescription, VR.LO,
+					o.getInstructions());
+		} catch (Exception e) {
+			debug("Not saving scheduled procedure");
+		}
+		// Scheduled Protocol Code Sequence, requires coding scheme
+		spcs.putString(Tag.CodeValue, VR.SH, "!");
+		spcs.putString(Tag.CodingSchemeDesignator, VR.SH, "!");
+		spcs.putString(Tag.CodeMeaning, VR.LO, "!");
+		spss.putNestedDicomObject(Tag.ScheduledProtocolCodeSequence, spcs);
+
+		spss.putString(Tag.ScheduledProcedureStepID, VR.SH,
+				String.valueOf(s.getId()));
+		spss.putString(Tag.ScheduledStationName, VR.SH, "");
+		spss.putString(Tag.ScheduledProcedureStepLocation, VR.SH, "");
+		spss.putString(Tag.PreMedication, VR.LO, "");
+		spss.putString(Tag.ScheduledProcedureStepStatus, VR.CS,
+				ScheduledStatuses.string(s.getScheduledStatus(), false));
+		workitem.putNestedDicomObject(Tag.ScheduledProcedureStepSequence, spss);
+
+		workitem.putString(Tag.RequestedProcedureID, VR.SH,
+				String.valueOf(s.getId()));
+		workitem.putString(Tag.RequestedProcedurePriority, VR.SH,
+				Study.Priorities.string(s.getPriority(), false));
+		workitem.putString(Tag.PatientTransportArrangements, VR.LO, "");
+		workitem.putString(
+				Tag.ConfidentialityConstraintOnPatientDataDescription, VR.LO,
+				"");
+
+		TransformerHandler th = ((SAXTransformerFactory) TransformerFactory
+				.newInstance()).newTransformerHandler();
+		th.getTransformer().setOutputProperty(OutputKeys.INDENT, "yes");
+		th.setResult(new StreamResult(file));
+		final SAXWriter writer = new SAXWriter(th, null);
+		writer.write(workitem);
+	}
+
+	/**
+	 * Updates database with mpps object o
+	 * 
+	 * @param o
+	 */
+	public static void writeMpps(DicomObject o) {
+		try {
+			SpecificCharacterSet scs = new SpecificCharacterSet(
+					Utils.specificCharacterSet());
+
+			// Save Study
+
+			int[] studyUIDPath = { Tag.ScheduledStepAttributesSequence,
+					Tag.StudyInstanceUID };
+			String studyUID = o.get(studyUIDPath[0]).getDicomObject()
+					.get(studyUIDPath[1]).getValueAsString(scs, 0);
+			String[] uidSplit = studyUID.split("[.]");
+			int id = Integer.parseInt(uidSplit[uidSplit.length - 1]);
+			Study s = service().getStudy(id);
+			debug(s.toString());
+			String pStatus = o.get(Tag.PerformedProcedureStepStatus)
+					.getValueAsString(scs, 0);
+			s.setPerformedStatus(PerformedStatuses.value(pStatus));
+			service().saveStudy(s, Calendar.getInstance().getTime());
+
+			// Save Series
+
+			int[] seriesUIDPath = new int[] { Tag.PerformedSeriesSequence,
+					Tag.SeriesInstanceUID };
+			String seriesuid = o.get(seriesUIDPath[0]).getDicomObject()
+					.get(seriesUIDPath[1]).getValueAsString(scs, 0);
+			new XebraInterface().saveSeries(seriesuid, s.getUid());
+
+			// TODO Save multiple Instances
+
+			String sopInstanceUID = o.get(Tag.PerformedSeriesSequence)
+					.getDicomObject().get(Tag.ReferencedImageSequence)
+					.getDicomObject().get(Tag.ReferencedSOPInstanceUID)
+					.getValueAsString(scs, 0);
+			new XebraInterface().saveInstance(
+					sopInstanceUID,
+					seriesuid,
+					StringUtils.path(Utils.storageDir(), sopInstanceUID
+							+ ".dcm"));
+		} catch (NumberFormatException e) {
+			log.error("Number can not be parsed");
+		} catch (PersistException e) {
+			log.error("Xebra persist error: " + e.getMessage());
+		} catch (SQLException e) {
+			log.error("Xebra persist error: " + e.getMessage());
+		}
+	}
+
+	/**
+	 * @param o
+	 *            the DICOM file loaded as dcm4che DicomObject
+	 * @param imagePath
+	 *            where the image is, example: "c:\images\image_1.dcm"
+	 */
+	public static void writeStorage(DicomObject o, String imagePath) {
+		try {
+			Date now = Calendar.getInstance().getTime();
+			String aeTitle = Utils.aeTitle();
+			String studyUid = o.getString(Tag.StudyInstanceUID);
+			new XebraInterface().saveStudy(studyUid, aeTitle, now);
+			String seriesUid = o.getString(Tag.SeriesInstanceUID);
+			new XebraInterface().saveSeries(seriesUid, studyUid);
+			String instUid = o.getString(Tag.SOPInstanceUID);
+			new XebraInterface().saveInstance(instUid, seriesUid, imagePath);
+			Study s = Study.byUID(studyUid);
+			if (s == null) {
+				s = new Study();
+				Integer patId= Integer.parseInt(o.getString(Tag.PatientID));
+				String patName= o.getString(Tag.PatientName);
+				s.persistOrderPatient(patId, patName);
+				s.setPerformedStatus(Study.PerformedStatuses.COMPLETED);
+				s.setUid(studyUid);
+				service().saveStudy(s);
+			}
+		} catch (PersistException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	static Main service() {
+		return Context.getService(Main.class);
+	}
+
+}

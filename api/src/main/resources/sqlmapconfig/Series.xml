@@ -1,0 +1,486 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+    PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<sqlMap namespace="Series">
+
+	<resultMap id="seriesMap" class="com.hxti.edge.pacs.data.Series">
+      <result property="uid"					column="series_uid" 
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="parentUid" 				column="study_uid"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="aeTitle" 				column="ae_title"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="seriesNumber" 			column="series_number"
+              jdbcType="INTEGER" 				javaType="java.lang.Integer"/>
+              
+      <result property="seriesDate" 			column="series_date"
+              jdbcType="DATETIME" 				javaType="java.util.Date"
+              typeHandler="com.hxti.edge.pacs.util.sql.DateTypeHandler"/>
+              
+      <result property="modality" 				column="modality"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="patientPosition" 		column="patient_position"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="patientOrientation"		column="patient_orientation"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="bodyPart" 				column="body_part_examined"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="seriesDescription" 		column="series_description"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="manufacturerModelName"	column="manufacturer_model_name"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="stationName" 			column="station_name"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="departmentName" 		column="department_name"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="numberOfSeriesRelatedInstances" 
+              column="number_of_series_related_instances"
+              jdbcType="INTEGER" 				javaType="java.lang.Integer"/>
+              
+      <result property="kvp" 					column="kvp"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="exposure" 				column="exposure"
+              jdbcType="INTEGER" 				javaType="java.lang.Integer"/>
+              
+      <result property="pulseSequenceName" 		column="pulse_sequence_name"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="scanOptions" 			column="scan_options"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="laterality" 			column="laterality"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="protocolName" 			column="protocol_name"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="plateType" 				column="plate_type"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="phosphorType" 			column="phosphor_type"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="cassetteOrientation" 	column="cassette_orientation"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="cassetteSize" 			column="cassette_size"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="sensitivity" 			column="sensitivity"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="contrastBolusAgent" 	column="contrast_bolus_agent"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="frameOfReferenceUid" 	column="frame_of_reference_uid"
+              jdbcType="VARCHAR" 				javaType="java.lang.String"/>
+              
+      <result property="lastCalibration" 		column="last_calibration_date"
+              jdbcType="DATETIME" 				javaType="java.util.Date"/>
+              
+      <result property="dateAdded" 				column="date_added"
+              jdbcType="DATETIME" 				javaType="java.util.Date"/>
+              
+      <result property="dateUpdated" 			column="date_updated"
+              jdbcType="DATETIME" 				javaType="java.util.Date"/>
+   </resultMap>
+   
+   <select id="testSeries" resultClass="int" parameterClass="string">
+      SELECT COUNT(series_id)
+        FROM radiology_series
+       WHERE series_uid = #value#
+   </select>
+   
+   <select id="allSeries" resultClass="Series" resultMap="seriesMap">
+      SELECT se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             se.series_number,
+             se.series_date,
+             se.modality,
+             se.patient_position,
+             se.patient_orientation,
+             se.body_part_examined,
+             se.series_description,
+             se.manufacturer_model_name,
+             se.station_name,
+             se.department_name,
+             se.number_of_series_related_instances,
+             se.kvp,
+             se.exposure,
+             se.pulse_sequence_name,
+             se.scan_options,
+             se.laterality,
+             se.protocol_name,
+             se.plate_type,
+             se.phosphor_type,
+             se.cassette_orientation,
+             se.cassette_size,
+             se.sensitivity,
+             se.contrast_bolus_agent,
+             se.frame_of_reference_uid,
+             se.last_calibration_date,
+             se.date_added,
+             se.date_updated
+      FROM radiology_series se, radiology_studies st, radiology_ae_peers ae
+      WHERE se.study_id = st.study_id
+        AND st.ae_id = ae.ae_id
+   </select>
+   
+   <select id="seriesSearchByUID" resultClass="Series" 
+           resultMap="seriesMap" parameterClass="string">
+      SELECT se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             se.series_number,
+             se.series_date,
+             se.modality,
+             se.patient_position,
+             se.patient_orientation,
+             se.body_part_examined,
+             se.series_description,
+             se.manufacturer_model_name,
+             se.station_name,
+             se.department_name,
+             se.number_of_series_related_instances,
+             se.kvp,
+             se.exposure,
+             se.pulse_sequence_name,
+             se.scan_options,
+             se.laterality,
+             se.protocol_name,
+             se.plate_type,
+             se.phosphor_type,
+             se.cassette_orientation,
+             se.cassette_size,
+             se.sensitivity,
+             se.contrast_bolus_agent,
+             se.frame_of_reference_uid,
+             se.last_calibration_date,
+             se.date_added,
+             se.date_updated
+        FROM radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+         AND se.series_uid = #value#
+   </select>
+   
+   <select id="seriesSearchByStudyUID" resultClass="Series" 
+           resultMap="seriesMap" parameterClass="string">
+      SELECT se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             se.series_number,
+             se.series_date,
+             se.modality,
+             se.patient_position,
+             se.patient_orientation,
+             se.body_part_examined,
+             se.series_description,
+             se.manufacturer_model_name,
+             se.station_name,
+             se.department_name,
+             se.number_of_series_related_instances,
+             se.kvp,
+             se.exposure,
+             se.pulse_sequence_name,
+             se.scan_options,
+             se.laterality,
+             se.protocol_name,
+             se.plate_type,
+             se.phosphor_type,
+             se.cassette_orientation,
+             se.cassette_size,
+             se.sensitivity,
+             se.contrast_bolus_agent,
+             se.frame_of_reference_uid,
+             se.last_calibration_date,
+             se.date_added,
+             se.date_updated
+        FROM radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+         AND st.study_uid = #value#
+   </select>
+   
+   <select id="seriesSearchByInstanceUid" resultClass="Series"
+           resultMap="seriesMap" parameterClass="string">
+      SELECT se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             se.series_number,
+             se.series_date,
+             se.modality,
+             se.patient_position,
+             se.patient_orientation,
+             se.body_part_examined,
+             se.series_description,
+             se.manufacturer_model_name,
+             se.station_name,
+             se.department_name,
+             se.number_of_series_related_instances,
+             se.kvp,
+             se.exposure,
+             se.pulse_sequence_name,
+             se.scan_options,
+             se.laterality,
+             se.protocol_name,
+             se.plate_type,
+             se.phosphor_type,
+             se.cassette_orientation,
+             se.cassette_size,
+             se.sensitivity,
+             se.contrast_bolus_agent,
+             se.frame_of_reference_uid,
+             se.last_calibration_date,
+             se.date_added,
+             se.date_updated
+        FROM radiology_series se, radiology_studies st, radiology_instances i, radiology_ae_peers ae
+       WHERE se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+         AND i.series_id = se.series_id
+         AND i.sop_instance_uid = #uid#
+   </select>
+   
+   <select id="seriesSearchByTemplate" resultClass="Series"
+           resultMap="seriesMap" parameterClass="SeriesQuery">
+      SELECT se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title
+             se.series_number,
+             se.series_date,
+             se.modality,
+             se.patient_position,
+             se.patient_orientation,
+             se.body_part_examined,
+             se.series_description,
+             se.manufacturer_model_name,
+             se.station_name,
+             se.department_name,
+             se.number_of_series_related_instances,
+             se.kvp,
+             se.exposure,
+             se.pulse_sequence_name,
+             se.scan_options,
+             se.laterality,
+             se.protocol_name,
+             se.plate_type,
+             se.phosphor_type,
+             se.cassette_orientation,
+             se.cassette_size,
+             se.sensitivity,
+             se.contrast_bolus_agent,
+             se.frame_of_reference_uid,
+             se.last_calibration_date,
+             se.date_added,
+             se.date_updated
+      FROM radiology_series se, radiology_studies st, radiology_ae_peers ae
+      WHERE se.study_id = st.study_id
+        AND st.ae_id = ae.ae_id
+      <isNotNull property="studyUids" prepend="AND">
+         <iterate property="studyUids" open="(" close=")" conjunction="OR">
+            st.study_uid = #studyUids[]#
+         </iterate>
+      </isNotNull>
+      <isNotNull property="uids" prepend="AND">
+         <iterate property="uids" open="(" close=")" conjunction="OR">
+         	se.series_uid = #uids[]#
+         </iterate>
+      </isNotNull>
+      <isNotNull property="bodyPartsExamined" prepend="AND">
+         <iterate property="bodyPartsExamined" open="(" close=")" 
+                  conjunction="OR">
+	      	se.body_part_examined LIKE #bodyPartsExamined[]#
+	     </iterate>
+	  </isNotNull>
+      <isNotNull property="modalities" prepend="AND">
+         <iterate property="modalities" open="(" close=")" conjunction="OR">
+	     	se.modality = #modalities[]#
+	     </iterate>
+	  </isNotNull>
+	  <isNotNull property="seriesNumber" prepend="AND">
+         <iterate property="seriesNumber" open="(" close=")" conjunction="OR">
+	     	se.series_number = #seriesNumber[]#
+	     </iterate>
+	  </isNotNull>
+   </select>
+   
+   <insert id="insertSeries" parameterClass="Series">
+      INSERT INTO radiology_series (
+      					series_id,
+      					study_id,
+      					series_uid,
+						series_number,
+						series_date,
+						modality,
+						patient_position,
+						patient_orientation,
+						body_part_examined,
+						series_description,
+						manufacturer_model_name,
+						number_of_series_related_instances,
+						station_name,
+						department_name,
+						kvp,
+						exposure,
+						pulse_sequence_name,
+						scan_options,
+						laterality,
+						protocol_name,
+						plate_type,
+						phosphor_type,
+						cassette_orientation,
+						cassette_size,
+						sensitivity,
+						contrast_bolus_agent,
+						frame_of_reference_uid,
+						last_calibration_date,
+						date_added,
+						date_updated
+					)
+             VALUES (
+             			0,
+                  		(SELECT study_id 
+                  		   FROM radiology_studies
+                          WHERE study_uid = #parentUid#),
+                  		#uid#,
+                  		#seriesNumber#,
+                  		#seriesDate#,
+                  		#modality#,
+                  		#patientPosition#,
+                  		#patientOrientation#,
+                  		#bodyPart#,
+                  		#seriesDescription#,
+                  		#manufacturerModelName#,
+                  		#numberOfSeriesRelatedInstances#,
+                  		#stationName#,
+                  		#departmentName#,
+                  		#kvp#,
+                  		#exposure#,
+                  		#pulseSequenceName#,
+                  		#scanOptions#,
+                  		#laterality#,
+                  		#protocolName#,
+                  		#plateType#,
+                  		#phosphorType#,
+                  		#cassetteOrientation#,
+                  		#cassetteSize#,
+                  		#sensitivity#,
+                  		#contrastBolusAgent#,
+                  		#frameOfReferenceUid#,
+                  		#lastCalibration#,
+                  		NOW(),
+                  		NOW()
+                  	)
+   </insert>
+   
+   <delete id="deleteInstanceBySeries" parameterClass="string">
+      DELETE FROM radiology_instances
+       USING radiology_series se, radiology_instances i, radiology_studies st
+       WHERE se.series_id = i.series_id 
+         AND se.study_id = st.study_id
+         AND se.series_uid = #value#
+   </delete>
+   
+   <delete id="deleteSeries" parameterClass="string">
+      DELETE FROM radiology_series 
+       WHERE series_uid = #value#
+   </delete>
+   
+   <update id="persistSeries" parameterClass="Series">
+      UPDATE radiology_series 
+      SET	date_updated = NOW()
+      <isNotNull property="seriesNumber" prepend=",">
+         series_number = #seriesNumber#
+      </isNotNull> 
+      <isNotNull property="seriesDate" prepend=",">
+         series_date = #seriesDate#
+      </isNotNull> 
+      <isNotNull property="modality" prepend=",">
+         modality = #modality#
+      </isNotNull> 
+      <isNotNull property="patientPosition" prepend=",">
+         patient_position = #patientPosition#
+      </isNotNull>
+      <isNotNull property="patientOrientation" prepend=",">
+         patient_orientation = #patientOrientation#
+      </isNotNull>
+      <isNotNull property="bodyPart" prepend=",">
+         body_part_examined = #bodyPart#
+      </isNotNull>
+      <isNotNull property="seriesDescription" prepend=",">
+         series_description = #seriesDescription#
+      </isNotNull>
+      <isNotNull property="manufacturerModelName" prepend=",">
+         manufacturer_model_name = #manufacturerModelName#
+      </isNotNull>
+      <isNotNull property="numberOfSeriesRelatedInstances" prepend=",">
+         number_of_series_related_instances = #numberOfSeriesRelatedInstances#
+      </isNotNull>
+      <isNotNull property="stationName" prepend=",">
+         station_name = #stationName#
+      </isNotNull>
+      <isNotNull property="departmentName" prepend=",">
+         department_name = #departmentName#
+      </isNotNull>
+      <isNotNull property="kvp" prepend=",">
+         kvp = #kvp#
+      </isNotNull>
+      <isNotNull property="exposure" prepend=",">
+         exposure = #exposure#
+      </isNotNull>
+      <isNotNull property="pulseSequenceName" prepend=",">
+         pulse_sequence_name = #pulseSequenceName#
+      </isNotNull>
+      <isNotNull property="scanOptions" prepend=",">
+         scan_options = #scanOptions#
+      </isNotNull>
+      <isNotNull property="laterality" prepend=",">
+         laterality = #laterality#
+      </isNotNull>
+      <isNotNull property="protocolName" prepend=",">
+         protocol_name = #protocolName#
+      </isNotNull>
+      <isNotNull property="plateType" prepend=",">
+         plate_type = #plateType#
+      </isNotNull>
+      <isNotNull property="phosphorType" prepend=",">
+         phosphor_type = #phosphorType#
+      </isNotNull>
+      <isNotNull property="cassetteOrientation" prepend=",">
+         cassette_orientation = #cassetteOrientation#
+      </isNotNull>
+      <isNotNull property="cassetteSize" prepend=",">
+         cassette_size = #cassetteSize#
+      </isNotNull>
+      <isNotNull property="sensitivity" prepend=",">
+         sensitivity = #sensitivity#
+      </isNotNull>
+      <isNotNull property="contrastBolusAgent" prepend=",">
+         contrast_bolus_agent = #contrastBolusAgent#
+      </isNotNull>
+      <isNotNull property="frameOfReferenceUid" prepend=",">
+         frame_of_reference_uid = #frameOfReferenceUid#
+      </isNotNull>
+      <isNotNull property="lastCalibration" prepend=",">
+         last_calibration_date = #lastCalibration#
+      </isNotNull>
+      WHERE series_uid = #uid#
+   </update>
+
+</sqlMap>

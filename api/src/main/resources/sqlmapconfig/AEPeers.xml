@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+    PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="AEPeer">
+
+	<resultMap id="aePeerMap" class="com.hxti.edge.pacs.data.AEPeer">
+		<result property="localName" column="local_name" jdbcType="VARCHAR"
+			javaType="string" />
+
+		<result property="findAETitle" column="find_ae_title" jdbcType="VARCHAR"
+			javaType="string" />
+
+		<result property="moveAETitle" column="move_ae_title" jdbcType="VARCHAR"
+			javaType="string" />
+
+		<result property="storeAETitle" column="store_ae_title"
+			jdbcType="VARCHAR" javaType="string" />
+
+		<result property="respAETitle" column="resp_ae_title" jdbcType="VARCHAR"
+			javaType="string" />
+
+		<result property="scpAETitle" column="scp_ae_title" jdbcType="VARCHAR"
+			javaType="string" />
+
+		<result property="host" column="host" jdbcType="VARCHAR"
+			javaType="string" />
+
+		<result property="port" column="port" jdbcType="INTEGER"
+			javaType="int" />
+
+		<result property="queryModel" column="query_model" jdbcType="VARCHAR"
+			javaType="string" />
+
+		<result property="primaryDeviceType" column="primary_device_type"
+			jdbcType="VARCHAR" javaType="string" />
+
+		<!-- <result property="organizations" column="ae_id" select="getOrgs" /> -->
+	</resultMap>
+
+	<resultMap id="organizationMap" class="com.hxti.edge.pacs.data.Organization">
+		<result property="organizationCode" column="org_code" jdbcType="VARCHAR"
+			javaType="string" />
+
+		<result property="organizationName" column="org_name" jdbcType="VARCHAR"
+			javaType="string" />
+	</resultMap>
+
+	<select id="getOrgs" resultClass="Organization" resultMap="organizationMap"
+		parameterClass="int">
+		SELECT org.org_code, org.org_name
+		FROM organizations org, peer_org_map pom
+		WHERE pom.ae_id = #value#
+		AND pom.org_id = org.org_id
+	</select>
+
+	<select id="allAEPeers" resultClass="AEPeer" resultMap="aePeerMap">
+		SELECT aep.local_name,
+		aep.find_ae_title,
+		aep.move_ae_title,
+		aep.store_ae_title,
+		aep.resp_ae_title,
+		scp.ae_title as scp_ae_title,
+		aep.host,
+		aep.port,
+		aep.query_model,
+		aep.primary_device_type,
+		aep.ae_id
+		FROM radiology_ae_peers aep, radiology_scp_service scp
+		WHERE scp.scp_id = aep.scp_id
+	</select>
+
+	<select id="aePeerByAETitle" resultClass="AEPeer" resultMap="aePeerMap"
+		parameterClass="java.lang.String">
+		SELECT aep.local_name,
+		aep.find_ae_title,
+		aep.move_ae_title,
+		aep.store_ae_title,
+		aep.resp_ae_title,
+		scp.ae_title as scp_ae_title,
+		aep.host,
+		aep.port,
+		aep.query_model,
+		aep.primary_device_type,
+		aep.ae_id
+		FROM radiology_ae_peers aep, radiology_scp_service scp
+		WHERE scp.scp_id = aep.scp_id
+		AND (aep.find_ae_title = #value#
+		OR aep.move_ae_title = #value#
+		OR aep.store_ae_title = #value#
+		OR aep.resp_ae_title = #value#)
+	</select>
+
+	<select id="aePeerBySCP" resultClass="AEPeer" resultMap="aePeerMap"
+		parameterClass="java.lang.String">
+		SELECT aep.local_name,
+		aep.find_ae_title,
+		aep.move_ae_title,
+		aep.store_ae_title,
+		aep.resp_ae_title,
+		scp.ae_title as scp_ae_title,
+		aep.host,
+		aep.port,
+		aep.query_model,
+		aep.primary_device_type,
+		aep.ae_id
+		FROM radiology_ae_peers aep, radiology_scp_service scp
+		WHERE scp.scp_id = aep.scp_id
+		AND scp.ae_title = #value#
+	</select>
+
+	<select id="peerByStudyUID" resultClass="AEPeer" resultMap="aePeerMap"
+		parameterClass="string">
+		SELECT aep.local_name,
+		aep.find_ae_title,
+		aep.move_ae_title,
+		aep.store_ae_title,
+		aep.resp_ae_title,
+		scp.ae_title as scp_ae_title,
+		aep.host,
+		aep.port,
+		aep.query_model,
+		aep.primary_device_type,
+		aep.ae_id
+		FROM radiology_ae_peers aep, radiology_scp_service scp, radiology_studies
+		st
+		WHERE scp.scp_id = aep.scp_id
+		AND st.ae_id = aep.ae_id
+		AND st.study_uid = #value#
+	</select>
+
+	<select id="peerBySeriesUID" resultClass="AEPeer" resultMap="aePeerMap"
+		parameterClass="string">
+		SELECT aep.local_name,
+		aep.find_ae_title,
+		aep.move_ae_title,
+		aep.store_ae_title,
+		aep.resp_ae_title,
+		scp.ae_title as scp_ae_title,
+		aep.host,
+		aep.port,
+		aep.query_model,
+		aep.primary_device_type,
+		aep.ae_id
+		FROM radiology_ae_peers aep, radiology_scp_service scp, radiology_studies
+		st, radiology_series se
+		WHERE scp.scp_id = aep.scp_id
+		AND st.ae_id = aep.ae_id
+		AND se.study_id = st.study_id
+		AND se.series_uid = #value#
+	</select>
+
+	<select id="peerByInstanceUID" resultClass="AEPeer" resultMap="aePeerMap"
+		parameterClass="string">
+		SELECT aep.local_name,
+		aep.find_ae_title,
+		aep.move_ae_title,
+		aep.store_ae_title,
+		aep.resp_ae_title,
+		scp.ae_title as scp_ae_title,
+		aep.host,
+		aep.port,
+		aep.query_model,
+		aep.primary_device_type,
+		aep.ae_id
+		FROM radiology_ae_peers aep, radiology_scp_service scp, radiology_studies
+		st, radiology_series se, radiology_instances i
+		WHERE scp.scp_id = aep.scp_id
+		AND st.ae_id = aep.ae_id
+		AND se.study_id = st.study_id
+		AND i.series_id = se.series_id
+		AND i.sop_instance_uid = #value#
+	</select>
+
+	<insert id="insertAEPeer" parameterClass="AEPeer">
+		INSERT INTO radiology_ae_peers
+		VALUES (
+		0,
+		(select scp_id from radiology_scp_service where ae_title = #scpAETitle#),
+		#localName#,
+		#findAETitle#,
+		#moveAETitle#,
+		#storeAETitle#,
+		#respAETitle#,
+		#host#,
+		#port#,
+		#queryModel#,
+		#primaryDeviceType#
+		)
+	</insert>
+
+	<delete id="deleteAEPeerByAETitle" parameterClass="java.lang.String">
+		DELETE FROM radiology_ae_peers
+		WHERE find_ae_title = #value#
+		OR move_ae_title = #value#
+		OR store_ae_title = #value#
+		OR resp_ae_title = #value#
+	</delete>
+
+	<update id="persistAEPeer" parameterClass="AEPeer">
+		UPDATE radiology_ae_peers
+		SET find_ae_title = #findAETitle#,
+		move_ae_title = #moveAETitle#,
+		store_ae_title = #storeAETitle#,
+		resp_ae_title = #respAETitle#
+		<isNotNull property="host" prepend=",">
+			host = #host#
+		</isNotNull>
+		<isNotNull property="port" prepend=",">
+			port = #port#
+		</isNotNull>
+		<isNotNull property="queryModel" prepend=",">
+			query_model = #queryModel#
+		</isNotNull>
+		<isNotNull property="primaryDeviceType" prepend=",">
+			primary_device_type = #primaryDeviceType#
+		</isNotNull>
+		WHERE find_ae_title = #findAETitle# OR
+		move_ae_title = #moveAETitle# OR
+		resp_ae_title = #respAETitle# OR
+		store_ae_title = #storeAETitle#
+	</update>
+
+</sqlMap>

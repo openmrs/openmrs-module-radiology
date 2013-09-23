@@ -1,0 +1,153 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<groupId>org.openmrs.module</groupId>
+	<artifactId>radiology</artifactId>
+	<version>0.1.0.0-dev-SNAPSHOT</version>
+	<packaging>pom</packaging>
+	<name>Radiology</name>
+	<description>Parent project for Radiology</description>
+
+	<url>http://openmrs.org</url>
+
+	<scm>
+		<connection>scm:svn:http://svn.openmrs.org/openmrs-modules/radiology/trunk/</connection>
+		<developerConnection>scm:svn:http://svn.openmrs.org/openmrs-modules/radiology/trunk/</developerConnection>
+		<url>http://svn.openmrs.org/openmrs-modules/radiology/trunk/</url>
+	</scm>
+
+	<modules>
+		<module>api</module>
+		<module>omod</module>
+	</modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<!--
+			Libraries from lib to add as dependencies with compile or runtime scope:
+			lib/commons-cli-1.2.jar
+lib/jai_imageio.jar
+lib/weasis-dicom-operations-0.5.1-SNAPSHOT.jar
+lib/jai_codec.jar
+lib/commons-codec-1.5.jar
+lib/weasis-launcher.jar
+lib/clibwrapper_jiio.jar
+lib/hxti-pacs-db.jar
+lib/jai_core.jar
+lib/dcm4che-core-2.0.25.jar
+lib/xebra-dcm-utils.jar
+lib/dcm4che-net-2.0.25.jar
+lib/dcm4che-filecache-2.0.25.jar
+lib/felix.jar
+lib/ibatis.jar
+				
+			Find matching dependencies in maven central repository.
+			<dependency>
+				<groupId>org.other.library</groupId>
+				<artifactId>library-name</artifactId>
+				<version>library.version</version>
+				<scope>compile</scope>
+			</dependency>
+			-->
+			
+			<dependency>
+				<groupId>org.openmrs.api</groupId>
+				<artifactId>openmrs-api</artifactId>
+				<version>${openMRSVersion}</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.openmrs.api</groupId>
+				<artifactId>openmrs-api</artifactId>
+				<version>${openMRSVersion}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.openmrs.web</groupId>
+				<artifactId>openmrs-web</artifactId>
+				<version>${openMRSVersion}</version>
+				<type>jar</type>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.openmrs.web</groupId>
+				<artifactId>openmrs-web</artifactId>
+				<version>${openMRSVersion}</version>
+				<type>test-jar</type>
+				<scope>test</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.openmrs.test</groupId>
+				<artifactId>openmrs-test</artifactId>
+				<version>${openMRSVersion}</version>
+				<type>pom</type>
+				<scope>test</scope>
+			</dependency>
+                        
+                        <dependency>
+                                  <groupId>org.slf4j</groupId>
+                                  <artifactId>slf4j-api</artifactId>   
+                                  <version>1.6.1</version>                               
+                                  <scope>provided</scope>
+                        </dependency>
+                        <dependency>
+                                  <groupId>org.slf4j</groupId>
+                                  <artifactId>slf4j-log4j12</artifactId>     
+                                  <version>1.6.1</version>                             
+                                  <scope>provided</scope>
+                        </dependency>
+		</dependencies>
+	</dependencyManagement>
+
+	<properties>
+		<openMRSVersion>1.9.1</openMRSVersion>
+	</properties>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<configuration>
+						<target>1.6</target>
+						<source>1.6</source>
+					</configuration>
+				</plugin>
+				<plugin>
+					<groupId>org.openmrs.maven.plugins</groupId>
+					<artifactId>maven-openmrs-plugin</artifactId>
+					<version>1.0.1</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+
+	<repositories>
+		<repository>
+			<id>openmrs-repo</id>
+			<name>OpenMRS Nexus Repository</name>
+			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+		</repository>
+                <repository>
+                      <id>dcm4che</id>
+                      <name>dcm4che Repository</name>
+                      <url>http://www.dcm4che.org/maven2</url>
+                </repository>
+	</repositories>
+
+	<pluginRepositories>
+		<pluginRepository>
+			<id>openmrs-repo</id>
+			<name>OpenMRS Nexus Repository</name>
+			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+
+</project>

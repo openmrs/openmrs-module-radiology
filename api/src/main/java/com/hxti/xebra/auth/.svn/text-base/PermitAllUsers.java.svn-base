@@ -1,0 +1,44 @@
+/* ****************************************************************************
+ * Copyright (C) 2007 Hx Technologies, Inc.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * $Id: PermitAllUsers.java,v 1.1.1.1 2007/10/18 15:58:39 kpearce Exp $
+ * Last Revised By   : $Author: kpearce $
+ * Last Checked In   : $Date: 2007/10/18 15:58:39 $
+ * Last Version      : $Revision: 1.1.1.1 $
+ *
+ * Original Author   : Kenny Pearce
+ * Origin            : Hx Technologies Inc.
+ *
+ *****************************************************************************/
+package com.hxti.xebra.auth;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+/**
+ * Implementation of {@link UserPermission} that allows anyone.
+ * @author Kenny
+ */
+public class PermitAllUsers implements UserPermission {
+
+	public boolean userPermitted(HttpServletRequest request,
+			HttpServletResponse response) throws IOException {
+		return true;
+	}
+
+}

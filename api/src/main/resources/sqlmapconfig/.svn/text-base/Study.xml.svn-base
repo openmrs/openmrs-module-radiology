@@ -1,0 +1,614 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+    PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<sqlMap namespace="Study">
+
+	<resultMap id="studyMap" class="com.hxti.edge.pacs.data.Study">
+      <result property="uid"               column="study_uid" 
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="aeTitle"           column="ae_title" 
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="studyDate"         column="study_date"
+              jdbcType="DATETIME"          javaType="java.util.Date"
+              typeHandler="com.hxti.edge.pacs.util.sql.DateTypeHandler"/>
+              
+      <result property="dicomStudyId"      column="dicom_study_id"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="accessionNumber"   column="accession_num"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="patientName"       column="patient_name"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="mrn"               column="mrn"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="birthDate"         column="birth_date"
+              jdbcType="DATE"              javaType="java.util.Date"
+              typeHandler="com.hxti.edge.pacs.util.sql.DateTypeHandler"/>
+              
+      <result property="sex"               column="sex"
+              jdbcType="CHAR"              javaType="java.lang.String"/>
+              
+      <result property="recordPurgeProfileId"
+              column="record_purge_profile_id"
+              jdbcType="INTEGER"           javaType="java.lang.Integer"/>
+              
+      <result property="studyDescription"  column="study_description"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="referringPhysicianName" 
+              column="referring_physician_name"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="readingPhysicianName" 
+              column="reading_physician_name"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="modalitiesInStudy" column="modalities_in_study"
+              jdbcType="INTEGER"           javaType="java.lang.Integer"/>
+              
+      <result property="procedureCodeSequence" 
+              column="procedure_code_sequence"
+              jdbcType="INTEGER"           javaType="java.lang.Integer"/>
+              
+      <result property="numberOfStudyRelatedSeries" 
+              column="number_of_study_related_series"
+              jdbcType="INTEGER"           javaType="java.lang.Integer"/>
+              
+      <result property="numberOfStudyRelatedInstances" 
+              column="number_of_study_related_instances"
+              jdbcType="INTEGER"           javaType="java.lang.Integer"/>
+              
+      <result property="cannotDelete" 
+              column="cannot_delete"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="imagesCachedDate"  column="images_cached_date"
+              jdbcType="DATE"              javaType="java.util.Date"/>
+              
+      <result property="imagesPurgedDate"  column="images_purged_date"
+              jdbcType="DATE"              javaType="java.util.Date"/>
+              
+      <result property="imagesPurgeScore"  column="images_purge_score"
+              jdbcType="INTEGER"           javaType="java.lang.Integer"/>
+
+      <result property="dateAdded"         column="date_added"
+              jdbcType="DATETIME"          javaType="java.util.Date"/>
+              
+      <result property="dateUpdated"       column="date_updated"
+              jdbcType="DATETIME"          javaType="java.util.Date"/>
+              
+      <result property="dateAccessed"      column="date_accessed"
+              jdbcType="DATETIME"          javaType="java.util.Date"/>
+              
+      <result property="peer.localName"    column="local_name"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="peer.findAETitle"  column="find_ae_title"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="peer.storeAETitle" column="store_ae_title"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="peer.moveAETitle"  column="move_ae_title"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="peer.respAETitle"  column="resp_ae_title"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="peer.host"         column="host"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="peer.port"         column="port"
+              jdbcType="INTEGER"           javaType="int"/>
+              
+      <result property="peer.queryModel"   column="query_model"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+      <result property="peer.primaryDeviceType"
+              column="primary_device_type"
+              jdbcType="VARCHAR"           javaType="java.lang.String"/>
+              
+<!--       <result property="peer.organizations"     -->
+<!--               column="ae_id" select="getStudyOrgs" /> -->
+              
+   </resultMap>
+
+	<resultMap id="orgStudyMap" class="com.hxti.edge.pacs.data.Organization">
+      <result property="organizationCode"    column="org_code"
+              jdbcType="VARCHAR"             javaType="string"/>
+              
+      <result property="organizationName"    column="org_name"
+              jdbcType="VARCHAR"             javaType="string"/>
+   </resultMap>
+   
+   <select id="getStudyOrgs" resultClass="Organization" resultMap="orgStudyMap" parameterClass="int">
+      SELECT org.org_code, org.org_name
+        FROM organizations org, peer_org_map pom
+       WHERE pom.ae_id = #value#
+         AND pom.org_id = org.org_id
+   </select>
+   
+   <select id="testStudy" resultClass="int" parameterClass="string">
+      SELECT COUNT(study_id)
+        FROM radiology_studies
+       WHERE study_uid = #value#
+   </select>
+   
+   <select id="allStudies" resultClass="Study" resultMap="studyMap">
+      SELECT st.study_id,
+             aep.resp_ae_title as ae_title,
+             st.study_date,
+             st.study_uid,
+             st.dicom_study_id,
+             st.accession_num,
+             st.patient_name,
+             st.mrn,
+             st.birth_date,
+             st.sex,
+             st.record_purge_profile_id,
+             st.study_description,
+             st.referring_physician_name,
+             st.reading_physician_name,
+             st.modalities_in_study,
+             st.procedure_code_sequence,
+             st.number_of_study_related_series,
+             st.number_of_study_related_instances,
+             st.cannot_delete,
+             st.images_cached_date,
+             st.images_purged_date,
+             st.images_purge_score,
+             st.date_added,
+             st.date_updated,
+             st.date_accessed,
+             aep.local_name,
+             aep.find_ae_title,
+             aep.store_ae_title,
+             aep.move_ae_title,
+             aep.resp_ae_title,
+             aep.host,
+             aep.port,
+             aep.query_model,
+             aep.primary_device_type,
+      		 aep.ae_id
+        FROM radiology_studies st, radiology_ae_peers aep
+       WHERE st.ae_id = aep.ae_id
+   </select>
+   
+   <select id="studySearchByUID" resultClass="Study" resultMap="studyMap" 
+           parameterClass="string">
+      SELECT st.study_id,
+             aep.resp_ae_title as ae_title,
+             st.study_date,
+             st.study_uid,
+             st.dicom_study_id,
+             st.accession_num,
+             st.patient_name,
+             st.mrn,
+             st.birth_date,
+             st.sex,
+             st.record_purge_profile_id,
+             st.study_description,
+             st.referring_physician_name,
+             st.reading_physician_name,
+             st.modalities_in_study,
+             st.procedure_code_sequence,
+             st.number_of_study_related_series,
+             st.number_of_study_related_instances,
+             st.cannot_delete,
+             st.images_cached_date,
+             st.images_purged_date,
+             st.images_purge_score,
+             st.date_added,
+             st.date_updated,
+             st.date_accessed,
+             aep.local_name,
+             aep.find_ae_title,
+             aep.store_ae_title,
+             aep.move_ae_title,
+             aep.resp_ae_title,
+             aep.host,
+             aep.port,
+             aep.query_model,
+             aep.primary_device_type,
+      		 aep.ae_id
+        FROM radiology_studies st, radiology_ae_peers aep
+       WHERE st.ae_id = aep.ae_id
+         AND st.study_uid = #value#
+   </select>
+   
+   <select id="getStudyByACN" resultClass="Study" resultMap="studyMap" 
+           parameterClass="map">
+      SELECT st.study_id,
+             aep.resp_ae_title as ae_title,
+             st.study_date,
+             st.study_uid,
+             st.dicom_study_id,
+             st.accession_num,
+             st.patient_name,
+             st.mrn,
+             st.birth_date,
+             st.sex,
+             st.record_purge_profile_id,
+             st.study_description,
+             st.referring_physician_name,
+             st.reading_physician_name,
+             st.modalities_in_study,
+             st.procedure_code_sequence,
+             st.number_of_study_related_series,
+             st.number_of_study_related_instances,
+             st.cannot_delete,
+             st.images_cached_date,
+             st.images_purged_date,
+             st.images_purge_score,
+             st.date_added,
+             st.date_updated,
+             st.date_accessed,
+             aep.local_name,
+             aep.find_ae_title,
+             aep.store_ae_title,
+             aep.move_ae_title,
+             aep.resp_ae_title,
+             aep.host,
+             aep.port,
+             aep.query_model,
+             aep.primary_device_type,
+      		 aep.ae_id
+        FROM radiology_studies st, radiology_ae_peers aep, organizations org, peer_org_map pom
+       WHERE st.ae_id = aep.ae_id
+         AND aep.ae_id = pom.ae_id
+         AND pom.org_id = org.org_id
+         AND org.org_code = #inst#
+         AND st.accession_num = #acn#
+   </select>
+   
+   <select id="studySearchByPatientMRN" resultClass="Study" 
+           resultMap="studyMap" parameterClass="string">
+      SELECT st.study_id,
+             aep.resp_ae_title as ae_title,
+             st.study_date,
+             st.study_uid,
+             st.dicom_study_id,
+             st.accession_num,
+             st.patient_name,
+             st.mrn,
+             st.birth_date,
+             st.sex,
+             st.record_purge_profile_id,
+             st.study_description,
+             st.referring_physician_name,
+             st.reading_physician_name,
+             st.modalities_in_study,
+             st.procedure_code_sequence,
+             st.number_of_study_related_series,
+             st.number_of_study_related_instances,
+             st.cannot_delete,
+             st.images_cached_date,
+             st.images_purged_date,
+             st.images_purge_score,
+             st.date_added,
+             st.date_updated,
+             st.date_accessed,
+             aep.local_name,
+             aep.find_ae_title,
+             aep.store_ae_title,
+             aep.move_ae_title,
+             aep.resp_ae_title,
+             aep.host,
+             aep.port,
+             aep.query_model,
+             aep.primary_device_type,
+      		 aep.ae_id
+        FROM radiology_studies st, radiology_ae_peers aep
+       WHERE st.ae_id = aep.ae_id
+         AND st.mrn = #value#
+   </select>
+   
+   <select id="studySearchBySeriesUid" resultClass="Study"
+           resultMap="studyMap" parameterClass="string">
+      SELECT st.study_id,
+             aep.resp_ae_title as ae_title,
+             st.study_date,
+             st.study_uid,
+             st.dicom_study_id,
+             st.accession_num,
+             st.patient_name,
+             st.mrn,
+             st.birth_date,
+             st.sex,
+             st.record_purge_profile_id,
+             st.study_description,
+             st.referring_physician_name,
+             st.reading_physician_name,
+             st.modalities_in_study,
+             st.procedure_code_sequence,
+             st.number_of_study_related_series,
+             st.number_of_study_related_instances,
+             st.cannot_delete,
+             st.images_cached_date,
+             st.images_purged_date,
+             st.images_purge_score,
+             st.date_added,
+             st.date_updated,
+             st.date_accessed,
+             aep.local_name,
+             aep.find_ae_title,
+             aep.store_ae_title,
+             aep.move_ae_title,
+             aep.resp_ae_title,
+             aep.host,
+             aep.port,
+             aep.query_model,
+             aep.primary_device_type,
+      		 aep.ae_id
+        FROM radiology_studies st, radiology_series se, radiology_ae_peers aep
+      WHERE st.study_id   = se.study_id
+        AND st.ae_id = aep.ae_id
+        AND se.series_uid = #value#
+   </select>
+   
+   <select id="studySearchByTemplate" resultClass="Study"
+           resultMap="studyMap" parameterClass="StudyQuery">
+      SELECT st.study_id,
+             aep.resp_ae_title as ae_title,
+             st.study_date,
+             st.study_uid,
+             st.dicom_study_id,
+             st.accession_num,
+             st.patient_name,
+             st.mrn,
+             st.birth_date,
+             st.sex,
+             st.record_purge_profile_id,
+             st.study_description,
+             st.referring_physician_name,
+             st.reading_physician_name,
+             st.modalities_in_study,
+             st.procedure_code_sequence,
+             st.number_of_study_related_series,
+             st.number_of_study_related_instances,
+             st.cannot_delete,
+             st.images_cached_date,
+             st.images_purged_date,
+             st.images_purge_score,
+             st.date_added,
+             st.date_updated,
+             st.date_accessed,
+             aep.find_ae_title,
+             aep.store_ae_title,
+             aep.move_ae_title,
+             aep.resp_ae_title,
+             aep.local_name,
+             aep.host,
+             aep.port,
+             aep.query_model,
+             aep.primary_device_type,
+      		 aep.ae_id
+        FROM radiology_studies st, radiology_ae_peers aep
+       WHERE st.ae_id = aep.ae_id
+         AND study_uid is not null
+      <isNotNull property="uids" prepend="AND">
+         <iterate property="uids" open="(" close=")" conjunction="OR">
+         	study_uid = #uids[]#
+         </iterate>
+      </isNotNull>
+      <isNotNull property="accessionNums" prepend="AND">
+         <iterate property="accessionNums" open="(" close=")" 
+                  conjunction="OR">
+	     	accession_num = #accessionNums[]#
+	     </iterate>
+	  </isNotNull>
+	  <isNotNull property="startBirthDate">
+	  	<isNotNull property="endBirthDate" prepend="AND">
+	     	<![CDATA[(birth_date >= #startBirthDate#
+	     	AND birth_date <= #endBirthDate#)]]>
+	  	</isNotNull>
+	  </isNotNull>
+      <isNotNull property="patientNames" prepend="AND">
+         <iterate property="patientNames" open="(" close=")" conjunction="OR">
+	     	patient_name LIKE #patientNames[]#
+	     </iterate>
+	  </isNotNull>
+      <isNotNull property="referringPhysicians" prepend="AND">
+         <iterate property="referringPhysicians" open="(" close=")" 
+                  conjunction="OR">
+	     	referring_physician_name LIKE #referringPhysicians[]#
+	     </iterate>
+	  </isNotNull>
+      <isNotNull property="readingPhysicians" prepend="AND">
+         <iterate property="readingPhysicians" open="(" close=")" 
+                  conjunction="OR">
+	     	reading_physician_name LIKE #readingPhysicians[]#
+	     </iterate>
+	  </isNotNull>
+      <isNotNull property="sexes" prepend="AND">
+         <iterate property="sexes" open="(" close=")" conjunction="OR">
+	     	sex = #sexes[]#
+	     </iterate>
+	  </isNotNull>
+      <isNotNull property="studyIds" prepend="AND">
+         <iterate property="studyIds" open="(" close=")" conjunction="OR">
+	        	dicom_study_id = #studyIds[]#
+	     </iterate>
+	  </isNotNull>
+	  <isNotNull property="startStudyDate">
+	  	<isNotNull property="endStudyDate" prepend="AND">
+	     	<![CDATA[study_date >= #startStudyDate#
+	     	AND study_date <= #endStudyDate#]]>
+	  	</isNotNull>
+	  </isNotNull>
+    </select>
+   
+   <insert id="insertStudy" parameterClass="Study">
+      INSERT INTO radiology_studies (
+      					study_id,
+      					study_date,
+      					study_uid,
+						dicom_study_id,
+						accession_num,
+						patient_name,
+						mrn,
+						birth_date,
+						sex,
+						record_purge_profile_id,
+						study_description,
+						referring_physician_name,
+						reading_physician_name,
+						modalities_in_study,
+						procedure_code_sequence,
+						number_of_study_related_series,
+						number_of_study_related_instances,
+						cannot_delete,
+						images_cached_date,
+						images_purged_date,
+						images_purge_score,
+						date_added,
+						date_updated,
+						date_accessed,
+						ae_id
+					)
+             VALUES (
+             			0,
+      					#studyDate#,
+      					#uid#,
+						#dicomStudyId#,
+						#accessionNumber#,
+						#patientName#,
+						#mrn#,
+						#birthDate#,
+						#sex#,
+						#recordPurgeProfileId#,
+						#studyDescription#,
+						#referringPhysicianName#,
+						#readingPhysicianName#,
+						#modalitiesInStudy#,
+						#procedureCodeSequence#,
+						#numberOfStudyRelatedSeries#,
+						#numberOfStudyRelatedInstances#,
+						#cannotDelete#,
+						#imagesCachedDate#,
+						#imagesPurgedDate#,
+						#imagesPurgeScore#,
+						NOW(),
+						NOW(),
+						NOW(),
+						(SELECT ae_id 
+						   FROM radiology_ae_peers
+						  WHERE find_ae_title = #aeTitle#
+						     OR move_ae_title = #aeTitle#
+						     OR resp_ae_title = #aeTitle#
+						     OR store_ae_title = #aeTitle#)
+                   	)
+   </insert>
+   
+   <delete id="deleteInstanceByStudy" parameterClass="string">
+      DELETE FROM radiology_instances
+      USING radiology_studies st, radiology_series se, radiology_instances i
+      WHERE st.study_id = se.study_id
+        AND se.series_id = i.series_id 
+        AND st.study_uid = #value#
+   </delete>
+   
+   <delete id="deleteSeriesByStudy" parameterClass="string">
+      DELETE FROM radiology_series
+      USING radiology_studies st, radiology_series se
+      WHERE st.study_id = se.study_id
+        AND st.study_uid = #value#
+   </delete>
+   
+   <delete id="deleteStudy" parameterClass="string">
+      DELETE FROM radiology_studies 
+       WHERE study_uid = #string#
+   </delete>
+   
+   <update id="changeAccessedDate" parameterClass="map">
+      UPDATE radiology_studies SET date_accessed = NOW() WHERE 1=1
+      <isNotNull property="uid" prepend="AND">
+      	study_uid = #uid#
+      </isNotNull>
+      <isNotNull property="acn" prepend="AND">
+        accession_num = #acn# 
+        AND ae_id = (SELECT ae_id 
+                       FROM radiology_ae_peers aep, 
+                            organizations org, 
+                            peer_org_map pom
+                      WHERE aep.ae_id = pom.ae_id
+                        AND pom.org_id = org.org_id
+                        AND org.org_code = #inst#)
+      </isNotNull>
+   </update>
+   
+   <update id="persistStudy" parameterClass="Study">
+      UPDATE radiology_studies 
+      SET	date_updated = NOW()
+        ,   date_accessed = NOW()
+      <isNotNull property="studyDate" prepend=",">
+         study_date = #studyDate#
+      </isNotNull> 
+      <isNotNull property="dicomStudyId" prepend=",">
+         dicom_study_id = #dicomStudyId#
+      </isNotNull>
+      <isNotNull property="accessionNumber" prepend=",">
+         accession_num = #accessionNumber#
+      </isNotNull>
+      <isNotNull property="patientName" prepend=",">
+         patient_name = #patientName#
+      </isNotNull>
+      <isNotNull property="mrn" prepend=",">
+         mrn = #mrn#
+      </isNotNull>
+      <isNotNull property="birthDate" prepend=",">
+         birth_date = #birthDate#
+      </isNotNull>
+      <isNotNull property="sex" prepend=",">
+         sex = #sex#
+      </isNotNull>
+      <isNotNull property="recordPurgeProfileId" prepend=",">
+         record_purge_profile_id = #recordPurgeProfileId#
+      </isNotNull>
+      <isNotNull property="studyDescription" prepend=",">
+         study_description = #studyDescription#
+      </isNotNull> 
+      <isNotNull property="referringPhysicianName" prepend=",">
+         referring_physician_name = #referringPhysicianName#
+      </isNotNull>
+      <isNotNull property="readingPhysicianName" prepend=",">
+         reading_physician_name = #readingPhysicianName#
+      </isNotNull>
+      <isNotNull property="modalitiesInStudy" prepend=",">
+         modalities_in_study = #modalitiesInStudy#
+      </isNotNull>
+      <isNotNull property="procedureCodeSequence" prepend=",">
+         procedure_code_sequence = #procedureCodeSequence#
+      </isNotNull>
+      <isNotNull property="numberOfStudyRelatedSeries" prepend=",">
+         number_of_study_related_series = #numberOfStudyRelatedSeries#
+      </isNotNull>
+      <isNotNull property="numberOfStudyRelatedInstances" prepend=",">
+         number_of_study_related_instances = #numberOfStudyRelatedInstances#
+      </isNotNull>
+      <isNotNull property="cannotDelete" prepend=",">
+         cannot_delete = #cannotDelete#
+      </isNotNull>
+      <isNotNull property="imagesPurgeScore" prepend=",">
+         images_purge_score = #imagesPurgeScore#
+      </isNotNull>
+      <isNotNull property="imagesCachedDate" prepend=",">
+         images_cached_date = #imagesCachedDate#, 
+         images_purged_date = null
+      </isNotNull>
+      <isNotNull property="imagesPurgedDate" prepend=",">
+         images_purged_date = #imagesPurgedDate#,
+         images_cached_date = null
+      </isNotNull>
+      WHERE study_uid = #uid#
+   </update>
+
+</sqlMap>

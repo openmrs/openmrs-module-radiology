@@ -1,0 +1,516 @@
+/* ****************************************************************************
+ * Copyright (C) 2007 Hx Technologies, Inc.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * $Id: WADORequestHandler.java,v 1.1.1.1 2007/10/18 15:58:37 kpearce Exp $
+ * Last Revised By   : $Author: kpearce $
+ * Last Checked In   : $Date: 2007/10/18 15:58:37 $
+ * Last Version      : $Revision: 1.1.1.1 $
+ *
+ * Original Author   : Rafael Chargel
+ * Origin            : Hx Technologies Inc.
+ *
+ *****************************************************************************/
+package com.hxti.xebra.com.wado;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Logger;
+
+import com.hxti.dicom.exception.WADOException;
+import com.hxti.dicom.util.ErrorMessages;
+import com.hxti.edge.pacs.data.HxTiObject;
+import com.hxti.edge.pacs.data.Instance;
+import com.hxti.edge.pacs.data.Series;
+import com.hxti.edge.pacs.data.Study;
+import com.hxti.edge.pacs.exception.PersistException;
+import com.hxti.edge.pacs.persist.InstanceLoader;
+import com.hxti.edge.pacs.persist.InstancePersister;
+import com.hxti.edge.pacs.persist.LoaderFactory;
+import com.hxti.edge.pacs.persist.SeriesLoader;
+import com.hxti.edge.pacs.persist.StudyLoader;
+import com.hxti.pixelmed.web.WadoRequest;
+import com.hxti.xebra.com.AbstractServlet;
+import com.hxti.xebra.com.HTTPResponseService;
+
+/**
+ * This is the processing class for the
+ * {@link com.hxti.xebra.com.wado.WADORequestServlet}. This class is responsible
+ * for the majority of the work performed by the servlet including validating
+ * the request, and generating the response.
+ * 
+ * <p>
+ * This serlvet supports the following content types:
+ * </p>
+ * 
+ * <ol>
+ * <li>image/jpeg - image data</li>
+ * <li>image/jp2 - image data</li>
+ * <li>image/tiff - image data</li>
+ * <li>image/bmp - image data</li>
+ * <li>text/plain - non-PDF text data</li>
+ * <li>text/xml - XML, HTML, AND DICOM meta-data</li>
+ * <li>text/html - HTML and DICOM meta-data</li>
+ * <li>application/pdf - PDF files</li>
+ * <li>application/dicom - DICOM files</li>
+ * </ol>
+ * 
+ * <p>
+ * <b>Note:</b> This class also takes advantage of the <code>PixelMed</code>
+ * libraries which are not included in this project's folders. The
+ * <code>PixelMed</code> library, and it's dependancies, are available from
+ * the <a target="_blank" href="http://www.pixelmed.com/">PixelMed web site</a>.
+ * </p>
+ * 
+ * @author Rafael Chargel
+ * @version $Revision: 1.1.1.1 $
+ */
+public class WADORequestHandler
+{
+	
+	protected WadoRequest							request;
+	private String								mimeType;
+
+	private static final List<String>			TYPES	= new ArrayList<String>();
+    static
+    {
+        TYPES.add("*/*");
+        TYPES.add("image/jpeg");
+        TYPES.add("image/jp2");
+        TYPES.add("image/png");
+        TYPES.add("image/tiff");
+        TYPES.add("image/bmp");
+        TYPES.add("application/dicom");
+        TYPES.add("text/plain");
+        TYPES.add("text/html");
+        TYPES.add("text/xml");
+        TYPES.add("application/xml");
+        TYPES.add("application/pdf");
+    }
+    
+	private static final Map<String, String>	EXT		= new HashMap<String, String>();
+    static
+    {
+        EXT.put(TYPES.get(1), ".jpg");
+        EXT.put(TYPES.get(2), ".jp2");
+        EXT.put(TYPES.get(3), ".png");
+        EXT.put(TYPES.get(4), ".tif");
+        EXT.put(TYPES.get(5), ".bmp");
+        EXT.put(TYPES.get(6), ".dcm");
+        EXT.put(TYPES.get(7), ".txt");
+        EXT.put(TYPES.get(8), ".htm");
+        EXT.put(TYPES.get(9), ".xml");
+        EXT.put(TYPES.get(10), ".xml");
+        EXT.put(TYPES.get(11), ".pdf");
+    }
+
+	/**
+	 * @param request
+	 *            The WADO Request.
+	 */
+	public WADORequestHandler(WadoRequest request)
+	{
+		this.request = request;
+	}
+    
+    /**
+     * Gets the Content/MIME type from the request.
+     *
+     * @param request The WADO Request.
+     * 
+     * @return Returns the desired content type.
+     */
+    public static final String getContentType(WadoRequest request)
+    {
+        if (request.getContentType() == null)
+        {
+            return (String) TYPES.get(1);
+        }
+        if (request.isContentTypeDicom())
+        {
+            return (String) TYPES.get(6);
+        }
+        
+        /*
+         * This is a two dimensional string: String[] = an integer value
+         * String[][] = the mime type
+         */
+        String[][] contentTypes = request.getContentType();
+
+        for (int i = 0; i < contentTypes.length; i++)
+        {
+            for (int j = 0; j < contentTypes[i].length; j++)
+            {
+                String type = contentTypes[i][j].toLowerCase();
+
+                if (type.equals("*/*"))
+                {
+                    return (String) TYPES.get(1);
+                }
+
+                for (int k = 1; k < TYPES.size(); k++)
+                {
+                    if (type.equals(TYPES.get(k)))
+                    {
+                        return (String) TYPES.get(k);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+	/**
+	 * Gets the WADO request object.
+	 * 
+	 * @return Returns the wado request.
+	 */
+	public WadoRequest getWadoRequest()
+	{
+		return this.request;
+	}
+    
+    /**
+     * This method checks to see the that requested image is in
+     * JPEG 2000 format and does not require any modifications.
+     *
+     * @return Returns true if the image can be read from cache.
+     */
+    public boolean canReadWriteFromCache()
+    {
+        Logger logger = Logger.getLogger(AbstractServlet.class);
+        
+        logger.debug("Checking to see if the image can be read from cache");
+        if (!this.mimeType.equals("image/jp2"))
+        {
+            logger.debug("The image mime type is: " + this.mimeType);
+            return false;
+        }
+        if (this.request.getColumns() > 0)
+        {
+            logger.debug("The requested width is: " + this.request.getColumns());
+            return false;
+        }
+        if (this.request.getRows() > 0)
+        {
+            logger.debug("The requested height is: " + this.request.getRows());
+            return false;
+        }
+        if (this.request.getRegion() != null)
+        {
+            logger.debug("The requested region is: " + this.request.getRegion());
+            return false;
+        }
+        if (this.request.getWindowCenter() > 0)
+        {
+            logger.debug("The requested window center is: " + this.request.getWindowCenter());
+            return false;
+        }
+        if (this.request.getWindowWidth() > 0)
+        {
+            logger.debug("The requested window width is: " + this.request.getWindowWidth());
+            return false;
+        }
+        
+        logger.debug("Can read from cache.");
+        return true;
+    }
+
+	/**
+	 * Determines whether the requested content type is valid. This method both
+	 * checks the list of requested content types to see if one is valid, and
+	 * also chooses one of the requested types for further processessing.
+	 * 
+	 * @return Returns <code>true</code> if any of the requested content types
+	 *         are valid, <code>false</code> otherwise.
+	 */
+	public boolean isValidContentRequest()
+	{
+        this.mimeType = getContentType(this.request);
+		if (this.mimeType != null) 
+        {
+            return true;
+        }
+		return false;
+	}
+
+	/**
+	 * Gets the supported file type this adaptor will use to process data.
+	 * 
+	 * @return Returns the supported file's MIME type.
+	 */
+	public String getContentType()
+	{
+		return this.mimeType;
+	}
+
+	/**
+	 * Gets the supported file extension this adaptor will use to process data.
+	 * 
+	 * @return Returns the supported file's extension.
+	 */
+	public String getContentExtension()
+	{
+		return (String) EXT.get(this.mimeType);
+	}
+
+	/**
+	 * Generates the response to the WADO request.
+	 * 
+	 * @param response
+	 *            The <code>HttpServletResponse</code> object that contains
+	 *            the response the servlet returns to the client.
+	 * 
+	 * @throws IOException
+	 *             thrown if there are any errors generating the response.
+	 */
+	public void generateResponse(HttpServletResponse response)
+			throws IOException
+	{
+		try
+		{
+			HxTiObject[] objects = getObjectTree();
+			if (objects.length == 3)
+			{
+				if (!this.request.getStudyUID().equals(objects[2].getUid())
+					|| !this.request.getSeriesUID().equals(objects[1].getUid())
+					|| !this.request.getObjectUID().equals(objects[0].getUid()))
+				{
+					response.sendError(HttpServletResponse.SC_BAD_REQUEST, 
+							ErrorMessages.MATCHING_UIDS_ERROR);
+					return;
+				}
+				Study study = (Study)objects[2];
+				
+				if (study.getImagesCachedDate() == null
+						|| study.getImagesPurgedDate() != null)
+				{
+					response.sendError(HttpServletResponse.SC_NOT_FOUND,
+							ErrorMessages.STUDY_PURGE_ERROR);
+					return;
+				}
+			}
+			System.out.println("Generate response from MIME type");
+			if (isContentDICOM())
+			{
+				System.out.println("DICOM content");
+				HTTPResponseService.outputDicomObject(response, this);
+			}
+			else if (isContentText())
+			{
+				// may be XML, HTML, or plain text
+				if (isContentXML())
+				{
+					// content is XML
+					System.out.println("XML content");
+					HTTPResponseService.outputXMLObject(response, this);
+				}
+				else if (isContentHTML())
+				{
+					// content is HTML
+					System.out.println("HTML content");
+					HTTPResponseService.outputHTMLObject(response, this);
+				}
+				else
+				{
+					// the object must be plain text, cannot be a DICOM File
+					System.out.println("Text content");
+					HTTPResponseService.outputTextObject(response, this);
+				}
+			}
+			else
+			{
+				// the request is for an image, not a report
+				System.out.println("Image content");
+				HTTPResponseService.outputImageObject(response, this);
+			}
+		}
+		catch (WADOException exc)
+		{
+			response.sendError(exc.getErrorType(), exc.getMessage());
+			return;
+		}
+		catch (Exception exc)
+		{
+			response.sendError(HttpServletResponse.SC_NOT_FOUND, 
+					ErrorMessages.NO_STUDY_ERROR);
+			return;
+		}
+	}
+
+	/**
+	 * Determines whether the selected content type is set to DICOM.
+	 * 
+	 * @return Returns <code>true</code> if the document has been requested as
+	 *         a DICOM file, <code>false</code> otherwise.
+	 */
+	public boolean isContentDICOM()
+	{
+		return this.mimeType.equals(TYPES.get(6));
+	}
+
+	/**
+	 * Determines whether the selected content type is set to text.
+	 * 
+	 * @return Returns <code>true</code> if the document has been requested as
+	 *         any text file, <code>false</code> otherwise.
+	 */
+	public boolean isContentText()
+	{
+		return (this.mimeType.startsWith("text") || isContentXML());
+	}
+
+	/**
+	 * Determines whether the selected content type is set to XML.
+	 * 
+	 * @return Returns <code>true</code> if the document has been requested as
+	 *         a XML file, <code>false</code> otherwise.
+	 */
+	public boolean isContentXML()
+	{
+		return (this.mimeType.endsWith("xml"));
+	}
+
+	/**
+	 * Determines whether the selected content type is set to HTML.
+	 * 
+	 * @return Returns <code>true</code> if the document has been requested as
+	 *         a HTML file, <code>false</code> otherwise.
+	 */
+	public boolean isContentHTML()
+	{
+		return (this.mimeType.equals(TYPES.get(8)));
+	}
+
+	/**
+	 * Determines whether the selected content type is set to PDF.
+	 * 
+	 * @return Returns <code>true</code> if the document has been requested as
+	 *         a PDF file, <code>false</code> otherwise.
+	 */
+	public boolean isContentPDF()
+	{
+		return (this.mimeType.equals(TYPES.get(11)));
+	}
+    
+    /**
+     * Saves changes made to an image.
+     *
+     * @param image The image.
+     * 
+     * @throws PersistException
+     */
+    public void persistImage(Instance image) throws PersistException
+    {
+        InstancePersister persister = 
+                (InstancePersister)LoaderFactory.getPersister(Instance.OBJECT_TYPE);
+            
+        persister.persist(image);
+    }
+
+	/**
+	 * Loads an image out of the database.
+	 * 
+	 * @return Returns an image out of the database.
+	 * @throws Exception
+	 *             thrown if a database error occurs.
+	 */
+	public Instance getImage()
+	{
+		try
+		{
+			InstanceLoader loader = (InstanceLoader) LoaderFactory
+					.getLoader(Instance.OBJECT_TYPE);
+
+			return (Instance) loader.loadByUID(this.request.getObjectUID(),
+					false, false);
+		}
+		catch (Throwable t)
+		{
+			// return null
+			return null;
+		}
+	}
+	
+	public String getImageModality(){
+		try{
+			SeriesLoader loader = 
+				(SeriesLoader)LoaderFactory.getLoader(Series.OBJECT_TYPE);
+			return loader.loadByChildUID(this.request.getObjectUID()).getModality();
+		}catch(Throwable t){
+			return null;
+		}
+	}
+
+	/**
+	 * Loads an object out of the database.
+	 * 
+	 * @return Returns an object out of the database.
+	 * @throws Exception
+	 *             thrown if a database error occurs.
+	 */
+	public HxTiObject getRequestedObject() throws Exception
+	{
+		InstanceLoader loader = (InstanceLoader) LoaderFactory
+				.getLoader(Instance.OBJECT_TYPE);
+		HxTiObject obj = loader.loadByUID(this.request.getObjectUID(),
+				false, false);
+		
+		return obj;
+	}
+
+	/**
+	 * Gets the Object and all of its parents.
+	 * 
+	 * @return Returns the objects and all of its parents, starting with the
+	 *         object itself, then its parent, etc.
+	 *         
+	 * @throws Exception
+	 *             thrown if a database error occurs.
+	 */
+	public HxTiObject[] getObjectTree() throws Exception
+	{
+		HxTiObject object = getRequestedObject();
+		
+		HxTiObject[] objects = new HxTiObject[3];
+		objects[0] = object;
+		try
+		{
+			SeriesLoader seLoader = (SeriesLoader)LoaderFactory.getLoader(Series.OBJECT_TYPE);
+			objects[1] = seLoader.loadByUID(objects[0].getParentUid());
+			
+			StudyLoader stLoader = (StudyLoader)LoaderFactory.getLoader(Study.OBJECT_TYPE);
+			objects[2] = stLoader.loadByUID(objects[1].getParentUid());
+			
+			if (objects[0] == null
+					|| objects[1] == null
+					|| objects[2] == null)
+			{
+				throw new Exception("Could not load objects");
+			}
+		}
+		catch (Throwable t)
+		{
+			throw new Exception(t);
+		}
+		return objects;
+	}
+}

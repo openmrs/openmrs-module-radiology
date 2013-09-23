@@ -1,0 +1,381 @@
+/* ****************************************************************************
+ * Copyright (C) 2007 Hx Technologies, Inc.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * $Id: ImageUtilties.java,v 1.1.1.1 2007/10/18 15:58:37 kpearce Exp $
+ * Last Revised By   : $Author: kpearce $
+ * Last Checked In   : $Date: 2007/10/18 15:58:37 $
+ * Last Version      : $Revision: 1.1.1.1 $
+ *
+ * Original Author   : Rafael Chargel
+ * Origin            : Hx Technologies Inc.
+ *
+ *****************************************************************************/
+package com.hxti.xebra.util;
+
+import java.awt.Dimension;
+import java.awt.RenderingHints;
+
+import java.awt.geom.Rectangle2D;
+
+import java.awt.image.BufferedImage;
+import java.awt.image.DataBuffer;
+import java.awt.image.WritableRaster;
+
+import java.io.IOException;
+
+import java.util.Iterator;
+
+import javax.imageio.ImageIO;
+import javax.imageio.ImageReadParam;
+import javax.imageio.ImageReader;
+import javax.imageio.ImageTypeSpecifier;
+import javax.imageio.metadata.IIOMetadata;
+
+import org.apache.log4j.Logger;
+
+import com.hxti.dicom.processing.WindowLevelOp;
+import com.hxti.dicom.util.DicomMetadataReader;
+import com.hxti.dicom.util.ImageSizeConverter;
+import com.hxti.pixelmed.dicom.Attribute;
+import com.hxti.pixelmed.dicom.AttributeList;
+import com.hxti.pixelmed.dicom.TagFromName;
+import com.hxti.xebra.com.AbstractServlet;
+
+/**
+ * This class provides a set of static methods for modifying image data.  Be aware 
+ * that this class also takes advantage to classes in the Java Advanced Imaging
+ * (JAI) API.  For more information about JAI visit <a href="http://java.sun.com"
+ * target="_blank">Sun's Java web site</a>.
+ * 
+ * <p>
+ * <b>Note:</b> This class also takes advantage of the <code>PixelMed</code>
+ * libraries which are not included in this project's folders. The
+ * <code>PixelMed</code> library, and it's dependancies, are available from
+ * the <a target="_blank" href="http://www.pixelmed.com/">PixelMed web site</a>.
+ * </p>
+ * 
+ * @author Rafael Chargel
+ * @version $Revision: 1.1.1.1 $
+ */
+public final class ImageUtilties
+{
+	private ImageConverter	conv;
+	private RenderingHints	hints;
+    private IIOMetadata     meta;
+	
+	private Logger 			logger;
+	
+	/**
+	 * This class cannot be instantiated by any other class.
+	 */
+	public ImageUtilties()
+	{
+		super();
+		
+		this.logger = Logger.getLogger(AbstractServlet.class);
+	}
+	
+	/**
+	 * Sets the <code>ImageConverter</code> to use for any transformations.
+	 * 
+	 * @param conv 
+	 *        The image converter. 
+	 */
+	public void setImageConverter(ImageConverter conv)
+	{
+		this.conv = conv;
+	}
+	
+	/**
+	 * Sets the <code>RenderingHints</code> to use for any transformations.
+	 * 
+	 * @param hints 
+	 *        The <code>RenderingHints</code>. 
+	 */
+	public void setRenderingHints(RenderingHints hints)
+	{
+		this.hints = hints;
+	}
+	
+	/**
+	 * Gets the <code>ImageConverter</code> being used by this object.
+	 * 
+	 * @return Returns the currently set image converter.
+	 */
+	public ImageConverter getImageConverter()
+	{
+		return this.conv;
+	}
+	
+	/**
+	 * Gets the SOP Class UID from the DICOM file.
+	 * 
+	 * @param attrs
+	 *        The DICOM Attribute list
+	 *        
+	 * @return Returns the SOP Class UID.
+	 */
+	public String getSOPClassUID(AttributeList attrs)
+	{
+		String value = null;
+		
+		Attribute classUid = attrs.get(TagFromName.SOPClassUID);
+
+		if (classUid != null)
+		{
+			value = classUid.getSingleStringValueOrEmptyString();
+		}
+		return value;
+	}
+	
+	/**
+	 * Creates a subsampling of the larger source image.  It will bring the image down to
+	 * its final size and shape.
+	 * 
+	 * @param srcImage
+	 *        The source image.
+	 */
+	public BufferedImage getSubImage(BufferedImage srcImage)
+	{
+		if (this.conv.getClippedRegion() != null)
+		{
+			// get bounding box for image
+			Rectangle2D rect = calculateRegionClip(srcImage.getWidth(), srcImage.getHeight(),
+					this.conv.getClippedRegion());
+            
+			return srcImage.getSubimage((int)rect.getX(), (int)rect.getY(), (int)rect.getWidth(), (int)rect.getHeight());
+		}
+		
+		return srcImage;
+	}
+	
+	/**
+	 * Gets a scaled instance of a <code>BufferedImage</code>.
+	 * 
+	 * @param srcImage
+	 *        The <code>BufferedImage</code> to scale.
+	 *        
+	 * @return Returns a scaled instance of the <code>BufferedImage</code>.
+	 */
+	public BufferedImage getScaledImage(BufferedImage srcImage)
+	{
+		if (this.conv.getImageWidth() > 0 && this.conv.getImageHeight() > 0)
+		{
+			// get the new size for the image.
+			Dimension dstSize = 
+				ImageSizeConverter.scaleImage(srcImage.getWidth(), srcImage.getHeight(),
+						this.conv.getImageWidth(), this.conv.getImageHeight());
+			
+			WritableRaster raster = 
+                srcImage.getRaster().createCompatibleWritableRaster(dstSize.width, dstSize.height);
+            
+            BufferedImage dst = new BufferedImage(srcImage.getColorModel(), raster, srcImage.isAlphaPremultiplied(), null);
+            dst.createGraphics().drawImage(srcImage, 0, 0, dst.getWidth(), dst.getHeight(), null);
+            
+            srcImage.flush();
+            return dst;
+		}	
+		return srcImage;
+	}
+	
+	/**
+	 * Gets the finalized <code>BufferedImage</code> to display.  This method
+	 * uses the properties set in the supplied <code>ImageConverter</code> to
+	 * establish a <code>RenderedOp</code> chain in the <code>BufferedImage</code>.
+	 *         
+	 * @return Returns the final <code>BufferedImage</code>.
+	 * 
+	 * @throws IOException
+	 *         thrown if there are any errors communicating with the server's file system.
+	 */
+	public BufferedImage getRenderedImage()
+			throws IOException
+	{
+		ServerProperties.runGarbageCollection(false);
+        
+        BufferedImage image = generateSourceImage();
+		
+		image = getSubImage(image);
+		
+		image = getScaledImage(image);
+        
+        double window = this.conv.getWindowWidth(); 
+        double level = this.conv.getWindowCenter();
+        
+        if (this.conv.getMimeType().equals(ImageConverter.JPEG))
+        {
+            if (window == Integer.MIN_VALUE || level == Integer.MIN_VALUE)
+            {
+                DicomMetadataReader reader = new DicomMetadataReader(this.meta);
+                
+                ServerProperties sp = ServerProperties.getSingletonInstance();
+                int dfltLevel = sp.getDefaultWindowLevel(reader.getStringValue(TagFromName.Modality, "CR"));
+                int dfltWindow = sp.getDefaultWindowWidth(reader.getStringValue(TagFromName.Modality, "CR"));
+                
+                window = reader.getDoubleValue(TagFromName.WindowWidth, dfltWindow);
+                level = reader.getDoubleValue(TagFromName.WindowCenter, dfltLevel);
+            }
+        }
+        if (window > Integer.MIN_VALUE && level > Integer.MIN_VALUE)
+        {
+            DicomMetadataReader reader = new DicomMetadataReader(this.meta);
+            
+            WindowLevelOp op = new WindowLevelOp(window, level);
+            op.setIntercept(reader.getDoubleValue(TagFromName.RescaleIntercept, 0));
+            op.setSlope(reader.getDoubleValue(TagFromName.RescaleSlope, 1));
+            op.setSigned(reader.getIntValue(TagFromName.PixelRepresentation, 0) == 1);
+            op.setInverted(reader.getStringValue(TagFromName.PhotometricInterpretation, "MONOCHROME2").equals("MONOCHROME1"));
+            op.setUsesPadding(reader.getStringValue(TagFromName.PixelPaddingValue, null) != null);
+            op.setPad(reader.getIntValue(TagFromName.PixelPaddingValue, 0));
+            op.setRenderingHints(this.hints);
+            
+            image = op.filter(image, null);
+        }
+        if (this.conv.getMimeType().equals("image/jpeg"))
+        {
+            return convertToJPEG(image);
+        }
+        return image;
+	}
+    
+    /**
+     * Converts 16bit grayscale images to 8bit images for JPEG conversion.
+     *
+     * @param img The image to convert.
+     * 
+     * @return Returns a new JPEG image.
+     */
+    public BufferedImage convertToJPEG(BufferedImage img)
+    {
+        if (img.getSampleModel().getNumBands() != 1)
+        {
+            return img;
+        }
+        
+        if (DataBuffer.getDataTypeSize(img.getSampleModel().getDataType()) > 8)
+        {
+            BufferedImage image = new BufferedImage(img.getWidth(), img.getHeight(), BufferedImage.TYPE_BYTE_GRAY);
+            image.createGraphics().drawImage(img, 0, 0, img.getWidth(), img.getHeight(), null);
+            img.flush();
+            return image;
+        }
+        return img;
+    }
+	
+	/**
+	 * Creates a rectangle that maps out the points of the clipped region.
+	 * 
+	 * @param srcWidth 
+	 *        The source image's width.
+	 * @param srcHeight 
+	 *        The source image's height.
+	 * @param region 
+	 *        The clipped region.
+	 *        
+	 * @return Returns a rectangle that maps out the points of the clipped region of
+	 *         the source image.
+	 */
+	public Rectangle2D calculateRegionClip(float srcWidth, float srcHeight, double[] region)
+	{		
+		double tlX = 0;
+		double tlY = 0;
+		double brX = srcWidth;
+		double brY = srcHeight;
+		
+		if (region != null)
+		{
+			/*
+			 * region[0] = top-left X position
+			 * region[1] = top-left Y position
+			 * region[2] = bottom-right X position
+			 * region[3] = bottom-right Y position
+			 */
+			tlX = region[0] * srcWidth;
+			tlY = region[1] * srcHeight;
+			brX = region[2] * srcWidth;
+			brY = region[3] * srcHeight;
+		}
+		
+		double width	= brX - tlX;
+		double height	= brY - tlY;
+		
+		return new Rectangle2D.Double(tlX, tlY, width, height);
+	}
+    
+    /**
+     * Gets the source image.
+     *
+     * @return Returns the source image.
+     */
+    private BufferedImage generateSourceImage()
+    {
+        BufferedImage image = null;
+        Iterator<ImageReader> readers = ImageIO.getImageReadersByMIMEType("application/dicom");
+        while (readers.hasNext())
+        {
+            try
+            {
+                ImageReader reader = readers.next();
+                
+                reader.setInput(this.conv.getDicomFile());
+                Iterator<ImageTypeSpecifier> types = reader.getImageTypes(this.conv.getFrameNumber());
+                int subSample = 1;
+                
+                while (types != null && types.hasNext())
+                {
+                    ImageTypeSpecifier its = types.next();
+                    
+                    int width = reader.getWidth(this.conv.getFrameNumber());
+                    int height = reader.getHeight(this.conv.getFrameNumber());
+                    
+                    if ((width * height) > (this.conv.getImageWidth() * this.conv.getImageWidth())
+                            && this.conv.getImageWidth() > 0
+                            && this.conv.getImageHeight() > 0)
+                    {
+                        int wSub = (int)(width / (double)this.conv.getImageWidth());
+                        int hSub = (int)(height / (double)this.conv.getImageHeight());
+                        
+                        subSample = Math.max(wSub, hSub);
+                        
+                        if (subSample > 1) subSample--;
+                    }
+                    width = width / subSample;
+                    height = height / subSample;
+                    
+                    image = its.createBufferedImage(width, height);
+                    break;
+                }
+                ImageReadParam param = reader.getDefaultReadParam();
+                param.setSourceSubsampling(subSample, subSample, 0, 0);
+                param.setDestination(image);
+                
+                image = reader.read(this.conv.getFrameNumber(), param);
+                
+                reader.dispose();
+                
+                this.meta = reader.getImageMetadata(this.conv.getFrameNumber());
+                
+                return image;
+            }
+            catch (Throwable t)
+            {
+                this.logger.error(t.getMessage(), t);
+            }
+        }
+        this.logger.fatal("No reader found");
+        return null;
+    }
+}

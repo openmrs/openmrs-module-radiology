@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<module configVersion="1.3">
+
+	<!-- Basic Module Properties -->
+	<id>radiology</id>
+	<name>Radiology</name>
+	<version>0.1.0.0-dev-SNAPSHOT</version>
+	<package>org.openmrs.module.radiology</package>
+	<author>Cortex</author>
+	<description>
+		Manage radiology orders and reports.
+		http://wiki.openmrs.org/display/docs/Radiology+Module
+	</description>
+
+	<activator>org.openmrs.module.radiology.Activator</activator>
+
+	<require_version>1.9.*</require_version>
+	<require_database_version>1.0.0</require_database_version>
+
+
+	<!-- Extensions -->
+	<extension>
+		<point>org.openmrs.admin.list</point>
+		<class>org.openmrs.module.radiology.extension.html.AdminList</class>
+	</extension>
+
+	<!-- /Extensions -->
+
+	<!--Required Global Properties -->
+	<globalProperty>
+		<property>radiology.mwlMppsPort</property>
+		<defaultValue>11114</defaultValue>
+		<description>Port of the DICOM MWL and MPPS server. OpenMRS MPPSSCU Client</description>
+	</globalProperty>
+	<globalProperty>
+		<property>radiology.storagePort</property>
+		<defaultValue>11115</defaultValue>
+		<description>Port of the DICOM storage server.</description>
+	</globalProperty>
+	<globalProperty>
+		<property>radiology.mwlDirectory</property>
+		<defaultValue>mwl</defaultValue>
+		<description>Directory for mwl entries. Ex: d:/tmp/mwl or /tmp/mwl</description>
+	</globalProperty>
+	<globalProperty>
+		<property>radiology.mppsDirectory</property>
+		<defaultValue>mpps</defaultValue>
+		<description>Directory for mpps entries</description>
+	</globalProperty>
+	<globalProperty>
+		<property>radiology.storageDirectory</property>
+		<defaultValue>storage</defaultValue>
+		<description>Directory for DICOM objects</description>
+	</globalProperty>
+	<globalProperty>
+		<property>radiology.serversAddress</property>
+		<defaultValue>localhost</defaultValue>
+		<description>IP address of the dcm4chee</description>
+	</globalProperty>
+        <globalProperty>
+		<property>radiology.serversPort</property>
+		<defaultValue>8081</defaultValue>
+		<description>Port of the dcm4chee Web</description>
+	</globalProperty>
+	<globalProperty>
+		<property>radiology.applicationEntityTitle</property>
+		<defaultValue>RADIOLOGY_MODULE</defaultValue>
+		<description>Title for this application entity.Calling application entity with respect to OpenMRS</description>
+	</globalProperty>
+        <globalProperty>
+		<property>radiology.calledApplicationEntityTitle</property>
+		<defaultValue>DCM4CHEE</defaultValue>
+		<description>Default application entity for DCM4CHEE. Called Application Entity with respect to OpenMRS </description>
+	</globalProperty>
+        <globalProperty>
+		<property>radiology.oviyamLocalServerName</property>
+		<defaultValue>oviyamlocal</defaultValue>
+		<description>Local Server name needed for deploying Oviyam. Must match the local server name created in the Oviyam UI</description>
+	</globalProperty>
+	<globalProperty>
+		<property>radiology.applicationUID</property>
+		<defaultValue>1.2.826.0.1.3680043.8.2186</defaultValue>
+		<description>
+			You need a application root UID, this will be the prefix
+			of any module
+			DICOM object, the default value serves for debugging
+			purposes</description>
+	</globalProperty>
+	<globalProperty>
+		<property>radiology.studyUIDSlug</property>
+		<defaultValue>1</defaultValue>
+		<description>Example: applicationUID+studyUIDSlug+orderId could be a
+			study UID. The default value works!. Example values: 1.2, 1.1.1 (No start or end dots)
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>radiology.specificCharacterSet</property>
+		<defaultValue>ISO-8859-1</defaultValue>
+		<description>DICOM working character set
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>radiology.storageCommitmentPort</property>
+		<defaultValue>11116</defaultValue>
+		<description>Storage Commitment port that modality uses to confirm a storage of an image
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>radiology.devMode</property>
+		<defaultValue>On</defaultValue>
+		<description>On/Off. On to: 
+		1. Set Provider or System developer (if provider does not have privileges) privileges to the roles created by the module
+		</description>
+	</globalProperty>
+	<!--Required Global Properties -->
+
+	<!-- Internationalization -->
+	<!-- All message codes should start with moduleId.* -->
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
+        <messages>
+            <lang>en</lang>
+            <file>hl7messages.properties</file>
+        </messages>
+	<messages>
+		<lang>es</lang>
+		<file>messages_es.properties</file>
+	</messages>
+	<!-- /Internationalization -->
+
+	<mappingFiles>Radiology.hbm.xml
+</mappingFiles>
+	
+	<!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> -->
+<!--	<servlet>
+		<servlet-name>viewer.jnlp</servlet-name>
+		<servlet-class>org.weasis.servlet.Weasis_Launcher</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>wadoRequest</servlet-name>
+		<servlet-class>com.hxti.xebra.com.wado.WADORequestServlet</servlet-class>
+	</servlet>
+-->	
+</module>

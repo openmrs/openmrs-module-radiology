@@ -1,0 +1,356 @@
+/* ****************************************************************************
+ * Copyright (C) 2007 Hx Technologies, Inc.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * $Id: WADORequestServlet.java,v 1.1.1.1 2007/10/18 15:58:37 kpearce Exp $
+ * Last Revised By   : $Author: kpearce $
+ * Last Checked In   : $Date: 2007/10/18 15:58:37 $
+ * Last Version      : $Revision: 1.1.1.1 $
+ *
+ * Original Author   : Rafael Chargel
+ * Origin            : Hx Technologies Inc.
+ *
+ *****************************************************************************/
+package com.hxti.xebra.com.wado;
+
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.util.Timer;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.log4j.Level;
+import org.apache.log4j.Logger;
+
+import com.hxti.dicom.util.ErrorMessages;
+import com.hxti.dicom.util.GarbageCollector;
+import com.hxti.pixelmed.web.WadoRequest;
+import com.hxti.xebra.com.AbstractServlet;
+
+/**
+ * <p>
+ * This servlet is used to fetch the Requested WADO Document as one of several types of
+ * images or even reports. The WADO standard defines a much larger set of parameters 
+ * than are allowed by this Servelt.  To see the full list of parameters allowed by the
+ * WADO specification, please see <a target="_blank" 
+ * href="ftp://medical.nema.org/medical/dicom/2004/printed/04_18pu.pdf">Digital Imaging
+ * and Communications in Medicine (DICOM) Part 18: Web Access to DICOM Persistent
+ * Objects (WADO)</a>.  The following list describes those optional attributes that
+ * are supported by this servlet.
+ * </p>
+ * 
+ * <table width="70%" cellspacing="0" cellpadding="2" border="1">
+ *  <caption align="right" valign="bottom">Much of this text is copied directly from the 
+ *  DICOM specification listed above.</caption>
+ * 	<tr>
+ * 		<th nowrap="nowrap" width="15%">Parameter Name</th>
+ * 		<th nowrap="nowrap" width="20%">Possible Value(s)</th>
+ * 		<th nowrap="nowrap" width="15%">Required</th>
+ * 		<th nowrap="nowrap" width="50%">What it does</th>
+ *  </tr>
+ *  <tr>
+ *  	<td valign="top">requestType</td>
+ *  	<td valign="top">always "WADO"</td>
+ *  	<td valign="top" align="center">YES</td>
+ *  	<td valign="top">Other possiblities may be allowed in the future.</td>
+ *  </tr>
+ *  <tr>
+ *  	<td valign="top">studyUID</td>
+ *  	<td valign="top">A Study UID</td>
+ *  	<td valign="top" align="center">YES</td>
+ *  	<td valign="top">The Study Instance UID of the DICOM Object requested.</td>
+ *  </tr>
+ *  <tr>
+ *  	<td valign="top">seriesUID</td>
+ *  	<td valign="top">A Series UID</td>
+ *  	<td valign="top" align="center">YES</td>
+ *  	<td valign="top">The Series Instance UID of the DICOM Object requested.</td>
+ *  </tr>
+ *  <tr>
+ *  	<td valign="top">objectUID</td>
+ *  	<td valign="top">An Instance UID</td>
+ *  	<td valign="top" align="center">YES</td>
+ *  	<td valign="top">The SOP Instance UID of the DICOM Object requested.</td>
+ *  </tr>
+ *  <tr>
+ *  	<td valign="top">contentType</td>
+ *  	<td valign="top">A set of MIME Types</td>
+ *  	<td valign="top" align="center">NO</td>
+ *  	<td valign="top">This can be a comma separated list of MIME types.  If nothing
+ *          is entered, the default MIME type is image/jpeg.</td>
+ *  </tr>
+ *  <tr>
+ *  	<td valign="top">rows</td>
+ *  	<td valign="top">An integer</td>
+ *  	<td valign="top" align="center">NO</td>
+ *  	<td valign="top">The value shall be expressed as an integer, representing the image 
+ *          height to be returned. It shall not be present if contentType is application/dicom.</td>
+ *  </tr>
+ *  <tr>
+ *  	<td valign="top">columns</td>
+ *  	<td valign="top">An integer</td>
+ *  	<td valign="top" align="center">NO</td>
+ *  	<td valign="top">The value shall be expressed as an integer, representing the image 
+ *          width to be returned. It shall not be present if contentType is application/dicom.</td>
+ *  </tr>
+ *  <tr>
+ *  	<td valign="top">region</td>
+ *  	<td valign="top">A comma separated list of 4 numbers from 0 to 1</td>
+ *  	<td valign="top" align="center">NO</td>
+ *  	<td valign="top">The value shall be expressed as a list of four positive decimal strings, 
+ *          separated by the ',' character, representing the region of the source image to be 
+ *          returned. These decimal values shall be values in a normalized coordinate system 
+ *          relative to the size of the original image matrix measured in rows and columns, with 
+ *          values ranging from 0.0 to 1.0, and representing in the following order:<br /><br />
+ *          <ul>
+ *          <li>the x position of the top left hand corner of the region to be retrieved, 
+ *            0.0 corresponding to the first column of the image matrix.<br /><br /></li>
+ *          <li>the y position of the top left hand corner of the region to be retrieved, 0.0 
+ *            corresponding to the top row of the image matrix.<br /><br /></li>
+ *          <li>the x position of the bottom right hand extent of the region, 1.0 corresponding 
+ *            to the last column of the image matrix, 0.0 being forbidden.<br /><br /></li>
+ *          <li>the y position of the bottom right hand extent of the region, 1.0 corresponding 
+ *            to the last row of the image matrix, 0.0 being forbidden.</li></ul></td>
+ *  </tr>
+ *  <tr>
+ *  	<td valign="top">windowCenter</td>
+ *  	<td valign="top">An integer.</td>
+ *  	<td valign="top" align="center">NO</td>
+ *  	<td valign="top">Controls the luminosity of the image.  This parameter is required if 
+ *          "windowWidth" is present.</td>
+ *  </tr>
+ *  <tr>
+ *  	<td valign="top">windowWidth</td>
+ *  	<td valign="top">An integer</td>
+ *  	<td valign="top" align="center">NO</td>
+ *  	<td valign="top">Controls the contrast of the image.  This parameter is required if 
+ *          "windowCenter" is present.</td>
+ *  </tr>
+ *  <tr>
+ *  	<td valign="top">frameNumber</td>
+ *  	<td valign="top">An integer</td>
+ *  	<td valign="top" align="center">NO</td>
+ *  	<td valign="top">Specifies that the single frame with that number within a multi-frame 
+ *          image object that shall be returned. It is optional and shall be ignored in the 
+ *          case of all objects other than multi-frame objects. It shall not be present if 
+ *          contentType is application/dicom.</td>
+ *  </tr>
+ *  <tr>
+ *  	<td valign="top">imageQuality</td>
+ *  	<td valign="top">An integer between 1 and 100</td>
+ *  	<td valign="top" align="center">NO</td>
+ *  	<td valign="top">If the requested MIME type is for a lossy compressed image (e.g. 
+ *          image/jpeg), this parameter indicates the required quality of the image to be 
+ *          returned within the range 1 to 100, 100 being the best quality.</td>
+ *  </tr>
+ * </table>
+ * 
+ * <p><b>Note: </b>
+ * If both "rows" and "columns" are specified, then each shall be interpreted as a 
+ * maximum, and a size will be chosen for the image within these constraints, 
+ * maintaining the correct aspect ratio. If the number of rows is absent and the 
+ * number of columns is present, the number of rows shall be chosen in order to 
+ * maintain the correct aspect ratio. If both are absent, the image (or selected 
+ * region) is sent in its original size (or the size of the presentation state 
+ * applied on the image), resulting as one pixel of screen image for each value in
+ * the image data matrix.
+ * </p>
+ * 
+ * <p>This serlvet supports the following content types:</p>
+ * 
+ * <ol>
+ * <li>image/jpeg - image data</li>
+ * <li>image/jp2 - image data</li>
+ * <li>image/tiff - image data</li>
+ * <li>image/bmp - image data</li>
+ * <li>text/plain - non-PDF text data</li>
+ * <li>text/xml - XML, HTML, AND DICOM meta-data</li>
+ * <li>text/html - HTML and DICOM meta-data</li>
+ * <li>application/pdf - PDF files</li>
+ * <li>application/dicom - DICOM files</li>
+ * </ol>
+ * 
+ * <p>
+ * <b>Note:</b> This class also takes advantage of the 
+ * <code>PixelMed</code> libraries which are not included in this project's
+ * folders. The <code>PixelMed</code> library, and it's dependancies, are
+ * available from the <a target="_blank"
+ * href="http://www.pixelmed.com/">PixelMed web site</a>.
+ * </p>
+ * 
+ * @author Rafael Chargel
+ * @version $Revision: 1.1.1.1 $
+ */
+public class WADORequestServlet extends AbstractServlet
+{
+    private static final long serialVersionUID = 7081622175598946331L;
+    
+    private static final Timer TIMER = new Timer(true);
+    
+    private String _wadoRequestHandler;
+    
+    /**
+     * This method is overriden in order to load the Log4J properties file.
+     * 
+     * @throws ServletException 
+     *         thrown if there is an error initializing the servlet.
+     *
+     * @see com.hxti.xebra.com.AbstractServlet#init()
+     */
+    @Override
+    public void init() throws ServletException
+    {
+        super.init();
+        
+        String wadoRequestHandler = getInitParameter("WadoRequestHandler");
+		if (wadoRequestHandler != null) {
+			_wadoRequestHandler = wadoRequestHandler;
+		}
+		
+        // runs every
+        TIMER.schedule(new GarbageCollector(), 300000, 300000);
+    }
+
+    /**
+	 * This method extracts the WADO request and returns the requested Document.
+	 * 
+	 * @param request
+	 *        The <code>HttpServletRequest</code> object that contains the
+	 *        request the client made of the servlet.
+	 * 
+	 * @param response
+	 *        The <code>HttpServletResponse</code> object that contains the
+	 *        response the servlet returns to the client.
+	 * 
+	 * @see com.hxti.xebra.com.AbstractServlet#processRequest(javax.servlet.http.HttpServletRequest,
+	 *      javax.servlet.http.HttpServletResponse)
+	 */
+	protected void processRequest(HttpServletRequest request,
+			HttpServletResponse response) throws ServletException, IOException
+    {
+		String header = request.getHeader("Authorization");
+		String sessid = null;
+		if(header != null){
+			sessid = header.split("\\s")[1];
+		}
+		Logger logger = Logger.getLogger(AbstractServlet.class);
+		
+		logger.debug("Received WADO request with sessid " + sessid);
+		
+        if (!super.authenticate(request, response))
+        {
+        	logger.debug("Authentication failed for sessid " + sessid);
+            return;
+        }
+	
+		// get the WADO Request
+		WadoRequest			wadoReq	= null; // this object validates the request.
+		WADORequestHandler	adaptor	= null;
+		
+		logger.setLevel((Level)Level.DEBUG);
+        
+		try
+		{
+			/* Gets the formated WADO Request as expected by the Pixelmed API
+			 * from the actual request object.
+			 */
+			StringBuffer buf = new StringBuffer();
+			buf.append(request.getRequestURI());
+			buf.append('?');
+			buf.append(request.getQueryString());
+			
+			if (buf.toString() == null) // if the request is empty, throw a bad request error 
+			{ 
+				logger.error(this.getClass().getName() + ".processRequest: " 
+						+ ErrorMessages.INVALID_ARGUMENT_ERROR + "the query request was null");
+				
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, 
+						ErrorMessages.INVALID_ARGUMENT_ERROR);
+				logger.debug("Invalid arguments from sessid " + sessid);
+				return;
+			}
+
+			try
+			{
+				long start_time = System.currentTimeMillis();
+				wadoReq = new WadoRequest(buf.toString());
+				logger.info("Generating Wado Request object took " + 
+						(System.currentTimeMillis() - start_time) + "ms");
+			}
+			catch (Throwable t)
+			{
+				logger.error(this.getClass().getName() + ".processRequest()", t);
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, t.getMessage());
+				return;
+			}
+			
+			if (wadoReq == null)
+			{
+				response.sendError(HttpServletResponse.SC_BAD_REQUEST, 
+						ErrorMessages.INVALID_ARGUMENT_ERROR);
+				return;
+			}
+			
+			adaptor = createWADORequestHandler(wadoReq);
+			
+			if (!adaptor.isValidContentRequest())
+			{
+				logger.error(this.getClass().getName() + 
+						".processRequest(): Content request is invalid");
+				response.sendError(HttpServletResponse.SC_UNSUPPORTED_MEDIA_TYPE, 
+						ErrorMessages.UNSUPPORTED_MIME_TYPE);
+				return;
+			}
+		}
+		catch (Throwable t)
+		{
+			logger.error(this.getClass().getName() + ".processRequest()", t);
+			
+			response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, t.getMessage());
+			return;
+		}
+		
+		try
+		{
+			long start_time = System.currentTimeMillis();
+			adaptor.generateResponse(response);
+			logger.info("Generating Wado response took " + 
+					(System.currentTimeMillis() - start_time) + "ms");
+		}
+		catch (Throwable t)
+		{
+			logger.error(this.getClass().getName() + ".processRequest()", t);
+		}
+		
+		logger.debug("Finished processing WADO request for sessid " + sessid);
+	}
+	
+	private WADORequestHandler createWADORequestHandler(WadoRequest wadoRequest) throws IOException {
+		if (_wadoRequestHandler != null) {
+			try {
+				Class clazz = Class.forName(_wadoRequestHandler,
+					true, Thread.currentThread().getContextClassLoader());
+				Constructor ctor = clazz.getConstructor(new Class[]{WadoRequest.class});
+				return (WADORequestHandler)ctor.newInstance(new Object[]{wadoRequest});
+			}
+			catch (Throwable t) {
+				t.printStackTrace();
+			}
+		}
+		return new WADORequestHandler(wadoRequest);
+	}
+}

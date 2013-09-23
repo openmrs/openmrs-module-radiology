@@ -1,0 +1,1900 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE sqlMap
+    PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN"
+    "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+
+<sqlMap namespace="Instance">
+
+	<!-- A version of the instance object with the full data-set and the thumbnail -->
+	<resultMap id="instanceMapLargeBlob" class="com.hxti.edge.pacs.data.Instance">
+      <result property="uid" 						column="sop_instance_uid" 
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="parentUid" 					column="series_uid"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="aeTitle" 					column="ae_title"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="studyInstanceUid" 			column="study_uid"
+              jdbcType="VARCHAR" 					javaType="string" />   
+                         
+      <result property="imageNumber" 				column="image_number"
+              jdbcType="INTEGER" 					javaType="int" nullValue="0"/>
+              
+      <result property="sopClassUid" 				column="sop_class_uid"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="imageDate" 					column="image_date"
+              jdbcType="DATETIME" 					javaType="java.util.Date"/>
+              
+      <result property="imageFileLocation" 			column="image_file_location"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="matrixRows" 				column="matrix_rows"
+              jdbcType="INTEGER" 					javaType="int" nullValue="-1"/>
+              
+      <result property="matrixColumns" 				column="matrix_columns"
+              jdbcType="INTEGER" 					javaType="int" nullValue="-1"/>
+              
+      <result property="numberOfFrames" 			column="number_of_frames"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="frameTime" 					column="frame_time"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="frameTimeVector" 			column="frame_time_vector"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="actualFrameDuration" 		column="actual_frame_duration"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="imageType" 					column="image_type"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="echoTime" 					column="echo_time"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="echoTrainLength" 			column="echo_train_length"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="repetitionTime" 			column="repetition_time"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="inversionTime" 				column="inversion_time"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="triggerTime" 				column="trigger_time"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="scanningSequence" 			column="scanning_sequence"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="sequenceVariant" 			column="sequence_variant"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="magneticFieldStrength" 		column="magnetic_field_strength"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="photometricInterpretation" 	column="photometric_interpretation"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="bitsAllocated" 				column="bits_allocated"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="bitsStored" 				column="bits_stored"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="highBit" 					column="high_bit"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="pixelAspectRatio" 			column="pixel_aspect_ratio"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="pixelSpacing" 				column="pixel_spacing"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="imagerPixelSpacing" 		column="imager_pixel_spacing"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="pixelRepresentation" 		column="pixel_representation"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="rescaleIntercept" 			column="rescale_intercept"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="rescaleSlope" 				column="rescale_slope"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="gantryDetectorTilt" 		column="gantry_detector_tilt"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="tableHeight" 				column="table_height"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="tableTraverse" 				column="table_traverse"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="wholeBodyTechnique" 		column="whole_body_technique"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="filterType" 				column="filter_type"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="rotationDirection" 			column="rotation_direction"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="countsAccumulated" 			column="counts_accumulated"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="scanLength" 				column="scan_length"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="scanVelocity" 				column="scan_velocity"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="spacingBetweenSlices" 		column="spacing_between_slices"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="sliceThickness" 			column="slice_thickness"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="sliceLocation"				column="slice_location"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="imagePosition" 				column="image_position_patient"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="imageOrientation" 			column="image_orientation_patient"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="smallestImagePixelValue" 	column="smallest_image_pixel_value"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="largestImagePixelValue" 	column="largest_image_pixel_value"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="overlayRows" 				column="overlay_rows"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="overlayColumns" 			column="overlay_columns"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="overlayType" 				column="overlay_type"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="overlayOrigin" 				column="overlay_origin"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="overlayBitsAllocated" 		column="overlay_bits_allocated"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="overlayBitPosition" 		column="overlay_bit_position"
+              jdbcType="INTEGER" 					javaType="java.lang.Integer"/>
+              
+      <result property="overlayData" 				column="overlay_data"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="windowCenter" 				column="window_center"
+              jdbcType="VARCHAR" 					javaType="java.lang.Double"
+              typeHandler="com.hxti.edge.pacs.util.sql.DoubleTypeHandler"/>
+              
+      <result property="windowWidth" 				column="window_width"
+              jdbcType="VARCHAR" 					javaType="java.lang.Double"
+              typeHandler="com.hxti.edge.pacs.util.sql.DoubleTypeHandler"/>
+              
+      <result property="padding" 					column="pixel_padding"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="presentationLabel" 			column="presentation_label"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="presentationDescription" 	column="presentation_description"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="presentationCreationDate"	column="presentation_creation_date"
+              jdbcType="DATETIME" 					javaType="java.util.Date"/>
+              
+      <result property="presentationCreatorName"	column="presentation_creator_name"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="thumbNail" 					column="thumbnail"
+              jdbcType="BLOB"
+              typeHandler="com.hxti.edge.pacs.util.sql.BlobTypeHandler"/>
+              
+      <result property="jpegFileLocation"			column="jpeg_file_location"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="losslessJpegFileLocation"	column="lossless_jpeg_file_location"
+      		  jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="dateAdded" 					column="date_added"
+              jdbcType="DATETIME" 					javaType="java.util.Date"/>
+              
+      <result property="dateUpdated" 				column="date_updated"
+              jdbcType="DATETIME" 					javaType="java.util.Date"/>
+   </resultMap>
+   
+   <!-- A version of the instance object with the full data-set except the tumbnail -->
+   <resultMap id="instanceMapLarge" class="com.hxti.edge.pacs.data.Instance">
+      <result property="uid" 						column="sop_instance_uid" 
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="parentUid"					column="series_uid"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="aeTitle" 					column="ae_title"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="studyInstanceUid" 			column="study_uid"
+              jdbcType="VARCHAR" 					javaType="string" />  
+                          
+      <result property="imageNumber" 				column="image_number"
+              jdbcType="INTEGER" 					javaType="int" nullValue="0"/>
+              
+      <result property="sopClassUid" 				column="sop_class_uid"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="imageDate" 					column="image_date"
+              jdbcType="DATETIME" 					javaType="java.util.Date"/>
+              
+      <result property="imageFileLocation" 			column="image_file_location"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="matrixRows" 				column="matrix_rows"
+              jdbcType="INTEGER" 					javaType="int" nullValue="-1"/>
+              
+      <result property="matrixColumns"				column="matrix_columns"
+              jdbcType="INTEGER" 					javaType="int" nullValue="-1"/>
+              
+      <result property="numberOfFrames"				column="number_of_frames"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="frameTime"					column="frame_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="frameTimeVector"			column="frame_time_vector"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="actualFrameDuration"		column="actual_frame_duration"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="imageType"					column="image_type"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="echoTime"					column="echo_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="echoTrainLength"			column="echo_train_length"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="repetitionTime"				column="repetition_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="inversionTime"				column="inversion_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="triggerTime"				column="trigger_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="scanningSequence"			column="scanning_sequence"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="sequenceVariant"			column="sequence_variant"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="magneticFieldStrength"		column="magnetic_field_strength"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="photometricInterpretation"	column="photometric_interpretation"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="bitsAllocated"				column="bits_allocated"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="bitsStored"					column="bits_stored"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="highBit"					column="high_bit"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="pixelAspectRatio"			column="pixel_aspect_ratio"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="pixelSpacing"				column="pixel_spacing"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="imagerPixelSpacing"			column="imager_pixel_spacing"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="pixelRepresentation"		column="pixel_representation"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="rescaleIntercept"			column="rescale_intercept"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="rescaleSlope"				column="rescale_slope"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="gantryDetectorTilt"			column="gantry_detector_tilt"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="tableHeight"				column="table_height"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="tableTraverse"				column="table_traverse"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="wholeBodyTechnique"			column="whole_body_technique"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="filterType"					column="filter_type"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="rotationDirection"			column="rotation_direction"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="countsAccumulated"			column="counts_accumulated"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="scanLength"					column="scan_length"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="scanVelocity"				column="scan_velocity"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="spacingBetweenSlices"		column="spacing_between_slices"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="sliceThickness"				column="slice_thickness"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="sliceLocation"				column="slice_location"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="imagePosition"				column="image_position_patient"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="imageOrientation"			column="image_orientation_patient"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="smallestImagePixelValue"	column="smallest_image_pixel_value"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="largestImagePixelValue"		column="largest_image_pixel_value"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="overlayRows"				column="overlay_rows"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="overlayColumns"				column="overlay_columns"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="overlayType"				column="overlay_type"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="overlayOrigin"				column="overlay_origin"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="overlayBitsAllocated"		column="overlay_bits_allocated"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="overlayBitPosition"			column="overlay_bit_position"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="overlayData"				column="overlay_data"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="windowCenter"				column="window_center"
+              jdbcType="VARCHAR"					javaType="java.lang.Double"
+              typeHandler="com.hxti.edge.pacs.util.sql.DoubleTypeHandler"/>
+              
+      <result property="windowWidth"				column="window_width"
+              jdbcType="VARCHAR"					javaType="java.lang.Double"
+              typeHandler="com.hxti.edge.pacs.util.sql.DoubleTypeHandler"/>
+              
+      <result property="padding"					column="pixel_padding" 
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="presentationLabel"			column="presentation_label"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="presentationDescription"	column="presentation_description"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="presentationCreationDate"	column="presentation_creation_date"
+              jdbcType="DATETIME"					javaType="java.util.Date"/>
+              
+      <result property="presentationCreatorName"	column="presentation_creator_name"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="jpegFileLocation"			column="jpeg_file_location"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="losslessJpegFileLocation"	column="lossless_jpeg_file_location"
+      		  jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="dateAdded"					column="date_added"
+              jdbcType="DATETIME"					javaType="java.util.Date"/>
+              
+      <result property="dateUpdated"				column="date_updated"
+              jdbcType="DATETIME"					javaType="java.util.Date"/>
+   </resultMap>
+   
+   <!-- A reduced version of the instance data-set but still with the thumbnail -->
+   <resultMap id="instanceMapBlob" class="com.hxti.edge.pacs.data.Instance">
+      <result property="uid"						column="sop_instance_uid" 
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="parentUid"					column="series_uid"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="aeTitle" 					column="ae_title"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="studyInstanceUid"			column="study_uid"
+              jdbcType="VARCHAR"					javaType="string" /> 
+                           
+      <result property="imageNumber"				column="image_number"
+              jdbcType="INTEGER"					javaType="int" nullValue="0"/>
+              
+      <result property="sopClassUid"				column="sop_class_uid"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="imageDate"					column="image_date"
+              jdbcType="DATETIME"					javaType="java.util.Date"/>
+              
+      <result property="imageFileLocation"			column="image_file_location"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="matrixRows"					column="matrix_rows"
+              jdbcType="INTEGER"					javaType="int" nullValue="-1"/>
+              
+      <result property="matrixColumns"				column="matrix_columns"
+              jdbcType="INTEGER"					javaType="int" nullValue="-1"/>
+              
+      <result property="numberOfFrames"				column="number_of_frames"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="frameTime"					column="frame_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="frameTimeVector"			column="frame_time_vector"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="actualFrameDuration"		column="actual_frame_duration"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="imageType"					column="image_type"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="echoTime"					column="echo_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="echoTrainLength"			column="echo_train_length"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="repetitionTime"				column="repetition_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="inversionTime"				column="inversion_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="triggerTime"				column="trigger_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="scanningSequence"			column="scanning_sequence"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="sequenceVariant"			column="sequence_variant"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="magneticFieldStrength"		column="magnetic_field_strength"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="photometricInterpretation"	column="photometric_interpretation"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="pixelAspectRatio"			column="pixel_aspect_ratio"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="pixelSpacing"				column="pixel_spacing"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="imagerPixelSpacing"			column="imager_pixel_spacing"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="pixelRepresentation"		column="pixel_representation"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="rescaleIntercept"			column="rescale_intercept"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="rescaleSlope"				column="rescale_slope"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="gantryDetectorTilt"			column="gantry_detector_tilt"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="tableHeight"				column="table_height"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="tableTraverse"				column="table_traverse"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="wholeBodyTechnique"			column="whole_body_technique"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="filterType"					column="filter_type"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="rotationDirection"			column="rotation_direction"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="countsAccumulated"			column="counts_accumulated"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="scanLength"					column="scan_length"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="scanVelocity"				column="scan_velocity"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="spacingBetweenSlices"		column="spacing_between_slices"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="sliceThickness"				column="slice_thickness"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="sliceLocation"				column="slice_location"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="imagePosition"				column="image_position_patient"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="imageOrientation"			column="image_orientation_patient"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="smallestImagePixelValue"	column="smallest_image_pixel_value"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="largestImagePixelValue"		column="largest_image_pixel_value"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="windowCenter"				column="window_center"
+              jdbcType="VARCHAR"					javaType="java.lang.Double"
+              typeHandler="com.hxti.edge.pacs.util.sql.DoubleTypeHandler"/>
+              
+      <result property="windowWidth"				column="window_width"
+              jdbcType="VARCHAR"					javaType="java.lang.Double"
+              typeHandler="com.hxti.edge.pacs.util.sql.DoubleTypeHandler"/>
+              
+      <result property="padding"					column="pixel_padding"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="thumbNail"					column="thumbnail"
+              jdbcType="BLOB" 
+              typeHandler="com.hxti.edge.pacs.util.sql.BlobTypeHandler"/>
+              
+      <result property="jpegFileLocation"			column="jpeg_file_location"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="losslessJpegFileLocation"	column="lossless_jpeg_file_location"
+      		  jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="dateAdded"					column="date_added"
+              jdbcType="DATETIME"					javaType="java.util.Date"/>
+              
+      <result property="dateUpdated"				column="date_updated"
+              jdbcType="DATETIME"					javaType="java.util.Date"/>
+   </resultMap>
+   
+   <!-- A reduced version of the data-set without the thumbnail -->
+   <resultMap id="instanceMap" class="com.hxti.edge.pacs.data.Instance">
+      <result property="uid"						column="sop_instance_uid" 
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="parentUid"					column="series_uid"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="aeTitle" 					column="ae_title"
+              jdbcType="VARCHAR" 					javaType="string"/>
+              
+      <result property="studyInstanceUid"			column="study_uid"
+              jdbcType="VARCHAR"					javaType="string" />  
+                          
+      <result property="imageNumber"				column="image_number"
+              jdbcType="INTEGER"					javaType="int" nullValue="0"/>
+              
+      <result property="sopClassUid"				column="sop_class_uid"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="imageDate"					column="image_date"
+              jdbcType="DATETIME"					javaType="java.util.Date"/>
+              
+      <result property="imageFileLocation"			column="image_file_location"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="matrixRows"					column="matrix_rows"
+              jdbcType="INTEGER"					javaType="int" nullValue="-1"/>
+              
+      <result property="matrixColumns"				column="matrix_columns"
+              jdbcType="INTEGER"					javaType="int" nullValue="-1"/>
+              
+      <result property="numberOfFrames"				column="number_of_frames"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="frameTime"					column="frame_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="frameTimeVector"			column="frame_time_vector"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="actualFrameDuration"		column="actual_frame_duration"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="imageType"					column="image_type"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="echoTime"					column="echo_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="echoTrainLength"			column="echo_train_length"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="repetitionTime"				column="repetition_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="inversionTime"				column="inversion_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="triggerTime"				column="trigger_time"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="scanningSequence"			column="scanning_sequence"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="sequenceVariant"			column="sequence_variant"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="magneticFieldStrength"		column="magnetic_field_strength"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="photometricInterpretation"	column="photometric_interpretation"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="pixelAspectRatio"			column="pixel_aspect_ratio"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="pixelSpacing"				column="pixel_spacing"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="imagerPixelSpacing"			column="imager_pixel_spacing"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="pixelRepresentation"		column="pixel_representation"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="rescaleIntercept"			column="rescale_intercept"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="rescaleSlope"				column="rescale_slope"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="gantryDetectorTilt"			column="gantry_detector_tilt"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="tableHeight"				column="table_height"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="tableTraverse"				column="table_traverse"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="wholeBodyTechnique"			column="whole_body_technique"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="filterType"					column="filter_type"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="rotationDirection"			column="rotation_direction"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="countsAccumulated"			column="counts_accumulated"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="scanLength"					column="scan_length"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="scanVelocity"				column="scan_velocity"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="spacingBetweenSlices"		column="spacing_between_slices"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="sliceThickness"				column="slice_thickness"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="sliceLocation"				column="slice_location"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="imagePosition"				column="image_position_patient"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="imageOrientation"			column="image_orientation_patient"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="smallestImagePixelValue"	column="smallest_image_pixel_value"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="largestImagePixelValue"		column="largest_image_pixel_value"
+              jdbcType="INTEGER"					javaType="java.lang.Integer"/>
+              
+      <result property="windowCenter"				column="window_center"
+              jdbcType="VARCHAR"					javaType="java.lang.Double"
+              typeHandler="com.hxti.edge.pacs.util.sql.DoubleTypeHandler"/>
+              
+      <result property="windowWidth"				column="window_width"
+              jdbcType="VARCHAR"					javaType="java.lang.Double"
+              typeHandler="com.hxti.edge.pacs.util.sql.DoubleTypeHandler"/>
+              
+      <result property="padding"					column="pixel_padding"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="jpegFileLocation"			column="jpeg_file_location"
+              jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="losslessJpegFileLocation"	column="lossless_jpeg_file_location"
+      		  jdbcType="VARCHAR"					javaType="string"/>
+              
+      <result property="dateAdded"					column="date_added"
+              jdbcType="DATETIME"					javaType="java.util.Date"/>
+              
+      <result property="dateUpdated"				column="date_updated"
+              jdbcType="DATETIME"					javaType="java.util.Date"/>
+   </resultMap>
+   
+   <select id="testInstances" resultClass="int" parameterClass="string">
+      SELECT COUNT(instance_id)
+        FROM radiology_instances
+       WHERE sop_instance_uid = #value#
+   </select>
+   
+   <select id="allInstances" resultClass="Instance" resultMap="instanceMap">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+   </select>
+   
+   <select id="allInstancesWithBLOB" resultClass="Instance" resultMap="instanceMapBlob">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.thumbnail,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+   </select>
+   
+   <select id="allInstancesLargeDataSet" resultClass="Instance" resultMap="instanceMapLarge">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.bits_allocated,
+             i.bits_stored,
+             i.high_bit,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.overlay_rows,
+             i.overlay_columns,
+             i.overlay_type,
+             i.overlay_origin,
+             i.overlay_bits_allocated,
+             i.overlay_bit_position,
+             i.overlay_data,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.presentation_label,
+             i.presentation_description,
+             i.presentation_creation_date,
+             i.presentation_creator_name,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+   </select>
+   
+   <select id="allInstancesLargeDataSetWithBLOB" resultClass="Instance" resultMap="instanceMapLargeBlob">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.bits_allocated,
+             i.bits_stored,
+             i.high_bit,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.overlay_rows,
+             i.overlay_columns,
+             i.overlay_type,
+             i.overlay_origin,
+             i.overlay_bits_allocated,
+             i.overlay_bit_position,
+             i.overlay_data,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.presentation_label,
+             i.presentation_description,
+             i.presentation_creation_date,
+             i.presentation_creator_name,
+             i.thumbnail,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+   </select>
+   
+   <select id="instanceSearchByUID" resultClass="Instance" 
+           resultMap="instanceMap" parameterClass="string">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+         AND i.sop_instance_uid = #value#
+    ORDER BY st.study_uid, se.series_uid, i.image_number
+   </select>
+   
+   <select id="instanceSearchByUIDWithBLOB" resultClass="Instance" 
+           resultMap="instanceMapBlob" parameterClass="string">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.thumbnail,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+         AND i.sop_instance_uid = #value#
+    ORDER BY st.study_uid, se.series_uid, i.image_number
+   </select>
+   
+   <select id="instanceSearchByUIDLargeDataSet" resultClass="Instance" 
+           resultMap="instanceMapLarge" parameterClass="string">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.bits_allocated,
+             i.bits_stored,
+             i.high_bit,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.overlay_rows,
+             i.overlay_columns,
+             i.overlay_type,
+             i.overlay_origin,
+             i.overlay_bits_allocated,
+             i.overlay_bit_position,
+             i.overlay_data,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.presentation_label,
+             i.presentation_description,
+             i.presentation_creation_date,
+             i.presentation_creator_name,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+         AND i.sop_instance_uid = #value#
+    ORDER BY st.study_uid, se.series_uid, i.image_number
+   </select>
+   
+   <select id="instanceSearchByUIDLargeDataSetWithBLOB" resultClass="Instance" 
+           resultMap="instanceMapLargeBlob" parameterClass="string">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.bits_allocated,
+             i.bits_stored,
+             i.high_bit,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.overlay_rows,
+             i.overlay_columns,
+             i.overlay_type,
+             i.overlay_origin,
+             i.overlay_bits_allocated,
+             i.overlay_bit_position,
+             i.overlay_data,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.presentation_label,
+             i.presentation_description,
+             i.presentation_creation_date,
+             i.presentation_creator_name,
+             i.thumbnail,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+         AND i.sop_instance_uid = #value#
+    ORDER BY st.study_uid, se.series_uid, i.image_number
+   </select>
+   
+   <select id="instanceSearchBySeriesUID" resultClass="Instance" 
+           resultMap="instanceMap" parameterClass="string">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+         AND se.series_uid = #value#
+    ORDER BY st.study_uid, se.series_uid, i.image_number
+   </select>
+   
+   <select id="instanceSearchBySeriesUIDWithBLOB" resultClass="Instance" 
+           resultMap="instanceMapBlob" parameterClass="string">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.thumbnail,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+         AND se.series_uid = #value#
+    ORDER BY st.study_uid, se.series_uid, i.image_number
+   </select>
+   
+   <select id="instanceSearchBySeriesUIDLargeDataSet" resultClass="Instance" 
+           resultMap="instanceMapLarge" parameterClass="string">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.bits_allocated,
+             i.bits_stored,
+             i.high_bit,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.overlay_rows,
+             i.overlay_columns,
+             i.overlay_type,
+             i.overlay_origin,
+             i.overlay_bits_allocated,
+             i.overlay_bit_position,
+             i.overlay_data,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.presentation_label,
+             i.presentation_description,
+             i.presentation_creation_date,
+             i.presentation_creator_name,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+         AND se.series_uid = #value#
+    ORDER BY st.study_uid, se.series_uid, i.image_number
+   </select>
+   
+   <select id="instanceSearchBySeriesUIDLargeDataSetWithBLOB" resultClass="Instance" 
+           resultMap="instanceMapLargeBlob" parameterClass="string">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.bits_allocated,
+             i.bits_stored,
+             i.high_bit,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.overlay_rows,
+             i.overlay_columns,
+             i.overlay_type,
+             i.overlay_origin,
+             i.overlay_bits_allocated,
+             i.overlay_bit_position,
+             i.overlay_data,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.presentation_label,
+             i.presentation_description,
+             i.presentation_creation_date,
+             i.presentation_creator_name,
+             i.thumbnail,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_series se, radiology_studies st, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+         AND se.series_uid = #value#
+    ORDER BY st.study_uid, se.series_uid, i.image_number
+   </select>
+   
+   <select id="instanceSearchByTemplate" resultClass="Instance"
+           resultMap="instanceMap" parameterClass="InstanceQuery">
+      SELECT i.sop_instance_uid, 
+             se.series_uid, 
+             st.study_uid,
+             ae.resp_ae_title as ae_title,
+             i.image_number, 
+             i.sop_class_uid,
+             i.image_date,
+             i.image_file_location,
+             i.matrix_rows,
+             i.matrix_columns,
+             i.number_of_frames,
+             i.frame_time,
+             i.frame_time_vector,
+             i.actual_frame_duration,
+             i.image_type,
+             i.echo_time,
+             i.echo_train_length,
+             i.repetition_time,
+             i.inversion_time,
+             i.trigger_time,
+             i.scanning_sequence,
+             i.sequence_variant,
+             i.magnetic_field_strength,
+             i.photometric_interpretation,
+             i.pixel_aspect_ratio,
+             i.pixel_spacing,
+             i.imager_pixel_spacing,
+             i.pixel_representation,
+             i.rescale_intercept,
+             i.rescale_slope,
+             i.gantry_detector_tilt,
+             i.table_height,
+             i.table_traverse,
+             i.whole_body_technique,
+             i.filter_type,
+             i.rotation_direction,
+             i.counts_accumulated,
+             i.scan_length,
+             i.scan_velocity,
+             i.spacing_between_slices,
+             i.slice_thickness,
+             i.slice_location,
+             i.image_position_patient,
+             i.image_orientation_patient,
+             i.smallest_image_pixel_value,
+             i.largest_image_pixel_value,
+             i.window_center,
+             i.window_width,
+             i.pixel_padding,
+             i.jpeg_file_location,
+             i.lossless_jpeg_file_location,
+             i.date_added,
+             i.date_updated
+        FROM radiology_instances i, radiology_studies st, radiology_series se, radiology_ae_peers ae
+       WHERE i.series_id = se.series_id
+         AND se.study_id = st.study_id
+         AND st.ae_id = ae.ae_id
+      <isNotNull property="studyUids" prepend="AND">
+         <iterate property="studyUids" open="(" close=")" conjunction="OR">
+            st.study_uid = #studyUids[]#
+         </iterate>
+      </isNotNull>
+      <isNotNull property="seriesUids" prepend="AND">
+         <iterate property="seriesUids" open="(" close=")" conjunction="OR">
+            se.series_uid = #seriesUids[]#
+         </iterate>
+      </isNotNull>
+      <isNotNull property="uids" prepend="AND">
+         <iterate property="uids" open="(" close=")" conjunction="OR">
+         	i.sop_instance_uid = #uids[]#
+         </iterate>
+      </isNotNull>
+      <isNotNull property="instanceNumbers" prepend="AND">
+        <iterate property="instanceNumbers" open="(" close=")" conjunction="OR">
+         	i.image_number = #instanceNumbers[]#
+	     </iterate>
+	  </isNotNull>
+      <isNotNull property="sopClassUids" prepend="AND">
+         <iterate property="sopClassUids" open="(" close=")" conjunction="OR">
+	        	i.sop_class_uid = #sopClassUids[]#
+	     </iterate>
+	  </isNotNull>
+    ORDER BY st.study_uid, se.series_uid, i.image_number
+   </select>
+   
+   <insert id="insertInstance" parameterClass="Instance">
+      INSERT INTO radiology_instances (
+      					instance_id,
+      					sop_instance_uid,
+      					series_id,
+      					image_number,
+      					sop_class_uid,
+      					image_date,
+      					image_file_location,
+      					matrix_rows,
+      					matrix_columns,
+      					number_of_frames,
+      					frame_time,
+      					frame_time_vector,
+      					actual_frame_duration,
+      					image_type,
+      					echo_time,
+      					echo_train_length,
+      					repetition_time,
+      					inversion_time,
+      					trigger_time,
+      					scanning_sequence,
+      					sequence_variant,
+      					magnetic_field_strength,
+      					photometric_interpretation,
+      					bits_allocated,
+      					bits_stored,
+      					high_bit,
+      					pixel_aspect_ratio,
+      					pixel_spacing,
+      					imager_pixel_spacing,
+      					pixel_representation,
+      					rescale_intercept,
+      					rescale_slope,
+      					gantry_detector_tilt,
+      					table_height,
+      					table_traverse,
+      					whole_body_technique,
+      					filter_type,
+      					rotation_direction,
+      					counts_accumulated,
+      					scan_length,
+      					scan_velocity,
+      					spacing_between_slices,
+      					slice_thickness,
+      					slice_location,
+      					image_position_patient,
+      					image_orientation_patient,
+      					smallest_image_pixel_value,
+      					largest_image_pixel_value,
+      					overlay_rows,
+      					overlay_columns,
+      					overlay_type,
+      					overlay_origin,
+      					overlay_bits_allocated,
+      					overlay_bit_position,
+      					overlay_data,
+      					window_center,
+      					window_width,
+             			pixel_padding,
+      					presentation_label,
+      					presentation_description,
+      					presentation_creation_date,
+      					presentation_creator_name,
+      					thumbnail,
+      					jpeg_file_location,
+      					lossless_jpeg_file_location,
+      					date_added,
+      					date_updated
+					)
+             VALUES (
+             			0,
+             			#uid#,
+             			(SELECT series_id 
+             			   FROM radiology_series
+             			  WHERE series_uid = #parentUid#),
+             			#imageNumber#,
+             			#sopClassUid#,
+             			#imageDate#,
+             			#imageFileLocation#,
+             			#matrixRows#,
+             			#matrixColumns#,
+             			#numberOfFrames#,
+             			#frameTime#,
+             			#frameTimeVector#,
+             			#actualFrameDuration#,
+             			#imageType#,
+             			#echoTime#,
+             			#echoTrainLength#,
+             			#repetitionTime#,
+             			#inversionTime#,
+             			#triggerTime#,
+             			#scanningSequence#,
+             			#sequenceVariant#,
+             			#magneticFieldStrength#,
+             			#photometricInterpretation#,
+             			#bitsAllocated#,
+             			#bitsStored#,
+             			#highBit#,
+             			#pixelAspectRatio#,
+             			#pixelSpacing#,
+             			#imagerPixelSpacing#,
+             			#pixelRepresentation#,
+             			#rescaleIntercept#,
+             			#rescaleSlope#,
+             			#gantryDetectorTilt#,
+             			#tableHeight#,
+             			#tableTraverse#,
+             			#wholeBodyTechnique#,
+             			#filterType#,
+             			#rotationDirection#,
+             			#countsAccumulated#,
+             			#scanLength#,
+             			#scanVelocity#,
+             			#spacingBetweenSlices#,
+             			#sliceThickness#,
+             			#sliceLocation#,
+             			#imagePosition#,
+             			#imageOrientation#,
+             			#smallestImagePixelValue#,
+             			#largestImagePixelValue#,
+             			#overlayRows#,
+             			#overlayColumns#,
+             			#overlayType#,
+             			#overlayOrigin#,
+             			#overlayBitsAllocated#,
+             			#overlayBitPosition#,
+             			#overlayData#,
+             			#windowCenter#,
+             			#windowWidth#,
+             			#padding#,
+             			#presentationLabel#,
+             			#presentationDescription#,
+             			#presentationCreationDate#,
+             			#presentationCreatorName#,
+             			#thumbNail#,
+             			#jpegFileLocation#,
+             			#losslessJpegFileLocation#,
+             			NOW(),
+             			NOW()
+                  	)
+   </insert>
+   
+   <delete id="deleteInstance" parameterClass="string">
+      DELETE FROM radiology_instances WHERE sop_instance_uid = #uid#
+   </delete>
+   
+   <update id="persistInstance" parameterClass="Instance">
+      UPDATE radiology_instances 
+      SET date_updated = NOW()
+      <isNotNull property="uid" prepend=",">sop_instance_uid = #uid#</isNotNull>
+      <isNotNull property="imageNumber" prepend=",">image_number = #imageNumber#</isNotNull>
+      <isNotNull property="sopClassUid" prepend=",">sop_class_uid = #sopClassUid#</isNotNull>
+      <isNotNull property="imageDate" prepend=",">image_date = #imageDate#</isNotNull>
+      <isNotNull property="imageFileLocation" prepend=",">image_file_location = #imageFileLocation#</isNotNull>
+      <isNotNull property="matrixRows" prepend=",">matrix_rows = #matrixRows#</isNotNull>
+      <isNotNull property="matrixColumns" prepend=",">matrix_columns = #matrixColumns#</isNotNull>
+      <isNotNull property="numberOfFrames" prepend=",">number_of_frames = #numberOfFrames#</isNotNull>
+      <isNotNull property="frameTime" prepend=",">frame_time = #frameTime#</isNotNull>
+      <isNotNull property="frameTimeVector" prepend=",">frame_time_vector = #frameTimeVector#</isNotNull>
+      <isNotNull property="actualFrameDuration" prepend=",">actual_frame_duration = #actualFrameDuration#</isNotNull>
+      <isNotNull property="imageType" prepend=",">image_type = #imageType#</isNotNull>
+      <isNotNull property="echoTime" prepend=",">echo_time = #echoTime#</isNotNull>
+      <isNotNull property="echoTrainLength" prepend=",">echo_train_length = #echoTrainLength#</isNotNull>
+      <isNotNull property="repetitionTime" prepend=",">repetition_time = #repetitionTime#</isNotNull>
+      <isNotNull property="inversionTime" prepend=",">inversion_time = #inversionTime#</isNotNull>
+      <isNotNull property="triggerTime" prepend=",">trigger_time = #triggerTime#</isNotNull>
+      <isNotNull property="scanningSequence" prepend=",">scanning_sequence = #scanningSequence#</isNotNull>
+      <isNotNull property="sequenceVariant" prepend=",">sequence_variant = #sequenceVariant#</isNotNull>
+      <isNotNull property="magneticFieldStrength" prepend=",">magnetic_field_strength = #magneticFieldStrength#</isNotNull>
+      <isNotNull property="photometricInterpretation" prepend=",">photometric_interpretation = #photometricInterpretation#</isNotNull>
+      <isNotNull property="bitsAllocated" prepend=",">bits_allocated = #bitsAllocated#</isNotNull>
+      <isNotNull property="bitsStored" prepend=",">bits_stored = #bitsStored#</isNotNull>
+      <isNotNull property="highBit" prepend=",">high_bit = #highBit#</isNotNull>
+      <isNotNull property="pixelAspectRatio" prepend=",">pixel_aspect_ratio = #pixelAspectRatio#</isNotNull>
+      <isNotNull property="pixelSpacing" prepend=",">pixel_spacing = #pixelSpacing#</isNotNull>
+      <isNotNull property="imagerPixelSpacing" prepend=",">imager_pixel_spacing = #imagerPixelSpacing#</isNotNull>
+      <isNotNull property="pixelRepresentation" prepend=",">pixel_representation = #pixelRepresentation#</isNotNull>
+      <isNotNull property="rescaleIntercept" prepend=",">rescale_intercept = #rescaleIntercept#</isNotNull>
+      <isNotNull property="rescaleSlope" prepend=",">rescale_slope = #rescaleSlope#</isNotNull>
+      <isNotNull property="gantryDetectorTilt" prepend=",">gantry_detector_tilt = #gantryDetectorTilt#</isNotNull>
+      <isNotNull property="tableHeight" prepend=",">table_height = #tableHeight#</isNotNull>
+      <isNotNull property="tableTraverse" prepend=",">table_traverse = #tableTraverse#</isNotNull>
+      <isNotNull property="wholeBodyTechnique" prepend=",">whole_body_technique = #wholeBodyTechnique#</isNotNull>
+      <isNotNull property="filterType" prepend=",">filter_type = #filterType#</isNotNull>
+      <isNotNull property="rotationDirection" prepend=",">rotation_direction = #rotationDirection#</isNotNull>
+      <isNotNull property="countsAccumulated" prepend=",">counts_accumulated = #countsAccumulated#</isNotNull>
+      <isNotNull property="scanLength" prepend=",">scan_length = #scanLength#</isNotNull>
+      <isNotNull property="scanVelocity" prepend=",">scan_velocity = #scanVelocity#</isNotNull>
+      <isNotNull property="spacingBetweenSlices" prepend=",">spacing_between_slices = #spacingBetweenSlices#</isNotNull>
+      <isNotNull property="sliceThickness" prepend=",">slice_thickness = #sliceThickness#</isNotNull>
+      <isNotNull property="sliceLocation" prepend=",">slice_location = #sliceLocation#</isNotNull>
+      <isNotNull property="imagePosition" prepend=",">image_position_patient = #imagePosition#</isNotNull>
+      <isNotNull property="imageOrientation" prepend=",">image_orientation_patient = #imageOrientation#</isNotNull>
+      <isNotNull property="smallestImagePixelValue" prepend=",">smallest_image_pixel_value = #smallestImagePixelValue#</isNotNull>
+      <isNotNull property="largestImagePixelValue" prepend=",">largest_image_pixel_value = #largestImagePixelValue#</isNotNull>
+      <isNotNull property="overlayRows" prepend=",">overlay_rows = #overlayRows#</isNotNull>
+      <isNotNull property="overlayColumns" prepend=",">overlay_columns = #overlayColumns#</isNotNull>
+      <isNotNull property="overlayType" prepend=",">overlay_type = #overlayType#</isNotNull>
+      <isNotNull property="overlayOrigin" prepend=",">overlay_origin = #overlayOrigin#</isNotNull>
+      <isNotNull property="overlayBitsAllocated" prepend=",">overlay_bits_allocated = #overlayBitsAllocated#</isNotNull>
+      <isNotNull property="overlayBitPosition" prepend=",">overlay_bit_position = #overlayBitPosition#</isNotNull>
+      <isNotNull property="overlayData" prepend=",">overlay_data = #overlayData#</isNotNull>
+      <isNotNull property="windowCenter" prepend=",">window_center = #windowCenter#</isNotNull>
+      <isNotNull property="windowWidth" prepend=",">window_width = #windowWidth#</isNotNull>
+      <isNotNull property="padding" prepend=",">pixel_padding = #padding#</isNotNull>
+      <isNotNull property="presentationLabel" prepend=",">presentation_label = #presentationLabel#</isNotNull>
+      <isNotNull property="presentationDescription" prepend=",">presentation_description = #presentationDescription#</isNotNull>
+      <isNotNull property="presentationCreationDate" prepend=",">presentation_creation_date = #presentationCreationDate#</isNotNull>
+      <isNotNull property="presentationCreatorName" prepend=",">presentation_creator_name = #presentationCreatorName#</isNotNull>
+      <isNotNull property="thumbNail" prepend=",">thumbnail = #thumbNail#</isNotNull>
+      <isNotNull property="jpegFileLocation" prepend=",">jpeg_file_location = #jpegFileLocation#</isNotNull>
+      <isNotNull property="losslessJpegFileLocation" prepend=",">lossless_jpeg_file_location = #losslessJpegFileLocation#</isNotNull>
+      WHERE sop_instance_uid = #uid#
+   </update>
+
+</sqlMap>

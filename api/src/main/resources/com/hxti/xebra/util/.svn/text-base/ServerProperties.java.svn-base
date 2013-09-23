@@ -1,0 +1,297 @@
+/* ****************************************************************************
+ * Copyright (C) 2007 Hx Technologies, Inc.
+ * 
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * version 2 as published by the Free Software Foundation.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+ *
+ * $Id: ServerProperties.java,v 1.3 2007/10/19 13:17:00 kpearce Exp $
+ * Last Revised By   : $Author: kpearce $
+ * Last Checked In   : $Date: 2007/10/19 13:17:00 $
+ * Last Version      : $Revision: 1.3 $
+ *
+ * Original Author   : Kenny Pearce
+ * Origin            : Hx Technologies Inc.
+ *
+ *****************************************************************************/
+package com.hxti.xebra.util;
+
+import java.awt.GraphicsConfiguration;
+import java.awt.GraphicsDevice;
+import java.awt.GraphicsEnvironment;
+import java.awt.color.ColorSpace;
+import java.awt.image.ColorModel;
+import java.awt.image.DataBuffer;
+import java.awt.image.DirectColorModel;
+import java.io.InputStream;
+import java.security.Security;
+import java.util.Properties;
+
+import com.hxti.dicom.util.GarbageCollector;
+import com.hxti.xebra.auth.UserPermission;
+import com.sun.net.ssl.internal.ssl.Provider;
+
+/**
+ * This class contains settings used by the Xebra server.
+ * 
+ * @author Kenny Pearce
+ * @version $Revision: 1.3 $
+ */
+public final class ServerProperties
+{
+    private static final ServerProperties SP                  = new ServerProperties();
+    private static final int              KB                  = 1024;
+
+    private int                           defaultDataBuffer;
+    private ColorModel                    cm;
+
+    private String                        jpegArchiveLocation;
+    
+    private UserPermission				  permission;
+    
+    private ServerProperties()
+    {
+        Properties props = new Properties();
+        try
+        {
+            InputStream in = this.getClass().getResourceAsStream("xebra-server.properties");
+            props.load(in);
+            in.close();
+
+            this.defaultDataBuffer = Integer.parseInt(props.getProperty("default.data.buffer", "4096"));
+            this.jpegArchiveLocation = props.getProperty("jpeg.archive.location");
+            
+            Class<?> permissionClass = Class.forName(props.getProperty("permission.class"));
+            permission = (UserPermission)permissionClass.newInstance();
+        }
+        catch (Throwable t)
+        {
+            t.printStackTrace();
+            System.exit(-1);
+        }
+        
+        this.getDefaultColorModel();
+    }
+
+    /**
+     * Loads the properties instance.
+     *
+     * @return Returns the singleton instance.
+     */
+    public static ServerProperties getSingletonInstance()
+    {
+        return SP;
+    }
+
+    /**
+     * This method tells the run-time environment to run the Java
+     * garbage collector to make its best efforts to free up more
+     * memory for the Java Virtual Machine.
+     * 
+     * @param displayData
+     *            Determines whether or not to display the GC data.
+     * 
+     * @return Returns the amount of memory in bytes that can be
+     *         allocated after this method has been called.
+     */
+    public static final long runGarbageCollection(boolean displayData)
+    {
+        System.out.println("Running basic garbage collection");
+        if (displayData)
+        {
+            System.out.println("\tOriginal used memory: "
+                    + GarbageCollector.usedMemory());
+        }
+
+        Runtime.getRuntime().gc();
+
+        if (displayData)
+        {
+            System.out.println("\tNew used memory:      "
+                    + GarbageCollector.usedMemory());
+        }
+
+        return GarbageCollector.freeMemory();
+    }
+
+    /**
+     * Gets the default screen device for this graphics environment.
+     * 
+     * @return Returns the default screen device for the current
+     *         graphics environment.
+     */
+    public static final GraphicsDevice getDefaultGraphicsDevice()
+    {
+        return GraphicsEnvironment.getLocalGraphicsEnvironment()
+                .getDefaultScreenDevice();
+    }
+
+    /**
+     * Gets the defaul graphics configuration for the default screen
+     * device.
+     * 
+     * @return Returns the default graphics configuration for the
+     *         default screen device.
+     */
+    public static final GraphicsConfiguration getDefaultGraphicsConfiguration()
+    {
+        return getDefaultGraphicsDevice().getDefaultConfiguration();
+    }
+
+    /**
+     * Gets the JPEG cache root directory.
+     * 
+     * @return Returns the jpeg cache root directory.
+     */
+    public String getJpegRootDirectory()
+    {
+        return this.jpegArchiveLocation;
+    }
+
+    /**
+     * This is the default size of the data buffer.
+     * 
+     * @return Returns the default size of an input stream data buffer
+     *         in bytes.
+     */
+    public final int getDefaultDataBuffer()
+    {
+        return this.defaultDataBuffer;
+    }
+
+    /**
+     * Sets the size of the default data buffer.
+     * 
+     * @param bufferSize
+     *            The data buffer size in bytes.
+     */
+    public final void setDefaultDataBuffer(int bufferSize)
+    {
+        this.defaultDataBuffer = bufferSize;
+
+        if (this.defaultDataBuffer < KB) this.defaultDataBuffer = KB;
+
+        if (this.defaultDataBuffer > (KB * 10))
+            this.defaultDataBuffer = (KB * 10);
+    }
+
+    /**
+     * Sets the size of the default data buffer.
+     * 
+     * @param bufferSize
+     *            The data buffer size in kilobytes (do not include
+     *            non-numeric characters).
+     */
+    public final void setDefaultDataBuffer(String bufferSize)
+    {
+        if (bufferSize == null || bufferSize.length() == 0) return;
+
+        try
+        {
+            setDefaultDataBuffer(Integer.parseInt(bufferSize) * KB);
+        }
+        catch (Throwable t)
+        {
+            // leave as is
+        }
+    }
+
+    /**
+     * Gets the default window width for this modality.
+     * 
+     * @param modality
+     *            The modality.
+     * @return Returns the default window width.
+     */
+    public final int getDefaultWindowWidth(String modality)
+    {
+        if (modality.equalsIgnoreCase("US"))
+        {
+            return 256;
+        }
+        if (modality.equalsIgnoreCase("RF"))
+        {
+            return 588;
+        }
+        return 4096;
+    }
+
+    /**
+     * Gets the default window level for this modality.
+     * 
+     * @param modality
+     *            The modality.
+     * @return Returns the default window level.
+     */
+    public final int getDefaultWindowLevel(String modality)
+    {
+        if (modality.equalsIgnoreCase("US"))
+        {
+            return 128;
+        }
+        if (modality.equalsIgnoreCase("RF"))
+        {
+            return 640;
+        }
+        return 2048;
+    }
+
+    /**
+     * Gets the default color model for this application.
+     * 
+     * @return Returns the default color model for this application.
+     */
+    public final ColorModel getDefaultColorModel()
+    {
+        if (this.cm == null)
+        {
+            if (System.getProperty("java.awt.headless", "false")
+                    .equals("false"))
+            {
+                try
+                {
+                    this.cm = getDefaultGraphicsConfiguration().getColorModel();
+                }
+                catch (Throwable t)
+                {
+                    // try something else
+                }
+            }
+            if (this.cm == null)
+            {
+                this.cm = new DirectColorModel(ColorSpace
+                        .getInstance(ColorSpace.CS_sRGB), 24, // bits
+                        0x00ff0000, // rmask
+                        0x0000ff00, // gmask
+                        0x000000ff, // bmask
+                        0x00000000, // amask
+                        false, // no alpha
+                        DataBuffer.TYPE_INT);
+            }
+        }
+        return this.cm;
+    }
+
+	/**
+	 * @return the permission
+	 */
+	public UserPermission getPermission() {
+		return permission;
+	}
+
+	/**
+	 * @param permission the permission to set
+	 */
+	public void setPermission(UserPermission permission) {
+		this.permission = permission;
+	}
+}

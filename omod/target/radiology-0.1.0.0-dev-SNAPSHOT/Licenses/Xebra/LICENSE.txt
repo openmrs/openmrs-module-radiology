@@ -1,0 +1,19 @@
+This software is copyright (C) Hx Technologies, Inc. 2007
+http://www.hxti.com
+
+It is licensed under the GNU GPL version 2 (see GPL.txt).
+For alternative licensing, please contact:
+
+Hx Technologies
+340 North Twelfth Street
+Suite 321
+Philadelphia, PA 19107
+USA
+
+(+1) 215-0923-4984
+
+sales@hxti.com
+
+The files lib/jaxb-xjc.jar and lib/jaxb-impl.jar are copyright (c) Sun Microsystems 2005, and 
+licensed under the Sun Common Development and Distribution License (CDDL). See CDDL.html. The 
+source code of these libraries is available from http://jaxb.dev.java.net/.
