@@ -96,7 +96,7 @@ public class Utils {
         }
         
         public static String oviyamLocalServerName(){
-            return as.getGlobalProperty("oviyamLocalServerName");
+            return as.getGlobalProperty("radiology.oviyamLocalServerName");
         }
                 
 

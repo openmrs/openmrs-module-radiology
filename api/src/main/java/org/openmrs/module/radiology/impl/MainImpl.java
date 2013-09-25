@@ -77,7 +77,7 @@ public class MainImpl extends BaseOpenmrsService implements Main
 			File file=new File(Utils.mwlDir(),s.getId()+".xml");
 			String path="";
 			path=file.getCanonicalPath();
-			//DicomUtils.write(order,s,file);
+			DicomUtils.write(order,s,file);
 			log.debug("Order and study saved in "+path);
 			return s;
 		}

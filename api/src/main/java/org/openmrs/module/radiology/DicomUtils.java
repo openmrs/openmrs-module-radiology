@@ -365,12 +365,32 @@ public class DicomUtils {
              
              String msh="MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"+Utils.time(new Date())+"||ORM^O01||P|2.3||||||encoding|\n";
              String pid="PID|||"+order.getPatient().getPatientIdentifier().getIdentifier()+"||"+order.getPatient().getPersonName().getFullName().replace(' ', '^')+"||"+Utils.plain(order.getPatient().getBirthdate())+"|"+order.getPatient().getGender()+"||||||||\n" ;
-             String orc="ORC|NW|"+study.getId()+"|||||^^^"+Utils.plain(order.getStartDate())+"^^R||||||\n" ;
-             String obr="OBR||||^^^^"+order.getInstructions().replace(' ', '^')+"|||||||||||||||"+study.getId()+"|"+study.getId()+"||||"+Modality.values()[study.getModality()].toString()+"||||||||||||||||||||"+order.getInstructions().replace(' ', '^')+"|\n" ;
+             String orc="ORC|NW|"+study.getId()+"|||||^^^"+Utils.plain(order.getStartDate())+"^^"+getTruncatedPriority(study.getPriority())+"||||||\n" ;
+             String obr="OBR||||^^^^"+order.getInstructions()+"|||||||||||||||"+study.getId()+"|"+study.getId()+"||||"+Modality.values()[study.getModality()].toString()+"||||||||||||||||||||"+order.getInstructions()+"|\n" ;
              String zds="ZDS|"+study.getUid()+"|";    
              String hl7blob=msh+pid+orc+obr+zds;
              System.out.println("Created Request \n"+hl7blob);
              return hl7blob;
+        }
+        
+        public static String getTruncatedPriority(Integer priority)
+        {
+            String result = new String();
+            switch (priority) {
+			case 0: result = "S";
+				break;
+			case 1: result = "A";
+				break;
+			case 2: result = "R";
+				break;
+			case 3: result = "T";
+				break;
+			case 4: result = "R";
+				break;
+			default: result= "R"; 
+				break;
+			}
+            return result;
         }
         
         public static void sendHL7Worklist(String hl7blob)
