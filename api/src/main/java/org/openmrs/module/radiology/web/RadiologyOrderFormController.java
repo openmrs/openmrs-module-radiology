@@ -74,9 +74,9 @@ public class RadiologyOrderFormController {
 			@ModelAttribute("study") Study study, BindingResult sErrors,
 			@ModelAttribute("order") Order order, BindingResult oErrors)
 			throws Exception {
-
+                
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("module/radiology/radiologyOrderForm");
+		mav.setViewName("module/radiology/radiologyOrderForm");             
 		if(study.setup(order, studyId)){
 
 		new OrderValidator().validate(order, oErrors);
@@ -120,7 +120,7 @@ public class RadiologyOrderFormController {
 	private void populate(ModelAndView mav, Order order, Study study) {
 		if (Context.isAuthenticated()) {
 			mav.addObject("order", order);
-			mav.addObject("study", study);
+			mav.addObject("study", study);                        
 			String[] priorities = Utils.forSelect(Priorities.class);
 			mav.addObject("priorities", priorities);
 			mav.addObject("n_priorities", priorities.length);

@@ -27,7 +27,7 @@ import org.openmrs.api.context.UserContext;
 public class Study {
 
 	public enum Modality {
-		CR, MR, CT, NM, US;
+		CR, MR, CT, NM, US,XA;
 	}
 
 	// Performed Procedure Steps Statuses - Part 3 Annex C.4.14

@@ -311,7 +311,7 @@ public class DicomUtils {
 		} catch (NumberFormatException e) {
 			log.error("Number can not be parsed");
 		} catch (Exception e) {
-			log.error("Xebra persist error: " + e.getMessage());
+			log.error("Error : " + e.getMessage());
 		}
 //                catch (Exception e) {
 //			log.error("Xebra persist error: " + e.getMessage());
