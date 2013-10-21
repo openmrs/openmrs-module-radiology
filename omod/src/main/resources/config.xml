@@ -119,7 +119,7 @@
 	<!-- All message codes should start with moduleId.* -->
 	<messages>
 		<lang>en</lang>
-		<file>messages.properties</file>
+		<file>radiologymessages.properties</file>
 	</messages>
         <messages>
             <lang>en</lang>
