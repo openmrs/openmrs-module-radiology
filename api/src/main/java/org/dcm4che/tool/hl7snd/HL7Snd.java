@@ -62,6 +62,9 @@ import org.dcm4che.util.SafeClose;
 import org.dcm4che.util.StreamUtils;
 import org.dcm4che.util.StringUtils;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Gunter Zeilinger <gunterze@gmail.com>
  *
@@ -70,6 +73,8 @@ public class HL7Snd extends Device {
 
     private static ResourceBundle rb =
             ResourceBundle.getBundle("hl7messages");
+    
+    private static final Logger log = LoggerFactory.getLogger(HL7Snd.class);
 
     private final Connection conn = new Connection();
     private final Connection remote = new Connection();
@@ -148,17 +153,18 @@ public class HL7Snd extends Device {
                 main.open();
              //   main.sendFiles(cl.getArgList());                
                 main.sendHL7Message(cl.getArgList()); 
+                log.info("Order sent successfully."); 
             } finally {
                 main.close();
             }
         } catch (ParseException e) {
-            System.err.println("hl7snd: " + e.getMessage());
-            System.err.println(rb.getString("try"));
-            System.exit(2);
+            log.error("hl7snd: " + e.getMessage());
+            log.error(rb.getString("try"));
+         //   System.exit(2);
         } catch (Exception e) {
-            System.err.println("hl7snd: " + e.getMessage());
-            e.printStackTrace();
-            System.exit(2);
+            log.error("hl7snd: " + e.getMessage());
+            log.error("Stack Trace :",e);
+         //   System.exit(2);
         }
     }
 
