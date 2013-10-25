@@ -167,6 +167,8 @@ public class Study {
 	private int performedStatus = -1;
 	private int priority = -1;
 	private int modality;
+        
+        private int mwlStatus=-1;
 
 	private User scheduler;
 
@@ -268,6 +270,10 @@ public class Study {
 	public String getUid() {
 		return uid;
 	}
+        
+        public int getMwlStatus(){
+            return mwlStatus;
+        }
 
 	public boolean isCompleted() {
 		return performedStatus == PerformedStatuses.COMPLETED;
@@ -359,6 +365,14 @@ public class Study {
 		return getScheduler() == null ? "" : getScheduler().getPersonName()
 				.getFullName();
 	}
+        
+        public String mwlStatus(){
+            return String.valueOf(mwlStatus);
+        }
+        
+         public void setMwlStatus(int status){
+             this.mwlStatus=status;
+        }
 
 	public void setId(int id) {
 		this.id = id;

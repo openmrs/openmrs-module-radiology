@@ -14,7 +14,7 @@
 			drop table if exists radiology_study;
 		</sql>
 	</changeSet>
-	<changeSet author="juanp" id="radiology-2">
+	<changeSet author="juanp" id="radiology-4">
 		<preConditions onFail="WARN" onError="WARN">
 				<not>
 					<tableExists tableName="radiology_study" />
@@ -38,6 +38,7 @@
 				defaultValue="-1"></column>
 			<column name="reading_physician_user_id" type="int"
 				defaultValue="-1"></column>
+                        <column name="mwl_status" type="int" defaultValue="-1"></column>        
 		</createTable>
 	</changeSet>
 	<changeSet author="juanp" id="radiology-3">

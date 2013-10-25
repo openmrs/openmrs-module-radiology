@@ -35,12 +35,12 @@
 		</div>
 	</form>
 </c:if>
-<form method="post" class="box">   
-    <%--  <spring:bind path="study.id">--%>
+<form method="post" class="box">       
 	<input type="hidden" name="study_id" value="${study.id }" /> 
-        <%--<div><p>Value : ${status.expression }</p></div>
-        <div><p>Value : ${status.value }</p></div>
-        </spring:bind>--%>
+            <%--  <spring:bind path="study.id">--%>
+                <%--<div><p>Value : ${status.expression }</p></div>
+                <div><p>Value : ${status.value }</p></div>
+            </spring:bind>--%>
 	<table>
 		<tr>
 			<td valign="top"><spring:message code="Order.patient" /></td>
@@ -370,15 +370,11 @@
 		value="<spring:message code="Order.save"/>">
 </form>
 
-<%--
+
 <c:if test="${order.discontinued}">
 	<br />
 	<form method="post" class="box">
-                <spring:bind path="study.id">
-                       <input type="hidden" name="study_id" value="${status.value}" />  
-                       <div><p>Value : ${status.expression }</p></div>
-                       <div><p>Value : ${status.value}</p></div>
-                </spring:bind>
+            <input type="hidden" name="study_id" value="${study.id }" />                 
 		<input type="submit"
 			value='<spring:message code="Order.undiscontinueOrder"/>'
 			name="undiscontinueOrder" />
@@ -388,11 +384,7 @@
 <c:if test="${not order.discontinued and not empty order.orderId}">
 	<br />
 	<form method="post" class="box">
-                <spring:bind path="study.id">
-                       <input type="hidden" name="study_id" value="${status.value}" />
-                       <div><p>Value : ${status.expression }</p></div>
-                       <div><p>Value : ${status.value}</p></div>
-                </spring:bind>
+            <input type="hidden" name="study_id" value="${study.id }" />             
 		<table>
 			<tr id="dateDiscontinued">
 				<td valign="top"><spring:message
@@ -425,13 +417,10 @@
 <c:if test="${not order.voided and not empty order.orderId}">
 	<br />
 	<form method="post" class="box">
-                            <spring:bind path="study.id">
-                       <input type="hidden" name="study_id" value="${status.value}" /> 
-                       <div><p>Value : ${status.expression }</p></div>
-                       <div><p>Value : ${status.value}</p></div>
-                </spring:bind>
+            <input type="hidden" name="study_id" value="${study.id }" />       
 		<spring:message code="general.voidReason" />
-		<input type="text" value="" size="40" name="voidReason" />
+                <spring:bind path="order.voidReason">
+		<input type="text" value="${status.value}" size="40" name="${status.expression }" />
 		<spring:hasBindErrors name="order">
 			<c:forEach items="${errors.allErrors}" var="error">
 				<c:if test="${error.code == 'voidReason'}">
@@ -441,10 +430,11 @@
 				</c:if>
 			</c:forEach>
 		</spring:hasBindErrors>
+                </spring:bind>
 		<input type="submit" name="voidOrder"
 			value='<spring:message code="Order.voidOrder"/>' />
 	</form>
 </c:if>
-        --%>
+        
 <div id="moreInfoPopup"></div>
 <%@ include file="/WEB-INF/template/footer.jsp"%>

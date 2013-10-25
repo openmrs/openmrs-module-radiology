@@ -33,6 +33,7 @@
 					<spring:message code="radiology.status" />
 				</th>
 				<th><spring:message code="general.instructions" /></th>
+                                <th><spring:message code="radiology.mwlStatus" /></th>
 			</tr>
 		</thead>
 		<tbody id="matchedOrdersBody">
@@ -62,6 +63,7 @@
 						onclick="$j('<p>'+this.innerHTML+'</p>').dialog({autoOpen:true,modal:true});"
 						title="<spring:message code="general.view"/>"
 						>${order.instructions} </a></td>
+                                        <td>${mwlStatuses[status.count-1]}</td>        
 				</tr>
 			</c:forEach>
 		</tbody>

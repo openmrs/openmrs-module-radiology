@@ -288,34 +288,14 @@ public class DicomUtils {
 					.getValueAsString(scs, 0);
 			s.setPerformedStatus(PerformedStatuses.value(pStatus));
 			service().saveStudy(s, Calendar.getInstance().getTime());
-                        System.out.println("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :"+ studyUID +" to Status : "+PerformedStatuses.value(pStatus));
-			// Save Series
-
-			int[] seriesUIDPath = new int[] { Tag.PerformedSeriesSequence,
-					Tag.SeriesInstanceUID };
-			String seriesuid = o.get(seriesUIDPath[0]).getDicomObject()
-					.get(seriesUIDPath[1]).getValueAsString(scs, 0);
-	//		new XebraInterface().saveSeries(seriesuid, s.getUid());
-
-			// TODO Save multiple Instances
-
-			String sopInstanceUID = o.get(Tag.PerformedSeriesSequence)
-					.getDicomObject().get(Tag.ReferencedImageSequence)
-					.getDicomObject().get(Tag.ReferencedSOPInstanceUID)
-					.getValueAsString(scs, 0);
-	//		new XebraInterface().saveInstance(
-	//				sopInstanceUID,
-	//				seriesuid,
-	//				StringUtils.path(Utils.storageDir(), sopInstanceUID
-	//						+ ".dcm"));
+                        log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :"+ studyUID +" to Status : "+PerformedStatuses.value(pStatus));	
+	
 		} catch (NumberFormatException e) {
 			log.error("Number can not be parsed");
 		} catch (Exception e) {
 			log.error("Error : " + e.getMessage());
 		}
-//                catch (Exception e) {
-//			log.error("Xebra persist error: " + e.getMessage());
-//		}
+
 	}
 
 	/**
@@ -323,17 +303,15 @@ public class DicomUtils {
 	 *            the DICOM file loaded as dcm4che DicomObject
 	 * @param imagePath
 	 *            where the image is, example: "c:\images\image_1.dcm"
+         * Below code used by the old Module. Doesn't use this function any more.
 	 */
 	public static void writeStorage(DicomObject o, String imagePath) {
 		try {
 			Date now = Calendar.getInstance().getTime();
 			String aeTitle = Utils.aeTitle();
-			String studyUid = o.getString(Tag.StudyInstanceUID);
-		//	new XebraInterface().saveStudy(studyUid, aeTitle, now);
-			String seriesUid = o.getString(Tag.SeriesInstanceUID);
-		//	new XebraInterface().saveSeries(seriesUid, studyUid);
-			String instUid = o.getString(Tag.SOPInstanceUID);
-		//	new XebraInterface().saveInstance(instUid, seriesUid, imagePath);
+			String studyUid = o.getString(Tag.StudyInstanceUID);	
+			String seriesUid = o.getString(Tag.SeriesInstanceUID);		
+			String instUid = o.getString(Tag.SOPInstanceUID);		
 			Study s = Study.byUID(studyUid);
 			if (s == null) {
 				s = new Study();
@@ -348,24 +326,22 @@ public class DicomUtils {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
                 }        
-//		 catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 	}
 
+        // Create HL7 ORU message to create worklist request.
         public static String createHL7Message(Study study,Order order)
         {
-            
+            // Example HL7Message to create order
            //  String hl7blob= "MSH|^~\\&|OpenMRSRadiologyModule|MyHospital|||201308271545||ORM^O01||P|2.3||||||encoding|\n" +
 //                            "PID|||100-07||Patient^D^Johnny||19651007|M||||||||\n" +
 //                            "ORC|NW|2|||||^^^201308241700^^R||||||\n" +
 //                            "OBR||||^^^^knee|||||||||||||||2|2||||CT||||||||||||||||||||^knee^scan|\n" +
 //                            "ZDS|1.2.826.0.1.3680043.8.2186.1.2|";
              
+             String orcfield1="NW";
              String msh="MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"+Utils.time(new Date())+"||ORM^O01||P|2.3||||||encoding|\n";
              String pid="PID|||"+order.getPatient().getPatientIdentifier().getIdentifier()+"||"+order.getPatient().getPersonName().getFullName().replace(' ', '^')+"||"+Utils.plain(order.getPatient().getBirthdate())+"|"+order.getPatient().getGender()+"||||||||\n" ;
-             String orc="ORC|NW|"+study.getId()+"|||||^^^"+Utils.plain(order.getStartDate())+"^^"+getTruncatedPriority(study.getPriority())+"||||||\n" ;
+             String orc="ORC|"+orcfield1+"|"+study.getId()+"|||||^^^"+Utils.plain(order.getStartDate())+"^^"+getTruncatedPriority(study.getPriority())+"||||||\n" ;
              String obr="OBR||||^^^^"+order.getInstructions()+"|||||||||||||||"+study.getId()+"|"+study.getId()+"||||"+Modality.values()[study.getModality()].toString()+"||||||||||||||||||||"+order.getInstructions()+"|\n" ;
              String zds="ZDS|"+study.getUid()+"|";    
              String hl7blob=msh+pid+orc+obr+zds;
@@ -373,6 +349,7 @@ public class DicomUtils {
              return hl7blob;
         }
         
+        // Create Priority for the order to be filled in the HL7 Message
         public static String getTruncatedPriority(Integer priority)
         {
             String result = new String();
@@ -393,11 +370,12 @@ public class DicomUtils {
             return result;
         }
         
+        //Send HL7 ORU message to dcm4chee.
         public static void sendHL7Worklist(String hl7blob)
         {
             String input[] = {"-c","localhost:2575",hl7blob};
             //String input[]={"--help"};
-            HL7Snd.main(input);
+            int result=HL7Snd.main(input);
         }
         
 	static Main service() {

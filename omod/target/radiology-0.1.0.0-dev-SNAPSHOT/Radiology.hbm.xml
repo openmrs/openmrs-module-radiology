@@ -13,6 +13,7 @@
 		<property name="performedStatus" column="performed_status"></property>
 		<property name="priority" column="priority"></property>
 		<property name="modality" column="modality"></property>
+                <property name="mwlStatus" column="mwl_status"></property>
 		<many-to-one name="scheduler" class="org.openmrs.User" not-null="false" not-found="ignore">
 			<column name="scheduler_user_id"></column>
 		</many-to-one>

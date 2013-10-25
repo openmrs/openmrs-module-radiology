@@ -351,7 +351,7 @@ th {
 </spring:hasBindErrors>
 
 <c:if test="${obs.voided}">
-	<form action="" method="post">
+	<form action="" method="post">                
 		<div class="retiredMessage">
 			<div>
 				<spring:message code="general.voidedBy" />
@@ -653,7 +653,18 @@ th {
 		<input type="hidden" name="phrase"
 			value="<request:parameter name="phrase" />" /> <br /> <br />
 
-		<%-- You can't edit a voided obs --%>
+                <c:if test="${obs.obsId != null}">
+                                <b><openmrs:message code="Obs.edit.reason"/></b> <input type="text" value="${editReason}" size="40" name="editReason"/>
+                                <spring:hasBindErrors name="obs">
+                                        <c:forEach items="${errors.allErrors}" var="error">
+                                                <c:if test="${error.code == 'editReason'}"><span class="error"><openmrs:message code="${error.defaultMessage}" text="${error.defaultMessage}"/></span></c:if>
+                                        </c:forEach>
+                                </spring:hasBindErrors>
+                        <br/><br/>
+                </c:if>
+
+                
+                <%-- You can't edit a voided obs --%>
 		<input type="submit" name="saveObs"
 			value='<spring:message code="Obs.save"/>'
 			<c:if test="${obs.voided}">disabled</c:if>> &nbsp; <input
@@ -671,8 +682,7 @@ th {
 		<fieldset>
 			<h4>
 				<spring:message code="Obs.voidObs" />
-			</h4>
-
+			</h4>                        
 			<b><spring:message code="general.reason" /></b> <input type="text"
 				value="" size="40" name="voidReason" />
 			<spring:hasBindErrors name="obs">

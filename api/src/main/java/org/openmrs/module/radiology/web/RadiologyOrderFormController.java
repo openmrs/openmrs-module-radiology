@@ -76,7 +76,7 @@ public class RadiologyOrderFormController {
 			throws Exception {
                 
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("module/radiology/radiologyOrderForm");             
+		mav.setViewName("module/radiology/radiologyOrderForm");
 		if(study.setup(order, studyId)){
 
 		new OrderValidator().validate(order, oErrors);
@@ -172,24 +172,28 @@ public class RadiologyOrderFormController {
 				request.getSession().setAttribute(
 						WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
 			} else if (request.getParameter("voidOrder") != null) {
-				orderService.voidOrder(order, order.getVoidReason());
+                                Order o=orderService.getOrder(order.getOrderId());
+				orderService.voidOrder(o, order.getVoidReason());
 				request.getSession().setAttribute(
 						WebConstants.OPENMRS_MSG_ATTR,
 						"Order.voidedSuccessfully");
 			} else if (request.getParameter("unvoidOrder") != null) {
-				orderService.unvoidOrder(order);
+                                Order o=orderService.getOrder(order.getOrderId());
+				orderService.unvoidOrder(o);
 				request.getSession().setAttribute(
 						WebConstants.OPENMRS_MSG_ATTR,
 						"Order.unvoidedSuccessfully");
 			} else if (request.getParameter("discontinueOrder") != null) {
-				orderService.discontinueOrder(order,
+                                Order o=orderService.getOrder(order.getOrderId());
+				orderService.discontinueOrder(o,
 						order.getDiscontinuedReason(),
 						order.getDiscontinuedDate());
 				request.getSession().setAttribute(
 						WebConstants.OPENMRS_MSG_ATTR,
 						"Order.discontinuedSuccessfully");
 			} else if (request.getParameter("undiscontinueOrder") != null) {
-				orderService.undiscontinueOrder(order);
+                                Order o=orderService.getOrder(order.getOrderId());
+				orderService.undiscontinueOrder(o);
 				request.getSession().setAttribute(
 						WebConstants.OPENMRS_MSG_ATTR,
 						"Order.undiscontinuedSuccessfully");

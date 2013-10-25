@@ -126,21 +126,30 @@ public class ObsFormController {
 			@RequestParam(value = "obsId", required = false) Integer obsId,
 			@ModelAttribute("obs") Obs obs, BindingResult errors) {
 			HttpSession httpSession = request.getSession();
+                                                
 			new ObsValidator().validate(obs, errors);
-			if (errors.hasErrors()) {
-				ModelAndView mav = new ModelAndView(
-						"module/radiology/obsForm");
-				populate(mav, orderId, obsId);
-				return mav;
-			}
-			if (Context.isAuthenticated() && !errors.hasErrors()) {
+//			if (errors.hasErrors()) {
+//                                System.out.println("#### Has errors #####");
+//				ModelAndView mav = new ModelAndView(
+//						"module/radiology/obsForm");
+//				populate(mav, orderId, obsId);
+//				return mav;
+//			}
+//			if (Context.isAuthenticated() && !errors.hasErrors()) {
+                        if (Context.isAuthenticated()) {    
 				ObsService os = Context.getObsService();
 				try {
 					// if the user is just editing the observation
-					if (request.getParameter("saveObs") != null) {
-						// TODO get reason from form when it is being saved along with the observation
-						String reason=""; 
-						
+                                                if (request.getParameter("saveObs") != null) {
+                                                        String reason = request.getParameter("editReason");
+                                                if (obs.getObsId() != null && (reason == null || reason.length() == 0)) {
+                                                        errors.reject("editReason", "Obs.edit.reason.empty");
+                                                        ModelAndView mav = new ModelAndView("module/radiology/obsForm");
+                                                        populate(mav, orderId, obsId);
+                                                        return mav;
+                                                }
+                                                
+                                                // TODO get reason from form when it is being saved along with the observation												
 						if (obs.getConcept().isComplex()) {
 							if (request instanceof MultipartHttpServletRequest) {
 								MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -176,8 +185,9 @@ public class ObsFormController {
 
 					// if the user is voiding out the observation
 					else if (request.getParameter("voidObs") != null) {
-						String voidReason = request.getParameter("voidReason");
-						if (obs.getObsId() != null
+						String voidReason = request.getParameter("voidReason");                                                                                   
+                                                Obs obs2=os.getObs(Integer.valueOf(obsId));
+						if (obs2.getObsId() != null
 								&& (voidReason == null || voidReason.length() == 0)) {
 							errors.reject("voidReason", "Obs.void.reason.empty");
 							ModelAndView mav = new ModelAndView(
@@ -185,15 +195,16 @@ public class ObsFormController {
 							populate(mav, orderId, obsId);
 							return mav;
 						}
-
-						os.voidObs(obs, voidReason);
+                                                                                         
+						os.voidObs(obs2, voidReason);
 						httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
 								"Obs.voidedSuccessfully");
 					}
 
 					// if this obs is already voided and needs to be unvoided
 					else if (request.getParameter("unvoidObs") != null) {
-						os.unvoidObs(obs);
+                                                Obs obs2=os.getObs(Integer.valueOf(obsId));
+						os.unvoidObs(obs2);
 						httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
 								"Obs.unvoidedSuccessfully");
 					}

@@ -72,6 +72,7 @@ public class PortletsController {
 		List<String> performings=new Vector<String>();
 		List<String> readings=new Vector<String>();
 		List<String> modalities=new Vector<String>();
+                List<String> mwlStatuses=new Vector<String>();
 		for (Study study : studies) {
 			if (study!=null) {
 				statuses.add(study.getStatus(Context.getAuthenticatedUser()));
@@ -80,6 +81,7 @@ public class PortletsController {
 				performings.add(study.performing());
 				readings.add(study.reading());
 				modalities.add(Modality.values()[study.getModality()].toString());
+                                mwlStatuses.add(study.mwlStatus());
 			}
 		}
 		
@@ -100,6 +102,7 @@ public class PortletsController {
 		if(Context.getAuthenticatedUser().hasRole(Roles.ReadingPhysician, true)){
 			mav.addObject("obsId", "&obsId");
 		}
+                mav.addObject("mwlStatuses", mwlStatuses);
 
 		log.debug("\n***\n" + str + "\n///");
 		return mav;

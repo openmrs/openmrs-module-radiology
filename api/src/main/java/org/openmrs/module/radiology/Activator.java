@@ -57,45 +57,10 @@ public class Activator extends BaseModuleActivator {
 		} catch (Exception e) {
 			// Just prints in console
 		}
-		typeAndRoles();
-		
-		createScp();
-		createAE();
+		typeAndRoles();		
+//		createScp();
+//		createAE();
 	}
-
-	public static boolean createAE()
-   {
-	   int storagePort=Integer.parseInt(Utils.storagePort());
-		try
-      {
-//	      new XebraInterface().saveAE(Utils.serversAddress(),storagePort,Utils.aeTitle());
-	      log.info("AE peer created succesfully!");
-      }
-      catch(Exception e)
-      {
-	      log.error("Can not save AE Peer");
-	      return false;
-      }
-		return true;
-   }
-
-	public static boolean createScp()
-   {
-	   String storageDir=Utils.storageDir();
-	   String tmpDirectory=StringUtils.path(storageDir,"tmp");
-		int storagePort=Integer.parseInt(Utils.storagePort());
-		try
-      {
-	//      new XebraInterface().saveSCP(Utils.aeTitle(),storageDir,storagePort,tmpDirectory);
-	      log.info("SCP created succesfully!");
-      }
-      catch(Exception e)
-      {
-      	log.error("Can not save SCP");
-      	return false;
-      }
-		return true;
-   }
 
 	/**
 	 * Creates radiology order type if not exists Creates "Scheduler",
@@ -149,38 +114,76 @@ public class Activator extends BaseModuleActivator {
 		return true;
 	}
 
-	public static void storageServer() throws Exception {
-		try {
-			String[] args3 = { "-dest", Utils.storageDir(),
-					Utils.aeTitle() + ":" + Utils.storagePort(), "-scport", Utils.storageCommitmentPort()};
-			DcmRcv.main(args3);
-			String saving = "\nSaving:\n  mpps entries in "
-					+ new File(Utils.mppsDir()).getAbsolutePath()
-					+ "\n  mwl entries in "
-					+ new File(Utils.mwlDir()).getAbsolutePath()
-					+ "\n  DICOM objects in "
-					+ new File(Utils.storageDir()).getAbsolutePath();
-			log.info(saving);
-		} catch (Exception e) {
-			e.printStackTrace();
-			log.warn("Can not start storage DICOM server");
-			throw e;
-		}
-	}
-
 	public static void orderFiller() throws Exception {
 		try {
 			String[] args2 = { "-mwl", Utils.mwlDir(), "-mpps",
 					Utils.mppsDir(),
 					Utils.aeTitle() + ":" + Utils.mwlMppsPort() };
 			DcmOF.main(args2);
-                        System.out.println("Started MPPSScu : OpenMRS MPPS SCU Client (dcmof)");                        
+                        log.info("Started MPPSScu : OpenMRS MPPS SCU Client (dcmof)");                        
 		} catch (Exception e) {
 			e.printStackTrace();
 			log.warn("Can not start MWL/MPPS DICOM server");
-                        System.out.println("Unable to start MPPSScu : OpenMRS MPPS SCU Client (dcmof)");                        
+                        log.warn("Unable to start MPPSScu : OpenMRS MPPS SCU Client (dcmof)");                        
 			throw e;
 		}
 	}
 
+        
+// Code from the Old Radiology Module which uses Xebra PACS Client and stores images locally using dcmrcv        
+//	public static void storageServer() throws Exception {
+//		try {
+//			String[] args3 = { "-dest", Utils.storageDir(),
+//					Utils.aeTitle() + ":" + Utils.storagePort(), "-scport", Utils.storageCommitmentPort()};
+//			DcmRcv.main(args3);
+//			String saving = "\nSaving:\n  mpps entries in "
+//					+ new File(Utils.mppsDir()).getAbsolutePath()
+//					+ "\n  mwl entries in "
+//					+ new File(Utils.mwlDir()).getAbsolutePath()
+//					+ "\n  DICOM objects in "
+//					+ new File(Utils.storageDir()).getAbsolutePath();
+//			log.info(saving);
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//			log.warn("Can not start storage DICOM server");
+//			throw e;
+//		}
+//	}
+        
+//	public static boolean createAE()
+//   {
+//	   int storagePort=Integer.parseInt(Utils.storagePort());
+//		try
+//      {
+////	      new XebraInterface().saveAE(Utils.serversAddress(),storagePort,Utils.aeTitle());
+//	      log.info("AE peer created succesfully!");
+//      }
+//      catch(Exception e)
+//      {
+//	      log.error("Can not save AE Peer");
+//	      return false;
+//      }
+//		return true;
+//   }
+//
+//	public static boolean createScp()
+//   {
+//	   String storageDir=Utils.storageDir();
+//	   String tmpDirectory=StringUtils.path(storageDir,"tmp");
+//		int storagePort=Integer.parseInt(Utils.storagePort());
+//		try
+//      {
+//	//      new XebraInterface().saveSCP(Utils.aeTitle(),storageDir,storagePort,tmpDirectory);
+//	      log.info("SCP created succesfully!");
+//      }
+//      catch(Exception e)
+//      {
+//      	log.error("Can not save SCP");
+//      	return false;
+//      }
+//		return true;
+//   }
+//
+        
+        
 }

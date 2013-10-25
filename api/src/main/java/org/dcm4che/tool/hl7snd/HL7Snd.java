@@ -140,7 +140,8 @@ public class HL7Snd extends Device {
     }
 
     @SuppressWarnings("unchecked")
-    public static void main(String[] args) {
+    public static int main(String[] args) {
+        int result=-1;
         try {
             CommandLine cl = parseComandLine(args);
             HL7Snd main = new HL7Snd();
@@ -154,18 +155,22 @@ public class HL7Snd extends Device {
              //   main.sendFiles(cl.getArgList());                
                 main.sendHL7Message(cl.getArgList()); 
                 log.info("Order sent successfully."); 
+                 result=1;
             } finally {
                 main.close();
             }
         } catch (ParseException e) {
             log.error("hl7snd: " + e.getMessage());
             log.error(rb.getString("try"));
+            result=0;
          //   System.exit(2);
         } catch (Exception e) {
             log.error("hl7snd: " + e.getMessage());
             log.error("Stack Trace :",e);
+            result=0;
          //   System.exit(2);
         }
+        return result;
     }
 
     public void open() throws IOException, IncompatibleConnectionException, GeneralSecurityException {
