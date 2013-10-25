@@ -17,6 +17,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.sql.SQLException;
 import java.util.HashSet;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -87,7 +88,20 @@ public class Activator extends BaseModuleActivator {
 			for (Field role : roles) {
 				String sRole = Roles.value(role);
 				Role toSave = new Role(sRole, sRole);
-				toSave.setCreator(Context.getUserService().getUser(1));                                
+                                toSave.setCreator(Context.getUserService().getUser(1));
+                                
+                                // Check if role has already been added.
+                                List<Role> allRoles=Context.getUserService().getAllRoles();                                
+                                boolean rolePresent=false;
+                                for (Role eachRole : allRoles){
+                                    if (eachRole.getRole().equals(toSave.getRole())){
+                                        rolePresent=true;
+                                    }                                        
+                                }                                
+                                if (rolePresent){
+                                    continue;
+                                }
+                                
 				HashSet<Role> set = new HashSet<Role>();
 				if (Utils.devMode()) {
 					// Inherits privileges from System developer
