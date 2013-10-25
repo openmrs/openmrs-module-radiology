@@ -40,8 +40,5 @@
 				defaultValue="-1"></column>
                         <column name="mwl_status" type="int" defaultValue="-1"></column>        
 		</createTable>
-	</changeSet>
-	<changeSet author="juanp" id="radiology-3">
-		 <sqlFile path="xebra_db.sql"/>
-	</changeSet>
+	</changeSet>	
 </databaseChangeLog>

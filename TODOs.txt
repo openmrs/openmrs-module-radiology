@@ -1,5 +1,3 @@
-Save radiology_instance entry from dcmrcv and not from dcmof
-Make Xebra database user configurable
-Quit checking memory messages
-Fix activator's startup method, sometimes is running twice
-   The DICOM servers stay open if server is shutdown, find out
+Synchronisation between dcm4chee worklist and radiology order needs to be completed in case of dcm4chee shutdown,update order,void order and discontinue order.
+
+
