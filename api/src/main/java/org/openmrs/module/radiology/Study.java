@@ -285,7 +285,9 @@ public class Study {
 
 	@SuppressWarnings("unchecked")
 	public List<Obs> obs() {
-		String query = "from Obs as o where o.order.orderId = " + orderID;
+                //String query = "from Obs as o where o.order.orderId = " + orderID;
+                String innerQuery= "(Select oo.previousVersion from Obs as oo where oo.order.orderId="+orderID+" and oo.previousVersion IS NOT NULL)";
+		String query = "from Obs as o where o.order.orderId = " + orderID+" and o.obsId NOT IN "+innerQuery;
 		return (List<Obs>) Context.getService(Main.class).get(query, false);
 	}
 

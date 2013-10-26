@@ -1,0 +1,6 @@
+This the dcmrcv package from the dcm4che2 toolkit.
+# It is not being used by the module in anyway and it was part of the old module.( With the Xebra PACS Client)
+# It is used to create a dicom compliant storage server to receive images.
+# Since dcm4chee is used as the PACS to store images. This package is redundant.
+# It's been left here for anyone to use in the future.
+
