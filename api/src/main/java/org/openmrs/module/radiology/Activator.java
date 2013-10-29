@@ -45,7 +45,7 @@ public class Activator extends BaseModuleActivator {
 	}
 
 	public void stopped() {
-            Server.dcmof.stop();
+         //   Server.dcmof.stop();
 	}
 
 	public static boolean badInit(UserService us, OrderService os) {

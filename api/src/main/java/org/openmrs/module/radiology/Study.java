@@ -168,7 +168,7 @@ public class Study {
 	private int priority = -1;
 	private int modality;
         
-        private int mwlStatus=-1;
+        private int mwlStatus;
 
 	private User scheduler;
 
@@ -369,7 +369,27 @@ public class Study {
 	}
         
         public String mwlStatus(){
-            return String.valueOf(mwlStatus);
+            
+            // -1 :Default
+         String[] mwlMessages={    
+        "Default ",     
+        "In Sync : Save order successful.",
+        "Out of Sync : Save order failed. Try Again!",         
+        "In Sync : Update order successful.",
+        "Out of Sync : Update order failed. Try again!",
+        "In Sync : Void order successful.",             
+        "Out of Sync : Void order failed. Try again!",
+        "In Sync : Discontinue order successful.",
+        "Out of Sync : Discontinue order failed. Try again!",
+        "In Sync : Undiscontinue order successful.",
+        "Out of Sync : Undiscontinue order failed. Try again!",
+        "In Sync :  Unvoid order successfull",
+        "Out of Sync :  Unvoid order failed. Try again"
+         };
+         if (mwlStatus==-1)
+             return "Default";
+         else
+            return mwlMessages[mwlStatus];
         }
         
          public void setMwlStatus(int status){

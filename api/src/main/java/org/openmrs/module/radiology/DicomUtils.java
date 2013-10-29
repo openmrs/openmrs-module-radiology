@@ -328,8 +328,12 @@ public class DicomUtils {
                 }        
 	}
 
+        public enum OrderRequest {
+            Default,Save_Order,Void_Order, Discontinue_Order, Undiscontinue_Order, Unvoid_Order;
+        }
+        
         // Create HL7 ORU message to create worklist request.
-        public static String createHL7Message(Study study,Order order)
+        public static String createHL7Message(Study study,Order order, OrderRequest orderRequest)
         {
             // Example HL7Message to create order
            //  String hl7blob= "MSH|^~\\&|OpenMRSRadiologyModule|MyHospital|||201308271545||ORM^O01||P|2.3||||||encoding|\n" +
@@ -337,8 +341,8 @@ public class DicomUtils {
 //                            "ORC|NW|2|||||^^^201308241700^^R||||||\n" +
 //                            "OBR||||^^^^knee|||||||||||||||2|2||||CT||||||||||||||||||||^knee^scan|\n" +
 //                            "ZDS|1.2.826.0.1.3680043.8.2186.1.2|";
-             
-             String orcfield1="NW";
+             Integer mwlstatus=study.getMwlStatus();             
+             String orcfield1=getORCtype(mwlstatus,orderRequest);             
              String msh="MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"+Utils.time(new Date())+"||ORM^O01||P|2.3||||||encoding|\n";
              String pid="PID|||"+order.getPatient().getPatientIdentifier().getIdentifier()+"||"+order.getPatient().getPersonName().getFullName().replace(' ', '^')+"||"+Utils.plain(order.getPatient().getBirthdate())+"|"+order.getPatient().getGender()+"||||||||\n" ;
              String orc="ORC|"+orcfield1+"|"+study.getId()+"|||||^^^"+Utils.plain(order.getStartDate())+"^^"+getTruncatedPriority(study.getPriority())+"||||||\n" ;
@@ -347,6 +351,34 @@ public class DicomUtils {
              String hl7blob=msh+pid+orc+obr+zds;
              System.out.println("Created Request \n"+hl7blob);
              return hl7blob;
+        }
+        
+        // Create Order Type for the order to be filled in the HL7 Message in the ORC-1 field
+        
+        public static String getORCtype(Integer mwlstatus, OrderRequest orderRequest)
+        {
+            String orc=new String();
+            switch (orderRequest){
+                case Save_Order : if (mwlstatus.intValue()==0 || mwlstatus.intValue()==2){
+                                        orc="NW";                                        
+                                        }
+                                  else{
+                                        orc="XO";                                        
+                                      }  
+                                  break;
+                case Void_Order : orc="CA";
+                                  break;
+                case Unvoid_Order : orc="NW";
+                                  break;
+                case Discontinue_Order : orc="CA";
+                                  break;
+                case Undiscontinue_Order : orc="NW";
+                                  break;                  
+                default : 
+                                  break;    
+            
+        }
+            return orc;
         }
         
         // Create Priority for the order to be filled in the HL7 Message
@@ -371,11 +403,12 @@ public class DicomUtils {
         }
         
         //Send HL7 ORU message to dcm4chee.
-        public static void sendHL7Worklist(String hl7blob)
+        public static int sendHL7Worklist(String hl7blob)
         {
             String input[] = {"-c","localhost:2575",hl7blob};
             //String input[]={"--help"};
             int result=HL7Snd.main(input);
+            return result;
         }
         
 	static Main service() {

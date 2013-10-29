@@ -13,6 +13,7 @@ import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Main;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
@@ -156,47 +157,72 @@ public class RadiologyOrderFormController {
 		}
 
 		OrderService orderService = Context.getOrderService();
-
+                OrderRequest orderRequest=OrderRequest.Default;
 		try {
 			if (request.getParameter("saveOrder") != null) {
 				orderService.saveOrder(order);
-				study.setOrderID(order.getOrderId());
+				study.setOrderID(order.getOrderId());                                                                
                                 service().saveStudy(study);
 //Assigning Study UID                                
                                 String studyUID= Utils.studyPrefix() + study.getId();
-                                System.out.println("New Radiology order received with StudyUID : "+studyUID);
+                                System.out.println("Radiology order received with StudyUID : "+studyUID + " Order ID : "+ order.getOrderId());
                                 study.setUid(studyUID);   
                                 service().saveStudy(study, Calendar.getInstance().getTime());
-				service().sendModalityWorklist(study);
+                                orderRequest=OrderRequest.Save_Order;                                
+                                Order o=orderService.getOrder(order.getOrderId());
+				service().sendModalityWorklist(service().getStudyByOrderId(o.getOrderId()),orderRequest);
+                                
 //Saving Study into Database.
-				request.getSession().setAttribute(
-						WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
+                                if (service().getStudyByOrderId(o.getOrderId()).getMwlStatus()==2 || service().getStudyByOrderId(o.getOrderId()).getMwlStatus()==4 )
+                                {
+                                            request.getSession().setAttribute(
+                                                	WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
+                                }            
 			} else if (request.getParameter("voidOrder") != null) {
                                 Order o=orderService.getOrder(order.getOrderId());
-				orderService.voidOrder(o, order.getVoidReason());
-				request.getSession().setAttribute(
+                                orderRequest=OrderRequest.Void_Order;
+                                service().sendModalityWorklist(service().getStudyByOrderId(o.getOrderId()),orderRequest);
+                                if (service().getStudyByOrderId(o.getOrderId()).getMwlStatus()==5){                                                                    
+                                    orderService.voidOrder(o, order.getVoidReason());
+                                    request.getSession().setAttribute(
 						WebConstants.OPENMRS_MSG_ATTR,
 						"Order.voidedSuccessfully");
+                                }
 			} else if (request.getParameter("unvoidOrder") != null) {
                                 Order o=orderService.getOrder(order.getOrderId());
-				orderService.unvoidOrder(o);
-				request.getSession().setAttribute(
+                                orderRequest=OrderRequest.Unvoid_Order;
+                                service().sendModalityWorklist(service().getStudyByOrderId(o.getOrderId()),orderRequest);
+                                if (service().getStudyByOrderId(o.getOrderId()).getMwlStatus()==11)
+                                {
+                                    orderService.unvoidOrder(o);
+                                    request.getSession().setAttribute(
 						WebConstants.OPENMRS_MSG_ATTR,
 						"Order.unvoidedSuccessfully");
-			} else if (request.getParameter("discontinueOrder") != null) {
+                                }    
+			} else if (request.getParameter("discontinueOrder") != null) {                            
                                 Order o=orderService.getOrder(order.getOrderId());
-				orderService.discontinueOrder(o,
+                                orderRequest=OrderRequest.Discontinue_Order;
+                                service().sendModalityWorklist(service().getStudyByOrderId(o.getOrderId()),orderRequest);
+                                if (service().getStudyByOrderId(o.getOrderId()).getMwlStatus()==7)
+                                {                                        
+                                    orderService.discontinueOrder(o,
 						order.getDiscontinuedReason(),
 						order.getDiscontinuedDate());
-				request.getSession().setAttribute(
+                                    request.getSession().setAttribute(
 						WebConstants.OPENMRS_MSG_ATTR,
 						"Order.discontinuedSuccessfully");
+                                }
 			} else if (request.getParameter("undiscontinueOrder") != null) {
                                 Order o=orderService.getOrder(order.getOrderId());
-				orderService.undiscontinueOrder(o);
-				request.getSession().setAttribute(
+                                orderRequest=OrderRequest.Undiscontinue_Order;
+                                service().sendModalityWorklist(service().getStudyByOrderId(o.getOrderId()),orderRequest);
+                                if (service().getStudyByOrderId(o.getOrderId()).getMwlStatus()==9)
+                                {
+                                    orderService.undiscontinueOrder(o);
+                                    request.getSession().setAttribute(
 						WebConstants.OPENMRS_MSG_ATTR,
 						"Order.undiscontinuedSuccessfully");
+                                }
 			}
 		} catch (Exception ex) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR,

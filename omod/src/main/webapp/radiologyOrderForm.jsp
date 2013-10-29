@@ -37,6 +37,12 @@
 </c:if>
 <form method="post" class="box">       
 	<input type="hidden" name="study_id" value="${study.id }" /> 
+         <spring:bind path="study.mwlStatus">
+                <input type="hidden" name="${status.expression}" value="${status.value}" />
+                <c:if test="${status.errorMessage != ''}">
+				<span class="error">${status.errorMessage}</span>
+                </c:if>
+         </spring:bind>
             <%--  <spring:bind path="study.id">--%>
                 <%--<div><p>Value : ${status.expression }</p></div>
                 <div><p>Value : ${status.value }</p></div>

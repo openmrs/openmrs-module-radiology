@@ -3,6 +3,7 @@ package org.openmrs.module.radiology;
 import java.util.Date;
 
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.db.GenericDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
 import org.openmrs.module.radiology.db.VisitDAO;
@@ -21,7 +22,7 @@ public interface Main extends OpenmrsService {
 
 	public Study saveStudy(Study os);
 	public Study saveStudy(Study os,Date d);
-        public void sendModalityWorklist(Study s);
+        public void sendModalityWorklist(Study s,OrderRequest orderRequest);
 	
 	public Visit getVisit(Integer id);
 
