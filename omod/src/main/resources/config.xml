@@ -7,7 +7,7 @@
 	<name>${project.parent.name}</name>
 	<version>${project.parent.version}</version>
 	<package>${project.parent.groupId}.${project.parent.artifactId}</package>
-	<author>Cortex</author>
+	<author>Cortex, Akhil Ravindran</author>
 	<description>
 		Manage radiology orders and reports.
 		http://wiki.openmrs.org/display/docs/Radiology+Module
@@ -108,7 +108,7 @@
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.devMode</property>
-		<defaultValue>On</defaultValue>
+		<defaultValue>Off</defaultValue>
 		<description>On/Off. On to: 
 		1. Set Provider or System developer (if provider does not have privileges) privileges to the roles created by the module
 		</description>

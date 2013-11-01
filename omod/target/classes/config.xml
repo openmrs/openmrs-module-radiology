@@ -7,7 +7,7 @@
 	<name>Radiology</name>
 	<version>0.1.0.0-dev-SNAPSHOT</version>
 	<package>org.openmrs.module.radiology</package>
-	<author>Cortex</author>
+	<author>Cortex, Akhil Ravindran</author>
 	<description>
 		Manage radiology orders and reports.
 		http://wiki.openmrs.org/display/docs/Radiology+Module
