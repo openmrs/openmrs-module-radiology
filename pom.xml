@@ -24,33 +24,6 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<!--
-			Libraries from lib to add as dependencies with compile or runtime scope:
-			lib/commons-cli-1.2.jar
-lib/jai_imageio.jar
-lib/weasis-dicom-operations-0.5.1-SNAPSHOT.jar
-lib/jai_codec.jar
-lib/commons-codec-1.5.jar
-lib/weasis-launcher.jar
-lib/clibwrapper_jiio.jar
-lib/hxti-pacs-db.jar
-lib/jai_core.jar
-lib/dcm4che-core-2.0.25.jar
-lib/xebra-dcm-utils.jar
-lib/dcm4che-net-2.0.25.jar
-lib/dcm4che-filecache-2.0.25.jar
-lib/felix.jar
-lib/ibatis.jar
-				
-			Find matching dependencies in maven central repository.
-			<dependency>
-				<groupId>org.other.library</groupId>
-				<artifactId>library-name</artifactId>
-				<version>library.version</version>
-				<scope>compile</scope>
-			</dependency>
-			-->
-			
 			<dependency>
 				<groupId>org.openmrs.api</groupId>
 				<artifactId>openmrs-api</artifactId>
@@ -86,7 +59,8 @@ lib/ibatis.jar
 				<type>pom</type>
 				<scope>test</scope>
 			</dependency>
-                        
+                                                
+                        <!-- Added logging libraries at the parent project level so that its inherited by child modules. -->
                         <dependency>
                                   <groupId>org.slf4j</groupId>
                                   <artifactId>slf4j-api</artifactId>   
