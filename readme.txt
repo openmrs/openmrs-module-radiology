@@ -21,3 +21,9 @@ Folder structure:
   
 Notes
   See Guide 
+
+Important
+OpenMRS Version 1.9.*
+Module Dependant on OrderType , OrderService methods for OrderType
+Does Not work after OrderType Deprecation in latest openmrs-core-1.10/trunk
+
