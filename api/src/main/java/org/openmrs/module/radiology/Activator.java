@@ -36,17 +36,23 @@ import org.openmrs.module.BaseModuleActivator;
  * This class contains the logic that is run every time this module is either
  * started or shutdown
  */
+
+
 public class Activator extends BaseModuleActivator {
 
 	private static final Log log = LogFactory.getLog(Activator.class);
 
+        @Override
 	public void started() {
 		start();
 	}
 
+        @Override
 	public void stopped() {
          //   Server.dcmof.stop();
 	}
+        
+        
 
 	public static boolean badInit(UserService us, OrderService os) {
 		return !Roles.created(us) || !Utils.hasRadiology(os);

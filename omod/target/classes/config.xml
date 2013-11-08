@@ -108,7 +108,7 @@
 	</globalProperty>
 	<globalProperty>
 		<property>radiology.devMode</property>
-		<defaultValue>On</defaultValue>
+		<defaultValue>Off</defaultValue>
 		<description>On/Off. On to: 
 		1. Set Provider or System developer (if provider does not have privileges) privileges to the roles created by the module
 		</description>
