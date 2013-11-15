@@ -126,16 +126,22 @@ public class ObsFormController {
 			@RequestParam(value = "obsId", required = false) Integer obsId,
 			@ModelAttribute("obs") Obs obs, BindingResult errors) {
 			HttpSession httpSession = request.getSession();
-                                                
+                                         
 			new ObsValidator().validate(obs, errors);
-//			if (errors.hasErrors()) {
-//                                System.out.println("#### Has errors #####");
-//				ModelAndView mav = new ModelAndView(
-//						"module/radiology/obsForm");
-//				populate(mav, orderId, obsId);
-//				return mav;
-//			}
-//			if (Context.isAuthenticated() && !errors.hasErrors()) {
+                         Boolean voidCheck=false;
+                                 
+                        if ((request.getParameter("voidObs") == null) && (request.getParameter("unvoidObs") == null))
+                                    voidCheck=true;
+                        
+                        
+			if (errors.hasErrors() && voidCheck) {
+                                //  System.out.println("#### Has errors #####"+errors.getAllErrors().toString());                                
+				ModelAndView mav = new ModelAndView(
+						"module/radiology/obsForm");
+				populate(mav, orderId, obsId);
+				return mav;
+			}
+//			if (Context.isAuthenticated() && !errors.hasErrors() ) {
                         if (Context.isAuthenticated()) {    
 				ObsService os = Context.getObsService();
 				try {
@@ -187,8 +193,10 @@ public class ObsFormController {
 					else if (request.getParameter("voidObs") != null) {
 						String voidReason = request.getParameter("voidReason");                                                                                   
                                                 Obs obs2=os.getObs(Integer.valueOf(obsId));
+                                                System.out.println("########"+voidReason+"######");
 						if (obs2.getObsId() != null
 								&& (voidReason == null || voidReason.length() == 0)) {
+                                                        System.out.println("########"+voidReason+"######"+obsId);
 							errors.reject("voidReason", "Obs.void.reason.empty");
 							ModelAndView mav = new ModelAndView(
 									"module/radiology/obsForm");
@@ -227,4 +235,5 @@ public class ObsFormController {
 		return new ModelAndView(
 				"redirect:/module/radiology/radiologyOrder.list");
 	}
+            
 }
