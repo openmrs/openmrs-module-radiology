@@ -128,8 +128,7 @@ public class ObsFormController {
 			HttpSession httpSession = request.getSession();
                                          
 			new ObsValidator().validate(obs, errors);
-                         Boolean voidCheck=false;
-                                 
+                         Boolean voidCheck=false;                        
                         if ((request.getParameter("voidObs") == null) && (request.getParameter("unvoidObs") == null))
                                     voidCheck=true;
                         

@@ -24,6 +24,11 @@
 		<point>org.openmrs.admin.list</point>
 		<class>org.openmrs.module.radiology.extension.html.AdminList</class>
 	</extension>
+        
+        <extension>
+                <point>org.openmrs.patientDashboardTab</point>
+                <class>org.openmrs.module.radiology.extension.html.RadiologyDashboardExt</class>
+        </extension>    
 
 	<!-- /Extensions -->
 
