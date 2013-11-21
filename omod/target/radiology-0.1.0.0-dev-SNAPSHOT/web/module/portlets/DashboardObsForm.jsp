@@ -18,7 +18,11 @@
                     </tr>
                 </c:if> 
     </table>
-    <p><a href="module/radiology/radiologyObs.form?orderId=${obs.order.orderId }&obsId">Add/Edit Observations</a></p>                
+                    
+    <c:if test="${not empty studyUID}">
+       <p><a href="module/radiology/radiologyObs.form?orderId=${obs.order.orderId }&obsId">Add/Edit Observations</a></p> 
+    </c:if>
+    
     <c:if test="${empty prevs}">
         <p>No Radiology Observations Present.</p>
     </c:if>                    

@@ -132,6 +132,13 @@
 		<file>messages_es.properties</file>
 	</messages>
 	<!-- /Internationalization -->
+        
+        <!-- Priviledges -->
+        <privilege>
+            <name>Patient Dashboard - View Radiology Section</name>
+            <description>Able to view the 'Radiology' tab on the patient dashboard</description>
+        </privilege>
+        <!-- /Priviledges -->
 
 	<mappingFiles>${omodHbmConfig}</mappingFiles>
 	

@@ -16,7 +16,7 @@ import org.openmrs.module.web.extension.PatientDashboardTabExt;
 
        @Override
        public String getRequiredPrivilege() {
-          return "Patient Radiology Dashboard - View Example Section";
+          return "Patient Dashboard - View Radiology Section";
        }
 
        @Override

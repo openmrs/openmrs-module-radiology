@@ -7,7 +7,7 @@ import org.openmrs.api.UserService;
 public class Roles {
 	public static final String Scheduler="Radiology: Scheduler";
 	public static final String ReferringPhysician="Radiology: Referring physician";
-	public static final String PerformingPhysician="Radiology: Performing physician";
+	public static final String PerformingPhysician="Radiology: Performing Technician";
 	public static final String ReadingPhysician="Radiology: Reading physician";
 
 	public static String value(Field f){

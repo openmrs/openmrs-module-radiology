@@ -25,9 +25,30 @@ import org.openmrs.api.context.UserContext;
  * @author Cortex
  */
 public class Study {
-
-	public enum Modality {
-		CR, MR, CT, NM, US,XA;
+	        
+        public enum Modality {
+           
+		CR("Computed Radiography"),
+                MR("Magnetic Resonance"),
+                CT("Computed Tomography"),
+                NM("Nuclear Medicine"),
+                US("Ultrasound"),
+                XA("X Ray");
+                
+                final private String fullName;
+                Modality (String fullname){
+                    this.fullName=fullname;
+                }
+                public String getFullName(){
+                    return this.fullName;
+                }
+                public static List<String> getAllFullNames()
+                {
+                    List<String> fullNameList=new ArrayList<String>();
+                    for (Modality s:Modality.values())
+                        fullNameList.add(s.getFullName());
+                    return fullNameList;
+                }
 	}
 
 	// Performed Procedure Steps Statuses - Part 3 Annex C.4.14

@@ -131,7 +131,7 @@ public class RadiologyOrderFormController {
 			String[] pStatuses = Utils.forSelect(PerformedStatuses.class);
 			mav.addObject("pStatuses", pStatuses);
 			mav.addObject("n_pStatuses", pStatuses.length);
-			mav.addObject("modalities", Modality.values());
+			mav.addObject("modalities", Modality.getAllFullNames());
 			mav.addObject("n_modalities", Modality.values().length);
 			boolean referring = Context.getAuthenticatedUser().hasRole(
 					Roles.ReferringPhysician, true);
@@ -174,10 +174,14 @@ public class RadiologyOrderFormController {
                                 
 //Saving Study into Database.
                                 if (service().getStudyByOrderId(o.getOrderId()).getMwlStatus()==2 || service().getStudyByOrderId(o.getOrderId()).getMwlStatus()==4 )
-                                {
+                                {                                            
                                             request.getSession().setAttribute(
-                                                	WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
-                                }            
+                                                    WebConstants.OPENMRS_MSG_ATTR, "radiology.savedFailWorklist");
+                                }
+                                else {
+                                            request.getSession().setAttribute(
+                                                	WebConstants.OPENMRS_MSG_ATTR, "Order.saved");                                    
+                                }
 			} else if (request.getParameter("voidOrder") != null) {
                                 Order o=orderService.getOrder(order.getOrderId());
                                 orderRequest=OrderRequest.Void_Order;
@@ -187,6 +191,11 @@ public class RadiologyOrderFormController {
                                     request.getSession().setAttribute(
 						WebConstants.OPENMRS_MSG_ATTR,
 						"Order.voidedSuccessfully");
+                                }
+                                else {
+                                    request.getSession().setAttribute(
+						WebConstants.OPENMRS_MSG_ATTR,
+						"radiology.failWorklist");
                                 }
 			} else if (request.getParameter("unvoidOrder") != null) {
                                 Order o=orderService.getOrder(order.getOrderId());
@@ -198,7 +207,12 @@ public class RadiologyOrderFormController {
                                     request.getSession().setAttribute(
 						WebConstants.OPENMRS_MSG_ATTR,
 						"Order.unvoidedSuccessfully");
-                                }    
+                                }
+                                else {
+                                    request.getSession().setAttribute(
+						WebConstants.OPENMRS_MSG_ATTR,
+						"radiology.failWorklist");
+                                }
 			} else if (request.getParameter("discontinueOrder") != null) {                            
                                 Order o=orderService.getOrder(order.getOrderId());
                                 orderRequest=OrderRequest.Discontinue_Order;
@@ -212,6 +226,11 @@ public class RadiologyOrderFormController {
 						WebConstants.OPENMRS_MSG_ATTR,
 						"Order.discontinuedSuccessfully");
                                 }
+                                else {
+                                    request.getSession().setAttribute(
+						WebConstants.OPENMRS_MSG_ATTR,
+						"radiology.failWorklist");
+                                }
 			} else if (request.getParameter("undiscontinueOrder") != null) {
                                 Order o=orderService.getOrder(order.getOrderId());
                                 orderRequest=OrderRequest.Undiscontinue_Order;
@@ -222,6 +241,11 @@ public class RadiologyOrderFormController {
                                     request.getSession().setAttribute(
 						WebConstants.OPENMRS_MSG_ATTR,
 						"Order.undiscontinuedSuccessfully");
+                                }
+                                else {
+                                    request.getSession().setAttribute(
+						WebConstants.OPENMRS_MSG_ATTR,
+						"radiology.failWorklist");
                                 }
 			}
 		} catch (Exception ex) {
