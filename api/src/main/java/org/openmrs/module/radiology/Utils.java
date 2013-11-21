@@ -57,7 +57,7 @@ public class Utils {
 	}
 
 	public static String serversAddress() {
-		return as.getGlobalProperty("radiology.serversAddress");
+		return "http://"+as.getGlobalProperty("radiology.serversAddress");
 	}
 
 	/**
