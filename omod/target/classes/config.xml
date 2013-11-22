@@ -133,12 +133,12 @@
 	</messages>
 	<!-- /Internationalization -->
         
-        <!-- Priviledges -->
+        <!-- Privileges -->
         <privilege>
             <name>Patient Dashboard - View Radiology Section</name>
             <description>Able to view the 'Radiology' tab on the patient dashboard</description>
         </privilege>
-        <!-- /Priviledges -->
+        <!-- /Privileges -->
 
 	<mappingFiles>Radiology.hbm.xml
 </mappingFiles>
