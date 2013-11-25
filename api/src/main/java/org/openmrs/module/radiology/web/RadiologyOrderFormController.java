@@ -75,7 +75,7 @@ public class RadiologyOrderFormController {
 			@ModelAttribute("study") Study study, BindingResult sErrors,
 			@ModelAttribute("order") Order order, BindingResult oErrors)
 			throws Exception {
-                
+                                            
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("module/radiology/radiologyOrderForm");
 		if(study.setup(order, studyId)){
@@ -97,12 +97,14 @@ public class RadiologyOrderFormController {
 
 	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET)
 	protected ModelAndView get(
-			@RequestParam(value = "orderId", required = false) Integer orderId) {
+			@RequestParam(value = "orderId", required = false) Integer orderId,
+                @RequestParam(value = "patientId", required = false) Integer patientId) {
 		ModelAndView mav = new ModelAndView(
 				"module/radiology/radiologyOrderForm");
 		OrderService os = Context.getOrderService();
 		Order order = null;
 		Study study = null;
+                
 		if (Context.isAuthenticated()) {
 			if (orderId != null) {
 				order = os.getOrder(orderId);
@@ -110,6 +112,9 @@ public class RadiologyOrderFormController {
 			} else {
 				study = new Study();
 				order = new Order();
+                                if (patientId!=null){                                    
+                                    order.setPatient(Context.getPatientService().getPatient(patientId));
+                                }
 			}
 		}
 		populate(mav, order, study);

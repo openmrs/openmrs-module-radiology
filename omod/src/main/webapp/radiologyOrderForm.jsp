@@ -121,7 +121,7 @@
 
 				</spring:bind></td>
 		</tr>
-		<tr <c:if test="${!super}">style="display:none"</c:if>>
+		<tr <c:if test="${!scheduler && !super}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.scheduledStatus" /></td>
 			<td valign="top"><spring:bind path="study.scheduledStatus">
@@ -147,7 +147,7 @@
 					</c:if>
 				</spring:bind></td>
 		</tr>
-		<tr <c:if test="${!super}">style="display:none"</c:if>>
+		<tr <c:if test="${!super && !performing}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.performedStatus" /></td>
 			<td valign="top"><spring:bind path="study.performedStatus">

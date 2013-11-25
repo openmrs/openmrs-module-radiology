@@ -32,7 +32,7 @@
 
 <openmrs:hasPrivilege privilege="Add Orders">
     <p>
-        <a href="module/radiology/radiologyOrder.form"><spring:message
+        <a href="module/radiology/radiologyOrder.form?patientId=${patientId}"><spring:message
                         code="radiology.addOrder" /></a>
         <br />
     </p>    

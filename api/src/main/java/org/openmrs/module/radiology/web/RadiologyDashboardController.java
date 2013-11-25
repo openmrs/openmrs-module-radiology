@@ -80,6 +80,7 @@ public class RadiologyDashboardController implements Controller {
 			mav.addObject("obsId", "&obsId");
 		//}
                 mav.addObject("mwlStatuses", mwlStatuses);
+                mav.addObject("patientId", patientId);
 
 		log.debug("\n***\n" + str + "\n///");
 		return mav;
