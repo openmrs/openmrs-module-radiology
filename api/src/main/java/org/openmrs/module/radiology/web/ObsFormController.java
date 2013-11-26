@@ -15,11 +15,13 @@ import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Person;
+import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.Main;
+import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.obs.ComplexData;
@@ -118,6 +120,14 @@ public class ObsFormController {
 		}
 		return obs;
 	}
+        
+        private void updateReadingPhysician(Integer orderId){
+            Study study=service().getStudyByOrderId(orderId);
+            User user=Context.getAuthenticatedUser();
+            if (user.hasRole(Roles.ReadingPhysician, true) && study.getReadingPhysician() == null)
+			study.setReadingPhysician(user);
+            service().saveStudy(study);
+        }
 
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.POST)
 	ModelAndView postObs(HttpServletRequest request,
@@ -176,12 +186,13 @@ public class ObsFormController {
 									// with
 									// the given complex data
 									os.saveObs(obs, reason);
-
+                                                                        updateReadingPhysician(orderId);
 									complexDataInputStream.close();
 								}
 							}
 						} else {
 							os.saveObs(obs, reason);
+                                                        updateReadingPhysician(orderId);
 						}
 
 						httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
@@ -191,11 +202,9 @@ public class ObsFormController {
 					// if the user is voiding out the observation
 					else if (request.getParameter("voidObs") != null) {
 						String voidReason = request.getParameter("voidReason");                                                                                   
-                                                Obs obs2=os.getObs(Integer.valueOf(obsId));
-                                                System.out.println("########"+voidReason+"######");
+                                                Obs obs2=os.getObs(Integer.valueOf(obsId));                                                
 						if (obs2.getObsId() != null
-								&& (voidReason == null || voidReason.length() == 0)) {
-                                                        System.out.println("########"+voidReason+"######"+obsId);
+								&& (voidReason == null || voidReason.length() == 0)) {                                                        
 							errors.reject("voidReason", "Obs.void.reason.empty");
 							ModelAndView mav = new ModelAndView(
 									"module/radiology/obsForm");

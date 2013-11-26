@@ -72,6 +72,7 @@ public class RadiologyOrderFormController {
 	protected ModelAndView post(
 			HttpServletRequest request,
 			@RequestParam(value = "study_id", required = false) Integer studyId,
+                        @RequestParam(value = "patient_id", required = false) Integer patientId,
 			@ModelAttribute("study") Study study, BindingResult sErrors,
 			@ModelAttribute("order") Order order, BindingResult oErrors)
 			throws Exception {
@@ -83,7 +84,10 @@ public class RadiologyOrderFormController {
 		new OrderValidator().validate(order, oErrors);
 		boolean ok = executeCommand(order, study, request);
 		if (ok) {
-			mav.setViewName("redirect:/module/radiology/radiologyOrder.list");
+                        if (patientId==null)
+                            mav.setViewName("redirect:/module/radiology/radiologyOrder.list");
+                        else
+                            mav.setViewName("redirect:/patientDashboard.form?patientId="+patientId);
 		} else {
 			populate(mav, order, study);
 		}}
@@ -114,7 +118,11 @@ public class RadiologyOrderFormController {
 				order = new Order();
                                 if (patientId!=null){                                    
                                     order.setPatient(Context.getPatientService().getPatient(patientId));
+                                    mav.addObject("patientId", patientId);
                                 }
+                                User u = Context.getAuthenticatedUser();
+                                if (u.hasRole(Roles.ReferringPhysician, true) && order.getOrderer() == null)
+                                    order.setOrderer(u);
 			}
 		}
 		populate(mav, order, study);

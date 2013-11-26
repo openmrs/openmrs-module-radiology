@@ -36,7 +36,8 @@
 	</form>
 </c:if>
 <form method="post" class="box">       
-	<input type="hidden" name="study_id" value="${study.id }" /> 
+	<input type="hidden" name="study_id" value="${study.id }" />
+        <input type="hidden" name="patient_id" value="${patientId }" /> 
          <spring:bind path="study.mwlStatus">
                 <input type="hidden" name="${status.expression}" value="${status.value}" />
                 <c:if test="${status.errorMessage != ''}">
@@ -91,7 +92,7 @@
 
 						</c:otherwise>
 					</c:choose>
-				</spring:bind></td>
+				</spring:bind>(Optional)</td>
 		</tr>
 		<tr>
 			<td valign="top"><spring:message code="radiology.priority" />
@@ -231,7 +232,7 @@
 
 						</c:otherwise>
 					</c:choose>
-				</spring:bind></td>
+				</spring:bind>(Optional)</td>
 		</tr>
 		<tr>
 			<td valign="top"><spring:message code="Order.orderer" /></td>
