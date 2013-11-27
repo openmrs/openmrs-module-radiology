@@ -64,6 +64,11 @@
 		<description>IP address of the dcm4chee</description>
 	</globalProperty>
         <globalProperty>
+		<property>@MODULE_ID@.viewerURLPath</property>
+		<defaultValue>/oviyam2/viewer.html?</defaultValue>
+		<description>URL for Oviyam/Weasis. Default value for Oviyam :"/oviyam2/viewer.html?". For Weasis(needs Java Web Start) : "/weasis-pacs-connector/viewer.jnlp?" </description>
+	</globalProperty>
+        <globalProperty>
 		<property>@MODULE_ID@.serversPort</property>
 		<defaultValue>8081</defaultValue>
 		<description>Port of the dcm4chee Web</description>
@@ -81,7 +86,7 @@
         <globalProperty>
 		<property>@MODULE_ID@.oviyamLocalServerName</property>
 		<defaultValue>oviyamlocal</defaultValue>
-		<description>Local Server name needed for deploying Oviyam. Must match the local server name created in the Oviyam UI</description>
+		<description>Local Server name needed for deploying Oviyam. Must match the local server name created in the Oviyam UI. Leave empty for weasis.</description>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.applicationUID</property>

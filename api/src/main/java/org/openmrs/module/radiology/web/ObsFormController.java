@@ -101,7 +101,7 @@ public class ObsFormController {
                 {
                 //    System.out.println("Study UID:"+study.getUid()+" Completed : "+study.isCompleted()+" Patient ID : "+or.getOrder(orderId).getPatient().getId()+" Server : "+Utils.oviyamLocalServerName() );                    
                     String patID=or.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();                    
-                    String link=Utils.serversAddress()+":"+Utils.serversPort()+"/oviyam2/viewer.html?serverName="+Utils.oviyamLocalServerName()+"&studyUID="+study.getUid()+"&patientID="+patID;
+                    String link=Utils.serversAddress()+":"+Utils.serversPort()+Utils.viewerURLPath()+Utils.oviyamLocalServerName()+"studyUID="+study.getUid()+"&patientID="+patID;
                     mav.addObject("oviyamLink",link);                    
                 }
                 else

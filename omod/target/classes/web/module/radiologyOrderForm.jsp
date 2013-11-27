@@ -253,7 +253,7 @@
 					<c:if test="${status.errorMessage != ''}">
 						<span class="error">${status.errorMessage}</span>
 					</c:if>
-				</spring:bind></td>
+				</spring:bind>(Default value is logged in User)</td>
 		</tr>
 		<c:if test="${scheduler || super}">
 			<tr>

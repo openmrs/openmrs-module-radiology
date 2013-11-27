@@ -96,9 +96,16 @@ public class Utils {
         }
         
         public static String oviyamLocalServerName(){
-            return as.getGlobalProperty("radiology.oviyamLocalServerName");
+            String serverName=as.getGlobalProperty("radiology.oviyamLocalServerName");
+            if (serverName==null)
+                return "";
+            else
+                return "serverName="+as.getGlobalProperty("radiology.oviyamLocalServerName")+"&";
         }
-                
+        
+        public static String viewerURLPath(){
+            return as.getGlobalProperty("radiology.viewerURLPath");
+        }
 
 	static Main service() {
 		return Context.getService(Main.class);
