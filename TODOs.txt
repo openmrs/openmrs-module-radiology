@@ -1,3 +1,0 @@
-Synchronisation between dcm4chee worklist and radiology order needs to be completed in case of dcm4chee shutdown,update order,void order and discontinue order.
-
-
