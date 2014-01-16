@@ -1,3 +1,7 @@
+Description : 
+  OpenMRS module to perform Radiology tasks using dcm4chee medical imaging archive.
+
+
 Installation:
   See Guide
 
