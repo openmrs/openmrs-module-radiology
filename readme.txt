@@ -1,11 +1,14 @@
 Description : 
   OpenMRS module to perform Radiology tasks using dcm4chee medical imaging archive.
 
+Wiki: 
+  https://wiki.openmrs.org/display/docs/Radiology+Module+with+dcm4chee
 
 Installation:
-  See Guide
-
-
+  See Install Guide in the WIki link above.
+  
+Usage:
+  See User Guide in the WIki link above.
 
 Folder structure:
   Sources, see them in netbeans, is just the folder src that contains:
