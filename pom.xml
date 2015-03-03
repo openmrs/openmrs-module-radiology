@@ -12,9 +12,9 @@
 	<url>http://openmrs.org</url>
 
 	<scm>
-		<connection>scm:svn:http://svn.openmrs.org/openmrs-modules/radiology/trunk/</connection>
-		<developerConnection>scm:svn:http://svn.openmrs.org/openmrs-modules/radiology/trunk/</developerConnection>
-		<url>http://svn.openmrs.org/openmrs-modules/radiology/trunk/</url>
+		<connection>scm:git:https://github.com/openmrs/openmrs-module-radiologydcm4chee</connection>
+		<developerConnection>scm:git:https://github.com/openmrs/openmrs-module-radiologydcm4chee</developerConnection>
+		<url>https://github.com/openmrs/openmrs-module-radiologydcm4chee</url>
 	</scm>
 
 	<modules>
