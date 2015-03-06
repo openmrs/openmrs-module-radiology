@@ -2,7 +2,6 @@ package org.openmrs.module.radiology.db;
 
 import org.openmrs.module.radiology.Study;
 
-
 /**
  * radiologyResponse-related database functions
  * 
@@ -10,9 +9,9 @@ import org.openmrs.module.radiology.Study;
  * @version 1.0
  */
 public interface StudyDAO {
-
+	
 	public Study getStudy(Integer id);
-
+	
 	public Study saveStudy(Study study);
 	
 	/**

@@ -7,7 +7,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class StaticPagesController {
-
+	
 	/**
 	 * Called resources because returns a path /module/radiology/resources/+path
 	 * Example path /module/radiology/static/felix-config.list
@@ -15,9 +15,8 @@ public class StaticPagesController {
 	 * @return ModelAndView with the view pointing to the file /web/module/resources/xxx.jsp
 	 */
 	@RequestMapping("/module/radiology/static/{path}")
-	ModelAndView resources(@PathVariable("path")String path) {
-		ModelAndView mav = new ModelAndView(
-				"/module/radiology/resources/"+path);
+	ModelAndView resources(@PathVariable("path") String path) {
+		ModelAndView mav = new ModelAndView("/module/radiology/resources/" + path);
 		return mav;
 	}
 }

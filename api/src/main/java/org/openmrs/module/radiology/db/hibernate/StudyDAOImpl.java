@@ -8,9 +8,9 @@ import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.db.StudyDAO;
 
 public class StudyDAOImpl implements StudyDAO {
-
+	
 	private SessionFactory sessionFactory;
-
+	
 	/**
 	 * This is a Hibernate object. It gives us metadata about the currently
 	 * connected database, the current session, the current db user, etc. To
@@ -27,7 +27,7 @@ public class StudyDAOImpl implements StudyDAO {
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
-
+	
 	public Study getStudy(Integer id) {
 		return (Study) sessionFactory.getCurrentSession().get(Study.class, id);
 	}
@@ -36,14 +36,14 @@ public class StudyDAOImpl implements StudyDAO {
 	 * @see org.openmrs.module.radiology.db.StudyDAO#getStudyByOrderId(java.lang.Integer)
 	 */
 	public Study getStudyByOrderId(Integer id) {
-		String query = "from Study s where s.orderID = '"+id+"'";
+		String query = "from Study s where s.orderID = '" + id + "'";
 		Study study = (Study) sessionFactory.getCurrentSession().createQuery(query).uniqueResult();
-		return study==null ? new Study() : study;
+		return study == null ? new Study() : study;
 	}
-
+	
 	public Study saveStudy(Study s) {
 		sessionFactory.getCurrentSession().saveOrUpdate(s);
 		return s;
 	}
-		
+	
 }

@@ -47,12 +47,12 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class RadiologyDashboardObsController {
-    
-    static Main service() {
+	
+	static Main service() {
 		return Context.getService(Main.class);
 	}
-    
-        @InitBinder
+	
+	@InitBinder
 	void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(java.lang.Integer.class, new CustomNumberEditor(java.lang.Integer.class, true));
 		binder.registerCustomEditor(java.util.Date.class, new CustomDateEditor(Context.getDateFormat(), true));
@@ -66,60 +66,57 @@ public class RadiologyDashboardObsController {
 		binder.registerCustomEditor(Encounter.class, new EncounterEditor());
 	}
 	
-    
-    @RequestMapping("/module/radiology/portlets/radiologyObsDashboard.form")
-    ModelAndView getObs(@RequestParam(value = "orderId", required = true) Integer orderId,
-			@RequestParam(value = "obsId", required = false) Integer obsId) {
-		ModelAndView mav = new ModelAndView("module/radiology/portlets/DashboardObsForm");	
-                populate(mav,orderId,obsId);
+	@RequestMapping("/module/radiology/portlets/radiologyObsDashboard.form")
+	ModelAndView getObs(@RequestParam(value = "orderId", required = true) Integer orderId,
+	        @RequestParam(value = "obsId", required = false) Integer obsId) {
+		ModelAndView mav = new ModelAndView("module/radiology/portlets/DashboardObsForm");
+		populate(mav, orderId, obsId);
 		return mav;
 	}
-    
-    private void populate(ModelAndView mav,
-			Integer orderId, Integer obsId) {
+	
+	private void populate(ModelAndView mav, Integer orderId, Integer obsId) {
 		Obs obs = null;
 		// Get previous obs
-		List<Obs> prevs=null;
+		List<Obs> prevs = null;
 		ObsService os = Context.getObsService();
 		OrderService or = Context.getOrderService();
-		Study study=service().getStudyByOrderId(orderId);
+		Study study = service().getStudyByOrderId(orderId);
 		if (obsId != null) {
-			obs = os.getObs(obsId);                        
-                        mav.addObject("obsAnswer", obs.getValueAsString(Locale.ENGLISH));                        
-			prevs=service().getStudyByOrderId(obs.getOrder().getOrderId()).obs();
-		} else{
+			obs = os.getObs(obsId);
+			mav.addObject("obsAnswer", obs.getValueAsString(Locale.ENGLISH));
+			prevs = service().getStudyByOrderId(obs.getOrder().getOrderId()).obs();
+		} else {
 			obs = newObs(or.getOrder(orderId));
-			prevs=study.obs();
+			prevs = study.obs();
 		}
-                
-                
+		
 		mav.addObject("obs", obs);
 		mav.addObject("studyUID", study.isCompleted() ? study.getUid() : null);
-                if (study.isCompleted())
-                {
-                //    System.out.println("Study UID:"+study.getUid()+" Completed : "+study.isCompleted()+" Patient ID : "+or.getOrder(orderId).getPatient().getId()+" Server : "+Utils.oviyamLocalServerName() );                    
-                    String patID=or.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();                    
-                    String link=Utils.serversAddress()+":"+Utils.serversPort()+Utils.viewerURLPath()+Utils.oviyamLocalServerName()+"studyUID="+study.getUid()+"&patientID="+patID;
-                    mav.addObject("oviyamLink",link);                    
-                }
-                else
-                    mav.addObject("oviyamLink",null);
+		if (study.isCompleted()) {
+			//    System.out.println("Study UID:"+study.getUid()+" Completed : "+study.isCompleted()+" Patient ID : "+or.getOrder(orderId).getPatient().getId()+" Server : "+Utils.oviyamLocalServerName() );                    
+			String patID = or.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();
+			String link = Utils.serversAddress() + ":" + Utils.serversPort() + Utils.viewerURLPath()
+			        + Utils.oviyamLocalServerName() + "studyUID=" + study.getUid() + "&patientID=" + patID;
+			mav.addObject("oviyamLink", link);
+		} else
+			mav.addObject("oviyamLink", null);
 		mav.addObject("prevs", prevs);
 		mav.addObject("prevsSize", prevs.size());
-                mav.addObject("personName", or.getOrder(orderId).getPatient().getPersonName().getFullName());
-                mav.addObject("orderId", orderId);
-                
+		mav.addObject("personName", or.getOrder(orderId).getPatient().getPersonName().getFullName());
+		mav.addObject("orderId", orderId);
+		
 	}
-    
-    @RequestMapping(value="/module/radiology/portlets/radiologyObsDetailsDashboard.form", method = RequestMethod.GET)
-    ModelAndView getObsDetails(@RequestParam(value = "orderId", required = true) Integer orderId,
-			@RequestParam(value = "obsId", required = true) Integer obsId, @ModelAttribute("obs") Obs obs,BindingResult errors) {
+	
+	@RequestMapping(value = "/module/radiology/portlets/radiologyObsDetailsDashboard.form", method = RequestMethod.GET)
+	ModelAndView getObsDetails(@RequestParam(value = "orderId", required = true) Integer orderId,
+	        @RequestParam(value = "obsId", required = true) Integer obsId, @ModelAttribute("obs") Obs obs,
+	        BindingResult errors) {
 		ModelAndView mav = new ModelAndView("module/radiology/portlets/DashboardObsDetailsForm");
-                populate(mav,orderId,obsId);
+		populate(mav, orderId, obsId);
 		return mav;
 	}
-    
-    private Obs newObs(Order order) {
+	
+	private Obs newObs(Order order) {
 		Obs obs;
 		obs = new Obs();
 		if (order != null) {

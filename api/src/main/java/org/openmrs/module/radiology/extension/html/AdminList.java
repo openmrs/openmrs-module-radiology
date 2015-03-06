@@ -23,7 +23,6 @@ public class AdminList extends AdministrationSectionExt {
 		map.put("module/radiology/radiologyOrder.list", "radiology.manageOrders");
 		map.put("module/radiology/config.list", "radiology.config");
 		
-		
 		return map;
 	}
 	
