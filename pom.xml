@@ -9,12 +9,12 @@
 	<name>Radiology</name>
 	<description>Parent project for Radiology</description>
 
-	<url>http://openmrs.org</url>
+	<url>https://wiki.openmrs.org/display/docs/Radiology+Module+with+dcm4chee</url>
 
 	<scm>
-		<connection>scm:svn:http://svn.openmrs.org/openmrs-modules/radiology/trunk/</connection>
-		<developerConnection>scm:svn:http://svn.openmrs.org/openmrs-modules/radiology/trunk/</developerConnection>
-		<url>http://svn.openmrs.org/openmrs-modules/radiology/trunk/</url>
+		<connection>scm:git:https://github.com/openmrs/openmrs-module-radiologydcm4chee</connection>
+		<developerConnection>scm:git:https://github.com/openmrs/openmrs-module-radiologydcm4chee</developerConnection>
+		<url>https://github.com/openmrs/openmrs-module-radiologydcm4chee</url>
 	</scm>
 
 	<modules>
