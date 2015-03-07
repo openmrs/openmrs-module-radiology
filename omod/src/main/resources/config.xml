@@ -127,11 +127,15 @@
 
 	<!-- Internationalization -->
 	<!-- All message codes should start with moduleId.* -->
-	
-        <messages>
-            <lang>en</lang>
-            <file>hl7messages.properties</file>
-        </messages>
+
+    <messages>
+        <lang>en</lang>
+        <file>hl7messages.properties</file>
+    </messages>
+    <messages>
+        <lang>en</lang>
+        <file>messages.properties</file>
+    </messages>
 	<messages>
 		<lang>es</lang>
 		<file>messages_es.properties</file>
