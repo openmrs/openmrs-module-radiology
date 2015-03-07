@@ -10,13 +10,13 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping("/module/radiology/radiologyOrder.list")
 public class RadiologyOrderListController {
-
+	
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView handleRequest() {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("module/radiology/radiologyOrderList");
-		if(Activator.badInit(Context.getUserService(),Context.getOrderService())){
-			mav.addObject("initialized","fail");
+		if (Activator.badInit(Context.getUserService(), Context.getOrderService())) {
+			mav.addObject("initialized", "fail");
 		}
 		return mav;
 	}

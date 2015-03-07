@@ -101,6 +101,18 @@
 						<includeEmptyDirs>true</includeEmptyDirs>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
+					<artifactId>maven-java-formatter-plugin</artifactId>
+					<configuration>
+						<excludes>
+							<exclude>**/DicomObjectGet.java</exclude>
+							<exclude>**/RcvTest.java</exclude>
+							<exclude>**/Scratch.java</exclude>
+							<exclude>**/SCPPersist.java</exclude>
+						</excludes>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>

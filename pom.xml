@@ -59,6 +59,11 @@
 				<type>pom</type>
 				<scope>test</scope>
 			</dependency>
+			<dependency>
+				<groupId>org.openmrs.tools</groupId>
+				<artifactId>openmrs-tools</artifactId>
+				<version>${openMRSVersion}</version>
+			</dependency>
                                                 
                         <!-- Added logging libraries at the parent project level so that its inherited by child modules. -->
                         <dependency>
@@ -77,6 +82,7 @@
 	</dependencyManagement>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openMRSVersion>1.9.1</openMRSVersion>
 	</properties>
 
@@ -95,6 +101,32 @@
 					<groupId>org.openmrs.maven.plugins</groupId>
 					<artifactId>maven-openmrs-plugin</artifactId>
 					<version>1.0.1</version>
+				</plugin>
+				<plugin>
+					<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
+					<artifactId>maven-java-formatter-plugin</artifactId>
+					<version>0.3.1</version>
+					<configuration>
+						<compilerSource>${javaCompilerVersion}</compilerSource>
+						<compilerCompliance>${javaCompilerVersion}</compilerCompliance>
+						<compilerTargetPlatform>${javaCompilerVersion}</compilerTargetPlatform>
+						<configFile>eclipse/OpenMRSFormatter.xml</configFile>
+						<overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>org.openmrs.tools</groupId>
+							<artifactId>openmrs-tools</artifactId>
+							<version>${openMRSVersion}</version>
+						</dependency>
+					</dependencies>
+					<executions>
+						<execution>
+							<goals>
+								<goal>format</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>

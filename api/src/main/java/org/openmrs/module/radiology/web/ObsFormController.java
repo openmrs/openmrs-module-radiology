@@ -50,12 +50,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class ObsFormController {
-
 	
 	static Main service() {
 		return Context.getService(Main.class);
 	}
-
+	
 	@InitBinder
 	void initBinder(WebDataBinder binder) {
 		binder.registerCustomEditor(java.lang.Integer.class, new CustomNumberEditor(java.lang.Integer.class, true));
@@ -71,45 +70,42 @@ public class ObsFormController {
 	}
 	
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.GET)
-	protected ModelAndView getObs(
-			@RequestParam(value = "orderId", required = false) Integer orderId,
-			@RequestParam(value = "obsId", required = false) Integer obsId) {
+	protected ModelAndView getObs(@RequestParam(value = "orderId", required = false) Integer orderId,
+	        @RequestParam(value = "obsId", required = false) Integer obsId) {
 		ModelAndView mav = new ModelAndView("module/radiology/obsForm");
-		populate(mav, orderId,obsId);
+		populate(mav, orderId, obsId);
 		return mav;
 	}
-
-	private void populate(ModelAndView mav,
-			Integer orderId, Integer obsId) {
+	
+	private void populate(ModelAndView mav, Integer orderId, Integer obsId) {
 		Obs obs = null;
 		// Get previous obs
-		List<Obs> prevs=null;
+		List<Obs> prevs = null;
 		ObsService os = Context.getObsService();
 		OrderService or = Context.getOrderService();
-		Study study=service().getStudyByOrderId(orderId);
+		Study study = service().getStudyByOrderId(orderId);
 		if (obsId != null) {
 			obs = os.getObs(obsId);
-			prevs=service().getStudyByOrderId(obs.getOrder().getOrderId()).obs();
-		} else{
+			prevs = service().getStudyByOrderId(obs.getOrder().getOrderId()).obs();
+		} else {
 			obs = newObs(or.getOrder(orderId));
-			prevs=study.obs();
+			prevs = study.obs();
 		}
 		
 		mav.addObject("obs", obs);
 		mav.addObject("studyUID", study.isCompleted() ? study.getUid() : null);
-                if (study.isCompleted())
-                {
-                //    System.out.println("Study UID:"+study.getUid()+" Completed : "+study.isCompleted()+" Patient ID : "+or.getOrder(orderId).getPatient().getId()+" Server : "+Utils.oviyamLocalServerName() );                    
-                    String patID=or.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();                    
-                    String link=Utils.serversAddress()+":"+Utils.serversPort()+Utils.viewerURLPath()+Utils.oviyamLocalServerName()+"studyUID="+study.getUid()+"&patientID="+patID;
-                    mav.addObject("oviyamLink",link);                    
-                }
-                else
-                    mav.addObject("oviyamLink",null);
+		if (study.isCompleted()) {
+			//    System.out.println("Study UID:"+study.getUid()+" Completed : "+study.isCompleted()+" Patient ID : "+or.getOrder(orderId).getPatient().getId()+" Server : "+Utils.oviyamLocalServerName() );                    
+			String patID = or.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();
+			String link = Utils.serversAddress() + ":" + Utils.serversPort() + Utils.viewerURLPath()
+			        + Utils.oviyamLocalServerName() + "studyUID=" + study.getUid() + "&patientID=" + patID;
+			mav.addObject("oviyamLink", link);
+		} else
+			mav.addObject("oviyamLink", null);
 		mav.addObject("prevs", prevs);
 		mav.addObject("prevsSize", prevs.size());
 	}
-
+	
 	private Obs newObs(Order order) {
 		Obs obs;
 		obs = new Obs();
@@ -120,128 +116,113 @@ public class ObsFormController {
 		}
 		return obs;
 	}
-        
-        private void updateReadingPhysician(Integer orderId){
-            Study study=service().getStudyByOrderId(orderId);
-            User user=Context.getAuthenticatedUser();
-            if (user.hasRole(Roles.ReadingPhysician, true) && study.getReadingPhysician() == null)
+	
+	private void updateReadingPhysician(Integer orderId) {
+		Study study = service().getStudyByOrderId(orderId);
+		User user = Context.getAuthenticatedUser();
+		if (user.hasRole(Roles.ReadingPhysician, true) && study.getReadingPhysician() == null)
 			study.setReadingPhysician(user);
-            service().saveStudy(study);
-        }
-
+		service().saveStudy(study);
+	}
+	
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.POST)
-	ModelAndView postObs(HttpServletRequest request,
-			HttpServletResponse response,
-			@RequestParam(value = "order", required = false) Integer orderId,
-			@RequestParam(value = "obsId", required = false) Integer obsId,
-			@ModelAttribute("obs") Obs obs, BindingResult errors) {
-			HttpSession httpSession = request.getSession();
-                                         
-			new ObsValidator().validate(obs, errors);
-                         Boolean voidCheck=false;                        
-                        if ((request.getParameter("voidObs") == null) && (request.getParameter("unvoidObs") == null))
-                                    voidCheck=true;
-                        
-                        
-			if (errors.hasErrors() && voidCheck) {
-                                //  System.out.println("#### Has errors #####"+errors.getAllErrors().toString());                                
-				ModelAndView mav = new ModelAndView(
-						"module/radiology/obsForm");
+	ModelAndView postObs(HttpServletRequest request, HttpServletResponse response,
+	        @RequestParam(value = "order", required = false) Integer orderId,
+	        @RequestParam(value = "obsId", required = false) Integer obsId, @ModelAttribute("obs") Obs obs,
+	        BindingResult errors) {
+		HttpSession httpSession = request.getSession();
+		
+		new ObsValidator().validate(obs, errors);
+		Boolean voidCheck = false;
+		if ((request.getParameter("voidObs") == null) && (request.getParameter("unvoidObs") == null))
+			voidCheck = true;
+		
+		if (errors.hasErrors() && voidCheck) {
+			//  System.out.println("#### Has errors #####"+errors.getAllErrors().toString());                                
+			ModelAndView mav = new ModelAndView("module/radiology/obsForm");
+			populate(mav, orderId, obsId);
+			return mav;
+		}
+		//			if (Context.isAuthenticated() && !errors.hasErrors() ) {
+		if (Context.isAuthenticated()) {
+			ObsService os = Context.getObsService();
+			try {
+				// if the user is just editing the observation
+				if (request.getParameter("saveObs") != null) {
+					String reason = request.getParameter("editReason");
+					if (obs.getObsId() != null && (reason == null || reason.length() == 0)) {
+						errors.reject("editReason", "Obs.edit.reason.empty");
+						ModelAndView mav = new ModelAndView("module/radiology/obsForm");
+						populate(mav, orderId, obsId);
+						return mav;
+					}
+					
+					// TODO get reason from form when it is being saved along with the observation												
+					if (obs.getConcept().isComplex()) {
+						if (request instanceof MultipartHttpServletRequest) {
+							MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
+							MultipartFile complexDataFile = multipartRequest.getFile("complexDataFile");
+							if (complexDataFile != null && !complexDataFile.isEmpty()) {
+								InputStream complexDataInputStream = complexDataFile.getInputStream();
+								
+								ComplexData complexData = new ComplexData(complexDataFile.getOriginalFilename(),
+								        complexDataInputStream);
+								
+								obs.setComplexData(complexData);
+								
+								// the handler on the obs.concept is called
+								// with
+								// the given complex data
+								os.saveObs(obs, reason);
+								updateReadingPhysician(orderId);
+								complexDataInputStream.close();
+							}
+						}
+					} else {
+						os.saveObs(obs, reason);
+						updateReadingPhysician(orderId);
+					}
+					
+					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.saved");
+				}
+
+				// if the user is voiding out the observation
+				else if (request.getParameter("voidObs") != null) {
+					String voidReason = request.getParameter("voidReason");
+					Obs obs2 = os.getObs(Integer.valueOf(obsId));
+					if (obs2.getObsId() != null && (voidReason == null || voidReason.length() == 0)) {
+						errors.reject("voidReason", "Obs.void.reason.empty");
+						ModelAndView mav = new ModelAndView("module/radiology/obsForm");
+						populate(mav, orderId, obsId);
+						return mav;
+					}
+					
+					os.voidObs(obs2, voidReason);
+					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.voidedSuccessfully");
+				}
+
+				// if this obs is already voided and needs to be unvoided
+				else if (request.getParameter("unvoidObs") != null) {
+					Obs obs2 = os.getObs(Integer.valueOf(obsId));
+					os.unvoidObs(obs2);
+					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.unvoidedSuccessfully");
+				}
+				
+			}
+			catch (APIException e) {
+				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, e.getMessage());
+				ModelAndView mav = new ModelAndView("module/radiology/obsForm");
 				populate(mav, orderId, obsId);
 				return mav;
 			}
-//			if (Context.isAuthenticated() && !errors.hasErrors() ) {
-                        if (Context.isAuthenticated()) {    
-				ObsService os = Context.getObsService();
-				try {
-					// if the user is just editing the observation
-                                                if (request.getParameter("saveObs") != null) {
-                                                        String reason = request.getParameter("editReason");
-                                                if (obs.getObsId() != null && (reason == null || reason.length() == 0)) {
-                                                        errors.reject("editReason", "Obs.edit.reason.empty");
-                                                        ModelAndView mav = new ModelAndView("module/radiology/obsForm");
-                                                        populate(mav, orderId, obsId);
-                                                        return mav;
-                                                }
-                                                
-                                                // TODO get reason from form when it is being saved along with the observation												
-						if (obs.getConcept().isComplex()) {
-							if (request instanceof MultipartHttpServletRequest) {
-								MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-								MultipartFile complexDataFile = multipartRequest
-										.getFile("complexDataFile");
-								if (complexDataFile != null
-										&& !complexDataFile.isEmpty()) {
-									InputStream complexDataInputStream = complexDataFile
-											.getInputStream();
-
-									ComplexData complexData = new ComplexData(
-											complexDataFile
-													.getOriginalFilename(),
-											complexDataInputStream);
-
-									obs.setComplexData(complexData);
-
-									// the handler on the obs.concept is called
-									// with
-									// the given complex data
-									os.saveObs(obs, reason);
-                                                                        updateReadingPhysician(orderId);
-									complexDataInputStream.close();
-								}
-							}
-						} else {
-							os.saveObs(obs, reason);
-                                                        updateReadingPhysician(orderId);
-						}
-
-						httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-								"Obs.saved");
-					}
-
-					// if the user is voiding out the observation
-					else if (request.getParameter("voidObs") != null) {
-						String voidReason = request.getParameter("voidReason");                                                                                   
-                                                Obs obs2=os.getObs(Integer.valueOf(obsId));                                                
-						if (obs2.getObsId() != null
-								&& (voidReason == null || voidReason.length() == 0)) {                                                        
-							errors.reject("voidReason", "Obs.void.reason.empty");
-							ModelAndView mav = new ModelAndView(
-									"module/radiology/obsForm");
-							populate(mav, orderId, obsId);
-							return mav;
-						}
-                                                                                         
-						os.voidObs(obs2, voidReason);
-						httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-								"Obs.voidedSuccessfully");
-					}
-
-					// if this obs is already voided and needs to be unvoided
-					else if (request.getParameter("unvoidObs") != null) {
-                                                Obs obs2=os.getObs(Integer.valueOf(obsId));
-						os.unvoidObs(obs2);
-						httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-								"Obs.unvoidedSuccessfully");
-					}
-
-				} catch (APIException e) {
-					httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
-							e.getMessage());
-					ModelAndView mav = new ModelAndView(
-							"module/radiology/obsForm");
-					populate(mav, orderId, obsId);
-					return mav;
-				} catch (IOException e) {
-					ModelAndView mav = new ModelAndView(
-							"module/radiology/obsForm");
-					populate(mav, orderId, obsId);
-					return mav;
-				}
-
+			catch (IOException e) {
+				ModelAndView mav = new ModelAndView("module/radiology/obsForm");
+				populate(mav, orderId, obsId);
+				return mav;
 			}
-		return new ModelAndView(
-				"redirect:/module/radiology/radiologyOrder.list");
+			
+		}
+		return new ModelAndView("redirect:/module/radiology/radiologyOrder.list");
 	}
-            
+	
 }

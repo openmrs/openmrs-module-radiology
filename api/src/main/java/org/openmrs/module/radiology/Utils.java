@@ -23,31 +23,31 @@ import org.openmrs.api.context.Context;
  * 
  */
 public class Utils {
-
+	
 	static final Log log = LogFactory.getLog(Utils.class);
-	private static AdministrationService as = Context
-			.getAdministrationService();
-
+	
+	private static AdministrationService as = Context.getAdministrationService();
+	
 	public static String aeTitle() {
 		return as.getGlobalProperty("radiology.applicationEntityTitle");
 	}
-
+	
 	public static String mppsDir() {
 		return as.getGlobalProperty("radiology.mppsDirectory");
 	}
-
+	
 	public static String mwlDir() {
 		return as.getGlobalProperty("radiology.mwlDirectory");
 	}
-
+	
 	public static String mwlMppsPort() {
 		return as.getGlobalProperty("radiology.mwlMppsPort");
 	}
-
+	
 	public static String storageDir() {
 		return as.getGlobalProperty("radiology.storageDirectory");
 	}
-
+	
 	public static String storagePort() {
 		return as.getGlobalProperty("radiology.storagePort");
 	}
@@ -55,11 +55,11 @@ public class Utils {
 	public static String storageCommitmentPort() {
 		return as.getGlobalProperty("radiology.storageCommitmentPort");
 	}
-
+	
 	public static String serversAddress() {
-		return "http://"+as.getGlobalProperty("radiology.serversAddress");
+		return "http://" + as.getGlobalProperty("radiology.serversAddress");
 	}
-
+	
 	/**
 	 * Prefix for DICOM objects in the application, Ex:
 	 * 1.2.826.0.1.3680043.8.2186
@@ -67,50 +67,50 @@ public class Utils {
 	public static String applicationUID() {
 		return as.getGlobalProperty("radiology.applicationUID");
 	}
-
+	
 	public static String studyUIDSlug() {
 		return as.getGlobalProperty("radiology.studyUIDSlug");
 	}
-
+	
 	/**
 	 * Example: 1.2.826.0.1.3680043.8.2186.1. (With last dot)
 	 */
 	public static String studyPrefix() {
 		return applicationUID() + "." + studyUIDSlug() + ".";
 	}
-
+	
 	public static String specificCharacterSet() {
 		return as.getGlobalProperty("radiology.specificCharacterSet");
 	}
-
+	
 	public static String devModeP() {
 		return as.getGlobalProperty("radiology.devMode");
 	}
-
+	
 	public static boolean devMode() {
 		return devModeP().compareToIgnoreCase("on") == 0;
 	}
-        
-        public static String serversPort(){
-            return as.getGlobalProperty("radiology.serversPort");
-        }
-        
-        public static String oviyamLocalServerName(){
-            String serverName=as.getGlobalProperty("radiology.oviyamLocalServerName");
-            if (serverName==null)
-                return "";
-            else
-                return "serverName="+as.getGlobalProperty("radiology.oviyamLocalServerName")+"&";
-        }
-        
-        public static String viewerURLPath(){
-            return as.getGlobalProperty("radiology.viewerURLPath");
-        }
-
+	
+	public static String serversPort() {
+		return as.getGlobalProperty("radiology.serversPort");
+	}
+	
+	public static String oviyamLocalServerName() {
+		String serverName = as.getGlobalProperty("radiology.oviyamLocalServerName");
+		if (serverName == null)
+			return "";
+		else
+			return "serverName=" + as.getGlobalProperty("radiology.oviyamLocalServerName") + "&";
+	}
+	
+	public static String viewerURLPath() {
+		return as.getGlobalProperty("radiology.viewerURLPath");
+	}
+	
 	static Main service() {
 		return Context.getService(Main.class);
 	}
-
+	
 	/**
 	 * @return List of all Order objects with OrderType == "Radiology"
 	 */
@@ -124,7 +124,7 @@ public class Utils {
 		}
 		return radiologyType;
 	}
-
+	
 	/**
 	 * @param d
 	 *            the date to plain
@@ -136,10 +136,9 @@ public class Utils {
 			d = new Date();
 		Calendar c = Calendar.getInstance();
 		c.setTime(d);
-		return "" + pad(c.get(c.YEAR), 4) + pad(c.get(c.MONTH)+1)
-				+ pad(c.get(c.DAY_OF_MONTH));
+		return "" + pad(c.get(c.YEAR), 4) + pad(c.get(c.MONTH) + 1) + pad(c.get(c.DAY_OF_MONTH));
 	}
-
+	
 	/**
 	 * @param c
 	 * @return [field1,field2...]
@@ -149,18 +148,18 @@ public class Utils {
 		String s[] = new String[f.length + 1];
 		s[0] = Context.getMessageSourceService().getMessage("general.select");
 		for (int i = 0; i < f.length; i++) {
-			try
-         {
-	         s[i + 1] = (String) c.getMethod("string",Integer.class,Boolean.class).invoke(c.newInstance(),new Integer(i),new Boolean(true));
-         }
-         catch(Exception e)
-         {
-	         log.error("Not the type expected: "+c.toString()+" has to have the method public String string(Integer ordinal,Boolean localized)");
-         }
+			try {
+				s[i + 1] = (String) c.getMethod("string", Integer.class, Boolean.class).invoke(c.newInstance(),
+				    new Integer(i), new Boolean(true));
+			}
+			catch (Exception e) {
+				log.error("Not the type expected: " + c.toString()
+				        + " has to have the method public String string(Integer ordinal,Boolean localized)");
+			}
 		}
 		return s;
 	}
-
+	
 	/**
 	 * @param d
 	 *            the date to 'time'
@@ -172,10 +171,9 @@ public class Utils {
 			d = new Date();
 		Calendar c = Calendar.getInstance();
 		c.setTime(d);
-		return "" + pad(c.get(c.HOUR_OF_DAY)) + pad(c.get(c.MINUTE))
-				+ pad(c.get(c.SECOND));
+		return "" + pad(c.get(c.HOUR_OF_DAY)) + pad(c.get(c.MINUTE)) + pad(c.get(c.SECOND));
 	}
-
+	
 	/**
 	 * @param x
 	 *            Number to pad
@@ -186,46 +184,40 @@ public class Utils {
 	static String pad(int x, int min) {
 		return String.format("%0" + min + "d", x);
 	}
-
+	
 	static String pad(int x) {
 		return pad(x, 2);
 	}
-
+	
 	public static boolean hasRadiology(OrderService os) {
 		return getRadiologyOrderType().size() > 0;
 	}
-
-	public static void setRoles(User u, String... roles)
-   {
-	   HashSet<Role> rolesSet=new HashSet<Role>();
-	   for(int j=0;j<roles.length;j++)
-      {
-	   	Role role=Context.getUserService().getRole(roles[j]);
-	   	rolesSet.add(role);
-      }
-	   u.setRoles(rolesSet);
-   }
 	
-	public static void createUser(String name, String pass, String... roles) throws Exception
-   {
-	   if(Context.getUserService().getUserByUsername(name)==null)
-      {
-	      Person p=new Person();
-	      p.setGender("M");
-	      p.setDead(false);
-	      p.setVoided(false);
-	      p.addName(new PersonName(name,"",""));
-	      User u=new User(p);
-	      u.setUsername(name);
-	      Utils.setRoles(u,roles);
-	      try
-	      {
-		      Context.getUserService().saveUser(u,pass);
-	      }
-	      catch(Exception e)
-	      {
-		      throw e;
-	      }
-      }
-   }
+	public static void setRoles(User u, String... roles) {
+		HashSet<Role> rolesSet = new HashSet<Role>();
+		for (int j = 0; j < roles.length; j++) {
+			Role role = Context.getUserService().getRole(roles[j]);
+			rolesSet.add(role);
+		}
+		u.setRoles(rolesSet);
+	}
+	
+	public static void createUser(String name, String pass, String... roles) throws Exception {
+		if (Context.getUserService().getUserByUsername(name) == null) {
+			Person p = new Person();
+			p.setGender("M");
+			p.setDead(false);
+			p.setVoided(false);
+			p.addName(new PersonName(name, "", ""));
+			User u = new User(p);
+			u.setUsername(name);
+			Utils.setRoles(u, roles);
+			try {
+				Context.getUserService().saveUser(u, pass);
+			}
+			catch (Exception e) {
+				throw e;
+			}
+		}
+	}
 }
