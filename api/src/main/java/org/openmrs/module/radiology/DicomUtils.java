@@ -2,7 +2,6 @@ package org.openmrs.module.radiology;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -17,6 +16,7 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
+import org.dcm4che.tool.hl7snd.HL7Snd;
 import org.dcm4che2.data.BasicDicomObject;
 import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.SpecificCharacterSet;
@@ -32,8 +32,6 @@ import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.Study.ScheduledStatuses;
 import org.xml.sax.SAXException;
 
-import org.dcm4che.tool.hl7snd.HL7Snd;
-
 //import com.hxti.edge.pacs.exception.PersistException;
 //import com.hxti.xebra.util.XebraInterface;
 
@@ -47,14 +45,11 @@ public class DicomUtils {
 	}
 	
 	/**
-	 * Search in the configured MPPS directory for a DICOM file whose study UID
-	 * matches studyPrefix + o.getOrderId()
+	 * Search in the configured MPPS directory for a DICOM file whose study UID matches studyPrefix
+	 * + o.getOrderId()
 	 * 
-	 * @param o
-	 *            the order from which to extract orderID
-	 * @param tag
-	 *            the tag to return
-	 * 
+	 * @param o the order from which to extract orderID
+	 * @param tag the tag to return
 	 * @return the value of the attribute marked by tag
 	 * @throws IOException
 	 */
@@ -93,14 +88,11 @@ public class DicomUtils {
 	}
 	
 	/**
-	 * Search in the configured MWL directory for a XML file whose name matches
-	 * o.getOrderId()+ ".xml"
+	 * Search in the configured MWL directory for a XML file whose name matches o.getOrderId()+
+	 * ".xml"
 	 * 
-	 * @param o
-	 *            the order from which to extract orderID
-	 * @param tag
-	 *            the tag to return
-	 * 
+	 * @param o the order from which to extract orderID
+	 * @param tag the tag to return
 	 * @return the value of the attribute marked by tag
 	 * @throws Exception
 	 */
@@ -133,9 +125,7 @@ public class DicomUtils {
 	}
 	
 	/**
-	 * 
-	 * @param o
-	 *            order to be searched
+	 * @param o order to be searched
 	 * @return String of the status that appears on this order (o) MPPS file
 	 * @throws IOException
 	 */
@@ -282,11 +272,9 @@ public class DicomUtils {
 	}
 	
 	/**
-	 * @param o
-	 *            the DICOM file loaded as dcm4che DicomObject
-	 * @param imagePath
-	 *            where the image is, example: "c:\images\image_1.dcm"
-	 * Below code used by the old Module. Doesn't use this function any more.
+	 * @param o the DICOM file loaded as dcm4che DicomObject
+	 * @param imagePath where the image is, example: "c:\images\image_1.dcm" Below code used by the
+	 *            old Module. Doesn't use this function any more.
 	 */
 	public static void writeStorage(DicomObject o, String imagePath) {
 		try {
