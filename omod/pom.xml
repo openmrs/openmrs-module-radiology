@@ -6,7 +6,6 @@
 		<artifactId>radiology</artifactId>
 		<version>0.1.0.0-dev-SNAPSHOT</version>
 	</parent>
-	<groupId>org.openmrs.module</groupId>
 	<artifactId>radiology-omod</artifactId>
 	<packaging>jar</packaging>
 	<name>Radiology OMOD</name>
