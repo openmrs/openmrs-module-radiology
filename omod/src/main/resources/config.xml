@@ -149,7 +149,7 @@
         </privilege>
         <!-- /Privileges -->
 
-	<mappingFiles>${omodHbmConfig}</mappingFiles>
+	<mappingFiles>Radiology.hbm.xml</mappingFiles>
 	
 	<!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> -->
 <!--	<servlet>
