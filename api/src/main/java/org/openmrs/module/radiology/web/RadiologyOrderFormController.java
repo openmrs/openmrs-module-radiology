@@ -1,7 +1,18 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License, 
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under 
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ * 
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.radiology.web;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -15,9 +26,9 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Main;
+import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Study.Modality;
 import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.Study.Priorities;
 import org.openmrs.module.radiology.Study.ScheduledStatuses;
@@ -133,8 +144,7 @@ public class RadiologyOrderFormController {
 			String[] pStatuses = Utils.forSelect(PerformedStatuses.class);
 			mav.addObject("pStatuses", pStatuses);
 			mav.addObject("n_pStatuses", pStatuses.length);
-			mav.addObject("modalities", Modality.getAllFullNames());
-			mav.addObject("n_modalities", Modality.values().length);
+			mav.addObject("modalities", getModalityList());
 			boolean referring = Context.getAuthenticatedUser().hasRole(Roles.ReferringPhysician, true);
 			mav.addObject("referring", referring);
 			boolean scheduler = Context.getAuthenticatedUser().hasRole(Roles.Scheduler, true);
@@ -145,6 +155,18 @@ public class RadiologyOrderFormController {
 			mav.addObject("reading", reading);
 			mav.addObject("super", !referring && !scheduler && !performing && !reading);
 		}
+	}
+	
+	private Map<String, String> getModalityList() {
+		
+		Map<String, String> modalities = new HashMap<String, String>();
+		modalities.put("", "Select");
+		
+		for (Modality modality : Modality.values()) {
+			modalities.put(modality.name(), modality.getFullName());
+		}
+		
+		return modalities;
 	}
 	
 	protected boolean executeCommand(Order order, Study study, HttpServletRequest request) {

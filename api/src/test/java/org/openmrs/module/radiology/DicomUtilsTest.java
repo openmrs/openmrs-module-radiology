@@ -27,7 +27,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
-import org.openmrs.module.radiology.Study.Modality;
+import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
 import org.openmrs.test.Verifies;
@@ -98,7 +98,7 @@ public class DicomUtilsTest {
 		study.setId(1);
 		study.setOrderID(order.getId());
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
-		study.setModality(2);
+		study.setModality(Modality.CT);
 		study.setPriority(0);
 		study.setMwlStatus(0);
 		
@@ -155,7 +155,7 @@ public class DicomUtilsTest {
 		assertEquals(order.getInstructions(), obr.getUniversalServiceID().getAlternateText().getValue());
 		assertEquals(String.valueOf(study.getId()), obr.getPlacerField2().getValue());
 		assertEquals(String.valueOf(study.getId()), obr.getFillerField1().getValue());
-		assertEquals(Modality.values()[study.getModality()].toString(), obr.getDiagnosticServSectID().getValue());
+		assertEquals(study.getModality().toString(), obr.getDiagnosticServSectID().getValue());
 		assertEquals(order.getInstructions(), obr.getProcedureCode().getText().getValue());
 		
 		// ZDS Segment
@@ -218,7 +218,7 @@ public class DicomUtilsTest {
 		study.setId(1);
 		study.setOrderID(order.getId());
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
-		study.setModality(2);
+		study.setModality(Modality.CT);
 		study.setPriority(0);
 		study.setMwlStatus(0);
 		
@@ -275,7 +275,7 @@ public class DicomUtilsTest {
 		assertEquals(order.getInstructions(), obr.getUniversalServiceID().getAlternateText().getValue());
 		assertEquals(String.valueOf(study.getId()), obr.getPlacerField2().getValue());
 		assertEquals(String.valueOf(study.getId()), obr.getFillerField1().getValue());
-		assertEquals(Modality.values()[study.getModality()].toString(), obr.getDiagnosticServSectID().getValue());
+		assertEquals(study.getModality().toString(), obr.getDiagnosticServSectID().getValue());
 		assertEquals(order.getInstructions(), obr.getProcedureCode().getText().getValue());
 		
 		// ZDS Segment
@@ -338,7 +338,7 @@ public class DicomUtilsTest {
 		study.setId(1);
 		study.setOrderID(order.getId());
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
-		study.setModality(2);
+		study.setModality(Modality.CT);
 		study.setPriority(0);
 		study.setMwlStatus(1);
 		
@@ -395,7 +395,7 @@ public class DicomUtilsTest {
 		assertEquals(order.getInstructions(), obr.getUniversalServiceID().getAlternateText().getValue());
 		assertEquals(String.valueOf(study.getId()), obr.getPlacerField2().getValue());
 		assertEquals(String.valueOf(study.getId()), obr.getFillerField1().getValue());
-		assertEquals(Modality.values()[study.getModality()].toString(), obr.getDiagnosticServSectID().getValue());
+		assertEquals(study.getModality().toString(), obr.getDiagnosticServSectID().getValue());
 		assertEquals(order.getInstructions(), obr.getProcedureCode().getText().getValue());
 		
 		// ZDS Segment
@@ -463,7 +463,7 @@ public class DicomUtilsTest {
 		study.setId(1);
 		study.setOrderID(order.getId());
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
-		study.setModality(2);
+		study.setModality(Modality.CT);
 		study.setPriority(0);
 		study.setMwlStatus(0);
 		
@@ -520,7 +520,7 @@ public class DicomUtilsTest {
 		assertEquals(order.getInstructions(), obr.getUniversalServiceID().getAlternateText().getValue());
 		assertEquals(String.valueOf(study.getId()), obr.getPlacerField2().getValue());
 		assertEquals(String.valueOf(study.getId()), obr.getFillerField1().getValue());
-		assertEquals(Modality.values()[study.getModality()].toString(), obr.getDiagnosticServSectID().getValue());
+		assertEquals(study.getModality().toString(), obr.getDiagnosticServSectID().getValue());
 		assertEquals(order.getInstructions(), obr.getProcedureCode().getText().getValue());
 		
 		// ZDS Segment

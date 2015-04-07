@@ -11,7 +11,13 @@
 		<property name="scheduledStatus" column="scheduled_status"></property>
 		<property name="performedStatus" column="performed_status"></property>
 		<property name="priority" column="priority"></property>
-		<property name="modality" column="modality"></property>
+		<property name="modality" column="modality" not-null="true">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">org.openmrs.module.radiology.Modality</param>
+				<param name="type">12</param>
+				<param name="useNamed">true</param>
+			</type>
+		</property>
 		<property name="mwlStatus" column="mwl_status"></property>
 		<many-to-one name="scheduler" class="org.openmrs.User"
 			not-null="false" not-found="ignore">

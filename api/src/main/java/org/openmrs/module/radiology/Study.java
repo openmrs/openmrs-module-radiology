@@ -1,3 +1,12 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License, 
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under 
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ * 
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.radiology;
 
 import java.lang.reflect.Field;
@@ -19,35 +28,12 @@ import org.openmrs.api.context.Context;
 import org.openmrs.api.context.UserContext;
 
 /**
- * A class that supports on openmrs's orders to make the module DICOM
- * compatible, corresponds to the table order_dicom_complment
+ * A class that supports on openmrs's orders to make the module DICOM compatible, corresponds to the
+ * table order_dicom_complment
  * 
  * @author Cortex
  */
 public class Study {
-	
-	public enum Modality {
-		
-		CR("Computed Radiography"), MR("Magnetic Resonance"), CT("Computed Tomography"), NM("Nuclear Medicine"), US(
-		        "Ultrasound"), XA("X Ray");
-		
-		final private String fullName;
-		
-		Modality(String fullname) {
-			this.fullName = fullname;
-		}
-		
-		public String getFullName() {
-			return this.fullName;
-		}
-		
-		public static List<String> getAllFullNames() {
-			List<String> fullNameList = new ArrayList<String>();
-			for (Modality s : Modality.values())
-				fullNameList.add(s.getFullName());
-			return fullNameList;
-		}
-	}
 	
 	// Performed Procedure Steps Statuses - Part 3 Annex C.4.14
 	public static class PerformedStatuses {
@@ -200,7 +186,7 @@ public class Study {
 	
 	private int priority = -1;
 	
-	private int modality;
+	private Modality modality;
 	
 	private int mwlStatus;
 	
@@ -214,7 +200,7 @@ public class Study {
 		super();
 	}
 	
-	public Study(int id, String uid, int orderID, int scheduledStatus, int performedStatus, int priority, int modality,
+	public Study(int id, String uid, int orderID, int scheduledStatus, int performedStatus, int priority, Modality modality,
 	    User schedulerUserId, User performingPhysicianUserId, User readingPhysicianUserId) {
 		super();
 		this.id = id;
@@ -255,7 +241,7 @@ public class Study {
 		return id;
 	}
 	
-	public int getModality() {
+	public Modality getModality() {
 		return modality;
 	}
 	
@@ -428,7 +414,7 @@ public class Study {
 		this.id = id;
 	}
 	
-	public void setModality(int modality) {
+	public void setModality(Modality modality) {
 		this.modality = modality;
 	}
 	
@@ -468,13 +454,11 @@ public class Study {
 	 * Fills null required values, to the moment orderer set to currentUser.<br/>
 	 * Fills radiology order type. Fills concept if null.<br/>
 	 * <br/>
-	 * In this function goes all validation pre post request: <li>Scheduler is
-	 * not allowed to schedule a completed procedure</li>
+	 * In this function goes all validation pre post request: <li>Scheduler is not allowed to
+	 * schedule a completed procedure</li>
 	 * 
-	 * @param o
-	 *            Order to be filled
-	 * @param studyId
-	 *            TODO
+	 * @param o Order to be filled
+	 * @param studyId TODO
 	 * @return Order modified
 	 */
 	public boolean setup(Order o, Integer studyId) {

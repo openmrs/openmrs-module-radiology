@@ -16,6 +16,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Order;
+import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.test.Verifies;
 
@@ -52,7 +53,7 @@ public class RadiologyOBRTest {
 		
 		Study study = new Study();
 		study.setId(1);
-		study.setModality(2);
+		study.setModality(Modality.CT);
 		study.setOrderID(1);
 		
 		ORM_O01 message = new ORM_O01();

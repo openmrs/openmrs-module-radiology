@@ -36,7 +36,6 @@ import org.dcm4che2.io.DicomInputStream;
 import org.dcm4che2.io.SAXWriter;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Study.Modality;
 import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.Study.ScheduledStatuses;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
@@ -212,7 +211,7 @@ public class DicomUtils {
 		
 		// Scheduled Procedure Step Sequence
 		// ! requires form enhancement, multiple steps
-		spss.putString(Tag.Modality, VR.CS, Modality.values()[s.getModality()].toString());
+		spss.putString(Tag.Modality, VR.CS, s.getModality().toString());
 		spss.putString(Tag.RequestedContrastAgent, VR.LO, "");
 		spss.putString(Tag.ScheduledStationAETitle, VR.AE, Utils.aeTitle());
 		try {
