@@ -11,6 +11,8 @@ package org.openmrs.module.radiology.web;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -24,9 +26,9 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Main;
+import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Study.Modality;
 import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.Study.Priorities;
 import org.openmrs.module.radiology.Study.ScheduledStatuses;
@@ -142,8 +144,6 @@ public class RadiologyOrderFormController {
 			String[] pStatuses = Utils.forSelect(PerformedStatuses.class);
 			mav.addObject("pStatuses", pStatuses);
 			mav.addObject("n_pStatuses", pStatuses.length);
-			mav.addObject("modalities", Modality.getAllFullNames());
-			mav.addObject("n_modalities", Modality.values().length);
 			boolean referring = Context.getAuthenticatedUser().hasRole(Roles.ReferringPhysician, true);
 			mav.addObject("referring", referring);
 			boolean scheduler = Context.getAuthenticatedUser().hasRole(Roles.Scheduler, true);
@@ -154,6 +154,18 @@ public class RadiologyOrderFormController {
 			mav.addObject("reading", reading);
 			mav.addObject("super", !referring && !scheduler && !performing && !reading);
 		}
+	}
+	
+	@ModelAttribute("modalities")
+	private Map<String, String> getModalityList() {
+		
+		Map<String, String> modalities = new HashMap<String, String>();
+		
+		for (Modality modality : Modality.values()) {
+			modalities.put(modality.name(), modality.getFullName());
+		}
+		
+		return modalities;
 	}
 	
 	protected boolean executeCommand(Order order, Study study, HttpServletRequest request) {

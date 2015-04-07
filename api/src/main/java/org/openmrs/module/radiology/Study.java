@@ -26,29 +26,6 @@ import org.openmrs.api.context.Context;
  */
 public class Study {
 	
-	public enum Modality {
-		
-		CR("Computed Radiography"), MR("Magnetic Resonance"), CT("Computed Tomography"), NM("Nuclear Medicine"), US(
-		        "Ultrasound"), XA("X Ray");
-		
-		final private String fullName;
-		
-		Modality(String fullname) {
-			this.fullName = fullname;
-		}
-		
-		public String getFullName() {
-			return this.fullName;
-		}
-		
-		public static List<String> getAllFullNames() {
-			List<String> fullNameList = new ArrayList<String>();
-			for (Modality s : Modality.values())
-				fullNameList.add(s.getFullName());
-			return fullNameList;
-		}
-	}
-	
 	// Performed Procedure Steps Statuses - Part 3 Annex C.4.14
 	public static class PerformedStatuses {
 		
@@ -189,7 +166,7 @@ public class Study {
 	
 	private int priority = -1;
 	
-	private int modality;
+	private Modality modality;
 	
 	private int mwlStatus;
 	
@@ -203,7 +180,7 @@ public class Study {
 		super();
 	}
 	
-	public Study(int id, String uid, int orderID, int scheduledStatus, int performedStatus, int priority, int modality,
+	public Study(int id, String uid, int orderID, int scheduledStatus, int performedStatus, int priority, Modality modality,
 	    User schedulerUserId, User performingPhysicianUserId, User readingPhysicianUserId) {
 		super();
 		this.id = id;
@@ -222,7 +199,7 @@ public class Study {
 		return id;
 	}
 	
-	public int getModality() {
+	public Modality getModality() {
 		return modality;
 	}
 	
@@ -332,7 +309,7 @@ public class Study {
 		this.id = id;
 	}
 	
-	public void setModality(int modality) {
+	public void setModality(Modality modality) {
 		this.modality = modality;
 	}
 	
