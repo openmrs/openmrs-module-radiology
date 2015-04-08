@@ -33,6 +33,7 @@ import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.Study.Priorities;
 import org.openmrs.module.radiology.Study.ScheduledStatuses;
 import org.openmrs.module.radiology.Utils;
+import org.openmrs.module.radiology.validator.StudyValidator;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.EncounterEditor;
 import org.openmrs.propertyeditor.OrderTypeEditor;
@@ -84,9 +85,15 @@ public class RadiologyOrderFormController {
 		
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("module/radiology/radiologyOrderForm");
+		
 		if (study.setup(order, studyId)) {
-			
 			new OrderValidator().validate(order, oErrors);
+			new StudyValidator().validate(study, sErrors);
+			if (oErrors.hasErrors() || sErrors.hasErrors()) {
+				populate(mav, order, study);
+				return mav;
+			}
+			
 			boolean ok = executeCommand(order, study, request);
 			if (ok) {
 				if (patientId == null)
