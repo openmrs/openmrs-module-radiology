@@ -20,7 +20,7 @@ package org.openmrs.module.radiology;
 public enum Modality {
 	
 	CR("Computed Radiography"), MR("Magnetic Resonance"), CT("Computed Tomography"), NM("Nuclear Medicine"), US("Ultrasound"), XA(
-	        "X Ray");
+	        "X-Ray Angiography");
 	
 	final private String fullName;
 	
