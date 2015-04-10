@@ -6,14 +6,16 @@
 	<id>${project.parent.artifactId}</id>
 	<name>${project.parent.name}</name>
 	<version>${project.parent.version}</version>
-	<package>${project.parent.groupId}.${project.parent.artifactId}</package>
+	<package>${project.parent.groupId}.${project.parent.artifactId}
+	</package>
 	<author>Cortex, Akhil Ravindran</author>
 	<description>
 		Manage radiology orders and reports.
 		http://wiki.openmrs.org/display/docs/Radiology+Module
 	</description>
 
-	<activator>${project.parent.groupId}.${project.parent.artifactId}.Activator</activator>
+	<activator>${project.parent.groupId}.${project.parent.artifactId}.Activator
+	</activator>
 
 	<require_version>1.9.*</require_version>
 	<require_database_version>1.0.0</require_database_version>
@@ -24,11 +26,11 @@
 		<point>org.openmrs.admin.list</point>
 		<class>@MODULE_PACKAGE@.extension.html.AdminList</class>
 	</extension>
-        
-        <extension>
-                <point>org.openmrs.patientDashboardTab</point>
-                <class>@MODULE_PACKAGE@.extension.html.RadiologyDashboardExt</class>
-        </extension>    
+
+	<extension>
+		<point>org.openmrs.patientDashboardTab</point>
+		<class>@MODULE_PACKAGE@.extension.html.RadiologyDashboardExt</class>
+	</extension>
 
 	<!-- /Extensions -->
 
@@ -36,17 +38,15 @@
 	<globalProperty>
 		<property>@MODULE_ID@.mwlMppsPort</property>
 		<defaultValue>11114</defaultValue>
-		<description>Port of the DICOM MWL and MPPS server. OpenMRS MPPSSCU Client</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.storagePort</property>
-		<defaultValue>11115</defaultValue>
-		<description>Port of the DICOM storage server.</description>
+		<description>Port of the DICOM MWL and MPPS server. OpenMRS MPPSSCU
+			Client
+		</description>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.mwlDirectory</property>
 		<defaultValue>mwl</defaultValue>
-		<description>Directory for mwl entries. Ex: d:/tmp/mwl or /tmp/mwl</description>
+		<description>Directory for mwl entries. Ex: d:/tmp/mwl or /tmp/mwl
+		</description>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.mppsDirectory</property>
@@ -54,21 +54,19 @@
 		<description>Directory for mpps entries</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.storageDirectory</property>
-		<defaultValue>storage</defaultValue>
-		<description>Directory for DICOM objects</description>
-	</globalProperty>
-	<globalProperty>
 		<property>@MODULE_ID@.serversAddress</property>
 		<defaultValue>localhost</defaultValue>
 		<description>IP address of the dcm4chee</description>
 	</globalProperty>
-        <globalProperty>
+	<globalProperty>
 		<property>@MODULE_ID@.viewerURLPath</property>
 		<defaultValue>/oviyam2/viewer.html?</defaultValue>
-		<description>URL for Oviyam/Weasis. Default value for Oviyam :"/oviyam2/viewer.html?". For Weasis(needs Java Web Start) : "/weasis-pacs-connector/viewer.jnlp?" </description>
+		<description>URL for Oviyam/Weasis. Default value for Oviyam
+			:"/oviyam2/viewer.html?". For Weasis(needs Java Web Start) :
+			"/weasis-pacs-connector/viewer.jnlp?"
+		</description>
 	</globalProperty>
-        <globalProperty>
+	<globalProperty>
 		<property>@MODULE_ID@.serversPort</property>
 		<defaultValue>8081</defaultValue>
 		<description>Port of the dcm4chee Web</description>
@@ -76,17 +74,24 @@
 	<globalProperty>
 		<property>@MODULE_ID@.applicationEntityTitle</property>
 		<defaultValue>RADIOLOGY_MODULE</defaultValue>
-		<description>Title for this application entity.Calling application entity with respect to OpenMRS</description>
+		<description>Title for this application entity.Calling application
+			entity with respect to OpenMRS
+		</description>
 	</globalProperty>
-        <globalProperty>
+	<globalProperty>
 		<property>@MODULE_ID@.calledApplicationEntityTitle</property>
 		<defaultValue>DCM4CHEE</defaultValue>
-		<description>Default application entity for DCM4CHEE. Called Application Entity with respect to OpenMRS </description>
+		<description>Default application entity for DCM4CHEE. Called
+			Application Entity with respect to OpenMRS
+		</description>
 	</globalProperty>
-        <globalProperty>
+	<globalProperty>
 		<property>@MODULE_ID@.oviyamLocalServerName</property>
 		<defaultValue>oviyamlocal</defaultValue>
-		<description>Local Server name needed for deploying Oviyam. Must match the local server name created in the Oviyam UI. Leave empty for weasis.</description>
+		<description>Local Server name needed for deploying Oviyam. Must match
+			the local server name created in the Oviyam UI. Leave empty for
+			weasis.
+		</description>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.applicationUID</property>
@@ -95,13 +100,15 @@
 			You need a application root UID, this will be the prefix
 			of any module
 			DICOM object, the default value serves for debugging
-			purposes</description>
+			purposes
+		</description>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.studyUIDSlug</property>
 		<defaultValue>1</defaultValue>
 		<description>Example: applicationUID+studyUIDSlug+orderId could be a
-			study UID. The default value works!. Example values: 1.2, 1.1.1 (No start or end dots)
+			study UID. The default value works!. Example values: 1.2, 1.1.1 (No
+			start or end dots)
 		</description>
 	</globalProperty>
 	<globalProperty>
@@ -111,16 +118,13 @@
 		</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.storageCommitmentPort</property>
-		<defaultValue>11116</defaultValue>
-		<description>Storage Commitment port that modality uses to confirm a storage of an image
-		</description>
-	</globalProperty>
-	<globalProperty>
 		<property>@MODULE_ID@.devMode</property>
 		<defaultValue>Off</defaultValue>
-		<description>On/Off. On to: 
-		1. Set Provider or System developer (if provider does not have privileges) privileges to the roles created by the module
+		<description>On/Off. On to:
+			1. Set Provider or System developer (if
+			provider does not have
+			privileges) privileges to the roles created by
+			the module
 		</description>
 	</globalProperty>
 	<!--Required Global Properties -->
@@ -128,38 +132,32 @@
 	<!-- Internationalization -->
 	<!-- All message codes should start with moduleId.* -->
 
-    <messages>
-        <lang>en</lang>
-        <file>hl7messages.properties</file>
-    </messages>
-    <messages>
-        <lang>en</lang>
-        <file>messages.properties</file>
-    </messages>
+	<messages>
+		<lang>en</lang>
+		<file>hl7messages.properties</file>
+	</messages>
+	<messages>
+		<lang>en</lang>
+		<file>messages.properties</file>
+	</messages>
 	<messages>
 		<lang>es</lang>
 		<file>messages_es.properties</file>
 	</messages>
 	<!-- /Internationalization -->
-        
-        <!-- Privileges -->
-        <privilege>
-            <name>Patient Dashboard - View Radiology Section</name>
-            <description>Able to view the 'Radiology' tab on the patient dashboard</description>
-        </privilege>
-        <!-- /Privileges -->
 
-	<mappingFiles>${omodHbmConfig}</mappingFiles>
-	
+	<!-- Privileges -->
+	<privilege>
+		<name>Patient Dashboard - View Radiology Section</name>
+		<description>Able to view the 'Radiology' tab on the patient dashboard
+		</description>
+	</privilege>
+	<!-- /Privileges -->
+
+	<mappingFiles>Radiology.hbm.xml</mappingFiles>
+
 	<!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> -->
-<!--	<servlet>
-		<servlet-name>viewer.jnlp</servlet-name>
-		<servlet-class>org.weasis.servlet.Weasis_Launcher</servlet-class>
-	</servlet>
-	
-	<servlet>
-		<servlet-name>wadoRequest</servlet-name>
-		<servlet-class>com.hxti.xebra.com.wado.WADORequestServlet</servlet-class>
-	</servlet>
--->	
+	<!-- <servlet> <servlet-name>viewer.jnlp</servlet-name> <servlet-class>org.weasis.servlet.Weasis_Launcher</servlet-class> 
+		</servlet> <servlet> <servlet-name>wadoRequest</servlet-name> <servlet-class>com.hxti.xebra.com.wado.WADORequestServlet</servlet-class> 
+		</servlet> -->
 </module>

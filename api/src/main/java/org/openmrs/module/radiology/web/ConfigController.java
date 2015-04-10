@@ -60,7 +60,6 @@ public class ConfigController {
 		try {
 			mav.addObject("mwl", new File(Utils.mwlDir()).getCanonicalPath());
 			mav.addObject("mpps", new File(Utils.mppsDir()).getCanonicalPath());
-			mav.addObject("storage", new File(Utils.storageDir()).getCanonicalPath());
 		}
 		catch (IOException e) {
 			// TODO handle

@@ -19,8 +19,6 @@ import org.openmrs.module.radiology.db.StudyDAO;
 import org.openmrs.module.radiology.db.VisitDAO;
 import org.springframework.transaction.annotation.Transactional;
 
-//import com.hxti.xebra.util.XebraInterface;
-
 public class MainImpl extends BaseOpenmrsService implements Main {
 	
 	private GenericDAO gdao;

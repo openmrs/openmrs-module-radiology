@@ -13,16 +13,13 @@
  */
 package org.openmrs.module.radiology;
 
-import java.io.File;
 import java.lang.reflect.Field;
-import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dcm4che2.tool.dcmof.DcmOF;
-import org.dcm4che2.tool.dcmrcv.DcmRcv;
 import org.openmrs.OrderType;
 import org.openmrs.Role;
 import org.openmrs.api.OrderService;
@@ -30,11 +27,8 @@ import org.openmrs.api.UserService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
 
-//import com.hxti.xebra.util.XebraInterface;
-
 /**
- * This class contains the logic that is run every time this module is either
- * started or shutdown
+ * This class contains the logic that is run every time this module is either started or shutdown
  */
 
 public class Activator extends BaseModuleActivator {
@@ -58,19 +52,16 @@ public class Activator extends BaseModuleActivator {
 	public static void start() {
 		try {
 			orderFiller();
-			//	storageServer();
 		}
 		catch (Exception e) {
 			// Just prints in console
 		}
 		typeAndRoles();
-		//		createScp();
-		//		createAE();
 	}
 	
 	/**
-	 * Creates radiology order type if not exists Creates "Scheduler",
-	 * "Referring Physician", "Performing Physician", "Reading Physician" roles
+	 * Creates radiology order type if not exists Creates "Scheduler", "Referring Physician",
+	 * "Performing Physician", "Reading Physician" roles
 	 */
 	public static boolean typeAndRoles() {
 		// Create radiology order type if not exists
@@ -147,60 +138,5 @@ public class Activator extends BaseModuleActivator {
 			throw e;
 		}
 	}
-	
-	// Code from the Old Radiology Module which uses Xebra PACS Client and stores images locally using dcmrcv        
-	//	public static void storageServer() throws Exception {
-	//		try {
-	//			String[] args3 = { "-dest", Utils.storageDir(),
-	//					Utils.aeTitle() + ":" + Utils.storagePort(), "-scport", Utils.storageCommitmentPort()};
-	//			DcmRcv.main(args3);
-	//			String saving = "\nSaving:\n  mpps entries in "
-	//					+ new File(Utils.mppsDir()).getAbsolutePath()
-	//					+ "\n  mwl entries in "
-	//					+ new File(Utils.mwlDir()).getAbsolutePath()
-	//					+ "\n  DICOM objects in "
-	//					+ new File(Utils.storageDir()).getAbsolutePath();
-	//			log.info(saving);
-	//		} catch (Exception e) {
-	//			e.printStackTrace();
-	//			log.warn("Can not start storage DICOM server");
-	//			throw e;
-	//		}
-	//	}
-	
-	//	public static boolean createAE()
-	//   {
-	//	   int storagePort=Integer.parseInt(Utils.storagePort());
-	//		try
-	//      {
-	////	      new XebraInterface().saveAE(Utils.serversAddress(),storagePort,Utils.aeTitle());
-	//	      log.info("AE peer created succesfully!");
-	//      }
-	//      catch(Exception e)
-	//      {
-	//	      log.error("Can not save AE Peer");
-	//	      return false;
-	//      }
-	//		return true;
-	//   }
-	//
-	//	public static boolean createScp()
-	//   {
-	//	   String storageDir=Utils.storageDir();
-	//	   String tmpDirectory=StringUtils.path(storageDir,"tmp");
-	//		int storagePort=Integer.parseInt(Utils.storagePort());
-	//		try
-	//      {
-	//	//      new XebraInterface().saveSCP(Utils.aeTitle(),storageDir,storagePort,tmpDirectory);
-	//	      log.info("SCP created succesfully!");
-	//      }
-	//      catch(Exception e)
-	//      {
-	//      	log.error("Can not save SCP");
-	//      	return false;
-	//      }
-	//		return true;
-	//   }
-	//
 	
 }
