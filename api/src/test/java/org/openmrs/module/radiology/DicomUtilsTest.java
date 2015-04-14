@@ -9,27 +9,49 @@
  */
 package org.openmrs.module.radiology;
 
+import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.xml.transform.TransformerConfigurationException;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+
+import org.dcm4che2.data.BasicDicomObject;
+import org.dcm4che2.data.DicomObject;
+import org.dcm4che2.data.SpecificCharacterSet;
+import org.dcm4che2.data.Tag;
+import org.dcm4che2.data.VR;
+import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.TemporaryFolder;
+import org.openmrs.GlobalProperty;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
+import org.openmrs.api.AdministrationService;
+import org.openmrs.api.OrderService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
+import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
+import org.openmrs.test.BaseContextSensitiveTest;
+import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
+import org.xml.sax.SAXException;
 
 import ca.uhn.hl7v2.model.Message;
 import ca.uhn.hl7v2.model.v231.message.ORM_O01;
@@ -43,7 +65,353 @@ import ca.uhn.hl7v2.util.Terser;
 /**
  * Tests methods in the {@link DicomUtils}
  */
-public class DicomUtilsTest {
+public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
+	
+	private static final String STUDIES_TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyServiceTestDataSet.xml";
+	
+	protected static final int STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER = 1;
+	
+	protected static final String GLOBAL_PROPERTY_SPECIFIC_CHARACTER_SET = "radiology.specificCharacterSet";
+	
+	protected static final String DICOM_SPECIFIC_CHARACTER_SET = "ISO-8859-1";
+	
+	protected static final String GLOBAL_PROPERTY_MWL_DIRECTORY = "radiology.mwlDirectory";
+	
+	protected static final String MWL_DIRECTORY = "mwl";
+	
+	private AdministrationService administrationService = null;
+	
+	private Main radiologyService = null;
+	
+	private OrderService orderService = null;
+	
+	@Rule
+	public TemporaryFolder temporaryBaseFolder = new TemporaryFolder();
+	
+	/**
+	 * Run this before each unit test in this class. It simply assigns the services used in this
+	 * class to private variables The "@Before" method in {@link BaseContextSensitiveTest} is run
+	 * right before this method and sets up the initial data set and authenticates to the Context
+	 * 
+	 * @throws Exception
+	 */
+	@Before
+	public void runBeforeEachTest() throws Exception {
+		
+		if (administrationService == null) {
+			administrationService = Context.getAdministrationService();
+		}
+		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_SPECIFIC_CHARACTER_SET,
+		        DICOM_SPECIFIC_CHARACTER_SET));
+		
+		if (orderService == null) {
+			orderService = Context.getOrderService();
+		}
+		
+		if (radiologyService == null) {
+			radiologyService = Context.getService(Main.class);
+		}
+		
+		executeDataSet(STUDIES_TEST_DATASET);
+	}
+	
+	/**
+	 * Tests the DicomUtils.writeMpps method with a DicomObject containing DICOM command N-CREATE
+	 * (PerformedProcedureStepStatus = IN PROGRESS) for an existing study. DICOM Performed Procedure
+	 * Step Status; IN PROGRESS = Started but not complete
+	 * 
+	 * @see {@link DicomUtils#updateStudyPerformedStatusByMpps(DicomObject)}
+	 */
+	@Test
+	@Verifies(value = "should set performed status of an existing study in database to performed procedure step status IN_PROGRESS of given dicom object", method = "updateStudyPerformedStatusByMPPS(DicomObject)")
+	public void updateStudyPerformedStatusByMpps_shouldSetPerformedStatusOfAnExistingStudyInDatabaseToPerformedProcedureStepStatusIN_PROGRESSOfGivenDicomObject()
+	        throws IOException, TransformerConfigurationException, TransformerFactoryConfigurationError, SAXException {
+		
+		Study studyToBeUpdated = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		
+		DicomObject dicomObjectNCreate = getDicomNCreate(studyToBeUpdated);
+		
+		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
+		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		        .getAbsolutePath()));
+		
+		DicomUtils.updateStudyPerformedStatusByMpps(dicomObjectNCreate);
+		
+		assertEquals(Study.PerformedStatuses.IN_PROGRESS, studyToBeUpdated.getPerformedStatus());
+	}
+	
+	/**
+	 * Convenience method to create a DicomObject containing DICOM command N-CREATE
+	 * (PerformedProcedureStepStatus = IN_PROGRESS) for an existing study.
+	 * 
+	 * @param study for which the DicomObject will be created
+	 */
+	DicomObject getDicomNCreate(Study study) {
+		
+		String performedProcedureStatus = PerformedStatuses.string(Study.PerformedStatuses.IN_PROGRESS, false);
+		String performedProcedureStepStartDate = "20150313";
+		String performedProcedureStepStartTime = "130225";
+		String performedStationAETitle = "CR01";
+		String performedStationName = "Radiology Department";
+		String performedLocation = "Room 01";
+		String performedProcedureStepID = "XX 01";
+		
+		String referencedSOPClassUID = "1.2.840.10008.3.1.2.3.1";
+		String referencedSOPInstanceUID = "1.2.840.10008.5.1.4.1.1.9.1.2.1.1.1";
+		
+		String studyID = String.valueOf(study.getId());
+		String studyInstanceUID = study.getUid();
+		String modality = study.getModality().name();
+		
+		Order radiologyOrder = study.getOrder();
+		String accessionNumber = radiologyOrder.getAccessionNumber();
+		String scheduledProcedureStepDescription = radiologyOrder.getInstructions();
+		
+		Patient patient = radiologyOrder.getPatient();
+		String patientName = patient.getPersonName().getFullName().replace(' ', '^');
+		String patientID = patient.getPatientIdentifier().getIdentifier();
+		String issuerOfPatientID = "";
+		String patientBirthDate = new SimpleDateFormat("yyyyMMdd").format(patient.getBirthdate());
+		
+		String patientGender = patient.getGender();
+		
+		BasicDicomObject dicomObject = new BasicDicomObject();
+		BasicDicomObject referencedStudySequence = new BasicDicomObject();
+		BasicDicomObject scheduledStepAttributesSequence = new BasicDicomObject();
+		
+		referencedStudySequence.putString(Tag.ReferencedSOPClassUID, VR.UI, referencedSOPClassUID);
+		referencedStudySequence.putString(Tag.ReferencedSOPInstanceUID, VR.UI, referencedSOPInstanceUID);
+		scheduledStepAttributesSequence.putNestedDicomObject(Tag.ReferencedStudySequence, referencedStudySequence);
+		
+		scheduledStepAttributesSequence.putString(Tag.AccessionNumber, VR.SH, accessionNumber);
+		scheduledStepAttributesSequence.putString(Tag.StudyInstanceUID, VR.UI, studyInstanceUID);
+		scheduledStepAttributesSequence.putString(Tag.RequestedProcedureDescription, VR.LO,
+		    scheduledProcedureStepDescription);
+		scheduledStepAttributesSequence.putString(Tag.ScheduledProcedureStepDescription, VR.LO,
+		    scheduledProcedureStepDescription);
+		scheduledStepAttributesSequence.putSequence(Tag.ScheduledProtocolCodeSequence);
+		scheduledStepAttributesSequence.putString(Tag.ScheduledProcedureStepID, VR.SH, studyID);
+		scheduledStepAttributesSequence.putString(Tag.RequestedProcedureID, VR.SH, studyID);
+		
+		dicomObject.putString(Tag.SpecificCharacterSet, VR.CS, DICOM_SPECIFIC_CHARACTER_SET);
+		dicomObject.putString(Tag.Modality, VR.CS, modality);
+		dicomObject.putString(Tag.PatientName, VR.PN, patientName);
+		dicomObject.putString(Tag.PatientID, VR.LO, patientID);
+		dicomObject.putString(Tag.IssuerOfPatientID, VR.LO, issuerOfPatientID);
+		dicomObject.putString(Tag.PatientBirthDate, VR.DA, patientBirthDate);
+		dicomObject.putString(Tag.PatientSex, VR.CS, patientGender);
+		dicomObject.putString(Tag.StudyID, VR.SH, studyID);
+		dicomObject.putString(Tag.PerformedStationAETitle, VR.AE, performedStationAETitle);
+		dicomObject.putString(Tag.PerformedStationName, VR.SH, performedStationName);
+		dicomObject.putString(Tag.PerformedLocation, VR.SH, performedLocation);
+		dicomObject.putString(Tag.PerformedProcedureStepStartDate, VR.DA, performedProcedureStepStartDate);
+		dicomObject.putString(Tag.PerformedProcedureStepStartTime, VR.TM, performedProcedureStepStartTime);
+		dicomObject.putString(Tag.PerformedProcedureStepStatus, VR.CS, performedProcedureStatus);
+		dicomObject.putString(Tag.PerformedProcedureStepID, VR.SH, performedProcedureStepID);
+		dicomObject.putString(Tag.PerformedProcedureStepDescription, VR.LO, "");
+		dicomObject.putString(Tag.PerformedProcedureTypeDescription, VR.LO, "");
+		dicomObject.putSequence(Tag.PerformedProtocolCodeSequence);
+		dicomObject.putNestedDicomObject(Tag.ScheduledStepAttributesSequence, scheduledStepAttributesSequence);
+		
+		return dicomObject;
+	}
+	
+	/**
+	 * Tests the DicomUtils.writeMpps method with a DicomObject containing DICOM command N-SET
+	 * (PerformedProcedureStepStatus = DISCONTINUED) for an existing study. DICOM Performed
+	 * Procedure Step Status; DISCONTINUED = Canceled or unsuccessfully terminated
+	 * 
+	 * @see {@link DicomUtils#updateStudyPerformedStatusByMPPS(DicomObject)}
+	 */
+	@Test
+	@Verifies(value = "should set the performed status of an existing study in the database to DISCONTINUED given a dicom object containing command N-CREATE", method = "updateStudyPerformedStatusByMPPS(DicomObject)")
+	public void updateStudyPerformedStatusByMPPS_shouldUpdateThePerformedStatusOfAnExistingStudyInTheDatabaseBasedOnADicomObject()
+	        throws IOException, TransformerConfigurationException, TransformerFactoryConfigurationError, SAXException {
+		
+		Study studyToBeUpdated = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		
+		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, PerformedStatuses.string(
+		    Study.PerformedStatuses.DISCONTINUED, false));
+		
+		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
+		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		        .getAbsolutePath()));
+		
+		DicomUtils.updateStudyPerformedStatusByMpps(dicomObjectNCreate);
+		
+		assertEquals(Study.PerformedStatuses.DISCONTINUED, studyToBeUpdated.getPerformedStatus());
+	}
+	
+	/**
+	 * Convenience method to create a DicomObject containing DICOM command N-SET
+	 * (PerformedProcedureStepStatus = DISCONTINUED/COMPLETED) for an existing study.
+	 * 
+	 * @param study for which the DicomObject will be created
+	 * @param performedProcedureStatus either DISCONTINUED or COMPLETED
+	 */
+	DicomObject getDicomNSet(Study study, String performedProcedureStatus) {
+		
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(Utils.specificCharacterSet());
+		
+		String performedProcedureStepEndDate = "20150313";
+		String performedProcedureStepEndTime = "133725";
+		String performingPhysicianName = "Doctor^Shiwago";
+		String seriesDescription = "Thorax scan";
+		String operatorsName = "Doctor^Shiwago";
+		String protocolName = "Thorax";
+		String seriesInstanceUID = "1.2.826.0.1.3680043.2.1545.1.2.1.7.20150313.130225.305.1";
+		
+		DicomObject dicomObject = getDicomNCreate(study);
+		dicomObject.putString(Tag.PerformedProcedureStepEndDate, VR.DA, performedProcedureStepEndDate);
+		dicomObject.putString(Tag.PerformedProcedureStepEndTime, VR.TM, performedProcedureStepEndTime);
+		dicomObject.putString(Tag.PerformedProcedureStepStatus, VR.CS, performedProcedureStatus);
+		String retrieveAETitle = dicomObject.get(Tag.PerformedStationAETitle).getValueAsString(specificCharacterSet, 0);
+		
+		BasicDicomObject performedSeriesSequence = new BasicDicomObject();
+		performedSeriesSequence.putString(Tag.PerformingPhysicianName, VR.PN, performingPhysicianName);
+		performedSeriesSequence.putString(Tag.RetrieveAETitle, VR.AE, retrieveAETitle);
+		performedSeriesSequence.putString(Tag.SeriesDescription, VR.LO, seriesDescription);
+		performedSeriesSequence.putString(Tag.OperatorsName, VR.PN, operatorsName);
+		performedSeriesSequence.putSequence(Tag.ReferencedImageSequence);
+		performedSeriesSequence.putString(Tag.ProtocolName, VR.LO, protocolName);
+		performedSeriesSequence.putString(Tag.SeriesInstanceUID, VR.UI, seriesInstanceUID);
+		performedSeriesSequence.putSequence(Tag.ReferencedNonImageCompositeSOPInstanceSequence);
+		dicomObject.putNestedDicomObject(Tag.PerformedSeriesSequence, performedSeriesSequence);
+		
+		return dicomObject;
+	}
+	
+	/**
+	 * Tests the DicomUtils.writeMpps method with a DicomObject containing DICOM command N-SET
+	 * (PerformedProcedureStepStatus = COMPLETED) for an existing study. DICOM Performed Procedure
+	 * Step Status; COMPLETED
+	 * 
+	 * @see {@link DicomUtils#updateStudyPerformedStatusByMpps(DicomObject)}
+	 */
+	@Test
+	@Verifies(value = "should set the performed status of an existing study in the database to COMPLETED given a dicom object containing command N-CREATE", method = "updateStudyPerformedStatusByMPPS(DicomObject)")
+	public void updateStudyPerformedStatusByMpps_shouldUpdateThePerformedStatusOfAnExistingStudyInTheDatabaseBasedOnADicomObjectCompleted()
+	        throws IOException, TransformerConfigurationException, TransformerFactoryConfigurationError, SAXException {
+		
+		Study studyToBeUpdated = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		
+		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, PerformedStatuses.string(
+		    Study.PerformedStatuses.COMPLETED, false));
+		
+		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
+		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		        .getAbsolutePath()));
+		
+		DicomUtils.updateStudyPerformedStatusByMpps(dicomObjectNCreate);
+		
+		assertEquals(Study.PerformedStatuses.COMPLETED, studyToBeUpdated.getPerformedStatus());
+	}
+	
+	/**
+	 * @see {@link DicomUtils#updateStudyPerformedStatusByMpps(DicomObject)}
+	 */
+	//	@Test
+	@Verifies(value = "not fail if study instance uid referenced in dicom mpps cannot be found", method = "updateStudyPerformedStatusByMPPS(DicomObject)")
+	public void updateStudyPerformedStatusByMpps_shouldNotFailIfStudyInstanceUidReferencedInDicomMppsCannotBeFound()
+	        throws IOException, TransformerConfigurationException, TransformerFactoryConfigurationError, SAXException {
+		
+		Study studyToBeUpdated = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		
+		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, PerformedStatuses.string(
+		    Study.PerformedStatuses.COMPLETED, false));
+		dicomObjectNCreate.remove(Tag.ScheduledStepAttributesSequence);
+		
+		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
+		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		        .getAbsolutePath()));
+		
+		DicomUtils.updateStudyPerformedStatusByMpps(dicomObjectNCreate);
+		
+		assertEquals(Study.PerformedStatuses.COMPLETED, studyToBeUpdated.getPerformedStatus());
+	}
+	
+	/**
+	 * @see {@link DicomUtils#getStudyInstanceUidFromMpps(DicomObject)}
+	 */
+	@Test
+	@Verifies(value = "should return study instance uid given mpps dicom object", method = "getStudyInstanceUidFromMpps(DicomObject)")
+	public void getStudyInstanceUidFromMpps_shouldReturnStudyInstanceUidGivenDicomMppsObject() {
+		
+		Study study = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		
+		DicomObject dicomMpps = getDicomNCreate(study);
+		
+		String studyInstanceUid = DicomUtils.getStudyInstanceUidFromMpps(dicomMpps);
+		
+		assertThat(study.getUid(), is(studyInstanceUid));
+	}
+	
+	/**
+	 * @see {@link DicomUtils#getStudyInstanceUidFromMpps(DicomObject)}
+	 */
+	@Test
+	@Verifies(value = "should return null given dicom mpps object without scheduled step attributes sequence", method = "getStudyInstanceUidFromMpps(DicomObject)")
+	public void getStudyInstanceUidFromMpps_shouldReturnNullGivenDicomMppsObjectWithoutScheduledStepAttributesSequence() {
+		
+		Study study = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		DicomObject dicomMpps = getDicomNCreate(study);
+		dicomMpps.remove(Tag.ScheduledStepAttributesSequence);
+		
+		String studyInstanceUid = DicomUtils.getStudyInstanceUidFromMpps(dicomMpps);
+		
+		assertNull(studyInstanceUid);
+	}
+	
+	/**
+	 * @see {@link DicomUtils#getStudyInstanceUidFromMpps(DicomObject)}
+	 */
+	@Test
+	@Verifies(value = "should return null given dicom mpps object with scheduled step attributes sequence missing study instance uid tag", method = "getStudyInstanceUidFromMpps(DicomObject)")
+	public void getStudyInstanceUidFromMpps_shouldReturnNullGivenDicomMppsObjectWithScheduledStepAttributesSequenceMissingStudyInstanceUidTag() {
+		
+		Study study = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		DicomObject dicomMpps = getDicomNCreate(study);
+		
+		dicomMpps.get(Tag.ScheduledStepAttributesSequence).getDicomObject().remove(Tag.StudyInstanceUID);
+		
+		String studyInstanceUid = DicomUtils.getStudyInstanceUidFromMpps(dicomMpps);
+		
+		assertNull(studyInstanceUid);
+	}
+	
+	/**
+	 * @see {@link DicomUtils#getPerformedProcedureStepStatus(DicomObject)}
+	 */
+	@Test
+	@Verifies(value = "should return performed procedure step status given dicom object", method = "getPerformedProcedureStepStatus(DicomObject)")
+	public void getPerformedProcedureStepStatus_shouldReturnPerformedProcedureStepStatusGivenMppsDicomObject() {
+		
+		Study study = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		
+		DicomObject dicomMpps = getDicomNCreate(study);
+		
+		String performedProcedureStepStatus = DicomUtils.getPerformedProcedureStepStatus(dicomMpps);
+		
+		assertThat(study.getPerformedStatus(), is(PerformedStatuses.IN_PROGRESS));
+		assertThat(performedProcedureStepStatus, is("IN PROGRESS"));
+	}
+	
+	/**
+	 * @see {@link DicomUtils#getPerformedProcedureStepStatus(DicomObject)}
+	 */
+	@Test
+	@Verifies(value = "return null given given dicom object without performed procedure step status", method = "getPerformedProcedureStepStatus(DicomObject)")
+	public void getPerformedProcedureStepStatus_shouldReturnNullGivenDicomObjectWithoutPerformedProcedureStepStatus() {
+		
+		Study study = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		
+		DicomObject dicomMpps = getDicomNCreate(study);
+		dicomMpps.remove(Tag.PerformedProcedureStepStatus);
+		
+		String performedProcedureStepStatus = DicomUtils.getPerformedProcedureStepStatus(dicomMpps);
+		
+		assertNull(performedProcedureStepStatus);
+	}
 	
 	/**
 	 * Tests the DicomUtils.createHL7Message method with a study with mwlstatus = 0 and

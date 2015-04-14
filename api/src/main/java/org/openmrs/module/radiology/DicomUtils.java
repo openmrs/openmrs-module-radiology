@@ -11,7 +11,6 @@ package org.openmrs.module.radiology;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -26,6 +25,7 @@ import javax.xml.transform.stream.StreamResult;
 import org.apache.log4j.Logger;
 import org.dcm4che.tool.hl7snd.HL7Snd;
 import org.dcm4che2.data.BasicDicomObject;
+import org.dcm4che2.data.DicomElement;
 import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.SpecificCharacterSet;
 import org.dcm4che2.data.Tag;
@@ -245,30 +245,35 @@ public class DicomUtils {
 	}
 	
 	/**
-	 * Updates database with mpps object o
+	 * <p>
+	 * Updates the PerformedStatus of an existing Study in the database to the
+	 * PerformedProcedureStepStatus of a given DicomObject containing a DICOM N-CREATE/N-SET command
+	 * </p>
 	 * 
-	 * @param o
+	 * @param mppsObject the DICOM MPPS object containing a DICOM N-CREATE/N-SET command with tag
+	 *            performedProcedureStepStatus
+	 * @should set performed status of an existing study in database to performed procedure step
+	 *         status IN_PROGRESS of given mpps object
+	 * @should set performed status of an existing study in database to performed procedure step
+	 *         status DISCONTINUED of given mpps object
+	 * @should set performed status of an existing study in database to performed procedure step
+	 *         status COMPLETED of given mpps object
+	 * @should not fail if study instance uid referenced in dicom mpps cannot be found
 	 */
-	public static void writeMpps(DicomObject o) {
+	public static void updateStudyPerformedStatusByMpps(DicomObject mppsObject) {
 		try {
 			
-			SpecificCharacterSet scs = new SpecificCharacterSet(Utils.specificCharacterSet());
+			String studyInstanceUid = getStudyInstanceUidFromMpps(mppsObject);
 			
-			// Save Study
+			Study studyToBeUpdated = service().getStudyByUid(studyInstanceUid);
+			debug(studyToBeUpdated.toString());
 			
-			int[] studyUIDPath = { Tag.ScheduledStepAttributesSequence, Tag.StudyInstanceUID };
-			String studyUID = o.get(studyUIDPath[0]).getDicomObject().get(studyUIDPath[1]).getValueAsString(scs, 0);
+			String performedProcedureStepStatus = getPerformedProcedureStepStatus(mppsObject);
 			
-			String[] uidSplit = studyUID.split("[.]");
-			int id = Integer.parseInt(uidSplit[uidSplit.length - 1]);
-			Study s = service().getStudy(id);
-			debug(s.toString());
-			String pStatus = o.get(Tag.PerformedProcedureStepStatus).getValueAsString(scs, 0);
-			s.setPerformedStatus(PerformedStatuses.value(pStatus));
-			service().saveStudy(s);
-			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :" + studyUID
-			        + " to Status : " + PerformedStatuses.value(pStatus));
+			service().updateStudyPerformedStatus(studyToBeUpdated, PerformedStatuses.value(performedProcedureStepStatus));
 			
+			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :"
+			        + studyInstanceUid + " to Status : " + PerformedStatuses.value(performedProcedureStepStatus));
 		}
 		catch (NumberFormatException e) {
 			log.error("Number can not be parsed");
@@ -276,7 +281,58 @@ public class DicomUtils {
 		catch (Exception e) {
 			log.error("Error : " + e.getMessage());
 		}
+	}
+	
+	/**
+	 * <p>
+	 * Gets the Study Instance UID of a DICOM MPPS object
+	 * </p>
+	 * 
+	 * @param mppsObject the DICOM MPPS object containing the Study Instance UID
+	 * @should return study instance uid given dicom object
+	 * @should return null given dicom mpps object without scheduled step attributes sequence
+	 * @should return null given dicom mpps object with scheduled step attributes sequence missing
+	 *         study instance uid tag
+	 */
+	public static String getStudyInstanceUidFromMpps(DicomObject mppsObject) {
 		
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(Utils.specificCharacterSet());
+		
+		DicomElement scheduledStepAttributesSequenceElement = mppsObject.get(Tag.ScheduledStepAttributesSequence);
+		if (scheduledStepAttributesSequenceElement == null)
+			return null;
+		
+		DicomObject scheduledStepAttributesSequence = scheduledStepAttributesSequenceElement.getDicomObject();
+		
+		DicomElement studyInstanceUidElement = scheduledStepAttributesSequence.get(Tag.StudyInstanceUID);
+		if (studyInstanceUidElement == null)
+			return null;
+		
+		String studyInstanceUid = studyInstanceUidElement.getValueAsString(specificCharacterSet, 0);
+		
+		return studyInstanceUid;
+	}
+	
+	/**
+	 * <p>
+	 * Gets the Performed Procedure Step Status of a DICOM object
+	 * </p>
+	 * 
+	 * @param dicomObject the DICOM object containing the Performed Procedure Step Status
+	 * @should return performed procedure step status given dicom object
+	 * @should return null given given dicom object without performed procedure step status
+	 */
+	public static String getPerformedProcedureStepStatus(DicomObject dicomObject) {
+		
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(Utils.specificCharacterSet());
+		
+		DicomElement performedProcedureStepStatusElement = dicomObject.get(Tag.PerformedProcedureStepStatus);
+		if (performedProcedureStepStatusElement == null)
+			return null;
+		
+		String performedProcedureStepStatus = performedProcedureStepStatusElement.getValueAsString(specificCharacterSet, 0);
+		
+		return performedProcedureStepStatus;
 	}
 	
 	public enum OrderRequest {
