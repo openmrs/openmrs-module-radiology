@@ -163,6 +163,25 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 		return null;
 	}
 	
+	/**
+	 * @see Main#updateStudyPerformedStatus(Study, int)
+	 */
+	@Transactional
+	public Study updateStudyPerformedStatus(Study studyToBeUpdated, int performedStatus) {
+		if (studyToBeUpdated == null) {
+			throw new IllegalArgumentException("study is required");
+		}
+		
+		if (studyToBeUpdated.getId() == null) {
+			throw new APIException("Study.cannot.edit.nonexisting");
+		}
+		
+		studyToBeUpdated.setPerformedStatus(performedStatus);
+		
+		return sdao.saveStudy(studyToBeUpdated);
+		
+	}
+	
 	//MWL Status Codes, these are custom codes to help determine what sync status of the order is.
 	// -1 :default
 	// 0 : save order successful

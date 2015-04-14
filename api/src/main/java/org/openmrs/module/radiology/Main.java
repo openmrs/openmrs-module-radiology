@@ -47,6 +47,20 @@ public interface Main extends OpenmrsService {
 	 */
 	public Study saveStudy(Study study) throws APIException, IllegalArgumentException;
 	
+	/**
+	 * <p>
+	 * Update <code>performedStatus</code> of existing <code>study</code> in the database
+	 * </p>
+	 * 
+	 * @param study Study to be updated
+	 * @param performedStatus Performed Status to set Study to
+	 * @return study which was updated
+	 * @should update performed status of given study in database to given performed status
+	 * @should not update non existing study
+	 */
+	//TODO(teleivo) is check for non existing study.id != null enough, could study.id be set somewhere other than on saveStudy()
+	public Study updateStudyPerformedStatus(Study study, int performedStatus);
+	
 	public void sendModalityWorklist(Study s, OrderRequest orderRequest);
 	
 	public Visit getVisit(Integer id);

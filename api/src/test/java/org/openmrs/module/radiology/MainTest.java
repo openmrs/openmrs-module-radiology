@@ -41,6 +41,7 @@ import org.openmrs.api.ConceptService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
 
@@ -296,6 +297,52 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 		assertNotNull(study);
 		assertThat(study, instanceOf(Study.class));
 		assertNull(study.getOrder());
+	}
+	
+	/**
+	 * @see Main#updateStudyPerformedStatus(Study, int)
+	 */
+	@Test
+	@Verifies(value = "should update performed status of given study in database to given performed status", method = "updateStudyPerformedStatus(Study, int)")
+	public void updateStudyPerformedStatus_shouldUpdatePerformedStatusOfGivenStudyInDatabaseToGivenPerformedStatus()
+	        throws Exception {
+		Study existingStudy = radiologyService.getStudy(EXISTING_STUDY_ID);
+		
+		radiologyService.updateStudyPerformedStatus(existingStudy, PerformedStatuses.IN_PROGRESS);
+		existingStudy = radiologyService.getStudy(EXISTING_STUDY_ID);
+		assertThat(existingStudy.getPerformedStatus(), is(PerformedStatuses.IN_PROGRESS));
+		
+		radiologyService.updateStudyPerformedStatus(existingStudy, PerformedStatuses.COMPLETED);
+		existingStudy = radiologyService.getStudy(EXISTING_STUDY_ID);
+		assertThat(existingStudy.getPerformedStatus(), is(PerformedStatuses.COMPLETED));
+		
+		radiologyService.updateStudyPerformedStatus(existingStudy, PerformedStatuses.DISCONTINUED);
+		existingStudy = radiologyService.getStudy(EXISTING_STUDY_ID);
+		assertThat(existingStudy.getPerformedStatus(), is(PerformedStatuses.DISCONTINUED));
+	}
+	
+	/**
+	 * @see Main#updateStudyPerformedStatus(Study, int)
+	 */
+	@Test
+	@Verifies(value = "should throw IllegalArgumentException if study is null", method = "updateStudyPerformedStatus(Study, int)")
+	public void updateStudyPerformedStatus_shouldThrowIllegalArgumentExceptionIfStudyIsNull() throws Exception {
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("study is required");
+		radiologyService.updateStudyPerformedStatus(null, PerformedStatuses.IN_PROGRESS);
+	}
+	
+	/**
+	 * @see Main#updateStudyPerformedStatus(Study, int)
+	 */
+	@Test
+	@Verifies(value = "should not update non existing study", method = "updateStudyPerformedStatus(Study, int)")
+	public void updateStudyPerformedStatus_shouldNotUpdateNonExistingStudy() throws Exception {
+		Study nonExistingStudy = getMockStudy();
+		
+		expectedException.expect(APIException.class);
+		expectedException.expectMessage("Study.cannot.edit.nonexisting");
+		radiologyService.updateStudyPerformedStatus(nonExistingStudy, PerformedStatuses.IN_PROGRESS);
 	}
 	
 	/**
