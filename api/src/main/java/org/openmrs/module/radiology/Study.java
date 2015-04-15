@@ -137,12 +137,6 @@ public class Study {
 		return Context.getService(Main.class);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public static List<Study> unassigned() {
-		String query = "from Study as s where s.orderID = 0";
-		return (List<Study>) Context.getService(Main.class).get(query, false);
-	}
-	
 	private Integer id;
 	
 	private String uid;
