@@ -188,7 +188,8 @@
 						<c:otherwise>
 							<select name="${status.expression}" id="modalitySelect">
 								<c:forEach var="modality" items="${modalities}">
-									<option value="${modality.key}">${modality.value}</option>
+									<option value="${modality.key}"
+										${status.value == modality.key ? 'selected="selected"' : ''}>${modality.value}</option>
 								</c:forEach>
 							</select>
 						</c:otherwise>
