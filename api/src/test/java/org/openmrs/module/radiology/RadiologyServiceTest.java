@@ -14,6 +14,8 @@
 package org.openmrs.module.radiology;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
@@ -47,6 +49,10 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	
 	private static final int ORDER_ID_WITHOUT_OBS = 2001;
 	
+	private static final String EXISTING_STUDY_INSTANCE_UID = "1.2.826.0.1.3680043.8.2186.1.1";
+	
+	private static final String NON_EXISTING_STUDY_INSTANCE_UID = "1.2.826.0.1.3680043.8.2186.1.9999";
+	
 	private PatientService patientService = null;
 	
 	private OrderService orderService = null;
@@ -72,6 +78,40 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		}
 		
 		executeDataSet(STUDIES_TEST_DATASET);
+	}
+	
+	/**
+	 * @see RadiologyService#getStudyByStudyInstanceUid(String)
+	 */
+	@Test
+	@Verifies(value = "should return study matching study instance uid", method = "getStudyByStudyInstanceUid(String)")
+	public void getStudyByStudyInstanceUid_shouldReturnStudyMatchingUid() throws Exception {
+		Study study = radiologyService.getStudyByStudyInstanceUid(EXISTING_STUDY_INSTANCE_UID);
+		
+		assertNotNull(study);
+		assertThat(study.getUid(), is(EXISTING_STUDY_INSTANCE_UID));
+	}
+	
+	/**
+	 * @see RadiologyService#getStudyByStudyInstanceUid(String)
+	 */
+	@Test
+	@Verifies(value = "should return null if no match was found", method = "getStudyByStudyInstanceUid(String)")
+	public void getStudyByStudyInstanceUid_shouldReturnNullIfNoMatchIsFound() throws Exception {
+		Study study = radiologyService.getStudyByStudyInstanceUid(NON_EXISTING_STUDY_INSTANCE_UID);
+		
+		assertNull(study);
+	}
+	
+	/**
+	 * @see RadiologyService#getStudyByStudyInstanceUid(String)
+	 */
+	@Test
+	@Verifies(value = "should throw IllegalArgumentException if study instance uid is null", method = "getStudyByStudyInstanceUid(String)")
+	public void getStudyByStudyInstanceUid_shouldThrowIllegalArgumentExceptionIfUidIsNull() throws Exception {
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("studyInstanceUid is required");
+		radiologyService.getStudyByStudyInstanceUid(null);
 	}
 	
 	/**

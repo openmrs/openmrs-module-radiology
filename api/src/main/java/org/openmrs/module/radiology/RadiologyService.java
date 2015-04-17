@@ -37,6 +37,17 @@ public interface RadiologyService extends OpenmrsService {
 	public Study getStudyByOrderId(Integer id);
 	
 	/**
+	 * Get study by its Study Instance UID
+	 * 
+	 * @param studyInstanceUid
+	 * @return study
+	 * @should return study matching study instance uid
+	 * @should return null if no match was found
+	 * @should throw IllegalArgumentException if study instance uid is null
+	 */
+	public Study getStudyByStudyInstanceUid(String studyInstanceUid) throws IllegalArgumentException;
+	
+	/**
 	 * Get all studies corresponding to list of orders
 	 * 
 	 * @param orders orders for which studies will be returned
