@@ -179,7 +179,6 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 		studyToBeUpdated.setPerformedStatus(performedStatus);
 		
 		return sdao.saveStudy(studyToBeUpdated);
-		
 	}
 	
 	//MWL Status Codes, these are custom codes to help determine what sync status of the order is.
@@ -256,8 +255,35 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 					break;
 			}
 		}
-		s.setMwlStatus(mwlStatus);
-		saveStudy(s);
+		updateStudyMwlStatus(s, mwlStatus);
+	}
+	
+	/**
+	 * <p>
+	 * Update <code>mwlStatus</code> of existing <code>study</code> in the database
+	 * </p>
+	 * 
+	 * @param study Study to be updated
+	 * @param mwlStatus MwlStatus to set Study to
+	 * @return study which was updated
+	 * @should update mwl status of given study in database to given mwl status
+	 * @should not update non existing study
+	 * @should throw IllegalArgumentException if study is null
+	 */
+	//TODO(teleivo) is check for non existing study.id != null enough, could study.id be set somewhere other than on saveStudy()
+	@Transactional
+	Study updateStudyMwlStatus(Study studyToBeUpdated, int mwlStatus) {
+		if (studyToBeUpdated == null) {
+			throw new IllegalArgumentException("study is required");
+		}
+		
+		if (studyToBeUpdated.getId() == null) {
+			throw new APIException("Study.cannot.edit.nonexisting");
+		}
+		
+		studyToBeUpdated.setMwlStatus(mwlStatus);
+		
+		return sdao.saveStudy(studyToBeUpdated);
 	}
 	
 	@Transactional(readOnly = true)
