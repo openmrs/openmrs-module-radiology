@@ -7,7 +7,10 @@
 			<generator class="native" />
 		</id>
 		<property name="uid" column="uid"></property>
-		<property name="orderID" column="order_id"></property>
+		<many-to-one name="order" class="org.openmrs.Order"
+			not-null="true">
+			<column name="order_id"></column>
+		</many-to-one>
 		<property name="scheduledStatus" column="scheduled_status"></property>
 		<property name="performedStatus" column="performed_status"></property>
 		<property name="priority" column="priority"></property>

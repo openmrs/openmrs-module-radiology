@@ -11,7 +11,7 @@ package org.openmrs.module.radiology.validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-
+import org.openmrs.Order;
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.radiology.Study;
 import org.springframework.validation.Errors;
@@ -43,14 +43,25 @@ public class StudyValidator implements Validator {
 	 * @see org.springframework.validation.Validator#validate(java.lang.Object,
 	 *      org.springframework.validation.Errors)
 	 * @should fail validation if study is null
+	 * @should fail validation if order is null
 	 * @should fail validation if modality is null
 	 */
-	public void validate(Object obj, Errors errors) {
-		Study study = (Study) obj;
+	public void validate(Object target, Errors errors) {
+		if (log.isDebugEnabled()) {
+			log.debug(this.getClass().getName() + ".validate...");
+		}
+		
+		Study study = (Study) target;
 		if (study == null) {
 			errors.reject("error.general");
 		} else {
 			ValidationUtils.rejectIfEmpty(errors, "modality", "error.null");
+			
+			Order order = study.getOrder();
+			if (order == null) {
+				ValidationUtils.rejectIfEmpty(errors, "order", "error.null");
+				return;
+			}
 		}
 	}
 }

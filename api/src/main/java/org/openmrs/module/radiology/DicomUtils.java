@@ -265,7 +265,7 @@ public class DicomUtils {
 			debug(s.toString());
 			String pStatus = o.get(Tag.PerformedProcedureStepStatus).getValueAsString(scs, 0);
 			s.setPerformedStatus(PerformedStatuses.value(pStatus));
-			service().saveStudy(s, Calendar.getInstance().getTime());
+			service().saveStudy(s);
 			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :" + studyUID
 			        + " to Status : " + PerformedStatuses.value(pStatus));
 			
@@ -288,7 +288,6 @@ public class DicomUtils {
 	 * Volume 2.
 	 * 
 	 * @param study Study for which the order message is created
-	 * @param order Order for which the order message is created
 	 * @param orderRequest OrderRequest specifying the action of the order message
 	 * @return encoded HL7 ORM^O01 message
 	 * @should return encoded HL7 ORMO01 message string with new order control given study with
@@ -298,7 +297,7 @@ public class DicomUtils {
 	 * @should return encoded HL7 ORMO01 message string with change order control given study with
 	 *         mwlstatus one and save order request
 	 */
-	public static String createHL7Message(Study study, Order order, OrderRequest orderRequest) {
+	public static String createHL7Message(Study study, OrderRequest orderRequest) {
 		String encodedHL7OrmMessage = null;
 		
 		Integer mwlstatus = study.getMwlStatus();
@@ -307,7 +306,7 @@ public class DicomUtils {
 		CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(study.getPriority());
 		
 		try {
-			encodedHL7OrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, order, commonOrderOrderControl,
+			encodedHL7OrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, commonOrderOrderControl,
 			    orderPriority);
 			System.out.println("Created Request \n" + encodedHL7OrmMessage);
 		}

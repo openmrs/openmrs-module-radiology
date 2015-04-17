@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.radiology.hl7;
 
-import org.openmrs.Order;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.hl7.custommodel.v231.message.ORM_O01;
 import org.openmrs.module.radiology.hl7.message.RadiologyORMO01;
@@ -39,16 +38,14 @@ public class HL7Generator {
 	 * @should should return encoded hl7 ormo01 message given all params including change order
 	 *         control code
 	 * @should fail given null as study
-	 * @should fail given null as order
 	 */
-	public static String createEncodedRadiologyORMO01Message(Study study, Order order,
-	        CommonOrderOrderControl commonOrderOrderControl, CommonOrderPriority commonOrderPriority) throws HL7Exception,
-	        DataTypeException {
+	public static String createEncodedRadiologyORMO01Message(Study study, CommonOrderOrderControl commonOrderOrderControl,
+	        CommonOrderPriority commonOrderPriority) throws HL7Exception, DataTypeException {
 		
 		String result;
 		ORM_O01 ormMessage = null;
 		
-		ormMessage = RadiologyORMO01.getRadiologyORMO01Message(study, order, commonOrderOrderControl, commonOrderPriority);
+		ormMessage = RadiologyORMO01.getRadiologyORMO01Message(study, commonOrderOrderControl, commonOrderPriority);
 		
 		result = PipeParser.encode(ormMessage, encodingCharacters);
 		return result;

@@ -80,7 +80,7 @@ public class HL7GeneratorTest {
 		patient.setBirthdate(cal.getTime());
 		
 		order = new Order();
-		order.setId(20);
+		order.setOrderId(20);
 		order.setPatient(patient);
 		cal.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
 		order.setStartDate(cal.getTime());
@@ -88,7 +88,7 @@ public class HL7GeneratorTest {
 		
 		study = new Study();
 		study.setId(1);
-		study.setOrderID(order.getId());
+		study.setOrder(order);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(0);
@@ -98,14 +98,14 @@ public class HL7GeneratorTest {
 	 * Tests the HL7Generator.createEncodedRadiologyORMO01Message passing all params
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link HL7Generator#createEncodedRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link HL7Generator#createEncodedRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should return encoded hl7 ormo01 message given all params including new order control code", method = "createEncodedRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should return encoded hl7 ormo01 message given all params including new order control code", method = "createEncodedRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)")
 	public void createEncodedRadiologyORMO01Message_shouldReturnEncodedHL7ORMO01MessageGivenAllParamsIncludingNewOrderControlCode()
 	        throws HL7Exception {
 		
-		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, order,
+		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study,
 		    CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
 		
 		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
@@ -123,14 +123,14 @@ public class HL7GeneratorTest {
 	 * CommonOrderOrderControl.CHANGE_ORDER
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link HL7Generator#createEncodedRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link HL7Generator#createEncodedRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should return encoded hl7 ormo01 message given all params including change order control code", method = "createEncodedRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should return encoded hl7 ormo01 message given all params including change order control code", method = "createEncodedRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)")
 	public void createEncodedRadiologyORMO01Message_shouldReturnEncodedHL7ORMO01MessageGivenAllParamsIncludingChangeOrderControlCode()
 	        throws HL7Exception {
 		
-		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, order,
+		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study,
 		    CommonOrderOrderControl.CHANGE_ORDER, CommonOrderPriority.STAT);
 		
 		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
@@ -147,31 +147,15 @@ public class HL7GeneratorTest {
 	 * Tests the HL7Generator.createEncodedRadiologyORMO01Message passing null as study
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link HL7Generator#createEncodedRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link HL7Generator#createEncodedRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as study", method = "createEncodedRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should fail given null as study", method = "createEncodedRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)")
 	public void createEncodedRadiologyORMO01Message_shouldFailGivenNullAsStudy() throws HL7Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("study cannot be null."));
-		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(null, order,
-		    CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
-	}
-	
-	/**
-	 * Tests the HL7Generator.createEncodedRadiologyORMO01Message passing null as order
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link HL7Generator#createEncodedRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
-	 */
-	@Test
-	@Verifies(value = "should fail given null as order", method = "createEncodedRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
-	public void createEncodedRadiologyORMO01Message_shouldFailGivenNullAsOrder() throws HL7Exception {
-		
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage(is("order cannot be null."));
-		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, null,
-		    CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(null, CommonOrderOrderControl.NEW_ORDER,
+		    CommonOrderPriority.STAT);
 	}
 }

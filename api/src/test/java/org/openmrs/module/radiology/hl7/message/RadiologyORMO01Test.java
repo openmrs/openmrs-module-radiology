@@ -87,7 +87,7 @@ public class RadiologyORMO01Test {
 		patient.setBirthdate(cal.getTime());
 		
 		order = new Order();
-		order.setId(20);
+		order.setOrderId(20);
 		order.setPatient(patient);
 		cal.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
 		order.setStartDate(cal.getTime());
@@ -95,7 +95,7 @@ public class RadiologyORMO01Test {
 		
 		study = new Study();
 		study.setId(1);
-		study.setOrderID(order.getId());
+		study.setOrder(order);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(0);
@@ -105,13 +105,13 @@ public class RadiologyORMO01Test {
 	 * Tests the RadiologyORMO01.getRadiologyORMO01Message with all params
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should return ormo01 message with order control nw for given study", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should return ormo01 message with order control nw for given study", method = "getRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)")
 	public void getRadiologyORMO01Message_shouldReturnORMO01MessageWithOrderControlNWForGivenStudy() throws HL7Exception {
 		
-		ORM_O01 ormMessage = RadiologyORMO01.getRadiologyORMO01Message(study, order, CommonOrderOrderControl.NEW_ORDER,
+		ORM_O01 ormMessage = RadiologyORMO01.getRadiologyORMO01Message(study, CommonOrderOrderControl.NEW_ORDER,
 		    CommonOrderPriority.STAT);
 		
 		String ormMessageEncodedHL7String = PipeParser.encode(ormMessage, encodingCharacters);
@@ -129,31 +129,15 @@ public class RadiologyORMO01Test {
 	 * Tests the RadiologyORMO01.getRadiologyORMO01Message passing null as Study
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as study", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should fail given null as study", method = "getRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)")
 	public void getRadiologyORMO01Message_shouldFailGivenNullAsStudy() throws HL7Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("study cannot be null."));
-		ORM_O01 ormMessage = RadiologyORMO01.getRadiologyORMO01Message(null, order, CommonOrderOrderControl.NEW_ORDER,
-		    CommonOrderPriority.STAT);
-	}
-	
-	/**
-	 * Tests the RadiologyORMO01.getRadiologyORMO01Message passing null as Order
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
-	 */
-	@Test
-	@Verifies(value = "should fail given null as order", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
-	public void getRadiologyORMO01Message_shouldFailGivenNullAsOrder() throws HL7Exception {
-		
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage(is("order cannot be null."));
-		ORM_O01 ormMessage = RadiologyORMO01.getRadiologyORMO01Message(study, null, CommonOrderOrderControl.NEW_ORDER,
+		ORM_O01 ormMessage = RadiologyORMO01.getRadiologyORMO01Message(null, CommonOrderOrderControl.NEW_ORDER,
 		    CommonOrderPriority.STAT);
 	}
 	
@@ -161,30 +145,29 @@ public class RadiologyORMO01Test {
 	 * Tests the RadiologyORMO01.getRadiologyORMO01Message passing null as orderControlPriority
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as order control code", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should fail given null as order control code", method = "getRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)")
 	public void getRadiologyORMO01Message_shouldFailGivenNullAsOrderControlCode() throws HL7Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("orderControlCode cannot be null."));
-		ORM_O01 ormMessage = RadiologyORMO01.getRadiologyORMO01Message(study, order, null, CommonOrderPriority.STAT);
+		ORM_O01 ormMessage = RadiologyORMO01.getRadiologyORMO01Message(study, null, CommonOrderPriority.STAT);
 	}
 	
 	/**
 	 * Tests the RadiologyORMO01.getRadiologyORMO01Message passing null as orderControlPriority
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as order control priority", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should fail given null as order control priority", method = "getRadiologyORMO01Message(Study, CommonOrderOrderControl, CommonOrderPriority)")
 	public void getRadiologyORMO01Message_shouldFailGivenNullAsOrderControlPriority() throws HL7Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("orderControlPriority cannot be null."));
-		ORM_O01 ormMessage = RadiologyORMO01
-		        .getRadiologyORMO01Message(study, order, CommonOrderOrderControl.NEW_ORDER, null);
+		ORM_O01 ormMessage = RadiologyORMO01.getRadiologyORMO01Message(study, CommonOrderOrderControl.NEW_ORDER, null);
 	}
 }

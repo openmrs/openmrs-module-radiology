@@ -40,25 +40,25 @@ public class RadiologyOBRTest {
 	 * Tests the RadiologyOBR.populateObservationRequest with all params
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, Study, Order)}
+	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, Study)}
 	 */
 	@Test
-	@Verifies(value = "should return populated observation request segment for given study and order", method = "populateObservationRequest(OBR, Study, Order)")
+	@Verifies(value = "should return populated observation request segment for given study", method = "populateObservationRequest(OBR, Study)")
 	public void populateObservationRequest_shouldReturnPopulatedObservationRequestSegmentForGivenStudyAndOrder()
 	        throws HL7Exception {
 		
 		Order order = new Order();
-		order.setId(1);
+		order.setOrderId(1);
 		order.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		
 		Study study = new Study();
 		study.setId(1);
 		study.setModality(Modality.CT);
-		study.setOrderID(1);
+		study.setOrder(order);
 		
 		ORM_O01 message = new ORM_O01();
 		RadiologyOBR.populateObservationRequest(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), study, order);
+		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), study);
 		
 		OBR observationRequestSegment = message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
 		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR();
@@ -78,55 +78,36 @@ public class RadiologyOBRTest {
 	 * Tests the RadiologyOBR.populateObservationRequest passing null as OBR
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, Study, Order)}
+	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, Study)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as obr", method = "populateObservationRequest(OBR, Study, Order)")
+	@Verifies(value = "should fail given null as obr", method = "populateObservationRequest(OBR, Study)")
 	public void populateObservationRequest_shouldFailGivenNullAsORC() throws HL7Exception {
 		
 		Study study = new Study();
 		Order order = new Order();
+		study.setOrder(order);
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("observationRequestSegment cannot be null."));
-		RadiologyOBR.populateObservationRequest(null, study, order);
+		RadiologyOBR.populateObservationRequest(null, study);
 	}
 	
 	/**
 	 * Tests the RadiologyOBR.populateObservationRequest passing null as Study
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, Study, Order)}
+	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, Study)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as study", method = "populateObservationRequest(OBR, Study, Order)")
+	@Verifies(value = "should fail given null as study", method = "populateObservationRequest(OBR, Study)")
 	public void populateObservationRequest_shouldFailGivenNullAsStudy() throws HL7Exception {
 		
-		Order order = new Order();
 		ORM_O01 message = new ORM_O01();
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("study cannot be null."));
 		RadiologyOBR.populateObservationRequest(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), null, order);
-	}
-	
-	/**
-	 * Tests the RadiologyOBR.populateObservationRequest passing null as Order
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, Study, Order)}
-	 */
-	@Test
-	@Verifies(value = "should fail given null as order", method = "populateObservationRequest(OBR, Study, Order)")
-	public void populateObservationRequest_shouldFailGivenNullAsOrder() throws HL7Exception {
-		
-		Study study = new Study();
-		ORM_O01 message = new ORM_O01();
-		
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage(is("order cannot be null."));
-		RadiologyOBR.populateObservationRequest(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), study, null);
+		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), null);
 	}
 }

@@ -1,12 +1,23 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License, 
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under 
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ * 
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.radiology.impl;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.Date;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Obs;
 import org.openmrs.Order;
+import org.openmrs.Patient;
+import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
@@ -14,14 +25,11 @@ import org.openmrs.module.radiology.Main;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.Visit;
-import org.openmrs.module.radiology.db.GenericDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
 import org.openmrs.module.radiology.db.VisitDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 public class MainImpl extends BaseOpenmrsService implements Main {
-	
-	private GenericDAO gdao;
 	
 	private StudyDAO sdao;
 	
@@ -37,31 +45,116 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 		this.vdao = vdao;
 	}
 	
+	/**
+	 * @see Main#getStudy(Integer)
+	 */
 	@Transactional(readOnly = true)
 	public Study getStudy(Integer id) {
+		if (id == null) {
+			throw new IllegalArgumentException("id is required");
+		}
+		
 		return sdao.getStudy(id);
 	}
 	
+	/**
+	 * @see Main#getStudyByOrderId(Integer)
+	 */
 	@Transactional(readOnly = true)
 	public Study getStudyByOrderId(Integer id) {
+		
 		return sdao.getStudyByOrderId(id);
 	}
 	
-	@Transactional
-	public Study saveStudy(Study s) {
-		return saveStudy(s, null);
+	/**
+	 * @see Main#getStudyByOrder(Order)
+	 */
+	@Transactional(readOnly = true)
+	public Study getStudyByOrder(Order order) {
+		if (order == null) {
+			throw new IllegalArgumentException("order is required");
+		}
+		
+		return sdao.getStudyByOrder(order);
 	}
 	
-	public Study saveStudy(Study s, Date d) {
-		Order order = s.order();
+	/**
+	 * @see Main#getStudyByUid(String)
+	 */
+	@Transactional(readOnly = true)
+	public Study getStudyByUid(String uid) {
+		if (uid == null) {
+			throw new IllegalArgumentException("uid is required");
+		}
+		
+		return sdao.getStudyByUid(uid);
+	}
+	
+	/**
+	 * @see Main#getStudiesByPatient(Patient)
+	 */
+	@Transactional(readOnly = true)
+	public List<Study> getStudiesByPatient(Patient patient) {
+		if (patient == null) {
+			throw new IllegalArgumentException("patient is required");
+		}
+		
+		return sdao.getStudiesByPatient(patient);
+	}
+	
+	/**
+	 * @see Main#getStudiesByOrders(List<Order>)
+	 */
+	@Transactional(readOnly = true)
+	public List<Study> getStudiesByOrders(List<Order> orders) {
+		if (orders == null) {
+			throw new IllegalArgumentException("orders are required");
+		}
+		
+		return sdao.getStudiesByOrders(orders);
+	}
+	
+	/**
+	 * @see Main#getObservationsByStudy(Study)
+	 */
+	@Transactional(readOnly = true)
+	public List<Obs> getObservationsByStudy(Study study) {
+		if (study == null) {
+			throw new IllegalArgumentException("study is required");
+		}
+		
+		return sdao.getObservationsByStudy(study);
+	}
+	
+	/**
+	 * @see Main#saveStudy(Study)
+	 */
+	@Transactional
+	public Study saveStudy(Study studyToBeSaved) {
+		if (studyToBeSaved == null) {
+			throw new IllegalArgumentException("study is required");
+		}
+		
+		if (studyToBeSaved.getOrder() == null) {
+			throw new APIException("Study.order.required");
+		}
+		
+		if (studyToBeSaved.getModality() == null) {
+			throw new APIException("Study.modality.required");
+		}
+		
 		try {
-			sdao.saveStudy(s);
-			File file = new File(Utils.mwlDir(), s.getId() + ".xml");
+			Study savedStudy = sdao.saveStudy(studyToBeSaved);
+			String studyUID = Utils.studyPrefix() + savedStudy.getId();
+			savedStudy.setUid(studyUID);
+			savedStudy = sdao.saveStudy(savedStudy);
+			
+			File file = new File(Utils.mwlDir(), savedStudy.getId() + ".xml");
 			String path = "";
 			path = file.getCanonicalPath();
-			DicomUtils.write(order, s, file);
+			DicomUtils.write(savedStudy.getOrder(), savedStudy, file);
 			log.debug("Order and study saved in " + path);
-			return s;
+			return savedStudy;
 		}
 		catch (Exception e) {
 			e.printStackTrace();
@@ -85,9 +178,8 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	// 10 : Unvoid order successfull
 	// 11 : Unvoid order failed. Try again
 	public void sendModalityWorklist(Study s, OrderRequest orderRequest) {
-		Order order = s.order();
 		Integer mwlStatus = s.getMwlStatus();
-		String hl7blob = DicomUtils.createHL7Message(s, order, orderRequest);
+		String hl7blob = DicomUtils.createHL7Message(s, orderRequest);
 		int status = DicomUtils.sendHL7Worklist(hl7blob);
 		
 		if (status == 1) {
@@ -158,19 +250,4 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	public Visit saveVisit(Visit v) {
 		return vdao.saveVisit(v);
 	}
-	
-	@Override
-	public void setGdao(GenericDAO dao) {
-		this.gdao = dao;
-	}
-	
-	@Override
-	public Object get(String query, boolean unique) {
-		return gdao.get(query, unique);
-	}
-	
-	public GenericDAO db() {
-		return gdao;
-	}
-	
 }

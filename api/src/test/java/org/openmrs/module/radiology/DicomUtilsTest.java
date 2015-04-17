@@ -27,7 +27,6 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
-import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
 import org.openmrs.test.Verifies;
@@ -51,10 +50,10 @@ public class DicomUtilsTest {
 	 * OrderRequest.Save_Order
 	 * 
 	 * @throws Exception
-	 * @see {@link DicomUtils#createHL7Message(Study, Order, OrderRequest)}
+	 * @see {@link DicomUtils#createHL7Message(Study, OrderRequest)}
 	 */
 	@Test
-	@Verifies(value = "should return encoded HL7 ORMO01 message string with new order control given study with mwlstatus zero and save order request", method = "createHL7Message(Study, Order, OrderRequest)")
+	@Verifies(value = "should return encoded HL7 ORMO01 message string with new order control given study with mwlstatus zero and save order request", method = "createHL7Message(Study, OrderRequest)")
 	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringWithNewOrderControlGivenStudyWithMwlstatusZeroAndSaveOrderRequest()
 	        throws Exception {
 		
@@ -88,7 +87,7 @@ public class DicomUtilsTest {
 		patient.setBirthdate(cal.getTime());
 		
 		Order order = new Order();
-		order.setId(20);
+		order.setOrderId(20);
 		order.setPatient(patient);
 		cal.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
 		order.setStartDate(cal.getTime());
@@ -96,13 +95,13 @@ public class DicomUtilsTest {
 		
 		Study study = new Study();
 		study.setId(1);
-		study.setOrderID(order.getId());
+		study.setOrder(order);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(0);
 		study.setMwlStatus(0);
 		
-		String saveOrderHL7String = DicomUtils.createHL7Message(study, order, DicomUtils.OrderRequest.Save_Order);
+		String saveOrderHL7String = DicomUtils.createHL7Message(study, DicomUtils.OrderRequest.Save_Order);
 		
 		assertThat(saveOrderHL7String, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(
@@ -171,10 +170,10 @@ public class DicomUtilsTest {
 	 * OrderRequest.Void_Order
 	 * 
 	 * @throws Exception
-	 * @see {@link DicomUtils#createHL7Message(Study, Order, OrderRequest)}
+	 * @see {@link DicomUtils#createHL7Message(Study, OrderRequest)}
 	 */
 	@Test
-	@Verifies(value = "should return encoded HL7 ORMO01 message string with cancel order control given study with mwlstatus zero and void order request", method = "createHL7Message(Study, Order, OrderRequest)")
+	@Verifies(value = "should return encoded HL7 ORMO01 message string with cancel order control given study with mwlstatus zero and void order request", method = "createHL7Message(Study, OrderRequest)")
 	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringWithCancelOrderControlGivenStudyWithMwlstatusZeroAndVoidOrderRequest()
 	        throws Exception {
 		
@@ -208,7 +207,7 @@ public class DicomUtilsTest {
 		patient.setBirthdate(cal.getTime());
 		
 		Order order = new Order();
-		order.setId(20);
+		order.setOrderId(20);
 		order.setPatient(patient);
 		cal.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
 		order.setStartDate(cal.getTime());
@@ -216,13 +215,13 @@ public class DicomUtilsTest {
 		
 		Study study = new Study();
 		study.setId(1);
-		study.setOrderID(order.getId());
+		study.setOrder(order);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(0);
 		study.setMwlStatus(0);
 		
-		String saveOrderHL7String = DicomUtils.createHL7Message(study, order, DicomUtils.OrderRequest.Void_Order);
+		String saveOrderHL7String = DicomUtils.createHL7Message(study, DicomUtils.OrderRequest.Void_Order);
 		
 		assertThat(saveOrderHL7String, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(
@@ -291,10 +290,10 @@ public class DicomUtilsTest {
 	 * OrderRequest.Save_Order
 	 * 
 	 * @throws Exception
-	 * @see {@link DicomUtils#createHL7Message(Study, Order, OrderRequest)}
+	 * @see {@link DicomUtils#createHL7Message(Study, OrderRequest)}
 	 */
 	@Test
-	@Verifies(value = "should return encoded HL7 ORMO01 message string with change order control given study with mwlstatus one and save order request", method = "createHL7Message(Study, Order, OrderRequest)")
+	@Verifies(value = "should return encoded HL7 ORMO01 message string with change order control given study with mwlstatus one and save order request", method = "createHL7Message(Study, OrderRequest)")
 	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringWithChangeOrderControlGivenStudyWithMwlstatusOneAndSaveOrderRequest()
 	        throws Exception {
 		
@@ -328,7 +327,7 @@ public class DicomUtilsTest {
 		patient.setBirthdate(cal.getTime());
 		
 		Order order = new Order();
-		order.setId(20);
+		order.setOrderId(20);
 		order.setPatient(patient);
 		cal.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
 		order.setStartDate(cal.getTime());
@@ -336,13 +335,13 @@ public class DicomUtilsTest {
 		
 		Study study = new Study();
 		study.setId(1);
-		study.setOrderID(order.getId());
+		study.setOrder(order);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(0);
 		study.setMwlStatus(1);
 		
-		String saveOrderHL7String = DicomUtils.createHL7Message(study, order, DicomUtils.OrderRequest.Save_Order);
+		String saveOrderHL7String = DicomUtils.createHL7Message(study, DicomUtils.OrderRequest.Save_Order);
 		
 		assertThat(saveOrderHL7String, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(
@@ -411,7 +410,7 @@ public class DicomUtilsTest {
 	 * OrderRequest.Default
 	 * 
 	 * @throws Exception
-	 * @see {@link DicomUtils#createHL7Message(Study, Order, OrderRequest)}
+	 * @see {@link DicomUtils#createHL7Message(Study, OrderRequest)}
 	 */
 	//TODO(teleivo) Find the purpose of OrderRequest.Default and delete if possible, since it leads to an invalid ORM^O01 message
 	// Note: the old getORCType(mwlstatus, OrderRequest) method returned "" if you passed OrderRequest.Default
@@ -419,7 +418,7 @@ public class DicomUtilsTest {
 	// Its unclear why OrderRequest.Default exists. I replaced the getORCType with getCommonOrderControlFrom to ensure type safety via an OrderControl Enum.
 	// In case mwlStatus = x, OrderRequest.Default null is returned.
 	//@Test
-	@Verifies(value = "should return encoded HL7 ORMO01 message string with new order control given study with mwlstatus zero and default order request", method = "createHL7Message(Study, Order, OrderRequest)")
+	@Verifies(value = "should return encoded HL7 ORMO01 message string with new order control given study with mwlstatus zero and default order request", method = "createHL7Message(Study, OrderRequest)")
 	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringWithNewOrderControlGivenStudyWithMwlstatusZeroAndDefaultOrderRequest()
 	        throws Exception {
 		
@@ -453,7 +452,7 @@ public class DicomUtilsTest {
 		patient.setBirthdate(cal.getTime());
 		
 		Order order = new Order();
-		order.setId(20);
+		order.setOrderId(20);
 		order.setPatient(patient);
 		cal.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
 		order.setStartDate(cal.getTime());
@@ -461,13 +460,13 @@ public class DicomUtilsTest {
 		
 		Study study = new Study();
 		study.setId(1);
-		study.setOrderID(order.getId());
+		study.setOrder(order);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(0);
 		study.setMwlStatus(0);
 		
-		String saveOrderHL7String = DicomUtils.createHL7Message(study, order, DicomUtils.OrderRequest.Default);
+		String saveOrderHL7String = DicomUtils.createHL7Message(study, DicomUtils.OrderRequest.Default);
 		
 		assertThat(saveOrderHL7String, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(

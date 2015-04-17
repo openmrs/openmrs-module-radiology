@@ -25,7 +25,7 @@
 			</column>
 			<column name="uid" type="varchar(255)"></column>
 			<column name="order_id" type="int">
-				<constraints unique="true" />
+				<constraints unique="true" nullable="false" />
 			</column>
 			<column name="scheduled_status" type="int" defaultValue="-1"></column>
 			<column name="performed_status" type="int" defaultValue="-1"></column>

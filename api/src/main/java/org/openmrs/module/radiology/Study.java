@@ -9,11 +9,6 @@
  */
 package org.openmrs.module.radiology;
 
-import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
-
-import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
@@ -134,23 +129,6 @@ public class Study {
 		}
 	}
 	
-	public static Study byUID(String uid) {
-		String query = "from Study as s where s.uid = '" + uid + "'";
-		return (Study) Context.getService(Main.class).get(query, true);
-	}
-	
-	public static List<Study> get(List<Order> o) {
-		ArrayList<Study> s = new ArrayList<Study>();
-		for (Order o1 : o) {
-			s.add(get(o1));
-		}
-		return s;
-	}
-	
-	public static Study get(Order o) {
-		return Context.getService(Main.class).getStudyByOrderId(o.getOrderId());
-	}
-	
 	private static String localized(String code) {
 		return Context.getMessageSourceService().getMessage(code);
 	}
@@ -165,11 +143,11 @@ public class Study {
 		return (List<Study>) Context.getService(Main.class).get(query, false);
 	}
 	
-	private int id;
+	private Integer id;
 	
 	private String uid;
 	
-	private int orderID;
+	private Order order;
 	
 	private int scheduledStatus = -1;
 	
@@ -191,12 +169,12 @@ public class Study {
 		super();
 	}
 	
-	public Study(int id, String uid, int orderID, int scheduledStatus, int performedStatus, int priority, Modality modality,
-	    User schedulerUserId, User performingPhysicianUserId, User readingPhysicianUserId) {
+	public Study(Integer id, String uid, Order order, int scheduledStatus, int performedStatus, int priority,
+	    Modality modality, User schedulerUserId, User performingPhysicianUserId, User readingPhysicianUserId) {
 		super();
 		this.id = id;
 		this.uid = uid;
-		this.orderID = orderID;
+		this.order = order;
 		this.scheduledStatus = scheduledStatus;
 		this.performedStatus = performedStatus;
 		this.priority = priority;
@@ -206,7 +184,7 @@ public class Study {
 		this.readingPhysician = readingPhysicianUserId;
 	}
 	
-	public int getId() {
+	public Integer getId() {
 		return id;
 	}
 	
@@ -214,8 +192,8 @@ public class Study {
 		return modality;
 	}
 	
-	public int getOrderID() {
-		return orderID;
+	public Order getOrder() {
+		return order;
 	}
 	
 	public int getPerformedStatus() {
@@ -270,20 +248,6 @@ public class Study {
 		return !PerformedStatuses.has(performedStatus);
 	}
 	
-	@SuppressWarnings("unchecked")
-	public List<Obs> obs() {
-		//String query = "from Obs as o where o.order.orderId = " + orderID;
-		String innerQuery = "(Select oo.previousVersion from Obs as oo where oo.order.orderId=" + orderID
-		        + " and oo.previousVersion IS NOT NULL)";
-		String query = "from Obs as o where o.order.orderId = " + orderID + " and o.obsId NOT IN " + innerQuery;
-		return (List<Obs>) Context.getService(Main.class).get(query, false);
-	}
-	
-	public Order order() {
-		String query = "from Order as o where o.orderId = " + orderID;
-		return (Order) Context.getService(Main.class).get(query, true);
-	}
-	
 	public String performing() {
 		return getPerformingPhysician() == null ? "" : getPerformingPhysician().getPersonName().getFullName();
 	}
@@ -316,7 +280,7 @@ public class Study {
 		this.mwlStatus = status;
 	}
 	
-	public void setId(int id) {
+	public void setId(Integer id) {
 		this.id = id;
 	}
 	
@@ -324,8 +288,8 @@ public class Study {
 		this.modality = modality;
 	}
 	
-	public void setOrderID(int orderID) {
-		this.orderID = orderID;
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 	
 	public void setPerformedStatus(int performedStatus) {
@@ -408,19 +372,11 @@ public class Study {
 		return ret;
 	}
 	
+	/**
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		StringBuffer buff = new StringBuffer();
-		
-		Field[] fields = this.getClass().getDeclaredFields();
-		for (int i = 0; i < fields.length; i++) {
-			try {
-				buff.append(fields[i].getName()).append(": ").append(fields[i].get(this)).append(" ");
-			}
-			catch (IllegalAccessException ex) {}
-			catch (IllegalArgumentException ex) {}
-			
-		}
-		return buff.toString();
+		return "Study. id: " + id + " uid: " + uid + " order: " + order;
 	}
 }

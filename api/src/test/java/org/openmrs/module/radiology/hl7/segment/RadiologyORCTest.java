@@ -43,14 +43,14 @@ public class RadiologyORCTest {
 	 * Tests the RadiologyORC.populateCommonOrder with all params
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link RadiologyORC#populateCommonOrder(ORC, Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORC#populateCommonOrder(ORC, Study, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should return populated common order segment for given study and order", method = "populateCommonOrder(ORC, Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should return populated common order segment for given study", method = "populateCommonOrder(ORC, Study, CommonOrderOrderControl, CommonOrderPriority)")
 	public void populateCommonOrder_shouldReturnPopulatedCommonOrderSegmentForGivenStudyAndOrder() throws HL7Exception {
 		
 		Order order = new Order();
-		order.setId(1);
+		order.setOrderId(1);
 		
 		Calendar calendarOrderStartDate = Calendar.getInstance();
 		calendarOrderStartDate.set(2015, Calendar.FEBRUARY, 04);
@@ -61,11 +61,11 @@ public class RadiologyORCTest {
 		
 		Study study = new Study();
 		study.setId(1);
-		study.setOrderID(1);
+		study.setOrder(order);
 		
 		ORM_O01 message = new ORM_O01();
 		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC(), study,
-		    order, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+		    CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
 		
 		ORC commonOrderSegment = message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC();
 		assertThat(commonOrderSegment.getOrderControl().getValue(), is("NW"));
@@ -81,10 +81,10 @@ public class RadiologyORCTest {
 	 * Tests the RadiologyORC.populateCommonOrder passing null as ORC
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link RadiologyORC#populateCommonOrder(ORC, Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORC#populateCommonOrder(ORC, Study, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as commonOrderSegment", method = "populateCommonOrder(ORC, Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should fail given null as commonOrderSegment", method = "populateCommonOrder(ORC, Study, CommonOrderOrderControl, CommonOrderPriority)")
 	public void populateCommonOrder_shouldFailGivenNullAsCommonOrderSegment() throws HL7Exception {
 		
 		Study study = new Study();
@@ -92,17 +92,17 @@ public class RadiologyORCTest {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("commonOrderSegment cannot be null."));
-		RadiologyORC.populateCommonOrder(null, study, order, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+		RadiologyORC.populateCommonOrder(null, study, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
 	}
 	
 	/**
 	 * Tests the RadiologyORC.populateCommonOrder passing null as Study
 	 * 
 	 * @throws HL7Exception
-	 * @see {@link RadiologyORC#populateCommonOrder(ORC, Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORC#populateCommonOrder(ORC, Study, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as study", method = "populateCommonOrder(ORC, Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should fail given null as study", method = "populateCommonOrder(ORC, Study, CommonOrderOrderControl, CommonOrderPriority)")
 	public void populateCommonOrder_shouldFailGivenNullAsStudy() throws HL7Exception {
 		
 		Order order = new Order();
@@ -111,25 +111,6 @@ public class RadiologyORCTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("study cannot be null."));
 		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC(), null,
-		    order, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
-	}
-	
-	/**
-	 * Tests the RadiologyORC.populateCommonOrder passing null as Order
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link RadiologyORC#populateCommonOrder(ORC, Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
-	 */
-	@Test
-	@Verifies(value = "should fail given null as order", method = "populateCommonOrder(ORC, Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
-	public void populateCommonOrder_shouldFailGivenNullAsOrder() throws HL7Exception {
-		
-		Study study = new Study();
-		ORM_O01 message = new ORM_O01();
-		
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage(is("order cannot be null."));
-		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC(), study,
-		    null, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+		    CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
 	}
 }

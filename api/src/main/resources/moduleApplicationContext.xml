@@ -26,13 +26,6 @@
 					</property>
 					<property name="target">
 						<bean class="org.openmrs.module.radiology.impl.MainImpl">
-							<property name="gdao">
-								<bean class="org.openmrs.module.radiology.db.hibernate.GenericDAOImpl">
-									<property name="sessionFactory">
-										<ref bean="sessionFactory" />
-									</property>
-								</bean>
-							</property>
 							<property name="sdao">
 								<bean class="org.openmrs.module.radiology.db.hibernate.StudyDAOImpl">
 									<property name="sessionFactory">

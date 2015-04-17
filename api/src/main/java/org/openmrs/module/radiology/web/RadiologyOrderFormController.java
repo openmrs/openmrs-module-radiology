@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.radiology.web;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -186,14 +185,9 @@ public class RadiologyOrderFormController {
 		try {
 			if (request.getParameter("saveOrder") != null) {
 				orderService.saveOrder(order);
-				study.setOrderID(order.getOrderId());
+				study.setOrder(orderService.getOrder(order.getOrderId()));
 				service().saveStudy(study);
-				//Assigning Study UID                                
-				String studyUID = Utils.studyPrefix() + study.getId();
-				System.out.println("Radiology order received with StudyUID : " + studyUID + " Order ID : "
-				        + order.getOrderId());
-				study.setUid(studyUID);
-				service().saveStudy(study, Calendar.getInstance().getTime());
+				
 				orderRequest = OrderRequest.Save_Order;
 				Order o = orderService.getOrder(order.getOrderId());
 				service().sendModalityWorklist(service().getStudyByOrderId(o.getOrderId()), orderRequest);

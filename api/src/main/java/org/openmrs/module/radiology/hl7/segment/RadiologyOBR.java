@@ -33,16 +33,15 @@ public class RadiologyOBR {
 	 * @should fail given null as study
 	 * @should fail given null as order
 	 */
-	public static OBR populateObservationRequest(OBR observationRequestSegment, Study study, Order order)
-	        throws DataTypeException {
+	public static OBR populateObservationRequest(OBR observationRequestSegment, Study study) throws DataTypeException {
 		
 		if (observationRequestSegment == null) {
 			throw new IllegalArgumentException("observationRequestSegment cannot be null.");
 		} else if (study == null) {
 			throw new IllegalArgumentException("study cannot be null.");
-		} else if (order == null) {
-			throw new IllegalArgumentException("order cannot be null.");
 		}
+		
+		Order order = study.getOrder();
 		
 		observationRequestSegment.getUniversalServiceID().getAlternateText().setValue(order.getInstructions());
 		observationRequestSegment.getPlacerField2().setValue(String.valueOf(study.getId()));

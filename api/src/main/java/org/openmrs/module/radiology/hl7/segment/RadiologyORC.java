@@ -36,7 +36,7 @@ public class RadiologyORC {
 	 * @should fail given null as study
 	 * @should fail given null as order
 	 */
-	public static ORC populateCommonOrder(ORC commonOrderSegment, Study study, Order order,
+	public static ORC populateCommonOrder(ORC commonOrderSegment, Study study,
 	        CommonOrderOrderControl commonOrderOrderControl, CommonOrderPriority commonOrderPriority)
 	        throws DataTypeException {
 		
@@ -44,9 +44,9 @@ public class RadiologyORC {
 			throw new IllegalArgumentException("commonOrderSegment cannot be null.");
 		} else if (study == null) {
 			throw new IllegalArgumentException("study cannot be null.");
-		} else if (order == null) {
-			throw new IllegalArgumentException("order cannot be null.");
 		}
+		
+		Order order = study.getOrder();
 		
 		commonOrderSegment.getOrderControl().setValue(commonOrderOrderControl.getValue());
 		commonOrderSegment.getPlacerOrderNumber().getEntityIdentifier().setValue(String.valueOf(study.getId()));
