@@ -1,3 +1,12 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License, 
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can 
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under 
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ * 
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.radiology.web;
 
 import java.io.IOException;
@@ -81,27 +90,30 @@ public class ObsFormController {
 		Obs obs = null;
 		// Get previous obs
 		List<Obs> prevs = null;
-		ObsService os = Context.getObsService();
-		OrderService or = Context.getOrderService();
-		Study study = service().getStudyByOrderId(orderId);
+		ObsService obsService = Context.getObsService();
+		OrderService orderService = Context.getOrderService();
+		Order order = orderService.getOrder(orderId);
+		Study study = service().getStudyByOrder(order);
+		prevs = service().getObservationsByStudy(study);
+		
 		if (obsId != null) {
-			obs = os.getObs(obsId);
-			prevs = service().getStudyByOrderId(obs.getOrder().getOrderId()).obs();
+			obs = obsService.getObs(obsId);
 		} else {
-			obs = newObs(or.getOrder(orderId));
-			prevs = study.obs();
+			obs = newObs(order);
 		}
 		
 		mav.addObject("obs", obs);
 		mav.addObject("studyUID", study.isCompleted() ? study.getUid() : null);
 		if (study.isCompleted()) {
 			//    System.out.println("Study UID:"+study.getUid()+" Completed : "+study.isCompleted()+" Patient ID : "+or.getOrder(orderId).getPatient().getId()+" Server : "+Utils.oviyamLocalServerName() );                    
-			String patID = or.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();
+			String patID = order.getPatient().getPatientIdentifier().getIdentifier();
 			String link = Utils.serversAddress() + ":" + Utils.serversPort() + Utils.viewerURLPath()
 			        + Utils.oviyamLocalServerName() + "studyUID=" + study.getUid() + "&patientID=" + patID;
 			mav.addObject("oviyamLink", link);
-		} else
+		} else {
 			mav.addObject("oviyamLink", null);
+		}
+		
 		mav.addObject("prevs", prevs);
 		mav.addObject("prevsSize", prevs.size());
 	}

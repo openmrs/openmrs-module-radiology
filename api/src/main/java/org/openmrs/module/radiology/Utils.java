@@ -20,7 +20,6 @@ import org.openmrs.api.context.Context;
 
 /**
  * @author Cortex
- * 
  */
 public class Utils {
 	
@@ -44,25 +43,12 @@ public class Utils {
 		return as.getGlobalProperty("radiology.mwlMppsPort");
 	}
 	
-	public static String storageDir() {
-		return as.getGlobalProperty("radiology.storageDirectory");
-	}
-	
-	public static String storagePort() {
-		return as.getGlobalProperty("radiology.storagePort");
-	}
-	
-	public static String storageCommitmentPort() {
-		return as.getGlobalProperty("radiology.storageCommitmentPort");
-	}
-	
 	public static String serversAddress() {
 		return "http://" + as.getGlobalProperty("radiology.serversAddress");
 	}
 	
 	/**
-	 * Prefix for DICOM objects in the application, Ex:
-	 * 1.2.826.0.1.3680043.8.2186
+	 * Prefix for DICOM objects in the application, Ex: 1.2.826.0.1.3680043.8.2186
 	 */
 	public static String applicationUID() {
 		return as.getGlobalProperty("radiology.applicationUID");
@@ -126,8 +112,7 @@ public class Utils {
 	}
 	
 	/**
-	 * @param d
-	 *            the date to plain
+	 * @param d the date to plain
 	 * @return d in the format yyyymmdd as string
 	 */
 	@SuppressWarnings("static-access")
@@ -161,8 +146,7 @@ public class Utils {
 	}
 	
 	/**
-	 * @param d
-	 *            the date to 'time'
+	 * @param d the date to 'time'
 	 * @return d in the format hhmmss as string
 	 */
 	@SuppressWarnings("static-access")
@@ -175,10 +159,8 @@ public class Utils {
 	}
 	
 	/**
-	 * @param x
-	 *            Number to pad
-	 * @param min
-	 *            Minimum numbers to be written
+	 * @param x Number to pad
+	 * @param min Minimum numbers to be written
 	 * @return pad(2,3) returns "002"
 	 */
 	static String pad(int x, int min) {

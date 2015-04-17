@@ -14,7 +14,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.Main;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Study.Modality;
 import org.openmrs.module.radiology.Study.Priorities;
 import org.openmrs.module.radiology.Utils;
 import org.springframework.stereotype.Controller;
@@ -61,7 +60,7 @@ public class PortletsController {
 		
 		List<Order> matchedOrders = dateFilter(patientQuery, startDateS, finalDateS, mav);
 		// TODO Status filter
-		List<Study> studies = Study.get(matchedOrders);
+		List<Study> studies = service().getStudiesByOrders(matchedOrders);
 		List<String> statuses = new Vector<String>();
 		List<String> priorities = new Vector<String>();
 		List<String> schedulers = new Vector<String>();
@@ -76,7 +75,7 @@ public class PortletsController {
 				schedulers.add(study.scheduler());
 				performings.add(study.performing());
 				readings.add(study.reading());
-				modalities.add(Modality.values()[study.getModality()].getFullName());
+				modalities.add(study.getModality().getFullName());
 				mwlStatuses.add(study.mwlStatus());
 			}
 		}
