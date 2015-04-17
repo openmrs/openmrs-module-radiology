@@ -333,6 +333,7 @@ public class Study {
 	 */
 	public boolean setup(Order o, Integer studyId) {
 		setId(studyId);
+		setOrder(o);
 		
 		User u = Context.getAuthenticatedUser();
 		if (u.hasRole(Roles.ReferringPhysician, true) && o.getOrderer() == null)
