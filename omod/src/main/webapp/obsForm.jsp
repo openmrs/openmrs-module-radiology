@@ -10,7 +10,7 @@
 <openmrs:htmlInclude file="/scripts/dojo/dojo.js" />
 <%@ include
 	file="/WEB-INF/view/module/radiology/resources/js/moreInfo.js"%>
-	
+
 <script type="text/javascript">
 	dojo.require("dojo.widget.openmrs.ConceptSearch");
 	dojo.require("dojo.widget.openmrs.EncounterSearch");
@@ -138,7 +138,7 @@
 		var values = [ 'valueBooleanRow', 'valueCodedRow', 'valueDatetimeRow',
 				'valueModifierRow', 'valueTextRow', 'valueNumericRow',
 				'valueInvalidRow', 'valueComplex' ];
-		for ( var i = 0; i < values.length; i++) {
+		for (var i = 0; i < values.length; i++) {
 			$(values[i]).style.display = "none";
 		}
 
@@ -222,7 +222,7 @@
 			div.innerHTML = "";
 			var txt = document
 					.createTextNode('<spring:message code="Obs.valueInvalid.didYouMean"/> ');
-			for ( var i = 0; i < questions.length && i < 10; i++) {
+			for (var i = 0; i < questions.length && i < 10; i++) {
 				if (i == 0)
 					div.appendChild(txt);
 				var concept = questions[i];
@@ -259,7 +259,7 @@ th {
 	text-align: left;
 }
 
-*>#numericRangeError,*>.obsValue {
+*>#numericRangeError, *>.obsValue {
 	visibility: visible;
 }
 
@@ -351,7 +351,7 @@ th {
 </spring:hasBindErrors>
 
 <c:if test="${obs.voided}">
-	<form action="" method="post">                
+	<form action="" method="post">
 		<div class="retiredMessage">
 			<div>
 				<spring:message code="general.voidedBy" />
@@ -388,7 +388,8 @@ th {
 							<openmrs_tag:personField formFieldName="person"
 								searchLabelCode="Person.findBy"
 								initialValue="${obs.person.personId}" linkUrl="" callback="" />
-								<a style="cursor:pointer;" id="moreInfo"><spring:message code="radiology.moreInfo" /></a>
+							<a style="cursor: pointer;" id="moreInfo"><spring:message
+									code="radiology.moreInfo" /></a>
 							<c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if>
@@ -424,8 +425,7 @@ th {
 							<input type="hidden" name="order" id="order"
 								value="${obs.order.orderId}" size="7" readonly="readonly" />
 							<a href="radiologyOrder.form?orderId=${obs.order.orderId}"
-								target="_blank"
-								>${obs.order.orderId}</a>
+								target="_blank">${obs.order.orderId}</a>
 							<c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if>
@@ -636,14 +636,14 @@ th {
 				<c:if test="${not empty studyUID}">
 					<tr>
 						<th><spring:message code="radiology.studyResults" /></th>
-                                                <%--<td><a href="/openmrs/moduleServlet/radiology/viewer.jnlp?studyUID=${studyUID}"><spring:message code="general.download" /></a></td>--%>
-                                                <td><a href="${oviyamLink}" target="_tab">View Study</a></td>
+						<%--<td><a href="/openmrs/moduleServlet/radiology/viewer.jnlp?studyUID=${studyUID}"><spring:message code="general.download" /></a></td>--%>
+						<td><a href="${oviyamLink}" target="_tab">View Study</a></td>
 					</tr>
 				</c:if>
 				<c:if test="${obs.creator != null}">
 					<tr>
 						<th><spring:message code="general.createdBy" /></th>
-						<td>${obs.creator.personName} - <openmrs:formatDate
+						<td>${obs.creator.personName}- <openmrs:formatDate
 								date="${obs.dateCreated}" type="medium" />
 						</td>
 					</tr>
@@ -653,18 +653,23 @@ th {
 		<input type="hidden" name="phrase"
 			value="<request:parameter name="phrase" />" /> <br /> <br />
 
-                <c:if test="${obs.obsId != null}">
-                                <b><openmrs:message code="Obs.edit.reason"/></b> <input type="text" value="${editReason}" size="40" name="editReason"/>
-                                <spring:hasBindErrors name="obs">
-                                        <c:forEach items="${errors.allErrors}" var="error">
-                                                <c:if test="${error.code == 'editReason'}"><span class="error"><openmrs:message code="${error.defaultMessage}" text="${error.defaultMessage}"/></span></c:if>
-                                        </c:forEach>
-                                </spring:hasBindErrors>
-                        <br/><br/>
-                </c:if>
+		<c:if test="${obs.obsId != null}">
+			<b><openmrs:message code="Obs.edit.reason" /></b>
+			<input type="text" value="${editReason}" size="40" name="editReason" />
+			<spring:hasBindErrors name="obs">
+				<c:forEach items="${errors.allErrors}" var="error">
+					<c:if test="${error.code == 'editReason'}">
+						<span class="error"><openmrs:message
+								code="${error.defaultMessage}" text="${error.defaultMessage}" /></span>
+					</c:if>
+				</c:forEach>
+			</spring:hasBindErrors>
+			<br />
+			<br />
+		</c:if>
 
-                
-                <%-- You can't edit a voided obs --%>
+
+		<%-- You can't edit a voided obs --%>
 		<input type="submit" name="saveObs"
 			value='<spring:message code="Obs.save"/>'
 			<c:if test="${obs.voided}">disabled</c:if>> &nbsp; <input
@@ -682,7 +687,7 @@ th {
 		<fieldset>
 			<h4>
 				<spring:message code="Obs.voidObs" />
-			</h4>                        
+			</h4>
 			<b><spring:message code="general.reason" /></b> <input type="text"
 				value="" size="40" name="voidReason" />
 			<spring:hasBindErrors name="obs">
