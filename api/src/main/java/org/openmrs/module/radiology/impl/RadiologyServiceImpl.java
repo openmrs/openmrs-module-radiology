@@ -21,7 +21,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
-import org.openmrs.module.radiology.Main;
+import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.Visit;
@@ -29,13 +29,13 @@ import org.openmrs.module.radiology.db.StudyDAO;
 import org.openmrs.module.radiology.db.VisitDAO;
 import org.springframework.transaction.annotation.Transactional;
 
-public class MainImpl extends BaseOpenmrsService implements Main {
+public class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyService {
 	
 	private StudyDAO sdao;
 	
 	private VisitDAO vdao;
 	
-	private static final Log log = LogFactory.getLog(MainImpl.class);
+	private static final Log log = LogFactory.getLog(RadiologyServiceImpl.class);
 	
 	public void setSdao(StudyDAO dao) {
 		this.sdao = dao;
@@ -46,7 +46,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	}
 	
 	/**
-	 * @see Main#getStudy(Integer)
+	 * @see RadiologyService#getStudy(Integer)
 	 */
 	@Transactional(readOnly = true)
 	public Study getStudy(Integer id) {
@@ -58,7 +58,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	}
 	
 	/**
-	 * @see Main#getStudyByOrderId(Integer)
+	 * @see RadiologyService#getStudyByOrderId(Integer)
 	 */
 	@Transactional(readOnly = true)
 	public Study getStudyByOrderId(Integer id) {
@@ -67,7 +67,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	}
 	
 	/**
-	 * @see Main#getStudyByOrder(Order)
+	 * @see RadiologyService#getStudyByOrder(Order)
 	 */
 	@Transactional(readOnly = true)
 	public Study getStudyByOrder(Order order) {
@@ -79,7 +79,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	}
 	
 	/**
-	 * @see Main#getStudyByUid(String)
+	 * @see RadiologyService#getStudyByUid(String)
 	 */
 	@Transactional(readOnly = true)
 	public Study getStudyByUid(String uid) {
@@ -91,7 +91,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	}
 	
 	/**
-	 * @see Main#getStudiesByPatient(Patient)
+	 * @see RadiologyService#getStudiesByPatient(Patient)
 	 */
 	@Transactional(readOnly = true)
 	public List<Study> getStudiesByPatient(Patient patient) {
@@ -103,7 +103,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	}
 	
 	/**
-	 * @see Main#getStudiesByOrders(List<Order>)
+	 * @see RadiologyService#getStudiesByOrders(List<Order>)
 	 */
 	@Transactional(readOnly = true)
 	public List<Study> getStudiesByOrders(List<Order> orders) {
@@ -115,7 +115,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	}
 	
 	/**
-	 * @see Main#getObservationsByStudy(Study)
+	 * @see RadiologyService#getObservationsByStudy(Study)
 	 */
 	@Transactional(readOnly = true)
 	public List<Obs> getObservationsByStudy(Study study) {
@@ -127,7 +127,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	}
 	
 	/**
-	 * @see Main#saveStudy(Study)
+	 * @see RadiologyService#saveStudy(Study)
 	 */
 	@Transactional
 	public Study saveStudy(Study studyToBeSaved) {
@@ -164,7 +164,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	}
 	
 	/**
-	 * @see Main#updateStudyPerformedStatus(Study, int)
+	 * @see RadiologyService#updateStudyPerformedStatus(Study, int)
 	 */
 	@Transactional
 	public Study updateStudyPerformedStatus(Study studyToBeUpdated, int performedStatus) {

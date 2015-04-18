@@ -46,9 +46,9 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
 
 /**
- * Tests the methods in {@link Main}
+ * Tests the methods in {@link RadiologyService}
  */
-public class MainTest extends BaseModuleContextSensitiveTest {
+public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	
 	private static final String STUDIES_TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyServiceTestDataSet.xml";
 	
@@ -84,7 +84,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	
 	private OrderService orderService = null;
 	
-	private Main radiologyService = null;
+	private RadiologyService radiologyService = null;
 	
 	@Rule
 	public TemporaryFolder temporaryBaseFolder = new TemporaryFolder();
@@ -111,7 +111,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 		}
 		
 		if (radiologyService == null) {
-			radiologyService = Context.getService(Main.class);
+			radiologyService = Context.getService(RadiologyService.class);
 		}
 		
 		executeDataSet(STUDIES_TEST_DATASET);
@@ -146,7 +146,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#saveStudy(Study)
+	 * @see RadiologyService#saveStudy(Study)
 	 */
 	@Test
 	@Verifies(value = "should create new study from given study object", method = "saveStudy(Study)")
@@ -170,7 +170,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#saveStudy(Study)
+	 * @see RadiologyService#saveStudy(Study)
 	 */
 	@Test
 	@Verifies(value = "should create new study and set its uid", method = "saveStudy(Study)")
@@ -192,7 +192,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#saveStudy(Study)
+	 * @see RadiologyService#saveStudy(Study)
 	 */
 	@Test
 	@Verifies(value = "should update existing study", method = "saveStudy(Study)")
@@ -216,7 +216,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#saveStudy(Study)
+	 * @see RadiologyService#saveStudy(Study)
 	 */
 	@Test
 	@Verifies(value = "should not save study given study with empty modality", method = "saveStudy(Study)")
@@ -235,7 +235,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#saveStudy(Study)
+	 * @see RadiologyService#saveStudy(Study)
 	 */
 	@Test
 	@Verifies(value = "should not save study given study with empty order", method = "saveStudy(Study)")
@@ -254,7 +254,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#saveStudy(Study)
+	 * @see RadiologyService#saveStudy(Study)
 	 */
 	@Test
 	@Verifies(value = "should throw IllegalArgumentException if study is null", method = "saveStudy(Study)")
@@ -270,7 +270,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudyByOrderId(Integer)
+	 * @see RadiologyService#getStudyByOrderId(Integer)
 	 */
 	@Test
 	@Verifies(value = "should return study matching order with given orderId", method = "getStudyByOrderId(Integer)")
@@ -286,7 +286,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudyByOrderId(Integer)
+	 * @see RadiologyService#getStudyByOrderId(Integer)
 	 */
 	@Test
 	@Verifies(value = "should return new study instance if no match is found", method = "getStudyByOrderId(Integer)")
@@ -300,7 +300,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#updateStudyPerformedStatus(Study, int)
+	 * @see RadiologyService#updateStudyPerformedStatus(Study, int)
 	 */
 	@Test
 	@Verifies(value = "should update performed status of given study in database to given performed status", method = "updateStudyPerformedStatus(Study, int)")
@@ -322,7 +322,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#updateStudyPerformedStatus(Study, int)
+	 * @see RadiologyService#updateStudyPerformedStatus(Study, int)
 	 */
 	@Test
 	@Verifies(value = "should throw IllegalArgumentException if study is null", method = "updateStudyPerformedStatus(Study, int)")
@@ -333,7 +333,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#updateStudyPerformedStatus(Study, int)
+	 * @see RadiologyService#updateStudyPerformedStatus(Study, int)
 	 */
 	@Test
 	@Verifies(value = "should not update non existing study", method = "updateStudyPerformedStatus(Study, int)")
@@ -346,7 +346,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudy(Integer)
+	 * @see RadiologyService#getStudy(Integer)
 	 */
 	@Test
 	@Verifies(value = "should return study matching id", method = "getStudy(Integer)")
@@ -358,7 +358,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudy(Integer)
+	 * @see RadiologyService#getStudy(Integer)
 	 */
 	@Test
 	@Verifies(value = "should return null if no match was found", method = "getStudy(Integer)")
@@ -369,7 +369,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudy(Integer)
+	 * @see RadiologyService#getStudy(Integer)
 	 */
 	@Test
 	@Verifies(value = "should throw IllegalArgumentException if id is null", method = "getStudy(Integer)")
@@ -380,7 +380,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudyByOrder(Order)
+	 * @see RadiologyService#getStudyByOrder(Order)
 	 */
 	@Test
 	@Verifies(value = "should return study matching order", method = "getStudyByOrder(Order)")
@@ -395,7 +395,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudyByOrder(Order)
+	 * @see RadiologyService#getStudyByOrder(Order)
 	 */
 	@Test
 	@Verifies(value = "should return null if no match was found", method = "getStudyByOrder(Order)")
@@ -408,7 +408,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudyByOrder(Order)
+	 * @see RadiologyService#getStudyByOrder(Order)
 	 */
 	@Test
 	@Verifies(value = "should throw IllegalArgumentException if order is null", method = "getStudyByOrder(Order)")
@@ -419,7 +419,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudyByUid(String)
+	 * @see RadiologyService#getStudyByUid(String)
 	 */
 	@Test
 	@Verifies(value = "should return study matching uid", method = "getStudyByUid(String)")
@@ -431,7 +431,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudyByUid(String)
+	 * @see RadiologyService#getStudyByUid(String)
 	 */
 	@Test
 	@Verifies(value = "should return null if no match was found", method = "getStudyByUid(String)")
@@ -442,7 +442,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudyByUid(String)
+	 * @see RadiologyService#getStudyByUid(String)
 	 */
 	@Test
 	@Verifies(value = "should throw IllegalArgumentException if uid is null", method = "getStudyByUid(String)")
@@ -453,7 +453,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudiesByPatient(Patient)
+	 * @see RadiologyService#getStudiesByPatient(Patient)
 	 */
 	@Test
 	@Verifies(value = "should fetch all studies for given patient", method = "getStudiesByPatient(Patient)")
@@ -475,7 +475,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudiesByPatient(Patient)
+	 * @see RadiologyService#getStudiesByPatient(Patient)
 	 */
 	@Test
 	@Verifies(value = "should return empty list for given patient without studies", method = "getStudiesByPatient(Patient)")
@@ -487,7 +487,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudiesByPatient(Patient)
+	 * @see RadiologyService#getStudiesByPatient(Patient)
 	 */
 	@Test
 	@Verifies(value = "should throw IllegalArgumentException if patient is null", method = "getStudiesByPatient(Patient)")
@@ -498,7 +498,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudiesByOrders(List<Order>)
+	 * @see RadiologyService#getStudiesByOrders(List<Order>)
 	 */
 	@Test
 	@Verifies(value = "should fetch all studies for given orders", method = "getStudiesByOrders(List<Order>)")
@@ -515,7 +515,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudiesByOrders(List<Order>)
+	 * @see RadiologyService#getStudiesByOrders(List<Order>)
 	 */
 	@Test
 	@Verifies(value = "should return empty list for given orders without studies", method = "getStudiesByOrders(List<Order>)")
@@ -531,7 +531,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getStudiesByOrders(List<Order>)
+	 * @see RadiologyService#getStudiesByOrders(List<Order>)
 	 */
 	@Test
 	@Verifies(value = "should throw IllegalArgumentException if orders is null", method = "getStudiesByOrders(List<Order>)")
@@ -542,7 +542,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getObservationsByStudy(Study)
+	 * @see RadiologyService#getObservationsByStudy(Study)
 	 */
 	@Test
 	@Verifies(value = "should fetch all obs for given study", method = "getObservationsByStudy(Study)")
@@ -556,7 +556,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getObservationsByStudy(Study)
+	 * @see RadiologyService#getObservationsByStudy(Study)
 	 */
 	@Test
 	@Verifies(value = "should return empty list for given study without obs", method = "getObservationsByStudy(Study)")
@@ -569,7 +569,7 @@ public class MainTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see Main#getObservationsByStudy(Study)
+	 * @see RadiologyService#getObservationsByStudy(Study)
 	 */
 	@Test
 	@Verifies(value = "should throw IllegalArgumentException if study is null", method = "getObservationsByStudy(Study)")

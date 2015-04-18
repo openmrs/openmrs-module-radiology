@@ -17,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Main;
+import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Study.Priorities;
 import org.springframework.web.servlet.ModelAndView;
@@ -39,7 +39,7 @@ public class RadiologyDashboardController implements Controller {
 		
 		PatientService patientService = Context.getPatientService();
 		Patient patient = patientService.getPatient(Integer.valueOf(patientId));
-		List<Study> studyList = Context.getService(Main.class).getStudiesByPatient(patient);
+		List<Study> studyList = Context.getService(RadiologyService.class).getStudiesByPatient(patient);
 		
 		List<String> statuses = new Vector<String>();
 		List<String> priorities = new Vector<String>();

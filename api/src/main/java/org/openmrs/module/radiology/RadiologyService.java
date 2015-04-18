@@ -22,7 +22,7 @@ import org.openmrs.module.radiology.db.VisitDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public interface Main extends OpenmrsService {
+public interface RadiologyService extends OpenmrsService {
 	
 	public void setSdao(StudyDAO dao);
 	

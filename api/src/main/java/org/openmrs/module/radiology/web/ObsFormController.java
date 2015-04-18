@@ -29,7 +29,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Main;
+import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
@@ -60,8 +60,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ObsFormController {
 	
-	static Main service() {
-		return Context.getService(Main.class);
+	static RadiologyService service() {
+		return Context.getService(RadiologyService.class);
 	}
 	
 	@InitBinder

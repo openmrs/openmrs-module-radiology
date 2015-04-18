@@ -133,8 +133,8 @@ public class Study {
 		return Context.getMessageSourceService().getMessage(code);
 	}
 	
-	static Main service() {
-		return Context.getService(Main.class);
+	static RadiologyService service() {
+		return Context.getService(RadiologyService.class);
 	}
 	
 	private Integer id;

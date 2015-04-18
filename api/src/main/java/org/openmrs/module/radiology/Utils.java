@@ -93,8 +93,8 @@ public class Utils {
 		return as.getGlobalProperty("radiology.viewerURLPath");
 	}
 	
-	static Main service() {
-		return Context.getService(Main.class);
+	static RadiologyService service() {
+		return Context.getService(RadiologyService.class);
 	}
 	
 	/**

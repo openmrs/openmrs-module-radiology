@@ -457,8 +457,8 @@ public class DicomUtils {
 		return result;
 	}
 	
-	static Main service() {
-		return Context.getService(Main.class);
+	static RadiologyService service() {
+		return Context.getService(RadiologyService.class);
 	}
 	
 }

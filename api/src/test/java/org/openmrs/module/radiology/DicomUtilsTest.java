@@ -81,7 +81,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	
 	private AdministrationService administrationService = null;
 	
-	private Main radiologyService = null;
+	private RadiologyService radiologyService = null;
 	
 	private OrderService orderService = null;
 	
@@ -109,7 +109,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		}
 		
 		if (radiologyService == null) {
-			radiologyService = Context.getService(Main.class);
+			radiologyService = Context.getService(RadiologyService.class);
 		}
 		
 		executeDataSet(STUDIES_TEST_DATASET);
