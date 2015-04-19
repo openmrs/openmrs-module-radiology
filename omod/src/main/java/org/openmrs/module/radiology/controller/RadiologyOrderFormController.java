@@ -24,8 +24,8 @@ import org.openmrs.User;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
-import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Study.PerformedStatuses;
@@ -150,7 +150,6 @@ public class RadiologyOrderFormController {
 			String[] pStatuses = Utils.forSelect(PerformedStatuses.class);
 			mav.addObject("pStatuses", pStatuses);
 			mav.addObject("n_pStatuses", pStatuses.length);
-			mav.addObject("modalities", getModalityList());
 			boolean referring = Context.getAuthenticatedUser().hasRole(Roles.ReferringPhysician, true);
 			mav.addObject("referring", referring);
 			boolean scheduler = Context.getAuthenticatedUser().hasRole(Roles.Scheduler, true);
@@ -163,6 +162,7 @@ public class RadiologyOrderFormController {
 		}
 	}
 	
+	@ModelAttribute("modalities")
 	private Map<String, String> getModalityList() {
 		
 		Map<String, String> modalities = new HashMap<String, String>();
