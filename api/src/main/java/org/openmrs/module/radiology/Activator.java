@@ -31,6 +31,8 @@ public class Activator extends BaseModuleActivator {
 	
 	private static final Log log = LogFactory.getLog(Activator.class);
 	
+	private DcmOF dicomOrderFiller;
+	
 	@Override
 	public void started() {
 		start();
@@ -38,16 +40,16 @@ public class Activator extends BaseModuleActivator {
 	
 	@Override
 	public void stopped() {
-		//   Server.dcmof.stop();
+		stopDicomOrderFiller();
 	}
 	
 	public static boolean badInit(UserService us, OrderService os) {
 		return !Roles.created(us) || !Utils.hasRadiology(os);
 	}
 	
-	public static void start() {
+	public void start() {
 		try {
-			orderFiller();
+			startDicomOrderFiller();
 		}
 		catch (Exception e) {
 			// Just prints in console
@@ -121,10 +123,10 @@ public class Activator extends BaseModuleActivator {
 		return true;
 	}
 	
-	public static void orderFiller() throws Exception {
+	public void startDicomOrderFiller() throws Exception {
 		try {
 			String[] args2 = { "-mwl", Utils.mwlDir(), "-mpps", Utils.mppsDir(), Utils.aeTitle() + ":" + Utils.mwlMppsPort() };
-			DcmOF.main(args2);
+			dicomOrderFiller = DcmOF.main(args2);
 			log.info("Started MPPSScu : OpenMRS MPPS SCU Client (dcmof)");
 		}
 		catch (Exception e) {
@@ -135,4 +137,8 @@ public class Activator extends BaseModuleActivator {
 		}
 	}
 	
+	public void stopDicomOrderFiller() {
+		dicomOrderFiller.stop();
+		log.info("Stopped MPPSScu : OpenMRS MPPS SCU Client (dcmof)");
+	}
 }
