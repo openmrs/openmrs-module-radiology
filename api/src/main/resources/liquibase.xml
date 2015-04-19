@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+
+	<!-- See http://www.liquibase.org/manual/home#available_database_refactorings 
+		for a list of supported elements and attributes -->
+
+	<changeSet id="radiology-1" author="cortex">
+		<sql>
+			drop table if exists radiology_study;
+		</sql>
+	</changeSet>
+	<changeSet author="juanp" id="radiology-4">
+		<preConditions onFail="WARN" onError="WARN">
+			<not>
+				<tableExists tableName="radiology_study" />
+			</not>
+		</preConditions>
+		<createTable tableName="radiology_study">
+			<column name="id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="uid" type="varchar(255)"></column>
+			<column name="order_id" type="int">
+				<constraints unique="true" nullable="false" />
+			</column>
+			<column name="scheduled_status" type="int" defaultValue="-1"></column>
+			<column name="performed_status" type="int" defaultValue="-1"></column>
+			<column name="priority" defaultValue="-1" type="int"></column>
+			<column name="modality" defaultValue="-1" type="int"></column>
+			<column name="scheduler_user_id" type="int" defaultValue="-1"></column>
+			<column name="performing_physician_user_id" type="int"
+				defaultValue="-1"></column>
+			<column name="reading_physician_user_id" type="int"
+				defaultValue="-1"></column>
+			<column name="mwl_status" type="int" defaultValue="-1"></column>
+		</createTable>
+	</changeSet>
+	<changeSet id="radiology-5" author="teleivo">
+		<comment>Change modality column type to varchar(16) in radiology_study
+			table to represent DICOM Tag Modality (0008,0060) value representation CS (Code String) defined in DICOM PS3.5 2014b - Data Structures and Encoding</comment>
+		<modifyDataType tableName="radiology_study" columnName="modality"
+			newDataType="varchar(16)" />
+		<dropDefaultValue tableName="radiology_study"
+			columnName="modality" columnDataType="varchar(16)" />
+		<addNotNullConstraint tableName="radiology_study"
+			columnName="modality" columnDataType="varchar(16)" />
+	</changeSet>
+</databaseChangeLog>
