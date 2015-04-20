@@ -11,6 +11,7 @@ package org.openmrs.module.radiology.controller;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -29,9 +30,8 @@ import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Roles;
+import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Study.ScheduledStatuses;
-import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.validator.StudyValidator;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.EncounterEditor;
@@ -141,9 +141,6 @@ public class RadiologyOrderFormController {
 		if (Context.isAuthenticated()) {
 			mav.addObject("order", order);
 			mav.addObject("study", study);
-			String[] sStatuses = Utils.forSelect(ScheduledStatuses.class);
-			mav.addObject("sStatuses", sStatuses);
-			mav.addObject("n_sStatuses", sStatuses.length);
 			boolean referring = Context.getAuthenticatedUser().hasRole(Roles.ReferringPhysician, true);
 			mav.addObject("referring", referring);
 			boolean scheduler = Context.getAuthenticatedUser().hasRole(Roles.Scheduler, true);
@@ -193,6 +190,20 @@ public class RadiologyOrderFormController {
 		}
 		
 		return requestedProcedurePriorities;
+	}
+	
+	@ModelAttribute("scheduledProcedureStepStatuses")
+	private Map<String, String> getScheduledProcedureStepStatusList() {
+		
+		Map<String, String> scheduledProcedureStepStatuses = new LinkedHashMap<String, String>();
+		scheduledProcedureStepStatuses.put("", "Select");
+		
+		for (ScheduledProcedureStepStatus scheduledProcedureStepStatus : ScheduledProcedureStepStatus.values()) {
+			scheduledProcedureStepStatuses.put(scheduledProcedureStepStatus.name(), scheduledProcedureStepStatus
+			        .getDisplayName());
+		}
+		
+		return scheduledProcedureStepStatuses;
 	}
 	
 	protected boolean executeCommand(Order order, Study study, HttpServletRequest request) {

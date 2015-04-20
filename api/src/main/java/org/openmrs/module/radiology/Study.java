@@ -21,45 +21,6 @@ import org.openmrs.api.context.Context;
  */
 public class Study {
 	
-	// Scheduled Procedure Steps Statuses - Part 3 Annex C.4.10
-	public static class ScheduledStatuses {
-		
-		public static final int SCHEDULED = 0;
-		
-		public static final int ARRIVED = 1;
-		
-		public static final int READY = 2;
-		
-		public static final int STARTED = 3;
-		
-		public static final int DEPARTED = 4;
-		
-		public static boolean has(int x) {
-			return !(string(x, false).compareTo(localized("UNKNOWN")) == 0);
-		}
-		
-		public static String string(Integer x, Boolean localized) {
-			switch (x) {
-				case SCHEDULED:
-					return localized ? localized("radiology.SCHEDULED") : "SCHEDULED";
-				case ARRIVED:
-					return localized ? localized("radiology.ARRIVED") : "ARRIVED";
-				case READY:
-					return localized ? localized("radiology.READY") : "READY";
-				case STARTED:
-					return localized ? localized("radiology.STARTED") : "STARTED";
-				case DEPARTED:
-					return localized ? localized("radiology.DEPARTED") : "DEPARTED";
-				default:
-					return localized ? localized("general.unknown") : "UNKNOWN";
-			}
-		}
-	}
-	
-	private static String localized(String code) {
-		return Context.getMessageSourceService().getMessage(code);
-	}
-	
 	static RadiologyService service() {
 		return Context.getService(RadiologyService.class);
 	}
@@ -70,7 +31,7 @@ public class Study {
 	
 	private Order order;
 	
-	private int scheduledStatus = -1;
+	private ScheduledProcedureStepStatus scheduledStatus;
 	
 	private PerformedProcedureStepStatus performedStatus;
 	
@@ -90,9 +51,9 @@ public class Study {
 		super();
 	}
 	
-	public Study(Integer id, String uid, Order order, int scheduledStatus, PerformedProcedureStepStatus performedStatus,
-	    RequestedProcedurePriority priority, Modality modality, User schedulerUserId, User performingPhysicianUserId,
-	    User readingPhysicianUserId) {
+	public Study(Integer id, String uid, Order order, ScheduledProcedureStepStatus scheduledStatus,
+	    PerformedProcedureStepStatus performedStatus, RequestedProcedurePriority priority, Modality modality,
+	    User schedulerUserId, User performingPhysicianUserId, User readingPhysicianUserId) {
 		super();
 		this.id = id;
 		this.uid = uid;
@@ -134,7 +95,7 @@ public class Study {
 		return readingPhysician;
 	}
 	
-	public int getScheduledStatus() {
+	public ScheduledProcedureStepStatus getScheduledStatus() {
 		return scheduledStatus;
 	}
 	
@@ -230,7 +191,7 @@ public class Study {
 		this.readingPhysician = readingPhysician;
 	}
 	
-	public void setScheduledStatus(int scheduledStatus) {
+	public void setScheduledStatus(ScheduledProcedureStepStatus scheduledStatus) {
 		this.scheduledStatus = scheduledStatus;
 	}
 	
@@ -274,7 +235,7 @@ public class Study {
 			setReadingPhysician(u);
 		
 		if (o.getStartDate() != null)
-			setScheduledStatus(ScheduledStatuses.SCHEDULED);
+			setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
 		
 		if (o.getOrderer() == null)
 			o.setOrderer(u);
@@ -287,7 +248,7 @@ public class Study {
 	private String statuses(boolean sched, boolean perf) {
 		String ret = "";
 		String scheduled = "";
-		scheduled += ScheduledStatuses.string(scheduledStatus, true);
+		scheduled += ScheduledProcedureStepStatus.getDisplayNameOrUnknown(scheduledStatus);
 		ret += sched ? scheduled : "";
 		String performed = "";
 		performed += PerformedProcedureStepStatus.getDisplayNameOrUnknown(performedStatus);

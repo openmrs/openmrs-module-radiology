@@ -61,4 +61,9 @@
 		<addNotNullConstraint tableName="radiology_study"
 			columnName="priority" columnDataType="int" />
 	</changeSet>
+	<changeSet author="teleivo" id="radiology-8">
+		<comment>column scheduled_status represents DICOM Scheduled Procedure Step Status (0040,0020) which is now mapped to by enum ScheduledProcedureStepStatus and stored via its ordinal number. ordinal number starts at 0, default value -1 needs to be removed.</comment>
+		<dropDefaultValue tableName="radiology_study"
+			columnName="scheduled_status" columnDataType="int" />
+	</changeSet>
 </databaseChangeLog>
