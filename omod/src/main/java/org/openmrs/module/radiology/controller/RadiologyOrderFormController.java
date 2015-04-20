@@ -33,6 +33,7 @@ import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.validator.StudyValidator;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.EncounterEditor;
@@ -86,7 +87,17 @@ public class RadiologyOrderFormController {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("module/radiology/radiologyOrderForm");
 		
-		if (study.setup(order, studyId)) {
+		User authenticatedUser = Context.getAuthenticatedUser();
+		if (order.getOrderer() == null)
+			order.setOrderer(authenticatedUser);
+		order.setOrderType(Utils.getRadiologyOrderType().get(0));
+		study.setId(studyId);
+		study.setOrder(order);
+		
+		if (authenticatedUser.hasRole(Roles.Scheduler, true) && study.getScheduler() == null && !study.isScheduleable()) {
+			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
+			populate(mav, order, study);
+		} else {
 			new OrderValidator().validate(order, oErrors);
 			new StudyValidator().validate(study, sErrors);
 			if (oErrors.hasErrors() || sErrors.hasErrors()) {
@@ -103,9 +114,6 @@ public class RadiologyOrderFormController {
 			} else {
 				populate(mav, order, study);
 			}
-		} else {
-			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
-			populate(mav, order, study);
 		}
 		return mav;
 	}

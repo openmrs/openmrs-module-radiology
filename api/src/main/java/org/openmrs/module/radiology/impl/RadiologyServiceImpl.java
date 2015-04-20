@@ -17,6 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
+import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
@@ -25,6 +26,8 @@ import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
+import org.openmrs.module.radiology.Roles;
+import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.Visit;
@@ -148,6 +151,27 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		
 		if (studyToBeSaved.getPriority() == null) {
 			studyToBeSaved.setPriority(RequestedProcedurePriority.ROUTINE);
+		}
+		
+		if (studyToBeSaved.getScheduledStatus() == null && studyToBeSaved.getOrder().getStartDate() != null) {
+			studyToBeSaved.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
+		}
+		
+		User orderer = studyToBeSaved.getOrder().getOrderer();
+		if (orderer != null) {
+			if (orderer.hasRole(Roles.Scheduler, true) && studyToBeSaved.getScheduler() == null) {
+				if (studyToBeSaved.isScheduleable()) {
+					studyToBeSaved.setScheduler(orderer);
+				}
+			}
+			
+			if (orderer.hasRole(Roles.PerformingPhysician, true) && studyToBeSaved.getPerformingPhysician() == null) {
+				studyToBeSaved.setPerformingPhysician(orderer);
+			}
+			
+			if (orderer.hasRole(Roles.ReadingPhysician, true) && studyToBeSaved.getReadingPhysician() == null) {
+				studyToBeSaved.setReadingPhysician(orderer);
+			}
 		}
 		
 		try {

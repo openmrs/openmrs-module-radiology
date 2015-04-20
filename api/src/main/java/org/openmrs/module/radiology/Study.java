@@ -11,7 +11,6 @@ package org.openmrs.module.radiology;
 
 import org.openmrs.Order;
 import org.openmrs.User;
-import org.openmrs.api.context.Context;
 
 /**
  * A class that supports on openmrs's orders to make the module DICOM compatible, corresponds to the
@@ -20,10 +19,6 @@ import org.openmrs.api.context.Context;
  * @author Cortex
  */
 public class Study {
-	
-	static RadiologyService service() {
-		return Context.getService(RadiologyService.class);
-	}
 	
 	private Integer id;
 	
@@ -185,48 +180,6 @@ public class Study {
 	
 	public void setUid(String uid) {
 		this.uid = uid;
-	}
-	
-	/**
-	 * Fills null required values, to the moment orderer set to currentUser.<br/>
-	 * Fills radiology order type. Fills concept if null.<br/>
-	 * <br/>
-	 * In this function goes all validation pre post request: <li>Scheduler is not allowed to
-	 * schedule a completed procedure</li>
-	 * 
-	 * @param o Order to be filled
-	 * @param studyId TODO
-	 * @return Order modified
-	 */
-	public boolean setup(Order o, Integer studyId) {
-		setId(studyId);
-		setOrder(o);
-		
-		User u = Context.getAuthenticatedUser();
-		if (u.hasRole(Roles.ReferringPhysician, true) && o.getOrderer() == null)
-			o.setOrderer(u);
-		if (u.hasRole(Roles.Scheduler, true) && getScheduler() == null) {
-			if (!isScheduleable()) {
-				return false;
-			} else {
-				setScheduler(u);
-			}
-			
-		}
-		if (u.hasRole(Roles.PerformingPhysician, true) && getPerformingPhysician() == null)
-			setPerformingPhysician(u);
-		if (u.hasRole(Roles.ReadingPhysician, true) && getReadingPhysician() == null)
-			setReadingPhysician(u);
-		
-		if (o.getStartDate() != null)
-			setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
-		
-		if (o.getOrderer() == null)
-			o.setOrderer(u);
-		o.setOrderType(Utils.getRadiologyOrderType().get(0));
-		if (o.getConcept() == null)
-			o.setConcept(Context.getConceptService().getConcept(1));
-		return true;
 	}
 	
 	private String statuses(boolean sched, boolean perf) {
