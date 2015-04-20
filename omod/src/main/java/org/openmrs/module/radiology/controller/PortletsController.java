@@ -84,7 +84,7 @@ public class PortletsController {
 				performings.add(study.performing());
 				readings.add(study.reading());
 				modalities.add(study.getModality().getFullName());
-				mwlStatuses.add(study.mwlStatus());
+				mwlStatuses.add(study.getMwlStatus().getDisplayName());
 			}
 		}
 		

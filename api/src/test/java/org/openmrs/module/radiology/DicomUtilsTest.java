@@ -470,7 +470,6 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(RequestedProcedurePriority.STAT);
-		study.setMwlStatus(0);
 		
 		String saveOrderHL7String = DicomUtils.createHL7Message(study, DicomUtils.OrderRequest.Save_Order);
 		
@@ -590,7 +589,6 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(RequestedProcedurePriority.STAT);
-		study.setMwlStatus(0);
 		
 		String saveOrderHL7String = DicomUtils.createHL7Message(study, DicomUtils.OrderRequest.Void_Order);
 		
@@ -657,8 +655,8 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * Tests the DicomUtils.createHL7Message method with a study with mwlstatus = 1 and
-	 * OrderRequest.Save_Order
+	 * Tests the DicomUtils.createHL7Message method with a study with mwlstatus =
+	 * MwlStatus.IN_SYNC_SAVE_SUCCESS and OrderRequest.Save_Order
 	 * 
 	 * @throws Exception
 	 * @see {@link DicomUtils#createHL7Message(Study, OrderRequest)}
@@ -710,7 +708,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(RequestedProcedurePriority.STAT);
-		study.setMwlStatus(1);
+		study.setMwlStatus(MwlStatus.IN_SYNC_SAVE_SUCCESS);
 		
 		String saveOrderHL7String = DicomUtils.createHL7Message(study, DicomUtils.OrderRequest.Save_Order);
 		
@@ -835,7 +833,6 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(RequestedProcedurePriority.STAT);
-		study.setMwlStatus(0);
 		
 		String saveOrderHL7String = DicomUtils.createHL7Message(study, DicomUtils.OrderRequest.Default);
 		
@@ -905,47 +902,45 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	 * Tests the DicomUtils.getCommonOrderControlFrom method mapping mwlstatus and OrderRequest to
 	 * HL7 Order Control Code
 	 * 
-	 * @see {@link DicomUtils#getCommonOrderControlFrom(Integer, OrderRequest)}
+	 * @see {@link DicomUtils#getCommonOrderControlFrom(MwlStatus, OrderRequest)}
 	 */
 	@Test
-	@Verifies(value = "should return HL7 order control given mwlstatus and orderrequest", method = "getCommonOrderControlFrom(Integer, OrderRequest)")
+	@Verifies(value = "should return HL7 order control given mwlstatus and orderrequest", method = "getCommonOrderControlFrom(MwlStatus, OrderRequest)")
 	public void getCommonOrderControlFrom_shouldReturnHL7OrderControlGivenMwlstatusAndOrderRequest() {
 		
-		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(0,
+		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT,
 		    DicomUtils.OrderRequest.Save_Order));
-		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(2,
+		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(MwlStatus.OUT_SYNC_SAVE_FAILED,
 		    DicomUtils.OrderRequest.Save_Order));
-		assertEquals(CommonOrderOrderControl.CHANGE_ORDER, DicomUtils.getCommonOrderControlFrom(1,
-		    DicomUtils.OrderRequest.Save_Order));
-		assertEquals(CommonOrderOrderControl.CHANGE_ORDER, DicomUtils.getCommonOrderControlFrom(-1,
-		    DicomUtils.OrderRequest.Save_Order));
-		assertEquals(CommonOrderOrderControl.CHANGE_ORDER, DicomUtils.getCommonOrderControlFrom(3,
-		    DicomUtils.OrderRequest.Save_Order));
-		assertEquals(CommonOrderOrderControl.CANCEL_ORDER, DicomUtils.getCommonOrderControlFrom(-1,
+		assertEquals(CommonOrderOrderControl.CHANGE_ORDER, DicomUtils.getCommonOrderControlFrom(
+		    MwlStatus.IN_SYNC_SAVE_SUCCESS, DicomUtils.OrderRequest.Save_Order));
+		assertEquals(CommonOrderOrderControl.CHANGE_ORDER, DicomUtils.getCommonOrderControlFrom(
+		    MwlStatus.IN_SYNC_UPDATE_SUCCESS, DicomUtils.OrderRequest.Save_Order));
+		assertEquals(CommonOrderOrderControl.CANCEL_ORDER, DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT,
 		    DicomUtils.OrderRequest.Void_Order));
-		assertEquals(CommonOrderOrderControl.CANCEL_ORDER, DicomUtils.getCommonOrderControlFrom(0,
+		assertEquals(CommonOrderOrderControl.CANCEL_ORDER, DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT,
 		    DicomUtils.OrderRequest.Void_Order));
-		assertEquals(CommonOrderOrderControl.CANCEL_ORDER, DicomUtils.getCommonOrderControlFrom(1,
-		    DicomUtils.OrderRequest.Void_Order));
-		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(-1,
+		assertEquals(CommonOrderOrderControl.CANCEL_ORDER, DicomUtils.getCommonOrderControlFrom(
+		    MwlStatus.IN_SYNC_SAVE_SUCCESS, DicomUtils.OrderRequest.Void_Order));
+		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT,
 		    DicomUtils.OrderRequest.Unvoid_Order));
-		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(0,
+		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT,
 		    DicomUtils.OrderRequest.Unvoid_Order));
-		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(1,
+		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(MwlStatus.IN_SYNC_SAVE_SUCCESS,
 		    DicomUtils.OrderRequest.Unvoid_Order));
-		assertEquals(CommonOrderOrderControl.CANCEL_ORDER, DicomUtils.getCommonOrderControlFrom(-1,
+		assertEquals(CommonOrderOrderControl.CANCEL_ORDER, DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT,
 		    DicomUtils.OrderRequest.Discontinue_Order));
-		assertEquals(CommonOrderOrderControl.CANCEL_ORDER, DicomUtils.getCommonOrderControlFrom(0,
+		assertEquals(CommonOrderOrderControl.CANCEL_ORDER, DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT,
 		    DicomUtils.OrderRequest.Discontinue_Order));
-		assertEquals(CommonOrderOrderControl.CANCEL_ORDER, DicomUtils.getCommonOrderControlFrom(1,
-		    DicomUtils.OrderRequest.Discontinue_Order));
-		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(-1,
+		assertEquals(CommonOrderOrderControl.CANCEL_ORDER, DicomUtils.getCommonOrderControlFrom(
+		    MwlStatus.IN_SYNC_SAVE_SUCCESS, DicomUtils.OrderRequest.Discontinue_Order));
+		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT,
 		    DicomUtils.OrderRequest.Undiscontinue_Order));
-		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(0,
+		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT,
 		    DicomUtils.OrderRequest.Undiscontinue_Order));
-		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(1,
+		assertEquals(CommonOrderOrderControl.NEW_ORDER, DicomUtils.getCommonOrderControlFrom(MwlStatus.IN_SYNC_SAVE_SUCCESS,
 		    DicomUtils.OrderRequest.Undiscontinue_Order));
-		assertNull(DicomUtils.getCommonOrderControlFrom(1, DicomUtils.OrderRequest.Default));
+		assertNull(DicomUtils.getCommonOrderControlFrom(MwlStatus.IN_SYNC_SAVE_SUCCESS, DicomUtils.OrderRequest.Default));
 	}
 	
 	/**

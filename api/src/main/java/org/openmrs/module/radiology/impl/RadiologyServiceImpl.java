@@ -21,6 +21,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
+import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
@@ -191,47 +192,34 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		return sdao.saveStudy(studyToBeUpdated);
 	}
 	
-	//MWL Status Codes, these are custom codes to help determine what sync status of the order is.
-	// -1 :default
-	// 0 : save order successful
-	// 1 : save order failed . Save Again
-	// 2 : Update order succesful .
-	// 3 : Update order failed. Save again.
-	// 4 : Void order succesful .
-	// 5 : Void order failed. Try again.
-	// 6 : Discontinue order succesful .
-	// 7 : Discontinue order failed. Try again.
-	// 8 : Undiscontinue order succesful .
-	// 9 : Undiscontinue order failed. Try again.
-	// 10 : Unvoid order successfull
-	// 11 : Unvoid order failed. Try again
 	public void sendModalityWorklist(Study s, OrderRequest orderRequest) {
-		Integer mwlStatus = s.getMwlStatus();
+		MwlStatus mwlStatus = s.getMwlStatus();
 		String hl7blob = DicomUtils.createHL7Message(s, orderRequest);
 		int status = DicomUtils.sendHL7Worklist(hl7blob);
 		
 		if (status == 1) {
 			switch (orderRequest) {
 				case Save_Order:
-					if (mwlStatus.intValue() == 0 || mwlStatus.intValue() == 2)
-						mwlStatus = 1;
-					else
-						mwlStatus = 3;
+					if (mwlStatus == MwlStatus.DEFAULT || mwlStatus == MwlStatus.OUT_SYNC_SAVE_FAILED) {
+						mwlStatus = MwlStatus.IN_SYNC_SAVE_SUCCESS;
+					} else {
+						mwlStatus = MwlStatus.IN_SYNC_UPDATE_SUCCESS;
+					}
 					break;
 				case Void_Order:
-					mwlStatus = 5;
+					mwlStatus = MwlStatus.IN_SYNC_VOID_SUCCESS;
 					break;
 				case Unvoid_Order:
-					mwlStatus = 11;
+					mwlStatus = MwlStatus.IN_SYNC_UNVOID_SUCCESS;
 					break;
 				case Discontinue_Order:
-					mwlStatus = 7;
+					mwlStatus = MwlStatus.IN_SYNC_DISCONTINUE_SUCCESS;
 					break;
 				case Undiscontinue_Order:
-					mwlStatus = 9;
+					mwlStatus = MwlStatus.IN_SYNC_UNDISCONTINUE_SUCCESS;
 					break;
 				case Default:
-					mwlStatus = 0;
+					mwlStatus = MwlStatus.DEFAULT;
 					break;
 				default:
 					break;
@@ -241,25 +229,26 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		} else if (status == 0) {
 			switch (orderRequest) {
 				case Save_Order:
-					if (mwlStatus.intValue() == 0 || mwlStatus.intValue() == 2)
-						mwlStatus = 2;
-					else
-						mwlStatus = 4;
+					if (mwlStatus == MwlStatus.DEFAULT || mwlStatus == MwlStatus.OUT_SYNC_SAVE_FAILED) {
+						mwlStatus = MwlStatus.OUT_SYNC_SAVE_FAILED;
+					} else {
+						mwlStatus = MwlStatus.OUT_SYNC_UPDATE_FAILED;
+					}
 					break;
 				case Void_Order:
-					mwlStatus = 6;
+					mwlStatus = MwlStatus.OUT_SYNC_VOID_FAILED;
 					break;
 				case Unvoid_Order:
-					mwlStatus = 12;
+					mwlStatus = MwlStatus.OUT_SYNC_UNVOID_FAILED;
 					break;
 				case Discontinue_Order:
-					mwlStatus = 8;
+					mwlStatus = MwlStatus.OUT_SYNC_DISCONTINUE_FAILED;
 					break;
 				case Undiscontinue_Order:
-					mwlStatus = 10;
+					mwlStatus = MwlStatus.OUT_SYNC_UNDISCONTINUE_FAILED;
 					break;
 				case Default:
-					mwlStatus = 0;
+					mwlStatus = MwlStatus.DEFAULT;
 					break;
 				default:
 					break;
@@ -282,7 +271,7 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 	 */
 	//TODO(teleivo) is check for non existing study.id != null enough, could study.id be set somewhere other than on saveStudy()
 	@Transactional
-	Study updateStudyMwlStatus(Study studyToBeUpdated, int mwlStatus) {
+	Study updateStudyMwlStatus(Study studyToBeUpdated, MwlStatus mwlStatus) {
 		if (studyToBeUpdated == null) {
 			throw new IllegalArgumentException("study is required");
 		}

@@ -66,4 +66,11 @@
 		<dropDefaultValue tableName="radiology_study"
 			columnName="scheduled_status" columnDataType="int" />
 	</changeSet>
+	<changeSet author="teleivo" id="radiology-9">
+		<comment>column mwl status is now mapped to by enum MwlStatus and stored via its ordinal number. ordinal number starts at 0, default value -1 needs to be removed. a default value is set in the application</comment>
+		<dropDefaultValue tableName="radiology_study"
+			columnName="mwl_status" columnDataType="int" />
+		<addNotNullConstraint tableName="radiology_study"
+			columnName="mwl_status" columnDataType="int" />
+	</changeSet>
 </databaseChangeLog>

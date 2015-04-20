@@ -362,7 +362,7 @@ public class DicomUtils {
 	public static String createHL7Message(Study study, OrderRequest orderRequest) {
 		String encodedHL7OrmMessage = null;
 		
-		Integer mwlstatus = study.getMwlStatus();
+		MwlStatus mwlstatus = study.getMwlStatus();
 		CommonOrderOrderControl commonOrderOrderControl = getCommonOrderControlFrom(mwlstatus, orderRequest);
 		
 		CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(study.getPriority());
@@ -390,12 +390,12 @@ public class DicomUtils {
 	 * @param orderRequest
 	 * @should return HL7 order control given mwlstatus and orderrequest
 	 */
-	public static CommonOrderOrderControl getCommonOrderControlFrom(Integer mwlstatus, OrderRequest orderRequest) {
+	public static CommonOrderOrderControl getCommonOrderControlFrom(MwlStatus mwlstatus, OrderRequest orderRequest) {
 		CommonOrderOrderControl result = null;
 		
 		switch (orderRequest) {
 			case Save_Order:
-				if (mwlstatus.intValue() == 0 || mwlstatus.intValue() == 2) {
+				if (mwlstatus == MwlStatus.DEFAULT || mwlstatus == MwlStatus.OUT_SYNC_SAVE_FAILED) {
 					result = CommonOrderOrderControl.NEW_ORDER;
 				} else {
 					result = CommonOrderOrderControl.CHANGE_ORDER;

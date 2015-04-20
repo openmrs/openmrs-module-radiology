@@ -33,7 +33,11 @@
 				<param name="useNamed">true</param>
 			</type>
 		</property>
-		<property name="mwlStatus" column="mwl_status"></property>
+		<property name="mwlStatus" column="mwl_status" not-null="true">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">org.openmrs.module.radiology.MwlStatus</param>
+			</type>
+		</property>
 		<many-to-one name="scheduler" class="org.openmrs.User"
 			not-null="false" not-found="ignore">
 			<column name="scheduler_user_id"></column>
