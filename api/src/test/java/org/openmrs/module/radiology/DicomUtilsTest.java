@@ -45,7 +45,6 @@ import org.openmrs.api.AdministrationService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
-import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
 import org.openmrs.test.BaseContextSensitiveTest;
@@ -137,7 +136,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		
 		DicomUtils.updateStudyPerformedStatusByMpps(dicomObjectNCreate);
 		
-		assertEquals(Study.PerformedStatuses.IN_PROGRESS, studyToBeUpdated.getPerformedStatus());
+		assertEquals(PerformedProcedureStepStatus.IN_PROGRESS, studyToBeUpdated.getPerformedStatus());
 	}
 	
 	/**
@@ -148,7 +147,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	 */
 	DicomObject getDicomNCreate(Study study) {
 		
-		String performedProcedureStatus = PerformedStatuses.string(Study.PerformedStatuses.IN_PROGRESS, false);
+		String performedProcedureStatus = PerformedProcedureStepStatus.IN_PROGRESS.getDisplayName();
 		String performedProcedureStepStartDate = "20150313";
 		String performedProcedureStepStartTime = "130225";
 		String performedStationAETitle = "CR01";
@@ -230,8 +229,8 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		
 		Study studyToBeUpdated = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
 		
-		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, PerformedStatuses.string(
-		    Study.PerformedStatuses.DISCONTINUED, false));
+		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, PerformedProcedureStepStatus.DISCONTINUED
+		        .getDisplayName());
 		
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
 		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
@@ -239,7 +238,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		
 		DicomUtils.updateStudyPerformedStatusByMpps(dicomObjectNCreate);
 		
-		assertEquals(Study.PerformedStatuses.DISCONTINUED, studyToBeUpdated.getPerformedStatus());
+		assertEquals(PerformedProcedureStepStatus.DISCONTINUED, studyToBeUpdated.getPerformedStatus());
 	}
 	
 	/**
@@ -295,8 +294,8 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		
 		Study studyToBeUpdated = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
 		
-		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, PerformedStatuses.string(
-		    Study.PerformedStatuses.COMPLETED, false));
+		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, PerformedProcedureStepStatus.COMPLETED
+		        .getDisplayName());
 		
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
 		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
@@ -304,7 +303,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		
 		DicomUtils.updateStudyPerformedStatusByMpps(dicomObjectNCreate);
 		
-		assertEquals(Study.PerformedStatuses.COMPLETED, studyToBeUpdated.getPerformedStatus());
+		assertEquals(PerformedProcedureStepStatus.COMPLETED, studyToBeUpdated.getPerformedStatus());
 	}
 	
 	/**
@@ -317,8 +316,8 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		
 		Study studyToBeUpdated = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
 		
-		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, PerformedStatuses.string(
-		    Study.PerformedStatuses.COMPLETED, false));
+		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, PerformedProcedureStepStatus.COMPLETED
+		        .getDisplayName());
 		dicomObjectNCreate.remove(Tag.ScheduledStepAttributesSequence);
 		
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
@@ -327,7 +326,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		
 		DicomUtils.updateStudyPerformedStatusByMpps(dicomObjectNCreate);
 		
-		assertEquals(Study.PerformedStatuses.COMPLETED, studyToBeUpdated.getPerformedStatus());
+		assertEquals(PerformedProcedureStepStatus.COMPLETED, studyToBeUpdated.getPerformedStatus());
 	}
 	
 	/**
@@ -392,7 +391,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		
 		String performedProcedureStepStatus = DicomUtils.getPerformedProcedureStepStatus(dicomMpps);
 		
-		assertThat(study.getPerformedStatus(), is(PerformedStatuses.IN_PROGRESS));
+		assertThat(study.getPerformedStatus(), is(PerformedProcedureStepStatus.IN_PROGRESS));
 		assertThat(performedProcedureStepStatus, is("IN PROGRESS"));
 	}
 	

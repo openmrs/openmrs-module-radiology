@@ -21,6 +21,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
+import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
@@ -167,13 +168,17 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 	 * @see RadiologyService#updateStudyPerformedStatus(Study, int)
 	 */
 	@Transactional
-	public Study updateStudyPerformedStatus(Study studyToBeUpdated, int performedStatus) {
+	public Study updateStudyPerformedStatus(Study studyToBeUpdated, PerformedProcedureStepStatus performedStatus) {
 		if (studyToBeUpdated == null) {
 			throw new IllegalArgumentException("study is required");
 		}
 		
 		if (studyToBeUpdated.getId() == null) {
 			throw new APIException("Study.cannot.edit.nonexisting");
+		}
+		
+		if (performedStatus == null) {
+			throw new IllegalArgumentException("performedStatus is required");
 		}
 		
 		studyToBeUpdated.setPerformedStatus(performedStatus);

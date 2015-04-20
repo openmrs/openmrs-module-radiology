@@ -12,7 +12,11 @@
 			<column name="order_id"></column>
 		</many-to-one>
 		<property name="scheduledStatus" column="scheduled_status"></property>
-		<property name="performedStatus" column="performed_status"></property>
+		<property name="performedStatus" column="performed_status">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">org.openmrs.module.radiology.PerformedProcedureStepStatus</param>
+			</type>
+		</property>
 		<property name="priority" column="priority"></property>
 		<property name="modality" column="modality" not-null="true">
 			<type name="org.hibernate.type.EnumType">

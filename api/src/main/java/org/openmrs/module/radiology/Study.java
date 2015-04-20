@@ -21,44 +21,6 @@ import org.openmrs.api.context.Context;
  */
 public class Study {
 	
-	// Performed Procedure Steps Statuses - Part 3 Annex C.4.14
-	public static class PerformedStatuses {
-		
-		public static final int IN_PROGRESS = 0;
-		
-		public static final int DISCONTINUED = 1;
-		
-		public static final int COMPLETED = 2;
-		
-		public static boolean has(int x) {
-			return !(string(x, false).compareTo("UNKNOWN") == 0);
-		}
-		
-		// TODO localized
-		public static String string(Integer x, Boolean localized) {
-			switch (x) {
-				case IN_PROGRESS:
-					return localized ? localized("radiology.IN_PROGRESS") : "IN PROGRESS";
-				case DISCONTINUED:
-					return localized ? localized("radiology.DISCONTINUED") : "DISCONTINUED";
-				case COMPLETED:
-					return localized ? localized("radiology.COMPLETED") : "COMPLETED";
-				default:
-					return localized ? localized("general.unknown") : "UNKNOWN";
-			}
-		}
-		
-		public static int value(String s) {
-			if (s.toLowerCase().contains("progress"))
-				return IN_PROGRESS;
-			if (s.compareToIgnoreCase("discontinued") == 0)
-				return DISCONTINUED;
-			if (s.compareToIgnoreCase("completed") == 0)
-				return COMPLETED;
-			return -1;
-		}
-	}
-	
 	// Priorities - Part 3 Annex C.4.11
 	public static class Priorities {
 		
@@ -145,7 +107,7 @@ public class Study {
 	
 	private int scheduledStatus = -1;
 	
-	private int performedStatus = -1;
+	private PerformedProcedureStepStatus performedStatus;
 	
 	private int priority = -1;
 	
@@ -163,8 +125,8 @@ public class Study {
 		super();
 	}
 	
-	public Study(Integer id, String uid, Order order, int scheduledStatus, int performedStatus, int priority,
-	    Modality modality, User schedulerUserId, User performingPhysicianUserId, User readingPhysicianUserId) {
+	public Study(Integer id, String uid, Order order, int scheduledStatus, PerformedProcedureStepStatus performedStatus,
+	    int priority, Modality modality, User schedulerUserId, User performingPhysicianUserId, User readingPhysicianUserId) {
 		super();
 		this.id = id;
 		this.uid = uid;
@@ -190,7 +152,7 @@ public class Study {
 		return order;
 	}
 	
-	public int getPerformedStatus() {
+	public PerformedProcedureStepStatus getPerformedStatus() {
 		return performedStatus;
 	}
 	
@@ -235,11 +197,11 @@ public class Study {
 	}
 	
 	public boolean isCompleted() {
-		return performedStatus == PerformedStatuses.COMPLETED;
+		return performedStatus == PerformedProcedureStepStatus.COMPLETED;
 	}
 	
 	public boolean isScheduleable() {
-		return !PerformedStatuses.has(performedStatus);
+		return performedStatus == null;
 	}
 	
 	public String performing() {
@@ -286,7 +248,7 @@ public class Study {
 		this.order = order;
 	}
 	
-	public void setPerformedStatus(int performedStatus) {
+	public void setPerformedStatus(PerformedProcedureStepStatus performedStatus) {
 		this.performedStatus = performedStatus;
 	}
 	
@@ -362,7 +324,7 @@ public class Study {
 		scheduled += ScheduledStatuses.string(scheduledStatus, true);
 		ret += sched ? scheduled : "";
 		String performed = "";
-		performed += PerformedStatuses.string(performedStatus, true);
+		performed += PerformedProcedureStepStatus.getDisplayNameOrUnknown(performedStatus);
 		ret += perf ? (sched ? " " : "") + performed : "";
 		return ret;
 	}
