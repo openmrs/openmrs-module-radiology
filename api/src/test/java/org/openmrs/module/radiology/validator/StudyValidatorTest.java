@@ -26,6 +26,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.test.Verifies;
 import org.springframework.validation.BindException;
@@ -60,7 +61,7 @@ public class StudyValidatorTest {
 		study.setId(1);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
-		study.setPriority(0);
+		study.setPriority(RequestedProcedurePriority.STAT);
 		
 		Errors errors = new BindException(study, "study");
 		new StudyValidator().validate(study, errors);
@@ -115,7 +116,7 @@ public class StudyValidatorTest {
 		study.setId(1);
 		study.setOrder(order);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
-		study.setPriority(0);
+		study.setPriority(RequestedProcedurePriority.STAT);
 		
 		Errors errors = new BindException(study, "study");
 		new StudyValidator().validate(study, errors);
@@ -175,7 +176,7 @@ public class StudyValidatorTest {
 		study.setOrder(order);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
-		study.setPriority(0);
+		study.setPriority(RequestedProcedurePriority.STAT);
 		
 		Errors errors = new BindException(study, "study");
 		new StudyValidator().validate(study, errors);

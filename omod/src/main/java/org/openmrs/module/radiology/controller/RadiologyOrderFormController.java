@@ -27,9 +27,9 @@ import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyService;
+import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Study.Priorities;
 import org.openmrs.module.radiology.Study.ScheduledStatuses;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.validator.StudyValidator;
@@ -141,9 +141,6 @@ public class RadiologyOrderFormController {
 		if (Context.isAuthenticated()) {
 			mav.addObject("order", order);
 			mav.addObject("study", study);
-			String[] priorities = Utils.forSelect(Priorities.class);
-			mav.addObject("priorities", priorities);
-			mav.addObject("n_priorities", priorities.length);
 			String[] sStatuses = Utils.forSelect(ScheduledStatuses.class);
 			mav.addObject("sStatuses", sStatuses);
 			mav.addObject("n_sStatuses", sStatuses.length);
@@ -183,6 +180,19 @@ public class RadiologyOrderFormController {
 		}
 		
 		return performedStatuses;
+	}
+	
+	@ModelAttribute("requestedProcedurePriorities")
+	private Map<String, String> getRequestedProcedurePriorityList() {
+		
+		Map<String, String> requestedProcedurePriorities = new HashMap<String, String>();
+		requestedProcedurePriorities.put("", "Select");
+		
+		for (RequestedProcedurePriority requestedProcedurePriority : RequestedProcedurePriority.values()) {
+			requestedProcedurePriorities.put(requestedProcedurePriority.name(), requestedProcedurePriority.getDisplayName());
+		}
+		
+		return requestedProcedurePriorities;
 	}
 	
 	protected boolean executeCommand(Order order, Study study, HttpServletRequest request) {

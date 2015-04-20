@@ -232,7 +232,7 @@ public class DicomUtils {
 		workitem.putNestedDicomObject(Tag.ScheduledProcedureStepSequence, spss);
 		
 		workitem.putString(Tag.RequestedProcedureID, VR.SH, String.valueOf(s.getId()));
-		workitem.putString(Tag.RequestedProcedurePriority, VR.SH, Study.Priorities.string(s.getPriority(), false));
+		workitem.putString(Tag.RequestedProcedurePriority, VR.SH, s.getPriority().getDisplayName());
 		workitem.putString(Tag.PatientTransportArrangements, VR.LO, "");
 		workitem.putString(Tag.ConfidentialityConstraintOnPatientDataDescription, VR.LO, "");
 		
@@ -420,26 +420,35 @@ public class DicomUtils {
 	 * Technical Framework Volume 2 for mapping of DICOM Requested Procedure Priority to HL7
 	 * Priority.
 	 * 
-	 * @param priority Study.priority representing DICOM Requested Procedure Priority
-	 * @should return hl7 common order priority given study priority
+	 * @param requestedProcedurePriority RequestedProcedurePriority representing DICOM Requested
+	 *            Procedure Priority
+	 * @return hl7 common order priority mapping to requested procedure priority
+	 * @throws IllegalArgumentException
+	 * @should return hl7 common order priority given requested procedure priority
+	 * @should throw IllegalArgumentException if requested procedure priority is null
 	 */
-	public static CommonOrderPriority getCommonOrderPriorityFrom(Integer priority) {
+	public static CommonOrderPriority getCommonOrderPriorityFrom(RequestedProcedurePriority requestedProcedurePriority)
+	        throws IllegalArgumentException {
+		if (requestedProcedurePriority == null) {
+			throw new IllegalArgumentException("requestedProcedurePriority is required");
+		}
+		
 		CommonOrderPriority result = null;
 		
-		switch (priority) {
-			case Study.Priorities.STAT:
+		switch (requestedProcedurePriority) {
+			case STAT:
 				result = CommonOrderPriority.STAT;
 				break;
-			case Study.Priorities.HIGH:
+			case HIGH:
 				result = CommonOrderPriority.ASAP;
 				break;
-			case Study.Priorities.ROUTINE:
+			case ROUTINE:
 				result = CommonOrderPriority.ROUTINE;
 				break;
-			case Study.Priorities.MEDIUM:
+			case MEDIUM:
 				result = CommonOrderPriority.TIMING_CRITICAL;
 				break;
-			case Study.Priorities.LOW:
+			case LOW:
 				result = CommonOrderPriority.ROUTINE;
 				break;
 			default:

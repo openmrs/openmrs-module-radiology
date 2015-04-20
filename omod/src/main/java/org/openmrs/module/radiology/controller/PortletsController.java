@@ -23,7 +23,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Study.Priorities;
 import org.openmrs.module.radiology.Utils;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -80,7 +79,7 @@ public class PortletsController {
 		for (Study study : studies) {
 			if (study != null) {
 				statuses.add(study.getStatus(Context.getAuthenticatedUser()));
-				priorities.add(Priorities.string(study.getPriority(), true));
+				priorities.add(study.getPriority().getDisplayName());
 				schedulers.add(study.scheduler());
 				performings.add(study.performing());
 				readings.add(study.reading());

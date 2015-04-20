@@ -17,7 +17,11 @@
 				<param name="enumClass">org.openmrs.module.radiology.PerformedProcedureStepStatus</param>
 			</type>
 		</property>
-		<property name="priority" column="priority"></property>
+		<property name="priority" column="priority" not-null="true">
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">org.openmrs.module.radiology.RequestedProcedurePriority</param>
+			</type>
+		</property>
 		<property name="modality" column="modality" not-null="true">
 			<type name="org.hibernate.type.EnumType">
 				<param name="enumClass">org.openmrs.module.radiology.Modality</param>

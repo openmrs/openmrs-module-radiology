@@ -24,7 +24,6 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Study.Priorities;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
@@ -55,7 +54,7 @@ public class RadiologyDashboardController implements Controller {
 		for (Study study : studyList) {
 			if (study != null) {
 				statuses.add(study.getStatus(Context.getAuthenticatedUser()));
-				priorities.add(Priorities.string(study.getPriority(), true));
+				priorities.add(study.getPriority().getDisplayName());
 				schedulers.add(study.scheduler());
 				performings.add(study.performing());
 				readings.add(study.reading());

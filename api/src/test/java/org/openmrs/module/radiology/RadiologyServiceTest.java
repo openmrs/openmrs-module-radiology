@@ -14,11 +14,11 @@
 package org.openmrs.module.radiology;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsInstanceOf.instanceOf;
 import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
-import static org.hamcrest.core.IsInstanceOf.instanceOf;
 
 import java.io.File;
 import java.util.Calendar;
@@ -139,7 +139,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		Study study = new Study();
 		study.setOrder(order);
 		study.setModality(Modality.CT);
-		study.setPriority(0);
+		study.setPriority(RequestedProcedurePriority.STAT);
 		
 		return study;
 	}

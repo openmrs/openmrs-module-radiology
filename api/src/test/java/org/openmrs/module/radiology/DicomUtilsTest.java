@@ -34,6 +34,7 @@ import org.dcm4che2.data.VR;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Order;
@@ -86,6 +87,9 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	
 	@Rule
 	public TemporaryFolder temporaryBaseFolder = new TemporaryFolder();
+	
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
 	
 	/**
 	 * Run this before each unit test in this class. It simply assigns the services used in this
@@ -465,7 +469,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		study.setOrder(order);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
-		study.setPriority(0);
+		study.setPriority(RequestedProcedurePriority.STAT);
 		study.setMwlStatus(0);
 		
 		String saveOrderHL7String = DicomUtils.createHL7Message(study, DicomUtils.OrderRequest.Save_Order);
@@ -585,7 +589,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		study.setOrder(order);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
-		study.setPriority(0);
+		study.setPriority(RequestedProcedurePriority.STAT);
 		study.setMwlStatus(0);
 		
 		String saveOrderHL7String = DicomUtils.createHL7Message(study, DicomUtils.OrderRequest.Void_Order);
@@ -705,7 +709,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		study.setOrder(order);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
-		study.setPriority(0);
+		study.setPriority(RequestedProcedurePriority.STAT);
 		study.setMwlStatus(1);
 		
 		String saveOrderHL7String = DicomUtils.createHL7Message(study, DicomUtils.OrderRequest.Save_Order);
@@ -830,7 +834,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		study.setOrder(order);
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
-		study.setPriority(0);
+		study.setPriority(RequestedProcedurePriority.STAT);
 		study.setMwlStatus(0);
 		
 		String saveOrderHL7String = DicomUtils.createHL7Message(study, DicomUtils.OrderRequest.Default);
@@ -945,21 +949,31 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * Tests the DicomUtils.getCommonOrderPriorityFrom method mapping all Study.Priorities to HL7
+	 * Tests the DicomUtils.getCommonOrderPriorityFrom method mapping all Study.priorities to HL7
 	 * Common Order segment (ORC) Quantity/Timing field Priority component.
 	 * 
-	 * @see {@link DicomUtils#getCommonOrderPriorityFrom(Integer)}
+	 * @see {@link DicomUtils#getCommonOrderPriorityFrom(RequestedProcedurePriority)}
 	 */
 	@Test
-	@Verifies(value = "should return hl7 common order priority given study priority", method = "getCommonOrderPriorityFrom(Integer)")
-	public void getCommonOrderPriorityFrom_shouldReturnHL7CommonOrderPriorityGivenStudyPriority() {
+	@Verifies(value = "should return hl7 common order priority given requested procedure priority", method = "getCommonOrderPriorityFrom(RequestedProcedurePriority)")
+	public void getCommonOrderPriorityFrom_shouldReturnHL7CommonOrderPriorityGivenRequestedProcedurePriority() {
 		
-		assertEquals(CommonOrderPriority.STAT, DicomUtils.getCommonOrderPriorityFrom(Study.Priorities.STAT));
-		assertEquals(CommonOrderPriority.ASAP, DicomUtils.getCommonOrderPriorityFrom(Study.Priorities.HIGH));
-		assertEquals(CommonOrderPriority.ROUTINE, DicomUtils.getCommonOrderPriorityFrom(Study.Priorities.ROUTINE));
-		assertEquals(CommonOrderPriority.TIMING_CRITICAL, DicomUtils.getCommonOrderPriorityFrom(Study.Priorities.MEDIUM));
-		assertEquals(CommonOrderPriority.ROUTINE, DicomUtils.getCommonOrderPriorityFrom(Study.Priorities.LOW));
-		assertEquals(CommonOrderPriority.ROUTINE, DicomUtils.getCommonOrderPriorityFrom(-1));
-		assertEquals(CommonOrderPriority.ROUTINE, DicomUtils.getCommonOrderPriorityFrom(100));
+		assertEquals(CommonOrderPriority.STAT, DicomUtils.getCommonOrderPriorityFrom(RequestedProcedurePriority.STAT));
+		assertEquals(CommonOrderPriority.ASAP, DicomUtils.getCommonOrderPriorityFrom(RequestedProcedurePriority.HIGH));
+		assertEquals(CommonOrderPriority.ROUTINE, DicomUtils.getCommonOrderPriorityFrom(RequestedProcedurePriority.ROUTINE));
+		assertEquals(CommonOrderPriority.TIMING_CRITICAL, DicomUtils
+		        .getCommonOrderPriorityFrom(RequestedProcedurePriority.MEDIUM));
+		assertEquals(CommonOrderPriority.ROUTINE, DicomUtils.getCommonOrderPriorityFrom(RequestedProcedurePriority.LOW));
+	}
+	
+	/**
+	 * @see {@link DicomUtils#getCommonOrderPriorityFrom(RequestedProcedurePriority)}
+	 */
+	@Test
+	@Verifies(value = "should throw IllegalArgumentException if requested procedure priority is null", method = "getCommonOrderPriorityFrom(RequestedProcedurePriority)")
+	public void getCommonOrderPriorityFrom_shouldThrowIllegalArgumentExceptionIfGivenRequestedProcedurePriorityIsNull() {
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("requestedProcedurePriority is required");
+		DicomUtils.getCommonOrderPriorityFrom(null);
 	}
 }

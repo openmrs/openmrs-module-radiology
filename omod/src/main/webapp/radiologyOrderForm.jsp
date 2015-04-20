@@ -104,24 +104,22 @@
 						<c:when test="${!referring && !super}">
 							<input type="hidden" name="${status.expression }"
 								value="${status.value }" />
-							<input readonly="readonly" value="${priorities[status.value+1] }" />
+							<input readonly="readonly" value="${status.value}" />
 						</c:when>
 						<c:otherwise>
-							<select name="${status.expression}">
-								<c:forEach items="${priorities}" begin="0" end="${n_priorities}"
-									var="p" varStatus="status1">
-									<option value="${status1.count-2}"
-										<c:if test="${ status1.count-2 == status.value}">selected</c:if>>
-										${p}</option>
+							<select name="${status.expression}"
+								id="requestedProcedurePrioritySelect">
+								<c:forEach var="requestedProcedurePriority"
+									items="${requestedProcedurePriorities}">
+									<option value="${requestedProcedurePriority.key}"
+										${status.value == requestedProcedurePriority.key ? 'selected="selected"' : ''}>${requestedProcedurePriority.value}</option>
 								</c:forEach>
 							</select>
-
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
 						</c:otherwise>
 					</c:choose>
-
+					<c:if test="${status.errorMessage != ''}">
+						<span class="error">${status.errorMessage}</span>
+					</c:if>
 				</spring:bind></td>
 		</tr>
 		<tr <c:if test="${!scheduler && !super}">style="display:none"</c:if>>

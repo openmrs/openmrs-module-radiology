@@ -54,4 +54,11 @@
 		<dropDefaultValue tableName="radiology_study"
 			columnName="performed_status" columnDataType="int" />
 	</changeSet>
+	<changeSet author="teleivo" id="radiology-7">
+		<comment>priority column represents DICOM Tag (0040,1003) Requested Procedure Priority, a default priority such as ROUTINE should be set in the application</comment>
+		<dropDefaultValue tableName="radiology_study"
+			columnName="priority" columnDataType="int" />
+		<addNotNullConstraint tableName="radiology_study"
+			columnName="priority" columnDataType="int" />
+	</changeSet>
 </databaseChangeLog>

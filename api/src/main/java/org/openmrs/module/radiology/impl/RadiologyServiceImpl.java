@@ -23,6 +23,7 @@ import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyService;
+import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.Visit;
@@ -142,6 +143,10 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		
 		if (studyToBeSaved.getModality() == null) {
 			throw new APIException("Study.modality.required");
+		}
+		
+		if (studyToBeSaved.getPriority() == null) {
+			studyToBeSaved.setPriority(RequestedProcedurePriority.ROUTINE);
 		}
 		
 		try {

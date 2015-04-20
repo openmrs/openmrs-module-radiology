@@ -21,41 +21,6 @@ import org.openmrs.api.context.Context;
  */
 public class Study {
 	
-	// Priorities - Part 3 Annex C.4.11
-	public static class Priorities {
-		
-		public static final int STAT = 0;
-		
-		public static final int HIGH = 1;
-		
-		public static final int ROUTINE = 2;
-		
-		public static final int MEDIUM = 3;
-		
-		public static final int LOW = 4;
-		
-		public static boolean has(int x) {
-			return !(string(x, false).compareTo("UNKNOWN") == 0);
-		}
-		
-		public static String string(Integer x, Boolean localized) {
-			switch (x) {
-				case STAT:
-					return localized ? localized("radiology.STAT") : "STAT";
-				case HIGH:
-					return localized ? localized("radiology.HIGH") : "HIGH";
-				case ROUTINE:
-					return localized ? localized("radiology.ROUTINE") : "ROUTINE";
-				case MEDIUM:
-					return localized ? localized("radiology.MEDIUM") : "MEDIUM";
-				case LOW:
-					return localized ? localized("radiology.LOW") : "LOW";
-				default:
-					return localized ? localized("general.unknown") : "UNKNOWN";
-			}
-		}
-	}
-	
 	// Scheduled Procedure Steps Statuses - Part 3 Annex C.4.10
 	public static class ScheduledStatuses {
 		
@@ -109,7 +74,7 @@ public class Study {
 	
 	private PerformedProcedureStepStatus performedStatus;
 	
-	private int priority = -1;
+	private RequestedProcedurePriority priority;
 	
 	private Modality modality;
 	
@@ -126,7 +91,8 @@ public class Study {
 	}
 	
 	public Study(Integer id, String uid, Order order, int scheduledStatus, PerformedProcedureStepStatus performedStatus,
-	    int priority, Modality modality, User schedulerUserId, User performingPhysicianUserId, User readingPhysicianUserId) {
+	    RequestedProcedurePriority priority, Modality modality, User schedulerUserId, User performingPhysicianUserId,
+	    User readingPhysicianUserId) {
 		super();
 		this.id = id;
 		this.uid = uid;
@@ -160,7 +126,7 @@ public class Study {
 		return performingPhysician;
 	}
 	
-	public int getPriority() {
+	public RequestedProcedurePriority getPriority() {
 		return priority;
 	}
 	
@@ -256,7 +222,7 @@ public class Study {
 		this.performingPhysician = performingPhysician;
 	}
 	
-	public void setPriority(int priority) {
+	public void setPriority(RequestedProcedurePriority priority) {
 		this.priority = priority;
 	}
 	
