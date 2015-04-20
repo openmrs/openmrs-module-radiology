@@ -49,4 +49,9 @@
 		<addNotNullConstraint tableName="radiology_study"
 			columnName="modality" columnDataType="varchar(16)" />
 	</changeSet>
+	<changeSet author="teleivo" id="radiology-6">
+		<comment>column performed_status represents DICOM Performed Procedure Step Status (0040,0252) which is now mapped to by enum PerformedProcedureStepStatus. PerformedProcedureStepStatus does not contain an element with value -1.</comment>
+		<dropDefaultValue tableName="radiology_study"
+			columnName="performed_status" columnDataType="int" />
+	</changeSet>
 </databaseChangeLog>

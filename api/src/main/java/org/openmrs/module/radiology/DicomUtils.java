@@ -35,7 +35,6 @@ import org.dcm4che2.io.DicomInputStream;
 import org.dcm4che2.io.SAXWriter;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.Study.ScheduledStatuses;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
@@ -270,10 +269,12 @@ public class DicomUtils {
 			
 			String performedProcedureStepStatus = getPerformedProcedureStepStatus(mppsObject);
 			
-			service().updateStudyPerformedStatus(studyToBeUpdated, PerformedStatuses.value(performedProcedureStepStatus));
+			service().updateStudyPerformedStatus(studyToBeUpdated,
+			    PerformedProcedureStepStatus.getMatchForDisplayName(performedProcedureStepStatus));
 			
 			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :"
-			        + studyInstanceUid + " to Status : " + PerformedStatuses.value(performedProcedureStepStatus));
+			        + studyInstanceUid + " to Status : "
+			        + PerformedProcedureStepStatus.getMatchForDisplayName(performedProcedureStepStatus));
 		}
 		catch (NumberFormatException e) {
 			log.error("Number can not be parsed");

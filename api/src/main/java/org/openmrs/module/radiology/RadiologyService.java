@@ -53,13 +53,17 @@ public interface RadiologyService extends OpenmrsService {
 	 * </p>
 	 * 
 	 * @param study Study to be updated
-	 * @param performedStatus Performed Status to set Study to
+	 * @param performedStatus Performed Procedure Step Status to set Study to
 	 * @return study which was updated
+	 * @throws IllegalArgumentException
 	 * @should update performed status of given study in database to given performed status
 	 * @should not update non existing study
+	 * @should throw IllegalArgumentException if study is null
+	 * @should throw IllegalArgumentException if performedStatus is null
 	 */
 	//TODO(teleivo) is check for non existing study.id != null enough, could study.id be set somewhere other than on saveStudy()
-	public Study updateStudyPerformedStatus(Study study, int performedStatus);
+	public Study updateStudyPerformedStatus(Study study, PerformedProcedureStepStatus performedStatus)
+	        throws IllegalArgumentException;
 	
 	public void sendModalityWorklist(Study s, OrderRequest orderRequest);
 	
