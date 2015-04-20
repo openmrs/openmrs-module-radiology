@@ -1,4 +1,5 @@
-    <%@ include file="/WEB-INF/template/include.jsp"%>
+
+<%@ include file="/WEB-INF/template/include.jsp"%>
 
 <openmrs:require privilege="Edit Orders" otherwise="/login.htm"
 	redirect="/module/radiology/radiologyOrder.form" />
@@ -35,17 +36,18 @@
 		</div>
 	</form>
 </c:if>
-<form method="post" class="box">       
-	<input type="hidden" name="study_id" value="${study.id }" />
-        <input type="hidden" name="patient_id" value="${patientId }" /> 
-         <spring:bind path="study.mwlStatus">
-                <input type="hidden" name="${status.expression}" value="${status.value}" />
-                <c:if test="${status.errorMessage != ''}">
-				<span class="error">${status.errorMessage}</span>
-                </c:if>
-         </spring:bind>
-            <%--  <spring:bind path="study.id">--%>
-                <%--<div><p>Value : ${status.expression }</p></div>
+<form method="post" class="box">
+	<input type="hidden" name="study_id" value="${study.id }" /> <input
+		type="hidden" name="patient_id" value="${patientId }" />
+	<spring:bind path="study.mwlStatus">
+		<input type="hidden" name="${status.expression}"
+			value="${status.value}" />
+		<c:if test="${status.errorMessage != ''}">
+			<span class="error">${status.errorMessage}</span>
+		</c:if>
+	</spring:bind>
+	<%--  <spring:bind path="study.id">--%>
+	<%--<div><p>Value : ${status.expression }</p></div>
                 <div><p>Value : ${status.value }</p></div>
             </spring:bind>--%>
 	<table>
@@ -63,7 +65,8 @@
 							<openmrs:fieldGen type="org.openmrs.Patient"
 								formFieldName="${status.expression}"
 								val="${status.editor.value}" />
-								<a style="cursor:pointer;" id="moreInfo"><spring:message code="radiology.moreInfo" /></a>
+							<a style="cursor: pointer;" id="moreInfo"><spring:message
+									code="radiology.moreInfo" /></a>
 							<c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if>
@@ -95,8 +98,7 @@
 				</spring:bind>(Optional)</td>
 		</tr>
 		<tr>
-			<td valign="top"><spring:message code="radiology.priority" />
-			</td>
+			<td valign="top"><spring:message code="radiology.priority" /></td>
 			<td valign="top"><spring:bind path="study.priority">
 					<c:choose>
 						<c:when test="${!referring && !super}">
@@ -154,17 +156,15 @@
 			<td valign="top"><spring:bind path="study.performedStatus">
 					<c:choose>
 						<c:when test="${!performing && !super}">
-							<input type="hidden" name="${status.expression }"
-								value="${status.value }" />
-							<input readonly="readonly" value="${pStatuses[status.value+1] }" />
+							<input type="hidden" name="${status.expression}"
+								value="${status.value}" />
+							<input readonly="readonly" value="${status.value}" />
 						</c:when>
 						<c:otherwise>
-							<select name="${status.expression}">
-								<c:forEach items="${pStatuses}" begin="0" end="${n_pStatuses}"
-									var="p" varStatus="status1">
-									<option value="${status1.count-2}"
-										<c:if test="${ status1.count-2 == status.value}">selected</c:if>>
-										${p}</option>
+							<select name="${status.expression}" id="performedStatusSelect">
+								<c:forEach var="performedStatus" items="${performedStatuses}">
+									<option value="${performedStatus.key}"
+										${status.value == performedStatus.key ? 'selected="selected"' : ''}>${performedStatus.value}</option>
 								</c:forEach>
 							</select>
 						</c:otherwise>
@@ -175,22 +175,19 @@
 				</spring:bind></td>
 		</tr>
 		<tr>
-			<td valign="top"><spring:message code="radiology.modality" />
-			</td>
+			<td valign="top"><spring:message code="radiology.modality" /></td>
 			<td valign="top"><spring:bind path="study.modality">
 					<c:choose>
 						<c:when test="${!referring && !super}">
-							<input type="hidden" name="${status.expression }"
+							<input type="hidden" name="${status.expression}"
 								value="${status.value }" />
-							<input readonly="readonly" value="${modalities[status.value] }" />
+							<input readonly="readonly" value="${status.value}" />
 						</c:when>
 						<c:otherwise>
-							<select name="${status.expression}">
-								<c:forEach items="${modalities}" begin="0" end="${n_modalities}"
-									var="p" varStatus="status1">
-									<option value="${status1.count-1}"
-										<c:if test="${ status1.count-1 == status.value}">selected</c:if>>
-										${p}</option>
+							<select name="${status.expression}" id="modalitySelect">
+								<c:forEach var="modality" items="${modalities}">
+									<option value="${modality.key}"
+										${status.value == modality.key ? 'selected="selected"' : ''}>${modality.value}</option>
 								</c:forEach>
 							</select>
 						</c:otherwise>
@@ -205,8 +202,7 @@
 			</td>
 			<td valign="top"><spring:bind path="order.instructions">
 					<textarea name="${status.expression}"
-						<c:if test="${!referring && !super }">readonly="readonly"</c:if>
-						>${status.value}</textarea>
+						<c:if test="${!referring && !super }">readonly="readonly"</c:if>>${status.value}</textarea>
 					<c:if test="${status.errorMessage != ''}">
 						<span class="error">${status.errorMessage}</span>
 					</c:if>
@@ -279,15 +275,13 @@
 			</tr>
 		</c:if>
 		<tr <c:if test="${!super}">style="display:none"</c:if>>
-			<td valign="top"><spring:message
-					code="radiology.scheduler" /></td>
+			<td valign="top"><spring:message code="radiology.scheduler" /></td>
 			<td valign="top"><spring:bind path="study.scheduler">
 					<c:choose>
 						<c:when test="${!referring && !super}">
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
-							<input readonly="readonly"
-								value="${study.scheduler.personName}" />
+							<input readonly="readonly" value="${study.scheduler.personName}" />
 						</c:when>
 						<c:otherwise>
 							<openmrs:fieldGen type="org.openmrs.User"
@@ -303,8 +297,7 @@
 		<tr <c:if test="${!super}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.performingPhysician" /></td>
-			<td valign="top"><spring:bind
-					path="study.performingPhysician">
+			<td valign="top"><spring:bind path="study.performingPhysician">
 					<c:choose>
 						<c:when test="${!referring && !super}">
 							<input type="hidden" name="${status.expression }"
@@ -326,8 +319,7 @@
 		<tr <c:if test="${referring}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.readingPhysician" /></td>
-			<td valign="top"><spring:bind
-					path="study.readingPhysician">
+			<td valign="top"><spring:bind path="study.readingPhysician">
 					<c:choose>
 						<c:when test="${!scheduler && !super}">
 							<input type="hidden" name="${status.expression }"
@@ -367,7 +359,7 @@
 		<c:if test="${order.creator != null}">
 			<tr>
 				<td><spring:message code="general.createdBy" /></td>
-				<td>${order.creator.personName} - <openmrs:formatDate
+				<td>${order.creator.personName}-<openmrs:formatDate
 						date="${order.dateCreated}" type="long" />
 				</td>
 			</tr>
@@ -381,8 +373,8 @@
 <c:if test="${order.discontinued}">
 	<br />
 	<form method="post" class="box">
-            <input type="hidden" name="study_id" value="${study.id }" />                 
-		<input type="submit"
+		<input type="hidden" name="study_id" value="${study.id }" /> <input
+			type="submit"
 			value='<spring:message code="Order.undiscontinueOrder"/>'
 			name="undiscontinueOrder" />
 	</form>
@@ -391,7 +383,7 @@
 <c:if test="${not order.discontinued and not empty order.orderId}">
 	<br />
 	<form method="post" class="box">
-            <input type="hidden" name="study_id" value="${study.id }" />             
+		<input type="hidden" name="study_id" value="${study.id }" />
 		<table>
 			<tr id="dateDiscontinued">
 				<td valign="top"><spring:message
@@ -424,24 +416,25 @@
 <c:if test="${not order.voided and not empty order.orderId}">
 	<br />
 	<form method="post" class="box">
-            <input type="hidden" name="study_id" value="${study.id }" />       
+		<input type="hidden" name="study_id" value="${study.id }" />
 		<spring:message code="general.voidReason" />
-                <spring:bind path="order.voidReason">
-		<input type="text" value="${status.value}" size="40" name="${status.expression }" />
-		<spring:hasBindErrors name="order">
-			<c:forEach items="${errors.allErrors}" var="error">
-				<c:if test="${error.code == 'voidReason'}">
-					<span class="error"><spring:message
-							code="${error.defaultMessage}" text="${error.defaultMessage}" />
-					</span>
-				</c:if>
-			</c:forEach>
-		</spring:hasBindErrors>
-                </spring:bind>
+		<spring:bind path="order.voidReason">
+			<input type="text" value="${status.value}" size="40"
+				name="${status.expression }" />
+			<spring:hasBindErrors name="order">
+				<c:forEach items="${errors.allErrors}" var="error">
+					<c:if test="${error.code == 'voidReason'}">
+						<span class="error"><spring:message
+								code="${error.defaultMessage}" text="${error.defaultMessage}" />
+						</span>
+					</c:if>
+				</c:forEach>
+			</spring:hasBindErrors>
+		</spring:bind>
 		<input type="submit" name="voidOrder"
 			value='<spring:message code="Order.voidOrder"/>' />
 	</form>
 </c:if>
-        
+
 <div id="moreInfoPopup"></div>
 <%@ include file="/WEB-INF/template/footer.jsp"%>
