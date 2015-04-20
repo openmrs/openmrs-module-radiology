@@ -51,7 +51,7 @@ public class Study {
 	
 	private Modality modality;
 	
-	private int mwlStatus;
+	private MwlStatus mwlStatus = MwlStatus.DEFAULT;
 	
 	private User scheduler;
 	
@@ -131,7 +131,7 @@ public class Study {
 		return uid;
 	}
 	
-	public int getMwlStatus() {
+	public MwlStatus getMwlStatus() {
 		return mwlStatus;
 	}
 	
@@ -169,24 +169,8 @@ public class Study {
 		return getScheduler() == null ? "" : getScheduler().getPersonName().getFullName();
 	}
 	
-	public String mwlStatus() {
-		
-		// -1 :Default
-		String[] mwlMessages = { "Default ", "In Sync : Save order successful.",
-		        "Out of Sync : Save order failed. Try Again!", "In Sync : Update order successful.",
-		        "Out of Sync : Update order failed. Try again!", "In Sync : Void order successful.",
-		        "Out of Sync : Void order failed. Try again!", "In Sync : Discontinue order successful.",
-		        "Out of Sync : Discontinue order failed. Try again!", "In Sync : Undiscontinue order successful.",
-		        "Out of Sync : Undiscontinue order failed. Try again!", "In Sync :  Unvoid order successfull",
-		        "Out of Sync :  Unvoid order failed. Try again" };
-		if (mwlStatus == -1)
-			return "Default";
-		else
-			return mwlMessages[mwlStatus];
-	}
-	
-	public void setMwlStatus(int status) {
-		this.mwlStatus = status;
+	public void setMwlStatus(MwlStatus mwlStatus) {
+		this.mwlStatus = mwlStatus;
 	}
 	
 	public void setId(int id) {

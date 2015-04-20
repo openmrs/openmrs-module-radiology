@@ -32,7 +32,12 @@
 				<param name="enumClassName">org.openmrs.module.radiology.Modality</param>
 			</type>
 		</property>
-		<property name="mwlStatus" column="mwl_status"></property>
+		<property name="mwlStatus" column="mwl_status" length="17"
+			not-null="true">
+			<type name="org.openmrs.util.HibernateEnumType">
+				<param name="enumClassName">org.openmrs.module.radiology.MwlStatus</param>
+			</type>
+		</property>
 		<many-to-one name="scheduler" class="org.openmrs.User"
 			not-null="false" not-found="ignore">
 			<column name="scheduler_user_id"></column>

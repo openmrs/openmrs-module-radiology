@@ -62,7 +62,8 @@
 	<changeSet id="radiology-7" author="teleivo">
 		<comment>column scheduled_status represents DICOM Scheduled Procedure
 			Step Status (0040,0020) which is now mapped to by enum
-			ScheduledProcedureStepStatus. Max length 9 chosen for the column because of max ScheduledProcedureStepStatus "SCHEDULED"</comment>
+			ScheduledProcedureStepStatus. Max length 9 chosen for the column
+			because of max ScheduledProcedureStepStatus "SCHEDULED"</comment>
 		<modifyDataType tableName="radiology_study" columnName="scheduled_status"
 			newDataType="varchar(9)" />
 		<dropDefaultValue tableName="radiology_study"
@@ -80,5 +81,14 @@
 		<addDefaultValue tableName="radiology_study"
 			columnName="performed_status" columnDataType="varchar(12)"
 			defaultValue="null" />
+	</changeSet>
+	<changeSet id="radiology-9" author="teleivo">
+		<comment>column mwl status is now mapped to by enum MwlStatus. Max length 17 chosen for the column because of max element "UNDISCONTINUE_ERR"</comment>
+		<modifyDataType tableName="radiology_study" columnName="mwl_status"
+			newDataType="varchar(17)" />
+		<dropDefaultValue tableName="radiology_study"
+			columnName="mwl_status" columnDataType="varchar(17)" />
+		<addNotNullConstraint tableName="radiology_study"
+			columnName="mwl_status" columnDataType="varchar(17)" />
 	</changeSet>
 </databaseChangeLog>

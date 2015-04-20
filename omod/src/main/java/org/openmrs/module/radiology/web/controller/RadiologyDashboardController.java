@@ -64,7 +64,7 @@ public class RadiologyDashboardController implements Controller {
 				performings.add(study.performing());
 				readings.add(study.reading());
 				modalities.add(study.getModality().getFullName());
-				mwlStatuses.add(study.mwlStatus());
+				mwlStatuses.add(study.getMwlStatus().name());
 			}
 		}
 		
