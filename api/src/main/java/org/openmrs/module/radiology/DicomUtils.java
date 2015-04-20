@@ -1,10 +1,16 @@
+/**
+ * This Source Code Form is subject to the terms of the Mozilla Public License,
+ * v. 2.0. If a copy of the MPL was not distributed with this file, You can
+ * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+ * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
+ * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+ * graphic logo is a trademark of OpenMRS Inc.
+ */
 package org.openmrs.module.radiology;
 
 import java.io.File;
 import java.io.IOException;
-import java.sql.SQLException;
-import java.util.Calendar;
-import java.util.Date;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -17,7 +23,9 @@ import javax.xml.transform.sax.TransformerHandler;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.log4j.Logger;
+import org.dcm4che.tool.hl7snd.HL7Snd;
 import org.dcm4che2.data.BasicDicomObject;
+import org.dcm4che2.data.DicomElement;
 import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.SpecificCharacterSet;
 import org.dcm4che2.data.Tag;
@@ -27,15 +35,13 @@ import org.dcm4che2.io.DicomInputStream;
 import org.dcm4che2.io.SAXWriter;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Study.Modality;
-import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.Study.ScheduledStatuses;
+import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
+import org.openmrs.module.radiology.hl7.CommonOrderPriority;
+import org.openmrs.module.radiology.hl7.HL7Generator;
 import org.xml.sax.SAXException;
 
-import org.dcm4che.tool.hl7snd.HL7Snd;
-
-//import com.hxti.edge.pacs.exception.PersistException;
-//import com.hxti.xebra.util.XebraInterface;
+import ca.uhn.hl7v2.HL7Exception;
 
 public class DicomUtils {
 	
@@ -47,14 +53,11 @@ public class DicomUtils {
 	}
 	
 	/**
-	 * Search in the configured MPPS directory for a DICOM file whose study UID
-	 * matches studyPrefix + o.getOrderId()
+	 * Search in the configured MPPS directory for a DICOM file whose study UID matches studyPrefix
+	 * + o.getOrderId()
 	 * 
-	 * @param o
-	 *            the order from which to extract orderID
-	 * @param tag
-	 *            the tag to return
-	 * 
+	 * @param o the order from which to extract orderID
+	 * @param tag the tag to return
 	 * @return the value of the attribute marked by tag
 	 * @throws IOException
 	 */
@@ -93,14 +96,11 @@ public class DicomUtils {
 	}
 	
 	/**
-	 * Search in the configured MWL directory for a XML file whose name matches
-	 * o.getOrderId()+ ".xml"
+	 * Search in the configured MWL directory for a XML file whose name matches o.getOrderId()+
+	 * ".xml"
 	 * 
-	 * @param o
-	 *            the order from which to extract orderID
-	 * @param tag
-	 *            the tag to return
-	 * 
+	 * @param o the order from which to extract orderID
+	 * @param tag the tag to return
 	 * @return the value of the attribute marked by tag
 	 * @throws Exception
 	 */
@@ -133,9 +133,7 @@ public class DicomUtils {
 	}
 	
 	/**
-	 * 
-	 * @param o
-	 *            order to be searched
+	 * @param o order to be searched
 	 * @return String of the status that appears on this order (o) MPPS file
 	 * @throws IOException
 	 */
@@ -147,8 +145,7 @@ public class DicomUtils {
 	/**
 	 * Writes o to MWL file in XML format
 	 * 
-	 * @throws Exception
-	 *             multiple ones, but just handled as one in the controller
+	 * @throws Exception multiple ones, but just handled as one in the controller
 	 */
 	public static void write(Order o, Study s, File file) throws TransformerConfigurationException,
 	        TransformerFactoryConfigurationError, SAXException, IOException {
@@ -209,7 +206,7 @@ public class DicomUtils {
 		
 		// Scheduled Procedure Step Sequence
 		// ! requires form enhancement, multiple steps
-		spss.putString(Tag.Modality, VR.CS, Modality.values()[s.getModality()].toString());
+		spss.putString(Tag.Modality, VR.CS, s.getModality().toString());
 		spss.putString(Tag.RequestedContrastAgent, VR.LO, "");
 		spss.putString(Tag.ScheduledStationAETitle, VR.AE, Utils.aeTitle());
 		try {
@@ -235,7 +232,7 @@ public class DicomUtils {
 		workitem.putNestedDicomObject(Tag.ScheduledProcedureStepSequence, spss);
 		
 		workitem.putString(Tag.RequestedProcedureID, VR.SH, String.valueOf(s.getId()));
-		workitem.putString(Tag.RequestedProcedurePriority, VR.SH, Study.Priorities.string(s.getPriority(), false));
+		workitem.putString(Tag.RequestedProcedurePriority, VR.SH, s.getPriority().getDisplayName());
 		workitem.putString(Tag.PatientTransportArrangements, VR.LO, "");
 		workitem.putString(Tag.ConfidentialityConstraintOnPatientDataDescription, VR.LO, "");
 		
@@ -247,30 +244,37 @@ public class DicomUtils {
 	}
 	
 	/**
-	 * Updates database with mpps object o
+	 * <p>
+	 * Updates the PerformedStatus of an existing Study in the database to the
+	 * PerformedProcedureStepStatus of a given DicomObject containing a DICOM N-CREATE/N-SET command
+	 * </p>
 	 * 
-	 * @param o
+	 * @param mppsObject the DICOM MPPS object containing a DICOM N-CREATE/N-SET command with tag
+	 *            performedProcedureStepStatus
+	 * @should set performed status of an existing study in database to performed procedure step
+	 *         status IN_PROGRESS of given mpps object
+	 * @should set performed status of an existing study in database to performed procedure step
+	 *         status DISCONTINUED of given mpps object
+	 * @should set performed status of an existing study in database to performed procedure step
+	 *         status COMPLETED of given mpps object
+	 * @should not fail if study instance uid referenced in dicom mpps cannot be found
 	 */
-	public static void writeMpps(DicomObject o) {
+	public static void updateStudyPerformedStatusByMpps(DicomObject mppsObject) {
 		try {
 			
-			SpecificCharacterSet scs = new SpecificCharacterSet(Utils.specificCharacterSet());
+			String studyInstanceUid = getStudyInstanceUidFromMpps(mppsObject);
 			
-			// Save Study
+			Study studyToBeUpdated = service().getStudyByUid(studyInstanceUid);
+			debug(studyToBeUpdated.toString());
 			
-			int[] studyUIDPath = { Tag.ScheduledStepAttributesSequence, Tag.StudyInstanceUID };
-			String studyUID = o.get(studyUIDPath[0]).getDicomObject().get(studyUIDPath[1]).getValueAsString(scs, 0);
+			String performedProcedureStepStatus = getPerformedProcedureStepStatus(mppsObject);
 			
-			String[] uidSplit = studyUID.split("[.]");
-			int id = Integer.parseInt(uidSplit[uidSplit.length - 1]);
-			Study s = service().getStudy(id);
-			debug(s.toString());
-			String pStatus = o.get(Tag.PerformedProcedureStepStatus).getValueAsString(scs, 0);
-			s.setPerformedStatus(PerformedStatuses.value(pStatus));
-			service().saveStudy(s, Calendar.getInstance().getTime());
-			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :" + studyUID
-			        + " to Status : " + PerformedStatuses.value(pStatus));
+			service().updateStudyPerformedStatus(studyToBeUpdated,
+			    PerformedProcedureStepStatus.getMatchForDisplayName(performedProcedureStepStatus));
 			
+			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :"
+			        + studyInstanceUid + " to Status : "
+			        + PerformedProcedureStepStatus.getMatchForDisplayName(performedProcedureStepStatus));
 		}
 		catch (NumberFormatException e) {
 			log.error("Number can not be parsed");
@@ -278,122 +282,177 @@ public class DicomUtils {
 		catch (Exception e) {
 			log.error("Error : " + e.getMessage());
 		}
-		
 	}
 	
 	/**
-	 * @param o
-	 *            the DICOM file loaded as dcm4che DicomObject
-	 * @param imagePath
-	 *            where the image is, example: "c:\images\image_1.dcm"
-	 * Below code used by the old Module. Doesn't use this function any more.
+	 * <p>
+	 * Gets the Study Instance UID of a DICOM MPPS object
+	 * </p>
+	 * 
+	 * @param mppsObject the DICOM MPPS object containing the Study Instance UID
+	 * @should return study instance uid given dicom object
+	 * @should return null given dicom mpps object without scheduled step attributes sequence
+	 * @should return null given dicom mpps object with scheduled step attributes sequence missing
+	 *         study instance uid tag
 	 */
-	public static void writeStorage(DicomObject o, String imagePath) {
-		try {
-			Date now = Calendar.getInstance().getTime();
-			String aeTitle = Utils.aeTitle();
-			String studyUid = o.getString(Tag.StudyInstanceUID);
-			String seriesUid = o.getString(Tag.SeriesInstanceUID);
-			String instUid = o.getString(Tag.SOPInstanceUID);
-			Study s = Study.byUID(studyUid);
-			if (s == null) {
-				s = new Study();
-				Integer patId = Integer.parseInt(o.getString(Tag.PatientID));
-				String patName = o.getString(Tag.PatientName);
-				s.persistOrderPatient(patId, patName);
-				s.setPerformedStatus(Study.PerformedStatuses.COMPLETED);
-				s.setUid(studyUid);
-				service().saveStudy(s);
-			}
-		}
-		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	public static String getStudyInstanceUidFromMpps(DicomObject mppsObject) {
+		
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(Utils.specificCharacterSet());
+		
+		DicomElement scheduledStepAttributesSequenceElement = mppsObject.get(Tag.ScheduledStepAttributesSequence);
+		if (scheduledStepAttributesSequenceElement == null)
+			return null;
+		
+		DicomObject scheduledStepAttributesSequence = scheduledStepAttributesSequenceElement.getDicomObject();
+		
+		DicomElement studyInstanceUidElement = scheduledStepAttributesSequence.get(Tag.StudyInstanceUID);
+		if (studyInstanceUidElement == null)
+			return null;
+		
+		String studyInstanceUid = studyInstanceUidElement.getValueAsString(specificCharacterSet, 0);
+		
+		return studyInstanceUid;
+	}
+	
+	/**
+	 * <p>
+	 * Gets the Performed Procedure Step Status of a DICOM object
+	 * </p>
+	 * 
+	 * @param dicomObject the DICOM object containing the Performed Procedure Step Status
+	 * @should return performed procedure step status given dicom object
+	 * @should return null given given dicom object without performed procedure step status
+	 */
+	public static String getPerformedProcedureStepStatus(DicomObject dicomObject) {
+		
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(Utils.specificCharacterSet());
+		
+		DicomElement performedProcedureStepStatusElement = dicomObject.get(Tag.PerformedProcedureStepStatus);
+		if (performedProcedureStepStatusElement == null)
+			return null;
+		
+		String performedProcedureStepStatus = performedProcedureStepStatusElement.getValueAsString(specificCharacterSet, 0);
+		
+		return performedProcedureStepStatus;
 	}
 	
 	public enum OrderRequest {
 		Default, Save_Order, Void_Order, Discontinue_Order, Undiscontinue_Order, Unvoid_Order;
 	}
 	
-	// Create HL7 ORU message to create worklist request.
-	public static String createHL7Message(Study study, Order order, OrderRequest orderRequest) {
-		// Example HL7Message to create order
-		//  String hl7blob= "MSH|^~\\&|OpenMRSRadiologyModule|MyHospital|||201308271545||ORM^O01||P|2.3||||||encoding|\n" +
-		//                            "PID|||100-07||Patient^D^Johnny||19651007|M||||||||\n" +
-		//                            "ORC|NW|2|||||^^^201308241700^^R||||||\n" +
-		//                            "OBR||||^^^^knee|||||||||||||||2|2||||CT||||||||||||||||||||^knee^scan|\n" +
-		//                            "ZDS|1.2.826.0.1.3680043.8.2186.1.2|";
+	/**
+	 * Create HL7 ORM^O01 message to create a worklist request See IHE Radiology Technical Framework
+	 * Volume 2.
+	 * 
+	 * @param study Study for which the order message is created
+	 * @param orderRequest OrderRequest specifying the action of the order message
+	 * @return encoded HL7 ORM^O01 message
+	 * @should return encoded HL7 ORMO01 message string with new order control given study with
+	 *         mwlstatus zero and save order request
+	 * @should return encoded HL7 ORMO01 message string with cancel order control given study with
+	 *         mwlstatus zero and void order request
+	 * @should return encoded HL7 ORMO01 message string with change order control given study with
+	 *         mwlstatus one and save order request
+	 */
+	public static String createHL7Message(Study study, OrderRequest orderRequest) {
+		String encodedHL7OrmMessage = null;
+		
 		Integer mwlstatus = study.getMwlStatus();
-		String orcfield1 = getORCtype(mwlstatus, orderRequest);
-		String msh = "MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||" + Utils.time(new Date())
-		        + "||ORM^O01||P|2.3||||||encoding|\n";
-		String pid = "PID|||" + order.getPatient().getPatientIdentifier().getIdentifier() + "||"
-		        + order.getPatient().getPersonName().getFullName().replace(' ', '^') + "||"
-		        + Utils.plain(order.getPatient().getBirthdate()) + "|" + order.getPatient().getGender() + "||||||||\n";
-		String orc = "ORC|" + orcfield1 + "|" + study.getId() + "|||||^^^" + Utils.plain(order.getStartDate()) + "^^"
-		        + getTruncatedPriority(study.getPriority()) + "||||||\n";
-		String obr = "OBR||||^^^^" + order.getInstructions() + "|||||||||||||||" + study.getId() + "|" + study.getId()
-		        + "||||" + Modality.values()[study.getModality()].toString() + "||||||||||||||||||||"
-		        + order.getInstructions() + "|\n";
-		String zds = "ZDS|" + study.getUid() + "|";
-		String hl7blob = msh + pid + orc + obr + zds;
-		System.out.println("Created Request \n" + hl7blob);
-		return hl7blob;
+		CommonOrderOrderControl commonOrderOrderControl = getCommonOrderControlFrom(mwlstatus, orderRequest);
+		
+		CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(study.getPriority());
+		
+		try {
+			encodedHL7OrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, commonOrderOrderControl,
+			    orderPriority);
+			System.out.println("Created Request \n" + encodedHL7OrmMessage);
+		}
+		catch (HL7Exception e) {
+			log.error("Error creating ORM^O01 Message : " + e.getMessage());
+			e.printStackTrace();
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		return encodedHL7OrmMessage;
 	}
 	
-	// Create Order Type for the order to be filled in the HL7 Message in the ORC-1 field
-	
-	public static String getORCtype(Integer mwlstatus, OrderRequest orderRequest) {
-		String orc = new String();
+	/**
+	 * Get the HL7 Order Control Code component used in an HL7 common order segment (ORC-1 field)
+	 * given the mwlstatus and orderRequest. See IHE Radiology Technical Framework Volume 2.
+	 * 
+	 * @param mwlstatus mwlstatus of a study
+	 * @param orderRequest
+	 * @should return HL7 order control given mwlstatus and orderrequest
+	 */
+	public static CommonOrderOrderControl getCommonOrderControlFrom(Integer mwlstatus, OrderRequest orderRequest) {
+		CommonOrderOrderControl result = null;
+		
 		switch (orderRequest) {
 			case Save_Order:
 				if (mwlstatus.intValue() == 0 || mwlstatus.intValue() == 2) {
-					orc = "NW";
+					result = CommonOrderOrderControl.NEW_ORDER;
 				} else {
-					orc = "XO";
+					result = CommonOrderOrderControl.CHANGE_ORDER;
 				}
 				break;
 			case Void_Order:
-				orc = "CA";
+				result = CommonOrderOrderControl.CANCEL_ORDER;
 				break;
 			case Unvoid_Order:
-				orc = "NW";
+				result = CommonOrderOrderControl.NEW_ORDER;
 				break;
 			case Discontinue_Order:
-				orc = "CA";
+				result = CommonOrderOrderControl.CANCEL_ORDER;
 				break;
 			case Undiscontinue_Order:
-				orc = "NW";
+				result = CommonOrderOrderControl.NEW_ORDER;
 				break;
 			default:
 				break;
-			
 		}
-		return orc;
+		return result;
 	}
 	
-	// Create Priority for the order to be filled in the HL7 Message
-	public static String getTruncatedPriority(Integer priority) {
-		String result = new String();
-		switch (priority) {
-			case 0:
-				result = "S";
+	/**
+	 * Get the HL7 Priority component of Quantity/Timing (ORC-7) field included in an HL7 version
+	 * 2.3.1 Common Order segment given the DICOM Requested Procedure Priority. See IHE Radiology
+	 * Technical Framework Volume 2 for mapping of DICOM Requested Procedure Priority to HL7
+	 * Priority.
+	 * 
+	 * @param requestedProcedurePriority RequestedProcedurePriority representing DICOM Requested
+	 *            Procedure Priority
+	 * @return hl7 common order priority mapping to requested procedure priority
+	 * @throws IllegalArgumentException
+	 * @should return hl7 common order priority given requested procedure priority
+	 * @should throw IllegalArgumentException if requested procedure priority is null
+	 */
+	public static CommonOrderPriority getCommonOrderPriorityFrom(RequestedProcedurePriority requestedProcedurePriority)
+	        throws IllegalArgumentException {
+		if (requestedProcedurePriority == null) {
+			throw new IllegalArgumentException("requestedProcedurePriority is required");
+		}
+		
+		CommonOrderPriority result = null;
+		
+		switch (requestedProcedurePriority) {
+			case STAT:
+				result = CommonOrderPriority.STAT;
 				break;
-			case 1:
-				result = "A";
+			case HIGH:
+				result = CommonOrderPriority.ASAP;
 				break;
-			case 2:
-				result = "R";
+			case ROUTINE:
+				result = CommonOrderPriority.ROUTINE;
 				break;
-			case 3:
-				result = "T";
+			case MEDIUM:
+				result = CommonOrderPriority.TIMING_CRITICAL;
 				break;
-			case 4:
-				result = "R";
+			case LOW:
+				result = CommonOrderPriority.ROUTINE;
 				break;
 			default:
-				result = "R";
+				result = CommonOrderPriority.ROUTINE;
 				break;
 		}
 		return result;
@@ -408,8 +467,8 @@ public class DicomUtils {
 		return result;
 	}
 	
-	static Main service() {
-		return Context.getService(Main.class);
+	static RadiologyService service() {
+		return Context.getService(RadiologyService.class);
 	}
 	
 }
