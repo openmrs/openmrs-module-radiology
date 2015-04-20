@@ -128,17 +128,17 @@
 			<td valign="top"><spring:bind path="study.scheduledStatus">
 					<c:choose>
 						<c:when test="${!scheduler && !super}">
-							<input type="hidden" name="${status.expression }"
-								value="${status.value }" />
-							<input readonly="readonly" value="${sStatuses[status.value+1] }" />
+							<input type="hidden" name="${status.expression}"
+								value="${status.value}" />
+							<input readonly="readonly" value="${status.value}" />
 						</c:when>
 						<c:otherwise>
-							<select name="${status.expression}">
-								<c:forEach items="${sStatuses}" begin="0" end="${n_sStatuses}"
-									var="p" varStatus="status1">
-									<option value="${status1.count-2}"
-										<c:if test="${ status1.count-2 == status.value}">selected</c:if>>
-										${p}</option>
+							<select name="${status.expression}"
+								id="scheduledProcedureStepStatusSelect">
+								<c:forEach var="scheduledProcedureStepStatus"
+									items="${scheduledProcedureStepStatuses}">
+									<option value="${scheduledProcedureStepStatus.key}"
+										${status.value == scheduledProcedureStepStatus.key ? 'selected="selected"' : ''}>${scheduledProcedureStepStatus.value}</option>
 								</c:forEach>
 							</select>
 						</c:otherwise>
