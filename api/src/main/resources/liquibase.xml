@@ -49,4 +49,14 @@
 		<addNotNullConstraint tableName="radiology_study"
 			columnName="modality" columnDataType="varchar(16)" />
 	</changeSet>
+	<changeSet author="teleivo" id="radiology-6">
+		<comment>priority column represents DICOM Tag (0040,1003) Requested
+			Procedure Priority. Max length 7 chosen for the column because of max priority "ROUTINE"</comment>
+		<modifyDataType tableName="radiology_study" columnName="priority"
+			newDataType="varchar(7)" />
+		<dropDefaultValue tableName="radiology_study"
+			columnName="priority" columnDataType="varchar(7)" />
+		<addNotNullConstraint tableName="radiology_study"
+			columnName="priority" columnDataType="varchar(7)" />
+	</changeSet>
 </databaseChangeLog>

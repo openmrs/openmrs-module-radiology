@@ -12,6 +12,8 @@ package org.openmrs.module.radiology.web;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,10 +29,10 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Main;
 import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Study.PerformedStatuses;
-import org.openmrs.module.radiology.Study.Priorities;
 import org.openmrs.module.radiology.Study.ScheduledStatuses;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.propertyeditor.ConceptEditor;
@@ -135,9 +137,6 @@ public class RadiologyOrderFormController {
 		if (Context.isAuthenticated()) {
 			mav.addObject("order", order);
 			mav.addObject("study", study);
-			String[] priorities = Utils.forSelect(Priorities.class);
-			mav.addObject("priorities", priorities);
-			mav.addObject("n_priorities", priorities.length);
 			String[] sStatuses = Utils.forSelect(ScheduledStatuses.class);
 			mav.addObject("sStatuses", sStatuses);
 			mav.addObject("n_sStatuses", sStatuses.length);
@@ -166,6 +165,18 @@ public class RadiologyOrderFormController {
 		}
 		
 		return modalities;
+	}
+	
+	@ModelAttribute("requestedProcedurePriorities")
+	private List<String> getRequestedProcedurePriorityList() {
+		
+		List<String> requestedProcedurePriorities = new LinkedList<String>();
+		
+		for (RequestedProcedurePriority requestedProcedurePriority : RequestedProcedurePriority.values()) {
+			requestedProcedurePriorities.add(requestedProcedurePriority.name());
+		}
+		
+		return requestedProcedurePriorities;
 	}
 	
 	protected boolean executeCommand(Order order, Study study, HttpServletRequest request) {
