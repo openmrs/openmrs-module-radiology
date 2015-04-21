@@ -122,14 +122,13 @@ public class RadiologyOrderFormController {
 	protected ModelAndView get(@RequestParam(value = "orderId", required = false) Integer orderId,
 	        @RequestParam(value = "patientId", required = false) Integer patientId) {
 		ModelAndView mav = new ModelAndView("module/radiology/radiologyOrderForm");
-		OrderService os = Context.getOrderService();
 		Order order = null;
 		Study study = null;
 		
 		if (Context.isAuthenticated()) {
 			if (orderId != null) {
-				order = os.getOrder(orderId);
 				study = service().getStudyByOrderId(orderId);
+				order = study.getOrder();
 			} else {
 				study = new Study();
 				order = new Order();
@@ -208,8 +207,8 @@ public class RadiologyOrderFormController {
 		scheduledProcedureStepStatuses.put("", "Select");
 		
 		for (ScheduledProcedureStepStatus scheduledProcedureStepStatus : ScheduledProcedureStepStatus.values()) {
-			scheduledProcedureStepStatuses.put(scheduledProcedureStepStatus.name(), scheduledProcedureStepStatus
-			        .getDisplayName());
+			scheduledProcedureStepStatuses.put(scheduledProcedureStepStatus.name(),
+			    scheduledProcedureStepStatus.getDisplayName());
 		}
 		
 		return scheduledProcedureStepStatuses;
