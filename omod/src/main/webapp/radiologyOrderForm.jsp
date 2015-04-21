@@ -55,13 +55,7 @@
 			<td valign="top"><spring:message code="Order.patient" /></td>
 			<td valign="top"><spring:bind path="order.patient">
 					<c:choose>
-						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
-							<input type="hidden" name="${status.expression }"
-								value="${status.editor.value.id }" />
-							<input readonly="readonly" value="${order.patient.personName}" />
-						</c:when>
-						<c:otherwise>
-
+						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<openmrs:fieldGen type="org.openmrs.Patient"
 								formFieldName="${status.expression}"
 								val="${status.editor.value}" />
@@ -70,7 +64,11 @@
 							<c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if>
-
+						</c:when>
+						<c:otherwise>
+							<input type="hidden" name="${status.expression }"
+								value="${status.editor.value.id }" />
+							<input readonly="readonly" value="${order.patient.personName}" />
 						</c:otherwise>
 					</c:choose>
 				</spring:bind></td>
@@ -79,20 +77,18 @@
 			<td valign="top"><spring:message code="Order.concept" /></td>
 			<td valign="top"><spring:bind path="order.concept">
 					<c:choose>
-						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
-							<input type="hidden" name="${status.expression }"
-								value="${status.editor.value.id }" />
-							<input readonly="readonly" value="${order.concept.name.name}" />
-						</c:when>
-						<c:otherwise>
-
+						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<openmrs:fieldGen type="org.openmrs.Concept"
 								formFieldName="${status.expression}"
 								val="${status.editor.value}" />
 							<c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if>
-
+						</c:when>
+						<c:otherwise>
+							<input type="hidden" name="${status.expression }"
+								value="${status.editor.value.id }" />
+							<input readonly="readonly" value="${order.concept.name.name}" />
 						</c:otherwise>
 					</c:choose>
 				</spring:bind>(Optional)</td>
@@ -101,12 +97,7 @@
 			<td valign="top"><spring:message code="radiology.priority" /></td>
 			<td valign="top"><spring:bind path="study.priority">
 					<c:choose>
-						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
-							<input type="hidden" name="${status.expression }"
-								value="${status.value }" />
-							<input readonly="readonly" value="${status.value}" />
-						</c:when>
-						<c:otherwise>
+						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<select name="${status.expression}"
 								id="requestedProcedurePrioritySelect">
 								<c:forEach var="requestedProcedurePriority"
@@ -115,6 +106,11 @@
 										${status.value == requestedProcedurePriority.key ? 'selected="selected"' : ''}>${requestedProcedurePriority.value}</option>
 								</c:forEach>
 							</select>
+						</c:when>
+						<c:otherwise>
+							<input type="hidden" name="${status.expression }"
+								value="${status.value }" />
+							<input readonly="readonly" value="${status.value}" />
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${status.errorMessage != ''}">
@@ -122,17 +118,13 @@
 					</c:if>
 				</spring:bind></td>
 		</tr>
-		<tr <c:if test="${!isUserScheduler && !isUserSuper}">style="display:none"</c:if>>
+		<tr
+			<c:if test="${!isUserScheduler && !isUserSuper}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.scheduledStatus" /></td>
 			<td valign="top"><spring:bind path="study.scheduledStatus">
 					<c:choose>
-						<c:when test="${!isUserScheduler && !isUserSuper}">
-							<input type="hidden" name="${status.expression}"
-								value="${status.value}" />
-							<input readonly="readonly" value="${status.value}" />
-						</c:when>
-						<c:otherwise>
+						<c:when test="${isUserScheduler || isUserSuper}">
 							<select name="${status.expression}"
 								id="scheduledProcedureStepStatusSelect">
 								<c:forEach var="scheduledProcedureStepStatus"
@@ -141,6 +133,11 @@
 										${status.value == scheduledProcedureStepStatus.key ? 'selected="selected"' : ''}>${scheduledProcedureStepStatus.value}</option>
 								</c:forEach>
 							</select>
+						</c:when>
+						<c:otherwise>
+							<input type="hidden" name="${status.expression}"
+								value="${status.value}" />
+							<input readonly="readonly" value="${status.value}" />
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${status.errorMessage != ''}">
@@ -148,23 +145,24 @@
 					</c:if>
 				</spring:bind></td>
 		</tr>
-		<tr <c:if test="${!isUserSuper && !isUserPerformingPhysician}">style="display:none"</c:if>>
+		<tr
+			<c:if test="${!isUserSuper && !isUserPerformingPhysician}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.performedStatus" /></td>
 			<td valign="top"><spring:bind path="study.performedStatus">
 					<c:choose>
-						<c:when test="${!isUserPerformingPhysician && !isUserSuper}">
-							<input type="hidden" name="${status.expression}"
-								value="${status.value}" />
-							<input readonly="readonly" value="${status.value}" />
-						</c:when>
-						<c:otherwise>
+						<c:when test="${isUserPerformingPhysician || isUserSuper}">
 							<select name="${status.expression}" id="performedStatusSelect">
 								<c:forEach var="performedStatus" items="${performedStatuses}">
 									<option value="${performedStatus.key}"
 										${status.value == performedStatus.key ? 'selected="selected"' : ''}>${performedStatus.value}</option>
 								</c:forEach>
 							</select>
+						</c:when>
+						<c:otherwise>
+							<input type="hidden" name="${status.expression}"
+								value="${status.value}" />
+							<input readonly="readonly" value="${status.value}" />
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${status.errorMessage != ''}">
@@ -176,18 +174,18 @@
 			<td valign="top"><spring:message code="radiology.modality" /></td>
 			<td valign="top"><spring:bind path="study.modality">
 					<c:choose>
-						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
-							<input type="hidden" name="${status.expression}"
-								value="${status.value }" />
-							<input readonly="readonly" value="${status.value}" />
-						</c:when>
-						<c:otherwise>
+						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<select name="${status.expression}" id="modalitySelect">
 								<c:forEach var="modality" items="${modalities}">
 									<option value="${modality.key}"
 										${status.value == modality.key ? 'selected="selected"' : ''}>${modality.value}</option>
 								</c:forEach>
 							</select>
+						</c:when>
+						<c:otherwise>
+							<input type="hidden" name="${status.expression}"
+								value="${status.value }" />
+							<input readonly="readonly" value="${status.value}" />
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${status.errorMessage != ''}">
@@ -210,20 +208,18 @@
 			<td valign="top"><spring:message code="Order.encounter" /></td>
 			<td valign="top"><spring:bind path="order.encounter">
 					<c:choose>
-						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
-							<input type="hidden" name="${status.expression }"
-								value="${status.editor.value.id }" />
-							<input readonly="readonly" value="${order.encounter}" />
-						</c:when>
-						<c:otherwise>
-
+						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<openmrs:fieldGen type="org.openmrs.Encounter"
 								formFieldName="${status.expression}"
 								val="${status.editor.value}" />
 							<c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if>
-
+						</c:when>
+						<c:otherwise>
+							<input type="hidden" name="${status.expression }"
+								value="${status.editor.value.id }" />
+							<input readonly="readonly" value="${order.encounter}" />
 						</c:otherwise>
 					</c:choose>
 				</spring:bind>(Optional)</td>
@@ -232,16 +228,15 @@
 			<td valign="top"><spring:message code="Order.orderer" /></td>
 			<td valign="top"><spring:bind path="order.orderer">
 					<c:choose>
-						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
-							<input type="hidden" name="${status.expression }"
-								value="${status.editor.value.id }" />
-							<input readonly="readonly" value="${order.orderer.personName}" />
-						</c:when>
-						<c:otherwise>
+						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<openmrs:fieldGen type="org.openmrs.User"
 								formFieldName="${status.expression}"
 								val="${status.editor.value}" />
-
+						</c:when>
+						<c:otherwise>
+							<input type="hidden" name="${status.expression }"
+								value="${status.editor.value.id }" />
+							<input readonly="readonly" value="${order.orderer.personName}" />
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${status.errorMessage != ''}">
@@ -276,15 +271,15 @@
 			<td valign="top"><spring:message code="radiology.scheduler" /></td>
 			<td valign="top"><spring:bind path="study.scheduler">
 					<c:choose>
-						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
-							<input type="hidden" name="${status.expression }"
-								value="${status.editor.value.id }" />
-							<input readonly="readonly" value="${study.scheduler.personName}" />
-						</c:when>
-						<c:otherwise>
+						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<openmrs:fieldGen type="org.openmrs.User"
 								formFieldName="${status.expression}"
 								val="${status.editor.value}" />
+						</c:when>
+						<c:otherwise>
+							<input type="hidden" name="${status.expression }"
+								value="${status.editor.value.id }" />
+							<input readonly="readonly" value="${study.scheduler.personName}" />
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${status.errorMessage != ''}">
@@ -297,16 +292,16 @@
 					code="radiology.performingPhysician" /></td>
 			<td valign="top"><spring:bind path="study.performingPhysician">
 					<c:choose>
-						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
+						<c:when test="${isUserReferringPhysician || isUserSuper}">
+							<openmrs:fieldGen type="org.openmrs.User"
+								formFieldName="${status.expression}"
+								val="${status.editor.value}" />
+						</c:when>
+						<c:otherwise>
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
 							<input readonly="readonly"
 								value="${study.performingPhysician.personName}" />
-						</c:when>
-						<c:otherwise>
-							<openmrs:fieldGen type="org.openmrs.User"
-								formFieldName="${status.expression}"
-								val="${status.editor.value}" />
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${status.errorMessage != ''}">
@@ -314,21 +309,22 @@
 					</c:if>
 				</spring:bind></td>
 		</tr>
-		<tr <c:if test="${isUserReferringPhysician}">style="display:none"</c:if>>
+		<tr
+			<c:if test="${isUserReferringPhysician}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.readingPhysician" /></td>
 			<td valign="top"><spring:bind path="study.readingPhysician">
 					<c:choose>
-						<c:when test="${!isUserScheduler && !isUserSuper}">
+						<c:when test="${isUserScheduler || isUserSuper}">
+							<openmrs:fieldGen type="org.openmrs.User"
+								formFieldName="${status.expression}"
+								val="${status.editor.value}" />
+						</c:when>
+						<c:otherwise>
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
 							<input readonly="readonly"
 								value="${study.readingPhysician.personName}" />
-						</c:when>
-						<c:otherwise>
-							<openmrs:fieldGen type="org.openmrs.User"
-								formFieldName="${status.expression}"
-								val="${status.editor.value}" />
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${status.errorMessage != ''}">
