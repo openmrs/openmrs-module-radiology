@@ -232,8 +232,7 @@ public class RadiologyOrderFormController {
 	@ModelAttribute("isUserSuper")
 	private boolean isUserSuper() {
 		
-		return !isUserReferringPhysician() && !isUserScheduler() && !isUserPerformingPhysician()
-		        && !isUserReadingPhysician();
+		return Context.getAuthenticatedUser().isSuperUser();
 	}
 	
 	protected boolean executeCommand(Order order, Study study, HttpServletRequest request) {
