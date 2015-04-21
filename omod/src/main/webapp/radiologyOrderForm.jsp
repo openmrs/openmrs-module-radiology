@@ -55,7 +55,7 @@
 			<td valign="top"><spring:message code="Order.patient" /></td>
 			<td valign="top"><spring:bind path="order.patient">
 					<c:choose>
-						<c:when test="${!referring && !super}">
+						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
 							<input readonly="readonly" value="${order.patient.personName}" />
@@ -79,7 +79,7 @@
 			<td valign="top"><spring:message code="Order.concept" /></td>
 			<td valign="top"><spring:bind path="order.concept">
 					<c:choose>
-						<c:when test="${!referring && !super}">
+						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
 							<input readonly="readonly" value="${order.concept.name.name}" />
@@ -101,7 +101,7 @@
 			<td valign="top"><spring:message code="radiology.priority" /></td>
 			<td valign="top"><spring:bind path="study.priority">
 					<c:choose>
-						<c:when test="${!referring && !super}">
+						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
 							<input type="hidden" name="${status.expression }"
 								value="${status.value }" />
 							<input readonly="readonly" value="${status.value}" />
@@ -122,12 +122,12 @@
 					</c:if>
 				</spring:bind></td>
 		</tr>
-		<tr <c:if test="${!scheduler && !super}">style="display:none"</c:if>>
+		<tr <c:if test="${!isUserScheduler && !isUserSuper}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.scheduledStatus" /></td>
 			<td valign="top"><spring:bind path="study.scheduledStatus">
 					<c:choose>
-						<c:when test="${!scheduler && !super}">
+						<c:when test="${!isUserScheduler && !isUserSuper}">
 							<input type="hidden" name="${status.expression}"
 								value="${status.value}" />
 							<input readonly="readonly" value="${status.value}" />
@@ -148,12 +148,12 @@
 					</c:if>
 				</spring:bind></td>
 		</tr>
-		<tr <c:if test="${!super && !performing}">style="display:none"</c:if>>
+		<tr <c:if test="${!isUserSuper && !isUserPerformingPhysician}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.performedStatus" /></td>
 			<td valign="top"><spring:bind path="study.performedStatus">
 					<c:choose>
-						<c:when test="${!performing && !super}">
+						<c:when test="${!isUserPerformingPhysician && !isUserSuper}">
 							<input type="hidden" name="${status.expression}"
 								value="${status.value}" />
 							<input readonly="readonly" value="${status.value}" />
@@ -176,7 +176,7 @@
 			<td valign="top"><spring:message code="radiology.modality" /></td>
 			<td valign="top"><spring:bind path="study.modality">
 					<c:choose>
-						<c:when test="${!referring && !super}">
+						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
 							<input type="hidden" name="${status.expression}"
 								value="${status.value }" />
 							<input readonly="readonly" value="${status.value}" />
@@ -200,7 +200,7 @@
 			</td>
 			<td valign="top"><spring:bind path="order.instructions">
 					<textarea name="${status.expression}"
-						<c:if test="${!referring && !super }">readonly="readonly"</c:if>>${status.value}</textarea>
+						<c:if test="${!isUserReferringPhysician && !isUserSuper }">readonly="readonly"</c:if>>${status.value}</textarea>
 					<c:if test="${status.errorMessage != ''}">
 						<span class="error">${status.errorMessage}</span>
 					</c:if>
@@ -210,7 +210,7 @@
 			<td valign="top"><spring:message code="Order.encounter" /></td>
 			<td valign="top"><spring:bind path="order.encounter">
 					<c:choose>
-						<c:when test="${!referring && !super}">
+						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
 							<input readonly="readonly" value="${order.encounter}" />
@@ -232,7 +232,7 @@
 			<td valign="top"><spring:message code="Order.orderer" /></td>
 			<td valign="top"><spring:bind path="order.orderer">
 					<c:choose>
-						<c:when test="${!referring && !super}">
+						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
 							<input readonly="readonly" value="${order.orderer.personName}" />
@@ -249,7 +249,7 @@
 					</c:if>
 				</spring:bind>(Default value is logged in User)</td>
 		</tr>
-		<c:if test="${scheduler || super}">
+		<c:if test="${isUserScheduler || isUserSuper}">
 			<tr>
 				<td valign="top"><spring:message code="general.dateStart" /></td>
 				<td valign="top"><spring:bind path="order.startDate">
@@ -272,11 +272,11 @@
 					</spring:bind></td>
 			</tr>
 		</c:if>
-		<tr <c:if test="${!super}">style="display:none"</c:if>>
+		<tr <c:if test="${!isUserSuper}">style="display:none"</c:if>>
 			<td valign="top"><spring:message code="radiology.scheduler" /></td>
 			<td valign="top"><spring:bind path="study.scheduler">
 					<c:choose>
-						<c:when test="${!referring && !super}">
+						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
 							<input readonly="readonly" value="${study.scheduler.personName}" />
@@ -292,12 +292,12 @@
 					</c:if>
 				</spring:bind></td>
 		</tr>
-		<tr <c:if test="${!super}">style="display:none"</c:if>>
+		<tr <c:if test="${!isUserSuper}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.performingPhysician" /></td>
 			<td valign="top"><spring:bind path="study.performingPhysician">
 					<c:choose>
-						<c:when test="${!referring && !super}">
+						<c:when test="${!isUserReferringPhysician && !isUserSuper}">
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
 							<input readonly="readonly"
@@ -314,12 +314,12 @@
 					</c:if>
 				</spring:bind></td>
 		</tr>
-		<tr <c:if test="${referring}">style="display:none"</c:if>>
+		<tr <c:if test="${isUserReferringPhysician}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.readingPhysician" /></td>
 			<td valign="top"><spring:bind path="study.readingPhysician">
 					<c:choose>
-						<c:when test="${!scheduler && !super}">
+						<c:when test="${!isUserScheduler && !isUserSuper}">
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
 							<input readonly="readonly"

@@ -149,15 +149,6 @@ public class RadiologyOrderFormController {
 		if (Context.isAuthenticated()) {
 			mav.addObject("order", order);
 			mav.addObject("study", study);
-			boolean referring = Context.getAuthenticatedUser().hasRole(Roles.ReferringPhysician, true);
-			mav.addObject("referring", referring);
-			boolean scheduler = Context.getAuthenticatedUser().hasRole(Roles.Scheduler, true);
-			mav.addObject("scheduler", scheduler);
-			boolean performing = Context.getAuthenticatedUser().hasRole(Roles.PerformingPhysician, true);
-			mav.addObject("performing", performing);
-			boolean reading = Context.getAuthenticatedUser().hasRole(Roles.ReadingPhysician, true);
-			mav.addObject("reading", reading);
-			mav.addObject("super", !referring && !scheduler && !performing && !reading);
 		}
 	}
 	
@@ -207,11 +198,42 @@ public class RadiologyOrderFormController {
 		scheduledProcedureStepStatuses.put("", "Select");
 		
 		for (ScheduledProcedureStepStatus scheduledProcedureStepStatus : ScheduledProcedureStepStatus.values()) {
-			scheduledProcedureStepStatuses.put(scheduledProcedureStepStatus.name(),
-			    scheduledProcedureStepStatus.getDisplayName());
+			scheduledProcedureStepStatuses.put(scheduledProcedureStepStatus.name(), scheduledProcedureStepStatus
+			        .getDisplayName());
 		}
 		
 		return scheduledProcedureStepStatuses;
+	}
+	
+	@ModelAttribute("isUserReferringPhysician")
+	private boolean isUserReferringPhysician() {
+		
+		return Context.getAuthenticatedUser().hasRole(Roles.ReferringPhysician, true);
+	}
+	
+	@ModelAttribute("isUserScheduler")
+	private boolean isUserScheduler() {
+		
+		return Context.getAuthenticatedUser().hasRole(Roles.Scheduler, true);
+	}
+	
+	@ModelAttribute("isUserPerformingPhysician")
+	private boolean isUserPerformingPhysician() {
+		
+		return Context.getAuthenticatedUser().hasRole(Roles.PerformingPhysician, true);
+	}
+	
+	@ModelAttribute("isUserReadingPhysician")
+	private boolean isUserReadingPhysician() {
+		
+		return Context.getAuthenticatedUser().hasRole(Roles.ReadingPhysician, true);
+	}
+	
+	@ModelAttribute("isUserSuper")
+	private boolean isUserSuper() {
+		
+		return !isUserReferringPhysician() && !isUserScheduler() && !isUserPerformingPhysician()
+		        && !isUserReadingPhysician();
 	}
 	
 	protected boolean executeCommand(Order order, Study study, HttpServletRequest request) {
