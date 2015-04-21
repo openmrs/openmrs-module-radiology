@@ -59,6 +59,9 @@ import org.springframework.web.servlet.ModelAndView;
 public class RadiologyOrderFormController {
 	
 	// private Log log = LogFactory.getLog(this.getClass());
+	
+	private final String RADIOLOGY_ORDER_FORM_PATH = "module/radiology/radiologyOrderForm";
+	
 	/**
 	 * @return Radiology module service instance
 	 */
@@ -81,7 +84,7 @@ public class RadiologyOrderFormController {
 	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET)
 	protected ModelAndView get(@RequestParam(value = "orderId", required = false) Integer orderId,
 	        @RequestParam(value = "patientId", required = false) Integer patientId) {
-		ModelAndView mav = new ModelAndView("module/radiology/radiologyOrderForm");
+		ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_FORM_PATH);
 		Order order = null;
 		Study study = null;
 		
@@ -112,7 +115,7 @@ public class RadiologyOrderFormController {
 	        BindingResult sErrors, @ModelAttribute("order") Order order, BindingResult oErrors) throws Exception {
 		
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("module/radiology/radiologyOrderForm");
+		mav.setViewName(RADIOLOGY_ORDER_FORM_PATH);
 		
 		User authenticatedUser = Context.getAuthenticatedUser();
 		if (order.getOrderer() == null)
