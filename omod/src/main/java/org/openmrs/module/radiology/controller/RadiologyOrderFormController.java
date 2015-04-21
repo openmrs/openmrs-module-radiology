@@ -78,6 +78,33 @@ public class RadiologyOrderFormController {
 		binder.registerCustomEditor(Encounter.class, new EncounterEditor());
 	}
 	
+	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET)
+	protected ModelAndView get(@RequestParam(value = "orderId", required = false) Integer orderId,
+	        @RequestParam(value = "patientId", required = false) Integer patientId) {
+		ModelAndView mav = new ModelAndView("module/radiology/radiologyOrderForm");
+		Order order = null;
+		Study study = null;
+		
+		if (Context.isAuthenticated()) {
+			if (orderId != null) {
+				study = radiologyService().getStudyByOrderId(orderId);
+				order = study.getOrder();
+			} else {
+				study = new Study();
+				order = new Order();
+				if (patientId != null) {
+					order.setPatient(Context.getPatientService().getPatient(patientId));
+					mav.addObject("patientId", patientId);
+				}
+				User u = Context.getAuthenticatedUser();
+				if (u.hasRole(Roles.ReferringPhysician, true) && order.getOrderer() == null)
+					order.setOrderer(u);
+			}
+		}
+		populate(mav, order, study);
+		return mav;
+	}
+	
 	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.POST)
 	protected ModelAndView post(HttpServletRequest request,
 	        @RequestParam(value = "study_id", required = false) Integer studyId,
@@ -115,33 +142,6 @@ public class RadiologyOrderFormController {
 				populate(mav, order, study);
 			}
 		}
-		return mav;
-	}
-	
-	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET)
-	protected ModelAndView get(@RequestParam(value = "orderId", required = false) Integer orderId,
-	        @RequestParam(value = "patientId", required = false) Integer patientId) {
-		ModelAndView mav = new ModelAndView("module/radiology/radiologyOrderForm");
-		Order order = null;
-		Study study = null;
-		
-		if (Context.isAuthenticated()) {
-			if (orderId != null) {
-				study = radiologyService().getStudyByOrderId(orderId);
-				order = study.getOrder();
-			} else {
-				study = new Study();
-				order = new Order();
-				if (patientId != null) {
-					order.setPatient(Context.getPatientService().getPatient(patientId));
-					mav.addObject("patientId", patientId);
-				}
-				User u = Context.getAuthenticatedUser();
-				if (u.hasRole(Roles.ReferringPhysician, true) && order.getOrderer() == null)
-					order.setOrderer(u);
-			}
-		}
-		populate(mav, order, study);
 		return mav;
 	}
 	
@@ -198,8 +198,8 @@ public class RadiologyOrderFormController {
 		scheduledProcedureStepStatuses.put("", "Select");
 		
 		for (ScheduledProcedureStepStatus scheduledProcedureStepStatus : ScheduledProcedureStepStatus.values()) {
-			scheduledProcedureStepStatuses.put(scheduledProcedureStepStatus.name(),
-			    scheduledProcedureStepStatus.getDisplayName());
+			scheduledProcedureStepStatuses.put(scheduledProcedureStepStatus.name(), scheduledProcedureStepStatus
+			        .getDisplayName());
 		}
 		
 		return scheduledProcedureStepStatuses;
