@@ -56,6 +56,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequestMapping(value = "/module/radiology/radiologyOrder.form")
 public class RadiologyOrderFormController {
 	
 	// private Log log = LogFactory.getLog(this.getClass());
@@ -81,34 +82,64 @@ public class RadiologyOrderFormController {
 		binder.registerCustomEditor(Encounter.class, new EncounterEditor());
 	}
 	
-	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET)
-	protected ModelAndView get(@RequestParam(value = "orderId", required = false) Integer orderId,
-	        @RequestParam(value = "patientId", required = false) Integer patientId) {
+	@RequestMapping(method = RequestMethod.GET)
+	protected ModelAndView getRadiologyOrderForm() {
 		ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_FORM_PATH);
-		Order order = null;
-		Study study = null;
 		
 		if (Context.isAuthenticated()) {
-			if (orderId != null) {
-				study = radiologyService().getStudyByOrderId(orderId);
-				order = study.getOrder();
-			} else {
-				study = new Study();
-				order = new Order();
-				if (patientId != null) {
-					order.setPatient(Context.getPatientService().getPatient(patientId));
-					mav.addObject("patientId", patientId);
-				}
-				User u = Context.getAuthenticatedUser();
-				if (u.hasRole(Roles.ReferringPhysician, true) && order.getOrderer() == null)
-					order.setOrderer(u);
+			Study study = new Study();
+			Order order = new Order();
+			
+			User u = Context.getAuthenticatedUser();
+			if (u.hasRole(Roles.ReferringPhysician, true) && order.getOrderer() == null) {
+				order.setOrderer(u);
 			}
+			
+			mav.addObject("order", order);
+			mav.addObject("study", study);
 		}
-		populate(mav, order, study);
+		
 		return mav;
 	}
 	
-	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.GET, params = "patientId")
+	protected ModelAndView getRadiologyOrderFormWithPatiendId(
+	        @RequestParam(value = "patientId", required = true) Integer patientId) {
+		ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_FORM_PATH);
+		
+		if (Context.isAuthenticated()) {
+			Study study = new Study();
+			Order order = new Order();
+			order.setPatient(Context.getPatientService().getPatient(patientId));
+			mav.addObject("patientId", patientId);
+			
+			User u = Context.getAuthenticatedUser();
+			if (u.hasRole(Roles.ReferringPhysician, true) && order.getOrderer() == null) {
+				order.setOrderer(u);
+			}
+			
+			mav.addObject("order", order);
+			mav.addObject("study", study);
+		}
+		
+		return mav;
+	}
+	
+	@RequestMapping(method = RequestMethod.GET, params = "orderId")
+	protected ModelAndView getRadiologyOrderFormWithOrderId(@RequestParam(value = "orderId", required = true) Integer orderId) {
+		ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_FORM_PATH);
+		
+		if (Context.isAuthenticated()) {
+			Study study = radiologyService().getStudyByOrderId(orderId);
+			Order order = study.getOrder();
+			mav.addObject("order", order);
+			mav.addObject("study", study);
+		}
+		
+		return mav;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST)
 	protected ModelAndView post(HttpServletRequest request,
 	        @RequestParam(value = "study_id", required = false) Integer studyId,
 	        @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("study") Study study,
