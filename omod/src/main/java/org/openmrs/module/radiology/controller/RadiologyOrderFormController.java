@@ -90,7 +90,9 @@ public class RadiologyOrderFormController {
 		
 		if (Context.isAuthenticated()) {
 			Study study = new Study();
+			
 			Order order = new Order();
+			order.setOrderType(Utils.getRadiologyOrderType().get(0));
 			
 			User u = Context.getAuthenticatedUser();
 			if (u.hasRole(Roles.ReferringPhysician, true) && order.getOrderer() == null) {
@@ -111,7 +113,9 @@ public class RadiologyOrderFormController {
 		
 		if (Context.isAuthenticated()) {
 			Study study = new Study();
+			
 			Order order = new Order();
+			order.setOrderType(Utils.getRadiologyOrderType().get(0));
 			order.setPatient(patient);
 			
 			if (patient != null) {
@@ -157,7 +161,7 @@ public class RadiologyOrderFormController {
 		User authenticatedUser = Context.getAuthenticatedUser();
 		if (order.getOrderer() == null)
 			order.setOrderer(authenticatedUser);
-		order.setOrderType(Utils.getRadiologyOrderType().get(0));
+		
 		study.setId(studyId);
 		study.setOrder(order);
 		

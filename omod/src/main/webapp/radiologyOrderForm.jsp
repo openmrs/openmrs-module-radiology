@@ -39,6 +39,10 @@
 <form method="post" class="box">
 	<input type="hidden" name="study_id" value="${study.id }" /> <input
 		type="hidden" name="patient_id" value="${patientId }" />
+	<spring:bind path="order.OrderType">
+		<input type="hidden" name="${status.expression}"
+			value="${status.value}" />
+	</spring:bind>
 	<spring:bind path="study.mwlStatus">
 		<input type="hidden" name="${status.expression}"
 			value="${status.value}" />
