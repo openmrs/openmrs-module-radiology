@@ -104,14 +104,19 @@ public class RadiologyOrderFormController {
 	
 	@RequestMapping(method = RequestMethod.GET, params = "patientId")
 	protected ModelAndView getRadiologyOrderFormWithPatiendId(
-	        @RequestParam(value = "patientId", required = true) Integer patientId) {
+	        @RequestParam(value = "patientId", required = true) Patient patient) {
 		ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_FORM_PATH);
 		
 		if (Context.isAuthenticated()) {
 			Study study = new Study();
 			Order order = new Order();
-			order.setPatient(Context.getPatientService().getPatient(patientId));
-			mav.addObject("patientId", patientId);
+			order.setPatient(patient);
+			
+			if (patient != null) {
+				mav.addObject("patientId", patient.getPatientId());
+			} else {
+				mav.addObject("patientId", "");
+			}
 			
 			User u = Context.getAuthenticatedUser();
 			if (u.hasRole(Roles.ReferringPhysician, true) && order.getOrderer() == null) {
