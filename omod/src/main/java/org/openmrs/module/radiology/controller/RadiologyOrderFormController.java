@@ -37,6 +37,7 @@ import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.validator.StudyValidator;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.EncounterEditor;
+import org.openmrs.propertyeditor.OrderEditor;
 import org.openmrs.propertyeditor.OrderTypeEditor;
 import org.openmrs.propertyeditor.PatientEditor;
 import org.openmrs.propertyeditor.UserEditor;
@@ -80,6 +81,7 @@ public class RadiologyOrderFormController {
 		binder.registerCustomEditor(User.class, new UserEditor());
 		binder.registerCustomEditor(Patient.class, new PatientEditor());
 		binder.registerCustomEditor(Encounter.class, new EncounterEditor());
+		binder.registerCustomEditor(Order.class, new OrderEditor());
 	}
 	
 	@RequestMapping(method = RequestMethod.GET)
@@ -131,12 +133,11 @@ public class RadiologyOrderFormController {
 	}
 	
 	@RequestMapping(method = RequestMethod.GET, params = "orderId")
-	protected ModelAndView getRadiologyOrderFormWithOrderId(@RequestParam(value = "orderId", required = true) Integer orderId) {
+	protected ModelAndView getRadiologyOrderFormWithOrderId(@RequestParam(value = "orderId", required = true) Order order) {
 		ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_FORM_PATH);
 		
 		if (Context.isAuthenticated()) {
-			Study study = radiologyService().getStudyByOrderId(orderId);
-			Order order = study.getOrder();
+			Study study = radiologyService().getStudyByOrder(order);
 			mav.addObject("order", order);
 			mav.addObject("study", study);
 		}
