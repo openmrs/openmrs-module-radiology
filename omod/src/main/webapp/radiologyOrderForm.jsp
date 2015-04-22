@@ -43,6 +43,10 @@
 		<input type="hidden" name="${status.expression}"
 			value="${status.value}" />
 	</spring:bind>
+	<spring:bind path="study.Id">
+		<input type="hidden" name="${status.expression}"
+			value="${status.value}" />
+	</spring:bind>
 	<spring:bind path="study.mwlStatus">
 		<input type="hidden" name="${status.expression}"
 			value="${status.value}" />

@@ -151,7 +151,6 @@ public class RadiologyOrderFormController {
 	
 	@RequestMapping(method = RequestMethod.POST)
 	protected ModelAndView post(HttpServletRequest request,
-	        @RequestParam(value = "study_id", required = false) Integer studyId,
 	        @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("study") Study study,
 	        BindingResult sErrors, @ModelAttribute("order") Order order, BindingResult oErrors) throws Exception {
 		
@@ -162,7 +161,6 @@ public class RadiologyOrderFormController {
 		if (order.getOrderer() == null)
 			order.setOrderer(authenticatedUser);
 		
-		study.setId(studyId);
 		study.setOrder(order);
 		
 		if (authenticatedUser.hasRole(Roles.Scheduler, true) && study.getScheduler() == null && !study.isScheduleable()) {
