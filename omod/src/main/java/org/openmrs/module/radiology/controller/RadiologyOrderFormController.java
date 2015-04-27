@@ -154,8 +154,7 @@ public class RadiologyOrderFormController {
 	        @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("study") Study study,
 	        BindingResult sErrors, @ModelAttribute("order") Order order, BindingResult oErrors) throws Exception {
 		
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName(RADIOLOGY_ORDER_FORM_PATH);
+		ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_FORM_PATH);
 		
 		User authenticatedUser = Context.getAuthenticatedUser();
 		if (order.getOrderer() == null)
