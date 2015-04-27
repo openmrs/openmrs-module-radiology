@@ -156,31 +156,72 @@ public class RadiologyOrderFormController {
 		
 		ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_FORM_PATH);
 		
-		User authenticatedUser = Context.getAuthenticatedUser();
-		if (order.getOrderer() == null)
-			order.setOrderer(authenticatedUser);
-		
-		study.setOrder(order);
-		
-		if (authenticatedUser.hasRole(Roles.Scheduler, true) && study.getScheduler() == null && !study.isScheduleable()) {
-			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
-			populate(mav, order, study);
+		boolean ok = executeCommand(order, study, request);
+		if (ok) {
+			if (patientId == null)
+				mav.setViewName("redirect:/module/radiology/radiologyOrder.list");
+			else
+				mav.setViewName("redirect:/patientDashboard.form?patientId=" + patientId);
 		} else {
-			new OrderValidator().validate(order, oErrors);
-			new StudyValidator().validate(study, sErrors);
-			if (oErrors.hasErrors() || sErrors.hasErrors()) {
-				populate(mav, order, study);
-				return mav;
-			}
+			populate(mav, order, study);
+		}
+		
+		return mav;
+	}
+	
+	@RequestMapping(method = RequestMethod.POST, params = "saveOrder")
+	protected ModelAndView postSaveOrder(HttpServletRequest request,
+	        @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("study") Study study,
+	        BindingResult sErrors, @ModelAttribute("order") Order order, BindingResult oErrors) throws Exception {
+		
+		ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_FORM_PATH);
+		
+		if (Context.isAuthenticated()) {
+			User authenticatedUser = Context.getAuthenticatedUser();
+			if (order.getOrderer() == null)
+				order.setOrderer(authenticatedUser);
 			
-			boolean ok = executeCommand(order, study, request);
-			if (ok) {
-				if (patientId == null)
-					mav.setViewName("redirect:/module/radiology/radiologyOrder.list");
-				else
-					mav.setViewName("redirect:/patientDashboard.form?patientId=" + patientId);
-			} else {
+			study.setOrder(order);
+			
+			if (authenticatedUser.hasRole(Roles.Scheduler, true) && study.getScheduler() == null && !study.isScheduleable()) {
+				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
 				populate(mav, order, study);
+			} else {
+				new OrderValidator().validate(order, oErrors);
+				new StudyValidator().validate(study, sErrors);
+				if (oErrors.hasErrors() || sErrors.hasErrors()) {
+					populate(mav, order, study);
+					return mav;
+				}
+				
+				OrderService orderService = Context.getOrderService();
+				
+				try {
+					orderService.saveOrder(order);
+					study.setOrder(orderService.getOrder(order.getOrderId()));
+					Study savedStudy = radiologyService().saveStudy(study);
+					
+					radiologyService().sendModalityWorklist(savedStudy, OrderRequest.Save_Order);
+					
+					savedStudy = radiologyService().getStudy(savedStudy.getId());
+					if (savedStudy.getMwlStatus() == MwlStatus.OUT_SYNC_SAVE_FAILED
+					        || savedStudy.getMwlStatus() == MwlStatus.OUT_SYNC_UPDATE_FAILED) {
+						request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.savedFailWorklist");
+					} else {
+						request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
+					}
+					
+					if (patientId == null) {
+						mav.setViewName("redirect:/module/radiology/radiologyOrder.list");
+					} else {
+						mav.setViewName("redirect:/patientDashboard.form?patientId=" + patientId);
+					}
+				}
+				catch (Exception ex) {
+					request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, ex.getMessage());
+					ex.printStackTrace();
+					populate(mav, order, study);
+				}
 			}
 		}
 		return mav;
@@ -284,23 +325,7 @@ public class RadiologyOrderFormController {
 		OrderService orderService = Context.getOrderService();
 		OrderRequest orderRequest = OrderRequest.Default;
 		try {
-			if (request.getParameter("saveOrder") != null) {
-				orderService.saveOrder(order);
-				study.setOrder(orderService.getOrder(order.getOrderId()));
-				radiologyService().saveStudy(study);
-				
-				orderRequest = OrderRequest.Save_Order;
-				Order o = orderService.getOrder(order.getOrderId());
-				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()), orderRequest);
-				
-				//Saving Study into Database.
-				if (radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.OUT_SYNC_SAVE_FAILED
-				        || radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.OUT_SYNC_UPDATE_FAILED) {
-					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.savedFailWorklist");
-				} else {
-					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
-				}
-			} else if (request.getParameter("voidOrder") != null) {
+			if (request.getParameter("voidOrder") != null) {
 				Order o = orderService.getOrder(order.getOrderId());
 				orderRequest = OrderRequest.Void_Order;
 				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()), orderRequest);
