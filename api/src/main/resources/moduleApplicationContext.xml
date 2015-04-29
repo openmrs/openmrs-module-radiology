@@ -36,13 +36,6 @@
 									</property>
 								</bean>
 							</property>
-							<property name="vdao">
-								<bean class="org.openmrs.module.radiology.db.hibernate.VisitDAOImpl">
-									<property name="sessionFactory">
-										<ref bean="sessionFactory" />
-									</property>
-								</bean>
-							</property>
 						</bean>
 					</property>
 					<property name="preInterceptors">

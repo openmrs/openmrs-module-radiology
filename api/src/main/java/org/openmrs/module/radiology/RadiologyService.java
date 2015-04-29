@@ -18,15 +18,12 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.db.StudyDAO;
-import org.openmrs.module.radiology.db.VisitDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
 public interface RadiologyService extends OpenmrsService {
 	
 	public void setSdao(StudyDAO dao);
-	
-	public void setVdao(VisitDAO dao);
 	
 	/**
 	 * <p>
@@ -66,10 +63,6 @@ public interface RadiologyService extends OpenmrsService {
 	        throws IllegalArgumentException;
 	
 	public void sendModalityWorklist(Study s, OrderRequest orderRequest);
-	
-	public Visit getVisit(Integer id);
-	
-	public Visit saveVisit(Visit v);
 	
 	/**
 	 * Get study by orderId

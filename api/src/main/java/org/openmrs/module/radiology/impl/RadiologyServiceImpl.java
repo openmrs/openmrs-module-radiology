@@ -30,25 +30,17 @@ import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
-import org.openmrs.module.radiology.Visit;
 import org.openmrs.module.radiology.db.StudyDAO;
-import org.openmrs.module.radiology.db.VisitDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 public class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyService {
 	
 	private StudyDAO sdao;
 	
-	private VisitDAO vdao;
-	
 	private static final Log log = LogFactory.getLog(RadiologyServiceImpl.class);
 	
 	public void setSdao(StudyDAO dao) {
 		this.sdao = dao;
-	}
-	
-	public void setVdao(VisitDAO vdao) {
-		this.vdao = vdao;
 	}
 	
 	/**
@@ -309,13 +301,4 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		return sdao.saveStudy(studyToBeUpdated);
 	}
 	
-	@Transactional(readOnly = true)
-	public Visit getVisit(Integer id) {
-		return vdao.getVisit(id);
-	}
-	
-	@Transactional
-	public Visit saveVisit(Visit v) {
-		return vdao.saveVisit(v);
-	}
 }
