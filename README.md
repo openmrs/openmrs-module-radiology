@@ -1,5 +1,7 @@
 # openmrs-module-radiologydcm4chee
 
+[![Build Status](https://secure.travis-ci.org/openmrs/openmrs-module-radiologydcm4chee.png?branch=master)](https://travis-ci.org/openmrs/openmrs-module-radiologydcm4chee)
+
 ## Overview
 
 OpenMRS module radiologydcm4chee is a module adding capabilities of a Radiology
