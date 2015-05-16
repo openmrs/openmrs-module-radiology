@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- This Source Code Form is subject to the terms of the Mozilla Public 
+	License, v. 2.0. If a copy of the MPL was not distributed with this file, 
+	You can obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed 
+	under the terms of the Healthcare Disclaimer located at http://openmrs.org/license. 
+	Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
+	graphic logo is a trademark of OpenMRS Inc. -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+                        http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                        http://www.springframework.org/schema/util
+                        http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>org.openmrs.module.radiology.RadiologyService</value>
+				<bean
+					class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+					<property name="transactionManager">
+						<ref bean="transactionManager" />
+					</property>
+					<property name="target">
+						<bean class="org.openmrs.module.radiology.impl.RadiologyServiceImpl">
+							<property name="sdao">
+								<bean class="org.openmrs.module.radiology.db.hibernate.StudyDAOImpl">
+									<property name="sessionFactory">
+										<ref bean="sessionFactory" />
+									</property>
+								</bean>
+							</property>
+						</bean>
+					</property>
+					<property name="preInterceptors">
+						<list>
+							<ref bean="authorizationInterceptor" />
+						</list>
+					</property>
+					<property name="transactionAttributeSource">
+						<bean
+							class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+</beans>
