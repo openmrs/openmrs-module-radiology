@@ -124,7 +124,7 @@ class MPPSSCP {
 			store(f, data);
 			try {
 				Context.openSession();
-				DicomUtils.writeMpps(data);
+				DicomUtils.updateStudyPerformedStatusByMpps(data);
 			} catch (Exception e) {
 				debug("Can not update database with");
 				debug(data.toString());
@@ -164,7 +164,7 @@ class MPPSSCP {
 			store(f, mpps);
 			try {
 				Context.openSession();
-				DicomUtils.writeMpps(mpps);
+				DicomUtils.updateStudyPerformedStatusByMpps(mpps);
 			} catch (Exception e) {
 				debug("Can not update database with");
 				debug(mpps.toString());
