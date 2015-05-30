@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN//EN" "http://www.springframework.org/dtd/spring-beans.dtd"> -->
+<!-- xmlns:mvc="http://www.springframework.org/schema/mvc" http://www.springframework.org/schema/mvc 
+	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="
+                        http://www.springframework.org/schema/beans
+                        http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+                        http://www.springframework.org/schema/context
+                        http://www.springframework.org/schema/context/spring-context-3.0.xsd
+                        http://www.springframework.org/schema/util
+                        http://www.springframework.org/schema/util/spring-util-3.0.xsd">
+
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list>
+				<value>org.openmrs.module.radiology.Main</value>
+				<bean
+					class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+					<property name="transactionManager">
+						<ref bean="transactionManager" />
+					</property>
+					<property name="target">
+						<bean class="org.openmrs.module.radiology.impl.MainImpl">
+							<property name="gdao">
+								<bean class="org.openmrs.module.radiology.db.hibernate.GenericDAOImpl">
+									<property name="sessionFactory">
+										<ref bean="sessionFactory" />
+									</property>
+								</bean>
+							</property>
+							<property name="sdao">
+								<bean class="org.openmrs.module.radiology.db.hibernate.StudyDAOImpl">
+									<property name="sessionFactory">
+										<ref bean="sessionFactory" />
+									</property>
+								</bean>
+							</property>
+							<property name="vdao">
+								<bean class="org.openmrs.module.radiology.db.hibernate.VisitDAOImpl">
+									<property name="sessionFactory">
+										<ref bean="sessionFactory" />
+									</property>
+								</bean>
+							</property>
+						</bean>
+					</property>
+					<property name="preInterceptors">
+						<list>
+							<ref bean="authorizationInterceptor" />
+						</list>
+					</property>
+					<property name="transactionAttributeSource">
+						<bean
+							class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+</beans>
