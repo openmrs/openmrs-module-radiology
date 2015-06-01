@@ -16,9 +16,9 @@
 	</changeSet>
 	<changeSet author="juanp" id="radiology-4">
 		<preConditions onFail="WARN" onError="WARN">
-				<not>
-					<tableExists tableName="radiology_study" />
-				</not>
+			<not>
+				<tableExists tableName="radiology_study" />
+			</not>
 		</preConditions>
 		<createTable tableName="radiology_study">
 			<column name="id" type="int" autoIncrement="true">
@@ -32,13 +32,12 @@
 			<column name="performed_status" type="int" defaultValue="-1"></column>
 			<column name="priority" defaultValue="-1" type="int"></column>
 			<column name="modality" defaultValue="-1" type="int"></column>
-			<column name="scheduler_user_id" type="int"
-				defaultValue="-1"></column>
+			<column name="scheduler_user_id" type="int" defaultValue="-1"></column>
 			<column name="performing_physician_user_id" type="int"
 				defaultValue="-1"></column>
 			<column name="reading_physician_user_id" type="int"
 				defaultValue="-1"></column>
-                        <column name="mwl_status" type="int" defaultValue="-1"></column>        
+			<column name="mwl_status" type="int" defaultValue="-1"></column>
 		</createTable>
-	</changeSet>	
+	</changeSet>
 </databaseChangeLog>

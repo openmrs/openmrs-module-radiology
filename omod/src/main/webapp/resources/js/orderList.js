@@ -68,7 +68,8 @@ var $j=jQuery.noConflict();
 								$j('div#footer + div + div').attr('style',style+' width:103%;');
 							});
 							
-							//********************** DT Events *******************							
+							// ********************** DT Events
+							// *******************
 							
 							$j('#markAll').click(function(){
 								$j('td#actionCheckboxes [type="checkbox"]').attr('checked',true);
@@ -121,11 +122,11 @@ var $j=jQuery.noConflict();
 		});	
 		
 		$j('input#voidOrderButton').click(function(){
-			//TODO
+			// TODO
 			
 		});
 		
-		//************Popups***************
+		// ************Popups***************
 		$j('#voidReasonPopup').dialog({
 			autoOpen: false,
 			modal: true,
