@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.openmrs.module</groupId>
@@ -64,20 +64,21 @@
 				<artifactId>openmrs-tools</artifactId>
 				<version>${openMRSVersion}</version>
 			</dependency>
-                                                
-                        <!-- Added logging libraries at the parent project level so that its inherited by child modules. -->
-                        <dependency>
-                                  <groupId>org.slf4j</groupId>
-                                  <artifactId>slf4j-api</artifactId>   
-                                  <version>1.6.1</version>                               
-                                  <scope>provided</scope>
-                        </dependency>
-                        <dependency>
-                                  <groupId>org.slf4j</groupId>
-                                  <artifactId>slf4j-log4j12</artifactId>     
-                                  <version>1.6.1</version>                             
-                                  <scope>provided</scope>
-                        </dependency>
+
+			<!-- Added logging libraries at the parent project level so that its inherited 
+				by child modules. -->
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-api</artifactId>
+				<version>1.6.1</version>
+				<scope>provided</scope>
+			</dependency>
+			<dependency>
+				<groupId>org.slf4j</groupId>
+				<artifactId>slf4j-log4j12</artifactId>
+				<version>1.6.1</version>
+				<scope>provided</scope>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -143,11 +144,11 @@
 			<name>OpenMRS Nexus Repository</name>
 			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
 		</repository>
-                <repository>
-                      <id>dcm4che</id>
-                      <name>dcm4che Repository</name>
-                      <url>http://www.dcm4che.org/maven2</url>
-                </repository>
+		<repository>
+			<id>dcm4che</id>
+			<name>dcm4che Repository</name>
+			<url>http://www.dcm4che.org/maven2</url>
+		</repository>
 	</repositories>
 
 	<pluginRepositories>
