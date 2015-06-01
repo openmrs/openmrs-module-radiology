@@ -7,33 +7,25 @@
 	<table id="matchedOrders" cellpadding="2" cellspacing="0" width="100%">
 		<thead>
 			<tr>
-				<th>
-				<c:if test="${empty obsId}">
-							<spring:message code="general.edit" />
-						</c:if>
-						<c:if test="${not empty obsId}">
+				<th><c:if test="${empty obsId}">
+						<spring:message code="general.edit" />
+					</c:if> <c:if test="${not empty obsId}">
 							Obs.
-						</c:if>
-				</th>
+						</c:if></th>
 				<th><spring:message code="radiology.patientId" /></th>
-				<th><spring:message code="radiology.patientFullName" />
-				</th>
+				<th><spring:message code="radiology.patientFullName" /></th>
 				<th><spring:message code="radiology.priority" /></th>
-				<th><spring:message code="radiology.referringPhysician" />
-				</th>
+				<th><spring:message code="radiology.referringPhysician" /></th>
 				<th><spring:message code="radiology.scheduler" /></th>
-				<th><spring:message code="radiology.performingPhysician" />
-				</th>
-				<th><spring:message code="radiology.readingPhysician" />
-				</th>
+				<th><spring:message code="radiology.performingPhysician" /></th>
+				<th><spring:message code="radiology.readingPhysician" /></th>
 				<th><spring:message code="radiology.appoinmentDate" /></th>
 				<th><spring:message code="radiology.modality" /></th>
-				<th
-					title="<spring:message code="radiology.accordingModality"/>">
+				<th title="<spring:message code="radiology.accordingModality"/>">
 					<spring:message code="radiology.status" />
 				</th>
 				<th><spring:message code="general.instructions" /></th>
-                                <th><spring:message code="radiology.mwlStatus" /></th>
+				<th><spring:message code="radiology.mwlStatus" /></th>
 			</tr>
 		</thead>
 		<tbody id="matchedOrdersBody">
@@ -42,12 +34,10 @@
 				<tr>
 					<td><c:if test="${empty obsId}">
 							<a href="radiologyOrder.form?orderId=${order.orderId}">${status.count}</a>
-						</c:if>
-						<c:if test="${not empty obsId}">
-						<!-- TODO  select observation-->
-						    <a href="radiologyObs.form?orderId=${order.orderId}${obsId}">${status.count}</a>
-						</c:if>
-						</td>
+						</c:if> <c:if test="${not empty obsId}">
+							<!-- TODO  select observation-->
+							<a href="radiologyObs.form?orderId=${order.orderId}${obsId}">${status.count}</a>
+						</c:if></td>
 					<td style="text-align: center">${order.patient.patientIdentifier}</td>
 					<td>${order.patient.personName}</td>
 					<td>${priorities[status.count-1]}</td>
@@ -61,9 +51,9 @@
 					<td style="max-width: 90px; overflow: hidden;"><a
 						style="cursor: pointer"
 						onclick="$j('<p>'+this.innerHTML+'</p>').dialog({autoOpen:true,modal:true});"
-						title="<spring:message code="general.view"/>"
-						>${order.instructions} </a></td>
-                                        <td>${mwlStatuses[status.count-1]}</td>        
+						title="<spring:message code="general.view"/>">${order.instructions}
+					</a></td>
+					<td>${mwlStatuses[status.count-1]}</td>
 				</tr>
 			</c:forEach>
 		</tbody>
