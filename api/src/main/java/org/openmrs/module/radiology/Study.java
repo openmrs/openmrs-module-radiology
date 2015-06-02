@@ -15,21 +15,12 @@ import java.util.List;
 
 import org.openmrs.Obs;
 import org.openmrs.Order;
-import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
-import org.openmrs.Person;
-import org.openmrs.PersonName;
 import org.openmrs.User;
-import org.openmrs.api.LocationService;
-import org.openmrs.api.OrderService;
-import org.openmrs.api.PatientService;
-import org.openmrs.api.PersonService;
 import org.openmrs.api.context.Context;
-import org.openmrs.api.context.UserContext;
 
 /**
- * A class that supports on openmrs's orders to make the module DICOM
- * compatible, corresponds to the table order_dicom_complment
+ * A class that supports on openmrs's orders to make the module DICOM compatible, corresponds to the
+ * table order_dicom_complment
  * 
  * @author Cortex
  */
@@ -166,11 +157,6 @@ public class Study {
 		}
 	}
 	
-	public static Study byUID(String uid) {
-		String query = "from Study as s where s.uid = '" + uid + "'";
-		return (Study) Context.getService(Main.class).get(query, true);
-	}
-	
 	public static List<Study> get(List<Order> o) {
 		ArrayList<Study> s = new ArrayList<Study>();
 		for (Order o1 : o) {
@@ -189,12 +175,6 @@ public class Study {
 	
 	static Main service() {
 		return Context.getService(Main.class);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public static List<Study> unassigned() {
-		String query = "from Study as s where s.orderID = 0";
-		return (List<Study>) Context.getService(Main.class).get(query, false);
 	}
 	
 	private int id;
@@ -236,28 +216,6 @@ public class Study {
 		this.scheduler = schedulerUserId;
 		this.performingPhysician = performingPhysicianUserId;
 		this.readingPhysician = readingPhysicianUserId;
-	}
-	
-	private PatientIdentifier doIdentifier(Integer patientId) {
-		PatientIdentifier pi = new PatientIdentifier();
-		PatientService ps = Context.getPatientService();
-		pi.setIdentifier(patientId.toString());
-		pi.setIdentifierType(ps.getPatientIdentifierType(2));
-		pi.setPreferred(false);
-		LocationService ls = Context.getLocationService();
-		pi.setLocation(ls.getAllLocations().get(0));
-		pi.setCreator(Context.getUserContext().getAuthenticatedUser());
-		pi.setVoided(false);
-		return pi;
-	}
-	
-	private PersonName doPersonName(String name) {
-		PersonName n = new PersonName();
-		n.setGivenName(name.replace("^", " "));
-		n.setPreferred(false);
-		n.setCreator(Context.getUserContext().getAuthenticatedUser());
-		n.setVoided(false);
-		return n;
 	}
 	
 	public int getId() {
@@ -342,69 +300,6 @@ public class Study {
 		return getPerformingPhysician() == null ? "" : getPerformingPhysician().getPersonName().getFullName();
 	}
 	
-	private Order persistOrder(Patient p) {
-		OrderService os = Context.getOrderService();
-		Order o = new Order();
-		o.setOrderType(Utils.getRadiologyOrderType().get(0));
-		o.setConcept(Context.getConceptService().getAllConcepts().get(0));
-		UserContext uc = Context.getUserContext();
-		User user = uc.getAuthenticatedUser();
-		o.setOrderer(user);
-		o.setCreator(user);
-		o.setDiscontinued(false);
-		o.setVoided(false);
-		o.setPatient(p);
-		os.saveOrder(o);
-		orderID = o.getOrderId();
-		return o;
-	}
-	
-	public Order persistOrderPatient(Integer patId, String patName) {
-		Patient p = persistPatient(patName, patId);
-		return persistOrder(p);
-	}
-	
-	private Patient persistPatient(String patientName, Integer patientId) {
-		PatientService ps = Context.getPatientService();
-		Patient p = null;
-		try {
-			p = ps.getPatients(null, patientId.toString(), null, false).get(0);
-		}
-		catch (Throwable t) {}
-		if (p == null) {
-			p = new Patient();
-			Person pe = persistPerson(doPersonName(patientName));
-			p.setPersonId(pe.getPersonId());
-			p.setCreator(Context.getUserContext().getAuthenticatedUser());
-			p.setVoided(false);
-			p.addIdentifier(doIdentifier(patientId));
-			ps.savePatient(p);
-		}
-		return p;
-	}
-	
-	private Person persistPerson(PersonName name) {
-		PersonService ps = Context.getPersonService();
-		Person p = new Person();
-		p.setBirthdateEstimated(false);
-		p.setDead(false);
-		p.setCreator(Context.getUserContext().getAuthenticatedUser());
-		p.setVoided(false);
-		p.addName(name);
-		ps.savePerson(p);
-		clearSession();
-		return p;
-	}
-	
-	private void clearSession() {
-		try {
-			service().db().session().clear();
-		}
-		catch (Throwable t) {
-			t.printStackTrace();
-		}
-	}
-	
 	public String reading() {
 		return getReadingPhysician() == null ? "" : getReadingPhysician().getPersonName().getFullName();
 	}
@@ -477,13 +372,11 @@ public class Study {
 	 * Fills null required values, to the moment orderer set to currentUser.<br/>
 	 * Fills radiology order type. Fills concept if null.<br/>
 	 * <br/>
-	 * In this function goes all validation pre post request: <li>Scheduler is
-	 * not allowed to schedule a completed procedure</li>
+	 * In this function goes all validation pre post request: <li>Scheduler is not allowed to
+	 * schedule a completed procedure</li>
 	 * 
-	 * @param o
-	 *            Order to be filled
-	 * @param studyId
-	 *            TODO
+	 * @param o Order to be filled
+	 * @param studyId TODO
 	 * @return Order modified
 	 */
 	public boolean setup(Order o, Integer studyId) {
