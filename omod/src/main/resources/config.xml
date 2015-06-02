@@ -39,12 +39,8 @@
 		<property>@MODULE_ID@.mwlMppsPort</property>
 		<defaultValue>11114</defaultValue>
 		<description>Port of the DICOM MWL and MPPS server. OpenMRS MPPSSCU
-			Client</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.storagePort</property>
-		<defaultValue>11115</defaultValue>
-		<description>Port of the DICOM storage server.</description>
+			Client
+		</description>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.mwlDirectory</property>
@@ -58,11 +54,6 @@
 		<description>Directory for mpps entries</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.storageDirectory</property>
-		<defaultValue>storage</defaultValue>
-		<description>Directory for DICOM objects</description>
-	</globalProperty>
-	<globalProperty>
 		<property>@MODULE_ID@.serversAddress</property>
 		<defaultValue>localhost</defaultValue>
 		<description>IP address of the dcm4chee</description>
@@ -72,7 +63,8 @@
 		<defaultValue>/oviyam2/viewer.html?</defaultValue>
 		<description>URL for Oviyam/Weasis. Default value for Oviyam
 			:"/oviyam2/viewer.html?". For Weasis(needs Java Web Start) :
-			"/weasis-pacs-connector/viewer.jnlp?" </description>
+			"/weasis-pacs-connector/viewer.jnlp?"
+		</description>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.serversPort</property>
@@ -83,20 +75,23 @@
 		<property>@MODULE_ID@.applicationEntityTitle</property>
 		<defaultValue>RADIOLOGY_MODULE</defaultValue>
 		<description>Title for this application entity.Calling application
-			entity with respect to OpenMRS</description>
+			entity with respect to OpenMRS
+		</description>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.calledApplicationEntityTitle</property>
 		<defaultValue>DCM4CHEE</defaultValue>
 		<description>Default application entity for DCM4CHEE. Called
-			Application Entity with respect to OpenMRS </description>
+			Application Entity with respect to OpenMRS
+		</description>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.oviyamLocalServerName</property>
 		<defaultValue>oviyamlocal</defaultValue>
 		<description>Local Server name needed for deploying Oviyam. Must match
 			the local server name created in the Oviyam UI. Leave empty for
-			weasis.</description>
+			weasis.
+		</description>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.applicationUID</property>
@@ -123,18 +118,13 @@
 		</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.storageCommitmentPort</property>
-		<defaultValue>11116</defaultValue>
-		<description>Storage Commitment port that modality uses to confirm a
-			storage of an image
-		</description>
-	</globalProperty>
-	<globalProperty>
 		<property>@MODULE_ID@.devMode</property>
 		<defaultValue>Off</defaultValue>
 		<description>On/Off. On to:
-			1. Set Provider or System developer (if provider does not have
-			privileges) privileges to the roles created by the module
+			1. Set Provider or System developer (if
+			provider does not have
+			privileges) privileges to the roles created by
+			the module
 		</description>
 	</globalProperty>
 	<!--Required Global Properties -->
