@@ -41,9 +41,6 @@ import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.Study.ScheduledStatuses;
 import org.xml.sax.SAXException;
 
-//import com.hxti.edge.pacs.exception.PersistException;
-//import com.hxti.xebra.util.XebraInterface;
-
 public class DicomUtils {
 	
 	private static Logger log = Logger.getLogger(DicomUtils.class);
@@ -278,35 +275,6 @@ public class DicomUtils {
 			log.error("Error : " + e.getMessage());
 		}
 		
-	}
-	
-	/**
-	 * @param o the DICOM file loaded as dcm4che DicomObject
-	 * @param imagePath where the image is, example: "c:\images\image_1.dcm" Below code used by the
-	 *            old Module. Doesn't use this function any more.
-	 */
-	public static void writeStorage(DicomObject o, String imagePath) {
-		try {
-			Date now = Calendar.getInstance().getTime();
-			String aeTitle = Utils.aeTitle();
-			String studyUid = o.getString(Tag.StudyInstanceUID);
-			String seriesUid = o.getString(Tag.SeriesInstanceUID);
-			String instUid = o.getString(Tag.SOPInstanceUID);
-			Study s = Study.byUID(studyUid);
-			if (s == null) {
-				s = new Study();
-				Integer patId = Integer.parseInt(o.getString(Tag.PatientID));
-				String patName = o.getString(Tag.PatientName);
-				s.persistOrderPatient(patId, patName);
-				s.setPerformedStatus(Study.PerformedStatuses.COMPLETED);
-				s.setUid(studyUid);
-				service().saveStudy(s);
-			}
-		}
-		catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 	}
 	
 	public enum OrderRequest {
