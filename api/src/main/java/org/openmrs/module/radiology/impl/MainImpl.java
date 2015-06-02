@@ -10,7 +10,6 @@
 package org.openmrs.module.radiology.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Date;
 
 import org.apache.commons.logging.Log;
@@ -22,10 +21,8 @@ import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Main;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
-import org.openmrs.module.radiology.Visit;
 import org.openmrs.module.radiology.db.GenericDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
-import org.openmrs.module.radiology.db.VisitDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 //import com.hxti.xebra.util.XebraInterface;
@@ -36,16 +33,10 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	
 	private StudyDAO sdao;
 	
-	private VisitDAO vdao;
-	
 	private static final Log log = LogFactory.getLog(MainImpl.class);
 	
 	public void setSdao(StudyDAO dao) {
 		this.sdao = dao;
-	}
-	
-	public void setVdao(VisitDAO vdao) {
-		this.vdao = vdao;
 	}
 	
 	@Transactional(readOnly = true)
@@ -158,16 +149,6 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 		}
 		s.setMwlStatus(mwlStatus);
 		saveStudy(s);
-	}
-	
-	@Transactional(readOnly = true)
-	public Visit getVisit(Integer id) {
-		return vdao.getVisit(id);
-	}
-	
-	@Transactional
-	public Visit saveVisit(Visit v) {
-		return vdao.saveVisit(v);
 	}
 	
 	@Override
