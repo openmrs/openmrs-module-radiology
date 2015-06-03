@@ -38,7 +38,7 @@ public class Study {
 	public enum Modality {
 		
 		CR("Computed Radiography"), MR("Magnetic Resonance"), CT("Computed Tomography"), NM("Nuclear Medicine"), US(
-		        "Ultrasound"), XA("X Ray");
+		        "Ultrasound"), XA("X-Ray Angiography");
 		
 		final private String fullName;
 		
