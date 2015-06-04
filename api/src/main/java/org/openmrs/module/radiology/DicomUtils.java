@@ -261,7 +261,7 @@ public class DicomUtils {
 			
 			String[] uidSplit = studyUID.split("[.]");
 			int id = Integer.parseInt(uidSplit[uidSplit.length - 1]);
-			Study s = service().getStudy(id);
+			Study s = radiologyService().getStudy(id);
 			debug(s.toString());
 			
 			String pStatus = o.get(Tag.PerformedProcedureStepStatus).getValueAsString(scs, 0);
@@ -269,7 +269,7 @@ public class DicomUtils {
 			        .getMatchForDisplayName(pStatus);
 			s.setPerformedStatus(performedProcedureStepStatus);
 			
-			service().saveStudy(s);
+			radiologyService().saveStudy(s);
 			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :" + studyUID
 			        + " to Status : " + PerformedProcedureStepStatus.getNameOrUnknown(performedProcedureStepStatus));
 			
@@ -392,8 +392,8 @@ public class DicomUtils {
 		return result;
 	}
 	
-	static Main service() {
-		return Context.getService(Main.class);
+	static RadiologyService radiologyService() {
+		return Context.getService(RadiologyService.class);
 	}
 	
 }

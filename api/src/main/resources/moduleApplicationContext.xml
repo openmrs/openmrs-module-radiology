@@ -18,14 +18,14 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
-				<value>org.openmrs.module.radiology.Main</value>
+				<value>org.openmrs.module.radiology.RadiologyService</value>
 				<bean
 					class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
 					<property name="transactionManager">
 						<ref bean="transactionManager" />
 					</property>
 					<property name="target">
-						<bean class="org.openmrs.module.radiology.impl.MainImpl">
+						<bean class="org.openmrs.module.radiology.impl.RadiologyServiceImpl">
 							<property name="gdao">
 								<bean class="org.openmrs.module.radiology.db.hibernate.GenericDAOImpl">
 									<property name="sessionFactory">

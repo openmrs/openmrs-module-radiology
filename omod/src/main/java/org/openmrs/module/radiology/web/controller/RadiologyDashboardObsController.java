@@ -21,7 +21,7 @@ import org.openmrs.Person;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Main;
+import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.propertyeditor.ConceptEditor;
@@ -44,15 +44,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
- *
  * @author Akhil
  */
 
 @Controller
 public class RadiologyDashboardObsController {
 	
-	static Main service() {
-		return Context.getService(Main.class);
+	static RadiologyService radiologyService() {
+		return Context.getService(RadiologyService.class);
 	}
 	
 	@InitBinder
@@ -83,11 +82,11 @@ public class RadiologyDashboardObsController {
 		List<Obs> prevs = null;
 		ObsService os = Context.getObsService();
 		OrderService or = Context.getOrderService();
-		Study study = service().getStudyByOrderId(orderId);
+		Study study = radiologyService().getStudyByOrderId(orderId);
 		if (obsId != null) {
 			obs = os.getObs(obsId);
 			mav.addObject("obsAnswer", obs.getValueAsString(Locale.ENGLISH));
-			prevs = service().getStudyByOrderId(obs.getOrder().getOrderId()).obs();
+			prevs = radiologyService().getStudyByOrderId(obs.getOrder().getOrderId()).obs();
 		} else {
 			obs = newObs(or.getOrder(orderId));
 			prevs = study.obs();

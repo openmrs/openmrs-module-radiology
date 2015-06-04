@@ -27,9 +27,9 @@ import org.openmrs.User;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
-import org.openmrs.module.radiology.Main;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
+import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
@@ -62,8 +62,8 @@ public class RadiologyOrderFormController {
 	/**
 	 * @return Radiology module service instance
 	 */
-	static Main service() {
-		return Context.getService(Main.class);
+	static RadiologyService radiologyService() {
+		return Context.getService(RadiologyService.class);
 	}
 	
 	@InitBinder
@@ -116,7 +116,7 @@ public class RadiologyOrderFormController {
 		if (Context.isAuthenticated()) {
 			if (orderId != null) {
 				order = os.getOrder(orderId);
-				study = service().getStudyByOrderId(orderId);
+				study = radiologyService().getStudyByOrderId(orderId);
 			} else {
 				study = new Study();
 				order = new Order();
@@ -209,27 +209,29 @@ public class RadiologyOrderFormController {
 			if (request.getParameter("saveOrder") != null) {
 				orderService.saveOrder(order);
 				study.setOrderId(order.getOrderId());
-				service().saveStudy(study);
+				radiologyService().saveStudy(study);
 				//Assigning Study UID                                
 				String studyUID = Utils.studyPrefix() + study.getId();
 				System.out.println("Radiology order received with StudyUID : " + studyUID + " Order ID : "
 				        + order.getOrderId());
 				study.setUid(studyUID);
-				service().saveStudy(study);
+				radiologyService().saveStudy(study);
 				Order o = orderService.getOrder(order.getOrderId());
-				service().sendModalityWorklist(service().getStudyByOrderId(o.getOrderId()), OrderRequest.Save_Order);
+				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()),
+				    OrderRequest.Save_Order);
 				
 				//Saving Study into Database.
-				if (service().getStudyByOrderId(o.getOrderId()).getMwlStatus() == 2
-				        || service().getStudyByOrderId(o.getOrderId()).getMwlStatus() == 4) {
+				if (radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == 2
+				        || radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == 4) {
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.savedFailWorklist");
 				} else {
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
 				}
 			} else if (request.getParameter("voidOrder") != null) {
 				Order o = orderService.getOrder(order.getOrderId());
-				service().sendModalityWorklist(service().getStudyByOrderId(o.getOrderId()), OrderRequest.Void_Order);
-				if (service().getStudyByOrderId(o.getOrderId()).getMwlStatus() == 5) {
+				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()),
+				    OrderRequest.Void_Order);
+				if (radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == 5) {
 					orderService.voidOrder(o, order.getVoidReason());
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.voidedSuccessfully");
 				} else {
@@ -237,8 +239,9 @@ public class RadiologyOrderFormController {
 				}
 			} else if (request.getParameter("unvoidOrder") != null) {
 				Order o = orderService.getOrder(order.getOrderId());
-				service().sendModalityWorklist(service().getStudyByOrderId(o.getOrderId()), OrderRequest.Unvoid_Order);
-				if (service().getStudyByOrderId(o.getOrderId()).getMwlStatus() == 11) {
+				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()),
+				    OrderRequest.Unvoid_Order);
+				if (radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == 11) {
 					orderService.unvoidOrder(o);
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.unvoidedSuccessfully");
 				} else {
@@ -246,8 +249,9 @@ public class RadiologyOrderFormController {
 				}
 			} else if (request.getParameter("discontinueOrder") != null) {
 				Order o = orderService.getOrder(order.getOrderId());
-				service().sendModalityWorklist(service().getStudyByOrderId(o.getOrderId()), OrderRequest.Discontinue_Order);
-				if (service().getStudyByOrderId(o.getOrderId()).getMwlStatus() == 7) {
+				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()),
+				    OrderRequest.Discontinue_Order);
+				if (radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == 7) {
 					orderService.discontinueOrder(o, order.getDiscontinuedReason(), order.getDiscontinuedDate());
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
 				} else {
@@ -255,9 +259,9 @@ public class RadiologyOrderFormController {
 				}
 			} else if (request.getParameter("undiscontinueOrder") != null) {
 				Order o = orderService.getOrder(order.getOrderId());
-				service()
-				        .sendModalityWorklist(service().getStudyByOrderId(o.getOrderId()), OrderRequest.Undiscontinue_Order);
-				if (service().getStudyByOrderId(o.getOrderId()).getMwlStatus() == 9) {
+				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()),
+				    OrderRequest.Undiscontinue_Order);
+				if (radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == 9) {
 					orderService.undiscontinueOrder(o);
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.undiscontinuedSuccessfully");
 				} else {

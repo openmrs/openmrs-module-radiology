@@ -16,7 +16,7 @@ import org.openmrs.module.radiology.db.StudyDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
-public interface Main extends OpenmrsService {
+public interface RadiologyService extends OpenmrsService {
 	
 	public void setGdao(GenericDAO dao);
 	

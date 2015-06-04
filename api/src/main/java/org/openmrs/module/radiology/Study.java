@@ -34,7 +34,7 @@ public class Study {
 	}
 	
 	public static Study get(Order o) {
-		return Context.getService(Main.class).getStudyByOrderId(o.getOrderId());
+		return Context.getService(RadiologyService.class).getStudyByOrderId(o.getOrderId());
 	}
 	
 	private int id;
@@ -149,12 +149,12 @@ public class Study {
 		String innerQuery = "(Select oo.previousVersion from Obs as oo where oo.order.orderId=" + orderId
 		        + " and oo.previousVersion IS NOT NULL)";
 		String query = "from Obs as o where o.order.orderId = " + orderId + " and o.obsId NOT IN " + innerQuery;
-		return (List<Obs>) Context.getService(Main.class).get(query, false);
+		return (List<Obs>) Context.getService(RadiologyService.class).get(query, false);
 	}
 	
 	public Order order() {
 		String query = "from Order as o where o.orderId = " + orderId;
-		return (Order) Context.getService(Main.class).get(query, true);
+		return (Order) Context.getService(RadiologyService.class).get(query, true);
 	}
 	
 	public String performing() {
