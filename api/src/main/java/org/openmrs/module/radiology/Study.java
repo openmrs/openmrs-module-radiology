@@ -168,7 +168,7 @@ public class Study {
 	
 	public static Study byUID(String uid) {
 		String query = "from Study as s where s.uid = '" + uid + "'";
-		return (Study) Context.getService(Main.class).get(query, true);
+		return (Study) Context.getService(RadiologyService.class).get(query, true);
 	}
 	
 	public static List<Study> get(List<Order> o) {
@@ -180,21 +180,21 @@ public class Study {
 	}
 	
 	public static Study get(Order o) {
-		return Context.getService(Main.class).getStudyByOrderId(o.getOrderId());
+		return Context.getService(RadiologyService.class).getStudyByOrderId(o.getOrderId());
 	}
 	
 	private static String localized(String code) {
 		return Context.getMessageSourceService().getMessage(code);
 	}
 	
-	static Main service() {
-		return Context.getService(Main.class);
+	static RadiologyService service() {
+		return Context.getService(RadiologyService.class);
 	}
 	
 	@SuppressWarnings("unchecked")
 	public static List<Study> unassigned() {
 		String query = "from Study as s where s.orderID = 0";
-		return (List<Study>) Context.getService(Main.class).get(query, false);
+		return (List<Study>) Context.getService(RadiologyService.class).get(query, false);
 	}
 	
 	private int id;
@@ -330,12 +330,12 @@ public class Study {
 		String innerQuery = "(Select oo.previousVersion from Obs as oo where oo.order.orderId=" + orderID
 		        + " and oo.previousVersion IS NOT NULL)";
 		String query = "from Obs as o where o.order.orderId = " + orderID + " and o.obsId NOT IN " + innerQuery;
-		return (List<Obs>) Context.getService(Main.class).get(query, false);
+		return (List<Obs>) Context.getService(RadiologyService.class).get(query, false);
 	}
 	
 	public Order order() {
 		String query = "from Order as o where o.orderId = " + orderID;
-		return (Order) Context.getService(Main.class).get(query, true);
+		return (Order) Context.getService(RadiologyService.class).get(query, true);
 	}
 	
 	public String performing() {

@@ -20,7 +20,7 @@ import org.openmrs.Order;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Main;
+import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Study.Modality;
@@ -38,8 +38,8 @@ public class PortletsController {
 	
 	String str = "";
 	
-	static Main service() {
-		return Context.getService(Main.class);
+	static RadiologyService service() {
+		return Context.getService(RadiologyService.class);
 	}
 	
 	@RequestMapping("/module/radiology/portlets/patientOverview.portlet")
