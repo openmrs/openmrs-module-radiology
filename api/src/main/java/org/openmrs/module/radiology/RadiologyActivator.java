@@ -27,9 +27,9 @@ import org.openmrs.module.BaseModuleActivator;
  * This class contains the logic that is run every time this module is either started or shutdown
  */
 
-public class Activator extends BaseModuleActivator {
+public class RadiologyActivator extends BaseModuleActivator {
 	
-	private static final Log log = LogFactory.getLog(Activator.class);
+	private static final Log log = LogFactory.getLog(RadiologyActivator.class);
 	
 	@Override
 	public void started() {

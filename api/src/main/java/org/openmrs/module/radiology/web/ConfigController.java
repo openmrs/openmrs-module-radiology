@@ -15,7 +15,7 @@ import java.lang.reflect.Field;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.openmrs.module.radiology.Activator;
+import org.openmrs.module.radiology.RadiologyActivator;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.web.WebConstants;
@@ -37,7 +37,7 @@ public class ConfigController {
 		command = command == null ? "" : command;
 		if (command.compareToIgnoreCase(typeRoles) == 0) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-			    Activator.typeAndRoles() ? "radiology.successConfig" : "radiology.failConfig");
+			    RadiologyActivator.typeAndRoles() ? "radiology.successConfig" : "radiology.failConfig");
 		} else if (command.compareToIgnoreCase(dummyUsers) == 0) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR,
 			    createDummyUsers() ? "radiology.successConfig" : "radiology.failConfig");
