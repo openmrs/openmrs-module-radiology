@@ -14,7 +14,7 @@
 		http://wiki.openmrs.org/display/docs/Radiology+Module
 	</description>
 
-	<activator>${project.parent.groupId}.${project.parent.artifactId}.Activator
+	<activator>${project.parent.groupId}.${project.parent.artifactId}.RadiologyActivator
 	</activator>
 
 	<require_version>1.9.*</require_version>

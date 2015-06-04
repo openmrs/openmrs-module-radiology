@@ -10,7 +10,7 @@
 package org.openmrs.module.radiology.web;
 
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Activator;
+import org.openmrs.module.radiology.RadiologyActivator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -24,7 +24,7 @@ public class RadiologyOrderListController {
 	public ModelAndView handleRequest() {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("module/radiology/radiologyOrderList");
-		if (Activator.badInit(Context.getUserService(), Context.getOrderService())) {
+		if (RadiologyActivator.badInit(Context.getUserService(), Context.getOrderService())) {
 			mav.addObject("initialized", "fail");
 		}
 		return mav;
