@@ -263,7 +263,7 @@ public class DicomUtils {
 			debug(s.toString());
 			String pStatus = o.get(Tag.PerformedProcedureStepStatus).getValueAsString(scs, 0);
 			s.setPerformedStatus(PerformedStatuses.value(pStatus));
-			service().saveStudy(s, Calendar.getInstance().getTime());
+			service().saveStudy(s);
 			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :" + studyUID
 			        + " to Status : " + PerformedStatuses.value(pStatus));
 			

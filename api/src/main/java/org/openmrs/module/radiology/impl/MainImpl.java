@@ -10,7 +10,6 @@
 package org.openmrs.module.radiology.impl;
 
 import java.io.File;
-import java.util.Date;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -49,10 +48,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	
 	@Transactional
 	public Study saveStudy(Study s) {
-		return saveStudy(s, null);
-	}
-	
-	public Study saveStudy(Study s, Date d) {
+		
 		Order order = s.order();
 		try {
 			sdao.saveStudy(s);
