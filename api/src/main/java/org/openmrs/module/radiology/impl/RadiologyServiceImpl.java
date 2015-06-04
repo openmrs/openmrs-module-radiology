@@ -18,20 +18,20 @@ import org.openmrs.Order;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
-import org.openmrs.module.radiology.Main;
+import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.db.GenericDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
 import org.springframework.transaction.annotation.Transactional;
 
-public class MainImpl extends BaseOpenmrsService implements Main {
+public class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyService {
 	
 	private GenericDAO gdao;
 	
 	private StudyDAO sdao;
 	
-	private static final Log log = LogFactory.getLog(MainImpl.class);
+	private static final Log log = LogFactory.getLog(RadiologyServiceImpl.class);
 	
 	public void setSdao(StudyDAO dao) {
 		this.sdao = dao;
