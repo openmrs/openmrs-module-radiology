@@ -11,6 +11,8 @@ package org.openmrs.module.radiology.web;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -25,11 +27,11 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Main;
 import org.openmrs.module.radiology.Roles;
+import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Study.Modality;
 import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.Study.Priorities;
-import org.openmrs.module.radiology.Study.ScheduledStatuses;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.EncounterEditor;
@@ -136,9 +138,6 @@ public class RadiologyOrderFormController {
 			String[] priorities = Utils.forSelect(Priorities.class);
 			mav.addObject("priorities", priorities);
 			mav.addObject("n_priorities", priorities.length);
-			String[] sStatuses = Utils.forSelect(ScheduledStatuses.class);
-			mav.addObject("sStatuses", sStatuses);
-			mav.addObject("n_sStatuses", sStatuses.length);
 			String[] pStatuses = Utils.forSelect(PerformedStatuses.class);
 			mav.addObject("pStatuses", pStatuses);
 			mav.addObject("n_pStatuses", pStatuses.length);
@@ -154,6 +153,19 @@ public class RadiologyOrderFormController {
 			mav.addObject("reading", reading);
 			mav.addObject("super", !referring && !scheduler && !performing && !reading);
 		}
+	}
+	
+	@ModelAttribute("scheduledProcedureStepStatuses")
+	private Map<String, String> getScheduledProcedureStepStatusList() {
+		
+		Map<String, String> scheduledProcedureStepStatuses = new LinkedHashMap<String, String>();
+		scheduledProcedureStepStatuses.put("", "Select");
+		
+		for (ScheduledProcedureStepStatus scheduledProcedureStepStatus : ScheduledProcedureStepStatus.values()) {
+			scheduledProcedureStepStatuses.put(scheduledProcedureStepStatus.name(), scheduledProcedureStepStatus.name());
+		}
+		
+		return scheduledProcedureStepStatuses;
 	}
 	
 	protected boolean executeCommand(Order order, Study study, HttpServletRequest request) {

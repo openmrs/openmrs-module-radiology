@@ -8,7 +8,12 @@
 		</id>
 		<property name="uid" column="uid"></property>
 		<property name="orderID" column="order_id"></property>
-		<property name="scheduledStatus" column="scheduled_status"></property>
+		<property name="scheduledStatus" column="scheduled_status"
+			length="9">
+			<type name="org.openmrs.util.HibernateEnumType">
+				<param name="enumClassName">org.openmrs.module.radiology.ScheduledProcedureStepStatus</param>
+			</type>
+		</property>
 		<property name="performedStatus" column="performed_status"></property>
 		<property name="priority" column="priority"></property>
 		<property name="modality" column="modality"></property>

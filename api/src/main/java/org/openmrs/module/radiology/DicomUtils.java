@@ -38,7 +38,6 @@ import org.openmrs.Order;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.Study.Modality;
 import org.openmrs.module.radiology.Study.PerformedStatuses;
-import org.openmrs.module.radiology.Study.ScheduledStatuses;
 import org.xml.sax.SAXException;
 
 public class DicomUtils {
@@ -227,7 +226,13 @@ public class DicomUtils {
 		spss.putString(Tag.ScheduledStationName, VR.SH, "");
 		spss.putString(Tag.ScheduledProcedureStepLocation, VR.SH, "");
 		spss.putString(Tag.PreMedication, VR.LO, "");
-		spss.putString(Tag.ScheduledProcedureStepStatus, VR.CS, ScheduledStatuses.string(s.getScheduledStatus(), false));
+		
+		ScheduledProcedureStepStatus scheduledProcedureStepStatus = s.getScheduledStatus();
+		if (scheduledProcedureStepStatus == null) {
+			spss.putString(Tag.ScheduledProcedureStepStatus, VR.CS, "");
+		} else {
+			spss.putString(Tag.ScheduledProcedureStepStatus, VR.CS, scheduledProcedureStepStatus.name());
+		}
 		workitem.putNestedDicomObject(Tag.ScheduledProcedureStepSequence, spss);
 		
 		workitem.putString(Tag.RequestedProcedureID, VR.SH, String.valueOf(s.getId()));

@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog/1.9"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog/1.9
-                  http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-1.9.xsd">
-
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
+    http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
 	<!-- See http://www.liquibase.org/manual/home#available_database_refactorings 
 		for a list of supported elements and attributes -->
@@ -39,5 +38,17 @@
 				defaultValue="-1"></column>
 			<column name="mwl_status" type="int" defaultValue="-1"></column>
 		</createTable>
+	</changeSet>
+	<changeSet author="teleivo" id="radiology-7">
+		<comment>column scheduled_status represents DICOM Scheduled Procedure
+			Step Status (0040,0020) which is now mapped to by enum
+			ScheduledProcedureStepStatus. Max length 9 chosen for the column because of max ScheduledProcedureStepStatus "SCHEDULED"</comment>
+		<modifyDataType tableName="radiology_study" columnName="scheduled_status"
+			newDataType="varchar(9)" />
+		<dropDefaultValue tableName="radiology_study"
+			columnName="scheduled_status" columnDataType="varchar(9)" />
+		<addDefaultValue tableName="radiology_study"
+			columnName="scheduled_status" columnDataType="varchar(9)"
+			defaultValue="null" />
 	</changeSet>
 </databaseChangeLog>
