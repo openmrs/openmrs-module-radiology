@@ -68,7 +68,7 @@ public class PortletsController {
 		
 		List<Order> matchedOrders = dateFilter(patientQuery, startDateS, finalDateS, mav);
 		// TODO Status filter
-		List<Study> studies = Study.get(matchedOrders);
+		List<Study> studies = radiologyService().getStudiesByOrders(matchedOrders);
 		List<String> statuses = new Vector<String>();
 		List<String> priorities = new Vector<String>();
 		List<String> schedulers = new Vector<String>();

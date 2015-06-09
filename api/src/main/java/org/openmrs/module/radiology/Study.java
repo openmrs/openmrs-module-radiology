@@ -10,7 +10,6 @@
 package org.openmrs.module.radiology;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.openmrs.Obs;
@@ -24,18 +23,6 @@ import org.openmrs.api.context.Context;
  * 
  */
 public class Study {
-	
-	public static List<Study> get(List<Order> o) {
-		ArrayList<Study> s = new ArrayList<Study>();
-		for (Order o1 : o) {
-			s.add(get(o1));
-		}
-		return s;
-	}
-	
-	public static Study get(Order o) {
-		return Context.getService(RadiologyService.class).getStudyByOrderId(o.getOrderId());
-	}
 	
 	private int id;
 	

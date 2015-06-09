@@ -9,7 +9,11 @@
  */
 package org.openmrs.module.radiology.db.hibernate;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.SessionFactory;
+import org.openmrs.Order;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.StudyDAO;
 
@@ -47,6 +51,27 @@ public class StudyDAOImpl implements StudyDAO {
 		String query = "from Study s where s.orderId = '" + orderId + "'";
 		Study study = (Study) sessionFactory.getCurrentSession().createQuery(query).uniqueResult();
 		return study == null ? new Study() : study;
+	}
+	
+	/**
+	 * @see StudyDAO#getStudiesByOrders(List<Order>)
+	 */
+	@Override
+	public List<Study> getStudiesByOrders(List<Order> orders) {
+		String query = "select study from Study as study where study.orderId in (:orderIds)";
+		
+		List<Integer> orderIds = new ArrayList<Integer>();
+		for (Order order : orders) {
+			orderIds.add(order.getOrderId());
+		}
+		
+		List<Study> studies = new ArrayList<Study>();
+		
+		if (orderIds.size() > 0) {
+			studies = sessionFactory.getCurrentSession().createQuery(query).setParameterList("orderIds", orderIds).list();
+		}
+		
+		return studies;
 	}
 	
 	@Override
