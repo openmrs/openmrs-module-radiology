@@ -7,7 +7,7 @@
 			<generator class="native" />
 		</id>
 		<property name="uid" column="uid"></property>
-		<property name="orderID" column="order_id"></property>
+		<property name="orderId" column="order_id"></property>
 		<property name="scheduledStatus" column="scheduled_status"></property>
 		<property name="performedStatus" column="performed_status"></property>
 		<property name="priority" column="priority"></property>

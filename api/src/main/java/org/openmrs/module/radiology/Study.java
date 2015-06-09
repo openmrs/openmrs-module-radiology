@@ -181,7 +181,7 @@ public class Study {
 	
 	private String uid;
 	
-	private int orderID;
+	private Integer orderId;
 	
 	private int scheduledStatus = -1;
 	
@@ -203,12 +203,12 @@ public class Study {
 		super();
 	}
 	
-	public Study(int id, String uid, int orderID, int scheduledStatus, int performedStatus, int priority, int modality,
+	public Study(int id, String uid, Integer orderId, int scheduledStatus, int performedStatus, int priority, int modality,
 	    User schedulerUserId, User performingPhysicianUserId, User readingPhysicianUserId) {
 		super();
 		this.id = id;
 		this.uid = uid;
-		this.orderID = orderID;
+		this.orderId = orderId;
 		this.scheduledStatus = scheduledStatus;
 		this.performedStatus = performedStatus;
 		this.priority = priority;
@@ -226,8 +226,8 @@ public class Study {
 		return modality;
 	}
 	
-	public int getOrderID() {
-		return orderID;
+	public Integer getOrderId() {
+		return orderId;
 	}
 	
 	public int getPerformedStatus() {
@@ -285,14 +285,14 @@ public class Study {
 	@SuppressWarnings("unchecked")
 	public List<Obs> obs() {
 		//String query = "from Obs as o where o.order.orderId = " + orderID;
-		String innerQuery = "(Select oo.previousVersion from Obs as oo where oo.order.orderId=" + orderID
+		String innerQuery = "(Select oo.previousVersion from Obs as oo where oo.order.orderId=" + orderId
 		        + " and oo.previousVersion IS NOT NULL)";
-		String query = "from Obs as o where o.order.orderId = " + orderID + " and o.obsId NOT IN " + innerQuery;
+		String query = "from Obs as o where o.order.orderId = " + orderId + " and o.obsId NOT IN " + innerQuery;
 		return (List<Obs>) Context.getService(Main.class).get(query, false);
 	}
 	
 	public Order order() {
-		String query = "from Order as o where o.orderId = " + orderID;
+		String query = "from Order as o where o.orderId = " + orderId;
 		return (Order) Context.getService(Main.class).get(query, true);
 	}
 	
@@ -336,8 +336,8 @@ public class Study {
 		this.modality = modality;
 	}
 	
-	public void setOrderID(int orderID) {
-		this.orderID = orderID;
+	public void setOrderId(Integer orderId) {
+		this.orderId = orderId;
 	}
 	
 	public void setPerformedStatus(int performedStatus) {
