@@ -10,14 +10,14 @@
 package org.openmrs.module.radiology.web;
 
 import java.io.IOException;
-import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Vector;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Order;
@@ -25,17 +25,20 @@ import org.openmrs.Patient;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.Main;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Study.Priorities;
 import org.openmrs.module.radiology.Utils;
-import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
 public class RadiologyDashboardController implements Controller {
 	
 	Log log = LogFactory.getLog(getClass());
+	
+	static Main radiologyService() {
+		return Context.getService(Main.class);
+	}
 	
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	        IOException {
@@ -50,7 +53,7 @@ public class RadiologyDashboardController implements Controller {
 		
 		List<Order> matchedOrders = getRadiologyOrdersByPatient(patientId, mav);
 		// TODO Status filter
-		List<Study> studies = Study.get(matchedOrders);
+		List<Study> studies = radiologyService().getStudiesByOrders(matchedOrders);
 		List<String> statuses = new Vector<String>();
 		List<String> priorities = new Vector<String>();
 		List<String> schedulers = new Vector<String>();
