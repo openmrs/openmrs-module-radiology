@@ -44,8 +44,8 @@ public class StudyDAOImpl implements StudyDAO {
 	/* (non-Javadoc)
 	 * @see org.openmrs.module.radiology.db.StudyDAO#getStudyByOrderId(java.lang.Integer)
 	 */
-	public Study getStudyByOrderId(Integer id) {
-		String query = "from Study s where s.orderID = '" + id + "'";
+	public Study getStudyByOrderId(Integer orderId) {
+		String query = "from Study s where s.orderId = '" + orderId + "'";
 		Study study = (Study) sessionFactory.getCurrentSession().createQuery(query).uniqueResult();
 		return study == null ? new Study() : study;
 	}
