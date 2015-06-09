@@ -54,7 +54,7 @@ public class RadiologyOBRTest {
 		Study study = new Study();
 		study.setId(1);
 		study.setModality(Modality.CT);
-		study.setOrderID(1);
+		study.setOrderId(1);
 		
 		ORM_O01 message = new ORM_O01();
 		RadiologyOBR.populateObservationRequest(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()

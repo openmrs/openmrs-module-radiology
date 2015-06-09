@@ -24,9 +24,9 @@ public interface StudyDAO {
 	public Study saveStudy(Study study);
 	
 	/**
-	 * @param id
-	 * @return the study with orderId=id, or new Study() if there is no such study
+	 * @param orderId
+	 * @return the study matching orderId, or new Study() if there is no such study
 	 */
-	public Study getStudyByOrderId(Integer id);
+	public Study getStudyByOrderId(Integer orderId);
 	
 }

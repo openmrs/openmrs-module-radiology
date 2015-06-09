@@ -89,7 +89,7 @@ public class HL7GeneratorTest {
 		
 		study = new Study();
 		study.setId(1);
-		study.setOrderID(order.getId());
+		study.setOrderId(order.getId());
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(RequestedProcedurePriority.STAT);

@@ -209,7 +209,7 @@ public class RadiologyOrderFormController {
 		try {
 			if (request.getParameter("saveOrder") != null) {
 				orderService.saveOrder(order);
-				study.setOrderID(order.getOrderId());
+				study.setOrderId(order.getOrderId());
 				service().saveStudy(study);
 				//Assigning Study UID                                
 				String studyUID = Utils.studyPrefix() + study.getId();

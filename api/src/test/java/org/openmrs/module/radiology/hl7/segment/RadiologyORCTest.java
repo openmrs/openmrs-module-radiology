@@ -61,7 +61,7 @@ public class RadiologyORCTest {
 		
 		Study study = new Study();
 		study.setId(1);
-		study.setOrderID(1);
+		study.setOrderId(1);
 		
 		ORM_O01 message = new ORM_O01();
 		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC(), study,
