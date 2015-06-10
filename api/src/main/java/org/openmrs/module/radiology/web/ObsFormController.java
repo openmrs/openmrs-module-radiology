@@ -95,10 +95,10 @@ public class ObsFormController {
 		Study study = service().getStudyByOrderId(orderId);
 		if (obsId != null) {
 			obs = os.getObs(obsId);
-			prevs = service().getStudyByOrderId(obs.getOrder().getOrderId()).obs();
+			prevs = service().getObsByOrderId(obs.getOrder().getOrderId());
 		} else {
 			obs = newObs(or.getOrder(orderId));
-			prevs = study.obs();
+			prevs = service().getObsByOrderId(study.getOrderID());
 		}
 		
 		mav.addObject("obs", obs);

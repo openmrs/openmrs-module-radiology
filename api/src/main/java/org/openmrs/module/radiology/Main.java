@@ -10,7 +10,9 @@
 package org.openmrs.module.radiology;
 
 import java.util.Date;
+import java.util.List;
 
+import org.openmrs.Obs;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.db.GenericDAO;
@@ -37,5 +39,16 @@ public interface Main extends OpenmrsService {
 	public Study getStudyByOrderId(Integer id);
 	
 	public GenericDAO db();
+	
+	/**
+	 * Get all obs matching the orderId
+	 * 
+	 * @param orderId orderId of obs
+	 * @return list of obs
+	 * @should fetch all obs for given orderId
+	 * @should return empty list given orderId without associated obs
+	 * @should throw IllegalArgumentException given null
+	 */
+	public List<Obs> getObsByOrderId(Integer orderId) throws IllegalArgumentException;
 	
 }

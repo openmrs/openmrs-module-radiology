@@ -1,0 +1,58 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+<dataset>
+  <patient_identifier_type patient_identifier_type_id="1" name="Test Identifier Type" description="Test description" check_digit="false" creator="1" date_created="2015-01-01 00:00:00.0" required="false" retired="false" uuid="0cbecb62-7249-4f91-8edf-d0206ecceb63"/>
+  
+  <location location_id="1" name="Radiology Department" creator="1" date_created="2015-01-01 00:00:00.0" retired="false" uuid="c36006e5-9fbb-4f20-866b-0ece245615a1"/>
+  
+  <!-- concept name and concept -->
+  <concept concept_id="178" retired="false" datatype_id="4" class_id="4" is_set="false" creator="1" date_created="2004-01-01 00:00:00" changed_by="1" date_changed="2005-02-16 00:00:00" version="" uuid="1565b6e6-df81-11e4-98ec-08002798a7ad"/>
+  <concept_name concept_id="178" name="FRACTURE" locale="en" creator="1" date_created="2004-01-01 00:00:00" concept_name_id="178" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="15736c16-df81-11e4-98ec-08002798a7ad"/>
+  
+  <!-- radiology order type -->
+  <order_type order_type_id="5" name="Radiology" description="Order for radiology procedures" creator="1" date_created="2015-04-10 13:03:45" retired="0" uuid="e0daf799-a151-47bb-a430-1931d526d1fe"/>
+  
+  <!-- define metadata for the radiology service -->
+  <global_property property="radiology.applicationUID" property_value="1.2.826.0.1.3680043.8.2186" description="You need a application root UID, this will be the prefix of any module DICOM object, the default value serves for debugging purposes" uuid="5d3962e1-eb27-49de-921b-01213ede5c73"/>
+  <global_property property="radiology.studyUIDSlug" property_value="1" description="Example: applicationUID+studyUIDSlug+orderId could be a study UID. The default value works!. Example values: 1.2, 1.1.1 (No start or end dots)" uuid="2adfb98b-9b2f-41c0-ae5b-22f84eee8dfb"/>
+
+  <!-- patient without any orders/radiology studies -->
+  <patient patient_id="70010" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="1" patient_id="70010" identifier="1234" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="1ac98ec8-e9d9-4626-998c-c795c2f0aa9f"/>
+  <person person_id="70010" gender="F" birthdate="1982-03-14" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <person_name person_name_id="2" preferred="true" person_id="70010" given_name="Alberta" family_name="Denada" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="71abaa07-48a7-4104-b458-17233ff4b77c"/>
+    
+  <!-- patient without one non-radiology order -->
+  <patient patient_id="70011" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="1" patient_id="70011" identifier="1234" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="1ac98ec8-e9d9-4626-998c-c795c2f0aa9f"/>
+  <person person_id="70011" gender="F" birthdate="1975-06-07" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <person_name person_name_id="2" preferred="true" person_id="70011" given_name="Jane" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="0f1f7d08-076b-4fc6-acac-4bb91515141e"/>
+  
+  <!-- non radiology order -->
+  <orders order_id="2003" order_type_id="1" orderer="1" concept_id="1" instructions="Non radiology order" start_date="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70011" />
+    
+  <!-- patient with two radiology studies -->
+  <patient patient_id="70021" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="1" patient_id="70021" identifier="4321" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="1ac98ec8-e9d9-4626-998c-c795c2f0aa9f"/>
+  <person person_id="70021" uuid="5631b434-78aa-102b-91a0-001e378eb67e" gender="M" birthdate="1950-04-01" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <person_name person_name_id="2" preferred="true" person_id="70021" given_name="John" middle_name="Francis" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="0f1f7d08-076b-4fc6-acac-4bb91515141e"/>
+  
+  <!-- radiology orders with study -->
+  <orders order_id="2001" order_type_id="5" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" start_date="2015-02-04 14:35:00.0" auto_expire_date="2015-02-17 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70021" />
+  <radiology_study id="1" uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" scheduled_status="-1" performed_status="0" priority="0" modality="2" mwl_status="0"/>
+
+  <orders order_id="2002" order_type_id="5" orderer="1" concept_id="178" instructions="MR Left Knee" start_date="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70021" />
+  <radiology_study id="2" uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="-1" performed_status="0" priority="0" modality="1" mwl_status="0"/>
+  
+  <obs obs_id="20021" person_id="70021" order_id="2002" concept_id="178" obs_datetime="2015-02-06 17:14:00.0" location_id="1" creator="1" date_created="2015-02-06 17:14:35.0" voided="false" uuid="be3a4d7a-f9ab-47bb-aaad-bc0b452fcda4" accession_number="RAD2002"/>
+</dataset>
