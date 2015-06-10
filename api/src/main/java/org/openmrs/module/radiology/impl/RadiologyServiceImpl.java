@@ -10,10 +10,12 @@
 package org.openmrs.module.radiology.impl;
 
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
@@ -161,6 +163,18 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		
 		List<Study> result = sdao.getStudiesByOrders(orders);
 		return result;
+	}
+	
+	/**
+	 * @see RadiologyService#getObsByOrderId(Integer)
+	 */
+	@Transactional(readOnly = true)
+	public List<Obs> getObsByOrderId(Integer orderId) {
+		if (orderId == null) {
+			throw new IllegalArgumentException("orderId is required");
+		}
+		
+		return sdao.getObsByOrderId(orderId);
 	}
 	
 }

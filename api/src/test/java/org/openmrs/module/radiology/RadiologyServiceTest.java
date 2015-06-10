@@ -23,6 +23,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.api.OrderService;
@@ -41,6 +42,10 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	private static final int PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER = 70011;
 	
 	private static final int PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER = 70021;
+	
+	private static final int ORDER_ID_WITH_ONE_OBS = 2002;
+	
+	private static final int ORDER_ID_WITHOUT_OBS = 2001;
 	
 	private PatientService patientService = null;
 	
@@ -125,5 +130,39 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("orders are required");
 		radiologyService.getStudiesByOrders(null);
+	}
+	
+	/**
+	 * @see RadiologyService#getObsByOrderId(Integer)
+	 */
+	@Test
+	@Verifies(value = "should fetch all obs for given orderId", method = "getObsByOrderId(Integer)")
+	public void getObsByOrderId_shouldFetchAllObsForGivenOrderId() throws Exception {
+		List<Obs> obs = radiologyService.getObsByOrderId(ORDER_ID_WITH_ONE_OBS);
+		
+		assertThat(obs.size(), is(1));
+		assertThat(obs.get(0).getOrder().getOrderId(), is(ORDER_ID_WITH_ONE_OBS));
+	}
+	
+	/**
+	 * @see RadiologyService#getObsByOrderId(Integer)
+	 */
+	@Test
+	@Verifies(value = "should return empty list given orderId without associated obs", method = "getObsByOrderId(Integer)")
+	public void getObsByOrderId_shouldReturnEmptyListGivenOrderIdWithoutAssociatedObs() throws Exception {
+		List<Obs> obs = radiologyService.getObsByOrderId(ORDER_ID_WITHOUT_OBS);
+		
+		assertThat(obs.size(), is(0));
+	}
+	
+	/**
+	 * @see RadiologyService#getObsByOrderId(Integer)
+	 */
+	@Test
+	@Verifies(value = "should throw IllegalArgumentException given null", method = "getObsByOrderId(Integer)")
+	public void getObsByOrderId_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("orderId is required");
+		radiologyService.getObsByOrderId(null);
 	}
 }

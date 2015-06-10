@@ -97,10 +97,10 @@ public class RadiologyObsFormController {
 		Study study = radiologyService().getStudyByOrderId(orderId);
 		if (obsId != null) {
 			obs = os.getObs(obsId);
-			prevs = radiologyService().getStudyByOrderId(obs.getOrder().getOrderId()).obs();
+			prevs = radiologyService().getObsByOrderId(obs.getOrder().getOrderId());
 		} else {
 			obs = newObs(or.getOrder(orderId));
-			prevs = study.obs();
+			prevs = radiologyService().getObsByOrderId(study.getOrderId());
 		}
 		
 		mav.addObject("obs", obs);
