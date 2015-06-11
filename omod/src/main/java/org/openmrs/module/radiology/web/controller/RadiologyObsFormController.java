@@ -58,7 +58,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-public class ObsFormController {
+public class RadiologyObsFormController {
 	
 	static Main service() {
 		return Context.getService(Main.class);
