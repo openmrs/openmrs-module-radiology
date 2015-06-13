@@ -23,7 +23,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.Main;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Study.Modality;
 import org.openmrs.module.radiology.Study.Priorities;
 import org.openmrs.module.radiology.Utils;
 import org.springframework.stereotype.Controller;
@@ -85,7 +84,7 @@ public class PortletsController {
 				schedulers.add(study.scheduler());
 				performings.add(study.performing());
 				readings.add(study.reading());
-				modalities.add(Modality.values()[study.getModality()].getFullName());
+				modalities.add(study.getModality().getFullName());
 				mwlStatuses.add(study.mwlStatus());
 			}
 		}

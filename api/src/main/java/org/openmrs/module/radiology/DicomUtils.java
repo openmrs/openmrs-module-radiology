@@ -36,7 +36,6 @@ import org.dcm4che2.io.DicomInputStream;
 import org.dcm4che2.io.SAXWriter;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Study.Modality;
 import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.Study.ScheduledStatuses;
 import org.xml.sax.SAXException;
@@ -205,7 +204,7 @@ public class DicomUtils {
 		
 		// Scheduled Procedure Step Sequence
 		// ! requires form enhancement, multiple steps
-		spss.putString(Tag.Modality, VR.CS, Modality.values()[s.getModality()].toString());
+		spss.putString(Tag.Modality, VR.CS, s.getModality().toString());
 		spss.putString(Tag.RequestedContrastAgent, VR.LO, "");
 		spss.putString(Tag.ScheduledStationAETitle, VR.AE, Utils.aeTitle());
 		try {
@@ -299,8 +298,7 @@ public class DicomUtils {
 		String orc = "ORC|" + orcfield1 + "|" + study.getId() + "|||||^^^" + Utils.plain(order.getStartDate()) + "^^"
 		        + getTruncatedPriority(study.getPriority()) + "||||||\n";
 		String obr = "OBR||||^^^^" + order.getInstructions() + "|||||||||||||||" + study.getId() + "|" + study.getId()
-		        + "||||" + Modality.values()[study.getModality()].toString() + "||||||||||||||||||||"
-		        + order.getInstructions() + "|\n";
+		        + "||||" + study.getModality().toString() + "||||||||||||||||||||" + order.getInstructions() + "|\n";
 		String zds = "ZDS|" + study.getUid() + "|";
 		String hl7blob = msh + pid + orc + obr + zds;
 		System.out.println("Created Request \n" + hl7blob);

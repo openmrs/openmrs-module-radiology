@@ -181,17 +181,15 @@
 			<td valign="top"><spring:bind path="study.modality">
 					<c:choose>
 						<c:when test="${!referring && !super}">
-							<input type="hidden" name="${status.expression }"
+							<input type="hidden" name="${status.expression}"
 								value="${status.value }" />
-							<input readonly="readonly" value="${modalities[status.value] }" />
+							<input readonly="readonly" value="${status.value}" />
 						</c:when>
 						<c:otherwise>
-							<select name="${status.expression}">
-								<c:forEach items="${modalities}" begin="0" end="${n_modalities}"
-									var="p" varStatus="status1">
-									<option value="${status1.count-1}"
-										<c:if test="${ status1.count-1 == status.value}">selected</c:if>>
-										${p}</option>
+							<select name="${status.expression}" id="modalitySelect">
+								<c:forEach var="modality" items="${modalities}">
+									<option value="${modality.key}"
+										${status.value == modality.key ? 'selected="selected"' : ''}>${modality.value}</option>
 								</c:forEach>
 							</select>
 						</c:otherwise>
