@@ -11,7 +11,6 @@ package org.openmrs.module.radiology.hl7.segment;
 
 import org.openmrs.Order;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Study.Modality;
 
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v231.segment.OBR;
@@ -49,7 +48,7 @@ public class RadiologyOBR {
 		observationRequestSegment.getUniversalServiceID().getAlternateText().setValue(order.getInstructions());
 		observationRequestSegment.getPlacerField2().setValue(String.valueOf(study.getId()));
 		observationRequestSegment.getFillerField1().setValue(String.valueOf(study.getId()));
-		observationRequestSegment.getDiagnosticServSectID().setValue(Modality.values()[study.getModality()].toString());
+		observationRequestSegment.getDiagnosticServSectID().setValue(study.getModality().toString());
 		observationRequestSegment.getProcedureCode().getText().setValue(order.getInstructions());
 		
 		return observationRequestSegment;

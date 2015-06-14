@@ -27,6 +27,7 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
+import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.test.Verifies;
 
@@ -89,7 +90,7 @@ public class HL7GeneratorTest {
 		study.setId(1);
 		study.setOrderID(order.getId());
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
-		study.setModality(2);
+		study.setModality(Modality.CT);
 		study.setPriority(0);
 	}
 	
