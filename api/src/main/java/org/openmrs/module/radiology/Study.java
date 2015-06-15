@@ -13,7 +13,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.User;
 import org.openmrs.api.context.Context;
@@ -257,15 +256,6 @@ public class Study {
 	
 	public boolean isScheduleable() {
 		return !PerformedStatuses.has(performedStatus);
-	}
-	
-	@SuppressWarnings("unchecked")
-	public List<Obs> obs() {
-		//String query = "from Obs as o where o.order.orderId = " + orderID;
-		String innerQuery = "(Select oo.previousVersion from Obs as oo where oo.order.orderId=" + orderID
-		        + " and oo.previousVersion IS NOT NULL)";
-		String query = "from Obs as o where o.order.orderId = " + orderID + " and o.obsId NOT IN " + innerQuery;
-		return (List<Obs>) Context.getService(Main.class).get(query, false);
 	}
 	
 	public Order order() {

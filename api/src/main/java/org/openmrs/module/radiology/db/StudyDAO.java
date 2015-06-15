@@ -9,6 +9,9 @@
  */
 package org.openmrs.module.radiology.db;
 
+import java.util.List;
+
+import org.openmrs.Obs;
 import org.openmrs.module.radiology.Study;
 
 /**
@@ -28,5 +31,11 @@ public interface StudyDAO {
 	 * @return the study with orderId=id, or new Study() if there is no such study
 	 */
 	public Study getStudyByOrderId(Integer id);
+	
+	/**
+	 * @param orderId
+	 * @return the obs for given orderId
+	 */
+	public List<Obs> getObsByOrderId(Integer orderId);
 	
 }
