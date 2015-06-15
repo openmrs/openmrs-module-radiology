@@ -9,6 +9,9 @@
  */
 package org.openmrs.module.radiology.db;
 
+import java.util.List;
+
+import org.openmrs.Order;
 import org.openmrs.module.radiology.Study;
 
 /**
@@ -29,4 +32,9 @@ public interface StudyDAO {
 	 */
 	public Study getStudyByOrderId(Integer id);
 	
+	/**
+	 * @param orders
+	 * @return studies for given orders
+	 */
+	public List<Study> getStudiesByOrders(List<Order> orders);
 }

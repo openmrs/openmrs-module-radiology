@@ -134,24 +134,8 @@ public class Study {
 		}
 	}
 	
-	public static List<Study> get(List<Order> o) {
-		ArrayList<Study> s = new ArrayList<Study>();
-		for (Order o1 : o) {
-			s.add(get(o1));
-		}
-		return s;
-	}
-	
-	public static Study get(Order o) {
-		return Context.getService(Main.class).getStudyByOrderId(o.getOrderId());
-	}
-	
 	private static String localized(String code) {
 		return Context.getMessageSourceService().getMessage(code);
-	}
-	
-	static Main service() {
-		return Context.getService(Main.class);
 	}
 	
 	private int id;
