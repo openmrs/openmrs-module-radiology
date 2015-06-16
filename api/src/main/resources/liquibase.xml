@@ -59,4 +59,16 @@
 		<addNotNullConstraint tableName="radiology_study"
 			columnName="priority" columnDataType="varchar(7)" />
 	</changeSet>
+	<changeSet id="radiology-7" author="teleivo">
+		<comment>column scheduled_status represents DICOM Scheduled Procedure
+			Step Status (0040,0020) which is now mapped to by enum
+			ScheduledProcedureStepStatus. Max length 9 chosen for the column because of max ScheduledProcedureStepStatus "SCHEDULED"</comment>
+		<modifyDataType tableName="radiology_study" columnName="scheduled_status"
+			newDataType="varchar(9)" />
+		<dropDefaultValue tableName="radiology_study"
+			columnName="scheduled_status" columnDataType="varchar(9)" />
+		<addDefaultValue tableName="radiology_study"
+			columnName="scheduled_status" columnDataType="varchar(9)"
+			defaultValue="null" />
+	</changeSet>
 </databaseChangeLog>
