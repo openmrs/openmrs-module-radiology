@@ -28,6 +28,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
@@ -98,7 +99,7 @@ public class RadiologyORMO01Test {
 		study.setOrderID(order.getId());
 		study.setUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
-		study.setPriority(0);
+		study.setPriority(RequestedProcedurePriority.STAT);
 	}
 	
 	/**

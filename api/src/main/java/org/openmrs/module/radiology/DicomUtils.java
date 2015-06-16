@@ -230,7 +230,7 @@ public class DicomUtils {
 		workitem.putNestedDicomObject(Tag.ScheduledProcedureStepSequence, spss);
 		
 		workitem.putString(Tag.RequestedProcedureID, VR.SH, String.valueOf(s.getId()));
-		workitem.putString(Tag.RequestedProcedurePriority, VR.SH, Study.Priorities.string(s.getPriority(), false));
+		workitem.putString(Tag.RequestedProcedurePriority, VR.SH, s.getPriority().name());
 		workitem.putString(Tag.PatientTransportArrangements, VR.LO, "");
 		workitem.putString(Tag.ConfidentialityConstraintOnPatientDataDescription, VR.LO, "");
 		
@@ -337,27 +337,41 @@ public class DicomUtils {
 	}
 	
 	// Create Priority for the order to be filled in the HL7 Message
-	public static String getTruncatedPriority(Integer priority) {
+	/**
+	 * Get the HL7 Priority component of Quantity/Timing (ORC-7) field included in an HL7 version
+	 * 2.3.1 Common Order segment given the DICOM Requested Procedure Priority. See IHE Radiology
+	 * Technical Framework Volume 2 for mapping of DICOM Requested Procedure Priority to HL7
+	 * Priority.
+	 * 
+	 * @param requestedProcedurePriority RequestedProcedurePriority representing DICOM Requested
+	 *            Procedure Priority
+	 * @return string representation of hl7 common order priority mapping to requested procedure priority
+	 * @should return hl7 common order priority given requested procedure priority
+	 * @should return default hl7 common order priority given null
+	 */
+	public static String getTruncatedPriority(RequestedProcedurePriority requestedProcedurePriority) {
 		String result = new String();
-		switch (priority) {
-			case 0:
-				result = "S";
-				break;
-			case 1:
-				result = "A";
-				break;
-			case 2:
-				result = "R";
-				break;
-			case 3:
-				result = "T";
-				break;
-			case 4:
-				result = "R";
-				break;
-			default:
-				result = "R";
-				break;
+		
+		if (requestedProcedurePriority == null) {
+			result = "R";
+		} else {
+			switch (requestedProcedurePriority) {
+				case STAT:
+					result = "S";
+					break;
+				case HIGH:
+					result = "A";
+					break;
+				case ROUTINE:
+					result = "R";
+					break;
+				case MEDIUM:
+					result = "T";
+					break;
+				case LOW:
+					result = "R";
+					break;
+			}
 		}
 		return result;
 	}

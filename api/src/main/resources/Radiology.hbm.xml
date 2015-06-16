@@ -10,7 +10,12 @@
 		<property name="orderID" column="order_id"></property>
 		<property name="scheduledStatus" column="scheduled_status"></property>
 		<property name="performedStatus" column="performed_status"></property>
-		<property name="priority" column="priority"></property>
+		<property name="priority" column="priority" length="7"
+			not-null="true">
+			<type name="org.openmrs.util.HibernateEnumType">
+				<param name="enumClassName">org.openmrs.module.radiology.RequestedProcedurePriority</param>
+			</type>
+		</property>
 		<property name="modality" column="modality" length="16"
 			not-null="true">
 			<type name="org.openmrs.util.HibernateEnumType">
