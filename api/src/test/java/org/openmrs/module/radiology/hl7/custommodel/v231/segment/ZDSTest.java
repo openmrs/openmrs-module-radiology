@@ -17,12 +17,10 @@ import org.junit.Test;
 import org.openmrs.test.Verifies;
 
 import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.Group;
 import ca.uhn.hl7v2.model.v231.datatype.RP;
 import ca.uhn.hl7v2.model.v231.message.ORM_O01;
 import ca.uhn.hl7v2.parser.DefaultModelClassFactory;
 import ca.uhn.hl7v2.parser.EncodingCharacters;
-import ca.uhn.hl7v2.parser.ModelClassFactory;
 import ca.uhn.hl7v2.parser.PipeParser;
 
 /**
@@ -30,7 +28,7 @@ import ca.uhn.hl7v2.parser.PipeParser;
  */
 public class ZDSTest {
 	
-	private static EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
+	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * Tests ZDS constructor and sets fields

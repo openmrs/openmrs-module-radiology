@@ -6,16 +6,12 @@ import java.lang.reflect.Field;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.dcm4che2.data.DicomObject;
-import org.dcm4che2.data.SpecificCharacterSet;
-import org.dcm4che2.data.Tag;
-import org.dcm4che2.io.DicomInputStream;
 import org.dcm4che2.tool.dcmof.DcmOF;
 
 public class Scratch {
 
 	long x;
-	private static Log log = LogFactory.getLog(Scratch.class);
+	private static final Log log = LogFactory.getLog(Scratch.class);
 
 	public static Scratch s;
 
@@ -51,11 +47,11 @@ public class Scratch {
 
 	public static String[] forSelect(Class<?> c) {
 		Field[] f = c.getDeclaredFields();
-		String s[] = new String[f.length];
+		String str[] = new String[f.length];
 		for (int i = 0; i < f.length; i++) {
-			s[i] = f[i].getName();
+			str[i] = f[i].getName();
 		}
-		return s;
+		return str;
 	}
 
 }

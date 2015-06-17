@@ -32,21 +32,25 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	
 	private static final Log log = LogFactory.getLog(MainImpl.class);
 	
+        @Override
 	public void setSdao(StudyDAO dao) {
 		this.sdao = dao;
 	}
 	
 	@Transactional(readOnly = true)
+        @Override
 	public Study getStudy(Integer id) {
 		return sdao.getStudy(id);
 	}
 	
 	@Transactional(readOnly = true)
+        @Override
 	public Study getStudyByOrderId(Integer id) {
 		return sdao.getStudyByOrderId(id);
 	}
 	
 	@Transactional
+        @Override
 	public Study saveStudy(Study s) {
 		
 		Order order = s.order();
@@ -60,7 +64,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 			return s;
 		}
 		catch (Exception e) {
-			e.printStackTrace();
+			log.error(e.getMessage(), e);
 			log.warn("Can not save study in openmrs or dmc4che.");
 		}
 		return null;
@@ -80,6 +84,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	// 9 : Undiscontinue order failed. Try again.
 	// 10 : Unvoid order successfull
 	// 11 : Unvoid order failed. Try again
+        @Override
 	public void sendModalityWorklist(Study s, OrderRequest orderRequest) {
 		Order order = s.order();
 		Integer mwlStatus = s.getMwlStatus();
@@ -89,7 +94,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 		if (status == 1) {
 			switch (orderRequest) {
 				case Save_Order:
-					if (mwlStatus.intValue() == 0 || mwlStatus.intValue() == 2)
+					if (mwlStatus == 0 || mwlStatus == 2)
 						mwlStatus = 1;
 					else
 						mwlStatus = 3;
@@ -117,7 +122,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 		} else if (status == 0) {
 			switch (orderRequest) {
 				case Save_Order:
-					if (mwlStatus.intValue() == 0 || mwlStatus.intValue() == 2)
+					if (mwlStatus == 0 || mwlStatus == 2)
 						mwlStatus = 2;
 					else
 						mwlStatus = 4;
@@ -155,6 +160,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 		return gdao.get(query, unique);
 	}
 	
+        @Override
 	public GenericDAO db() {
 		return gdao;
 	}

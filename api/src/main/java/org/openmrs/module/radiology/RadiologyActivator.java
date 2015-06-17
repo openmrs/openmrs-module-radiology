@@ -64,7 +64,7 @@ public class RadiologyActivator extends BaseModuleActivator {
 	public static boolean typeAndRoles() {
 		// Create radiology order type if not exists
 		try {
-			if (Utils.getRadiologyOrderType().size() == 0) {
+			if (Utils.getRadiologyOrderType().isEmpty()) {
 				OrderService os = Context.getOrderService();
 				os.saveOrderType(new OrderType("Radiology", "Order for radiology procedures"));
 			}
@@ -106,7 +106,7 @@ public class RadiologyActivator extends BaseModuleActivator {
 				} else {
 					// TODO set correct privileges...
 					Role parent = Context.getUserService().getRole("Provider");
-					if (parent.getPrivileges().size() == 0)
+					if (parent.getPrivileges().isEmpty())
 						parent = Context.getUserService().getRole("System Developer");
 					set.add(parent);
 					toSave.setInheritedRoles(set);
@@ -116,8 +116,7 @@ public class RadiologyActivator extends BaseModuleActivator {
 			log.info("\"Scheduler\", \"Referring Physician\",\"Performing Physician\", \"Reading Physician\" Roles created");
 		}
 		catch (Exception e) {
-			log
-			        .warn("Can not create \"Scheduler\", \"Referring Physician\", \"Performing Physician\", \"Reading Physician\" roles. Go to openmrs/module/radiology/config.list with authenticated user.");
+			log.warn("Can not create \"Scheduler\", \"Referring Physician\", \"Performing Physician\", \"Reading Physician\" roles. Go to openmrs/module/radiology/config.list with authenticated user.");
 			return false;
 		}
 		return true;
@@ -130,7 +129,6 @@ public class RadiologyActivator extends BaseModuleActivator {
 			log.info("Started MPPSScu : OpenMRS MPPS SCU Client (dcmof)");
 		}
 		catch (Exception e) {
-			e.printStackTrace();
 			log.warn("Can not start MWL/MPPS DICOM server");
 			log.warn("Unable to start MPPSScu : OpenMRS MPPS SCU Client (dcmof)");
 			throw e;

@@ -26,7 +26,7 @@ import ca.uhn.hl7v2.parser.PipeParser;
  */
 public class HL7UtilsTest {
 	
-	private static EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
+	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * Test HL7Utils.getExtendedPersonNameFrom

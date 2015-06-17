@@ -27,7 +27,6 @@ import org.openmrs.test.Verifies;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v231.message.ORM_O01;
-import ca.uhn.hl7v2.model.v231.segment.PID;
 import ca.uhn.hl7v2.parser.EncodingCharacters;
 import ca.uhn.hl7v2.parser.PipeParser;
 
@@ -39,7 +38,7 @@ public class RadiologyPIDTest {
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
 	
-	private static EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
+	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * Test RadiologyPID.populatePatientIdentifier

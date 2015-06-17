@@ -21,7 +21,7 @@ import ca.uhn.hl7v2.parser.PipeParser;
 
 public class HL7Generator {
 	
-	private static EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
+	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * Create an encoded HL7 ORM^O01 message (version 2.3.1) for given Study, Order, Common Order

@@ -34,7 +34,7 @@ public class RadiologyZDSTest {
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
 	
-	private static EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
+	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * Tests the RadiologyZDS.populateZDSSegment with Study containing Study.Uid

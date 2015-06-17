@@ -330,17 +330,16 @@ public class Study {
 	
 	@Override
 	public String toString() {
-		StringBuffer buff = new StringBuffer();
+		StringBuilder buff = new StringBuilder();
 		
 		Field[] fields = this.getClass().getDeclaredFields();
-		for (int i = 0; i < fields.length; i++) {
-			try {
-				buff.append(fields[i].getName()).append(": ").append(fields[i].get(this)).append(" ");
-			}
+        for (Field field : fields) {
+            try {
+                buff.append(field.getName()).append(": ").append(field.get(this)).append(" ");
+            }
 			catch (IllegalAccessException ex) {}
 			catch (IllegalArgumentException ex) {}
-			
-		}
+        }
 		return buff.toString();
 	}
 }

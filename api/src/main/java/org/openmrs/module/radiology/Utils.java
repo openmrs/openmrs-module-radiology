@@ -143,8 +143,7 @@ public class Utils {
 		s[0] = Context.getMessageSourceService().getMessage("general.select");
 		for (int i = 0; i < f.length; i++) {
 			try {
-				s[i + 1] = (String) c.getMethod("string", Integer.class, Boolean.class).invoke(c.newInstance(),
-				    new Integer(i), new Boolean(true));
+				s[i + 1] = (String) c.getMethod("string", Integer.class, Boolean.class).invoke(c.newInstance(), i, true);
 			}
 			catch (Exception e) {
 				log.error("Not the type expected: " + c.toString()

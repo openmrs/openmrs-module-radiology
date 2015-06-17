@@ -24,9 +24,6 @@ public class RadiologyOBR {
 	 * @param observationRequestSegment segment to populate
 	 * @param study to map to observationRequestSegment segment
 	 * @param order to map to observationRequestSegment segment
-	 * @param orderControlCode Order Control element of Common Order (OBR)
-	 * @param orderControlPriority Priority component of Common Order (OBR) segment attribute
-	 *            Quantity/Timing
 	 * @return populated observationRequestSegment segment
 	 * @throws DataTypeException
 	 * @should return populated observation request segment given all params

@@ -11,7 +11,6 @@ package org.openmrs.module.radiology;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.Date;
 
 import javax.xml.parsers.SAXParser;
@@ -41,7 +40,7 @@ import org.xml.sax.SAXException;
 
 public class DicomUtils {
 	
-	private static Logger log = Logger.getLogger(DicomUtils.class);
+	private static final Logger log = Logger.getLogger(DicomUtils.class);
 	
 	private static void debug(String message) {
 		if (log.isDebugEnabled())
@@ -84,7 +83,7 @@ public class DicomUtils {
 						dis.close();
 					}
 					catch (IOException e) {
-						e.printStackTrace();
+						log.error(e.getMessage(), e);
 					}
 			}
 		}
@@ -106,12 +105,12 @@ public class DicomUtils {
 		int arg1 = 0;
 		DicomObject d = null;
 		try {
-			String _ = File.separator;
+			String separator = File.separator;
 			d = new BasicDicomObject();
 			SAXParserFactory f = SAXParserFactory.newInstance();
 			SAXParser p1 = f.newSAXParser();
 			ContentHandlerAdapter ch = new ContentHandlerAdapter(d);
-			String pathname = Utils.mwlDir() + _ + o.getOrderId() + ".xml";
+			String pathname = Utils.mwlDir() + separator + o.getOrderId() + ".xml";
 			p1.parse(new File(pathname), ch);
 			
 			status = d.get(tag).getValueAsString(scs, arg1);

@@ -29,7 +29,7 @@ import ca.uhn.hl7v2.parser.PipeParser;
  */
 public class ORM_O01Test {
 	
-	private static EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
+	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * Test ORM_O01.getZDS()

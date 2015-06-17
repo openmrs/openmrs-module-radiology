@@ -10,7 +10,6 @@
 package org.openmrs.module.radiology.hl7.segment;
 
 import org.openmrs.Patient;
-import org.openmrs.PatientIdentifier;
 import org.openmrs.PersonName;
 import org.openmrs.module.radiology.hl7.HL7Utils;
 import org.openmrs.module.radiology.utils.DateTimeUtils;

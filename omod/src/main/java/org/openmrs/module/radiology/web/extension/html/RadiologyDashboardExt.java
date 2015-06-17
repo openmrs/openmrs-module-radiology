@@ -14,6 +14,7 @@ import org.openmrs.module.web.extension.PatientDashboardTabExt;
 
 public class RadiologyDashboardExt extends PatientDashboardTabExt {
 	
+        @Override
 	public Extension.MEDIA_TYPE getMediaType() {
 		return Extension.MEDIA_TYPE.html;
 	}

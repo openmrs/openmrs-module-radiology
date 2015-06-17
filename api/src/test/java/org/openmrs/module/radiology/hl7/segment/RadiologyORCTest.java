@@ -37,7 +37,7 @@ public class RadiologyORCTest {
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
 	
-	private static EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
+	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * Test RadiologyORC.populateCommonOrder

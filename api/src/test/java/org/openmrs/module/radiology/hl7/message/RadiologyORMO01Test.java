@@ -47,7 +47,7 @@ public class RadiologyORMO01Test {
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
 	
-	private static EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
+	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	private Patient patient = null;
 	
