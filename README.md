@@ -16,6 +16,46 @@ For a detailed guide on how to install and configure this module see
 
 https://wiki.openmrs.org/display/docs/Radiology+Module+with+dcm4chee
 
+## Development
+
+To file new issues or help to fix existing ones please check out
+
+https://issues.openmrs.org/browse/RAD
+
+###Build
+
+To ensure that your commit builds fine run
+```
+mvn clean package
+```
+before opening a new pull request.
+
+###Coding conventions
+
+This module adheres to the OpenMRS coding conventions, please read
+
+https://wiki.openmrs.org/display/docs/Coding+Conventions
+
+####Code style
+
+Help us to keep the code consistent!
+This will produce readable diffs and make merging easier and quicker!
+
+This module uses the Eclipse formatter plugin to automatically format *.java
+files.
+
+To ensure that your commit is properly formatted run
+```
+mvn java-formatter:format
+```
+before every commit.
+
+For xml and javascript files use **control-shift-f** in Eclipse.
+You will need to configure Eclipse to use the [OpenMRSFormatter.xml](tools/src/main/resources/eclipse/OpenMRSFormatter.xml)
+provided by this module.
+
+Remove unused imports by using **control-shift-o** in Eclipse.
+
 ## Limitations
 
 This module currently only works with OpenMRS Version 1.9.*
