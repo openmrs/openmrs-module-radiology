@@ -22,7 +22,7 @@ public class GenericDAOImpl implements GenericDAO {
 		this.sessionFactory = sessionFactory;
 	}
 	
-        @Override
+	@Override
 	public Object get(String query, boolean unique) {
 		Query query2 = sessionFactory.getCurrentSession().createQuery(query);
 		if (unique)
@@ -31,7 +31,7 @@ public class GenericDAOImpl implements GenericDAO {
 			return query2.list();
 	}
 	
-        @Override
+	@Override
 	public Session session() {
 		return sessionFactory.getCurrentSession();
 	}
