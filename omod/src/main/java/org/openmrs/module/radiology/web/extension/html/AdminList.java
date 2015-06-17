@@ -17,17 +17,17 @@ import org.openmrs.module.web.extension.AdministrationSectionExt;
 
 public class AdminList extends AdministrationSectionExt {
 	
-        @Override
+	@Override
 	public Extension.MEDIA_TYPE getMediaType() {
 		return Extension.MEDIA_TYPE.html;
 	}
 	
-        @Override
+	@Override
 	public String getTitle() {
 		return "radiology.title";
 	}
 	
-        @Override
+	@Override
 	public Map<String, String> getLinks() {
 		
 		Map<String, String> map = new HashMap<String, String>();

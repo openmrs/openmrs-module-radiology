@@ -32,25 +32,25 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	
 	private static final Log log = LogFactory.getLog(MainImpl.class);
 	
-        @Override
+	@Override
 	public void setSdao(StudyDAO dao) {
 		this.sdao = dao;
 	}
 	
 	@Transactional(readOnly = true)
-        @Override
+	@Override
 	public Study getStudy(Integer id) {
 		return sdao.getStudy(id);
 	}
 	
 	@Transactional(readOnly = true)
-        @Override
+	@Override
 	public Study getStudyByOrderId(Integer id) {
 		return sdao.getStudyByOrderId(id);
 	}
 	
 	@Transactional
-        @Override
+	@Override
 	public Study saveStudy(Study s) {
 		
 		Order order = s.order();
@@ -84,7 +84,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 	// 9 : Undiscontinue order failed. Try again.
 	// 10 : Unvoid order successfull
 	// 11 : Unvoid order failed. Try again
-        @Override
+	@Override
 	public void sendModalityWorklist(Study s, OrderRequest orderRequest) {
 		Order order = s.order();
 		Integer mwlStatus = s.getMwlStatus();
@@ -160,7 +160,7 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 		return gdao.get(query, unique);
 	}
 	
-        @Override
+	@Override
 	public GenericDAO db() {
 		return gdao;
 	}

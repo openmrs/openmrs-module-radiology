@@ -333,13 +333,13 @@ public class Study {
 		StringBuilder buff = new StringBuilder();
 		
 		Field[] fields = this.getClass().getDeclaredFields();
-        for (Field field : fields) {
-            try {
-                buff.append(field.getName()).append(": ").append(field.get(this)).append(" ");
-            }
+		for (Field field : fields) {
+			try {
+				buff.append(field.getName()).append(": ").append(field.get(this)).append(" ");
+			}
 			catch (IllegalAccessException ex) {}
 			catch (IllegalArgumentException ex) {}
-        }
+		}
 		return buff.toString();
 	}
 }

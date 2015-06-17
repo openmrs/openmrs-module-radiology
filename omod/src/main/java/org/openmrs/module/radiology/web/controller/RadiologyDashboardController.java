@@ -34,7 +34,7 @@ public class RadiologyDashboardController implements Controller {
 	
 	Log log = LogFactory.getLog(getClass());
 	
-        @Override
+	@Override
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException,
 	        IOException {
 		String patientId = request.getParameter("patientId");
