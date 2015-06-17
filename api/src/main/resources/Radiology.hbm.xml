@@ -14,7 +14,12 @@
 				<param name="enumClassName">org.openmrs.module.radiology.ScheduledProcedureStepStatus</param>
 			</type>
 		</property>
-		<property name="performedStatus" column="performed_status"></property>
+		<property name="performedStatus" column="performed_status"
+			length="12">
+			<type name="org.openmrs.util.HibernateEnumType">
+				<param name="enumClassName">org.openmrs.module.radiology.PerformedProcedureStepStatus</param>
+			</type>
+		</property>
 		<property name="priority" column="priority" length="7"
 			not-null="true">
 			<type name="org.openmrs.util.HibernateEnumType">

@@ -35,7 +35,6 @@ import org.dcm4che2.io.DicomInputStream;
 import org.dcm4che2.io.SAXWriter;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.xml.sax.SAXException;
 
 public class DicomUtils {
@@ -264,11 +263,15 @@ public class DicomUtils {
 			int id = Integer.parseInt(uidSplit[uidSplit.length - 1]);
 			Study s = service().getStudy(id);
 			debug(s.toString());
+			
 			String pStatus = o.get(Tag.PerformedProcedureStepStatus).getValueAsString(scs, 0);
-			s.setPerformedStatus(PerformedStatuses.value(pStatus));
+			PerformedProcedureStepStatus performedProcedureStepStatus = PerformedProcedureStepStatus
+			        .getMatchForDisplayName(pStatus);
+			s.setPerformedStatus(performedProcedureStepStatus);
+			
 			service().saveStudy(s);
 			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :" + studyUID
-			        + " to Status : " + PerformedStatuses.value(pStatus));
+			        + " to Status : " + PerformedProcedureStepStatus.getNameOrUnknown(performedProcedureStepStatus));
 			
 		}
 		catch (NumberFormatException e) {
