@@ -30,6 +30,6 @@
 	</bean>
 
 	<bean id="RadiologyDashboardController"
-		class="org.openmrs.module.radiology.web.RadiologyDashboardController" />
+		class="org.openmrs.module.radiology.web.controller.RadiologyDashboardController" />
 
 </beans>
