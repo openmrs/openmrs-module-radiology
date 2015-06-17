@@ -71,4 +71,14 @@
 			columnName="scheduled_status" columnDataType="varchar(9)"
 			defaultValue="null" />
 	</changeSet>
+	<changeSet id="radiology-8" author="teleivo">
+		<comment>column performed_status represents DICOM Performed Procedure Step Status (0040,0252) which is now mapped to by enum PerformedProcedureStepStatus. Max length 12 chosen for the column because of max PerformedProcedureStepStatus "DISCONTINUED"</comment>
+		<modifyDataType tableName="radiology_study" columnName="performed_status"
+			newDataType="varchar(12)" />
+		<dropDefaultValue tableName="radiology_study"
+			columnName="performed_status" columnDataType="varchar(12)" />
+		<addDefaultValue tableName="radiology_study"
+			columnName="performed_status" columnDataType="varchar(12)"
+			defaultValue="null" />
+	</changeSet>
 </databaseChangeLog>

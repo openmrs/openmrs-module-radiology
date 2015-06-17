@@ -29,11 +29,11 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Main;
 import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Study.PerformedStatuses;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.EncounterEditor;
@@ -137,9 +137,6 @@ public class RadiologyOrderFormController {
 		if (Context.isAuthenticated()) {
 			mav.addObject("order", order);
 			mav.addObject("study", study);
-			String[] pStatuses = Utils.forSelect(PerformedStatuses.class);
-			mav.addObject("pStatuses", pStatuses);
-			mav.addObject("n_pStatuses", pStatuses.length);
 			boolean referring = Context.getAuthenticatedUser().hasRole(Roles.ReferringPhysician, true);
 			mav.addObject("referring", referring);
 			boolean scheduler = Context.getAuthenticatedUser().hasRole(Roles.Scheduler, true);
@@ -187,6 +184,19 @@ public class RadiologyOrderFormController {
 		}
 		
 		return scheduledProcedureStepStatuses;
+	}
+	
+	@ModelAttribute("performedStatuses")
+	private Map<String, String> getPerformedStatusList() {
+		
+		Map<String, String> performedStatuses = new HashMap<String, String>();
+		performedStatuses.put("", "Select");
+		
+		for (PerformedProcedureStepStatus performedStatus : PerformedProcedureStepStatus.values()) {
+			performedStatuses.put(performedStatus.name(), performedStatus.name());
+		}
+		
+		return performedStatuses;
 	}
 	
 	protected boolean executeCommand(Order order, Study study, HttpServletRequest request) {

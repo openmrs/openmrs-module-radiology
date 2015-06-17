@@ -154,17 +154,17 @@
 			<td valign="top"><spring:bind path="study.performedStatus">
 					<c:choose>
 						<c:when test="${!performing && !super}">
-							<input type="hidden" name="${status.expression }"
-								value="${status.value }" />
-							<input readonly="readonly" value="${pStatuses[status.value+1] }" />
+							<input type="hidden" name="${status.expression}"
+								value="${status.value}" />
+							<input readonly="readonly" value="${status.value}" />
 						</c:when>
 						<c:otherwise>
-							<select name="${status.expression}">
-								<c:forEach items="${pStatuses}" begin="0" end="${n_pStatuses}"
-									var="p" varStatus="status1">
-									<option value="${status1.count-2}"
-										<c:if test="${ status1.count-2 == status.value}">selected</c:if>>
-										${p}</option>
+							<select name="${status.expression}" id="performedStatusSelect">
+								<c:forEach var="performedStatus" items="${performedStatuses}">
+									<option value="${performedStatus.key}"
+										${status.value == performedStatus.key ? 'selected="selected"' : ''}><spring:message
+											code="radiology.${performedStatus.key}"
+											text="${performedStatus.value}" /></option>
 								</c:forEach>
 							</select>
 						</c:otherwise>
