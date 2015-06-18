@@ -7,7 +7,7 @@
 			<generator class="native" />
 		</id>
 		<property name="uid" column="uid"></property>
-		<property name="orderID" column="order_id"></property>
+		<property name="orderId" column="order_id"></property>
 		<property name="scheduledStatus" column="scheduled_status"
 			length="9">
 			<type name="org.openmrs.util.HibernateEnumType">
