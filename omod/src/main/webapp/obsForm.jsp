@@ -339,14 +339,6 @@ th {
 
 <spring:hasBindErrors name="obs">
 	<spring:message code="fix.error" />
-	<div class="error">
-		<c:forEach items="${errors.globalErrors}" var="error">
-			<spring:message code="${error.defaultMessage}"
-				text="${error.defaultMessage}" />
-			<br />
-			<!-- ${error} -->
-		</c:forEach>
-	</div>
 	<br />
 </spring:hasBindErrors>
 
