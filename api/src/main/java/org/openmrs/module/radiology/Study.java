@@ -22,7 +22,6 @@ import org.openmrs.api.context.Context;
  * A class that supports on openmrs's orders to make the module DICOM compatible, corresponds to the
  * table order_dicom_complment
  * 
- * @author Cortex
  */
 public class Study {
 	

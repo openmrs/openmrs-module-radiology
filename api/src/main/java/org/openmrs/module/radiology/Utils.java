@@ -27,9 +27,6 @@ import org.openmrs.api.AdministrationService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 
-/**
- * @author Cortex
- */
 public class Utils {
 	
 	static final Log log = LogFactory.getLog(Utils.class);

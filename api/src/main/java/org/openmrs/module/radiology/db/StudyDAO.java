@@ -14,8 +14,6 @@ import org.openmrs.module.radiology.Study;
 /**
  * radiologyResponse-related database functions
  * 
- * @author Cortex
- * @version 1.0
  */
 public interface StudyDAO {
 	
