@@ -111,9 +111,6 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 				case Undiscontinue_Order:
 					mwlStatus = 9;
 					break;
-				case Default:
-					mwlStatus = 0;
-					break;
 				default:
 					break;
 				
@@ -138,9 +135,6 @@ public class MainImpl extends BaseOpenmrsService implements Main {
 					break;
 				case Undiscontinue_Order:
 					mwlStatus = 10;
-					break;
-				case Default:
-					mwlStatus = 0;
 					break;
 				default:
 					break;

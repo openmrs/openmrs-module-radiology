@@ -284,7 +284,7 @@ public class DicomUtils {
 	}
 	
 	public enum OrderRequest {
-		Default, Save_Order, Void_Order, Discontinue_Order, Undiscontinue_Order, Unvoid_Order;
+		Save_Order, Void_Order, Discontinue_Order, Undiscontinue_Order, Unvoid_Order;
 	}
 	
 	// Create HL7 ORU message to create worklist request.
