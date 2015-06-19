@@ -42,13 +42,12 @@ Help us to keep the code consistent!
 This will produce readable diffs and make merging easier and quicker!
 
 This module uses the Eclipse formatter plugin to automatically format *.java
-files.
+files. This plugin is automatically executed when you build the module.
 
-To ensure that your commit is properly formatted run
+To manually run the formatter plugin, do
 ```
 mvn java-formatter:format
 ```
-before every commit.
 
 For xml and javascript files use **control-shift-f** in Eclipse.
 You will need to configure Eclipse to use the [OpenMRSFormatter.xml](tools/src/main/resources/eclipse/OpenMRSFormatter.xml)
