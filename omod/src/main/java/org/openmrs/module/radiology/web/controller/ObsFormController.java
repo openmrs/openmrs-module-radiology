@@ -29,7 +29,7 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Main;
+import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
@@ -60,8 +60,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ObsFormController {
 	
-	static Main service() {
-		return Context.getService(Main.class);
+	static RadiologyService radiologyService() {
+		return Context.getService(RadiologyService.class);
 	}
 	
 	@InitBinder
@@ -92,10 +92,10 @@ public class ObsFormController {
 		List<Obs> prevs = null;
 		ObsService os = Context.getObsService();
 		OrderService or = Context.getOrderService();
-		Study study = service().getStudyByOrderId(orderId);
+		Study study = radiologyService().getStudyByOrderId(orderId);
 		if (obsId != null) {
 			obs = os.getObs(obsId);
-			prevs = service().getStudyByOrderId(obs.getOrder().getOrderId()).obs();
+			prevs = radiologyService().getStudyByOrderId(obs.getOrder().getOrderId()).obs();
 		} else {
 			obs = newObs(or.getOrder(orderId));
 			prevs = study.obs();
@@ -127,11 +127,11 @@ public class ObsFormController {
 	}
 	
 	private void updateReadingPhysician(Integer orderId) {
-		Study study = service().getStudyByOrderId(orderId);
+		Study study = radiologyService().getStudyByOrderId(orderId);
 		User user = Context.getAuthenticatedUser();
 		if (user.hasRole(Roles.ReadingPhysician, true) && study.getReadingPhysician() == null)
 			study.setReadingPhysician(user);
-		service().saveStudy(study);
+		radiologyService().saveStudy(study);
 	}
 	
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.POST)
