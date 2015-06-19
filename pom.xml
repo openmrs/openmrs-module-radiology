@@ -147,13 +147,6 @@
 							<version>${openMRSVersion}</version>
 						</dependency>
 					</dependencies>
-					<executions>
-						<execution>
-							<goals>
-								<goal>format</goal>
-							</goals>
-						</execution>
-					</executions>
 				</plugin>
 			</plugins>
 		</pluginManagement>
@@ -182,19 +175,18 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
-	
-	
+
 	<distributionManagement>
 		<repository>
 			<id>openmrs-repo-modules</id>
 			<name>Modules</name>
 			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/modules/</url>
 		</repository>
-        	<snapshotRepository>
-            		<id>openmrs-repo-snapshots</id>
-            		<name>OpenMRS Snapshots</name>
-            		<url>http://mavenrepo.openmrs.org/nexus/content/repositories/snapshots</url>
-        	</snapshotRepository>
+		<snapshotRepository>
+			<id>openmrs-repo-snapshots</id>
+			<name>OpenMRS Snapshots</name>
+			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/snapshots</url>
+		</snapshotRepository>
 	</distributionManagement>
 
 </project>
