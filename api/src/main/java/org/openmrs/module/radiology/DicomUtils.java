@@ -139,8 +139,7 @@ public class DicomUtils {
 	/**
 	 * Writes o to MWL file in XML format
 	 * 
-	 * @throws Exception
-	 *             multiple ones, but just handled as one in the controller
+	 * @throws Exception multiple ones, but just handled as one in the controller
 	 */
 	public static void write(Order o, Study s, File file) throws TransformerConfigurationException,
 	        TransformerFactoryConfigurationError, SAXException, IOException {
@@ -295,7 +294,7 @@ public class DicomUtils {
 		//                            "ORC|NW|2|||||^^^201308241700^^R||||||\n" +
 		//                            "OBR||||^^^^knee|||||||||||||||2|2||||CT||||||||||||||||||||^knee^scan|\n" +
 		//                            "ZDS|1.2.826.0.1.3680043.8.2186.1.2|";
-		Integer mwlstatus = study.getMwlStatus();
+		MwlStatus mwlstatus = study.getMwlStatus();
 		String orcfield1 = getORCtype(mwlstatus, orderRequest);
 		String msh = "MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||" + Utils.time(new Date())
 		        + "||ORM^O01||P|2.3||||||encoding|\n";
@@ -312,13 +311,19 @@ public class DicomUtils {
 		return hl7blob;
 	}
 	
-	// Create Order Type for the order to be filled in the HL7 Message in the ORC-1 field
-	
-	public static String getORCtype(Integer mwlstatus, OrderRequest orderRequest) {
+	/**
+	 * Get the HL7 Order Control Code component used in an HL7 common order segment (ORC-1 field)
+	 * given the mwlstatus and orderRequest.
+	 * 
+	 * @param mwlstatus mwlstatus of a study
+	 * @param orderRequest
+	 * @should return hl7 order control given mwlstatus and orderrequest
+	 */
+	public static String getORCtype(MwlStatus mwlstatus, OrderRequest orderRequest) {
 		String orc = new String();
 		switch (orderRequest) {
 			case Save_Order:
-				if (mwlstatus.intValue() == 0 || mwlstatus.intValue() == 2) {
+				if (mwlstatus == MwlStatus.DEFAULT || mwlstatus == MwlStatus.SAVE_ERR) {
 					orc = "NW";
 				} else {
 					orc = "XO";
@@ -338,7 +343,6 @@ public class DicomUtils {
 				break;
 			default:
 				break;
-			
 		}
 		return orc;
 	}

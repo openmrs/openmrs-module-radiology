@@ -53,7 +53,9 @@
 						onclick="$j('<p>'+this.innerHTML+'</p>').dialog({autoOpen:true,modal:true});"
 						title="<spring:message code="general.view"/>">${order.instructions}
 					</a></td>
-					<td>${mwlStatuses[status.count-1]}</td>
+					<td><spring:message
+							code="radiology.${mwlStatuses[status.count-1]}"
+							text="${mwlStatuses[status.count-1]}" /></td>
 				</tr>
 			</c:forEach>
 		</tbody>

@@ -17,6 +17,7 @@ import org.openmrs.Order;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
+import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
@@ -70,46 +71,33 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		return null;
 	}
 	
-	//MWL Status Codes, these are custom codes to help determine what sync status of the order is.
-	// -1 :default
-	// 0 : save order successful
-	// 1 : save order failed . Save Again
-	// 2 : Update order succesful .
-	// 3 : Update order failed. Save again.
-	// 4 : Void order succesful .
-	// 5 : Void order failed. Try again.
-	// 6 : Discontinue order succesful .
-	// 7 : Discontinue order failed. Try again.
-	// 8 : Undiscontinue order succesful .
-	// 9 : Undiscontinue order failed. Try again.
-	// 10 : Unvoid order successfull
-	// 11 : Unvoid order failed. Try again
 	@Override
 	public void sendModalityWorklist(Study s, OrderRequest orderRequest) {
 		Order order = s.order();
-		Integer mwlStatus = s.getMwlStatus();
+		MwlStatus mwlStatus = s.getMwlStatus();
 		String hl7blob = DicomUtils.createHL7Message(s, order, orderRequest);
 		int status = DicomUtils.sendHL7Worklist(hl7blob);
 		
 		if (status == 1) {
 			switch (orderRequest) {
 				case Save_Order:
-					if (mwlStatus == 0 || mwlStatus == 2)
-						mwlStatus = 1;
-					else
-						mwlStatus = 3;
+					if (mwlStatus == MwlStatus.DEFAULT || mwlStatus == MwlStatus.SAVE_ERR) {
+						mwlStatus = MwlStatus.SAVE_OK;
+					} else {
+						mwlStatus = MwlStatus.UPDATE_OK;
+					}
 					break;
 				case Void_Order:
-					mwlStatus = 5;
+					mwlStatus = MwlStatus.VOID_OK;
 					break;
 				case Unvoid_Order:
-					mwlStatus = 11;
+					mwlStatus = MwlStatus.UNVOID_OK;
 					break;
 				case Discontinue_Order:
-					mwlStatus = 7;
+					mwlStatus = MwlStatus.DISCONTINUE_OK;
 					break;
 				case Undiscontinue_Order:
-					mwlStatus = 9;
+					mwlStatus = MwlStatus.UNDISCONTINUE_OK;
 					break;
 				default:
 					break;
@@ -119,22 +107,23 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		} else if (status == 0) {
 			switch (orderRequest) {
 				case Save_Order:
-					if (mwlStatus == 0 || mwlStatus == 2)
-						mwlStatus = 2;
-					else
-						mwlStatus = 4;
+					if (mwlStatus == MwlStatus.DEFAULT || mwlStatus == MwlStatus.SAVE_ERR) {
+						mwlStatus = MwlStatus.SAVE_ERR;
+					} else {
+						mwlStatus = MwlStatus.UPDATE_ERR;
+					}
 					break;
 				case Void_Order:
-					mwlStatus = 6;
+					mwlStatus = MwlStatus.VOID_ERR;
 					break;
 				case Unvoid_Order:
-					mwlStatus = 12;
+					mwlStatus = MwlStatus.UNVOID_ERR;
 					break;
 				case Discontinue_Order:
-					mwlStatus = 8;
+					mwlStatus = MwlStatus.DISCONTINUE_ERR;
 					break;
 				case Undiscontinue_Order:
-					mwlStatus = 10;
+					mwlStatus = MwlStatus.UNDISCONTINUE_ERR;
 					break;
 				default:
 					break;
