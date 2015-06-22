@@ -11,7 +11,6 @@ package org.openmrs.module.radiology;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Date;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
@@ -35,7 +34,12 @@ import org.dcm4che2.io.DicomInputStream;
 import org.dcm4che2.io.SAXWriter;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
+import org.openmrs.module.radiology.hl7.CommonOrderPriority;
+import org.openmrs.module.radiology.hl7.HL7Generator;
 import org.xml.sax.SAXException;
+
+import ca.uhn.hl7v2.HL7Exception;
 
 public class DicomUtils {
 	
@@ -286,29 +290,42 @@ public class DicomUtils {
 		Save_Order, Void_Order, Discontinue_Order, Undiscontinue_Order, Unvoid_Order;
 	}
 	
-	// Create HL7 ORU message to create worklist request.
+	/**
+	 * Create HL7 ORM^O01 message to create a worklist request. See IHE Radiology Technical Framework
+	 * Volume 2.
+	 * 
+	 * @param study Study for which the order message is created
+	 * @param order Order for which the order message is created
+	 * @param orderRequest OrderRequest specifying the action of the order message
+	 * @return encoded HL7 ORM^O01 message
+	 * @should return encoded HL7 ORMO01 message string with new order control given study with
+	 *         mwlstatus default and save order request
+	 * @should return encoded HL7 ORMO01 message string with cancel order control given study with
+	 *         mwlstatus default and void order request
+	 * @should return encoded HL7 ORMO01 message string with change order control given study with
+	 *         mwlstatus save ok and save order request
+	 */
 	public static String createHL7Message(Study study, Order order, OrderRequest orderRequest) {
-		// Example HL7Message to create order
-		//  String hl7blob= "MSH|^~\\&|OpenMRSRadiologyModule|MyHospital|||201308271545||ORM^O01||P|2.3||||||encoding|\n" +
-		//                            "PID|||100-07||Patient^D^Johnny||19651007|M||||||||\n" +
-		//                            "ORC|NW|2|||||^^^201308241700^^R||||||\n" +
-		//                            "OBR||||^^^^knee|||||||||||||||2|2||||CT||||||||||||||||||||^knee^scan|\n" +
-		//                            "ZDS|1.2.826.0.1.3680043.8.2186.1.2|";
+		String encodedHL7OrmMessage = null;
+		
 		MwlStatus mwlstatus = study.getMwlStatus();
-		String orcfield1 = getORCtype(mwlstatus, orderRequest);
-		String msh = "MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||" + Utils.time(new Date())
-		        + "||ORM^O01||P|2.3||||||encoding|\n";
-		String pid = "PID|||" + order.getPatient().getPatientIdentifier().getIdentifier() + "||"
-		        + order.getPatient().getPersonName().getFullName().replace(' ', '^') + "||"
-		        + Utils.plain(order.getPatient().getBirthdate()) + "|" + order.getPatient().getGender() + "||||||||\n";
-		String orc = "ORC|" + orcfield1 + "|" + study.getId() + "|||||^^^" + Utils.plain(order.getStartDate()) + "^^"
-		        + getTruncatedPriority(study.getPriority()) + "||||||\n";
-		String obr = "OBR||||^^^^" + order.getInstructions() + "|||||||||||||||" + study.getId() + "|" + study.getId()
-		        + "||||" + study.getModality().toString() + "||||||||||||||||||||" + order.getInstructions() + "|\n";
-		String zds = "ZDS|" + study.getUid() + "|";
-		String hl7blob = msh + pid + orc + obr + zds;
-		System.out.println("Created Request \n" + hl7blob);
-		return hl7blob;
+		CommonOrderOrderControl commonOrderOrderControl = getCommonOrderControlFrom(mwlstatus, orderRequest);
+		
+		CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(study.getPriority());
+		
+		try {
+			encodedHL7OrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, order, commonOrderOrderControl,
+			    orderPriority);
+			log.info("Created HL7 ORM^O01 message \n" + encodedHL7OrmMessage);
+		}
+		catch (HL7Exception e) {
+			log.error("Error creating ORM^O01 Message : " + e.getMessage());
+			log.error(e.getMessage(), e);
+		}
+		catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return encodedHL7OrmMessage;
 	}
 	
 	/**
@@ -319,35 +336,35 @@ public class DicomUtils {
 	 * @param orderRequest
 	 * @should return hl7 order control given mwlstatus and orderrequest
 	 */
-	public static String getORCtype(MwlStatus mwlstatus, OrderRequest orderRequest) {
-		String orc = new String();
+	public static CommonOrderOrderControl getCommonOrderControlFrom(MwlStatus mwlstatus, OrderRequest orderRequest) {
+		CommonOrderOrderControl result = null;
+		
 		switch (orderRequest) {
 			case Save_Order:
 				if (mwlstatus == MwlStatus.DEFAULT || mwlstatus == MwlStatus.SAVE_ERR) {
-					orc = "NW";
+					result = CommonOrderOrderControl.NEW_ORDER;
 				} else {
-					orc = "XO";
+					result = CommonOrderOrderControl.CHANGE_ORDER;
 				}
 				break;
 			case Void_Order:
-				orc = "CA";
+				result = CommonOrderOrderControl.CANCEL_ORDER;
 				break;
 			case Unvoid_Order:
-				orc = "NW";
+				result = CommonOrderOrderControl.NEW_ORDER;
 				break;
 			case Discontinue_Order:
-				orc = "CA";
+				result = CommonOrderOrderControl.CANCEL_ORDER;
 				break;
 			case Undiscontinue_Order:
-				orc = "NW";
+				result = CommonOrderOrderControl.NEW_ORDER;
 				break;
 			default:
 				break;
 		}
-		return orc;
+		return result;
 	}
 	
-	// Create Priority for the order to be filled in the HL7 Message
 	/**
 	 * Get the HL7 Priority component of Quantity/Timing (ORC-7) field included in an HL7 version
 	 * 2.3.1 Common Order segment given the DICOM Requested Procedure Priority. See IHE Radiology
@@ -360,27 +377,27 @@ public class DicomUtils {
 	 * @should return hl7 common order priority given requested procedure priority
 	 * @should return default hl7 common order priority given null
 	 */
-	public static String getTruncatedPriority(RequestedProcedurePriority requestedProcedurePriority) {
-		String result = new String();
+	public static CommonOrderPriority getCommonOrderPriorityFrom(RequestedProcedurePriority requestedProcedurePriority) {
+		CommonOrderPriority result = null;
 		
 		if (requestedProcedurePriority == null) {
-			result = "R";
+			result = CommonOrderPriority.ROUTINE;
 		} else {
 			switch (requestedProcedurePriority) {
 				case STAT:
-					result = "S";
+					result = CommonOrderPriority.STAT;
 					break;
 				case HIGH:
-					result = "A";
+					result = CommonOrderPriority.ASAP;
 					break;
 				case ROUTINE:
-					result = "R";
+					result = CommonOrderPriority.ROUTINE;
 					break;
 				case MEDIUM:
-					result = "T";
+					result = CommonOrderPriority.TIMING_CRITICAL;
 					break;
 				case LOW:
-					result = "R";
+					result = CommonOrderPriority.ROUTINE;
 					break;
 			}
 		}
