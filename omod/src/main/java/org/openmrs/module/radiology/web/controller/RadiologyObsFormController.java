@@ -60,6 +60,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class RadiologyObsFormController {
 	
+	private static final String RADIOLOGY_OBS_FORM_PATH = "module/radiology/radiologyObsForm";
+	
 	static RadiologyService radiologyService() {
 		return Context.getService(RadiologyService.class);
 	}
@@ -81,7 +83,7 @@ public class RadiologyObsFormController {
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.GET)
 	protected ModelAndView getObs(@RequestParam(value = "orderId", required = false) Integer orderId,
 	        @RequestParam(value = "obsId", required = false) Integer obsId) {
-		ModelAndView mav = new ModelAndView("module/radiology/obsForm");
+		ModelAndView mav = new ModelAndView(RADIOLOGY_OBS_FORM_PATH);
 		populate(mav, orderId, obsId);
 		return mav;
 	}
@@ -148,7 +150,7 @@ public class RadiologyObsFormController {
 		
 		if (errors.hasErrors() && voidCheck) {
 			//  System.out.println("#### Has errors #####"+errors.getAllErrors().toString());                                
-			ModelAndView mav = new ModelAndView("module/radiology/obsForm");
+			ModelAndView mav = new ModelAndView(RADIOLOGY_OBS_FORM_PATH);
 			populate(mav, orderId, obsId);
 			return mav;
 		}
@@ -161,7 +163,7 @@ public class RadiologyObsFormController {
 					String reason = request.getParameter("editReason");
 					if (obs.getObsId() != null && (reason == null || reason.length() == 0)) {
 						errors.reject("editReason", "Obs.edit.reason.empty");
-						ModelAndView mav = new ModelAndView("module/radiology/obsForm");
+						ModelAndView mav = new ModelAndView(RADIOLOGY_OBS_FORM_PATH);
 						populate(mav, orderId, obsId);
 						return mav;
 					}
@@ -201,7 +203,7 @@ public class RadiologyObsFormController {
 					Obs obs2 = os.getObs(Integer.valueOf(obsId));
 					if (obs2.getObsId() != null && (voidReason == null || voidReason.length() == 0)) {
 						errors.reject("voidReason", "Obs.void.reason.empty");
-						ModelAndView mav = new ModelAndView("module/radiology/obsForm");
+						ModelAndView mav = new ModelAndView(RADIOLOGY_OBS_FORM_PATH);
 						populate(mav, orderId, obsId);
 						return mav;
 					}
@@ -220,12 +222,12 @@ public class RadiologyObsFormController {
 			}
 			catch (APIException e) {
 				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, e.getMessage());
-				ModelAndView mav = new ModelAndView("module/radiology/obsForm");
+				ModelAndView mav = new ModelAndView(RADIOLOGY_OBS_FORM_PATH);
 				populate(mav, orderId, obsId);
 				return mav;
 			}
 			catch (IOException e) {
-				ModelAndView mav = new ModelAndView("module/radiology/obsForm");
+				ModelAndView mav = new ModelAndView(RADIOLOGY_OBS_FORM_PATH);
 				populate(mav, orderId, obsId);
 				return mav;
 			}
