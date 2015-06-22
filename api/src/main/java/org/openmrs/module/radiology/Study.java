@@ -63,22 +63,6 @@ public class Study {
 		super();
 	}
 	
-	public Study(int id, String uid, Integer orderId, ScheduledProcedureStepStatus scheduledStatus,
-	    PerformedProcedureStepStatus performedStatus, RequestedProcedurePriority priority, Modality modality,
-	    User schedulerUserId, User performingPhysicianUserId, User readingPhysicianUserId) {
-		super();
-		this.id = id;
-		this.uid = uid;
-		this.orderId = orderId;
-		this.scheduledStatus = scheduledStatus;
-		this.performedStatus = performedStatus;
-		this.priority = priority;
-		this.modality = modality;
-		this.scheduler = schedulerUserId;
-		this.performingPhysician = performingPhysicianUserId;
-		this.readingPhysician = readingPhysicianUserId;
-	}
-	
 	public int getId() {
 		return id;
 	}
