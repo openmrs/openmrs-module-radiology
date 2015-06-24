@@ -91,4 +91,9 @@
 		<addNotNullConstraint tableName="radiology_study"
 			columnName="mwl_status" columnDataType="varchar(17)" />
 	</changeSet>
+	<changeSet id="radiology-10" author="teleivo">
+		<comment>rename column 'uid' to 'study_instance_uid' to make clear that the column represents the Study Instance UID defined by the DICOM standard</comment>
+		<renameColumn columnDataType="varchar(255)"
+			newColumnName="study_instance_uid" oldColumnName="uid" tableName="radiology_study" />
+	</changeSet>
 </databaseChangeLog>

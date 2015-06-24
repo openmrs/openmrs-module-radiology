@@ -215,7 +215,7 @@ public class RadiologyOrderFormController {
 				String studyUID = Utils.studyPrefix() + study.getId();
 				System.out.println("Radiology order received with StudyUID : " + studyUID + " Order ID : "
 				        + order.getOrderId());
-				study.setUid(studyUID);
+				study.setStudyInstanceUid(studyUID);
 				radiologyService().saveStudy(study);
 				Order o = orderService.getOrder(order.getOrderId());
 				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()),
