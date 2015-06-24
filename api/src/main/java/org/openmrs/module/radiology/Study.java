@@ -24,7 +24,7 @@ public class Study {
 	
 	private int id;
 	
-	private String uid;
+	private String studyInstanceUid;
 	
 	private Integer orderId;
 	
@@ -80,8 +80,8 @@ public class Study {
 		return scheduler;
 	}
 	
-	public String getUid() {
-		return uid;
+	public String getStudyInstanceUid() {
+		return studyInstanceUid;
 	}
 	
 	public MwlStatus getMwlStatus() {
@@ -153,8 +153,8 @@ public class Study {
 		this.scheduler = scheduler;
 	}
 	
-	public void setUid(String uid) {
-		this.uid = uid;
+	public void setStudyInstanceUid(String studyInstanceUid) {
+		this.studyInstanceUid = studyInstanceUid;
 	}
 	
 	/**

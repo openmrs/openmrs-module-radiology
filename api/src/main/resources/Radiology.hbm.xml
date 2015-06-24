@@ -6,7 +6,7 @@
 		<id name="id" type="int" column="id" unsaved-value="0">
 			<generator class="native" />
 		</id>
-		<property name="uid" column="uid"></property>
+		<property name="studyInstanceUid" column="study_instance_uid"></property>
 		<property name="orderId" column="order_id"></property>
 		<property name="scheduledStatus" column="scheduled_status"
 			length="9">

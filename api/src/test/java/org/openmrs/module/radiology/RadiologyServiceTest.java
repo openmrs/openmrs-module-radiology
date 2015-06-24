@@ -89,7 +89,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		Study study = radiologyService.getStudyByStudyInstanceUid(EXISTING_STUDY_INSTANCE_UID);
 		
 		assertNotNull(study);
-		assertThat(study.getUid(), is(EXISTING_STUDY_INSTANCE_UID));
+		assertThat(study.getStudyInstanceUid(), is(EXISTING_STUDY_INSTANCE_UID));
 	}
 	
 	/**

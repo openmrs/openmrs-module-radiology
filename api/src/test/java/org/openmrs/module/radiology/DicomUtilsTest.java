@@ -160,7 +160,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		String referencedSOPInstanceUID = "1.2.840.10008.5.1.4.1.1.9.1.2.1.1.1";
 		
 		String studyID = String.valueOf(study.getId());
-		String studyInstanceUID = study.getUid();
+		String studyInstanceUID = study.getStudyInstanceUid();
 		String modality = study.getModality().name();
 		
 		String accessionNumber = radiologyOrder.getAccessionNumber();
@@ -340,7 +340,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		
 		String studyInstanceUid = DicomUtils.getStudyInstanceUidFromMpps(dicomMpps);
 		
-		assertThat(study.getUid(), is(studyInstanceUid));
+		assertThat(study.getStudyInstanceUid(), is(studyInstanceUid));
 	}
 	
 	/**
@@ -462,7 +462,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		Study mockStudy = new Study();
 		mockStudy.setId(1);
 		mockStudy.setOrderId(getMockRadiologyOrder().getOrderId());
-		mockStudy.setUid("1.2.826.0.1.3680043.8.2186.1.1");
+		mockStudy.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
 		mockStudy.setModality(Modality.CT);
 		mockStudy.setPriority(RequestedProcedurePriority.STAT);
 		
@@ -540,7 +540,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		
 		// ZDS Segment
 		Terser terser = new Terser(ormMsg);
-		assertEquals(study.getUid(), terser.get("/.ZDS-1-1"));
+		assertEquals(study.getStudyInstanceUid(), terser.get("/.ZDS-1-1"));
 		assertEquals(null, terser.get("/.ZDS-1-2"));
 		assertEquals("Application", terser.get("/.ZDS-1-3"));
 		assertEquals("DICOM", terser.get("/.ZDS-1-4"));
@@ -617,7 +617,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		
 		// ZDS Segment
 		Terser terser = new Terser(ormMsg);
-		assertEquals(study.getUid(), terser.get("/.ZDS-1-1"));
+		assertEquals(study.getStudyInstanceUid(), terser.get("/.ZDS-1-1"));
 		assertEquals(null, terser.get("/.ZDS-1-2"));
 		assertEquals("Application", terser.get("/.ZDS-1-3"));
 		assertEquals("DICOM", terser.get("/.ZDS-1-4"));
@@ -694,7 +694,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		
 		// ZDS Segment
 		Terser terser = new Terser(ormMsg);
-		assertEquals(study.getUid(), terser.get("/.ZDS-1-1"));
+		assertEquals(study.getStudyInstanceUid(), terser.get("/.ZDS-1-1"));
 		assertEquals(null, terser.get("/.ZDS-1-2"));
 		assertEquals("Application", terser.get("/.ZDS-1-3"));
 		assertEquals("DICOM", terser.get("/.ZDS-1-4"));

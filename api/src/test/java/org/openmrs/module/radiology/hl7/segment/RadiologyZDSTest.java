@@ -47,7 +47,7 @@ public class RadiologyZDSTest {
 	public void populateZDSSegment_shouldReturnPopulatedZDSSegmentForGivenStudy() throws HL7Exception {
 		
 		Study study = new Study();
-		study.setUid("1.2.826.0.1.3680043.8.2186.1.1.1");
+		study.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1.1");
 		
 		ORM_O01 message = new ORM_O01();
 		ZDS zds = new ZDS(message, new DefaultModelClassFactory());
@@ -96,7 +96,7 @@ public class RadiologyZDSTest {
 	public void populateZDSSegment_shouldReturnPopulatedZDSSegmentForGivenStudyWithEmptyUid() throws HL7Exception {
 		
 		Study study = new Study();
-		study.setUid("");
+		study.setStudyInstanceUid("");
 		
 		ORM_O01 message = new ORM_O01();
 		ZDS zds = new ZDS(message, new DefaultModelClassFactory());
@@ -120,7 +120,7 @@ public class RadiologyZDSTest {
 	public void populateZDSSegment_shouldFailGivenNullAsZDS() throws HL7Exception {
 		
 		Study study = new Study();
-		study.setUid("1.2.826.0.1.3680043.8.2186.1.1.1");
+		study.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1.1");
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("zds cannot be null."));
