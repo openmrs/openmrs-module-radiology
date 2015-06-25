@@ -27,6 +27,7 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
+import org.openmrs.module.radiology.web.util.StudyStatusColumnGenerator;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.mvc.Controller;
 
@@ -58,7 +59,7 @@ public class RadiologyDashboardController implements Controller {
 		List<String> mwlStatuses = new Vector<String>();
 		for (Study study : studies) {
 			if (study != null) {
-				statuses.add(study.getStatus(Context.getAuthenticatedUser()));
+				statuses.add(StudyStatusColumnGenerator.getStatusColumnForStudy(Context.getAuthenticatedUser(), study));
 				priorities.add(study.getPriority().name());
 				schedulers.add(study.scheduler());
 				performings.add(study.performing());

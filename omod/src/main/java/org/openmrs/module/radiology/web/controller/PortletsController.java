@@ -24,6 +24,7 @@ import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
+import org.openmrs.module.radiology.web.util.StudyStatusColumnGenerator;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -78,7 +79,7 @@ public class PortletsController {
 		List<String> mwlStatuses = new Vector<String>();
 		for (Study study : studies) {
 			if (study != null) {
-				statuses.add(study.getStatus(Context.getAuthenticatedUser()));
+				statuses.add(StudyStatusColumnGenerator.getStatusColumnForStudy(Context.getAuthenticatedUser(), study));
 				priorities.add(study.getPriority().name());
 				schedulers.add(study.scheduler());
 				performings.add(study.performing());
