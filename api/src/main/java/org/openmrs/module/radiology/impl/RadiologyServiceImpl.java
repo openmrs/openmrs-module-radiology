@@ -10,6 +10,7 @@
 package org.openmrs.module.radiology.impl;
 
 import java.io.File;
+import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -146,6 +147,20 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 	@Override
 	public GenericDAO db() {
 		return gdao;
+	}
+	
+	/**
+	 * @see RadiologyService#getStudiesByOrders(List<Order>)
+	 */
+	@Override
+	@Transactional(readOnly = true)
+	public List<Study> getStudiesByOrders(List<Order> orders) {
+		if (orders == null) {
+			throw new IllegalArgumentException("orders are required");
+		}
+		
+		List<Study> result = sdao.getStudiesByOrders(orders);
+		return result;
 	}
 	
 }

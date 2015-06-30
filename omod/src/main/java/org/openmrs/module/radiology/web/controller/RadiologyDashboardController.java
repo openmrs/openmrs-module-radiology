@@ -25,6 +25,7 @@ import org.openmrs.Patient;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
 import org.springframework.web.servlet.ModelAndView;
@@ -33,6 +34,10 @@ import org.springframework.web.servlet.mvc.Controller;
 public class RadiologyDashboardController implements Controller {
 	
 	Log log = LogFactory.getLog(getClass());
+	
+	static RadiologyService radiologyService() {
+		return Context.getService(RadiologyService.class);
+	}
 	
 	@Override
 	public ModelAndView handleRequest(HttpServletRequest request, HttpServletResponse response) throws ServletException,
@@ -48,7 +53,7 @@ public class RadiologyDashboardController implements Controller {
 		
 		List<Order> matchedOrders = getRadiologyOrdersByPatient(patientId, mav);
 		// TODO Status filter
-		List<Study> studies = Study.get(matchedOrders);
+		List<Study> studies = radiologyService().getStudiesByOrders(matchedOrders);
 		List<String> statuses = new Vector<String>();
 		List<String> priorities = new Vector<String>();
 		List<String> schedulers = new Vector<String>();
