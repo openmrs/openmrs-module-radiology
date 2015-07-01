@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.StudyDAO;
@@ -78,6 +79,22 @@ public class StudyDAOImpl implements StudyDAO {
 	public Study saveStudy(Study s) {
 		sessionFactory.getCurrentSession().saveOrUpdate(s);
 		return s;
+	}
+	
+	/**
+	 * @see StudyDAO#getObsByOrderId(Integer)
+	 */
+	@Override
+	public List<Obs> getObsByOrderId(Integer orderId) {
+		String innerQuery = "(Select oo.previousVersion from Obs as oo where oo.order.orderId=" + orderId
+		        + " and oo.previousVersion IS NOT NULL)";
+		String query = "from Obs as o where o.order.orderId = " + orderId + " and o.obsId NOT IN " + innerQuery;
+		
+		List<Obs> observations;
+		
+		observations = sessionFactory.getCurrentSession().createQuery(query).list();
+		
+		return observations;
 	}
 	
 }

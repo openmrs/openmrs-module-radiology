@@ -11,6 +11,7 @@ package org.openmrs.module.radiology.web.controller;
 
 import java.util.List;
 import java.util.Locale;
+
 import org.openmrs.Concept;
 import org.openmrs.Drug;
 import org.openmrs.Encounter;
@@ -86,10 +87,10 @@ public class RadiologyDashboardObsController {
 		if (obsId != null) {
 			obs = os.getObs(obsId);
 			mav.addObject("obsAnswer", obs.getValueAsString(Locale.ENGLISH));
-			prevs = radiologyService().getStudyByOrderId(obs.getOrder().getOrderId()).obs();
+			prevs = radiologyService().getObsByOrderId(obs.getOrder().getOrderId());
 		} else {
 			obs = newObs(or.getOrder(orderId));
-			prevs = study.obs();
+			prevs = radiologyService().getObsByOrderId(study.getOrderId());
 		}
 		
 		mav.addObject("obs", obs);
