@@ -104,12 +104,12 @@ public class RadiologyObsFormController {
 		}
 		
 		mav.addObject("obs", obs);
-		mav.addObject("studyUID", study.isCompleted() ? study.getUid() : null);
+		mav.addObject("studyUID", study.isCompleted() ? study.getStudyInstanceUid() : null);
 		if (study.isCompleted()) {
 			//    System.out.println("Study UID:"+study.getUid()+" Completed : "+study.isCompleted()+" Patient ID : "+or.getOrder(orderId).getPatient().getId()+" Server : "+Utils.oviyamLocalServerName() );                    
 			String patID = or.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();
 			String link = Utils.serversAddress() + ":" + Utils.serversPort() + Utils.viewerURLPath()
-			        + Utils.oviyamLocalServerName() + "studyUID=" + study.getUid() + "&patientID=" + patID;
+			        + Utils.oviyamLocalServerName() + "studyUID=" + study.getStudyInstanceUid() + "&patientID=" + patID;
 			mav.addObject("oviyamLink", link);
 		} else
 			mav.addObject("oviyamLink", null);
