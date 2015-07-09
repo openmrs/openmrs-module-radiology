@@ -72,6 +72,11 @@
 		<description>Port of the dcm4chee Web</description>
 	</globalProperty>
 	<globalProperty>
+		<property>@MODULE_ID@.serversHL7Port</property>
+		<defaultValue>2575</defaultValue>
+		<description>Port of the dcm4chee hl7 receiver/sender</description>
+	</globalProperty>
+	<globalProperty>
 		<property>@MODULE_ID@.applicationEntityTitle</property>
 		<defaultValue>RADIOLOGY_MODULE</defaultValue>
 		<description>Title for this application entity.Calling application

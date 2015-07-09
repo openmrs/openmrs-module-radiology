@@ -407,7 +407,7 @@ public class DicomUtils {
 	//Send HL7 ORU message to dcm4chee.
 	public static int sendHL7Worklist(String hl7blob) {
 		String serverIP = Utils.serversAddress();
-		String input[] = { "-c", serverIP.substring(7) + ":2575", hl7blob };
+		String input[] = { "-c", serverIP.substring(7) + ":" + Utils.serversHL7Port(), hl7blob };
 		//String input[]={"--help"};
 		int result = HL7Snd.main(input);
 		return result;
