@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.module.radiology.Study;
@@ -23,15 +24,13 @@ public class StudyDAOImpl implements StudyDAO {
 	private SessionFactory sessionFactory;
 	
 	/**
-	 * This is a Hibernate object. It gives us metadata about the currently
-	 * connected database, the current session, the current db user, etc. To
-	 * save and get objects, calls should go through
+	 * This is a Hibernate object. It gives us metadata about the currently connected database, the
+	 * current session, the current db user, etc. To save and get objects, calls should go through
 	 * sessionFactory.getCurrentSession() <br/>
 	 * <br/>
-	 * This is called by Spring. See the /metadata/moduleApplicationContext.xml
-	 * for the "sessionFactory" setting. See the applicationContext-service.xml
-	 * file in CORE openmrs for where the actual "sessionFactory" object is
-	 * first defined.
+	 * This is called by Spring. See the /metadata/moduleApplicationContext.xml for the
+	 * "sessionFactory" setting. See the applicationContext-service.xml file in CORE openmrs for
+	 * where the actual "sessionFactory" object is first defined.
 	 * 
 	 * @param sessionFactory
 	 */
@@ -44,8 +43,17 @@ public class StudyDAOImpl implements StudyDAO {
 		return (Study) sessionFactory.getCurrentSession().get(Study.class, id);
 	}
 	
-	/* (non-Javadoc)
-	 * @see org.openmrs.module.radiology.db.StudyDAO#getStudyByOrderId(java.lang.Integer)
+	/**
+	 * @see StudyDAO#getStudyByStudyInstanceUid(String)
+	 */
+	@Override
+	public Study getStudyByStudyInstanceUid(String studyInstanceUid) {
+		return (Study) sessionFactory.getCurrentSession().createCriteria(Study.class).add(
+		    Restrictions.eq("uid", studyInstanceUid)).uniqueResult();
+	}
+	
+	/**
+	 * @see StudyDAO#getStudyByOrderId(Integer)
 	 */
 	@Override
 	public Study getStudyByOrderId(Integer orderId) {

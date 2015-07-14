@@ -260,11 +260,9 @@ public class DicomUtils {
 			// Save Study
 			
 			int[] studyUIDPath = { Tag.ScheduledStepAttributesSequence, Tag.StudyInstanceUID };
-			String studyUID = o.get(studyUIDPath[0]).getDicomObject().get(studyUIDPath[1]).getValueAsString(scs, 0);
+			String studyInstanceUid = o.get(studyUIDPath[0]).getDicomObject().get(studyUIDPath[1]).getValueAsString(scs, 0);
 			
-			String[] uidSplit = studyUID.split("[.]");
-			int id = Integer.parseInt(uidSplit[uidSplit.length - 1]);
-			Study s = radiologyService().getStudy(id);
+			Study s = radiologyService().getStudyByStudyInstanceUid(studyInstanceUid);
 			debug(s.toString());
 			
 			String pStatus = o.get(Tag.PerformedProcedureStepStatus).getValueAsString(scs, 0);
@@ -273,8 +271,9 @@ public class DicomUtils {
 			s.setPerformedStatus(performedProcedureStepStatus);
 			
 			radiologyService().saveStudy(s);
-			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :" + studyUID
-			        + " to Status : " + PerformedProcedureStepStatus.getNameOrUnknown(performedProcedureStepStatus));
+			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :"
+			        + studyInstanceUid + " to Status : "
+			        + PerformedProcedureStepStatus.getNameOrUnknown(performedProcedureStepStatus));
 			
 		}
 		catch (NumberFormatException e) {

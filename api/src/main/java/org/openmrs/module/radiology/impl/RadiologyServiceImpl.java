@@ -10,7 +10,6 @@
 package org.openmrs.module.radiology.impl;
 
 import java.io.File;
-import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
@@ -149,6 +148,18 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 	@Override
 	public GenericDAO db() {
 		return gdao;
+	}
+	
+	/**
+	 * @see RadiologyService#getStudyByStudyInstanceUid(String)
+	 */
+	@Transactional(readOnly = true)
+	public Study getStudyByStudyInstanceUid(String studyInstanceUid) {
+		if (studyInstanceUid == null) {
+			throw new IllegalArgumentException("studyInstanceUid is required");
+		}
+		
+		return sdao.getStudyByStudyInstanceUid(studyInstanceUid);
 	}
 	
 	/**

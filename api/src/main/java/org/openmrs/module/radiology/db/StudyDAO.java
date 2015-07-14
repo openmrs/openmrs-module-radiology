@@ -11,8 +11,8 @@ package org.openmrs.module.radiology.db;
 
 import java.util.List;
 
-import org.openmrs.Order;
 import org.openmrs.Obs;
+import org.openmrs.Order;
 import org.openmrs.module.radiology.Study;
 
 /**
@@ -30,6 +30,12 @@ public interface StudyDAO {
 	 * @return the study matching orderId, or new Study() if there is no such study
 	 */
 	public Study getStudyByOrderId(Integer orderId);
+	
+	/**
+	 * @param studyInstanceUid
+	 * @return the study for given studyInstanceUid
+	 */
+	public Study getStudyByStudyInstanceUid(String studyInstanceUid);
 	
 	/**
 	 * @param orders
