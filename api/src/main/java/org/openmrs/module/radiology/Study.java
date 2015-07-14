@@ -84,18 +84,6 @@ public class Study {
 		return scheduler;
 	}
 	
-	public String getStatus(User u) {
-		if (u.hasRole(Roles.ReferringPhysician, true))
-			return statuses(true, true);
-		if (u.hasRole(Roles.Scheduler, true))
-			return statuses(true, false);
-		if (u.hasRole(Roles.PerformingPhysician, true))
-			return statuses(true, true);
-		if (u.hasRole(Roles.ReadingPhysician, true))
-			return statuses(false, true);
-		return statuses(true, true);
-	}
-	
 	public String getUid() {
 		return uid;
 	}
@@ -212,17 +200,6 @@ public class Study {
 		if (o.getConcept() == null)
 			o.setConcept(Context.getConceptService().getConcept(1));
 		return true;
-	}
-	
-	private String statuses(boolean sched, boolean perf) {
-		String ret = "";
-		String scheduled = "";
-		scheduled += ScheduledProcedureStepStatus.getNameOrUnknown(scheduledStatus);
-		ret += sched ? scheduled : "";
-		String performed = "";
-		performed += PerformedProcedureStepStatus.getNameOrUnknown(performedStatus);
-		ret += perf ? (sched ? " " : "") + performed : "";
-		return ret;
 	}
 	
 	@Override
