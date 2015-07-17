@@ -23,6 +23,12 @@ public interface StudyDAO {
 	
 	public Study getStudy(Integer id);
 	
+	/**
+	 * Save the given <code>Study</code> to the database
+	 * 
+	 * @param study study to be created or updated
+	 * @return study who was created or updated
+	 */
 	public Study saveStudy(Study study);
 	
 	/**

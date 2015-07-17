@@ -16,6 +16,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Obs;
 import org.openmrs.Order;
+import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
@@ -54,17 +55,28 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 	
 	@Transactional
 	@Override
-	public Study saveStudy(Study s) {
+	public Study saveStudy(Study study) {
+		if (study == null) {
+			throw new IllegalArgumentException("study is required");
+		}
 		
-		Order order = s.order();
+		if (study.getOrderId() == null) {
+			throw new APIException("Study.order.required");
+		}
+		
+		if (study.getModality() == null) {
+			throw new APIException("Study.modality.required");
+		}
+		
+		Order order = study.order();
 		try {
-			sdao.saveStudy(s);
-			File file = new File(Utils.mwlDir(), s.getId() + ".xml");
+			sdao.saveStudy(study);
+			File file = new File(Utils.mwlDir(), study.getId() + ".xml");
 			String path = "";
 			path = file.getCanonicalPath();
-			DicomUtils.write(order, s, file);
+			DicomUtils.write(order, study, file);
 			log.debug("Order and study saved in " + path);
-			return s;
+			return study;
 		}
 		catch (Exception e) {
 			log.error(e.getMessage(), e);
