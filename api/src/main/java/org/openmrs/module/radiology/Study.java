@@ -44,10 +44,6 @@ public class Study {
 	
 	private User readingPhysician;
 	
-	public Study() {
-		super();
-	}
-	
 	public int getId() {
 		return id;
 	}
