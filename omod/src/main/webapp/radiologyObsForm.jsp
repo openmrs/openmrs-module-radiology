@@ -461,30 +461,6 @@ th {
 							</c:if>
 						</spring:bind></td>
 				</tr>
-				<c:if test="${1 == 2}">
-					<tr>
-						<th><spring:message code="Obs.accessionNumber" /></th>
-						<td><spring:bind path="accessionNumber">
-								<input type="text" name="${status.expression}"
-									id="accessionNumber" value="${status.value}" size="10"
-									<c:if test="${obs.obsId != null}">disabled</c:if> />
-								<c:if test="${status.errorMessage != ''}">
-									<span class="error">${status.errorMessage}</span>
-								</c:if>
-							</spring:bind></td>
-					</tr>
-					<tr>
-						<th><spring:message code="Obs.valueGroupId" /></th>
-						<spring:bind path="valueGroupId">
-							<td><input type="text" name="${status.expression}"
-								id="valueGroupId" value="${status.value}" size="10"
-								<c:if test="${obs.obsId != null}">disabled</c:if> /> <c:if
-									test="${status.errorMessage != ''}">
-									<span class="error">${status.errorMessage}</span>
-								</c:if></td>
-						</spring:bind>
-					</tr>
-				</c:if>
 				<tr id="valueBooleanRow" class="obsValue">
 					<th><spring:message code="general.value" /></th>
 					<spring:bind path="valueBoolean">
@@ -591,30 +567,6 @@ th {
 						<div id="valueInvalidPossibleConcepts"></div>
 					</td>
 				</tr>
-
-				<%--
-		<tr>
-			<th><spring:message code="Obs.dateStarted"/></th>
-			<td>
-				<spring:bind path="dateStarted">			
-					<input type="text" name="${status.expression}" size="10" 
-						   value="${status.value}" onClick="showCalendar(this)" />
-					<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if> 
-				</spring:bind>
-			</td>
-		</tr>
-		<tr>
-			<th><spring:message code="Obs.dateStopped"/></th>
-			<td>
-				<spring:bind path="dateStopped">			
-					<input type="text" name="${status.expression}" size="10" 
-						   value="${status.value}" onClick="showCalendar(this)" />
-					<c:if test="${status.errorMessage != ''}"><span class="error">${status.errorMessage}</span></c:if> 
-				</spring:bind>
-			</td>
-		</tr>
-	--%>
-
 				<tr>
 					<th><spring:message code="Obs.comment" /></th>
 					<spring:bind path="comment">
