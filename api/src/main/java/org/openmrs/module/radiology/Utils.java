@@ -87,6 +87,10 @@ public class Utils {
 		return as.getGlobalProperty("radiology.serversPort");
 	}
 	
+	public static String serversHL7Port() {
+		return as.getGlobalProperty("radiology.serversHL7Port");
+	}
+	
 	public static String oviyamLocalServerName() {
 		String serverName = as.getGlobalProperty("radiology.oviyamLocalServerName");
 		if (serverName == null)
