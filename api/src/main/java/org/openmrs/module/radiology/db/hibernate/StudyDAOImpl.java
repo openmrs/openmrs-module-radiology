@@ -49,7 +49,7 @@ public class StudyDAOImpl implements StudyDAO {
 	@Override
 	public Study getStudyByStudyInstanceUid(String studyInstanceUid) {
 		return (Study) sessionFactory.getCurrentSession().createCriteria(Study.class).add(
-		    Restrictions.eq("uid", studyInstanceUid)).uniqueResult();
+		    Restrictions.eq("studyInstanceUid", studyInstanceUid)).uniqueResult();
 	}
 	
 	/**
