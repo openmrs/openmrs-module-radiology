@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.openmrs.Obs;
 import org.openmrs.Order;
+import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.db.GenericDAO;
@@ -30,7 +31,23 @@ public interface RadiologyService extends OpenmrsService {
 	
 	public Study getStudy(Integer id);
 	
-	public Study saveStudy(Study os);
+	/**
+	 * <p>
+	 * Save the given <code>Study</code> to the database
+	 * </p>
+	 * Additionally, study and study.order information are written into a DICOM xml file.
+	 * 
+	 * @param study study to be created or updated
+	 * @return study who was created or updated
+	 * @throws IllegalArgumentException
+	 * @throws APIException
+	 * @should create new study from given study object
+	 * @should update existing study
+	 * @should throw IllegalArgumentException if study is null
+	 * @should throw APIException given study with empty order id
+	 * @should throw APIException given study with empty modality
+	 */
+	public Study saveStudy(Study study) throws APIException, IllegalArgumentException;
 	
 	public void sendModalityWorklist(Study s, OrderRequest orderRequest);
 	

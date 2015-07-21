@@ -55,4 +55,14 @@
   <radiology_study id="2" uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" priority="ROUTINE" modality="MR" mwl_status="DEFAULT"/>
   
   <obs obs_id="20021" person_id="70021" order_id="2002" concept_id="178" obs_datetime="2015-02-06 17:14:00.0" location_id="1" creator="1" date_created="2015-02-06 17:14:35.0" voided="false" uuid="be3a4d7a-f9ab-47bb-aaad-bc0b452fcda4" accession_number="RAD2002"/>
+  
+  <!-- patient with one radiology order with no associated study -->
+  <patient patient_id="70022" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="3" patient_id="70022" identifier="1236" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="4d529220-9864-4a95-a12c-eb2f81833076"/>
+  <person person_id="70022" gender="M" birthdate="1990-04-13" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <person_name person_name_id="3" preferred="true" person_id="70022" given_name="John" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="6753aaa1-545d-44e2-9a9f-6c682f37a134"/>
+  
+  <!-- radiology order with no associated study -->
+  <orders order_id="2004" order_type_id="5" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" start_date="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70022" />
+  
 </dataset>

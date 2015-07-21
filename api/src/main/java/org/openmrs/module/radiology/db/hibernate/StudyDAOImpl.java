@@ -83,10 +83,13 @@ public class StudyDAOImpl implements StudyDAO {
 		return studies;
 	}
 	
+	/**
+	 * @see StudyDAO#saveStudy(Study)
+	 */
 	@Override
-	public Study saveStudy(Study s) {
-		sessionFactory.getCurrentSession().saveOrUpdate(s);
-		return s;
+	public Study saveStudy(Study study) {
+		sessionFactory.getCurrentSession().saveOrUpdate(study);
+		return study;
 	}
 	
 	/**
