@@ -22,6 +22,7 @@ import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.RadiologyService;
+import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.db.GenericDAO;
@@ -69,6 +70,11 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		}
 		
 		Order order = study.order();
+		
+		if (study.getScheduledStatus() == null && order.getStartDate() != null) {
+			study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
+		}
+		
 		try {
 			sdao.saveStudy(study);
 			File file = new File(Utils.mwlDir(), study.getId() + ".xml");
