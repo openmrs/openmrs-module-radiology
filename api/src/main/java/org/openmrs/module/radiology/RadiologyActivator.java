@@ -35,7 +35,8 @@ public class RadiologyActivator extends BaseModuleActivator {
 	
 	@Override
 	public void started() {
-		start();
+		startDicomOrderFiller();
+		typeAndRoles();
 	}
 	
 	@Override
@@ -45,16 +46,6 @@ public class RadiologyActivator extends BaseModuleActivator {
 	
 	public static boolean badInit(UserService us, OrderService os) {
 		return !Roles.created(us) || !Utils.hasRadiology(os);
-	}
-	
-	public void start() {
-		try {
-			startDicomOrderFiller();
-		}
-		catch (Exception e) {
-			// Just prints in console
-		}
-		typeAndRoles();
 	}
 	
 	/**
@@ -71,8 +62,7 @@ public class RadiologyActivator extends BaseModuleActivator {
 			log.info("Radiology order type created!");
 		}
 		catch (Exception e) {
-			log
-			        .warn("Need some privilege to startup the module. Go to openmrs/module/radiology/config.list with authenticated user.");
+			log.warn("Need some privilege to startup the module. Go to openmrs/module/radiology/config.list with authenticated user.");
 			return false;
 		}
 		
@@ -116,14 +106,13 @@ public class RadiologyActivator extends BaseModuleActivator {
 			log.info("\"Scheduler\", \"Referring Physician\",\"Performing Physician\", \"Reading Physician\" Roles created");
 		}
 		catch (Exception e) {
-			log
-			        .warn("Can not create \"Scheduler\", \"Referring Physician\", \"Performing Physician\", \"Reading Physician\" roles. Go to openmrs/module/radiology/config.list with authenticated user.");
+			log.warn("Can not create \"Scheduler\", \"Referring Physician\", \"Performing Physician\", \"Reading Physician\" roles. Go to openmrs/module/radiology/config.list with authenticated user.");
 			return false;
 		}
 		return true;
 	}
 	
-	public void startDicomOrderFiller() throws Exception {
+	public void startDicomOrderFiller() {
 		try {
 			String[] args2 = { "-mwl", Utils.mwlDir(), "-mpps", Utils.mppsDir(), Utils.aeTitle() + ":" + Utils.mwlMppsPort() };
 			dicomOrderFiller = DcmOF.main(args2);
@@ -132,7 +121,6 @@ public class RadiologyActivator extends BaseModuleActivator {
 		catch (Exception e) {
 			log.warn("Can not start MWL/MPPS DICOM server");
 			log.warn("Unable to start MPPSScu : OpenMRS MPPS SCU Client (dcmof)");
-			throw e;
 		}
 	}
 	
