@@ -193,8 +193,6 @@ public class Study {
 		if (o.getOrderer() == null)
 			o.setOrderer(u);
 		o.setOrderType(Utils.getRadiologyOrderType().get(0));
-		if (o.getConcept() == null)
-			o.setConcept(Context.getConceptService().getConcept(1));
 		return true;
 	}
 	
