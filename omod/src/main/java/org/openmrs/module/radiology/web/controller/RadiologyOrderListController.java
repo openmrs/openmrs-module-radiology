@@ -24,7 +24,7 @@ public class RadiologyOrderListController {
 	public ModelAndView handleRequest() {
 		ModelAndView mav = new ModelAndView();
 		mav.setViewName("module/radiology/radiologyOrderList");
-		if (RadiologyActivator.badInit(Context.getUserService(), Context.getOrderService())) {
+		if (RadiologyActivator.badInit(Context.getOrderService())) {
 			mav.addObject("initialized", "fail");
 		}
 		return mav;

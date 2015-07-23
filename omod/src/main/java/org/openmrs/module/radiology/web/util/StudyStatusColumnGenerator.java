@@ -1,8 +1,12 @@
 package org.openmrs.module.radiology.web.util;
 
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_PERFORMING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_READING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_REFERRING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_SCHEDULER;
+
 import org.openmrs.User;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 
@@ -23,13 +27,13 @@ public class StudyStatusColumnGenerator {
 	 */
 	public static String getStatusColumnForStudy(User user, Study study) {
 		
-		if (user.hasRole(Roles.ReferringPhysician, true))
+		if (user.hasRole(RADIOLOGY_REFERRING_PHYSICIAN, true))
 			return getStatusColumnForStudy(study, true, true);
-		if (user.hasRole(Roles.Scheduler, true))
+		if (user.hasRole(RADIOLOGY_SCHEDULER, true))
 			return getStatusColumnForStudy(study, true, false);
-		if (user.hasRole(Roles.PerformingPhysician, true))
+		if (user.hasRole(RADIOLOGY_PERFORMING_PHYSICIAN, true))
 			return getStatusColumnForStudy(study, true, true);
-		if (user.hasRole(Roles.ReadingPhysician, true))
+		if (user.hasRole(RADIOLOGY_READING_PHYSICIAN, true))
 			return getStatusColumnForStudy(study, false, true);
 		return getStatusColumnForStudy(study, true, true);
 	}

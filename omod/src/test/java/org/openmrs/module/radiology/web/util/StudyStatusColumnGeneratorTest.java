@@ -2,6 +2,10 @@ package org.openmrs.module.radiology.web.util;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_PERFORMING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_READING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_REFERRING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_SCHEDULER;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -10,7 +14,6 @@ import org.junit.Test;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.test.Verifies;
@@ -33,7 +36,7 @@ public class StudyStatusColumnGeneratorTest {
 		
 		User userWithRoleScheduler = new User();
 		Role roleScheduler = new Role();
-		roleScheduler.setRole(Roles.Scheduler);
+		roleScheduler.setRole(RADIOLOGY_SCHEDULER);
 		Set<Role> rolesScheduler = new HashSet<Role>();
 		rolesScheduler.add(roleScheduler);
 		userWithRoleScheduler.setRoles(rolesScheduler);
@@ -54,7 +57,7 @@ public class StudyStatusColumnGeneratorTest {
 		
 		User userWithRoleReferringPhysician = new User();
 		Role roleReferringPhysician = new Role();
-		roleReferringPhysician.setRole(Roles.ReferringPhysician);
+		roleReferringPhysician.setRole(RADIOLOGY_REFERRING_PHYSICIAN);
 		Set<Role> rolesReferringPhysician = new HashSet<Role>();
 		rolesReferringPhysician.add(roleReferringPhysician);
 		userWithRoleReferringPhysician.setRoles(rolesReferringPhysician);
@@ -76,7 +79,7 @@ public class StudyStatusColumnGeneratorTest {
 		
 		User userWithRolePerformingPhysician = new User();
 		Role rolePerformingPhysician = new Role();
-		rolePerformingPhysician.setRole(Roles.PerformingPhysician);
+		rolePerformingPhysician.setRole(RADIOLOGY_PERFORMING_PHYSICIAN);
 		Set<Role> rolesPerformingPhysician = new HashSet<Role>();
 		rolesPerformingPhysician.add(rolePerformingPhysician);
 		userWithRolePerformingPhysician.setRoles(rolesPerformingPhysician);
@@ -98,7 +101,7 @@ public class StudyStatusColumnGeneratorTest {
 		
 		User userWithRoleReadingPhysician = new User();
 		Role roleReadingPhysician = new Role();
-		roleReadingPhysician.setRole(Roles.ReadingPhysician);
+		roleReadingPhysician.setRole(RADIOLOGY_READING_PHYSICIAN);
 		Set<Role> rolesReadingPhysician = new HashSet<Role>();
 		rolesReadingPhysician.add(roleReadingPhysician);
 		userWithRoleReadingPhysician.setRoles(rolesReadingPhysician);

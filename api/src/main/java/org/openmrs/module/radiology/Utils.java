@@ -12,17 +12,12 @@ package org.openmrs.module.radiology;
 import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.OrderType;
-import org.openmrs.Person;
-import org.openmrs.PersonName;
-import org.openmrs.Role;
-import org.openmrs.User;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
@@ -73,14 +68,6 @@ public class Utils {
 	
 	public static String specificCharacterSet() {
 		return as.getGlobalProperty("radiology.specificCharacterSet");
-	}
-	
-	public static String devModeP() {
-		return as.getGlobalProperty("radiology.devMode");
-	}
-	
-	public static boolean devMode() {
-		return devModeP().compareToIgnoreCase("on") == 0;
 	}
 	
 	public static String serversPort() {
@@ -184,31 +171,4 @@ public class Utils {
 		return getRadiologyOrderType().size() > 0;
 	}
 	
-	public static void setRoles(User u, String... roles) {
-		HashSet<Role> rolesSet = new HashSet<Role>();
-		for (int j = 0; j < roles.length; j++) {
-			Role role = Context.getUserService().getRole(roles[j]);
-			rolesSet.add(role);
-		}
-		u.setRoles(rolesSet);
-	}
-	
-	public static void createUser(String name, String pass, String... roles) throws Exception {
-		if (Context.getUserService().getUserByUsername(name) == null) {
-			Person p = new Person();
-			p.setGender("M");
-			p.setDead(false);
-			p.setVoided(false);
-			p.addName(new PersonName(name, "", ""));
-			User u = new User(p);
-			u.setUsername(name);
-			Utils.setRoles(u, roles);
-			try {
-				Context.getUserService().saveUser(u, pass);
-			}
-			catch (Exception e) {
-				throw e;
-			}
-		}
-	}
 }

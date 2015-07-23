@@ -9,6 +9,11 @@
  */
 package org.openmrs.module.radiology;
 
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_PERFORMING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_READING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_REFERRING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_SCHEDULER;
+
 import java.lang.reflect.Field;
 
 import org.openmrs.Order;
@@ -172,9 +177,9 @@ public class Study {
 		setId(studyId);
 		
 		User u = Context.getAuthenticatedUser();
-		if (u.hasRole(Roles.ReferringPhysician, true) && o.getOrderer() == null)
+		if (u.hasRole(RADIOLOGY_REFERRING_PHYSICIAN, true) && o.getOrderer() == null)
 			o.setOrderer(u);
-		if (u.hasRole(Roles.Scheduler, true) && getScheduler() == null) {
+		if (u.hasRole(RADIOLOGY_SCHEDULER, true) && getScheduler() == null) {
 			if (!isScheduleable()) {
 				return false;
 			} else {
@@ -182,9 +187,9 @@ public class Study {
 			}
 			
 		}
-		if (u.hasRole(Roles.PerformingPhysician, true) && getPerformingPhysician() == null)
+		if (u.hasRole(RADIOLOGY_PERFORMING_PHYSICIAN, true) && getPerformingPhysician() == null)
 			setPerformingPhysician(u);
-		if (u.hasRole(Roles.ReadingPhysician, true) && getReadingPhysician() == null)
+		if (u.hasRole(RADIOLOGY_READING_PHYSICIAN, true) && getReadingPhysician() == null)
 			setReadingPhysician(u);
 		
 		if (o.getStartDate() != null)
