@@ -152,6 +152,8 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		assertNotNull(createdStudy);
 		assertThat(createdStudy, is(mockStudy));
 		assertThat(createdStudy.getId(), is(mockStudy.getId()));
+		assertNotNull(createdStudy.getStudyInstanceUid());
+		assertThat(createdStudy.getStudyInstanceUid(), is(Utils.studyPrefix() + createdStudy.getId()));
 		assertThat(createdStudy.getModality(), is(mockStudy.getModality()));
 		assertThat(createdStudy.getOrderId(), is(mockStudy.getOrderId()));
 	}
