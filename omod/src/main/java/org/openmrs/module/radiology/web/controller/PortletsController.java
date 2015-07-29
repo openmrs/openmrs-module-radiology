@@ -47,16 +47,6 @@ public class PortletsController {
 		return route;
 	}
 	
-	@RequestMapping(value = "/module/radiology/portlets/addOrderFields.portlet")
-	ModelAndView handleAddOrderFieldsRequest(@RequestParam(value = "modality", required = true) String modality) {
-		
-		ModelAndView mav = new ModelAndView("module/radiology/portlets/addOrderFields");
-		mav.addObject("modality", modality);
-		
-		return mav;
-		
-	}
-	
 	@RequestMapping(value = "/module/radiology/portlets/orderSearch.portlet")
 	ModelAndView ordersTable(@RequestParam(value = "patientQuery", required = false) String patientQuery,
 	        @RequestParam(value = "startDate", required = false) String startDateS,
