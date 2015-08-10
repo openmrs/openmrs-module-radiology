@@ -187,9 +187,6 @@ public class Study {
 		if (u.hasRole(Roles.ReadingPhysician, true) && getReadingPhysician() == null)
 			setReadingPhysician(u);
 		
-		if (o.getStartDate() != null)
-			setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
-		
 		if (o.getOrderer() == null)
 			o.setOrderer(u);
 		o.setOrderType(Utils.getRadiologyOrderType().get(0));
