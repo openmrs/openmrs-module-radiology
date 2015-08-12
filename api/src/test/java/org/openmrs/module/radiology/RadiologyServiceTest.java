@@ -187,7 +187,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	@Verifies(value = "should throw IllegalArgumentException if study is null", method = "saveStudy(Study)")
-	public void saveStudy_shouldThrowIllegalArgumentExceptionIfStudyIsNull() {
+	public void saveStudy_shouldThrowIllegalArgumentExceptionIfStudyIsNull() throws Exception {
 		
 		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
@@ -204,7 +204,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	@Verifies(value = "should throw APIException given study with empty order id", method = "saveStudy(Study)")
-	public void saveStudy_shouldThrowAPIExceptionGivenStudyWithEmptyOrderId() {
+	public void saveStudy_shouldThrowAPIExceptionGivenStudyWithEmptyOrderId() throws Exception {
 		
 		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
@@ -224,7 +224,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	@Verifies(value = "should throw APIException given study with empty modality", method = "saveStudy(Study)")
-	public void saveStudy_shouldThrowAPIExceptionGivenStudyWithEmptyModality() {
+	public void saveStudy_shouldThrowAPIExceptionGivenStudyWithEmptyModality() throws Exception {
 		
 		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
