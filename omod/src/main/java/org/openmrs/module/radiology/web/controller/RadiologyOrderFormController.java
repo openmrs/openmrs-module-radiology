@@ -9,6 +9,11 @@
  */
 package org.openmrs.module.radiology.web.controller;
 
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_PERFORMING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_READING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_REFERRING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRolePrivilegeMetadata._Role.RADIOLOGY_SCHEDULER;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -32,7 +37,6 @@ import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
-import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
@@ -126,7 +130,7 @@ public class RadiologyOrderFormController {
 					mav.addObject("patientId", patientId);
 				}
 				User u = Context.getAuthenticatedUser();
-				if (u.hasRole(Roles.ReferringPhysician, true) && order.getOrderer() == null)
+				if (u.hasRole(RADIOLOGY_REFERRING_PHYSICIAN, true) && order.getOrderer() == null)
 					order.setOrderer(u);
 			}
 		}
@@ -138,13 +142,13 @@ public class RadiologyOrderFormController {
 		if (Context.isAuthenticated()) {
 			mav.addObject("order", order);
 			mav.addObject("study", study);
-			boolean referring = Context.getAuthenticatedUser().hasRole(Roles.ReferringPhysician, true);
+			boolean referring = Context.getAuthenticatedUser().hasRole(RADIOLOGY_REFERRING_PHYSICIAN, true);
 			mav.addObject("referring", referring);
-			boolean scheduler = Context.getAuthenticatedUser().hasRole(Roles.Scheduler, true);
+			boolean scheduler = Context.getAuthenticatedUser().hasRole(RADIOLOGY_SCHEDULER, true);
 			mav.addObject("scheduler", scheduler);
-			boolean performing = Context.getAuthenticatedUser().hasRole(Roles.PerformingPhysician, true);
+			boolean performing = Context.getAuthenticatedUser().hasRole(RADIOLOGY_PERFORMING_PHYSICIAN, true);
 			mav.addObject("performing", performing);
-			boolean reading = Context.getAuthenticatedUser().hasRole(Roles.ReadingPhysician, true);
+			boolean reading = Context.getAuthenticatedUser().hasRole(RADIOLOGY_READING_PHYSICIAN, true);
 			mav.addObject("reading", reading);
 			mav.addObject("super", !referring && !scheduler && !performing && !reading);
 		}

@@ -106,6 +106,8 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openMRSVersion>1.9.4</openMRSVersion>
+		<metadatadeployVersion>1.5-SNAPSHOT</metadatadeployVersion>
+		<metadatasharingVersion>1.1.8</metadatasharingVersion>
 	</properties>
 
 	<build>
