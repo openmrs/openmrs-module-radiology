@@ -57,7 +57,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequestMapping(value = "/module/radiology/radiologyOrder.form")
 public class RadiologyOrderFormController {
+	
+	private static final String RADIOLOGY_ORDER_FORM_PATH = "module/radiology/radiologyOrderForm";
 	
 	// private Log log = LogFactory.getLog(this.getClass());
 	/**
@@ -79,14 +82,14 @@ public class RadiologyOrderFormController {
 		binder.registerCustomEditor(Encounter.class, new EncounterEditor());
 	}
 	
-	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.POST)
+	@RequestMapping(method = RequestMethod.POST)
 	protected ModelAndView post(HttpServletRequest request,
 	        @RequestParam(value = "study_id", required = false) Integer studyId,
 	        @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("study") Study study,
 	        BindingResult sErrors, @ModelAttribute("order") Order order, BindingResult oErrors) throws Exception {
 		
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("module/radiology/radiologyOrderForm");
+		mav.setViewName(RADIOLOGY_ORDER_FORM_PATH);
 		if (study.setup(order, studyId)) {
 			
 			new OrderValidator().validate(order, oErrors);
@@ -106,10 +109,10 @@ public class RadiologyOrderFormController {
 		return mav;
 	}
 	
-	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView get(@RequestParam(value = "orderId", required = false) Integer orderId,
 	        @RequestParam(value = "patientId", required = false) Integer patientId) {
-		ModelAndView mav = new ModelAndView("module/radiology/radiologyOrderForm");
+		ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_FORM_PATH);
 		OrderService os = Context.getOrderService();
 		Order order = null;
 		Study study = null;
