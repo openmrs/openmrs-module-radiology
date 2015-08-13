@@ -17,7 +17,7 @@
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.RadiologyActivator
 	</activator>
 
-	<require_version>1.9.4 - 1.9.*</require_version>
+	<require_version>1.9.9</require_version>
 	<require_database_version>1.0.0</require_database_version>
 
 

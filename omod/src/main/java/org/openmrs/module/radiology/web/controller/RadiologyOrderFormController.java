@@ -25,6 +25,7 @@ import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.OrderService;
+import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Modality;
@@ -43,6 +44,7 @@ import org.openmrs.propertyeditor.PatientEditor;
 import org.openmrs.propertyeditor.UserEditor;
 import org.openmrs.validator.OrderValidator;
 import org.openmrs.web.WebConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
@@ -60,12 +62,15 @@ import org.springframework.web.servlet.ModelAndView;
 public class RadiologyOrderFormController {
 	
 	// private Log log = LogFactory.getLog(this.getClass());
-	/**
-	 * @return Radiology module service instance
-	 */
-	static RadiologyService radiologyService() {
-		return Context.getService(RadiologyService.class);
-	}
+	
+	@Autowired
+	private RadiologyService radiologyService;
+	
+	@Autowired
+	private OrderService orderService;
+	
+	@Autowired
+	private PatientService patientService;
 	
 	@InitBinder
 	void initBinder(WebDataBinder binder) {
@@ -79,6 +84,36 @@ public class RadiologyOrderFormController {
 		binder.registerCustomEditor(Encounter.class, new EncounterEditor());
 	}
 	
+	/**
+	 * Handles POST requests for the radiologyOrderForm
+	 * 
+	 * @param studyId study id of an existing study which should be updated
+	 * @param patientId patient id of an existing patient which is used to redirect to the patient
+	 *            dashboard
+	 * @param study study object
+	 * @param sErrors binding result containing study errors for a non valid study
+	 * @param order order object
+	 * @param oErrors binding result containing order errors for a non valid order
+	 * @return model and view
+	 * @should set http session attribute openmrs message to order saved and redirect to radiology
+	 *         order list when save study was successful
+	 * @should set http session attribute openmrs message to order saved and redirect to patient
+	 *         dashboard when save study was successful and given patient id
+	 * @should set http session attribute openmrs message to saved fail worklist and redirect to
+	 *         patient dashboard when save study was not successful and given patient id
+	 * @should set http session attribute openmrs message to study performed when study performed
+	 *         status is in progress and scheduler is empty and request was issued by radiology
+	 *         scheduler
+	 * @should set http session attribute openmrs message to voided successfully and redirect to
+	 *         patient dashboard when void order was successful and given patient id
+	 * @should set http session attribute openmrs message to unvoided successfully and redirect to
+	 *         patient dashboard when unvoid order was successful and given patient id
+	 * @should set http session attribute openmrs message to discontinued successfully and redirect
+	 *         to patient dashboard when discontinue order was successful and given patient id
+	 * @should set http session attribute openmrs message to undiscontinued successfully and
+	 *         redirect to patient dashboard when undiscontinue order was successful and given
+	 *         patient id
+	 */
 	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.POST)
 	protected ModelAndView post(HttpServletRequest request,
 	        @RequestParam(value = "study_id", required = false) Integer studyId,
@@ -106,23 +141,37 @@ public class RadiologyOrderFormController {
 		return mav;
 	}
 	
+	/**
+	 * Handles GET requests for the radiologyOrderForm
+	 * 
+	 * @param orderId order id of an existing order which should be put into the model and view
+	 * @param patientId patient id of an existing patient which should be associated with a new
+	 *            order returned in the model and view
+	 * @return model and view containing order and study objects
+	 * @should should populate model and view with new order and study when given empty request
+	 *         parameters
+	 * @should populate model and view with new order and study with prefilled orderer when given
+	 *         empty request parameters by referring physician
+	 * @should populate model and view with new order and study with prefilled patient when given
+	 *         patient id
+	 * @should populate model and view with existing order and study when given order id
+	 */
 	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET)
 	protected ModelAndView get(@RequestParam(value = "orderId", required = false) Integer orderId,
 	        @RequestParam(value = "patientId", required = false) Integer patientId) {
 		ModelAndView mav = new ModelAndView("module/radiology/radiologyOrderForm");
-		OrderService os = Context.getOrderService();
 		Order order = null;
 		Study study = null;
 		
 		if (Context.isAuthenticated()) {
 			if (orderId != null) {
-				order = os.getOrder(orderId);
-				study = radiologyService().getStudyByOrderId(orderId);
+				order = orderService.getOrder(orderId);
+				study = radiologyService.getStudyByOrderId(orderId);
 			} else {
 				study = new Study();
 				order = new Order();
 				if (patientId != null) {
-					order.setPatient(Context.getPatientService().getPatient(patientId));
+					order.setPatient(patientService.getPatient(patientId));
 					mav.addObject("patientId", patientId);
 				}
 				User u = Context.getAuthenticatedUser();
@@ -205,34 +254,33 @@ public class RadiologyOrderFormController {
 			return false;
 		}
 		
-		OrderService orderService = Context.getOrderService();
 		try {
 			if (request.getParameter("saveOrder") != null) {
 				orderService.saveOrder(order);
 				study.setOrderId(order.getOrderId());
-				radiologyService().saveStudy(study);
+				radiologyService.saveStudy(study);
 				//Assigning Study UID                                
 				String studyUID = Utils.studyPrefix() + study.getId();
 				System.out.println("Radiology order received with StudyUID : " + studyUID + " Order ID : "
 				        + order.getOrderId());
 				study.setStudyInstanceUid(studyUID);
-				radiologyService().saveStudy(study);
+				radiologyService.saveStudy(study);
 				Order o = orderService.getOrder(order.getOrderId());
-				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()),
+				radiologyService.sendModalityWorklist(radiologyService.getStudyByOrderId(o.getOrderId()),
 				    OrderRequest.Save_Order);
 				
 				//Saving Study into Database.
-				if (radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.SAVE_ERR
-				        || radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.UPDATE_ERR) {
+				if (radiologyService.getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.SAVE_ERR
+				        || radiologyService.getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.UPDATE_ERR) {
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.savedFailWorklist");
 				} else {
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
 				}
 			} else if (request.getParameter("voidOrder") != null) {
 				Order o = orderService.getOrder(order.getOrderId());
-				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()),
+				radiologyService.sendModalityWorklist(radiologyService.getStudyByOrderId(o.getOrderId()),
 				    OrderRequest.Void_Order);
-				if (radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.VOID_OK) {
+				if (radiologyService.getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.VOID_OK) {
 					orderService.voidOrder(o, order.getVoidReason());
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.voidedSuccessfully");
 				} else {
@@ -240,9 +288,9 @@ public class RadiologyOrderFormController {
 				}
 			} else if (request.getParameter("unvoidOrder") != null) {
 				Order o = orderService.getOrder(order.getOrderId());
-				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()),
+				radiologyService.sendModalityWorklist(radiologyService.getStudyByOrderId(o.getOrderId()),
 				    OrderRequest.Unvoid_Order);
-				if (radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.UNVOID_OK) {
+				if (radiologyService.getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.UNVOID_OK) {
 					orderService.unvoidOrder(o);
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.unvoidedSuccessfully");
 				} else {
@@ -250,9 +298,9 @@ public class RadiologyOrderFormController {
 				}
 			} else if (request.getParameter("discontinueOrder") != null) {
 				Order o = orderService.getOrder(order.getOrderId());
-				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()),
+				radiologyService.sendModalityWorklist(radiologyService.getStudyByOrderId(o.getOrderId()),
 				    OrderRequest.Discontinue_Order);
-				if (radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.DISCONTINUE_OK) {
+				if (radiologyService.getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.DISCONTINUE_OK) {
 					orderService.discontinueOrder(o, order.getDiscontinuedReason(), order.getDiscontinuedDate());
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
 				} else {
@@ -260,9 +308,9 @@ public class RadiologyOrderFormController {
 				}
 			} else if (request.getParameter("undiscontinueOrder") != null) {
 				Order o = orderService.getOrder(order.getOrderId());
-				radiologyService().sendModalityWorklist(radiologyService().getStudyByOrderId(o.getOrderId()),
+				radiologyService.sendModalityWorklist(radiologyService.getStudyByOrderId(o.getOrderId()),
 				    OrderRequest.Undiscontinue_Order);
-				if (radiologyService().getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.UNDISCONTINUE_OK) {
+				if (radiologyService.getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.UNDISCONTINUE_OK) {
 					orderService.undiscontinueOrder(o);
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.undiscontinuedSuccessfully");
 				} else {
