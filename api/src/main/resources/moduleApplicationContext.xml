@@ -15,44 +15,46 @@
                         http://www.springframework.org/schema/util
                         http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
+	<bean id="radiologyService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean class="org.openmrs.module.radiology.impl.RadiologyServiceImpl">
+				<property name="gdao">
+					<bean class="org.openmrs.module.radiology.db.hibernate.GenericDAOImpl">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
+					</bean>
+				</property>
+
+				<property name="sdao">
+					<bean class="org.openmrs.module.radiology.db.hibernate.StudyDAOImpl">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list>
 				<value>org.openmrs.module.radiology.RadiologyService</value>
-				<bean
-					class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
-					<property name="transactionManager">
-						<ref bean="transactionManager" />
-					</property>
-					<property name="target">
-						<bean class="org.openmrs.module.radiology.impl.RadiologyServiceImpl">
-							<property name="gdao">
-								<bean class="org.openmrs.module.radiology.db.hibernate.GenericDAOImpl">
-									<property name="sessionFactory">
-										<ref bean="sessionFactory" />
-									</property>
-								</bean>
-							</property>
-							<property name="sdao">
-								<bean class="org.openmrs.module.radiology.db.hibernate.StudyDAOImpl">
-									<property name="sessionFactory">
-										<ref bean="sessionFactory" />
-									</property>
-								</bean>
-							</property>
-						</bean>
-					</property>
-					<property name="preInterceptors">
-						<list>
-							<ref bean="authorizationInterceptor" />
-						</list>
-					</property>
-					<property name="transactionAttributeSource">
-						<bean
-							class="org.springframework.transaction.annotation.AnnotationTransactionAttributeSource" />
-					</property>
-				</bean>
+				<ref local="radiologyService" />
 			</list>
 		</property>
 	</bean>
+
+
 </beans>
