@@ -84,6 +84,82 @@ public class RadiologyOrderFormController {
 	}
 	
 	/**
+	 * Handles GET requests for the radiologyOrderForm with new order and study
+	 * 
+	 * @return model and view containing new order and study objects
+	 * @should populate model and view with new order and study
+	 * @should populate model and view with new order and study with prefilled orderer when
+	 *         requested by referring physician
+	 */
+	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET)
+	protected ModelAndView getRadiologyOrderFormWithNewOrder() {
+		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
+		
+		if (Context.isAuthenticated()) {
+			Study study = new Study();
+			Order order = new Order();
+			
+			User user = Context.getAuthenticatedUser();
+			if (user.hasRole(Roles.ReferringPhysician, true) && order.getOrderer() == null) {
+				order.setOrderer(user);
+			}
+			
+			modelAndView.addObject("order", order);
+			modelAndView.addObject("study", study);
+		}
+		
+		return modelAndView;
+	}
+	
+	/**
+	 * Handles GET requests for the radiologyOrderForm with new order and study with prefilled
+	 * patient
+	 * 
+	 * @param patientId patient id of an existing patient which should be associated with a new
+	 *            order returned in the model and view
+	 * @return model and view containing new order and study objects
+	 * @should populate model and view with new order and study with prefilled patient matching
+	 *         given patient id
+	 * @should populate model and view with new order and study with prefilled orderer when
+	 *         requested by referring physician
+	 */
+	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET, params = "patientId")
+	protected ModelAndView getRadiologyOrderFormWithNewOrderAndPrefilledPatient(
+	        @RequestParam(value = "patientId", required = true) Integer patientId) {
+		ModelAndView modelAndView = getRadiologyOrderFormWithNewOrder();
+		
+		if (Context.isAuthenticated()) {
+			Order order = (Order) modelAndView.getModel().get("order");
+			order.setPatient(patientService.getPatient(patientId));
+			modelAndView.addObject("patientId", patientId);
+		}
+		
+		return modelAndView;
+	}
+	
+	/**
+	 * Handles GET requests for the radiologyOrderForm with existing order and study
+	 * 
+	 * @param orderId order id of an existing order which should be put into the model and view
+	 * @return model and view containing order and study objects
+	 * @should populate model and view with existing order and study matching given order id
+	 */
+	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET, params = "orderId")
+	protected ModelAndView getRadiologyOrderFormWithExistingOrderByOrderId(
+	        @RequestParam(value = "orderId", required = true) Integer orderId) {
+		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
+		
+		if (Context.isAuthenticated()) {
+			Study study = radiologyService.getStudyByOrderId(orderId);
+			Order order = orderService.getOrder(orderId);
+			modelAndView.addObject("order", order);
+			modelAndView.addObject("study", study);
+		}
+		
+		return modelAndView;
+	}
+	
+	/**
 	 * Handles POST requests for the radiologyOrderForm
 	 * 
 	 * @param studyId study id of an existing study which should be updated
@@ -137,48 +213,6 @@ public class RadiologyOrderFormController {
 			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
 			populate(mav, order, study);
 		}
-		return mav;
-	}
-	
-	/**
-	 * Handles GET requests for the radiologyOrderForm
-	 * 
-	 * @param orderId order id of an existing order which should be put into the model and view
-	 * @param patientId patient id of an existing patient which should be associated with a new
-	 *            order returned in the model and view
-	 * @return model and view containing order and study objects
-	 * @should should populate model and view with new order and study when given empty request
-	 *         parameters
-	 * @should populate model and view with new order and study with prefilled orderer when given
-	 *         empty request parameters by referring physician
-	 * @should populate model and view with new order and study with prefilled patient when given
-	 *         patient id
-	 * @should populate model and view with existing order and study when given order id
-	 */
-	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET)
-	protected ModelAndView get(@RequestParam(value = "orderId", required = false) Integer orderId,
-	        @RequestParam(value = "patientId", required = false) Integer patientId) {
-		ModelAndView mav = new ModelAndView("module/radiology/radiologyOrderForm");
-		Order order = null;
-		Study study = null;
-		
-		if (Context.isAuthenticated()) {
-			if (orderId != null) {
-				order = orderService.getOrder(orderId);
-				study = radiologyService.getStudyByOrderId(orderId);
-			} else {
-				study = new Study();
-				order = new Order();
-				if (patientId != null) {
-					order.setPatient(patientService.getPatient(patientId));
-					mav.addObject("patientId", patientId);
-				}
-				User u = Context.getAuthenticatedUser();
-				if (u.hasRole(Roles.ReferringPhysician, true) && order.getOrderer() == null)
-					order.setOrderer(u);
-			}
-		}
-		populate(mav, order, study);
 		return mav;
 	}
 	
