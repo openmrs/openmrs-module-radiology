@@ -62,7 +62,8 @@ public class RadiologyActivator extends BaseModuleActivator {
 			log.info("Radiology order type created!");
 		}
 		catch (Exception e) {
-			log.warn("Need some privilege to startup the module. Go to openmrs/module/radiology/config.list with authenticated user.");
+			log
+			        .warn("Need some privilege to startup the module. Go to openmrs/module/radiology/config.list with authenticated user.");
 			return false;
 		}
 		
@@ -106,7 +107,8 @@ public class RadiologyActivator extends BaseModuleActivator {
 			log.info("\"Scheduler\", \"Referring Physician\",\"Performing Physician\", \"Reading Physician\" Roles created");
 		}
 		catch (Exception e) {
-			log.warn("Can not create \"Scheduler\", \"Referring Physician\", \"Performing Physician\", \"Reading Physician\" roles. Go to openmrs/module/radiology/config.list with authenticated user.");
+			log
+			        .warn("Can not create \"Scheduler\", \"Referring Physician\", \"Performing Physician\", \"Reading Physician\" roles. Go to openmrs/module/radiology/config.list with authenticated user.");
 			return false;
 		}
 		return true;

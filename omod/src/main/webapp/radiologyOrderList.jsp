@@ -57,7 +57,7 @@
 			<td><label><spring:message code="radiology.startDate" />:</label>
 				<input name="startDate" type="text" onclick="showCalendar(this)" /></td>
 			<td><label><spring:message code="radiology.endDate" />:</label>
-				<input name="finalDate" type="text" onclick="showCalendar(this)" /></td>
+				<input name="endDate" type="text" onclick="showCalendar(this)" /></td>
 		</tr>
 		<tr>
 			<td><input id="findButton" type="button"

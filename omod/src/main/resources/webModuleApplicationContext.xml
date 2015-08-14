@@ -17,6 +17,9 @@
 
 	<context:component-scan base-package="@MODULE_PACKAGE@" />
 
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver" />
+
 	<bean id="radiologyTabUrlMapping"
 		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
 		<property name="order">

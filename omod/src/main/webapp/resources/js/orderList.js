@@ -4,7 +4,7 @@ var $j=jQuery.noConflict();
 		pQuery=$j('input[name="patientQuery"]');
 		loading=$j('div#openmrs_msg[name="loading"]');
 		startDate=$j('input[name="startDate"]');
-		finalDate=$j('input[name="finalDate"]');
+		endDate=$j('input[name="endDate"]');
 		completed=$j('input[name="completed"]');
 		pending=$j('input[name="pending"]');
 		find=$j('#findButton');
@@ -22,7 +22,7 @@ var $j=jQuery.noConflict();
 			$j('#errorSpan').html('');
 			$j.get('portlets/orderSearch.portlet',
 			{patientQuery:pQuery.val(),startDate:startDate.val(),
-			finalDate:finalDate.val(),completed:completed.attr('checked'),
+			endDate:endDate.val(),completed:completed.attr('checked'),
 			pending:pending.attr('checked')},
 			function(data){
 				loading.hide();
