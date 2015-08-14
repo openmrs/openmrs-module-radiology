@@ -36,7 +36,6 @@ import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Utils;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.EncounterEditor;
 import org.openmrs.propertyeditor.OrderTypeEditor;
@@ -280,12 +279,8 @@ public class RadiologyOrderFormController {
 				orderService.saveOrder(order);
 				study.setOrderId(order.getOrderId());
 				radiologyService.saveStudy(study);
-				//Assigning Study UID                                
-				String studyUID = Utils.studyPrefix() + study.getId();
-				System.out.println("Radiology order received with StudyUID : " + studyUID + " Order ID : "
-				        + order.getOrderId());
-				study.setStudyInstanceUid(studyUID);
-				radiologyService.saveStudy(study);
+				System.out.println("Radiology order received with StudyInstanceUid : " + study.getStudyInstanceUid()
+				        + " Order ID : " + order.getOrderId());
 				Order o = orderService.getOrder(order.getOrderId());
 				radiologyService.sendModalityWorklist(radiologyService.getStudyByOrderId(o.getOrderId()),
 				    OrderRequest.Save_Order);
