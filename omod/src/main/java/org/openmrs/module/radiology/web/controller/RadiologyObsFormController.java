@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Concept;
 import org.openmrs.Drug;
 import org.openmrs.Encounter;
@@ -42,6 +44,7 @@ import org.openmrs.propertyeditor.OrderEditor;
 import org.openmrs.propertyeditor.PersonEditor;
 import org.openmrs.validator.ObsValidator;
 import org.openmrs.web.WebConstants;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
@@ -60,11 +63,18 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class RadiologyObsFormController {
 	
+	Log log = LogFactory.getLog(getClass());
+	
 	private static final String RADIOLOGY_OBS_FORM_PATH = "module/radiology/radiologyObsForm";
 	
-	static RadiologyService radiologyService() {
-		return Context.getService(RadiologyService.class);
-	}
+	@Autowired
+	RadiologyService radiologyService;
+	
+	@Autowired
+	OrderService orderService;
+	
+	@Autowired
+	ObsService obsService;
 	
 	@InitBinder
 	void initBinder(WebDataBinder binder) {
@@ -80,6 +90,17 @@ public class RadiologyObsFormController {
 		binder.registerCustomEditor(Encounter.class, new EncounterEditor());
 	}
 	
+	/**
+	 * Get observations corresponding to given orderId and obsId
+	 * 
+	 * @param orderId the order for which the observations should be returned
+	 * @param obsId the observation which should be returned
+	 * @return model and view populated with observations matching the given criteria
+	 * @should populate model and view with new obs given valid order
+	 * @should populate model and view with obs for given obs and given valid order
+	 * @should populate model and view with oviyamlink for completed study and obs for given obs and
+	 *         given valid order
+	 */
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.GET)
 	protected ModelAndView getObs(@RequestParam(value = "orderId", required = false) Integer orderId,
 	        @RequestParam(value = "obsId", required = false) Integer obsId) {
@@ -91,30 +112,29 @@ public class RadiologyObsFormController {
 	private void populate(ModelAndView mav, Integer orderId, Integer obsId) {
 		Obs obs = null;
 		// Get previous obs
-		List<Obs> prevs = null;
-		ObsService os = Context.getObsService();
-		OrderService or = Context.getOrderService();
-		Study study = radiologyService().getStudyByOrderId(orderId);
+		List<Obs> previousObservations = null;
+		
+		Study study = radiologyService.getStudyByOrderId(orderId);
 		if (obsId != null) {
-			obs = os.getObs(obsId);
-			prevs = radiologyService().getObsByOrderId(obs.getOrder().getOrderId());
+			obs = obsService.getObs(obsId);
+			previousObservations = radiologyService.getObsByOrderId(obs.getOrder().getOrderId());
 		} else {
-			obs = newObs(or.getOrder(orderId));
-			prevs = radiologyService().getObsByOrderId(study.getOrderId());
+			obs = newObs(orderService.getOrder(orderId));
+			previousObservations = radiologyService.getObsByOrderId(study.getOrderId());
 		}
 		
 		mav.addObject("obs", obs);
 		mav.addObject("studyUID", study.isCompleted() ? study.getStudyInstanceUid() : null);
 		if (study.isCompleted()) {
 			//    System.out.println("Study UID:"+study.getUid()+" Completed : "+study.isCompleted()+" Patient ID : "+or.getOrder(orderId).getPatient().getId()+" Server : "+Utils.oviyamLocalServerName() );                    
-			String patID = or.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();
+			String patID = orderService.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();
 			String link = Utils.serversAddress() + ":" + Utils.serversPort() + Utils.viewerURLPath()
 			        + Utils.oviyamLocalServerName() + "studyUID=" + study.getStudyInstanceUid() + "&patientID=" + patID;
 			mav.addObject("oviyamLink", link);
 		} else
 			mav.addObject("oviyamLink", null);
-		mav.addObject("prevs", prevs);
-		mav.addObject("prevsSize", prevs.size());
+		mav.addObject("prevs", previousObservations);
+		mav.addObject("prevsSize", previousObservations.size());
 	}
 	
 	private Obs newObs(Order order) {
@@ -129,13 +149,34 @@ public class RadiologyObsFormController {
 	}
 	
 	private void updateReadingPhysician(Integer orderId) {
-		Study study = radiologyService().getStudyByOrderId(orderId);
+		Study study = radiologyService.getStudyByOrderId(orderId);
 		User user = Context.getAuthenticatedUser();
 		if (user.hasRole(Roles.ReadingPhysician, true) && study.getReadingPhysician() == null)
 			study.setReadingPhysician(user);
-		radiologyService().saveStudy(study);
+		radiologyService.saveStudy(study);
 	}
 	
+	/**
+	 * Post observations corresponding to given orderId, obsId, Obs, HttpServletRequest,
+	 * HttpServletResponse and BindingResult
+	 * 
+	 * @param request the httpservletrequest with all parameters
+	 * @param response the httpservletresponse
+	 * @param orderId the id of the corresponding order
+	 * @param obsId the id of the observation
+	 * @param obs the observation
+	 * @param errors the result of the parameter binding
+	 * @return ModelAndView populated with observations matching the given criteria
+	 * @should populate model with new obs given no parameters and binding errors
+	 * @should unvoid voided Obs with given orderId, obsId, request and obs
+	 * @should void obs with voiding reason
+	 * @should edit observation with edit reason and complex concept
+	 * @should edit observation with edit reason, complex concept and request which is an instance
+	 *         of multihttpserveletrequest
+	 * @should edit observation with edit reason concept not complex and request which is an
+	 *         instance of multihttpserveletrequest
+	 * @should populate model and view with new observation occuring thrown APIException
+	 */
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.POST)
 	ModelAndView postObs(HttpServletRequest request, HttpServletResponse response,
 	        @RequestParam(value = "order", required = false) Integer orderId,
@@ -145,6 +186,7 @@ public class RadiologyObsFormController {
 		
 		new ObsValidator().validate(obs, errors);
 		Boolean voidCheck = false;
+		
 		if ((request.getParameter("voidObs") == null) && (request.getParameter("unvoidObs") == null))
 			voidCheck = true;
 		
@@ -156,13 +198,15 @@ public class RadiologyObsFormController {
 		}
 		//			if (Context.isAuthenticated() && !errors.hasErrors() ) {
 		if (Context.isAuthenticated()) {
-			ObsService os = Context.getObsService();
+			
 			try {
 				// if the user is just editing the observation
+				
 				if (request.getParameter("saveObs") != null) {
 					String reason = request.getParameter("editReason");
 					if (obs.getObsId() != null && (reason == null || reason.length() == 0)) {
 						errors.reject("editReason", "Obs.edit.reason.empty");
+						
 						ModelAndView mav = new ModelAndView(RADIOLOGY_OBS_FORM_PATH);
 						populate(mav, orderId, obsId);
 						return mav;
@@ -184,13 +228,13 @@ public class RadiologyObsFormController {
 								// the handler on the obs.concept is called
 								// with
 								// the given complex data
-								os.saveObs(obs, reason);
+								obsService.saveObs(obs, reason);
 								updateReadingPhysician(orderId);
 								complexDataInputStream.close();
 							}
 						}
 					} else {
-						os.saveObs(obs, reason);
+						obsService.saveObs(obs, reason);
 						updateReadingPhysician(orderId);
 					}
 					
@@ -200,7 +244,7 @@ public class RadiologyObsFormController {
 				// if the user is voiding out the observation
 				else if (request.getParameter("voidObs") != null) {
 					String voidReason = request.getParameter("voidReason");
-					Obs obs2 = os.getObs(Integer.valueOf(obsId));
+					Obs obs2 = obsService.getObs(Integer.valueOf(obsId));
 					if (obs2.getObsId() != null && (voidReason == null || voidReason.length() == 0)) {
 						errors.reject("voidReason", "Obs.void.reason.empty");
 						ModelAndView mav = new ModelAndView(RADIOLOGY_OBS_FORM_PATH);
@@ -208,14 +252,14 @@ public class RadiologyObsFormController {
 						return mav;
 					}
 					
-					os.voidObs(obs2, voidReason);
+					obsService.voidObs(obs2, voidReason);
 					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.voidedSuccessfully");
 				}
 
 				// if this obs is already voided and needs to be unvoided
 				else if (request.getParameter("unvoidObs") != null) {
-					Obs obs2 = os.getObs(Integer.valueOf(obsId));
-					os.unvoidObs(obs2);
+					Obs obs2 = obsService.getObs(Integer.valueOf(obsId));
+					obsService.unvoidObs(obs2);
 					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.unvoidedSuccessfully");
 				}
 				

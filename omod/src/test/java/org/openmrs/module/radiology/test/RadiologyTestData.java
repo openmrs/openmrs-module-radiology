@@ -9,10 +9,18 @@
  */
 package org.openmrs.module.radiology.test;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
+import org.openmrs.Encounter;
+import org.openmrs.EncounterProvider;
+import org.openmrs.EncounterType;
+import org.openmrs.Location;
+import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
 import org.openmrs.Patient;
@@ -28,6 +36,8 @@ import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
 
 public class RadiologyTestData {
+	
+	static OrderType radiologyOrderType = new OrderType("Radiology", "Order for radiology procedures");
 	
 	/**
 	 * Convenience method constructing a study order for the tests
@@ -57,12 +67,59 @@ public class RadiologyTestData {
 	}
 	
 	/**
+	 * Convenience method constructing a study order for the tests
+	 */
+	public static Study getMockStudy2PreSave() {
+		
+		Study mockStudy = new Study();
+		mockStudy.setOrderId(getMockRadiologyOrder2().getId());
+		mockStudy.setModality(Modality.CT);
+		mockStudy.setPriority(RequestedProcedurePriority.STAT);
+		
+		return mockStudy;
+	}
+	
+	/**
+	 * Convenience method constructing a study order for the tests
+	 */
+	public static Study getMockStudy2PostSave() {
+		
+		Study mockStudy = getMockStudy1PreSave();
+		
+		int studyId = 2;
+		mockStudy.setId(studyId);
+		mockStudy.setStudyInstanceUid(getStudyPrefix() + studyId);
+		
+		return mockStudy;
+	}
+	
+	/**
 	 * Convenience method to get the StudyPrefix needed for StudyInstanceUid construction in the
 	 * tests
 	 */
 	public static String getStudyPrefix() {
 		
 		return "1.2.826.0.1.3680043.8.2186.1.";
+	}
+	
+	/**
+	 * Convenience method constructing an encounter for the tests
+	 */
+	public static Encounter getMockEncounter() {
+		
+		Encounter mockEncounter = new Encounter();
+		mockEncounter.setId(1);
+		mockEncounter.setEncounterType(new EncounterType(1));
+		mockEncounter.setEncounterDatetime(new GregorianCalendar(2015, 0, 01).getTime());
+		mockEncounter.setLocation(new Location(1));
+		
+		EncounterProvider encounterProvider = new EncounterProvider();
+		encounterProvider.setId(1);
+		Set providerSet = new HashSet();
+		providerSet.add(encounterProvider);
+		mockEncounter.setEncounterProviders(providerSet);
+		
+		return mockEncounter;
 	}
 	
 	/**
@@ -85,11 +142,65 @@ public class RadiologyTestData {
 	}
 	
 	/**
+	 * Convenience method constructing a mock order for the tests
+	 */
+	public static Order getMockRadiologyOrder2() {
+		
+		Calendar cal = Calendar.getInstance();
+		Order mockOrder = new Order();
+		mockOrder.setOrderId(2);
+		mockOrder.setOrderType(getMockRadiologyOrderType());
+		mockOrder.setPatient(getMockPatient2());
+		cal.set(2015, Calendar.MARCH, 4, 14, 35, 0);
+		mockOrder.setStartDate(cal.getTime());
+		mockOrder.setInstructions("CT ABDOMEN PANCREAS WITHOUT IV CONTRAST");
+		mockOrder.setDiscontinued(true);
+		mockOrder.setVoided(false);
+		
+		return mockOrder;
+	}
+	
+	/**
+	 * Convenience method constructing a mock obs for the tests
+	 */
+	public static Obs getMockObs() {
+		
+		Obs mockObs = new Obs();
+		mockObs.setId(1);
+		mockObs.setEncounter(getMockEncounter());
+		mockObs.setOrder(getMockRadiologyOrder1());
+		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
+		return mockObs;
+	}
+	
+	/**
+	 * Convenience method constructing a list of previous mock obs for the tests
+	 */
+	public static List<Obs> getPreviousMockObs() {
+		
+		ArrayList<Obs> previousObs = new ArrayList<Obs>();
+		Obs mockObs = new Obs();
+		mockObs.setId(2);
+		mockObs.setEncounter(getMockEncounter());
+		mockObs.setOrder(getMockRadiologyOrder1());
+		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
+		previousObs.add(mockObs);
+		Obs mockObs2 = new Obs();
+		mockObs2.setId(3);
+		mockObs2.setEncounter(getMockEncounter());
+		mockObs2.setOrder(getMockRadiologyOrder1());
+		mockObs2.setPerson(getMockRadiologyOrder1().getPatient());
+		previousObs.add(mockObs2);
+		
+		return previousObs;
+	}
+	
+	/**
 	 * Convenience method constructing a mock radiology order type for the tests
 	 */
 	public static OrderType getMockRadiologyOrderType() {
 		
-		return new OrderType("Radiology", "Order for radiology procedures");
+		return radiologyOrderType;
 	}
 	
 	/**
@@ -112,6 +223,31 @@ public class RadiologyTestData {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(1950, Calendar.APRIL, 1, 0, 0, 0);
+		mockPatient.setBirthdate(cal.getTime());
+		
+		return mockPatient;
+	}
+	
+	/**
+	 * Convenience method constructing a mock patient for the tests
+	 */
+	public static Patient getMockPatient2() {
+		
+		Patient mockPatient = new Patient();
+		mockPatient.setPatientId(2);
+		mockPatient.addIdentifiers(getPatientIdentifiers("101"));
+		mockPatient.setGender("F");
+		
+		Set<PersonName> personNames = new HashSet<PersonName>();
+		PersonName personName = new PersonName();
+		personName.setFamilyName("Doe");
+		personName.setGivenName("Jane");
+		personName.setMiddleName("Francine");
+		personNames.add(personName);
+		mockPatient.setNames(personNames);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(1955, Calendar.FEBRUARY, 1, 0, 0, 0);
 		mockPatient.setBirthdate(cal.getTime());
 		
 		return mockPatient;
@@ -160,20 +296,19 @@ public class RadiologyTestData {
 	}
 	
 	/**
-	 * Convenience method constructing a mock person for the tests
+	 * Convenience method constructing a mock user with role RADIOLOGY_READING_PHYSICIAN for the
+	 * tests
 	 */
-	public static Person getMockUserPerson() {
+	public static User getMockRadiologyReadingPhysician() {
+		Role role = new Role(Roles.ReadingPhysician);
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(role);
 		
-		PersonName name = new PersonName();
-		name.setFamilyName("Karlsson");
-		name.setGivenName("Karl");
-		Set<PersonName> names = new HashSet<PersonName>();
-		names.add(name);
+		User radiologyReadingPhysician = new User();
+		radiologyReadingPhysician.setRoles(roles);
+		radiologyReadingPhysician.setPerson(getMockUserPerson());
 		
-		Person person = new Person();
-		person.setNames(names);
-		
-		return person;
+		return radiologyReadingPhysician;
 	}
 	
 	/**
@@ -190,6 +325,23 @@ public class RadiologyTestData {
 		radiologyScheduler.setPerson(getMockUserPerson());
 		
 		return radiologyScheduler;
+	}
+	
+	/**
+	 * Convenience method constructing a mock person for the tests
+	 */
+	public static Person getMockUserPerson() {
+		
+		PersonName name = new PersonName();
+		name.setFamilyName("Karlsson");
+		name.setGivenName("Karl");
+		Set<PersonName> names = new HashSet<PersonName>();
+		names.add(name);
+		
+		Person person = new Person();
+		person.setNames(names);
+		
+		return person;
 	}
 	
 }
