@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.radiology;
 
-import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashSet;
@@ -132,26 +131,6 @@ public class Utils {
 		Calendar c = Calendar.getInstance();
 		c.setTime(d);
 		return "" + pad(c.get(c.YEAR), 4) + pad(c.get(c.MONTH) + 1) + pad(c.get(c.DAY_OF_MONTH));
-	}
-	
-	/**
-	 * @param c
-	 * @return [field1,field2...]
-	 */
-	public static String[] forSelect(Class<?> c) {
-		Field[] f = c.getDeclaredFields();
-		String s[] = new String[f.length + 1];
-		s[0] = Context.getMessageSourceService().getMessage("general.select");
-		for (int i = 0; i < f.length; i++) {
-			try {
-				s[i + 1] = (String) c.getMethod("string", Integer.class, Boolean.class).invoke(c.newInstance(), i, true);
-			}
-			catch (Exception e) {
-				log.error("Not the type expected: " + c.toString()
-				        + " has to have the method public String string(Integer ordinal,Boolean localized)");
-			}
-		}
-		return s;
 	}
 	
 	/**

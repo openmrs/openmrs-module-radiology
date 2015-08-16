@@ -12,8 +12,6 @@ package org.openmrs.module.radiology;
 import java.io.File;
 import java.io.IOException;
 
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
 import javax.xml.transform.OutputKeys;
 import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
@@ -30,8 +28,6 @@ import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.SpecificCharacterSet;
 import org.dcm4che2.data.Tag;
 import org.dcm4che2.data.VR;
-import org.dcm4che2.io.ContentHandlerAdapter;
-import org.dcm4che2.io.DicomInputStream;
 import org.dcm4che2.io.SAXWriter;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
@@ -49,96 +45,6 @@ public class DicomUtils {
 	private static void debug(String message) {
 		if (log.isDebugEnabled())
 			log.debug(message);
-	}
-	
-	/**
-	 * Search in the configured MPPS directory for a DICOM file whose study UID matches studyPrefix
-	 * + o.getOrderId()
-	 * 
-	 * @param o the order from which to extract orderID
-	 * @param tag the tag to return
-	 * @return the value of the attribute marked by tag
-	 * @throws IOException
-	 */
-	public static String findDCM(Order o, int[] tag) throws IOException {
-		File f = new File(Utils.mppsDir());
-		String status = "?";
-		String[] list = f.list();
-		SpecificCharacterSet scs = new SpecificCharacterSet(Utils.specificCharacterSet());
-		int arg1 = 0;
-		for (String string : list) {
-			DicomObject d = null;
-			DicomInputStream dis = null;
-			try {
-				dis = new DicomInputStream(new File(f, string));
-				d = (dis).readDicomObject();
-				
-				if ((Utils.studyPrefix() + o.getOrderId().toString()).compareTo(d.get(Tag.ScheduledStepAttributesSequence)
-				        .getDicomObject().get(Tag.StudyInstanceUID).getValueAsString(scs, arg1)) == 0) {
-					status = d.get(tag).getValueAsString(scs, arg1);
-				}
-			}
-			catch (IOException e) {
-				throw e;
-			}
-			finally {
-				if (dis != null)
-					try {
-						dis.close();
-					}
-					catch (IOException e) {
-						log.error(e.getMessage(), e);
-					}
-			}
-		}
-		return status;
-	}
-	
-	/**
-	 * Search in the configured MWL directory for a XML file whose name matches o.getOrderId()+
-	 * ".xml"
-	 * 
-	 * @param o the order from which to extract orderID
-	 * @param tag the tag to return
-	 * @return the value of the attribute marked by tag
-	 * @throws Exception
-	 */
-	public static String findXML(Order o, int[] tag) throws Exception {
-		String status = "?";
-		SpecificCharacterSet scs = new SpecificCharacterSet(Utils.specificCharacterSet());
-		int arg1 = 0;
-		DicomObject d = null;
-		try {
-			String separator = File.separator;
-			d = new BasicDicomObject();
-			SAXParserFactory f = SAXParserFactory.newInstance();
-			SAXParser p1 = f.newSAXParser();
-			ContentHandlerAdapter ch = new ContentHandlerAdapter(d);
-			String pathname = Utils.mwlDir() + separator + o.getOrderId() + ".xml";
-			p1.parse(new File(pathname), ch);
-			
-			status = d.get(tag).getValueAsString(scs, arg1);
-			
-		}
-		catch (Exception e) {
-			throw e;
-		}
-		return status;
-	}
-	
-	public static String orderPriority(Order o) throws Exception {
-		int[] p = { Tag.RequestedProcedurePriority };
-		return findXML(o, p);
-	}
-	
-	/**
-	 * @param o order to be searched
-	 * @return String of the status that appears on this order (o) MPPS file
-	 * @throws IOException
-	 */
-	public static String orderStatus(Order o) throws IOException {
-		int[] p = { Tag.PerformedProcedureStepStatus };
-		return findDCM(o, p);
 	}
 	
 	/**
@@ -250,12 +156,12 @@ public class DicomUtils {
 	
 	/**
 	 * <p>
-	 * Updates the PerformedStatus of an existing Study in the database to the
-	 * Performed Procedure Step Status of a given DicomObject containing a DICOM N-CREATE/N-SET command
+	 * Updates the PerformedStatus of an existing Study in the database to the Performed Procedure
+	 * Step Status of a given DicomObject containing a DICOM N-CREATE/N-SET command
 	 * </p>
 	 * 
-	 * @param mppsObject the DICOM MPPS object containing a DICOM N-CREATE/N-SET command with DICOM tag
-	 *            Performed Procedure Step Status
+	 * @param mppsObject the DICOM MPPS object containing a DICOM N-CREATE/N-SET command with DICOM
+	 *            tag Performed Procedure Step Status
 	 * @should set performed status of an existing study in database to performed procedure step
 	 *         status IN_PROGRESS of given mpps object
 	 * @should set performed status of an existing study in database to performed procedure step
@@ -346,8 +252,8 @@ public class DicomUtils {
 	}
 	
 	/**
-	 * Create HL7 ORM^O01 message to create a worklist request. See IHE Radiology Technical Framework
-	 * Volume 2.
+	 * Create HL7 ORM^O01 message to create a worklist request. See IHE Radiology Technical
+	 * Framework Volume 2.
 	 * 
 	 * @param study Study for which the order message is created
 	 * @param order Order for which the order message is created
@@ -428,7 +334,8 @@ public class DicomUtils {
 	 * 
 	 * @param requestedProcedurePriority RequestedProcedurePriority representing DICOM Requested
 	 *            Procedure Priority
-	 * @return string representation of hl7 common order priority mapping to requested procedure priority
+	 * @return string representation of hl7 common order priority mapping to requested procedure
+	 *         priority
 	 * @should return hl7 common order priority given requested procedure priority
 	 * @should return default hl7 common order priority given null
 	 */
