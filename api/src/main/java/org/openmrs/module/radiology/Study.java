@@ -18,7 +18,6 @@ import org.openmrs.api.context.Context;
 /**
  * A class that supports on openmrs's orders to make the module DICOM compatible, corresponds to the
  * table order_dicom_complment
- * 
  */
 public class Study {
 	
@@ -155,44 +154,6 @@ public class Study {
 	
 	public void setStudyInstanceUid(String studyInstanceUid) {
 		this.studyInstanceUid = studyInstanceUid;
-	}
-	
-	/**
-	 * Fills null required values, to the moment orderer set to currentUser.<br/>
-	 * Fills radiology order type. Fills concept if null.<br/>
-	 * <br/>
-	 * In this function goes all validation pre post request: <li>Scheduler is not allowed to
-	 * schedule a completed procedure</li>
-	 * 
-	 * @param o Order to be filled
-	 * @param studyId TODO
-	 * @return Order modified
-	 */
-	public boolean setup(Order o, Integer studyId) {
-		setId(studyId);
-		
-		User u = Context.getAuthenticatedUser();
-		if (u.hasRole(Roles.ReferringPhysician, true) && o.getOrderer() == null)
-			o.setOrderer(u);
-		if (u.hasRole(Roles.Scheduler, true) && getScheduler() == null) {
-			if (!isScheduleable()) {
-				return false;
-			} else {
-				setScheduler(u);
-			}
-			
-		}
-		if (u.hasRole(Roles.PerformingPhysician, true) && getPerformingPhysician() == null)
-			setPerformingPhysician(u);
-		if (u.hasRole(Roles.ReadingPhysician, true) && getReadingPhysician() == null)
-			setReadingPhysician(u);
-		
-		if (o.getOrderer() == null)
-			o.setOrderer(u);
-		o.setOrderType(Utils.getRadiologyOrderType().get(0));
-		if (o.getConcept() == null)
-			o.setConcept(Context.getConceptService().getConcept(1));
-		return true;
 	}
 	
 	@Override
