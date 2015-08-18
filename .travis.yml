@@ -11,3 +11,4 @@ branches:
     - master
 notifications:
   email: false
+sudo: false
