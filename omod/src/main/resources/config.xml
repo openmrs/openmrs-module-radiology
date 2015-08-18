@@ -159,7 +159,7 @@
 	</privilege>
 	<!-- /Privileges -->
 
-	<mappingFiles>Radiology.hbm.xml</mappingFiles>
+	<mappingFiles>RadiologyStudy.hbm.xml</mappingFiles>
 
 	<!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> -->
 	<!-- <servlet> <servlet-name>viewer.jnlp</servlet-name> <servlet-class>org.weasis.servlet.Weasis_Launcher</servlet-class> 
