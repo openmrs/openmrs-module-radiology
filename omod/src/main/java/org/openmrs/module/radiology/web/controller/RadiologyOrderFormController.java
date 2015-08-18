@@ -198,7 +198,7 @@ public class RadiologyOrderFormController {
 		if (order.getConcept() == null)
 			order.setConcept(Context.getConceptService().getConcept(1));
 		
-		study.setId(studyId);
+		study.setStudyId(studyId);
 		
 		User authenticatedUser = Context.getAuthenticatedUser();
 		if (order.getOrderer() == null)

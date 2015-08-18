@@ -159,7 +159,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		String referencedSOPClassUID = "1.2.840.10008.3.1.2.3.1";
 		String referencedSOPInstanceUID = "1.2.840.10008.5.1.4.1.1.9.1.2.1.1.1";
 		
-		String studyID = String.valueOf(study.getId());
+		String studyID = String.valueOf(study.getStudyId());
 		String studyInstanceUID = study.getStudyInstanceUid();
 		String modality = study.getModality().name();
 		
@@ -460,7 +460,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	 */
 	Study getMockStudy() {
 		Study mockStudy = new Study();
-		mockStudy.setId(1);
+		mockStudy.setStudyId(1);
 		mockStudy.setOrderId(getMockRadiologyOrder().getOrderId());
 		mockStudy.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
 		mockStudy.setModality(Modality.CT);
@@ -523,7 +523,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		// ORC segment
 		ORC orc = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC();
 		assertEquals("NW", orc.getOrderControl().getValue());
-		assertEquals(String.valueOf(study.getId()), orc.getPlacerOrderNumber().getEntityIdentifier().getValue());
+		assertEquals(String.valueOf(study.getStudyId()), orc.getPlacerOrderNumber().getEntityIdentifier().getValue());
 		assertEquals(null, orc.getOrderStatus().getValue());
 		assertEquals(new SimpleDateFormat("yyyyMMddHHmmss").format(order.getStartDate()), orc.getQuantityTiming()
 		        .getStartDateTime().getTimeOfAnEvent().getValue());
@@ -533,8 +533,8 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		OBR obr = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
 		        .getOBR();
 		assertEquals(order.getInstructions(), obr.getUniversalServiceID().getAlternateText().getValue());
-		assertEquals(String.valueOf(study.getId()), obr.getPlacerField2().getValue());
-		assertEquals(String.valueOf(study.getId()), obr.getFillerField1().getValue());
+		assertEquals(String.valueOf(study.getStudyId()), obr.getPlacerField2().getValue());
+		assertEquals(String.valueOf(study.getStudyId()), obr.getFillerField1().getValue());
 		assertEquals(study.getModality().name(), obr.getDiagnosticServSectID().getValue());
 		assertEquals(order.getInstructions(), obr.getProcedureCode().getText().getValue());
 		
@@ -600,7 +600,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		// ORC segment
 		ORC orc = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC();
 		assertEquals("CA", orc.getOrderControl().getValue());
-		assertEquals(String.valueOf(study.getId()), orc.getPlacerOrderNumber().getEntityIdentifier().getValue());
+		assertEquals(String.valueOf(study.getStudyId()), orc.getPlacerOrderNumber().getEntityIdentifier().getValue());
 		assertEquals(null, orc.getOrderStatus().getValue());
 		assertEquals(new SimpleDateFormat("yyyyMMddHHmmss").format(order.getStartDate()), orc.getQuantityTiming()
 		        .getStartDateTime().getTimeOfAnEvent().getValue());
@@ -610,8 +610,8 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		OBR obr = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
 		        .getOBR();
 		assertEquals(order.getInstructions(), obr.getUniversalServiceID().getAlternateText().getValue());
-		assertEquals(String.valueOf(study.getId()), obr.getPlacerField2().getValue());
-		assertEquals(String.valueOf(study.getId()), obr.getFillerField1().getValue());
+		assertEquals(String.valueOf(study.getStudyId()), obr.getPlacerField2().getValue());
+		assertEquals(String.valueOf(study.getStudyId()), obr.getFillerField1().getValue());
 		assertEquals(study.getModality().name(), obr.getDiagnosticServSectID().getValue());
 		assertEquals(order.getInstructions(), obr.getProcedureCode().getText().getValue());
 		
@@ -677,7 +677,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		// ORC segment
 		ORC orc = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC();
 		assertEquals("XO", orc.getOrderControl().getValue());
-		assertEquals(String.valueOf(study.getId()), orc.getPlacerOrderNumber().getEntityIdentifier().getValue());
+		assertEquals(String.valueOf(study.getStudyId()), orc.getPlacerOrderNumber().getEntityIdentifier().getValue());
 		assertEquals(null, orc.getOrderStatus().getValue());
 		assertEquals(new SimpleDateFormat("yyyyMMddHHmmss").format(order.getStartDate()), orc.getQuantityTiming()
 		        .getStartDateTime().getTimeOfAnEvent().getValue());
@@ -687,8 +687,8 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		OBR obr = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
 		        .getOBR();
 		assertEquals(order.getInstructions(), obr.getUniversalServiceID().getAlternateText().getValue());
-		assertEquals(String.valueOf(study.getId()), obr.getPlacerField2().getValue());
-		assertEquals(String.valueOf(study.getId()), obr.getFillerField1().getValue());
+		assertEquals(String.valueOf(study.getStudyId()), obr.getPlacerField2().getValue());
+		assertEquals(String.valueOf(study.getStudyId()), obr.getFillerField1().getValue());
 		assertEquals(study.getModality().name(), obr.getDiagnosticServSectID().getValue());
 		assertEquals(order.getInstructions(), obr.getProcedureCode().getText().getValue());
 		

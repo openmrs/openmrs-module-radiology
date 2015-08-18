@@ -60,7 +60,7 @@ public class RadiologyTestData {
 		Study mockStudy = getMockStudy1PreSave();
 		
 		int studyId = 1;
-		mockStudy.setId(studyId);
+		mockStudy.setStudyId(studyId);
 		mockStudy.setStudyInstanceUid(getStudyPrefix() + studyId);
 		
 		return mockStudy;
@@ -87,7 +87,7 @@ public class RadiologyTestData {
 		Study mockStudy = getMockStudy1PreSave();
 		
 		int studyId = 2;
-		mockStudy.setId(studyId);
+		mockStudy.setStudyId(studyId);
 		mockStudy.setStudyInstanceUid(getStudyPrefix() + studyId);
 		
 		return mockStudy;

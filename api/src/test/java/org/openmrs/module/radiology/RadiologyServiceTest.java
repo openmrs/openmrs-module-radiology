@@ -145,12 +145,12 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		
 		radiologyService.saveStudy(mockStudy);
 		
-		Study createdStudy = radiologyService.getStudy(mockStudy.getId());
+		Study createdStudy = radiologyService.getStudy(mockStudy.getStudyId());
 		assertNotNull(createdStudy);
 		assertThat(createdStudy, is(mockStudy));
-		assertThat(createdStudy.getId(), is(mockStudy.getId()));
+		assertThat(createdStudy.getStudyId(), is(mockStudy.getStudyId()));
 		assertNotNull(createdStudy.getStudyInstanceUid());
-		assertThat(createdStudy.getStudyInstanceUid(), is(Utils.studyPrefix() + createdStudy.getId()));
+		assertThat(createdStudy.getStudyInstanceUid(), is(Utils.studyPrefix() + createdStudy.getStudyId()));
 		assertThat(createdStudy.getModality(), is(mockStudy.getModality()));
 		assertThat(createdStudy.getOrderId(), is(mockStudy.getOrderId()));
 	}
@@ -174,7 +174,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		
 		Study updatedStudy = radiologyService.saveStudy(existingStudy);
 		
-		updatedStudy = radiologyService.getStudy(updatedStudy.getId());
+		updatedStudy = radiologyService.getStudy(updatedStudy.getStudyId());
 		assertNotNull(updatedStudy);
 		assertThat(updatedStudy, is(existingStudy));
 		assertThat(modalityPreUpdate, is(not(modalityPostUpdate)));
