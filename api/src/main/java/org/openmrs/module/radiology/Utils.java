@@ -90,16 +90,22 @@ public class Utils {
 		return as.getGlobalProperty("radiology.serversHL7Port");
 	}
 	
-	public static String oviyamLocalServerName() {
-		String serverName = as.getGlobalProperty("radiology.oviyamLocalServerName");
+	public static String dicomViewerLocalServerName() {
+		String serverName = as.getGlobalProperty("radiology.dicomViewerLocalServerName");
 		if (serverName == null)
 			return "";
 		else
-			return "serverName=" + as.getGlobalProperty("radiology.oviyamLocalServerName") + "&";
+			return "serverName=" + as.getGlobalProperty("radiology.dicomViewerLocalServerName") + "&";
 	}
 	
-	public static String viewerURLPath() {
-		return as.getGlobalProperty("radiology.viewerURLPath");
+	public static String dicomViewerUrlBase() {
+		return as.getGlobalProperty("radiology.dicomViewerUrlBase");
+	}
+	
+	public static String dicomViewerUrl() {
+		String dicomViewerUrl = Utils.serversAddress() + ":" + Utils.serversPort() + Utils.dicomViewerUrlBase()
+		        + Utils.dicomViewerLocalServerName();
+		return dicomViewerUrl;
 	}
 	
 	static RadiologyService radiologyService() {
