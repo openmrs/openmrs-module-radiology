@@ -25,7 +25,6 @@ import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.OrderService;
-import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Modality;
@@ -67,9 +66,6 @@ public class RadiologyOrderFormController {
 	
 	@Autowired
 	private OrderService orderService;
-	
-	@Autowired
-	private PatientService patientService;
 	
 	@InitBinder
 	void initBinder(WebDataBinder binder) {
@@ -115,23 +111,23 @@ public class RadiologyOrderFormController {
 	 * Handles GET requests for the radiologyOrderForm with new order and study with prefilled
 	 * patient
 	 * 
-	 * @param patientId patient id of an existing patient which should be associated with a new
-	 *            order returned in the model and view
+	 * @param patient existing patient which should be associated with a new order returned in the
+	 *            model and view
 	 * @return model and view containing new order and study objects
-	 * @should populate model and view with new order and study with prefilled patient matching
-	 *         given patient id
+	 * @should populate model and view with new order and study prefilled with given patient
 	 * @should populate model and view with new order and study with prefilled orderer when
 	 *         requested by referring physician
+	 * @should populate model and view with new order and study without prefilled patient if given patient is null
 	 */
 	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET, params = "patientId")
 	protected ModelAndView getRadiologyOrderFormWithNewOrderAndPrefilledPatient(
-	        @RequestParam(value = "patientId", required = true) Integer patientId) {
+	        @RequestParam(value = "patientId", required = true) Patient patient) {
 		ModelAndView modelAndView = getRadiologyOrderFormWithNewOrder();
 		
-		if (Context.isAuthenticated()) {
+		if (Context.isAuthenticated() && patient != null) {
 			Order order = (Order) modelAndView.getModel().get("order");
-			order.setPatient(patientService.getPatient(patientId));
-			modelAndView.addObject("patientId", patientId);
+			order.setPatient(patient);
+			modelAndView.addObject("patientId", patient.getPatientId());
 		}
 		
 		return modelAndView;

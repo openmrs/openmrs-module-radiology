@@ -10,6 +10,7 @@
 package org.openmrs.module.radiology.web.controller;
 
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -123,16 +124,15 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	 * @see RadiologyOrderFormController#getRadiologyOrderFormWithNewOrderAndPrefilledPatient(Integer)
 	 */
 	@Test
-	@Verifies(value = "should populate model and view with new order and study with prefilled patient matching given patient id", method = "getRadiologyOrderFormWithNewOrderAndPrefilledPatient(Integer)")
-	public void getRadiologyOrderFormWithNewOrderAndPrefilledPatient_shouldPopulateModelAndViewWithNewOrderAndStudyWithPrefilledPatientMatchingGivenPatientId()
+	@Verifies(value = "should populate model and view with new order and study prefilled with given patient", method = "getRadiologyOrderFormWithNewOrderAndPrefilledPatient(Integer)")
+	public void getRadiologyOrderFormWithNewOrderAndPrefilledPatient_shouldPopulateModelAndViewWithNewOrderAndStudyPrefilledWithGivenPatient()
 	        throws Exception {
 		
 		//given
 		Patient mockPatient = RadiologyTestData.getMockPatient1();
-		when(patientService.getPatient(mockPatient.getPatientId())).thenReturn(mockPatient);
 		
 		ModelAndView modelAndView = radiologyOrderFormController
-		        .getRadiologyOrderFormWithNewOrderAndPrefilledPatient(mockPatient.getPatientId());
+		        .getRadiologyOrderFormWithNewOrderAndPrefilledPatient(mockPatient);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
@@ -169,7 +169,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(patientService.getPatient(mockPatient.getPatientId())).thenReturn(mockPatient);
 		
 		ModelAndView modelAndView = radiologyOrderFormController
-		        .getRadiologyOrderFormWithNewOrderAndPrefilledPatient(mockPatient.getPatientId());
+		        .getRadiologyOrderFormWithNewOrderAndPrefilledPatient(mockPatient);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
@@ -184,6 +184,32 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		assertNotNull(order.getOrderer());
 		assertThat(order.getOrderer(), is(mockReferringPhysician));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#getRadiologyOrderFormWithNewOrderAndPrefilledPatient(Integer)
+	 */
+	@Test
+	@Verifies(value = "should populate model and view with new order and study without prefilled patient if given patient is null", method = "getRadiologyOrderFormWithNewOrderAndPrefilledPatient(Integer)")
+	public void getRadiologyOrderFormWithNewOrderAndPrefilledPatient_shouldPopulateModelAndViewWithNewOrderAndStudyWithoutPrefilledPatientIfGivenPatientIsNull()
+	        throws Exception {
+		
+		ModelAndView modelAndView = radiologyOrderFormController.getRadiologyOrderFormWithNewOrderAndPrefilledPatient(null);
+		
+		assertNotNull(modelAndView);
+		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
+		
+		assertTrue(modelAndView.getModelMap().containsKey("study"));
+		Study study = (Study) modelAndView.getModelMap().get("study");
+		assertThat(study.getId(), is(0));
+		
+		assertTrue(modelAndView.getModelMap().containsKey("order"));
+		Order order = (Order) modelAndView.getModelMap().get("order");
+		assertNull(order.getOrderId());
+		
+		assertNull(order.getPatient());
+		
+		assertFalse(modelAndView.getModelMap().containsKey("patientId"));
 	}
 	
 	/**
