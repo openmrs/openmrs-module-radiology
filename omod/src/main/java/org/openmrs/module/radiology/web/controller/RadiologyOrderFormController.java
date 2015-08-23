@@ -36,6 +36,7 @@ import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.Utils;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.EncounterEditor;
 import org.openmrs.propertyeditor.OrderTypeEditor;
@@ -194,26 +195,36 @@ public class RadiologyOrderFormController {
 	        @RequestParam(value = "study_id", required = false) Integer studyId,
 	        @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("study") Study study,
 	        BindingResult sErrors, @ModelAttribute("order") Order order, BindingResult oErrors) throws Exception {
+		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
 		
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("module/radiology/radiologyOrderForm");
-		if (study.setup(order, studyId)) {
-			
+		order.setOrderType(Utils.getRadiologyOrderType().get(0));
+		
+		if (order.getConcept() == null)
+			order.setConcept(Context.getConceptService().getConcept(1));
+		
+		study.setId(studyId);
+		
+		User authenticatedUser = Context.getAuthenticatedUser();
+		if (order.getOrderer() == null)
+			order.setOrderer(authenticatedUser);
+		
+		if (authenticatedUser.hasRole(Roles.Scheduler, true) && study.getScheduler() == null && !study.isScheduleable()) {
+			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
+			populate(modelAndView, order, study);
+		} else {
 			new OrderValidator().validate(order, oErrors);
+			
 			boolean ok = executeCommand(order, study, request);
 			if (ok) {
 				if (patientId == null)
-					mav.setViewName("redirect:/module/radiology/radiologyOrder.list");
+					modelAndView.setViewName("redirect:/module/radiology/radiologyOrder.list");
 				else
-					mav.setViewName("redirect:/patientDashboard.form?patientId=" + patientId);
+					modelAndView.setViewName("redirect:/patientDashboard.form?patientId=" + patientId);
 			} else {
-				populate(mav, order, study);
+				populate(modelAndView, order, study);
 			}
-		} else {
-			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
-			populate(mav, order, study);
 		}
-		return mav;
+		return modelAndView;
 	}
 	
 	private void populate(ModelAndView mav, Order order, Study study) {
