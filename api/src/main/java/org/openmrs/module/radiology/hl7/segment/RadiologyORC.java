@@ -50,7 +50,7 @@ public class RadiologyORC {
 		}
 		
 		commonOrderSegment.getOrderControl().setValue(commonOrderOrderControl.getValue());
-		commonOrderSegment.getPlacerOrderNumber().getEntityIdentifier().setValue(String.valueOf(study.getId()));
+		commonOrderSegment.getPlacerOrderNumber().getEntityIdentifier().setValue(String.valueOf(study.getStudyId()));
 		commonOrderSegment.getQuantityTiming().getStartDateTime().getTimeOfAnEvent().setValue(
 		    DateTimeUtils.getPlainDateTimeFrom(order.getStartDate()));
 		commonOrderSegment.getQuantityTiming().getPriority().setValue(commonOrderPriority.getValue());

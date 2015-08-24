@@ -83,7 +83,7 @@ public class DicomUtils {
 		workitem.putString(Tag.MedicalAlerts, VR.LO, "");
 		workitem.putString(Tag.Allergies, VR.LO, "");
 		workitem.putString(Tag.PregnancyStatus, VR.US, "");
-		workitem.putString(Tag.StudyInstanceUID, VR.UI, Utils.studyPrefix() + s.getId());
+		workitem.putString(Tag.StudyInstanceUID, VR.UI, Utils.studyPrefix() + s.getStudyId());
 		try {
 			workitem.putString(Tag.RequestingPhysician, VR.PN, o.getOrderer().getPersonName().getFullName()
 			        .replace(' ', '^'));
@@ -129,7 +129,7 @@ public class DicomUtils {
 		spcs.putString(Tag.CodeMeaning, VR.LO, "!");
 		spss.putNestedDicomObject(Tag.ScheduledProtocolCodeSequence, spcs);
 		
-		spss.putString(Tag.ScheduledProcedureStepID, VR.SH, String.valueOf(s.getId()));
+		spss.putString(Tag.ScheduledProcedureStepID, VR.SH, String.valueOf(s.getStudyId()));
 		spss.putString(Tag.ScheduledStationName, VR.SH, "");
 		spss.putString(Tag.ScheduledProcedureStepLocation, VR.SH, "");
 		spss.putString(Tag.PreMedication, VR.LO, "");
@@ -142,7 +142,7 @@ public class DicomUtils {
 		}
 		workitem.putNestedDicomObject(Tag.ScheduledProcedureStepSequence, spss);
 		
-		workitem.putString(Tag.RequestedProcedureID, VR.SH, String.valueOf(s.getId()));
+		workitem.putString(Tag.RequestedProcedureID, VR.SH, String.valueOf(s.getStudyId()));
 		workitem.putString(Tag.RequestedProcedurePriority, VR.SH, s.getPriority().name());
 		workitem.putString(Tag.PatientTransportArrangements, VR.LO, "");
 		workitem.putString(Tag.ConfidentialityConstraintOnPatientDataDescription, VR.LO, "");

@@ -99,11 +99,11 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		
 		try {
 			Study savedStudy = sdao.saveStudy(study);
-			String studyInstanceUid = Utils.studyPrefix() + savedStudy.getId();
+			String studyInstanceUid = Utils.studyPrefix() + savedStudy.getStudyId();
 			savedStudy.setStudyInstanceUid(studyInstanceUid);
 			savedStudy = sdao.saveStudy(savedStudy);
 			
-			File file = new File(Utils.mwlDir(), savedStudy.getId() + ".xml");
+			File file = new File(Utils.mwlDir(), savedStudy.getStudyId() + ".xml");
 			String path = "";
 			path = file.getCanonicalPath();
 			DicomUtils.write(order, savedStudy, file);

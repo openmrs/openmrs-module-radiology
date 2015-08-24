@@ -88,7 +88,7 @@ public class HL7GeneratorTest {
 		order.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		
 		study = new Study();
-		study.setId(1);
+		study.setStudyId(1);
 		study.setOrderId(order.getId());
 		study.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);

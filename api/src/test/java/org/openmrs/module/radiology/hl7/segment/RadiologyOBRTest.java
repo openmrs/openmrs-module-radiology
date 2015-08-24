@@ -52,7 +52,7 @@ public class RadiologyOBRTest {
 		order.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		
 		Study study = new Study();
-		study.setId(1);
+		study.setStudyId(1);
 		study.setModality(Modality.CT);
 		study.setOrderId(1);
 		

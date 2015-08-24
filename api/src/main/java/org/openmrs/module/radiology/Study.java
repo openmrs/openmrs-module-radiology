@@ -21,7 +21,7 @@ import org.openmrs.api.context.Context;
  */
 public class Study {
 	
-	private int id;
+	private Integer studyId;
 	
 	private String studyInstanceUid;
 	
@@ -43,8 +43,8 @@ public class Study {
 	
 	private User readingPhysician;
 	
-	public int getId() {
-		return id;
+	public Integer getStudyId() {
+		return studyId;
 	}
 	
 	public Modality getModality() {
@@ -116,8 +116,8 @@ public class Study {
 		this.mwlStatus = mwlStatus;
 	}
 	
-	public void setId(int id) {
-		this.id = id;
+	public void setStudyId(Integer studyId) {
+		this.studyId = studyId;
 	}
 	
 	public void setModality(Modality modality) {

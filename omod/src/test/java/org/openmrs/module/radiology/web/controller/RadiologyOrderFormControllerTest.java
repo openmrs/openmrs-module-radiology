@@ -82,7 +82,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		assertTrue(modelAndView.getModelMap().containsKey("study"));
 		Study study = (Study) modelAndView.getModelMap().get("study");
-		assertThat(study.getId(), is(0));
+		assertNull(study.getStudyId());
 		
 		assertTrue(modelAndView.getModelMap().containsKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");
@@ -110,7 +110,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		assertTrue(modelAndView.getModelMap().containsKey("study"));
 		Study study = (Study) modelAndView.getModelMap().get("study");
-		assertThat(study.getId(), is(0));
+		assertNull(study.getStudyId());
 		
 		assertTrue(modelAndView.getModelMap().containsKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");
@@ -139,7 +139,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		assertTrue(modelAndView.getModelMap().containsKey("study"));
 		Study study = (Study) modelAndView.getModelMap().get("study");
-		assertThat(study.getId(), is(0));
+		assertNull(study.getStudyId());
 		
 		assertTrue(modelAndView.getModelMap().containsKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");
@@ -176,7 +176,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		assertTrue(modelAndView.getModelMap().containsKey("study"));
 		Study study = (Study) modelAndView.getModelMap().get("study");
-		assertThat(study.getId(), is(0));
+		assertNull(study.getStudyId());
 		
 		assertTrue(modelAndView.getModelMap().containsKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");
@@ -201,7 +201,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		assertTrue(modelAndView.getModelMap().containsKey("study"));
 		Study study = (Study) modelAndView.getModelMap().get("study");
-		assertThat(study.getId(), is(0));
+		assertNull(study.getStudyId());
 		
 		assertTrue(modelAndView.getModelMap().containsKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");
@@ -276,7 +276,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getId(), null,
+		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), null,
 		    mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
@@ -318,7 +318,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getId(), mockOrder
+		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
 		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
@@ -361,7 +361,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult studyErrors = mock(BindingResult.class);
 		when(studyErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getId(), mockOrder
+		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
 		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
@@ -375,7 +375,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		mockRequest.setSession(mockSession);
 		
 		mockStudyPostSave.setMwlStatus(MwlStatus.UPDATE_ERR);
-		modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getId(), mockOrder.getPatient()
+		modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder.getPatient()
 		        .getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
@@ -420,7 +420,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getId(), mockOrder
+		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
 		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
@@ -462,7 +462,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getId(), mockOrder
+		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
 		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
@@ -505,7 +505,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getId(), mockOrder
+		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
 		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
@@ -548,7 +548,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getId(), mockOrder
+		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
 		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
@@ -591,7 +591,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getId(), mockOrder
+		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
 		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);

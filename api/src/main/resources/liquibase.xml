@@ -96,4 +96,18 @@
 		<renameColumn columnDataType="varchar(255)"
 			newColumnName="study_instance_uid" oldColumnName="uid" tableName="radiology_study" />
 	</changeSet>
+	<changeSet id="radiology-11" author="teleivo">
+		<comment>rename column 'id' to 'study_id'.</comment>
+		<renameColumn columnDataType="int" newColumnName="study_id"
+			oldColumnName="id" tableName="radiology_study" />
+	</changeSet>
+	<changeSet id="radiology-12" author="teleivo">
+		<comment>necessary because of changeset 'radiology-11'. mysql looses 'NOT NULL' and 'AUTOINCREMENT' these properties are therefore added again explicitly (see https://liquibase.jira.com/browse/CORE-1019)</comment>
+		<dropDefaultValue columnDataType="int" columnName="study_id"
+			tableName="radiology_study" />
+		<addNotNullConstraint columnDataType="int"
+			columnName="study_id" tableName="radiology_study" />
+		<addAutoIncrement columnDataType="int" columnName="study_id"
+			incrementBy="1" tableName="radiology_study" />
+	</changeSet>
 </databaseChangeLog>

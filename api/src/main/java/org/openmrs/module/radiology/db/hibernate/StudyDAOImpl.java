@@ -39,8 +39,8 @@ public class StudyDAOImpl implements StudyDAO {
 	}
 	
 	@Override
-	public Study getStudy(Integer id) {
-		return (Study) sessionFactory.getCurrentSession().get(Study.class, id);
+	public Study getStudy(Integer studyId) {
+		return (Study) sessionFactory.getCurrentSession().get(Study.class, studyId);
 	}
 	
 	/**

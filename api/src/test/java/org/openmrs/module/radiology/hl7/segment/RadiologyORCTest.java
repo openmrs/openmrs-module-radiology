@@ -60,7 +60,7 @@ public class RadiologyORCTest {
 		order.setStartDate(calendarOrderStartDate.getTime());
 		
 		Study study = new Study();
-		study.setId(1);
+		study.setStudyId(1);
 		study.setOrderId(1);
 		
 		ORM_O01 message = new ORM_O01();

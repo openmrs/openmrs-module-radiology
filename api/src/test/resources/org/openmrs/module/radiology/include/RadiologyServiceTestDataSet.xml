@@ -49,10 +49,10 @@
   
   <!-- radiology orders with study -->
   <orders order_id="2001" order_type_id="5"  urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" start_date="2015-02-04 14:35:00.0" auto_expire_date="2015-02-17 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70021" />
-  <radiology_study id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" priority="ROUTINE" modality="CT" mwl_status="DEFAULT"/>
+  <radiology_study study_id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" priority="ROUTINE" modality="CT" mwl_status="DEFAULT"/>
 
   <orders order_id="2002" order_type_id="5"   urgency="ROUTINE"  orderer="1" concept_id="178" instructions="MR Left Knee" start_date="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70021" />
-  <radiology_study id="2" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" priority="ROUTINE" modality="MR" mwl_status="DEFAULT"/>
+  <radiology_study study_id="2" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" priority="ROUTINE" modality="MR" mwl_status="DEFAULT"/>
 
   <obs obs_id="20021" person_id="70021" order_id="2002" concept_id="178" obs_datetime="2015-02-06 17:14:00.0" location_id="1" creator="1" date_created="2015-02-06 17:14:35.0" voided="false" uuid="be3a4d7a-f9ab-47bb-aaad-bc0b452fcda4" accession_number="RAD2002"/>
   

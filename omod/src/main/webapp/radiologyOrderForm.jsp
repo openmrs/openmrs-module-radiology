@@ -37,7 +37,7 @@
 	</form>
 </c:if>
 <form method="post" class="box">
-	<input type="hidden" name="study_id" value="${study.id }" /> <input
+	<input type="hidden" name="study_id" value="${study.studyId}" /> <input
 		type="hidden" name="patient_id" value="${patientId }" />
 	<spring:bind path="study.mwlStatus">
 		<input type="hidden" name="${status.expression}"
@@ -46,10 +46,6 @@
 			<span class="error">${status.errorMessage}</span>
 		</c:if>
 	</spring:bind>
-	<%--  <spring:bind path="study.id">--%>
-	<%--<div><p>Value : ${status.expression }</p></div>
-                <div><p>Value : ${status.value }</p></div>
-            </spring:bind>--%>
 	<table>
 		<tr>
 			<td valign="top"><spring:message code="Order.patient" /></td>
@@ -369,7 +365,7 @@
 <c:if test="${order.discontinued}">
 	<br />
 	<form method="post" class="box">
-		<input type="hidden" name="study_id" value="${study.id }" /> <input
+		<input type="hidden" name="study_id" value="${study.studyId}" /> <input
 			type="submit"
 			value='<spring:message code="Order.undiscontinueOrder"/>'
 			name="undiscontinueOrder" />
@@ -379,7 +375,7 @@
 <c:if test="${not order.discontinued and not empty order.orderId}">
 	<br />
 	<form method="post" class="box">
-		<input type="hidden" name="study_id" value="${study.id }" />
+		<input type="hidden" name="study_id" value="${study.studyId}" />
 		<table>
 			<tr id="dateDiscontinued">
 				<td valign="top"><spring:message
@@ -412,7 +408,7 @@
 <c:if test="${not order.voided and not empty order.orderId}">
 	<br />
 	<form method="post" class="box">
-		<input type="hidden" name="study_id" value="${study.id }" />
+		<input type="hidden" name="study_id" value="${study.studyId}" />
 		<spring:message code="general.voidReason" />
 		<spring:bind path="order.voidReason">
 			<input type="text" value="${status.value}" size="40"
