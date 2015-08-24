@@ -98,7 +98,7 @@ public class RadiologyObsFormController {
 	 * @return model and view populated with observations matching the given criteria
 	 * @should populate model and view with new obs given valid order
 	 * @should populate model and view with obs for given obs and given valid order
-	 * @should populate model and view with oviyamlink for completed study and obs for given obs and
+	 * @should populate model and view with dicom viewer url for completed study and obs for given obs and
 	 *         given valid order
 	 */
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.GET)
@@ -126,13 +126,12 @@ public class RadiologyObsFormController {
 		mav.addObject("obs", obs);
 		mav.addObject("studyUID", study.isCompleted() ? study.getStudyInstanceUid() : null);
 		if (study.isCompleted()) {
-			//    System.out.println("Study UID:"+study.getUid()+" Completed : "+study.isCompleted()+" Patient ID : "+or.getOrder(orderId).getPatient().getId()+" Server : "+Utils.oviyamLocalServerName() );                    
 			String patID = orderService.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();
-			String link = Utils.serversAddress() + ":" + Utils.serversPort() + Utils.viewerURLPath()
-			        + Utils.oviyamLocalServerName() + "studyUID=" + study.getStudyInstanceUid() + "&patientID=" + patID;
-			mav.addObject("oviyamLink", link);
+			String dicomViewerUrl = Utils.dicomViewerUrl() + "studyUID=" + study.getStudyInstanceUid() + "&patientID="
+			        + patID;
+			mav.addObject("dicomViewerUrl", dicomViewerUrl);
 		} else
-			mav.addObject("oviyamLink", null);
+			mav.addObject("dicomViewerUrl", null);
 		mav.addObject("prevs", previousObservations);
 		mav.addObject("prevsSize", previousObservations.size());
 	}

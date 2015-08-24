@@ -29,7 +29,8 @@
 
 	<extension>
 		<point>org.openmrs.patientDashboardTab</point>
-		<class>@MODULE_PACKAGE@.web.extension.html.RadiologyDashboardExt</class>
+		<class>@MODULE_PACKAGE@.web.extension.html.RadiologyDashboardExt
+		</class>
 	</extension>
 
 	<!-- /Extensions -->
@@ -59,14 +60,6 @@
 		<description>IP address of the dcm4chee</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.viewerURLPath</property>
-		<defaultValue>/oviyam2/viewer.html?</defaultValue>
-		<description>URL for Oviyam/Weasis. Default value for Oviyam
-			:"/oviyam2/viewer.html?". For Weasis(needs Java Web Start) :
-			"/weasis-pacs-connector/viewer.jnlp?"
-		</description>
-	</globalProperty>
-	<globalProperty>
 		<property>@MODULE_ID@.serversPort</property>
 		<defaultValue>8081</defaultValue>
 		<description>Port of the dcm4chee Web</description>
@@ -91,11 +84,24 @@
 		</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.oviyamLocalServerName</property>
-		<defaultValue>oviyamlocal</defaultValue>
-		<description>Local Server name needed for deploying Oviyam. Must match
-			the local server name created in the Oviyam UI. Leave empty for
-			weasis.
+		<property>@MODULE_ID@.dicomViewerUrlBase</property>
+		<defaultValue>/weasis-pacs-connector/viewer?</defaultValue>
+		<description>Base URL for DICOM viewer (e.g. Weasis, Oviyam, ...).
+			Default is for Weasis using weasis-pacs-connector
+			(Weasis needs java on client):
+			"/weasis-pacs-connector/viewer-applet?". For
+			Oviyam:
+			"/oviyam2/viewer.html?".
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.dicomViewerLocalServerName</property>
+		<defaultValue></defaultValue>
+		<description>Local server name needed for deploying Oviyam (default
+			value: "oviyamlocal"). Must match
+			the local server name created in the
+			Oviyam UI. Leave empty for
+			Weasis.
 		</description>
 	</globalProperty>
 	<globalProperty>
