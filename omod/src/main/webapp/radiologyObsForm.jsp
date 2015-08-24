@@ -581,7 +581,7 @@ th {
 					<tr>
 						<th><spring:message code="radiology.studyResults" /></th>
 						<%--<td><a href="/openmrs/moduleServlet/radiology/viewer.jnlp?studyUID=${studyUID}"><spring:message code="general.download" /></a></td>--%>
-						<td><a href="${oviyamLink}" target="_tab">View Study</a></td>
+						<td><a href="${dicomViewerUrl}" target="_tab">View Study</a></td>
 					</tr>
 				</c:if>
 				<c:if test="${obs.creator != null}">

@@ -154,28 +154,31 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 	 * @see RadiologyObsFormController#getObs(Integer, Integer)
 	 */
 	@Test
-	@Verifies(value = "should populate model and view with oviyamlink for completed study and obs for given obs and given valid order", method = "getObs(Integer, Integer)")
-	public void getObs_ShouldPopulateModelAndViewWithOviyamLinkForCompletedStudyAndObsForGivenObsAndGivenValidOrder()
+	@Verifies(value = "should populate model and view with dicom viewer url for completed study and obs for given obs and given valid order", method = "getObs(Integer, Integer)")
+	public void getObs_ShouldPopulateModelAndViewWitDicomViewerUrlForCompletedStudyAndObsForGivenObsAndGivenValidOrder()
 	        throws Exception {
 		
 		mockStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		
 		when(Utils.serversAddress()).thenReturn("localhost");
 		when(Utils.serversPort()).thenReturn("8081");
-		when(Utils.viewerURLPath()).thenReturn("/oviyam2/viewer.html?");
-		when(Utils.oviyamLocalServerName()).thenReturn("oviyamlocal");
+		when(Utils.dicomViewerUrlBase()).thenReturn("/weasis-pacs-connector/viewer?");
+		when(Utils.dicomViewerLocalServerName()).thenReturn("");
+		when(Utils.dicomViewerUrl()).thenReturn("http://localhost:8081/weasis-pacs-connector/viewer?");
 		
 		ModelAndView modelAndView = radiologyObsFormController.getObs(validorderId, validObsIdForOrder20);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyObsForm"));
 		
-		assertTrue(modelAndView.getModelMap().containsKey("oviyamLink"));
-		String oviyamLink = (String) modelAndView.getModelMap().get("oviyamLink");
-		assertNotNull(oviyamLink);
+		assertTrue(modelAndView.getModelMap().containsKey("dicomViewerUrl"));
+		String dicomViewerUrl = (String) modelAndView.getModelMap().get("dicomViewerUrl");
+		assertNotNull(dicomViewerUrl);
 		
 		String patID = mockOrder.getPatient().getPatientIdentifier().getIdentifier();
-		assertTrue(oviyamLink.equals("http://localhost:8081/oviyam2/viewer.html?serverName=oviyamlocal&studyUID="
+		System.out.println("dicomViewerUrl: " + dicomViewerUrl);
+		System.out.println("Utils.dicomViewerUrl(): " + Utils.dicomViewerUrl());
+		assertTrue(dicomViewerUrl.equals("http://localhost:8081/weasis-pacs-connector/viewer?studyUID="
 		        + mockStudy.getStudyInstanceUid() + "&patientID=" + patID));
 	}
 	
