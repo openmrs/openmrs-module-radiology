@@ -84,7 +84,7 @@ public class RadiologyTestData {
 	 */
 	public static Study getMockStudy2PostSave() {
 		
-		Study mockStudy = getMockStudy1PreSave();
+		Study mockStudy = getMockStudy2PreSave();
 		
 		int studyId = 2;
 		mockStudy.setStudyId(studyId);
