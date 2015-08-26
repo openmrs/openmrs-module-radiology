@@ -20,19 +20,5 @@
 	<bean
 		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver" />
 
-	<bean id="radiologyTabUrlMapping"
-		class="org.springframework.web.servlet.handler.SimpleUrlHandlerMapping">
-		<property name="order">
-			<value>51</value>
-		</property>
-		<property name="mappings">
-			<props>
-				<prop key="**/RadiologyDashboardTab.portlet">RadiologyDashboardController</prop>
-			</props>
-		</property>
-	</bean>
-
-	<bean id="RadiologyDashboardController"
-		class="org.openmrs.module.radiology.web.controller.RadiologyDashboardController" />
 
 </beans>
