@@ -20,7 +20,7 @@
   <concept_name concept_id="178" name="FRACTURE" locale="en" creator="1" date_created="2004-01-01 00:00:00" concept_name_id="178" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="15736c16-df81-11e4-98ec-08002798a7ad"/>
   
   <!-- radiology order type -->
-  <order_type order_type_id="5" name="Radiology" description="Order for radiology procedures" creator="1" date_created="2015-04-10 13:03:45" retired="0" uuid="e0daf799-a151-47bb-a430-1931d526d1fe"/>
+  <order_type order_type_id="5" name="Radiology Order" description="Order type for radiology exams" creator="1" date_created="2015-09-09" retired="0" uuid="dbdb9a9b-56ea-11e5-a47f-08002719a237"/>
   
   <!-- define metadata for the radiology service -->
   <global_property property="radiology.applicationUID" property_value="1.2.826.0.1.3680043.8.2186" description="You need a application root UID, this will be the prefix of any module DICOM object, the default value serves for debugging purposes" uuid="5d3962e1-eb27-49de-921b-01213ede5c73"/>
@@ -48,10 +48,14 @@
   <person_name person_name_id="2" preferred="true" person_id="70021" given_name="John" middle_name="Francis" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="0f1f7d08-076b-4fc6-acac-4bb91515141e"/>
   
   <!-- radiology orders with study -->
-  <orders order_id="2001" order_type_id="5"  urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" start_date="2015-02-04 14:35:00.0" auto_expire_date="2015-02-17 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70021" />
+  <orders order_id="2001" order_type_id="2" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" start_date="2015-02-04 14:35:00.0" auto_expire_date="2015-02-17 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70021" />
+  <test_order order_id="2001"/>
+  <radiology_order order_id="2001" />
   <radiology_study study_id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" priority="ROUTINE" modality="CT" mwl_status="DEFAULT"/>
 
-  <orders order_id="2002" order_type_id="5"   urgency="ROUTINE"  orderer="1" concept_id="178" instructions="MR Left Knee" start_date="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70021" />
+  <orders order_id="2002" order_type_id="2" urgency="ROUTINE"  orderer="1" concept_id="178" instructions="MR Left Knee" start_date="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70021" />
+  <test_order order_id="2002"/>
+  <radiology_order order_id="2002" />
   <radiology_study study_id="2" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" priority="ROUTINE" modality="MR" mwl_status="DEFAULT"/>
 
   <obs obs_id="20021" person_id="70021" order_id="2002" concept_id="178" obs_datetime="2015-02-06 17:14:00.0" location_id="1" creator="1" date_created="2015-02-06 17:14:35.0" voided="false" uuid="be3a4d7a-f9ab-47bb-aaad-bc0b452fcda4" accession_number="RAD2002"/>
@@ -63,6 +67,8 @@
   <person_name person_name_id="3" preferred="true" person_id="70022" given_name="John" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="6753aaa1-545d-44e2-9a9f-6c682f37a134"/>
   
   <!-- radiology order with no associated study -->
-  <orders order_id="2004" order_type_id="5" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" start_date="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70022" />
+  <orders order_id="2004" order_type_id="2" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" start_date="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70022" />
+  <test_order order_id="2004"/>
+  <radiology_order order_id="2004" />
   
 </dataset>

@@ -12,7 +12,7 @@ package org.openmrs.module.radiology.db;
 import java.util.List;
 
 import org.openmrs.Obs;
-import org.openmrs.Order;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
 
 /**
@@ -21,8 +21,6 @@ import org.openmrs.module.radiology.Study;
  */
 public interface StudyDAO {
 	
-	public Study getStudy(Integer id);
-	
 	/**
 	 * Save the given <code>Study</code> to the database
 	 * 
@@ -30,6 +28,8 @@ public interface StudyDAO {
 	 * @return study who was created or updated
 	 */
 	public Study saveStudy(Study study);
+	
+	public Study getStudy(Integer id);
 	
 	/**
 	 * @param orderId
@@ -44,10 +44,10 @@ public interface StudyDAO {
 	public Study getStudyByStudyInstanceUid(String studyInstanceUid);
 	
 	/**
-	 * @param orders
-	 * @return studies for given orders
+	 * @param radiologyOrders
+	 * @return studies for given radiology orders
 	 */
-	public List<Study> getStudiesByOrders(List<Order> orders);
+	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
 	
 	/**
 	 * @param orderId

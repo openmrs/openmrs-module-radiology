@@ -25,7 +25,6 @@ import org.openmrs.EncounterProvider;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
 import org.openmrs.Obs;
-import org.openmrs.Order;
 import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
@@ -35,6 +34,7 @@ import org.openmrs.PersonName;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Study;
 
@@ -126,41 +126,41 @@ public class RadiologyTestData {
 	}
 	
 	/**
-	 * Convenience method constructing a mock order for the tests
+	 * Convenience method constructing a mock RadiologyOrder for the tests
 	 */
-	public static Order getMockRadiologyOrder1() {
+	public static RadiologyOrder getMockRadiologyOrder1() {
 		
-		Order mockOrder = new Order();
-		mockOrder.setOrderId(1);
-		mockOrder.setOrderType(getMockRadiologyOrderType());
-		mockOrder.setPatient(getMockPatient1());
+		RadiologyOrder mockRadiologyOrder = new RadiologyOrder();
+		mockRadiologyOrder.setOrderId(1);
+		mockRadiologyOrder.setOrderType(getMockRadiologyOrderType());
+		mockRadiologyOrder.setPatient(getMockPatient1());
 		Calendar cal = Calendar.getInstance();
 		cal.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
-		mockOrder.setStartDate(cal.getTime());
-		mockOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
-		mockOrder.setDiscontinued(false);
-		mockOrder.setVoided(false);
+		mockRadiologyOrder.setStartDate(cal.getTime());
+		mockRadiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
+		mockRadiologyOrder.setDiscontinued(false);
+		mockRadiologyOrder.setVoided(false);
 		
-		return mockOrder;
+		return mockRadiologyOrder;
 	}
 	
 	/**
-	 * Convenience method constructing a mock order for the tests
+	 * Convenience method constructing a mock RadiologyOrder for the tests
 	 */
-	public static Order getMockRadiologyOrder2() {
+	public static RadiologyOrder getMockRadiologyOrder2() {
 		
+		RadiologyOrder mockRadiologyOrder = new RadiologyOrder();
+		mockRadiologyOrder.setOrderId(2);
+		mockRadiologyOrder.setOrderType(getMockRadiologyOrderType());
+		mockRadiologyOrder.setPatient(getMockPatient2());
 		Calendar cal = Calendar.getInstance();
-		Order mockOrder = new Order();
-		mockOrder.setOrderId(2);
-		mockOrder.setOrderType(getMockRadiologyOrderType());
-		mockOrder.setPatient(getMockPatient2());
 		cal.set(2015, Calendar.MARCH, 4, 14, 35, 0);
-		mockOrder.setStartDate(cal.getTime());
-		mockOrder.setInstructions("CT ABDOMEN PANCREAS WITHOUT IV CONTRAST");
-		mockOrder.setDiscontinued(true);
-		mockOrder.setVoided(false);
+		mockRadiologyOrder.setStartDate(cal.getTime());
+		mockRadiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITHOUT IV CONTRAST");
+		mockRadiologyOrder.setDiscontinued(true);
+		mockRadiologyOrder.setVoided(false);
 		
-		return mockOrder;
+		return mockRadiologyOrder;
 	}
 	
 	/**
