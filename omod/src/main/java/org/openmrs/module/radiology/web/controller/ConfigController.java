@@ -16,6 +16,7 @@ import java.lang.reflect.Field;
 import javax.servlet.http.HttpServletRequest;
 
 import org.openmrs.module.radiology.RadiologyActivator;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.web.WebConstants;
@@ -50,8 +51,8 @@ public class ConfigController {
 	
 	private void populate(ModelAndView mav) {
 		try {
-			mav.addObject("mwl", new File(Utils.mwlDir()).getCanonicalPath());
-			mav.addObject("mpps", new File(Utils.mppsDir()).getCanonicalPath());
+			mav.addObject("mwl", new File(RadiologyProperties.getMwlDir()).getCanonicalPath());
+			mav.addObject("mpps", new File(RadiologyProperties.getMppsDir()).getCanonicalPath());
 		}
 		catch (IOException e) {
 			// TODO handle

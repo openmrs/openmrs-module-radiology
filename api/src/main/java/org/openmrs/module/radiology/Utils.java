@@ -22,95 +22,12 @@ import org.openmrs.Person;
 import org.openmrs.PersonName;
 import org.openmrs.Role;
 import org.openmrs.User;
-import org.openmrs.api.AdministrationService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 
 public class Utils {
 	
 	static final Log log = LogFactory.getLog(Utils.class);
-	
-	private static AdministrationService as = Context.getAdministrationService();
-	
-	public static String aeTitle() {
-		return as.getGlobalProperty("radiology.applicationEntityTitle");
-	}
-	
-	public static String mppsDir() {
-		return as.getGlobalProperty("radiology.mppsDirectory");
-	}
-	
-	public static String mwlDir() {
-		return as.getGlobalProperty("radiology.mwlDirectory");
-	}
-	
-	public static String mwlMppsPort() {
-		return as.getGlobalProperty("radiology.mwlMppsPort");
-	}
-	
-	public static String serversAddress() {
-		return "http://" + as.getGlobalProperty("radiology.serversAddress");
-	}
-	
-	/**
-	 * Prefix for DICOM objects in the application, Ex: 1.2.826.0.1.3680043.8.2186
-	 */
-	public static String applicationUID() {
-		return as.getGlobalProperty("radiology.applicationUID");
-	}
-	
-	public static String studyUIDSlug() {
-		return as.getGlobalProperty("radiology.studyUIDSlug");
-	}
-	
-	/**
-	 * Example: 1.2.826.0.1.3680043.8.2186.1. (With last dot)
-	 */
-	public static String studyPrefix() {
-		return applicationUID() + "." + studyUIDSlug() + ".";
-	}
-	
-	public static String specificCharacterSet() {
-		return as.getGlobalProperty("radiology.specificCharacterSet");
-	}
-	
-	public static String devModeP() {
-		return as.getGlobalProperty("radiology.devMode");
-	}
-	
-	public static boolean devMode() {
-		return devModeP().compareToIgnoreCase("on") == 0;
-	}
-	
-	public static String serversPort() {
-		return as.getGlobalProperty("radiology.serversPort");
-	}
-	
-	public static String serversHL7Port() {
-		return as.getGlobalProperty("radiology.serversHL7Port");
-	}
-	
-	public static String dicomViewerLocalServerName() {
-		String serverName = as.getGlobalProperty("radiology.dicomViewerLocalServerName");
-		if (serverName == null)
-			return "";
-		else
-			return "serverName=" + as.getGlobalProperty("radiology.dicomViewerLocalServerName") + "&";
-	}
-	
-	public static String dicomViewerUrlBase() {
-		return as.getGlobalProperty("radiology.dicomViewerUrlBase");
-	}
-	
-	public static String dicomViewerUrl() {
-		String dicomViewerUrl = Utils.serversAddress() + ":" + Utils.serversPort() + Utils.dicomViewerUrlBase()
-		        + Utils.dicomViewerLocalServerName();
-		return dicomViewerUrl;
-	}
-	
-	static RadiologyService radiologyService() {
-		return Context.getService(RadiologyService.class);
-	}
 	
 	/**
 	 * @return List of all Order objects with OrderType == "Radiology"

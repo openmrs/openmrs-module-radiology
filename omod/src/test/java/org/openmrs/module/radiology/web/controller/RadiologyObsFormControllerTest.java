@@ -40,9 +40,9 @@ import org.openmrs.api.ObsService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.openmrs.test.Verifies;
@@ -160,9 +160,9 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 		
 		mockStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		
-		when(Utils.serversAddress()).thenReturn("localhost");
-		when(Utils.serversPort()).thenReturn("8081");
-		when(Utils.dicomViewerUrlBase()).thenReturn("/weasis/viewer?");
+		when(RadiologyProperties.getServersAddress()).thenReturn("localhost");
+		when(RadiologyProperties.getServersPort()).thenReturn("8081");
+		when(RadiologyProperties.getDicomViewerUrlBase()).thenReturn("/weasis/viewer?");
 		
 		ModelAndView modelAndView = radiologyObsFormController.getObs(validorderId, validObsIdForOrder20);
 		

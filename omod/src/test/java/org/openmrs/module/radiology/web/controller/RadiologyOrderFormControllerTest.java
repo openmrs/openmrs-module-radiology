@@ -33,6 +33,7 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
@@ -243,12 +244,12 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#post(Integer, Integer, Study, BindingResult, Order,
+	 * @see RadiologyOrderFormController#postSaveOrder(Integer, Study, BindingResult, Order,
 	 *      BindingResult)
 	 */
 	@Test
-	@Verifies(value = "should set http session attribute openmrs message to order saved and redirect to radiology order list when save study was successful", method = "post(Integer, Integer, Study, BindingResult, Order, BindingResult)")
-	public void post_shouldSetHttpSessionAttributeOpenmrsMessageToOrderSavedAndRedirectToRadiologyOrderListWhenSaveStudyWasSuccessful()
+	@Verifies(value = "should set http session attribute openmrs message to order saved and redirect to radiology order list when save study was successful", method = "postSaveOrder(Integer, Study, BindingResult, Order, BindingResult)")
+	public void postSaveOrder_shouldSetHttpSessionAttributeOpenmrsMessageToOrderSavedAndRedirectToRadiologyOrderListWhenSaveStudyWasSuccessful()
 	        throws Exception {
 		
 		//given
@@ -258,13 +259,12 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_OK);
 		Concept mockConcept = new Concept();
 		
-		when(orderService.getOrder(mockOrder.getOrderId())).thenReturn(mockOrder);
-		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
-		when(radiologyService.getStudyByOrderId(mockOrder.getOrderId())).thenReturn(mockStudyPostSave);
-		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
-		when(conceptService.getConcept(1)).thenReturn(mockConcept);
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
-		when(Utils.studyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
+		when(conceptService.getConcept(1)).thenReturn(mockConcept);
+		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
+		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
+		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
+		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -276,8 +276,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), null,
-		    mockStudyPreSave, studyErrors, mockOrder, orderErrors);
+		ModelAndView modelAndView = radiologyOrderFormController.postSaveOrder(mockRequest, null, mockStudyPreSave,
+		    studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.list"));
@@ -285,12 +285,12 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#post(Integer, Integer, Study, BindingResult, Order,
+	 * @see RadiologyOrderFormController#postSaveOrder(Integer, Study, BindingResult, Order,
 	 *      BindingResult)
 	 */
 	@Test
-	@Verifies(value = "should set http session attribute openmrs message to order saved and redirect to patient dashboard when save study was successful and given patient id", method = "post(Integer, Integer, Study, BindingResult, Order, BindingResult)")
-	public void post_shouldSetHttpSessionAttributeOpenmrsMessageToOrderSavedAndRedirectToPatientDashboardWhenSaveStudyWasSuccessfulAndGivenPatientId()
+	@Verifies(value = "should set http session attribute openmrs message to order saved and redirect to patient dashboard when save study was successful and given patient id", method = "postSaveOrder(Integer, Study, BindingResult, Order, BindingResult)")
+	public void postSaveOrder_shouldSetHttpSessionAttributeOpenmrsMessageToOrderSavedAndRedirectToPatientDashboardWhenSaveStudyWasSuccessfulAndGivenPatientId()
 	        throws Exception {
 		
 		//given
@@ -300,13 +300,12 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_OK);
 		Concept mockConcept = new Concept();
 		
-		when(orderService.getOrder(mockOrder.getOrderId())).thenReturn(mockOrder);
-		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
-		when(radiologyService.getStudyByOrderId(mockOrder.getOrderId())).thenReturn(mockStudyPostSave);
-		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
-		when(conceptService.getConcept(1)).thenReturn(mockConcept);
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
-		when(Utils.studyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
+		when(conceptService.getConcept(1)).thenReturn(mockConcept);
+		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
+		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
+		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
+		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -318,8 +317,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
-		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
+		ModelAndView modelAndView = radiologyOrderFormController.postSaveOrder(mockRequest, mockOrder.getPatient()
+		        .getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
@@ -328,12 +327,12 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#post(Integer, Integer, Study, BindingResult, Order,
+	 * @see RadiologyOrderFormController#postSaveOrder(Integer, Study, BindingResult, Order,
 	 *      BindingResult)
 	 */
 	@Test
-	@Verifies(value = "should set http session attribute openmrs message to saved fail worklist and redirect to patient dashboard when save study was not successful and given patient id", method = "post(Integer, Integer, Study, BindingResult, Order, BindingResult)")
-	public void post_shouldSetHttpSessionAttributeOpenmrsMessageToSavedFailWorklistAndRedirectToPatientDashboardWhenSaveStudyWasNotSuccessfulAndGivenPatientId()
+	@Verifies(value = "should set http session attribute openmrs message to saved fail worklist and redirect to patient dashboard when save study was not successful and given patient id", method = "postSaveOrder(Integer, Study, BindingResult, Order, BindingResult)")
+	public void postSaveOrder_shouldSetHttpSessionAttributeOpenmrsMessageToSavedFailWorklistAndRedirectToPatientDashboardWhenSaveStudyWasNotSuccessfulAndGivenPatientId()
 	        throws Exception {
 		
 		//given
@@ -343,14 +342,13 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_ERR);
 		Concept mockConcept = new Concept();
 		
-		when(orderService.getOrder(mockOrder.getOrderId())).thenReturn(mockOrder);
-		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
-		when(radiologyService.getStudyByOrderId(mockOrder.getOrderId())).thenReturn(mockStudyPostSave);
-		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
-		when(conceptService.getConcept(1)).thenReturn(mockConcept);
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
-		when(Utils.studyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
-		
+		when(conceptService.getConcept(1)).thenReturn(mockConcept);
+		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
+		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
+		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
+		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
+
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
 		MockHttpSession mockSession = new MockHttpSession();
@@ -361,8 +359,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult studyErrors = mock(BindingResult.class);
 		when(studyErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
-		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
+		ModelAndView modelAndView = radiologyOrderFormController.postSaveOrder(mockRequest, mockOrder.getPatient()
+		        .getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
@@ -374,9 +372,12 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		mockSession = new MockHttpSession();
 		mockRequest.setSession(mockSession);
 		
+		mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.UPDATE_ERR);
-		modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder.getPatient()
-		        .getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
+		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
+		
+		modelAndView = radiologyOrderFormController.postSaveOrder(mockRequest, mockOrder.getPatient().getPatientId(),
+		    mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
@@ -385,12 +386,12 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#post(Integer, Integer, Study, BindingResult, Order,
+	 * @see RadiologyOrderFormController#postSaveOrder(Integer, Study, BindingResult, Order,
 	 *      BindingResult)
 	 */
 	@Test
-	@Verifies(value = "should set http session attribute openmrs message to study performed when study performed status is in progress and scheduler is empty and request was issued by radiology scheduler", method = "post(Integer, Integer, Study, BindingResult, Order, BindingResult)")
-	public void post_shouldSetHttpSessionAttributeOpenmrsMessageToStudyPerformedWhenStudyPerformedStatusIsInProgressAndSchedulerIsEmptyAndRequestWasIssuedByRadiologyScheduler()
+	@Verifies(value = "should set http session attribute openmrs message to study performed when study performed status is in progress and scheduler is empty and request was issued by radiology scheduler", method = "postSaveOrder(Integer, Study, BindingResult, Order, BindingResult)")
+	public void postSaveOrder_shouldSetHttpSessionAttributeOpenmrsMessageToStudyPerformedWhenStudyPerformedStatusIsInProgressAndSchedulerIsEmptyAndRequestWasIssuedByRadiologyScheduler()
 	        throws Exception {
 		
 		//given
@@ -401,14 +402,14 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Concept mockConcept = new Concept();
 		User mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
 		
-		when(orderService.getOrder(mockOrder.getOrderId())).thenReturn(mockOrder);
-		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
-		when(radiologyService.getStudyByOrderId(mockOrder.getOrderId())).thenReturn(mockStudyPostSave);
-		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
+		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		when(conceptService.getConcept(1)).thenReturn(mockConcept);
 		when(userContext.getAuthenticatedUser()).thenReturn(mockRadiologyScheduler);
-		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
-		when(Utils.studyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
+		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
+		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
+		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
+		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
+
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -420,8 +421,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
-		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
+		ModelAndView modelAndView = radiologyOrderFormController.postSaveOrder(mockRequest, mockOrder.getPatient()
+		        .getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
@@ -429,11 +430,49 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#post(Integer, Integer, Study, BindingResult, Order,
+	 * @see RadiologyOrderFormController#postSaveOrder(Integer, Study, BindingResult, Order,
 	 *      BindingResult)
 	 */
 	@Test
-	@Verifies(value = "should set http session attribute openmrs message to voided successfully and redirect to patient dashboard when void order was successful and given patient id", method = "post(Integer, Integer, Study, BindingResult, Order, BindingResult)")
+	@Verifies(value = "should not redirect if order is not valid according to order validator", method = "postSaveOrder(Integer, Study, BindingResult, Order, BindingResult)")
+	public void postSaveOrder_shouldNotRedirectIfOrderIsNotValidAccordingToOrderValidator() throws Exception {
+		
+		//given
+		Order mockOrder = RadiologyTestData.getMockRadiologyOrder1();
+		Study mockStudyPreSave = RadiologyTestData.getMockStudy1PreSave();
+		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
+		Concept mockConcept = new Concept();
+		User mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
+		
+		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
+		when(conceptService.getConcept(1)).thenReturn(mockConcept);
+		when(userContext.getAuthenticatedUser()).thenReturn(mockRadiologyScheduler);
+		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
+		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
+		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
+		
+		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+		mockRequest.addParameter("saveOrder", "saveOrder");
+		MockHttpSession mockSession = new MockHttpSession();
+		mockRequest.setSession(mockSession);
+		
+		BindingResult studyErrors = mock(BindingResult.class);
+		when(studyErrors.hasErrors()).thenReturn(false);
+		BindingResult orderErrors = mock(BindingResult.class);
+		when(orderErrors.hasErrors()).thenReturn(true);
+		
+		ModelAndView modelAndView = radiologyOrderFormController.postSaveOrder(mockRequest, mockOrder.getPatient()
+		        .getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
+		
+		assertNotNull(modelAndView);
+		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#post(Integer, Study, BindingResult, Order, BindingResult)
+	 */
+	@Test
+	@Verifies(value = "should set http session attribute openmrs message to voided successfully and redirect to patient dashboard when void order was successful and given patient id", method = "post(Integer, Study, BindingResult, Order, BindingResult)")
 	public void post_shouldSetHttpSessionAttributeOpenmrsMessageToVoidedSuccessfullyAndRedirectToPatientDashboardWhenVoidOrderWasSuccessfulAndGivenPatientId()
 	        throws Exception {
 		
@@ -450,7 +489,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(conceptService.getConcept(1)).thenReturn(mockConcept);
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
-		when(Utils.studyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
+		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("voidOrder", "voidOrder");
@@ -462,8 +501,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
-		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
+		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockOrder.getPatient().getPatientId(),
+		    mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
@@ -472,11 +511,10 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#post(Integer, Integer, Study, BindingResult, Order,
-	 *      BindingResult)
+	 * @see RadiologyOrderFormController#post(Integer, Study, BindingResult, Order, BindingResult)
 	 */
 	@Test
-	@Verifies(value = "should set http session attribute openmrs message to unvoided successfully and redirect to patient dashboard when unvoid order was successful and given patient id", method = "post(Integer, Integer, Study, BindingResult, Order, BindingResult)")
+	@Verifies(value = "should set http session attribute openmrs message to unvoided successfully and redirect to patient dashboard when unvoid order was successful and given patient id", method = "post(Integer, Study, BindingResult, Order, BindingResult)")
 	public void post_shouldSetHttpSessionAttributeOpenmrsMessageToUnvoidedSuccessfullyAndRedirectToPatientDashboardWhenUnvoidOrderWasSuccessfulAndGivenPatientId()
 	        throws Exception {
 		
@@ -493,7 +531,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(conceptService.getConcept(1)).thenReturn(mockConcept);
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
-		when(Utils.studyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
+		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("unvoidOrder", "unvoidOrder");
@@ -505,8 +543,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
-		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
+		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockOrder.getPatient().getPatientId(),
+		    mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
@@ -515,11 +553,10 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#post(Integer, Integer, Study, BindingResult, Order,
-	 *      BindingResult)
+	 * @see RadiologyOrderFormController#post(Integer, Study, BindingResult, Order, BindingResult)
 	 */
 	@Test
-	@Verifies(value = "should set http session attribute openmrs message to discontinued successfully and redirect to patient dashboard when discontinue order was successful and given patient id", method = "post(Integer, Integer, Study, BindingResult, Order, BindingResult)")
+	@Verifies(value = "should set http session attribute openmrs message to discontinued successfully and redirect to patient dashboard when discontinue order was successful and given patient id", method = "post(Integer, Study, BindingResult, Order, BindingResult)")
 	public void post_shouldSetHttpSessionAttributeOpenmrsMessageToDiscontinuedSuccessfullyAndRedirectToPatientDashboardWhenDiscontinueOrderWasSuccessfulAndGivenPatientId()
 	        throws Exception {
 		
@@ -536,7 +573,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(conceptService.getConcept(1)).thenReturn(mockConcept);
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
-		when(Utils.studyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
+		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("discontinueOrder", "discontinueOrder");
@@ -548,8 +585,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
-		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
+		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockOrder.getPatient().getPatientId(),
+		    mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
@@ -558,11 +595,10 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#post(Integer, Integer, Study, BindingResult, Order,
-	 *      BindingResult)
+	 * @see RadiologyOrderFormController#post(Integer, Study, BindingResult, Order, BindingResult)
 	 */
 	@Test
-	@Verifies(value = "should set http session attribute openmrs message to undiscontinued successfully and redirect to patient dashboard when undiscontinue order was successful and given patient id", method = "post(Integer, Integer, Study, BindingResult, Order, BindingResult)")
+	@Verifies(value = "should set http session attribute openmrs message to undiscontinued successfully and redirect to patient dashboard when undiscontinue order was successful and given patient id", method = "post(Integer, Study, BindingResult, Order, BindingResult)")
 	public void post_shouldSetHttpSessionAttributeOpenmrsMessageToUndiscontinueSuccessfullyAndRedirectToPatientDashboardWhenUndiscontinueOrderWasSuccessfulAndGivenPatientId()
 	        throws Exception {
 		
@@ -579,7 +615,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(conceptService.getConcept(1)).thenReturn(mockConcept);
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
-		when(Utils.studyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
+		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("undiscontinueOrder", "undiscontinueOrder");
@@ -591,8 +627,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		BindingResult orderErrors = mock(BindingResult.class);
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockStudyPreSave.getStudyId(), mockOrder
-		        .getPatient().getPatientId(), mockStudyPreSave, studyErrors, mockOrder, orderErrors);
+		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockOrder.getPatient().getPatientId(),
+		    mockStudyPreSave, studyErrors, mockOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="

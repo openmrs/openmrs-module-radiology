@@ -59,7 +59,7 @@ public class DicomUtils {
 		BasicDicomObject rpcs = new BasicDicomObject();
 		BasicDicomObject spss = new BasicDicomObject();
 		BasicDicomObject spcs = new BasicDicomObject();
-		workitem.putString(Tag.SpecificCharacterSet, VR.CS, Utils.specificCharacterSet());
+		workitem.putString(Tag.SpecificCharacterSet, VR.CS, RadiologyProperties.getSpecificCharacterSet());
 		workitem.putString(Tag.AccessionNumber, VR.SH, "");
 		try {
 			workitem.putString(Tag.ReferringPhysicianName, VR.PN, o.getOrderer().getPersonName().getFullName().replace(' ',
@@ -83,7 +83,7 @@ public class DicomUtils {
 		workitem.putString(Tag.MedicalAlerts, VR.LO, "");
 		workitem.putString(Tag.Allergies, VR.LO, "");
 		workitem.putString(Tag.PregnancyStatus, VR.US, "");
-		workitem.putString(Tag.StudyInstanceUID, VR.UI, Utils.studyPrefix() + s.getStudyId());
+		workitem.putString(Tag.StudyInstanceUID, VR.UI, RadiologyProperties.getStudyPrefix() + s.getStudyId());
 		try {
 			workitem.putString(Tag.RequestingPhysician, VR.PN, o.getOrderer().getPersonName().getFullName()
 			        .replace(' ', '^'));
@@ -113,7 +113,7 @@ public class DicomUtils {
 		// ! requires form enhancement, multiple steps
 		spss.putString(Tag.Modality, VR.CS, s.getModality().toString());
 		spss.putString(Tag.RequestedContrastAgent, VR.LO, "");
-		spss.putString(Tag.ScheduledStationAETitle, VR.AE, Utils.aeTitle());
+		spss.putString(Tag.ScheduledStationAETitle, VR.AE, RadiologyProperties.getAeTitle());
 		try {
 			spss.putString(Tag.ScheduledProcedureStepStartDate, VR.DA, Utils.plain(o.getStartDate()));
 			spss.putString(Tag.ScheduledProcedureStepStartTime, VR.TM, Utils.time(o.getStartDate()));
@@ -208,7 +208,7 @@ public class DicomUtils {
 	 */
 	public static String getStudyInstanceUidFromMpps(DicomObject mppsObject) {
 		
-		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(Utils.specificCharacterSet());
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(RadiologyProperties.getSpecificCharacterSet());
 		
 		DicomElement scheduledStepAttributesSequenceElement = mppsObject.get(Tag.ScheduledStepAttributesSequence);
 		if (scheduledStepAttributesSequenceElement == null)
@@ -236,7 +236,7 @@ public class DicomUtils {
 	 */
 	public static String getPerformedProcedureStepStatus(DicomObject dicomObject) {
 		
-		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(Utils.specificCharacterSet());
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(RadiologyProperties.getSpecificCharacterSet());
 		
 		DicomElement performedProcedureStepStatusElement = dicomObject.get(Tag.PerformedProcedureStepStatus);
 		if (performedProcedureStepStatusElement == null)
@@ -368,8 +368,8 @@ public class DicomUtils {
 	
 	//Send HL7 ORU message to dcm4chee.
 	public static int sendHL7Worklist(String hl7blob) {
-		String serverIP = Utils.serversAddress();
-		String input[] = { "-c", serverIP.substring(7) + ":" + Utils.serversHL7Port(), hl7blob };
+		String serverIP = RadiologyProperties.getServersAddress();
+		String input[] = { "-c", serverIP.substring(7) + ":" + RadiologyProperties.getServersHL7Port(), hl7blob };
 		//String input[]={"--help"};
 		int result = HL7Snd.main(input);
 		return result;

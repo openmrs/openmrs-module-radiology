@@ -118,7 +118,8 @@ public class RadiologyOrderFormController {
 	 * @should populate model and view with new order and study prefilled with given patient
 	 * @should populate model and view with new order and study with prefilled orderer when
 	 *         requested by referring physician
-	 * @should populate model and view with new order and study without prefilled patient if given patient is null
+	 * @should populate model and view with new order and study without prefilled patient if given
+	 *         patient is null
 	 */
 	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET, params = "patientId")
 	protected ModelAndView getRadiologyOrderFormWithNewOrderAndPrefilledPatient(
@@ -157,9 +158,8 @@ public class RadiologyOrderFormController {
 	}
 	
 	/**
-	 * Handles POST requests for the radiologyOrderForm
+	 * Handles POST requests for the radiologyOrderForm with request parameter attribute saveOrder
 	 * 
-	 * @param studyId study id of an existing study which should be updated
 	 * @param patientId patient id of an existing patient which is used to redirect to the patient
 	 *            dashboard
 	 * @param study study object
@@ -176,6 +176,81 @@ public class RadiologyOrderFormController {
 	 * @should set http session attribute openmrs message to study performed when study performed
 	 *         status is in progress and scheduler is empty and request was issued by radiology
 	 *         scheduler
+	 * @should not redirect if order is not valid according to order validator
+	 */
+	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.POST, params = "saveOrder")
+	protected ModelAndView postSaveOrder(HttpServletRequest request,
+	        @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("study") Study study,
+	        BindingResult sErrors, @ModelAttribute("order") Order order, BindingResult oErrors) throws Exception {
+		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
+		
+		order.setOrderType(Utils.getRadiologyOrderType().get(0));
+		
+		if (order.getConcept() == null)
+			order.setConcept(Context.getConceptService().getConcept(1));
+		
+		User authenticatedUser = Context.getAuthenticatedUser();
+		if (order.getOrderer() == null)
+			order.setOrderer(authenticatedUser);
+		
+		if (authenticatedUser.hasRole(Roles.Scheduler, true) && study.getScheduler() == null && !study.isScheduleable()) {
+			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
+			populate(modelAndView, order, study);
+		} else {
+			new OrderValidator().validate(order, oErrors);
+			if (oErrors.hasErrors()) {
+				populate(modelAndView, order, study);
+				return modelAndView;
+			}
+			
+			try {
+				orderService.saveOrder(order);
+				study.setOrderId(order.getOrderId());
+				Study savedStudy = radiologyService.saveStudy(study);
+				
+				radiologyService.sendModalityWorklist(savedStudy, OrderRequest.Save_Order);
+				
+				savedStudy = radiologyService.getStudy(savedStudy.getStudyId());
+				if (savedStudy.getMwlStatus() == MwlStatus.SAVE_ERR || savedStudy.getMwlStatus() == MwlStatus.UPDATE_ERR) {
+					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.savedFailWorklist");
+				} else {
+					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
+				}
+				
+				if (patientId == null) {
+					modelAndView.setViewName("redirect:/module/radiology/radiologyOrder.list");
+				} else {
+					modelAndView.setViewName("redirect:/patientDashboard.form?patientId=" + patientId);
+				}
+			}
+			catch (Exception ex) {
+				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, ex.getMessage());
+				ex.printStackTrace();
+				populate(modelAndView, order, study);
+			}
+		}
+		
+		return modelAndView;
+	}
+	
+	/**
+	 * Handles POST requests for the radiologyOrderForm with request parameter attributes
+	 * <p>
+	 * <ul>
+	 * <li>voidOrder
+	 * <li>unvoidOrder
+	 * <li>discontinueOrder
+	 * <li>undiscontinueOrder
+	 * </ul>
+	 * <p>
+	 * 
+	 * @param patientId patient id of an existing patient which is used to redirect to the patient
+	 *            dashboard
+	 * @param study study object
+	 * @param sErrors binding result containing study errors for a non valid study
+	 * @param order order object
+	 * @param oErrors binding result containing order errors for a non valid order
+	 * @return model and view
 	 * @should set http session attribute openmrs message to voided successfully and redirect to
 	 *         patient dashboard when void order was successful and given patient id
 	 * @should set http session attribute openmrs message to unvoided successfully and redirect to
@@ -188,38 +263,20 @@ public class RadiologyOrderFormController {
 	 */
 	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.POST)
 	protected ModelAndView post(HttpServletRequest request,
-	        @RequestParam(value = "study_id", required = false) Integer studyId,
 	        @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("study") Study study,
 	        BindingResult sErrors, @ModelAttribute("order") Order order, BindingResult oErrors) throws Exception {
 		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
 		
-		order.setOrderType(Utils.getRadiologyOrderType().get(0));
-		
-		if (order.getConcept() == null)
-			order.setConcept(Context.getConceptService().getConcept(1));
-		
-		study.setStudyId(studyId);
-		
-		User authenticatedUser = Context.getAuthenticatedUser();
-		if (order.getOrderer() == null)
-			order.setOrderer(authenticatedUser);
-		
-		if (authenticatedUser.hasRole(Roles.Scheduler, true) && study.getScheduler() == null && !study.isScheduleable()) {
-			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
-			populate(modelAndView, order, study);
+		boolean ok = executeCommand(order, request);
+		if (ok) {
+			if (patientId == null)
+				modelAndView.setViewName("redirect:/module/radiology/radiologyOrder.list");
+			else
+				modelAndView.setViewName("redirect:/patientDashboard.form?patientId=" + patientId);
 		} else {
-			new OrderValidator().validate(order, oErrors);
-			
-			boolean ok = executeCommand(order, study, request);
-			if (ok) {
-				if (patientId == null)
-					modelAndView.setViewName("redirect:/module/radiology/radiologyOrder.list");
-				else
-					modelAndView.setViewName("redirect:/patientDashboard.form?patientId=" + patientId);
-			} else {
-				populate(modelAndView, order, study);
-			}
+			populate(modelAndView, order, study);
 		}
+		
 		return modelAndView;
 	}
 	
@@ -310,30 +367,13 @@ public class RadiologyOrderFormController {
 		return Context.getAuthenticatedUser().isSuperUser();
 	}
 	
-	protected boolean executeCommand(Order order, Study study, HttpServletRequest request) {
+	protected boolean executeCommand(Order order, HttpServletRequest request) {
 		if (!Context.isAuthenticated()) {
 			return false;
 		}
 		
 		try {
-			if (request.getParameter("saveOrder") != null) {
-				orderService.saveOrder(order);
-				study.setOrderId(order.getOrderId());
-				radiologyService.saveStudy(study);
-				System.out.println("Radiology order received with StudyInstanceUid : " + study.getStudyInstanceUid()
-				        + " Order ID : " + order.getOrderId());
-				Order o = orderService.getOrder(order.getOrderId());
-				radiologyService.sendModalityWorklist(radiologyService.getStudyByOrderId(o.getOrderId()),
-				    OrderRequest.Save_Order);
-				
-				//Saving Study into Database.
-				if (radiologyService.getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.SAVE_ERR
-				        || radiologyService.getStudyByOrderId(o.getOrderId()).getMwlStatus() == MwlStatus.UPDATE_ERR) {
-					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.savedFailWorklist");
-				} else {
-					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
-				}
-			} else if (request.getParameter("voidOrder") != null) {
+			if (request.getParameter("voidOrder") != null) {
 				Order o = orderService.getOrder(order.getOrderId());
 				radiologyService.sendModalityWorklist(radiologyService.getStudyByOrderId(o.getOrderId()),
 				    OrderRequest.Void_Order);

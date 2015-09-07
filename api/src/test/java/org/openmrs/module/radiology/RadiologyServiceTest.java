@@ -64,8 +64,6 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	
 	private static final int EXISTING_STUDY_ID = 1;
 	
-	private static final String GLOBAL_PROPERTY_MWL_DIRECTORY = "radiology.mwlDirectory";
-	
 	private static final String MWL_DIRECTORY = "mwl";
 	
 	private PatientService patientService = null;
@@ -136,7 +134,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		
 		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
 		        .getAbsolutePath()));
 		
 		Order mockOrder = orderService.getOrder(ORDER_ID_WITHOUT_STUDY);
@@ -150,7 +148,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		assertThat(createdStudy, is(mockStudy));
 		assertThat(createdStudy.getStudyId(), is(mockStudy.getStudyId()));
 		assertNotNull(createdStudy.getStudyInstanceUid());
-		assertThat(createdStudy.getStudyInstanceUid(), is(Utils.studyPrefix() + createdStudy.getStudyId()));
+		assertThat(createdStudy.getStudyInstanceUid(), is(RadiologyProperties.getStudyPrefix() + createdStudy.getStudyId()));
 		assertThat(createdStudy.getModality(), is(mockStudy.getModality()));
 		assertThat(createdStudy.getOrderId(), is(mockStudy.getOrderId()));
 	}
@@ -164,7 +162,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		
 		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
 		        .getAbsolutePath()));
 		
 		Study existingStudy = radiologyService.getStudy(EXISTING_STUDY_ID);
@@ -190,7 +188,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		
 		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
 		        .getAbsolutePath()));
 		
 		expectedException.expect(IllegalArgumentException.class);
@@ -207,7 +205,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		
 		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
 		        .getAbsolutePath()));
 		
 		Study mockStudy = getMockStudy();
@@ -227,7 +225,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		
 		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
 		        .getAbsolutePath()));
 		
 		Order mockOrder = orderService.getOrder(ORDER_ID_WITHOUT_STUDY);

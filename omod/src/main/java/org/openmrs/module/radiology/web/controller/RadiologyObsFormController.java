@@ -31,10 +31,10 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Utils;
 import org.openmrs.obs.ComplexData;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.DrugEditor;
@@ -127,8 +127,8 @@ public class RadiologyObsFormController {
 		mav.addObject("studyUID", study.isCompleted() ? study.getStudyInstanceUid() : null);
 		if (study.isCompleted()) {
 			String patID = orderService.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();
-			String dicomViewerUrl = Utils.dicomViewerUrl() + "studyUID=" + study.getStudyInstanceUid() + "&patientID="
-			        + patID;
+			String dicomViewerUrl = RadiologyProperties.getDicomViewerUrl() + "studyUID=" + study.getStudyInstanceUid()
+			        + "&patientID=" + patID;
 			mav.addObject("dicomViewerUrl", dicomViewerUrl);
 		} else
 			mav.addObject("dicomViewerUrl", null);

@@ -89,7 +89,7 @@ public class RadiologyActivator extends BaseModuleActivator {
 				}
 				
 				HashSet<Role> set = new HashSet<Role>();
-				if (Utils.devMode()) {
+				if (RadiologyProperties.getDevMode()) {
 					// Inherits privileges from System developer
 					Role parent = Context.getUserService().getRole("System Developer");
 					set.add(parent);
@@ -116,7 +116,8 @@ public class RadiologyActivator extends BaseModuleActivator {
 	
 	public void startDicomOrderFiller() {
 		try {
-			String[] args2 = { "-mwl", Utils.mwlDir(), "-mpps", Utils.mppsDir(), Utils.aeTitle() + ":" + Utils.mwlMppsPort() };
+			String[] args2 = { "-mwl", RadiologyProperties.getMwlDir(), "-mpps", RadiologyProperties.getMppsDir(),
+			        RadiologyProperties.getAeTitle() + ":" + RadiologyProperties.getMwlMppsPort() };
 			dicomOrderFiller = DcmOF.main(args2);
 			log.info("Started MPPSScu : OpenMRS MPPS SCU Client (dcmof)");
 		}
