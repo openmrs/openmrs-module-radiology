@@ -37,8 +37,11 @@
 	</form>
 </c:if>
 <form method="post" class="box">
-	<input type="hidden" name="study_id" value="${study.studyId}" /> <input
-		type="hidden" name="patient_id" value="${patientId }" />
+	<input type="hidden" name="patient_id" value="${patientId}" />
+	<spring:bind path="study.studyId">
+		<input type="hidden" name="${status.expression}"
+			value="${status.value}" />
+	</spring:bind>
 	<spring:bind path="study.mwlStatus">
 		<input type="hidden" name="${status.expression}"
 			value="${status.value}" />
@@ -365,8 +368,7 @@
 <c:if test="${order.discontinued}">
 	<br />
 	<form method="post" class="box">
-		<input type="hidden" name="study_id" value="${study.studyId}" /> <input
-			type="submit"
+		<input type="submit"
 			value='<spring:message code="Order.undiscontinueOrder"/>'
 			name="undiscontinueOrder" />
 	</form>
@@ -375,7 +377,6 @@
 <c:if test="${not order.discontinued and not empty order.orderId}">
 	<br />
 	<form method="post" class="box">
-		<input type="hidden" name="study_id" value="${study.studyId}" />
 		<table>
 			<tr id="dateDiscontinued">
 				<td valign="top"><spring:message
@@ -408,7 +409,6 @@
 <c:if test="${not order.voided and not empty order.orderId}">
 	<br />
 	<form method="post" class="box">
-		<input type="hidden" name="study_id" value="${study.studyId}" />
 		<spring:message code="general.voidReason" />
 		<spring:bind path="order.voidReason">
 			<input type="text" value="${status.value}" size="40"
