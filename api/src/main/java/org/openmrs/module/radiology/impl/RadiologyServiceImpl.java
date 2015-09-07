@@ -22,11 +22,11 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.MwlStatus;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.db.GenericDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
 import org.springframework.transaction.annotation.Transactional;
@@ -99,11 +99,11 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		
 		try {
 			Study savedStudy = sdao.saveStudy(study);
-			String studyInstanceUid = Utils.studyPrefix() + savedStudy.getStudyId();
+			String studyInstanceUid = RadiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
 			savedStudy.setStudyInstanceUid(studyInstanceUid);
 			savedStudy = sdao.saveStudy(savedStudy);
 			
-			File file = new File(Utils.mwlDir(), savedStudy.getStudyId() + ".xml");
+			File file = new File(RadiologyProperties.getMwlDir(), savedStudy.getStudyId() + ".xml");
 			String path = "";
 			path = file.getCanonicalPath();
 			DicomUtils.write(order, savedStudy, file);

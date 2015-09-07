@@ -70,11 +70,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	
 	protected static final int STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER = 1;
 	
-	protected static final String GLOBAL_PROPERTY_SPECIFIC_CHARACTER_SET = "radiology.specificCharacterSet";
-	
 	protected static final String DICOM_SPECIFIC_CHARACTER_SET = "ISO-8859-1";
-	
-	protected static final String GLOBAL_PROPERTY_MWL_DIRECTORY = "radiology.mwlDirectory";
 	
 	protected static final String MWL_DIRECTORY = "mwl";
 	
@@ -100,7 +96,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		if (administrationService == null) {
 			administrationService = Context.getAdministrationService();
 		}
-		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_SPECIFIC_CHARACTER_SET,
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_SPECIFIC_CHARCATER_SET,
 		        DICOM_SPECIFIC_CHARACTER_SET));
 		
 		if (orderService == null) {
@@ -131,7 +127,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		DicomObject dicomObjectNCreate = getDicomNCreate(studyToBeUpdated, radiologyOrder);
 		
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
 		        .getAbsolutePath()));
 		
 		DicomUtils.updateStudyPerformedStatusByMpps(dicomObjectNCreate);
@@ -232,7 +228,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, radiologyOrder, "DISCONTINUED");
 		
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
 		        .getAbsolutePath()));
 		
 		DicomUtils.updateStudyPerformedStatusByMpps(dicomObjectNCreate);
@@ -250,7 +246,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	 */
 	DicomObject getDicomNSet(Study study, Order radiologyOrder, String performedProcedureStatus) {
 		
-		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(Utils.specificCharacterSet());
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(RadiologyProperties.getSpecificCharacterSet());
 		
 		String performedProcedureStepEndDate = "20150313";
 		String performedProcedureStepEndTime = "133725";
@@ -297,7 +293,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, radiologyOrder, "COMPLETED");
 		
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
 		        .getAbsolutePath()));
 		
 		DicomUtils.updateStudyPerformedStatusByMpps(dicomObjectNCreate);
@@ -319,7 +315,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		dicomObjectNCreate.remove(Tag.ScheduledStepAttributesSequence);
 		
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(GLOBAL_PROPERTY_MWL_DIRECTORY, temporaryMwlFolder
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
 		        .getAbsolutePath()));
 		
 		DicomUtils.updateStudyPerformedStatusByMpps(dicomObjectNCreate);
