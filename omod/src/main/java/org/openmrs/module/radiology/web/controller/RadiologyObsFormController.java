@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.radiology.web.controller;
 
+import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -33,7 +35,6 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.obs.ComplexData;
 import org.openmrs.propertyeditor.ConceptEditor;
@@ -150,7 +151,7 @@ public class RadiologyObsFormController {
 	private void updateReadingPhysician(Integer orderId) {
 		Study study = radiologyService.getStudyByOrderId(orderId);
 		User user = Context.getAuthenticatedUser();
-		if (user.hasRole(Roles.ReadingPhysician, true) && study.getReadingPhysician() == null)
+		if (user.hasRole(READING_PHYSICIAN, true) && study.getReadingPhysician() == null)
 			study.setReadingPhysician(user);
 		radiologyService.saveStudy(study);
 	}

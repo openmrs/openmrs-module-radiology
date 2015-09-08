@@ -11,14 +11,11 @@ package org.openmrs.module.radiology.web.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 
 import javax.servlet.http.HttpServletRequest;
 
 import org.openmrs.module.radiology.RadiologyActivator;
 import org.openmrs.module.radiology.RadiologyProperties;
-import org.openmrs.module.radiology.Roles;
-import org.openmrs.module.radiology.Utils;
 import org.openmrs.web.WebConstants;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -27,21 +24,16 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ConfigController {
 	
-	static String typeRoles = "typeRoles";
-	
-	static String dummyUsers = "dummyUsers";
+	static String createRadiologyType = "createRadiologyType";
 	
 	@RequestMapping("/module/radiology/config.list")
 	ModelAndView init(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("/module/radiology/config");
 		String command = request.getParameter("command");
 		command = command == null ? "" : command;
-		if (command.compareToIgnoreCase(typeRoles) == 0) {
+		if (command.compareToIgnoreCase(createRadiologyType) == 0) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-			    RadiologyActivator.typeAndRoles() ? "radiology.successConfig" : "radiology.failConfig");
-		} else if (command.compareToIgnoreCase(dummyUsers) == 0) {
-			request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR,
-			    createDummyUsers() ? "radiology.successConfig" : "radiology.failConfig");
+			    RadiologyActivator.installRadiologyOrderType() ? "radiology.successConfig" : "radiology.failConfig");
 		}
 		
 		populate(mav);
@@ -57,19 +49,6 @@ public class ConfigController {
 		catch (IOException e) {
 			// TODO handle
 		}
-	}
-	
-	boolean createDummyUsers() {
-		try {
-			Field[] roles = Roles.class.getDeclaredFields();
-			for (Field role : roles) {
-				Utils.createUser(Roles.value(role), "Admin123", Roles.value(role));
-			}
-		}
-		catch (Throwable t) {
-			return false;
-		}
-		return true;
 	}
 	
 }

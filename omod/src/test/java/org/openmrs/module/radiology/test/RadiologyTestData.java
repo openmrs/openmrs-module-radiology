@@ -9,6 +9,10 @@
  */
 package org.openmrs.module.radiology.test;
 
+import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRoles.REFERRRING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -32,7 +36,6 @@ import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
-import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
 
 public class RadiologyTestData {
@@ -284,7 +287,7 @@ public class RadiologyTestData {
 	 */
 	public static User getMockRadiologyReferringPhysician() {
 		
-		Role role = new Role(Roles.ReferringPhysician);
+		Role role = new Role(REFERRRING_PHYSICIAN);
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
 		
@@ -300,7 +303,7 @@ public class RadiologyTestData {
 	 * tests
 	 */
 	public static User getMockRadiologyReadingPhysician() {
-		Role role = new Role(Roles.ReadingPhysician);
+		Role role = new Role(READING_PHYSICIAN);
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
 		
@@ -316,7 +319,7 @@ public class RadiologyTestData {
 	 */
 	public static User getMockRadiologyScheduler() {
 		
-		Role role = new Role(Roles.Scheduler);
+		Role role = new Role(SCHEDULER);
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
 		

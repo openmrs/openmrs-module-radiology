@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.radiology.web.extension.html;
 
+import static org.openmrs.module.radiology.RadiologyPrivileges.VIEW_RADIOLOGY_SECTION;
+
 import org.openmrs.module.Extension;
 import org.openmrs.module.web.extension.PatientDashboardTabExt;
 
@@ -26,7 +28,7 @@ public class RadiologyDashboardExt extends PatientDashboardTabExt {
 	
 	@Override
 	public String getRequiredPrivilege() {
-		return "Patient Dashboard - View Radiology Section";
+		return VIEW_RADIOLOGY_SECTION;
 	}
 	
 	@Override
