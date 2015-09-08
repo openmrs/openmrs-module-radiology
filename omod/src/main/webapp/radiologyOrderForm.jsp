@@ -90,7 +90,7 @@
 							<input readonly="readonly" value="${order.concept.name.name}" />
 						</c:otherwise>
 					</c:choose>
-				</spring:bind>(Optional)</td>
+				</spring:bind></td>
 		</tr>
 		<tr>
 			<td valign="top"><spring:message code="radiology.priority" /></td>

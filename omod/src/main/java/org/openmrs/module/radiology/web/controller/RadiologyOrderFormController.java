@@ -186,9 +186,6 @@ public class RadiologyOrderFormController {
 		
 		order.setOrderType(Utils.getRadiologyOrderType().get(0));
 		
-		if (order.getConcept() == null)
-			order.setConcept(Context.getConceptService().getConcept(1));
-		
 		User authenticatedUser = Context.getAuthenticatedUser();
 		if (order.getOrderer() == null)
 			order.setOrderer(authenticatedUser);
