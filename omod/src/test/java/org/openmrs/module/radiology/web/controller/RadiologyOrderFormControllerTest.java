@@ -264,7 +264,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
-		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -348,7 +347,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
 		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
-
+		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
 		MockHttpSession mockSession = new MockHttpSession();
@@ -409,7 +408,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
 		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
-
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -489,7 +487,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(conceptService.getConcept(1)).thenReturn(mockConcept);
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
-		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("voidOrder", "voidOrder");
@@ -531,7 +528,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(conceptService.getConcept(1)).thenReturn(mockConcept);
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
-		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("unvoidOrder", "unvoidOrder");
@@ -573,7 +569,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(conceptService.getConcept(1)).thenReturn(mockConcept);
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
-		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("discontinueOrder", "discontinueOrder");
@@ -615,7 +610,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(conceptService.getConcept(1)).thenReturn(mockConcept);
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
-		when(RadiologyProperties.getStudyPrefix()).thenReturn(RadiologyTestData.getStudyPrefix());
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("undiscontinueOrder", "undiscontinueOrder");
