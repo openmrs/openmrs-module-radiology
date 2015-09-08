@@ -9,6 +9,10 @@
  */
 package org.openmrs.module.radiology.impl;
 
+import static org.openmrs.module.radiology.RadiologyRoles.PERFORMING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
+
 import java.io.File;
 import java.util.List;
 
@@ -24,7 +28,6 @@ import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.GenericDAO;
@@ -82,17 +85,17 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		
 		User orderer = order.getOrderer();
 		if (orderer != null) {
-			if (orderer.hasRole(Roles.Scheduler, true) && study.getScheduler() == null) {
+			if (orderer.hasRole(SCHEDULER, true) && study.getScheduler() == null) {
 				if (study.isScheduleable()) {
 					study.setScheduler(orderer);
 				}
 			}
 			
-			if (orderer.hasRole(Roles.PerformingPhysician, true) && study.getPerformingPhysician() == null) {
+			if (orderer.hasRole(PERFORMING_PHYSICIAN, true) && study.getPerformingPhysician() == null) {
 				study.setPerformingPhysician(orderer);
 			}
 			
-			if (orderer.hasRole(Roles.ReadingPhysician, true) && study.getReadingPhysician() == null) {
+			if (orderer.hasRole(READING_PHYSICIAN, true) && study.getReadingPhysician() == null) {
 				study.setReadingPhysician(orderer);
 			}
 		}

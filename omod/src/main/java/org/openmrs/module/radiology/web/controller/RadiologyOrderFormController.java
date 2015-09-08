@@ -9,6 +9,11 @@
  */
 package org.openmrs.module.radiology.web.controller;
 
+import static org.openmrs.module.radiology.RadiologyRoles.PERFORMING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRoles.REFERRRING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -32,7 +37,6 @@ import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
-import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
@@ -97,7 +101,7 @@ public class RadiologyOrderFormController {
 			Order order = new Order();
 			
 			User user = Context.getAuthenticatedUser();
-			if (user.hasRole(Roles.ReferringPhysician, true) && order.getOrderer() == null) {
+			if (user.hasRole(REFERRRING_PHYSICIAN, true) && order.getOrderer() == null) {
 				order.setOrderer(user);
 			}
 			
@@ -193,7 +197,7 @@ public class RadiologyOrderFormController {
 		if (order.getOrderer() == null)
 			order.setOrderer(authenticatedUser);
 		
-		if (authenticatedUser.hasRole(Roles.Scheduler, true) && study.getScheduler() == null && !study.isScheduleable()) {
+		if (authenticatedUser.hasRole(SCHEDULER, true) && study.getScheduler() == null && !study.isScheduleable()) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
 			populate(modelAndView, order, study);
 		} else {
@@ -227,6 +231,7 @@ public class RadiologyOrderFormController {
 				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, ex.getMessage());
 				ex.printStackTrace();
 				populate(modelAndView, order, study);
+				
 			}
 		}
 		
@@ -340,25 +345,25 @@ public class RadiologyOrderFormController {
 	@ModelAttribute("isUserReferringPhysician")
 	private boolean isUserReferringPhysician() {
 		
-		return Context.getAuthenticatedUser().hasRole(Roles.ReferringPhysician, true);
+		return Context.getAuthenticatedUser().hasRole(REFERRRING_PHYSICIAN, true);
 	}
 	
 	@ModelAttribute("isUserScheduler")
 	private boolean isUserScheduler() {
 		
-		return Context.getAuthenticatedUser().hasRole(Roles.Scheduler, true);
+		return Context.getAuthenticatedUser().hasRole(SCHEDULER, true);
 	}
 	
 	@ModelAttribute("isUserPerformingPhysician")
 	private boolean isUserPerformingPhysician() {
 		
-		return Context.getAuthenticatedUser().hasRole(Roles.PerformingPhysician, true);
+		return Context.getAuthenticatedUser().hasRole(PERFORMING_PHYSICIAN, true);
 	}
 	
 	@ModelAttribute("isUserReadingPhysician")
 	private boolean isUserReadingPhysician() {
 		
-		return Context.getAuthenticatedUser().hasRole(Roles.ReadingPhysician, true);
+		return Context.getAuthenticatedUser().hasRole(READING_PHYSICIAN, true);
 	}
 	
 	@ModelAttribute("isUserSuper")

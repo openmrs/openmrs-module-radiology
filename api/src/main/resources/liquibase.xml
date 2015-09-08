@@ -110,4 +110,31 @@
 		<addAutoIncrement columnDataType="int" columnName="study_id"
 			incrementBy="1" tableName="radiology_study" />
 	</changeSet>
+	<changeSet id="radiology-13" author="bgeVam">
+		<comment>add roles</comment>
+		<insert tableName="role">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="description" value="The physician who refers the radiology order" />
+		</insert>
+		<insert tableName="role">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="description" value="The physician who reads the performed study" />
+		</insert>
+		<insert tableName="role">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="description" value="The physician who performs the radiology order" />
+		</insert>
+		<insert tableName="role">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="description" value="The person who schedules the radiology order" />
+		</insert>
+	</changeSet>
+	<changeSet id="radiology-14" author="bgeVam">
+		<comment>add privileges</comment>
+		<insert tableName="privilege">
+			<column name="privilege" value="Patient Dashboard - View Radiology Section" />
+			<column name="description"
+				value="Able to view the 'Radiology' tab on the patient dashboard" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>

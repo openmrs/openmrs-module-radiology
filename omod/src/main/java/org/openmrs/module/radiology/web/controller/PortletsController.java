@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.radiology.web.controller;
 
+import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -21,7 +23,6 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.Roles;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.web.util.StudyStatusColumnGenerator;
@@ -127,7 +128,7 @@ public class PortletsController {
 		mav.addObject("readings", readings);
 		mav.addObject("modalities", modalities);
 		mav.addObject("matchedOrdersSize", matchedOrders.size());
-		if (Context.getAuthenticatedUser().hasRole(Roles.ReadingPhysician, true)) {
+		if (Context.getAuthenticatedUser().hasRole(READING_PHYSICIAN, true)) {
 			mav.addObject("obsId", "&obsId");
 		}
 		mav.addObject("mwlStatuses", mwlStatuses);

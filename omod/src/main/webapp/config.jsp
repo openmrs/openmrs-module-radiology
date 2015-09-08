@@ -3,17 +3,14 @@
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="./localHeader.jsp"%>
 
-<openmrs:require privilege="Manage Roles,Manage Order Types,Add Users"
-	otherwise="/login.htm" redirect="/module/radiology/config.list" />
+<openmrs:require privilege="Manage Order Types" otherwise="/login.htm"
+	redirect="/module/radiology/config.list" />
 
 <h2>
 	<spring:message code="radiology.config" />
 </h2>
-<a href="config.list?command=typeRoles"><spring:message
-		code="radiology.createTypeAndRoles" /></a>
-<br />
-<a href="config.list?command=dummyUsers"><spring:message
-		code="radiology.dummyUsers" /></a>
+<a href="config.list?command=createRadiologyType"><spring:message
+		code="radiology.createRadiologyOrderType" /></a>
 <br />
 <spring:message code="general.saving" arguments=": " />
 <br />
