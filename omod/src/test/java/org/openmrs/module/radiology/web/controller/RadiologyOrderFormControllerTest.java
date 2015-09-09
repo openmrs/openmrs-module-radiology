@@ -23,7 +23,6 @@ import java.util.Arrays;
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openmrs.Concept;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.User;
@@ -253,7 +252,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPreSave = RadiologyTestData.getMockStudy1PreSave();
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_OK);
-		Concept mockConcept = new Concept();
 		
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
@@ -292,7 +290,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPreSave = RadiologyTestData.getMockStudy1PreSave();
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_OK);
-		Concept mockConcept = new Concept();
 		
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
@@ -333,7 +330,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPreSave = RadiologyTestData.getMockStudy1PreSave();
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_ERR);
-		Concept mockConcept = new Concept();
 		
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
@@ -391,7 +387,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPreSave = RadiologyTestData.getMockStudy1PreSave();
 		mockStudyPreSave.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
-		Concept mockConcept = new Concept();
 		User mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
 		
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
@@ -431,7 +426,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Order mockOrder = RadiologyTestData.getMockRadiologyOrder1();
 		Study mockStudyPreSave = RadiologyTestData.getMockStudy1PreSave();
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
-		Concept mockConcept = new Concept();
 		User mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
 		
 		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
@@ -470,7 +464,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPreSave = RadiologyTestData.getMockStudy1PreSave();
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.VOID_OK);
-		Concept mockConcept = new Concept();
 		
 		when(orderService.getOrder(mockOrder.getOrderId())).thenReturn(mockOrder);
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
@@ -510,7 +503,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPreSave = RadiologyTestData.getMockStudy1PreSave();
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.UNVOID_OK);
-		Concept mockConcept = new Concept();
 		
 		when(orderService.getOrder(mockOrder.getOrderId())).thenReturn(mockOrder);
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
@@ -550,7 +542,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPreSave = RadiologyTestData.getMockStudy1PreSave();
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.DISCONTINUE_OK);
-		Concept mockConcept = new Concept();
 		
 		when(orderService.getOrder(mockOrder.getOrderId())).thenReturn(mockOrder);
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
@@ -590,7 +581,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPreSave = RadiologyTestData.getMockStudy1PreSave();
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.UNDISCONTINUE_OK);
-		Concept mockConcept = new Concept();
 		
 		when(orderService.getOrder(mockOrder.getOrderId())).thenReturn(mockOrder);
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
