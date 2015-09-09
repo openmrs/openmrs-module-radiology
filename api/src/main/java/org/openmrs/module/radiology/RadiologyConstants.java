@@ -30,8 +30,6 @@ public class RadiologyConstants {
 	
 	public static final String GP_SPECIFIC_CHARCATER_SET = "radiology.specificCharacterSet";
 	
-	public static final String GP_DEV_MODE_P = "radiology.devMode";
-	
 	public static final String GP_SERVERS_PORT = "radiology.serversPort";
 	
 	public static final String GP_SERVERS_HL7_PORT = "radiology.serversHL7Port";

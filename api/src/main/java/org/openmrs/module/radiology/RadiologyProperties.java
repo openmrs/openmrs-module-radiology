@@ -54,19 +54,11 @@ public class RadiologyProperties {
 		return administrationService.getGlobalProperty(RadiologyConstants.GP_SPECIFIC_CHARCATER_SET);
 	}
 	
-	public static String getDevModeP() {
-		return administrationService.getGlobalProperty(RadiologyConstants.GP_DEV_MODE_P);
-	}
-	
 	/**
 	 * Example: 1.2.826.0.1.3680043.8.2186.1. (With last dot)
 	 */
 	public static String getStudyPrefix() {
 		return getApplicationUID() + "." + getStudyUIDSlug() + ".";
-	}
-	
-	public static boolean getDevMode() {
-		return RadiologyConstants.GP_DEV_MODE_P.compareToIgnoreCase("on") == 0;
 	}
 	
 	public static String getServersPort() {
