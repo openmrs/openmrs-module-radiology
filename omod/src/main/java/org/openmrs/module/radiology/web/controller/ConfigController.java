@@ -24,14 +24,12 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class ConfigController {
 	
-	static String createRadiologyType = "createRadiologyType";
-	
 	@RequestMapping("/module/radiology/config.list")
 	ModelAndView init(HttpServletRequest request) {
 		ModelAndView mav = new ModelAndView("/module/radiology/config");
 		String command = request.getParameter("command");
 		command = command == null ? "" : command;
-		if (command.compareToIgnoreCase(createRadiologyType) == 0) {
+		if (command.compareToIgnoreCase("createRadiologyType") == 0) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR,
 			    RadiologyActivator.installRadiologyOrderType() ? "radiology.successConfig" : "radiology.failConfig");
 		}
