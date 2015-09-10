@@ -9,7 +9,9 @@
  */
 package org.openmrs.module.radiology;
 
+import org.openmrs.OrderType;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 
 /**
@@ -18,6 +20,8 @@ import org.openmrs.api.context.Context;
 public class RadiologyProperties {
 	
 	private static AdministrationService administrationService = Context.getAdministrationService();
+	
+	private static OrderService orderService = Context.getOrderService();
 	
 	public static String getAeTitle() {
 		return administrationService.getGlobalProperty(RadiologyConstants.GP_APPLICATION_ENTITY_TITLE);
@@ -88,4 +92,12 @@ public class RadiologyProperties {
 		return dicomViewerUrl;
 	}
 	
+	public static OrderType getRadiologyTestOrderType() {
+		OrderType result = orderService.getOrderTypeByUuid(RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID);
+		if (result == null) {
+			throw new IllegalStateException("OrderType for radiology orders not in database (not found under uuid="
+			        + RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID + ").");
+		}
+		return result;
+	}
 }

@@ -11,32 +11,13 @@ package org.openmrs.module.radiology;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
-import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.OrderType;
-import org.openmrs.api.OrderService;
-import org.openmrs.api.context.Context;
 
 public class Utils {
 	
 	static final Log log = LogFactory.getLog(Utils.class);
-	
-	/**
-	 * @return List of all Order objects with OrderType == "Radiology"
-	 */
-	public static List<OrderType> getRadiologyOrderType() {
-		List<OrderType> radiologyType = new Vector<OrderType>();
-		OrderService os = Context.getOrderService();
-		List<OrderType> allTypes = os.getAllOrderTypes();
-		for (OrderType orderType : allTypes) {
-			if (orderType.getName().equals("Radiology"))
-				radiologyType.add(orderType);
-		}
-		return radiologyType;
-	}
 	
 	/**
 	 * @param d the date to plain
@@ -77,10 +58,4 @@ public class Utils {
 		return pad(x, 2);
 	}
 	
-	/**
-	 * Returns true if order type for radiology orders is not in the database
-	 */
-	public static boolean isRadiologyOrderTypeMissing() {
-		return getRadiologyOrderType().isEmpty();
-	}
 }

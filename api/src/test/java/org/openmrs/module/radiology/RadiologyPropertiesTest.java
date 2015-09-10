@@ -12,9 +12,13 @@ package org.openmrs.module.radiology;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.openmrs.GlobalProperty;
+import org.openmrs.OrderType;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
@@ -25,6 +29,11 @@ import org.openmrs.test.Verifies;
 public class RadiologyPropertiesTest extends BaseModuleContextSensitiveTest {
 	
 	private AdministrationService administrationService = null;
+	
+	private OrderService orderService = null;
+	
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
 	
 	/**
 	 * Run this before each unit test in this class. It simply assigns the services used in this
@@ -37,6 +46,10 @@ public class RadiologyPropertiesTest extends BaseModuleContextSensitiveTest {
 		
 		if (administrationService == null) {
 			administrationService = Context.getAdministrationService();
+		}
+		
+		if (orderService == null) {
+			orderService = Context.getOrderService();
 		}
 		
 	}
@@ -114,5 +127,34 @@ public class RadiologyPropertiesTest extends BaseModuleContextSensitiveTest {
 		        null));
 		
 		assertEquals(RadiologyProperties.getDicomViewerUrl(), "http://localhost:8081/weasis-pacs-connector/viewer?");
+	}
+	
+	/**
+	 * @see {@link RadiologyProperties#getRadiologyTestOrderType()}
+	 */
+	@Test
+	@Verifies(value = "should return order type for radiology test orders", method = "getRadiologyTestOrderType()")
+	public void getRadiologyTestOrderType_shouldReturnOrderTypeForRadiologyTestOrders() {
+		OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams");
+		radiologyOrderType.setUuid(RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID);
+		orderService.createOrderType(radiologyOrderType);
+		
+		assertEquals(RadiologyProperties.getRadiologyTestOrderType().getName(), "Radiology Order");
+		assertEquals(RadiologyProperties.getRadiologyTestOrderType().getUuid(),
+		    RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID);
+	}
+	
+	/**
+	 * @see {@link RadiologyProperties#getRadiologyTestOrderType()}
+	 */
+	@Test
+	@Verifies(value = "should throw illegal state exception for non existing radiology test order type", method = "getRadiologyTestOrderType()")
+	public void getRadiologyTestOrderType_shouldThrowIllegalStateExceptionForNonExistingRadiologyTestOrderType() {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("OrderType for radiology orders not in database (not found under uuid="
+		        + RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID + ").");
+		
+		RadiologyProperties.getRadiologyTestOrderType();
 	}
 }

@@ -137,4 +137,13 @@
 				value="Able to view the 'Radiology' tab on the patient dashboard" />
 		</insert>
 	</changeSet>
+	<changeSet id="radiology-15" author="bgeVam">
+		<insert tableName="order_type">
+			<column name="name" value="Radiology Order" />
+			<column name="description" value="Order type for radiology exams" />
+			<column name="creator" valueNumeric="1" />
+			<column name="date_created" valueDate="2015-09-09" />
+			<column name="uuid" value="dbdb9a9b-56ea-11e5-a47f-08002719a237" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>

@@ -12,6 +12,7 @@ package org.openmrs.module.radiology.web.controller;
 import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
@@ -22,9 +23,9 @@ import org.openmrs.Order;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.web.util.StudyStatusColumnGenerator;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,7 +158,7 @@ public class PortletsController {
 		}
 		
 		List<Order> preMatchedOrders = orderService.getOrders(Order.class, patientService.getPatients(patientQuery), null,
-		    null, null, null, Utils.getRadiologyOrderType());
+		    null, null, null, Arrays.asList(RadiologyProperties.getRadiologyTestOrderType()));
 		List<Order> matchedOrders = new Vector<Order>();
 		if (startDate == null && endDate == null) {
 			return preMatchedOrders;

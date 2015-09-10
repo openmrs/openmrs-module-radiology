@@ -35,11 +35,11 @@ import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Utils;
 import org.openmrs.propertyeditor.ConceptEditor;
 import org.openmrs.propertyeditor.EncounterEditor;
 import org.openmrs.propertyeditor.OrderTypeEditor;
@@ -188,7 +188,7 @@ public class RadiologyOrderFormController {
 	        BindingResult sErrors, @ModelAttribute("order") Order order, BindingResult oErrors) throws Exception {
 		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
 		
-		order.setOrderType(Utils.getRadiologyOrderType().get(0));
+		order.setOrderType(RadiologyProperties.getRadiologyTestOrderType());
 		
 		User authenticatedUser = Context.getAuthenticatedUser();
 		if (order.getOrderer() == null)

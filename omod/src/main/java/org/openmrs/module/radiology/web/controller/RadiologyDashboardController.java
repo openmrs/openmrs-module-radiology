@@ -19,9 +19,9 @@ import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.web.util.StudyStatusColumnGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -54,7 +54,7 @@ public class RadiologyDashboardController {
 		ModelAndView mav = new ModelAndView("/module/radiology/portlets/RadiologyDashboardTab");
 		
 		List<Order> matchedOrders = orderService.getOrders(Order.class, Arrays.asList(patient), null, null, null, null,
-		    Utils.getRadiologyOrderType());
+		    Arrays.asList(RadiologyProperties.getRadiologyTestOrderType()));
 		// TODO Status filter
 		List<Study> studies = radiologyService.getStudiesByOrders(matchedOrders);
 		List<String> statuses = new Vector<String>();
