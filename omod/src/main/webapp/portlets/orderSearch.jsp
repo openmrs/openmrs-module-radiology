@@ -30,14 +30,13 @@
 				</tr>
 			</thead>
 			<tbody id="matchedOrdersBody">
-				<c:forEach items="${orderList}" begin="0" end="${matchedOrdersSize}"
-					var="order" varStatus="status">
+				<c:forEach items="${orderList}" var="order">
 					<tr>
 						<td><c:if test="${empty obsId}">
-								<a href="radiologyOrder.form?orderId=${order.orderId}">${status.count}</a>
+								<a href="radiologyOrder.form?orderId=${order.orderId}">${order.orderId}</a>
 							</c:if> <c:if test="${not empty obsId}">
 								<!-- TODO  select observation-->
-								<a href="radiologyObs.form?orderId=${order.orderId}${obsId}">${status.count}</a>
+								<a href="radiologyObs.form?orderId=${order.orderId}${obsId}">${order.orderId}</a>
 							</c:if></td>
 						<td style="text-align: center">${order.patient.patientIdentifier}</td>
 						<td>${order.patient.personName}</td>

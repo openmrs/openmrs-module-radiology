@@ -26,6 +26,8 @@ import org.openmrs.module.radiology.RadiologyService;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -53,13 +55,12 @@ public class PortletsController {
 	/**
 	 * Get URL to the patientOverview portlet
 	 * 
-	 * @return String
-	 * @should should return string with patient info route
+	 * @return patient info route
+	 * @should return string with patient info route
 	 */
 	@RequestMapping("/module/radiology/portlets/patientOverview.portlet")
 	String getPatientInfoRoute() {
-		String route = "module/radiology/portlets/patientOverview";
-		return route;
+		return "module/radiology/portlets/patientOverview";
 	}
 	
 	/**
@@ -75,29 +76,24 @@ public class PortletsController {
 	 * @should populate model and view with table of orders associated with given empty patient and
 	 *         given date range null
 	 * @should not populate model and view with table of orders if start date is after end date
-	 * @should populate model and view with empty table of orders associated with given end date and
-	 *         start date before any order has started
-	 * @should populate model and view with empty table of orders associated with given end date and
-	 *         start date after any order has started
-	 * @should populate model and view with table of orders associated with given start date but
-	 *         given end date null
-	 * @should populate model and view with table of orders associated with given end date but given
-	 *         start date null
-	 * @should populate model and view with table of orders including obsId accessed as reading
-	 *         physician
-	 * @should populate model and view with table of orders associated with given date range
+	 * @should populate model and view with table of orders including obsId accessed as reading physician
 	 */
 	@RequestMapping(value = "/module/radiology/portlets/orderSearch.portlet")
-	ModelAndView ordersTable(@RequestParam(value = "patientQuery", required = false) String patientQuery,
-	        @RequestParam(value = "startDate", required = false) Date startDate,
-	        @RequestParam(value = "endDate", required = false) Date endDate,
-	        @RequestParam(value = "pending", required = false) boolean pending,
-	        @RequestParam(value = "completed", required = false) boolean completed) {
+	ModelAndView getRadiologyOrdersByPatientQueryAndDateRange(
+	        @RequestParam(value = "patientQuery", required = false) String patientQuery,
+	        @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = ISO.DATE) Date startDate,
+	        @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = ISO.DATE) Date endDate) {
 		ModelAndView mav = new ModelAndView("module/radiology/portlets/orderSearch");
 		
-		List<RadiologyOrder> matchedOrders = dateFilter(patientQuery, startDate, endDate, mav);
+		if (isEndDateBeforeStartDate(startDate, endDate)) {
+			mav.addObject("exceptionText", "radiology.crossDate");
+			mav.addObject("orderList", new ArrayList<RadiologyOrder>());
+			return mav;
+		}
+		
+		List<RadiologyOrder> matchedOrders = getRadiologyOrdersForPatientQuery(patientQuery);
+		matchedOrders = filterRadiologyOrdersByDateRange(matchedOrders, startDate, endDate);
 		mav.addObject("orderList", matchedOrders);
-		mav.addObject("matchedOrdersSize", matchedOrders.size());
 		
 		if (Context.getAuthenticatedUser().hasRole(READING_PHYSICIAN, true)) {
 			mav.addObject("obsId", "&obsId");
@@ -107,59 +103,89 @@ public class PortletsController {
 	}
 	
 	/**
-	 * Get all orders for given date and patient criteria
+	 * Get all orders for given date range
 	 * 
-	 * @param patientQuery Patient string for which radiology orders and studies should be returned
-	 *            for
-	 * @param startDate Date from which on the radiology orders and studies should be returned for
-	 * @param endDate Date until which the radiology orders and studies should be returned for
+	 * @param unfilteredRadiologyOrders list of orders which matches a patientQuery
+	 * @param startDate Date from which on the radiology orders should be returned for
+	 * @param endDate Date until which the radiology should be returned for
 	 * @return list of radiology orders corresponding to given criteria
-	 * @should return list of radiology orders matching the criteria
-	 * @should return empty list of radiology orders, if date criteria is not met
-	 * @should return list of radiology orders for all patients if patientQuery criteria is not met
+	 * @should return list of orders matching a given date range
+	 * @should return list of all orders with start date if start date is null and end date is null
+	 * @should return empty list of orders with given end date and start date before any order has started
+	 * @should return empty list of orders with given end date and start date after any order has started
+	 * @should return list of orders started after given start date but given end date null
+	 * @should return list of orders started before given end date but given start date null
 	 */
-	private List<RadiologyOrder> dateFilter(String patientQuery, Date startDate, Date endDate, ModelAndView mav) {
+	private List<RadiologyOrder> filterRadiologyOrdersByDateRange(List<RadiologyOrder> unfilteredRadiologyOrders,
+	        Date startDate, Date endDate) {
 		
-		if (startDate != null && endDate != null) {
-			if (startDate.after(endDate)) {
-				mav.addObject("exceptionText", "radiology.crossDate");
-				return new ArrayList<RadiologyOrder>();
-			}
-		}
+		List<RadiologyOrder> result = new Vector<RadiologyOrder>();
 		
-		List<Patient> patientList = patientService.getPatients(patientQuery);
-		List<RadiologyOrder> preMatchedOrders = radiologyService.getRadiologyOrdersByPatients(patientList);
-		List<RadiologyOrder> matchedOrders = new Vector<RadiologyOrder>();
 		if (startDate == null && endDate == null) {
-			return preMatchedOrders;
-		}
-
-		else if (startDate == null && endDate != null) {
-			for (RadiologyOrder order : preMatchedOrders) {
+			return unfilteredRadiologyOrders;
+		} else if (startDate == null && endDate != null) {
+			for (RadiologyOrder order : unfilteredRadiologyOrders) {
 				if (order.getStartDate() != null && order.getStartDate().compareTo(endDate) <= 0) {
 					
-					matchedOrders.add(order);
+					result.add(order);
 				}
 			}
 			
 		} else if (startDate != null && endDate == null) {
-			for (RadiologyOrder order : preMatchedOrders) {
+			for (RadiologyOrder order : unfilteredRadiologyOrders) {
 				if (order.getStartDate() != null && order.getStartDate().compareTo(startDate) >= 0) {
-					matchedOrders.add(order);
+					result.add(order);
 				}
 			}
 		}
 
 		else {
-			for (RadiologyOrder order : preMatchedOrders) {
+			for (RadiologyOrder order : unfilteredRadiologyOrders) {
 				if (order.getStartDate() != null && order.getStartDate().compareTo(startDate) >= 0
 				        && order.getStartDate().compareTo(endDate) <= 0) {
-					matchedOrders.add(order);
+					result.add(order);
 				}
 			}
 		}
 		
-		return matchedOrders;
+		return result;
+	}
+	
+	/**
+	 * Return true if end date is before start date
+	 * 
+	 * @param startDate start date of the date range
+	 * @param endDate end date of the date range
+	 * @return true if end date is before start date
+	 * @should return true if end date is after start date
+	 * @should return false if end date is not after start date 
+	 * @should return false with given start date but end date null
+	 * @should return false with given end date but start date null
+	 * @should return false with given end date and end date null
+	 */
+	private boolean isEndDateBeforeStartDate(Date startDate, Date endDate) {
+		if (startDate != null && endDate != null) {
+			if (startDate.after(endDate)) {
+				return true;
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * Get orders of type radiology for patientQuery
+	 * 
+	 * @param patientQuery Patient string for which radiology orders and studies should be returned for
+	 * @return list of radiology orders associated with patientQuery
+	 * @should return list of all radiology orders given patientQuery empty
+	 * @should return list of all radiology orders given patientQuery null
+	 * @should return list of all radiology orders given patientQuery matching no patient
+	 * @should return empty list for patients without radiology orders
+	 * @should return list of all radiology orders for a patient given valid patientQuery
+	 */
+	private List<RadiologyOrder> getRadiologyOrdersForPatientQuery(String patientQuery) {
+		List<Patient> patientList = patientService.getPatients(patientQuery);
+		return radiologyService.getRadiologyOrdersByPatients(patientList);
 	}
 	
 	/**

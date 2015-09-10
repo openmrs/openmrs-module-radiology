@@ -257,6 +257,31 @@ public class RadiologyTestData {
 	}
 	
 	/**
+	 * Convenience method constructing a mock patient for the tests
+	 */
+	public static Patient getMockPatient3() {
+		
+		Patient mockPatient = new Patient();
+		mockPatient.setPatientId(3);
+		mockPatient.addIdentifiers(getPatientIdentifiers("102"));
+		mockPatient.setGender("F");
+		
+		Set<PersonName> personNames = new HashSet<PersonName>();
+		PersonName personName = new PersonName();
+		personName.setFamilyName("Diaz");
+		personName.setGivenName("Maria");
+		personName.setMiddleName("Sophia");
+		personNames.add(personName);
+		mockPatient.setNames(personNames);
+		
+		Calendar cal = Calendar.getInstance();
+		cal.set(1980, Calendar.FEBRUARY, 1, 0, 0, 0);
+		mockPatient.setBirthdate(cal.getTime());
+		
+		return mockPatient;
+	}
+	
+	/**
 	 * Convenience method constructing PatientIdentifiers
 	 */
 	public static Set<PatientIdentifier> getPatientIdentifiers(String id) {
