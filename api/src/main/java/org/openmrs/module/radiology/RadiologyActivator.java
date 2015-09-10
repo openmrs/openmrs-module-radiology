@@ -12,9 +12,6 @@ package org.openmrs.module.radiology;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dcm4che2.tool.dcmof.DcmOF;
-import org.openmrs.OrderType;
-import org.openmrs.api.OrderService;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
 
 /**
@@ -30,33 +27,11 @@ public class RadiologyActivator extends BaseModuleActivator {
 	@Override
 	public void started() {
 		startDicomOrderFiller();
-		installRadiologyOrderType();
 	}
 	
 	@Override
 	public void stopped() {
 		stopDicomOrderFiller();
-	}
-	
-	/**
-	 * Creates radiology order type if not exists
-	 */
-	public static boolean installRadiologyOrderType() {
-		// Create radiology order type if not exists
-		try {
-			if (Utils.isRadiologyOrderTypeMissing()) {
-				OrderService os = Context.getOrderService();
-				os.saveOrderType(new OrderType("Radiology", "Order for radiology procedures"));
-			}
-			log.info("Radiology order type created!");
-		}
-		catch (Exception e) {
-			log
-			        .warn("Need some privilege to startup the module. Go to openmrs/module/radiology/config.list with authenticated user.");
-			return false;
-		}
-		
-		return true;
 	}
 	
 	public void startDicomOrderFiller() {

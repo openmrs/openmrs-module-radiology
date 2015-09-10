@@ -18,9 +18,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
-
+import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Order;
@@ -34,11 +34,14 @@ import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.openmrs.test.Verifies;
 import org.openmrs.web.WebConstants;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.validation.BindingResult;
@@ -47,6 +50,9 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * Tests {@link RadiologyOrderFormController}
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(RadiologyProperties.class)
+@PowerMockIgnore( { "org.apache.commons.logging.*" })
 public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	@Mock
@@ -63,6 +69,13 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	@InjectMocks
 	private RadiologyOrderFormController radiologyOrderFormController = new RadiologyOrderFormController();
+	
+	@Before
+	public void runBeforeAllTests() {
+		PowerMockito.mockStatic(RadiologyProperties.class);
+		
+		when(RadiologyProperties.getRadiologyTestOrderType()).thenReturn(RadiologyTestData.getMockRadiologyOrderType());
+	}
 	
 	/**
 	 * @see RadiologyOrderFormController#getRadiologyOrderFormWithNewOrder()
@@ -253,7 +266,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_OK);
 		
-		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
@@ -291,7 +303,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_OK);
 		
-		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
@@ -331,7 +342,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_ERR);
 		
-		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
@@ -389,7 +399,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		User mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
 		
-		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		when(userContext.getAuthenticatedUser()).thenReturn(mockRadiologyScheduler);
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
@@ -428,7 +437,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		User mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
 		
-		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		when(userContext.getAuthenticatedUser()).thenReturn(mockRadiologyScheduler);
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
@@ -469,7 +477,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
 		when(radiologyService.getStudyByOrderId(mockOrder.getOrderId())).thenReturn(mockStudyPostSave);
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
-		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("voidOrder", "voidOrder");
@@ -508,7 +515,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
 		when(radiologyService.getStudyByOrderId(mockOrder.getOrderId())).thenReturn(mockStudyPostSave);
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
-		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("unvoidOrder", "unvoidOrder");
@@ -547,7 +553,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
 		when(radiologyService.getStudyByOrderId(mockOrder.getOrderId())).thenReturn(mockStudyPostSave);
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
-		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("discontinueOrder", "discontinueOrder");
@@ -586,7 +591,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(orderService.saveOrder(mockOrder)).thenReturn(mockOrder);
 		when(radiologyService.getStudyByOrderId(mockOrder.getOrderId())).thenReturn(mockStudyPostSave);
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
-		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(RadiologyTestData.getMockRadiologyOrderType()));
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("undiscontinueOrder", "undiscontinueOrder");

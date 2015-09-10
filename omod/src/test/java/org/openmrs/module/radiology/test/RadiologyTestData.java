@@ -40,7 +40,7 @@ import org.openmrs.module.radiology.Study;
 
 public class RadiologyTestData {
 	
-	static OrderType radiologyOrderType = new OrderType("Radiology", "Order for radiology procedures");
+	static OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams");
 	
 	/**
 	 * Convenience method constructing a study order for the tests

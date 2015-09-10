@@ -69,23 +69,4 @@
 
 </div>
 <br />
-<c:if test="${not empty initialized}">
-	<div id="init">
-		<spring:message code="radiology.badInit" />
-		<br />
-		<spring:message code="radiology.goto" />
-		<a href="config.list"><spring:message code="radiology.init" /></a>
-	</div>
-	<script type="text/javascript">
-		$j('#init')
-				.dialog(
-						{
-							autoOpen : true,
-							modal : true,
-							position : 'center',
-							title : '<spring:message code="radiology.init" javaScriptEscape="true"/>',
-							width : '50%'
-						});
-	</script>
-</c:if>
 <%@ include file="/WEB-INF/template/footer.jsp"%>

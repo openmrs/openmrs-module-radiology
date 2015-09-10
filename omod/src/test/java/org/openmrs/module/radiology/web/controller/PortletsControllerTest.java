@@ -34,9 +34,9 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.MessageSourceService;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.Verifies;
 import org.powermock.api.mockito.PowerMockito;
@@ -50,7 +50,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Tests {@link PortletsController}
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(Context.class)
+@PrepareForTest( { Context.class, RadiologyProperties.class })
 @PowerMockIgnore( { "org.apache.commons.logging.*" })
 public class PortletsControllerTest {
 	
@@ -85,7 +85,7 @@ public class PortletsControllerTest {
 	
 	@Before
 	public void runBeforeAllTests() {
-		PowerMockito.mockStatic(Context.class);
+		PowerMockito.mockStatic(Context.class, RadiologyProperties.class);
 		SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 		
 		String patientQuery = "";
@@ -106,14 +106,13 @@ public class PortletsControllerTest {
 		
 		when(Context.getDateFormat()).thenReturn(sdf);
 		when(Context.getOrderService()).thenReturn(orderService);
-		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(mockRadiologyOrderType));
+		when(RadiologyProperties.getRadiologyTestOrderType()).thenReturn(RadiologyTestData.getMockRadiologyOrderType());
 		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
 		when(radiologyService.getStudiesByOrders(mockOrders)).thenReturn(mockStudies);
 		when(patientService.getPatients(patientQuery)).thenReturn(mockPatients);
 		when(
 		    (orderService.getOrders(Order.class, patientService.getPatients(patientQuery), null, null, null, null, Arrays
 		            .asList(mockRadiologyOrderType)))).thenReturn(mockOrders);
-		
 	}
 	
 	/**

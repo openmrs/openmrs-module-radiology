@@ -38,4 +38,5 @@ public class RadiologyConstants {
 	
 	public static final String GP_DICOM_VIEWER_URL_BASE = "radiology.dicomViewerUrlBase";
 	
+	public static final String RADIOLOGY_TEST_ORDER_TYPE_UUID = "dbdb9a9b-56ea-11e5-a47f-08002719a237";
 }

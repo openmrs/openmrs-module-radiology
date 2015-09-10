@@ -10,6 +10,7 @@ import java.util.List;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Order;
@@ -19,17 +20,24 @@ import org.openmrs.api.AdministrationService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.Utils;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.openmrs.test.Verifies;
+import org.powermock.api.mockito.PowerMockito;
+import org.powermock.core.classloader.annotations.PowerMockIgnore;
+import org.powermock.core.classloader.annotations.PrepareForTest;
+import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
  * Tests {@link RadiologyDashboardController}
  */
+@RunWith(PowerMockRunner.class)
+@PrepareForTest(RadiologyProperties.class)
+@PowerMockIgnore( { "org.apache.commons.logging.*" })
 public class RadiologyDashboardControllerTest extends BaseContextMockTest {
 	
 	private List<Order> mockOrders;
@@ -59,6 +67,8 @@ public class RadiologyDashboardControllerTest extends BaseContextMockTest {
 	
 	@Before
 	public void runBeforeAllTests() {
+		PowerMockito.mockStatic(RadiologyProperties.class);
+		
 		mockPatient1 = RadiologyTestData.getMockPatient1();
 		invalidPatient = new Patient();
 		mockRadiologyOrderType = RadiologyTestData.getMockRadiologyOrderType();
@@ -72,7 +82,8 @@ public class RadiologyDashboardControllerTest extends BaseContextMockTest {
 		ArrayList<Order> emptyOrdersList = new ArrayList<Order>();
 		
 		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
-		when(Utils.getRadiologyOrderType()).thenReturn(Arrays.asList(mockRadiologyOrderType));
+		when(RadiologyProperties.getRadiologyTestOrderType()).thenReturn(RadiologyTestData.getMockRadiologyOrderType());
+		
 		when(radiologyService.getStudiesByOrders(mockOrders)).thenReturn(mockStudies);
 		when(
 		    (orderService.getOrders(Order.class, Arrays.asList(mockPatient1), null, null, null, null, Arrays
