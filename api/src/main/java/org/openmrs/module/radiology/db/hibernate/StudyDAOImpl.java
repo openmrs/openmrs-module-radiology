@@ -16,6 +16,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Obs;
 import org.openmrs.Order;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.StudyDAO;
 
@@ -63,14 +64,14 @@ public class StudyDAOImpl implements StudyDAO {
 	}
 	
 	/**
-	 * @see StudyDAO#getStudiesByOrders(List<Order>)
+	 * @see StudyDAO#getStudiesByRadiologyOrders(List<RadiologyOrder>)
 	 */
 	@Override
-	public List<Study> getStudiesByOrders(List<Order> orders) {
+	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
 		String query = "select study from Study as study where study.orderId in (:orderIds)";
 		
 		List<Integer> orderIds = new ArrayList<Integer>();
-		for (Order order : orders) {
+		for (Order order : radiologyOrders) {
 			orderIds.add(order.getOrderId());
 		}
 		

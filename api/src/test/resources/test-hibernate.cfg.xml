@@ -5,6 +5,7 @@
 
 <hibernate-configuration>
 	<session-factory>
+		<mapping resource="RadiologyOrder.hbm.xml" />
 		<mapping resource="RadiologyStudy.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

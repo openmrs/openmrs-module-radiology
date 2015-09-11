@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.openmrs.module.radiology">
+
+	<joined-subclass name="org.openmrs.module.radiology.RadiologyOrder"
+		extends="org.openmrs.TestOrder" table="radiology_order" lazy="false">
+		<key column="order_id" not-null="true" on-delete="cascade" />
+	</joined-subclass>
+
+</hibernate-mapping>

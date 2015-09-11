@@ -146,4 +146,23 @@
 			<column name="uuid" value="dbdb9a9b-56ea-11e5-a47f-08002719a237" />
 		</insert>
 	</changeSet>
+	<changeSet id="radiology-16" author="teleivo">
+		<preConditions onFail="MARK_RAN">
+			<not>
+				<tableExists tableName="radiology_order" />
+			</not>
+		</preConditions>
+		<comment>Create radiology_order table for new class RadiologyOrder</comment>
+		<createTable tableName="radiology_order">
+			<column name="order_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="radiology_order_order_id_fk"
+			baseTableName="radiology_order" baseColumnNames="order_id"
+			referencedTableName="test_order" referencedColumnNames="order_id" />
+		<addForeignKeyConstraint constraintName="radiology_study_order_id_fk"
+			baseTableName="radiology_study" baseColumnNames="order_id"
+			referencedTableName="radiology_order" referencedColumnNames="order_id" />
+	</changeSet>
 </databaseChangeLog>

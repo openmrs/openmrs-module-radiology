@@ -9,17 +9,14 @@
  */
 package org.openmrs.module.radiology.web.controller;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Order;
 import org.openmrs.Patient;
-import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.RadiologyProperties;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.web.util.StudyStatusColumnGenerator;
@@ -37,9 +34,6 @@ public class RadiologyDashboardController {
 	@Autowired
 	RadiologyService radiologyService;
 	
-	@Autowired
-	OrderService orderService;
-	
 	/**
 	 * Get all orders for given patient criteria
 	 * 
@@ -53,10 +47,9 @@ public class RadiologyDashboardController {
 		
 		ModelAndView mav = new ModelAndView("/module/radiology/portlets/RadiologyDashboardTab");
 		
-		List<Order> matchedOrders = orderService.getOrders(Order.class, Arrays.asList(patient), null, null, null, null,
-		    Arrays.asList(RadiologyProperties.getRadiologyTestOrderType()));
+		List<RadiologyOrder> matchedOrders = radiologyService.getRadiologyOrdersByPatient(patient);
 		// TODO Status filter
-		List<Study> studies = radiologyService.getStudiesByOrders(matchedOrders);
+		List<Study> studies = radiologyService.getStudiesByRadiologyOrders(matchedOrders);
 		List<String> statuses = new Vector<String>();
 		List<String> priorities = new Vector<String>();
 		List<String> schedulers = new Vector<String>();
@@ -79,7 +72,7 @@ public class RadiologyDashboardController {
 		// TODO optimize all the function, get orders and studies(priorities, statuses, etc) in a row				
 		// Response variables
 		
-		mav.addObject(matchedOrders);
+		mav.addObject("orderList", matchedOrders);
 		mav.addObject("statuses", statuses);
 		mav.addObject("priorities", priorities);
 		mav.addObject("schedulers", schedulers);

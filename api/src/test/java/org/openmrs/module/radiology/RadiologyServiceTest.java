@@ -21,6 +21,8 @@ import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 
 import org.junit.Before;
@@ -28,14 +30,13 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
+import org.openmrs.Concept;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Obs;
-import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
-import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -52,11 +53,19 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	
 	private static final int PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER = 70021;
 	
-	private static final int ORDER_ID_WITH_ONE_OBS = 2002;
+	private static final int PATIENT_ID_WITH_TWO_RADIOLOGY_ORDERS = 70021;
 	
-	private static final int ORDER_ID_WITHOUT_OBS = 2001;
+	private static final int PATIENT_ID_WITH_ONE_RADIOLOGY_ORDER = 70022;
 	
-	private static final int ORDER_ID_WITHOUT_STUDY = 2004;
+	private static final int RADIOLOGY_ORDER_ID_WITH_ONE_OBS = 2002;
+	
+	private static final int RADIOLOGY_ORDER_ID_WITHOUT_OBS = 2001;
+	
+	private static final int RADIOLOGY_ORDER_ID_WITHOUT_STUDY = 2004;
+	
+	private static final int EXISTING_RADIOLOGY_ORDER_ID = 2001;
+	
+	private static final int NON_EXISTING_RADIOLOGY_ORDER_ID = 99999;
 	
 	private static final String EXISTING_STUDY_INSTANCE_UID = "1.2.826.0.1.3680043.8.2186.1.1";
 	
@@ -64,11 +73,13 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	
 	private static final int EXISTING_STUDY_ID = 1;
 	
+	private static final int CONCEPT_ID_FOR_FRACTURE = 178;
+	
+	private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 3;
+	
 	private static final String MWL_DIRECTORY = "mwl";
 	
 	private PatientService patientService = null;
-	
-	private OrderService orderService = null;
 	
 	private ConceptService conceptService = null;
 	
@@ -89,10 +100,6 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 			patientService = Context.getPatientService();
 		}
 		
-		if (orderService == null) {
-			orderService = Context.getOrderService();
-		}
-		
 		if (conceptService == null) {
 			conceptService = Context.getConceptService();
 		}
@@ -109,20 +116,177 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * Convenience method to have a Study object with all required values filled in
-	 * 
-	 * @return a mock Study object that can be saved
+	 * @see RadiologyService#saveRadiologyOrder(RadiologyOrder)
 	 */
-	public Study getMockStudy() {
+	@Test
+	@Verifies(value = "should create new radiology order from given radiology order object", method = "saveRadiologyOrder(RadiologyOrder)")
+	public void saveRadiologyOrder_shouldCreateNewRadiologyOrderGivenRadiologyOrderObject() {
 		
-		Study study = new Study();
-		study.setOrderId(orderService.getOrder(ORDER_ID_WITHOUT_STUDY).getOrderId());
-		study.setModality(Modality.CT);
-		study.setPriority(RequestedProcedurePriority.LOW);
-		study.setMwlStatus(MwlStatus.DEFAULT);
-		study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
+		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
 		
-		return study;
+		radiologyOrder = radiologyService.saveRadiologyOrder(radiologyOrder);
+		
+		assertNotNull(radiologyOrder);
+		assertNotNull(radiologyOrder.getOrderId());
+	}
+	
+	/**
+	 * Convenience method to get a RadiologyOrder object with all required values filled in but
+	 * which is not yet saved in the database
+	 * 
+	 * @return RadiologyOrder object that can be saved to the database
+	 */
+	public RadiologyOrder getUnsavedRadiologyOrder() {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		radiologyOrder.setPatient(patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER));
+		radiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
+		
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
+		radiologyOrder.setStartDate(calendar.getTime());
+		
+		Concept conceptFracture = conceptService.getConcept(CONCEPT_ID_FOR_FRACTURE);
+		radiologyOrder.setConcept(conceptFracture);
+		
+		radiologyOrder.setOrderType(RadiologyProperties.getRadiologyTestOrderType());
+		
+		return radiologyOrder;
+	}
+	
+	/**
+	 * @see RadiologyService#saveRadiologyOrder(RadiologyOrder)
+	 */
+	@Test
+	@Verifies(value = "should throw illegal argument exception given null", method = "saveRadiologyOrder(RadiologyOrder)")
+	public void saveRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenNull() {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder is required");
+		radiologyService.saveRadiologyOrder(null);
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 */
+	@Test
+	@Verifies(value = "should return radiology order matching order id", method = "getRadiologyOrderByOrderId(Integer)")
+	public void getRadiologyOrderByOrderId_shouldReturnRadiologyOrderMatchingOrderId() {
+		
+		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		
+		assertNotNull(radiologyOrder);
+		assertThat(radiologyOrder.getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 */
+	@Test
+	@Verifies(value = "should return null if no match was found", method = "getRadiologyOrderByOrderId(Integer)")
+	public void getRadiologyOrderByOrderId_shouldReturnNullIfNoMatchIsFound() {
+		
+		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(NON_EXISTING_RADIOLOGY_ORDER_ID);
+		
+		assertNull(radiologyOrder);
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 */
+	@Test
+	@Verifies(value = "should throw illegal argument exception given null", method = "getRadiologyOrderByOrderId(Integer)")
+	public void getRadiologyOrderByOrderId_shouldThrowIllegalArgumentExceptionGivenNull() {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("orderId is required");
+		radiologyService.getRadiologyOrderByOrderId(null);
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyOrdersByPatient(Patient)
+	 */
+	@Test
+	@Verifies(value = "should return all radiology orders associated with given patient", method = "getRadiologyOrdersByPatient(Patient)")
+	public void getRadiologyOrdersByPatient_shouldReturnAllRadiologyOrdersAssociatedWithGivenPatient() {
+		
+		Patient patientWithTwoRadiologyOrders = patientService
+		        .getPatient(PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER);
+		
+		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatient(patientWithTwoRadiologyOrders);
+		
+		assertThat(radiologyOrders.size(), is(2));
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyOrdersByPatient(Patient)
+	 */
+	@Test
+	@Verifies(value = "should return empty list given patient without associated radiology orders", method = "getRadiologyOrdersByPatient(Patient)")
+	public void getRadiologyOrdersByPatient_shouldReturnEmptyListGivenPatientWithoutAssociatedRadiologyOrders() {
+		
+		Patient patientWithoutRadiologyOrders = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER);
+		
+		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatient(patientWithoutRadiologyOrders);
+		
+		assertThat(radiologyOrders.size(), is(0));
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyOrdersByPatient(Patient)
+	 */
+	@Test
+	@Verifies(value = "should throw illegal argument exception given null", method = "getRadiologyOrdersByPatient(Patient)")
+	public void getRadiologyOrdersByPatient_shouldThrowIllegalArgumentExceptionGivenNull() {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("patient is required");
+		radiologyService.getRadiologyOrdersByPatient(null);
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 */
+	@Test
+	@Verifies(value = "should return all radiology orders associated with given patients", method = "getRadiologyOrdersByPatients(List<Patient>)")
+	public void getRadiologyOrdersByPatients_shouldReturnAllRadiologyOrdersAssociatedWithGivenPatients() {
+		
+		Patient patientWithTwoRadiologyOrders = patientService.getPatient(PATIENT_ID_WITH_TWO_RADIOLOGY_ORDERS);
+		Patient patientWithOneRadiologyOrder = patientService.getPatient(PATIENT_ID_WITH_ONE_RADIOLOGY_ORDER);
+		List<Patient> patientsWithThreeRadiologyOrders = new ArrayList<Patient>();
+		patientsWithThreeRadiologyOrders.add(patientWithTwoRadiologyOrders);
+		patientsWithThreeRadiologyOrders.add(patientWithOneRadiologyOrder);
+		
+		List<RadiologyOrder> radiologyOrders = radiologyService
+		        .getRadiologyOrdersByPatients(patientsWithThreeRadiologyOrders);
+		
+		assertThat(radiologyOrders.size(), is(3));
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 */
+	@Test
+	@Verifies(value = "should return all radiology orders given empty patient list", method = "getRadiologyOrdersByPatients(List<Patient>)")
+	public void getRadiologyOrdersByPatients_shouldReturnAllRadiologyOrdersGivenEmptyPatientList() {
+		
+		List<Patient> emptyPatientList = new ArrayList<Patient>();
+		
+		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatients(emptyPatientList);
+		
+		assertThat(radiologyOrders.size(), is(TOTAL_NUMBER_OF_RADIOLOGY_ORDERS));
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 */
+	@Test
+	@Verifies(value = "should throw illegal argument exception given null", method = "getRadiologyOrdersByPatients(List<Patient>)")
+	public void getRadiologyOrdersByPatients_shouldThrowIllegalArgumentExceptionGivenNull() {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("patients is required");
+		radiologyService.getRadiologyOrdersByPatients(null);
 	}
 	
 	/**
@@ -137,20 +301,38 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
 		        .getAbsolutePath()));
 		
-		Order mockOrder = orderService.getOrder(ORDER_ID_WITHOUT_STUDY);
-		Study mockStudy = getMockStudy();
-		mockStudy.setOrderId(mockOrder.getOrderId());
+		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
+		Study radiologyStudy = getUnsavedStudy();
+		radiologyStudy.setOrderId(radiologyOrder.getOrderId());
 		
-		radiologyService.saveStudy(mockStudy);
+		radiologyService.saveStudy(radiologyStudy);
 		
-		Study createdStudy = radiologyService.getStudy(mockStudy.getStudyId());
+		Study createdStudy = radiologyService.getStudy(radiologyStudy.getStudyId());
 		assertNotNull(createdStudy);
-		assertThat(createdStudy, is(mockStudy));
-		assertThat(createdStudy.getStudyId(), is(mockStudy.getStudyId()));
+		assertThat(createdStudy, is(radiologyStudy));
+		assertThat(createdStudy.getStudyId(), is(radiologyStudy.getStudyId()));
 		assertNotNull(createdStudy.getStudyInstanceUid());
 		assertThat(createdStudy.getStudyInstanceUid(), is(RadiologyProperties.getStudyPrefix() + createdStudy.getStudyId()));
-		assertThat(createdStudy.getModality(), is(mockStudy.getModality()));
-		assertThat(createdStudy.getOrderId(), is(mockStudy.getOrderId()));
+		assertThat(createdStudy.getModality(), is(radiologyStudy.getModality()));
+		assertThat(createdStudy.getOrderId(), is(radiologyStudy.getOrderId()));
+	}
+	
+	/**
+	 * Convenience method to get a Study object with all required values filled in but which is not
+	 * yet saved in the database
+	 * 
+	 * @return Study object that can be saved to the database
+	 */
+	public Study getUnsavedStudy() {
+		
+		Study study = new Study();
+		study.setOrderId(radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY).getOrderId());
+		study.setModality(Modality.CT);
+		study.setPriority(RequestedProcedurePriority.LOW);
+		study.setMwlStatus(MwlStatus.DEFAULT);
+		study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
+		
+		return study;
 	}
 	
 	/**
@@ -208,12 +390,12 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
 		        .getAbsolutePath()));
 		
-		Study mockStudy = getMockStudy();
-		mockStudy.setOrderId(null);
+		Study radiologyStudy = getUnsavedStudy();
+		radiologyStudy.setOrderId(null);
 		
 		expectedException.expect(APIException.class);
 		expectedException.expectMessage("Study.order.required");
-		radiologyService.saveStudy(mockStudy);
+		radiologyService.saveStudy(radiologyStudy);
 	}
 	
 	/**
@@ -228,14 +410,14 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
 		        .getAbsolutePath()));
 		
-		Order mockOrder = orderService.getOrder(ORDER_ID_WITHOUT_STUDY);
-		Study mockStudy = getMockStudy();
-		mockStudy.setOrderId(mockOrder.getOrderId());
-		mockStudy.setModality(null);
+		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
+		Study radiologyStudy = getUnsavedStudy();
+		radiologyStudy.setOrderId(radiologyOrder.getOrderId());
+		radiologyStudy.setModality(null);
 		
 		expectedException.expect(APIException.class);
 		expectedException.expectMessage("Study.modality.required");
-		radiologyService.saveStudy(mockStudy);
+		radiologyService.saveStudy(radiologyStudy);
 	}
 	
 	/**
@@ -273,61 +455,65 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see RadiologyService#getStudiesByOrders(List<Order>)
+	 * @see RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
 	 */
 	@Test
-	@Verifies(value = "should fetch all studies for given orders", method = "getStudiesByOrders(List<Order>)")
-	public void getStudiesByOrders_shouldFetchAllStudiesForGivenOrders() throws Exception {
+	@Verifies(value = "should fetch all studies for given radiology orders", method = "getStudiesByRadiologyOrders(List<RadiologyOrder>)")
+	public void getStudiesByRadiologyOrders_shouldFetchAllStudiesForGivenRadiologyOrders() throws Exception {
+		
 		Patient patient = patientService.getPatient(PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER);
-		List<Order> orders = null;
-		orders = orderService.getOrdersByPatient(patient);
+		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatient(patient);
 		
-		List<Study> studies = radiologyService.getStudiesByOrders(orders);
+		List<Study> studies = radiologyService.getStudiesByRadiologyOrders(radiologyOrders);
 		
-		assertThat(studies.size(), is(orders.size()));
-		assertThat(studies.get(0).getOrderId(), is(orders.get(0).getOrderId()));
-		assertThat(studies.get(1).getOrderId(), is(orders.get(1).getOrderId()));
+		assertThat(studies.size(), is(radiologyOrders.size()));
+		assertThat(studies.get(0).getOrderId(), is(radiologyOrders.get(0).getOrderId()));
+		assertThat(studies.get(1).getOrderId(), is(radiologyOrders.get(1).getOrderId()));
 	}
 	
 	/**
-	 * @see RadiologyService#getStudiesByOrders(List<Order>)
+	 * @see RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
 	 */
 	@Test
-	@Verifies(value = "should return empty list given orders without associated studies", method = "getStudiesByOrders(List<Order>)")
-	public void getStudiesByOrders_shouldReturnEmptyListGivenOrdersWithoutAssociatedStudies() throws Exception {
-		Patient patient = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER);
-		List<Order> orders = null;
-		orders = orderService.getOrdersByPatient(patient);
+	@Verifies(value = "should return empty list given radiology orders without associated studies", method = "getStudiesByRadiologyOrders(List<RadiologyOrder>)")
+	public void getStudiesByRadiologyOrders_shouldReturnEmptyListGivenRadiologyOrdersWithoutAssociatedStudies()
+	        throws Exception {
 		
-		List<Study> studies = radiologyService.getStudiesByOrders(orders);
+		RadiologyOrder radiologyOrderWithoutStudy = radiologyService
+		        .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
+		List<RadiologyOrder> radiologyOrders = Arrays.asList(radiologyOrderWithoutStudy);
 		
-		assertThat(orders.size(), is(1));
+		List<Study> studies = radiologyService.getStudiesByRadiologyOrders(radiologyOrders);
+		
+		assertThat(radiologyOrders.size(), is(1));
 		assertThat(studies.size(), is(0));
 	}
 	
 	/**
-	 * @see RadiologyService#getStudiesByOrders(List<Order>)
+	 * @see RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
 	 */
 	@Test
-	@Verifies(value = "should return empty list given empty order list", method = "getStudiesByOrders(List<Order>)")
-	public void getStudiesByOrders_shouldReturnEmptyListGivenEmptyOrderList() throws Exception {
-		List<Order> orders = new ArrayList<Order>();
+	@Verifies(value = "should return empty list given empty radiology order list", method = "getStudiesByRadiologyOrders(List<RadiologyOrder>)")
+	public void getStudiesByRadiologyOrders_shouldReturnEmptyListGivenEmptyRadiologyOrderList() throws Exception {
 		
-		List<Study> studies = radiologyService.getStudiesByOrders(orders);
+		List<RadiologyOrder> orders = new ArrayList<RadiologyOrder>();
+		
+		List<Study> studies = radiologyService.getStudiesByRadiologyOrders(orders);
 		
 		assertThat(orders.size(), is(0));
 		assertThat(studies.size(), is(0));
 	}
 	
 	/**
-	 * @see RadiologyService#getStudiesByOrders(List<Order>)
+	 * @see RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
 	 */
 	@Test
-	@Verifies(value = "should throw IllegalArgumentException given null", method = "getStudiesByOrders(List<Order>)")
-	public void getStudiesByOrders_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
+	@Verifies(value = "should throw IllegalArgumentException given null", method = "getStudiesByRadiologyOrders(List<RadiologyOrder>)")
+	public void getStudiesByRadiologyOrders_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
+		
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("orders are required");
-		radiologyService.getStudiesByOrders(null);
+		expectedException.expectMessage("radiologyOrders are required");
+		radiologyService.getStudiesByRadiologyOrders(null);
 	}
 	
 	/**
@@ -336,10 +522,10 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	@Test
 	@Verifies(value = "should fetch all obs for given orderId", method = "getObsByOrderId(Integer)")
 	public void getObsByOrderId_shouldFetchAllObsForGivenOrderId() throws Exception {
-		List<Obs> obs = radiologyService.getObsByOrderId(ORDER_ID_WITH_ONE_OBS);
+		List<Obs> obs = radiologyService.getObsByOrderId(RADIOLOGY_ORDER_ID_WITH_ONE_OBS);
 		
 		assertThat(obs.size(), is(1));
-		assertThat(obs.get(0).getOrder().getOrderId(), is(ORDER_ID_WITH_ONE_OBS));
+		assertThat(obs.get(0).getOrder().getOrderId(), is(RADIOLOGY_ORDER_ID_WITH_ONE_OBS));
 	}
 	
 	/**
@@ -348,7 +534,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	@Test
 	@Verifies(value = "should return empty list given orderId without associated obs", method = "getObsByOrderId(Integer)")
 	public void getObsByOrderId_shouldReturnEmptyListGivenOrderIdWithoutAssociatedObs() throws Exception {
-		List<Obs> obs = radiologyService.getObsByOrderId(ORDER_ID_WITHOUT_OBS);
+		List<Obs> obs = radiologyService.getObsByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_OBS);
 		
 		assertThat(obs.size(), is(0));
 	}

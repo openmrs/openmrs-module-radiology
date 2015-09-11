@@ -12,18 +12,16 @@ package org.openmrs.module.radiology.web.controller;
 import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.Vector;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Order;
-import org.openmrs.api.OrderService;
+import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.RadiologyProperties;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.web.util.StudyStatusColumnGenerator;
@@ -47,9 +45,6 @@ public class PortletsController {
 	private RadiologyService radiologyService;
 	
 	@Autowired
-	private OrderService orderService;
-	
-	@Autowired
 	private PatientService patientService;
 	
 	@InitBinder
@@ -70,19 +65,28 @@ public class PortletsController {
 	}
 	
 	/**
-	 * Get model and view containing radiology orders and studies for given patient string and date range
+	 * Get model and view containing radiology orders and studies for given patient string and date
+	 * range
 	 * 
-	 * @param patientQuery Patient string for which radiology orders and studies should be returned for
+	 * @param patientQuery Patient string for which radiology orders and studies should be returned
+	 *            for
 	 * @param startDate Date from which on the radiology orders and studies should be returned for
 	 * @param endDate Date until which the radiology orders and studies should be returned for
-	 * @return model and view containing radiology orders and studies corresponding to given criteria
-	 * @should populate model and view with table of orders associated with given empty patient and given date range null
+	 * @return model and view containing radiology orders and studies corresponding to given
+	 *         criteria
+	 * @should populate model and view with table of orders associated with given empty patient and
+	 *         given date range null
 	 * @should not populate model and view with table of orders if start date is after end date
-	 * @should populate model and view with empty table of orders associated with given end date and start date before any order has started
-	 * @should populate model and view with empty table of orders associated with given end date and start date after any order has started
-	 * @should populate model and view with table of orders associated with given start date but given end date null
-	 * @should populate model and view with table of orders associated with given end date but given start date null
-	 * @should populate model and view with table of orders including obsId accessed as reading physician
+	 * @should populate model and view with empty table of orders associated with given end date and
+	 *         start date before any order has started
+	 * @should populate model and view with empty table of orders associated with given end date and
+	 *         start date after any order has started
+	 * @should populate model and view with table of orders associated with given start date but
+	 *         given end date null
+	 * @should populate model and view with table of orders associated with given end date but given
+	 *         start date null
+	 * @should populate model and view with table of orders including obsId accessed as reading
+	 *         physician
 	 * @should populate model and view with table of orders associated with given date range
 	 */
 	@RequestMapping(value = "/module/radiology/portlets/orderSearch.portlet")
@@ -92,10 +96,10 @@ public class PortletsController {
 	        @RequestParam(value = "pending", required = false) boolean pending,
 	        @RequestParam(value = "completed", required = false) boolean completed) {
 		ModelAndView mav = new ModelAndView("module/radiology/portlets/orderSearch");
-		List<Order> matchedOrders = dateFilter(patientQuery, startDate, endDate, mav);
+		List<RadiologyOrder> matchedOrders = dateFilter(patientQuery, startDate, endDate, mav);
 		
 		// TODO Status filter
-		List<Study> studies = radiologyService.getStudiesByOrders(matchedOrders);
+		List<Study> studies = radiologyService.getStudiesByRadiologyOrders(matchedOrders);
 		
 		List<String> statuses = new Vector<String>();
 		List<String> priorities = new Vector<String>();
@@ -121,7 +125,7 @@ public class PortletsController {
 		
 		// Response variables
 		
-		mav.addObject(matchedOrders);
+		mav.addObject("orderList", matchedOrders);
 		mav.addObject("statuses", statuses);
 		mav.addObject("priorities", priorities);
 		mav.addObject("schedulers", schedulers);
@@ -140,7 +144,8 @@ public class PortletsController {
 	/**
 	 * Get all orders for given date and patient criteria
 	 * 
-	 * @param patientQuery Patient string for which radiology orders and studies should be returned for
+	 * @param patientQuery Patient string for which radiology orders and studies should be returned
+	 *            for
 	 * @param startDate Date from which on the radiology orders and studies should be returned for
 	 * @param endDate Date until which the radiology orders and studies should be returned for
 	 * @return list of radiology orders corresponding to given criteria
@@ -148,24 +153,24 @@ public class PortletsController {
 	 * @should return empty list of radiology orders, if date criteria is not met
 	 * @should return list of radiology orders for all patients if patientQuery criteria is not met
 	 */
-	private List<Order> dateFilter(String patientQuery, Date startDate, Date endDate, ModelAndView mav) {
+	private List<RadiologyOrder> dateFilter(String patientQuery, Date startDate, Date endDate, ModelAndView mav) {
 		
 		if (startDate != null && endDate != null) {
 			if (startDate.after(endDate)) {
 				mav.addObject("exceptionText", "radiology.crossDate");
-				return new ArrayList<Order>();
+				return new ArrayList<RadiologyOrder>();
 			}
 		}
 		
-		List<Order> preMatchedOrders = orderService.getOrders(Order.class, patientService.getPatients(patientQuery), null,
-		    null, null, null, Arrays.asList(RadiologyProperties.getRadiologyTestOrderType()));
-		List<Order> matchedOrders = new Vector<Order>();
+		List<Patient> patientList = patientService.getPatients(patientQuery);
+		List<RadiologyOrder> preMatchedOrders = radiologyService.getRadiologyOrdersByPatients(patientList);
+		List<RadiologyOrder> matchedOrders = new Vector<RadiologyOrder>();
 		if (startDate == null && endDate == null) {
 			return preMatchedOrders;
 		}
 
 		else if (startDate == null && endDate != null) {
-			for (Order order : preMatchedOrders) {
+			for (RadiologyOrder order : preMatchedOrders) {
 				if (order.getStartDate() != null && order.getStartDate().compareTo(endDate) <= 0) {
 					
 					matchedOrders.add(order);
@@ -173,7 +178,7 @@ public class PortletsController {
 			}
 			
 		} else if (startDate != null && endDate == null) {
-			for (Order order : preMatchedOrders) {
+			for (RadiologyOrder order : preMatchedOrders) {
 				if (order.getStartDate() != null && order.getStartDate().compareTo(startDate) >= 0) {
 					matchedOrders.add(order);
 				}
@@ -181,7 +186,7 @@ public class PortletsController {
 		}
 
 		else {
-			for (Order order : preMatchedOrders) {
+			for (RadiologyOrder order : preMatchedOrders) {
 				if (order.getStartDate() != null && order.getStartDate().compareTo(startDate) >= 0
 				        && order.getStartDate().compareTo(endDate) <= 0) {
 					matchedOrders.add(order);
@@ -197,7 +202,8 @@ public class PortletsController {
 	 * 
 	 * @param TypeMismatchException the thrown TypeMismatchException
 	 * @return model and view with exception information
-	 * @should populate model with exception text from message properties and invalid value if date is expected but nut passed
+	 * @should populate model with exception text from message properties and invalid value if date
+	 *         is expected but nut passed
 	 * @should should populate model with exception text
 	 */
 	@ExceptionHandler(TypeMismatchException.class)

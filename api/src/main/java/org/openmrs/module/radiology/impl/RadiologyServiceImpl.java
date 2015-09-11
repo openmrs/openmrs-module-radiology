@@ -20,17 +20,20 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Obs;
 import org.openmrs.Order;
+import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.MwlStatus;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.GenericDAO;
+import org.openmrs.module.radiology.db.RadiologyOrderDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,25 +41,72 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 	
 	private GenericDAO gdao;
 	
+	private RadiologyOrderDAO radiologyOrderDAO;
+	
 	private StudyDAO sdao;
 	
 	private static final Log log = LogFactory.getLog(RadiologyServiceImpl.class);
+	
+	@Override
+	public void setRadiologyOrderDao(RadiologyOrderDAO radiologyOrderDAO) {
+		this.radiologyOrderDAO = radiologyOrderDAO;
+	}
 	
 	@Override
 	public void setSdao(StudyDAO dao) {
 		this.sdao = dao;
 	}
 	
-	@Transactional(readOnly = true)
+	/**
+	 * @see RadiologyService#saveRadiologyOrder(RadiologyOrder)
+	 */
+	@Transactional
 	@Override
-	public Study getStudy(Integer id) {
-		return sdao.getStudy(id);
+	public RadiologyOrder saveRadiologyOrder(RadiologyOrder radiologyOrder) {
+		if (radiologyOrder == null) {
+			throw new IllegalArgumentException("radiologyOrder is required");
+		}
+		
+		return radiologyOrderDAO.saveRadiologyOrder(radiologyOrder);
 	}
 	
+	/**
+	 * @see RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 */
 	@Transactional(readOnly = true)
 	@Override
-	public Study getStudyByOrderId(Integer id) {
-		return sdao.getStudyByOrderId(id);
+	public RadiologyOrder getRadiologyOrderByOrderId(Integer orderId) {
+		if (orderId == null) {
+			throw new IllegalArgumentException("orderId is required");
+		}
+		
+		return radiologyOrderDAO.getRadiologyOrderByOrderId(orderId);
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyOrdersByPatient(Patient)
+	 */
+	@Transactional(readOnly = true)
+	@Override
+	public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient) {
+		if (patient == null) {
+			throw new IllegalArgumentException("patient is required");
+		}
+		
+		return radiologyOrderDAO.getRadiologyOrdersByPatient(patient);
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 */
+	@Transactional(readOnly = true)
+	@Override
+	public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients) {
+		if (patients == null) {
+			throw new IllegalArgumentException("patients is required");
+		}
+		
+		return radiologyOrderDAO.getRadiologyOrdersByPatients(patients);
 	}
 	
 	/**
@@ -182,6 +232,18 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		saveStudy(s);
 	}
 	
+	@Transactional(readOnly = true)
+	@Override
+	public Study getStudy(Integer id) {
+		return sdao.getStudy(id);
+	}
+	
+	@Transactional(readOnly = true)
+	@Override
+	public Study getStudyByOrderId(Integer id) {
+		return sdao.getStudyByOrderId(id);
+	}
+	
 	@Override
 	public void setGdao(GenericDAO dao) {
 		this.gdao = dao;
@@ -210,16 +272,16 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 	}
 	
 	/**
-	 * @see RadiologyService#getStudiesByOrders(List<Order>)
+	 * @see RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public List<Study> getStudiesByOrders(List<Order> orders) {
-		if (orders == null) {
-			throw new IllegalArgumentException("orders are required");
+	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
+		if (radiologyOrders == null) {
+			throw new IllegalArgumentException("radiologyOrders are required");
 		}
 		
-		List<Study> result = sdao.getStudiesByOrders(orders);
+		List<Study> result = sdao.getStudiesByRadiologyOrders(radiologyOrders);
 		return result;
 	}
 	

@@ -16,7 +16,6 @@ import static org.mockito.Mockito.when;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -27,13 +26,13 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Order;
-import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.MessageSourceService;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
@@ -50,7 +49,7 @@ import org.springframework.web.servlet.ModelAndView;
  * Tests {@link PortletsController}
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest( { Context.class, RadiologyProperties.class })
+@PrepareForTest( { Context.class })
 @PowerMockIgnore( { "org.apache.commons.logging.*" })
 public class PortletsControllerTest {
 	
@@ -58,9 +57,7 @@ public class PortletsControllerTest {
 	
 	private List<Study> mockStudies;
 	
-	private List<Order> mockOrders;
-	
-	private OrderType mockRadiologyOrderType;
+	private List<RadiologyOrder> mockOrders;
 	
 	@Mock
 	private PatientService patientService;
@@ -90,9 +87,7 @@ public class PortletsControllerTest {
 		
 		String patientQuery = "";
 		
-		mockRadiologyOrderType = RadiologyTestData.getMockRadiologyOrderType();
-		
-		mockOrders = new ArrayList<Order>();
+		mockOrders = new ArrayList<RadiologyOrder>();
 		mockOrders.add(RadiologyTestData.getMockRadiologyOrder1());
 		mockOrders.add(RadiologyTestData.getMockRadiologyOrder2());
 		
@@ -106,13 +101,10 @@ public class PortletsControllerTest {
 		
 		when(Context.getDateFormat()).thenReturn(sdf);
 		when(Context.getOrderService()).thenReturn(orderService);
-		when(RadiologyProperties.getRadiologyTestOrderType()).thenReturn(RadiologyTestData.getMockRadiologyOrderType());
 		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
-		when(radiologyService.getStudiesByOrders(mockOrders)).thenReturn(mockStudies);
+		when(radiologyService.getStudiesByRadiologyOrders(mockOrders)).thenReturn(mockStudies);
 		when(patientService.getPatients(patientQuery)).thenReturn(mockPatients);
-		when(
-		    (orderService.getOrders(Order.class, patientService.getPatients(patientQuery), null, null, null, null, Arrays
-		            .asList(mockRadiologyOrderType)))).thenReturn(mockOrders);
+		when(radiologyService.getRadiologyOrdersByPatients(patientService.getPatients(patientQuery))).thenReturn(mockOrders);
 	}
 	
 	/**
