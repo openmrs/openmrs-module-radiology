@@ -28,6 +28,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
@@ -53,7 +54,7 @@ public class RadiologyORMO01Test {
 	
 	private Study study = null;
 	
-	private Order order = null;
+	private RadiologyOrder radiologyOrder = null;
 	
 	@Before
 	public void runBeforeEachTest() throws Exception {
@@ -87,16 +88,16 @@ public class RadiologyORMO01Test {
 		cal.set(1950, Calendar.APRIL, 1, 0, 0, 0);
 		patient.setBirthdate(cal.getTime());
 		
-		order = new Order();
-		order.setId(20);
-		order.setPatient(patient);
+		radiologyOrder = new RadiologyOrder();
+		radiologyOrder.setId(20);
+		radiologyOrder.setPatient(patient);
 		cal.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
-		order.setStartDate(cal.getTime());
-		order.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
+		radiologyOrder.setStartDate(cal.getTime());
+		radiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		
 		study = new Study();
 		study.setStudyId(1);
-		study.setOrderId(order.getId());
+		study.setRadiologyOrder(radiologyOrder);
 		study.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(RequestedProcedurePriority.STAT);
@@ -112,8 +113,8 @@ public class RadiologyORMO01Test {
 	@Verifies(value = "should return ormo01 message given all params", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
 	public void getRadiologyORMO01Message_shouldReturnORMO01MessageGivenAllParams() throws HL7Exception {
 		
-		ORM_O01 ormMessage = RadiologyORMO01.getRadiologyORMO01Message(study, order, CommonOrderOrderControl.NEW_ORDER,
-		    CommonOrderPriority.STAT);
+		ORM_O01 ormMessage = RadiologyORMO01.getRadiologyORMO01Message(study, radiologyOrder,
+		    CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
 		
 		String encodedOrmMessage = PipeParser.encode(ormMessage, encodingCharacters);
 		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
@@ -138,7 +139,8 @@ public class RadiologyORMO01Test {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("study cannot be null."));
-		RadiologyORMO01.getRadiologyORMO01Message(null, order, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+		RadiologyORMO01.getRadiologyORMO01Message(null, radiologyOrder, CommonOrderOrderControl.NEW_ORDER,
+		    CommonOrderPriority.STAT);
 	}
 	
 	/**
@@ -168,7 +170,7 @@ public class RadiologyORMO01Test {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("orderControlCode cannot be null."));
-		RadiologyORMO01.getRadiologyORMO01Message(study, order, null, CommonOrderPriority.STAT);
+		RadiologyORMO01.getRadiologyORMO01Message(study, radiologyOrder, null, CommonOrderPriority.STAT);
 	}
 	
 	/**
@@ -183,6 +185,6 @@ public class RadiologyORMO01Test {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("orderControlPriority cannot be null."));
-		RadiologyORMO01.getRadiologyORMO01Message(study, order, CommonOrderOrderControl.NEW_ORDER, null);
+		RadiologyORMO01.getRadiologyORMO01Message(study, radiologyOrder, CommonOrderOrderControl.NEW_ORDER, null);
 	}
 }

@@ -9,7 +9,8 @@
 			</generator>
 		</id>
 		<property name="studyInstanceUid" column="study_instance_uid"></property>
-		<property name="orderId" column="order_id"></property>
+		<many-to-one name="radiologyOrder" column="order_id"
+			unique="true" not-null="true" />
 		<property name="scheduledStatus" column="scheduled_status"
 			length="9">
 			<type name="org.openmrs.util.HibernateEnumType">

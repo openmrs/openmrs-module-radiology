@@ -48,7 +48,7 @@ public class RadiologyTestData {
 	public static Study getMockStudy1PreSave() {
 		
 		Study mockStudy = new Study();
-		mockStudy.setOrderId(getMockRadiologyOrder1().getId());
+		mockStudy.setRadiologyOrder(getMockRadiologyOrder1());
 		mockStudy.setModality(Modality.CT);
 		mockStudy.setPriority(RequestedProcedurePriority.STAT);
 		
@@ -75,7 +75,7 @@ public class RadiologyTestData {
 	public static Study getMockStudy2PreSave() {
 		
 		Study mockStudy = new Study();
-		mockStudy.setOrderId(getMockRadiologyOrder2().getId());
+		mockStudy.setRadiologyOrder(getMockRadiologyOrder2());
 		mockStudy.setModality(Modality.CT);
 		mockStudy.setPriority(RequestedProcedurePriority.STAT);
 		

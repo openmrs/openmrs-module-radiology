@@ -32,14 +32,11 @@ import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.db.GenericDAO;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
 import org.springframework.transaction.annotation.Transactional;
 
 public class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyService {
-	
-	private GenericDAO gdao;
 	
 	private RadiologyOrderDAO radiologyOrderDAO;
 	
@@ -119,7 +116,7 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 			throw new IllegalArgumentException("study is required");
 		}
 		
-		if (study.getOrderId() == null) {
+		if (study.getRadiologyOrder() == null) {
 			throw new APIException("Study.order.required");
 		}
 		
@@ -127,7 +124,7 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 			throw new APIException("Study.modality.required");
 		}
 		
-		Order order = study.order();
+		RadiologyOrder order = study.getRadiologyOrder();
 		
 		if (study.getScheduledStatus() == null && order.getStartDate() != null) {
 			study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
@@ -172,7 +169,7 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 	
 	@Override
 	public void sendModalityWorklist(Study s, OrderRequest orderRequest) {
-		Order order = s.order();
+		Order order = s.getRadiologyOrder();
 		MwlStatus mwlStatus = s.getMwlStatus();
 		String hl7blob = DicomUtils.createHL7Message(s, order, orderRequest);
 		int status = DicomUtils.sendHL7Worklist(hl7blob);
@@ -240,23 +237,12 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 	
 	@Transactional(readOnly = true)
 	@Override
-	public Study getStudyByOrderId(Integer id) {
-		return sdao.getStudyByOrderId(id);
-	}
-	
-	@Override
-	public void setGdao(GenericDAO dao) {
-		this.gdao = dao;
-	}
-	
-	@Override
-	public Object get(String query, boolean unique) {
-		return gdao.get(query, unique);
-	}
-	
-	@Override
-	public GenericDAO db() {
-		return gdao;
+	public Study getStudyByOrderId(Integer orderId) {
+		if (orderId == null) {
+			throw new IllegalArgumentException("orderId is required");
+		}
+		
+		return sdao.getStudyByOrderId(orderId);
 	}
 	
 	/**

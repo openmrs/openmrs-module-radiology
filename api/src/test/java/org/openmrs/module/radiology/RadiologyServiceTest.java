@@ -303,7 +303,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
 		Study radiologyStudy = getUnsavedStudy();
-		radiologyStudy.setOrderId(radiologyOrder.getOrderId());
+		radiologyStudy.setRadiologyOrder(radiologyOrder);
 		
 		radiologyService.saveStudy(radiologyStudy);
 		
@@ -314,7 +314,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		assertNotNull(createdStudy.getStudyInstanceUid());
 		assertThat(createdStudy.getStudyInstanceUid(), is(RadiologyProperties.getStudyPrefix() + createdStudy.getStudyId()));
 		assertThat(createdStudy.getModality(), is(radiologyStudy.getModality()));
-		assertThat(createdStudy.getOrderId(), is(radiologyStudy.getOrderId()));
+		assertThat(createdStudy.getRadiologyOrder(), is(radiologyStudy.getRadiologyOrder()));
 	}
 	
 	/**
@@ -326,7 +326,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	public Study getUnsavedStudy() {
 		
 		Study study = new Study();
-		study.setOrderId(radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY).getOrderId());
+		study.setRadiologyOrder(radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY));
 		study.setModality(Modality.CT);
 		study.setPriority(RequestedProcedurePriority.LOW);
 		study.setMwlStatus(MwlStatus.DEFAULT);
@@ -391,7 +391,7 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		        .getAbsolutePath()));
 		
 		Study radiologyStudy = getUnsavedStudy();
-		radiologyStudy.setOrderId(null);
+		radiologyStudy.setRadiologyOrder(null);
 		
 		expectedException.expect(APIException.class);
 		expectedException.expectMessage("Study.order.required");
@@ -412,12 +412,49 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
 		Study radiologyStudy = getUnsavedStudy();
-		radiologyStudy.setOrderId(radiologyOrder.getOrderId());
+		radiologyStudy.setRadiologyOrder(radiologyOrder);
 		radiologyStudy.setModality(null);
 		
 		expectedException.expect(APIException.class);
 		expectedException.expectMessage("Study.modality.required");
 		radiologyService.saveStudy(radiologyStudy);
+	}
+	
+	/**
+	 * @see RadiologyService#getStudyByOrderId(Integer)
+	 */
+	@Test
+	@Verifies(value = "should return study associated with radiology order for which order id is given", method = "getStudyByOrderId(Integer)")
+	public void getStudyByOrderId_shouldReturnStudyMatching() throws Exception {
+		
+		Study study = radiologyService.getStudyByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		
+		assertNotNull(study);
+		assertThat(study.getRadiologyOrder().getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
+	}
+	
+	/**
+	 * @see RadiologyService#getStudyByOrderId(Integer)
+	 */
+	@Test
+	@Verifies(value = "should return null if no match was found", method = "getStudyByOrderId(Integer)")
+	public void getStudyByOrderId_shouldReturnNullIfNoMatchIsFound() {
+		
+		Study study = radiologyService.getStudyByOrderId(NON_EXISTING_RADIOLOGY_ORDER_ID);
+		
+		assertNull(study);
+	}
+	
+	/**
+	 * @see RadiologyService#getStudyByOrderId(Integer)
+	 */
+	@Test
+	@Verifies(value = "should throw illegal argument exception given null", method = "getStudyByOrderId(Integer)")
+	public void getStudyByOrderId_shouldThrowIllegalArgumentExceptionGivenNull() {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("orderId is required");
+		radiologyService.getStudyByOrderId(null);
 	}
 	
 	/**
@@ -467,8 +504,8 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		List<Study> studies = radiologyService.getStudiesByRadiologyOrders(radiologyOrders);
 		
 		assertThat(studies.size(), is(radiologyOrders.size()));
-		assertThat(studies.get(0).getOrderId(), is(radiologyOrders.get(0).getOrderId()));
-		assertThat(studies.get(1).getOrderId(), is(radiologyOrders.get(1).getOrderId()));
+		assertThat(studies.get(0).getRadiologyOrder(), is(radiologyOrders.get(0)));
+		assertThat(studies.get(1).getRadiologyOrder(), is(radiologyOrders.get(1)));
 	}
 	
 	/**

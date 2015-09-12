@@ -28,6 +28,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.test.Verifies;
@@ -46,7 +47,7 @@ public class HL7GeneratorTest {
 	
 	private Study study = null;
 	
-	private Order order = null;
+	private RadiologyOrder radiologyOrder = null;
 	
 	@Before
 	public void runBeforeEachTest() throws Exception {
@@ -80,16 +81,16 @@ public class HL7GeneratorTest {
 		cal.set(1950, Calendar.APRIL, 1, 0, 0, 0);
 		patient.setBirthdate(cal.getTime());
 		
-		order = new Order();
-		order.setId(20);
-		order.setPatient(patient);
+		radiologyOrder = new RadiologyOrder();
+		radiologyOrder.setId(20);
+		radiologyOrder.setPatient(patient);
 		cal.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
-		order.setStartDate(cal.getTime());
-		order.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
+		radiologyOrder.setStartDate(cal.getTime());
+		radiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		
 		study = new Study();
 		study.setStudyId(1);
-		study.setOrderId(order.getId());
+		study.setRadiologyOrder(radiologyOrder);
 		study.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(RequestedProcedurePriority.STAT);
@@ -106,7 +107,7 @@ public class HL7GeneratorTest {
 	public void createEncodedRadiologyORMO01Message_shouldReturnEncodedHL7ORMO01MessageGivenAllParamsIncludingNewOrderControlCode()
 	        throws HL7Exception {
 		
-		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, order,
+		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, radiologyOrder,
 		    CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
 		
 		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
@@ -130,7 +131,7 @@ public class HL7GeneratorTest {
 	public void createEncodedRadiologyORMO01Message_shouldReturnEncodedHL7ORMO01MessageGivenAllParamsIncludingChangeOrderControlCode()
 	        throws HL7Exception {
 		
-		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, order,
+		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, radiologyOrder,
 		    CommonOrderOrderControl.CHANGE_ORDER, CommonOrderPriority.STAT);
 		
 		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
@@ -154,7 +155,7 @@ public class HL7GeneratorTest {
 	public void createEncodedRadiologyORMO01Message_shouldReturnEncodedHL7ORMO01MessageGivenAllParamsIncludingCancelOrderControlCode()
 	        throws HL7Exception {
 		
-		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, order,
+		String encodedOrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, radiologyOrder,
 		    CommonOrderOrderControl.CANCEL_ORDER, CommonOrderPriority.STAT);
 		
 		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
@@ -179,7 +180,7 @@ public class HL7GeneratorTest {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("study cannot be null."));
-		HL7Generator.createEncodedRadiologyORMO01Message(null, order, CommonOrderOrderControl.NEW_ORDER,
+		HL7Generator.createEncodedRadiologyORMO01Message(null, radiologyOrder, CommonOrderOrderControl.NEW_ORDER,
 		    CommonOrderPriority.STAT);
 	}
 	

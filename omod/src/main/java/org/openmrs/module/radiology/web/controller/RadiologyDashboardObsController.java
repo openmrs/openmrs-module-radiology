@@ -90,7 +90,7 @@ public class RadiologyDashboardObsController {
 			prevs = radiologyService().getObsByOrderId(obs.getOrder().getOrderId());
 		} else {
 			obs = newObs(or.getOrder(orderId));
-			prevs = radiologyService().getObsByOrderId(study.getOrderId());
+			prevs = radiologyService().getObsByOrderId(study.getRadiologyOrder().getOrderId());
 		}
 		
 		mav.addObject("obs", obs);

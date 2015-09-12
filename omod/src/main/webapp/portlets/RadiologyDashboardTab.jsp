@@ -29,7 +29,8 @@
 
 <openmrs:hasPrivilege privilege="Add Orders">
 	<p>
-		<a href="module/radiology/radiologyOrder.form?patientId=${patient.patientId}"><spring:message
+		<a
+			href="module/radiology/radiologyOrder.form?patientId=${patient.patientId}"><spring:message
 				code="radiology.addOrder" /></a> <br />
 	</p>
 </openmrs:hasPrivilege>
@@ -52,9 +53,6 @@
 							</c:if> <c:if test="${not empty obsId}">
                                                                     View Obs.
                                                             </c:if></th>
-						<!--<th><spring:message code="radiology.patientId" /></th>
-                                            <th><spring:message code="radiology.patientFullName" /></th>-->
-
 						<th><spring:message code="radiology.priority" /></th>
 						<th><spring:message code="radiology.referringPhysician" /></th>
 						<th><spring:message code="radiology.scheduler" /></th>
@@ -63,9 +61,8 @@
 						<th><spring:message code="radiology.readingPhysician" /></th>
 						<th><spring:message code="radiology.appoinmentDate" /></th>
 						<th><spring:message code="radiology.modality" /></th>
-						<th title="<spring:message code="radiology.accordingModality"/>">
-							<spring:message code="radiology.status" />
-						</th>
+						<th><spring:message code="radiology.scheduledStatus" /></th>
+						<th><spring:message code="radiology.performedStatus" /></th>
 						<th><spring:message code="general.instructions" /></th>
 
 						<!--<th><spring:message code="radiology.mwlStatus" /></th>-->
@@ -78,28 +75,24 @@
 							<td style="text-align: center"><c:if test="${empty obsId}">
 									<a href="radiologyOrder.form?orderId=${order.orderId}">${status.count}</a>
 								</c:if> <c:if test="${not empty obsId}">
-									<!-- TODO  select observation-->
 									<a
 										href="module/radiology/portlets/radiologyObsDashboard.form?orderId=${order.orderId}"
 										style="cursor: pointer;" class="viewRadiologyObservations">${status.count}</a>
 								</c:if></td>
-							<%--<td style="text-align: center">${order.patient.patientIdentifier}</td>
-                                                        <td>${order.patient.personName}</td>--%>
-
-							<td>${priorities[status.count-1]}</td>
+							<td>${order.study.priority}</td>
 							<td>${order.orderer.personName}</td>
-							<td>${schedulers[status.count-1]}</td>
-							<td>${performings[status.count-1]}</td>
-							<td>${readings[status.count-1]}</td>
+							<td>${order.study.scheduler}</td>
+							<td>${order.study.performingPhysician}</td>
+							<td>${order.study.readingPhysician}</td>
 							<td name="appointmentDate">${order.startDate}</td>
-							<td>${modalities[status.count-1]}</td>
-							<td>${statuses[status.count-1]}</td>
+							<td>${order.study.modality.fullName}</td>
+							<td>${order.study.scheduledStatus}</td>
+							<td>${order.study.performedStatus}</td>
 							<td style="max-width: 90px; overflow: hidden;"><a
 								style="cursor: pointer"
 								onclick="$j('<p>'+this.innerHTML+'</p>').dialog({autoOpen:true,modal:true});"
 								title="<spring:message code="general.view"/>">${order.instructions}
 							</a></td>
-							<%--<td>${mwlStatuses[status.count-1]}</td>--%>
 						</tr>
 					</c:forEach>
 				</tbody>

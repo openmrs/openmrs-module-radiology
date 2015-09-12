@@ -16,7 +16,6 @@ import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
-import org.openmrs.module.radiology.db.GenericDAO;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
 import org.springframework.transaction.annotation.Transactional;
@@ -24,13 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface RadiologyService extends OpenmrsService {
 	
-	public void setGdao(GenericDAO dao);
-	
 	public void setRadiologyOrderDao(RadiologyOrderDAO radiologyOrderDao);
 	
 	public void setSdao(StudyDAO dao);
-	
-	public Object get(String query, boolean unique);
 	
 	/**
 	 * Save given <code>RadiologyOrder</code> to the database
@@ -101,7 +96,17 @@ public interface RadiologyService extends OpenmrsService {
 	
 	public Study getStudy(Integer id);
 	
-	public Study getStudyByOrderId(Integer id);
+	/**
+	 * Get Study by its associated RadiologyOrder's orderId
+	 * 
+	 * @param orderId of RadiologyOrder associated with wanted Study
+	 * @return Study associated with RadiologyOrder for which orderId is given
+	 * @throws IllegalArgumentException if order id is null
+	 * @should return study associated with radiology order for which order id is given
+	 * @should return null if no match was found
+	 * @should throw illegal argument exception given null
+	 */
+	public Study getStudyByOrderId(Integer orderId) throws IllegalArgumentException;
 	
 	/**
 	 * Get study by its Study Instance UID
@@ -126,8 +131,6 @@ public interface RadiologyService extends OpenmrsService {
 	 * @should throw IllegalArgumentException given null
 	 */
 	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) throws IllegalArgumentException;
-	
-	public GenericDAO db();
 	
 	/**
 	 * Get all obs matching the orderId
