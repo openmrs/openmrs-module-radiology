@@ -6,6 +6,8 @@
 	<joined-subclass name="org.openmrs.module.radiology.RadiologyOrder"
 		extends="org.openmrs.TestOrder" table="radiology_order" lazy="false">
 		<key column="order_id" not-null="true" on-delete="cascade" />
+
+		<one-to-one name="study" property-ref="radiologyOrder" />
 	</joined-subclass>
 
 </hibernate-mapping>

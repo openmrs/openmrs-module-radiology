@@ -123,7 +123,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	        throws IOException, TransformerConfigurationException, TransformerFactoryConfigurationError, SAXException {
 		
 		Study studyToBeUpdated = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = orderService.getOrder(studyToBeUpdated.getOrderId());
+		Order radiologyOrder = studyToBeUpdated.getRadiologyOrder();
 		DicomObject dicomObjectNCreate = getDicomNCreate(studyToBeUpdated, radiologyOrder);
 		
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
@@ -224,7 +224,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	        throws IOException, TransformerConfigurationException, TransformerFactoryConfigurationError, SAXException {
 		
 		Study studyToBeUpdated = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = orderService.getOrder(studyToBeUpdated.getOrderId());
+		Order radiologyOrder = studyToBeUpdated.getRadiologyOrder();
 		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, radiologyOrder, "DISCONTINUED");
 		
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
@@ -289,7 +289,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	        throws IOException, TransformerConfigurationException, TransformerFactoryConfigurationError, SAXException {
 		
 		Study studyToBeUpdated = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = orderService.getOrder(studyToBeUpdated.getOrderId());
+		Order radiologyOrder = studyToBeUpdated.getRadiologyOrder();
 		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, radiologyOrder, "COMPLETED");
 		
 		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
@@ -310,7 +310,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	        throws IOException, TransformerConfigurationException, TransformerFactoryConfigurationError, SAXException {
 		
 		Study studyToBeUpdated = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = orderService.getOrder(studyToBeUpdated.getOrderId());
+		Order radiologyOrder = studyToBeUpdated.getRadiologyOrder();
 		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, radiologyOrder, "COMPLETED");
 		dicomObjectNCreate.remove(Tag.ScheduledStepAttributesSequence);
 		
@@ -331,7 +331,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	public void getStudyInstanceUidFromMpps_shouldReturnStudyInstanceUidGivenDicomMppsObject() {
 		
 		Study study = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = orderService.getOrder(study.getOrderId());
+		Order radiologyOrder = study.getRadiologyOrder();
 		DicomObject dicomMpps = getDicomNCreate(study, radiologyOrder);
 		
 		String studyInstanceUid = DicomUtils.getStudyInstanceUidFromMpps(dicomMpps);
@@ -347,7 +347,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	public void getStudyInstanceUidFromMpps_shouldReturnNullGivenDicomMppsObjectWithoutScheduledStepAttributesSequence() {
 		
 		Study study = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = orderService.getOrder(study.getOrderId());
+		Order radiologyOrder = study.getRadiologyOrder();
 		DicomObject dicomMpps = getDicomNCreate(study, radiologyOrder);
 		dicomMpps.remove(Tag.ScheduledStepAttributesSequence);
 		
@@ -364,7 +364,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	public void getStudyInstanceUidFromMpps_shouldReturnNullGivenDicomMppsObjectWithScheduledStepAttributesSequenceMissingStudyInstanceUidTag() {
 		
 		Study study = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = orderService.getOrder(study.getOrderId());
+		Order radiologyOrder = study.getRadiologyOrder();
 		DicomObject dicomMpps = getDicomNCreate(study, radiologyOrder);
 		
 		dicomMpps.get(Tag.ScheduledStepAttributesSequence).getDicomObject().remove(Tag.StudyInstanceUID);
@@ -382,7 +382,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	public void getPerformedProcedureStepStatus_shouldReturnPerformedProcedureStepStatusGivenMppsDicomObject() {
 		
 		Study study = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = orderService.getOrder(study.getOrderId());
+		Order radiologyOrder = study.getRadiologyOrder();
 		DicomObject dicomMpps = getDicomNCreate(study, radiologyOrder);
 		
 		String performedProcedureStepStatus = DicomUtils.getPerformedProcedureStepStatus(dicomMpps);
@@ -399,7 +399,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	public void getPerformedProcedureStepStatus_shouldReturnNullGivenDicomObjectWithoutPerformedProcedureStepStatus() {
 		
 		Study study = radiologyService.getStudy(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = orderService.getOrder(study.getOrderId());
+		Order radiologyOrder = study.getRadiologyOrder();
 		DicomObject dicomMpps = getDicomNCreate(study, radiologyOrder);
 		dicomMpps.remove(Tag.PerformedProcedureStepStatus);
 		
@@ -411,7 +411,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	/**
 	 * Convenience method to create a mock radiology order
 	 */
-	Order getMockRadiologyOrder() {
+	RadiologyOrder getMockRadiologyOrder() {
 		Patient mockPatient = new Patient();
 		mockPatient.setPatientId(1);
 		
@@ -441,7 +441,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		cal.set(1950, Calendar.APRIL, 1, 0, 0, 0);
 		mockPatient.setBirthdate(cal.getTime());
 		
-		Order mockRadiologyOrder = new Order();
+		RadiologyOrder mockRadiologyOrder = new RadiologyOrder();
 		mockRadiologyOrder.setId(20);
 		mockRadiologyOrder.setPatient(mockPatient);
 		cal.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
@@ -457,7 +457,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	Study getMockStudy() {
 		Study mockStudy = new Study();
 		mockStudy.setStudyId(1);
-		mockStudy.setOrderId(getMockRadiologyOrder().getOrderId());
+		mockStudy.setRadiologyOrder(getMockRadiologyOrder());
 		mockStudy.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
 		mockStudy.setModality(Modality.CT);
 		mockStudy.setPriority(RequestedProcedurePriority.STAT);

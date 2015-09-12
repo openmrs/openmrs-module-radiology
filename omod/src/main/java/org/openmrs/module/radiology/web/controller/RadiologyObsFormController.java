@@ -121,7 +121,7 @@ public class RadiologyObsFormController {
 			previousObservations = radiologyService.getObsByOrderId(obs.getOrder().getOrderId());
 		} else {
 			obs = newObs(orderService.getOrder(orderId));
-			previousObservations = radiologyService.getObsByOrderId(study.getOrderId());
+			previousObservations = radiologyService.getObsByOrderId(study.getRadiologyOrder().getOrderId());
 		}
 		
 		mav.addObject("obs", obs);

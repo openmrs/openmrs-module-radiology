@@ -23,8 +23,6 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.web.util.StudyStatusColumnGenerator;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
@@ -96,47 +94,14 @@ public class PortletsController {
 	        @RequestParam(value = "pending", required = false) boolean pending,
 	        @RequestParam(value = "completed", required = false) boolean completed) {
 		ModelAndView mav = new ModelAndView("module/radiology/portlets/orderSearch");
+		
 		List<RadiologyOrder> matchedOrders = dateFilter(patientQuery, startDate, endDate, mav);
-		
-		// TODO Status filter
-		List<Study> studies = radiologyService.getStudiesByRadiologyOrders(matchedOrders);
-		
-		List<String> statuses = new Vector<String>();
-		List<String> priorities = new Vector<String>();
-		List<String> schedulers = new Vector<String>();
-		List<String> performings = new Vector<String>();
-		List<String> readings = new Vector<String>();
-		List<String> modalities = new Vector<String>();
-		List<String> mwlStatuses = new Vector<String>();
-		
-		for (Study study : studies) {
-			if (study != null) {
-				statuses.add(StudyStatusColumnGenerator.getStatusColumnForStudy(Context.getAuthenticatedUser(), study));
-				priorities.add(study.getPriority().name());
-				schedulers.add(study.scheduler());
-				performings.add(study.performing());
-				readings.add(study.reading());
-				modalities.add(study.getModality().getFullName());
-				mwlStatuses.add(study.getMwlStatus().name());
-			}
-		}
-		
-		// TODO optimize all the function, get orders and studies(priorities, statuses, etc) in a row
-		
-		// Response variables
-		
 		mav.addObject("orderList", matchedOrders);
-		mav.addObject("statuses", statuses);
-		mav.addObject("priorities", priorities);
-		mav.addObject("schedulers", schedulers);
-		mav.addObject("performings", performings);
-		mav.addObject("readings", readings);
-		mav.addObject("modalities", modalities);
 		mav.addObject("matchedOrdersSize", matchedOrders.size());
+		
 		if (Context.getAuthenticatedUser().hasRole(READING_PHYSICIAN, true)) {
 			mav.addObject("obsId", "&obsId");
 		}
-		mav.addObject("mwlStatuses", mwlStatuses);
 		
 		return mav;
 	}

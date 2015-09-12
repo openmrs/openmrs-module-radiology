@@ -15,5 +15,14 @@ import org.openmrs.TestOrder;
  * RadiologyOrder represents a radiology examination
  */
 public class RadiologyOrder extends TestOrder {
-
+	
+	private Study study;
+	
+	public Study getStudy() {
+		return study;
+	}
+	
+	public void setStudy(Study study) {
+		this.study = study;
+	}
 }

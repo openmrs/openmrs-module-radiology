@@ -107,7 +107,7 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 		
 		when(radiologyService.getStudyByOrderId(validorderId)).thenReturn(mockStudy);
 		when(orderService.getOrder(validorderId)).thenReturn(mockOrder);
-		when(radiologyService.getObsByOrderId(mockStudy.getOrderId())).thenReturn(new ArrayList<Obs>());
+		when(radiologyService.getObsByOrderId(mockStudy.getRadiologyOrder().getOrderId())).thenReturn(new ArrayList<Obs>());
 		when(obsService.getObs(validObsIdForOrder20)).thenReturn(mockObs);
 		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReadingPhysician());
 		when(radiologyService.getObsByOrderId(mockObs.getOrder().getOrderId())).thenReturn(

@@ -207,7 +207,7 @@ public class RadiologyOrderFormController {
 			
 			try {
 				radiologyService.saveRadiologyOrder(order);
-				study.setOrderId(order.getOrderId());
+				study.setRadiologyOrder(order);
 				Study savedStudy = radiologyService.saveStudy(study);
 				
 				radiologyService.sendModalityWorklist(savedStudy, OrderRequest.Save_Order);

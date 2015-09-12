@@ -18,6 +18,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Order;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
@@ -49,23 +50,23 @@ public class RadiologyORCTest {
 	@Verifies(value = "should return populated common order segment given all params", method = "populateCommonOrder(ORC, Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
 	public void populateCommonOrder_shouldReturnPopulatedCommonOrderSegmentGivenAllParams() throws HL7Exception {
 		
-		Order order = new Order();
-		order.setId(1);
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		radiologyOrder.setId(1);
 		
 		Calendar calendarOrderStartDate = Calendar.getInstance();
 		calendarOrderStartDate.set(2015, Calendar.FEBRUARY, 04);
 		calendarOrderStartDate.set(Calendar.HOUR_OF_DAY, 14);
 		calendarOrderStartDate.set(Calendar.MINUTE, 35);
 		calendarOrderStartDate.set(Calendar.SECOND, 00);
-		order.setStartDate(calendarOrderStartDate.getTime());
+		radiologyOrder.setStartDate(calendarOrderStartDate.getTime());
 		
 		Study study = new Study();
 		study.setStudyId(1);
-		study.setOrderId(1);
+		study.setRadiologyOrder(radiologyOrder);
 		
 		ORM_O01 message = new ORM_O01();
 		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC(), study,
-		    order, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+		    radiologyOrder, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
 		
 		ORC commonOrderSegment = message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC();
 		assertThat(commonOrderSegment.getOrderControl().getValue(), is("NW"));

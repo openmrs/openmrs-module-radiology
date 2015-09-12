@@ -17,6 +17,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Order;
 import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.test.Verifies;
 
@@ -47,18 +48,18 @@ public class RadiologyOBRTest {
 	public void populateObservationRequest_shouldReturnPopulatedObservationRequestSegmentGivenAllParams()
 	        throws HL7Exception {
 		
-		Order order = new Order();
-		order.setId(1);
-		order.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		radiologyOrder.setId(1);
+		radiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		
 		Study study = new Study();
 		study.setStudyId(1);
 		study.setModality(Modality.CT);
-		study.setOrderId(1);
+		study.setRadiologyOrder(radiologyOrder);
 		
 		ORM_O01 message = new ORM_O01();
 		RadiologyOBR.populateObservationRequest(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), study, order);
+		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), study, radiologyOrder);
 		
 		OBR observationRequestSegment = message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
 		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR();

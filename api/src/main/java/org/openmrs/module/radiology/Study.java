@@ -11,9 +11,7 @@ package org.openmrs.module.radiology;
 
 import java.lang.reflect.Field;
 
-import org.openmrs.Order;
 import org.openmrs.User;
-import org.openmrs.api.context.Context;
 
 /**
  * A class that supports on openmrs's orders to make the module DICOM compatible, corresponds to the
@@ -25,7 +23,7 @@ public class Study {
 	
 	private String studyInstanceUid;
 	
-	private Integer orderId;
+	private RadiologyOrder radiologyOrder;
 	
 	private ScheduledProcedureStepStatus scheduledStatus;
 	
@@ -51,8 +49,8 @@ public class Study {
 		return modality;
 	}
 	
-	public Integer getOrderId() {
-		return orderId;
+	public RadiologyOrder getRadiologyOrder() {
+		return radiologyOrder;
 	}
 	
 	public PerformedProcedureStepStatus getPerformedStatus() {
@@ -95,11 +93,6 @@ public class Study {
 		return performedStatus == null;
 	}
 	
-	public Order order() {
-		String query = "from Order as o where o.orderId = " + orderId;
-		return (Order) Context.getService(RadiologyService.class).get(query, true);
-	}
-	
 	public String performing() {
 		return getPerformingPhysician() == null ? "" : getPerformingPhysician().getPersonName().getFullName();
 	}
@@ -124,8 +117,8 @@ public class Study {
 		this.modality = modality;
 	}
 	
-	public void setOrderId(Integer orderId) {
-		this.orderId = orderId;
+	public void setRadiologyOrder(RadiologyOrder radiologyOrder) {
+		this.radiologyOrder = radiologyOrder;
 	}
 	
 	public void setPerformedStatus(PerformedProcedureStepStatus performedStatus) {
