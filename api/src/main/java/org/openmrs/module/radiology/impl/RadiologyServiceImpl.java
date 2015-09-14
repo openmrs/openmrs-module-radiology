@@ -19,7 +19,6 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Obs;
-import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
@@ -168,10 +167,9 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 	}
 	
 	@Override
-	public void sendModalityWorklist(Study s, OrderRequest orderRequest) {
-		Order order = s.getRadiologyOrder();
-		MwlStatus mwlStatus = s.getMwlStatus();
-		String hl7blob = DicomUtils.createHL7Message(s, order, orderRequest);
+	public void sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
+		MwlStatus mwlStatus = radiologyOrder.getStudy().getMwlStatus();
+		String hl7blob = DicomUtils.createHL7Message(radiologyOrder, orderRequest);
 		int status = DicomUtils.sendHL7Worklist(hl7blob);
 		
 		if (status == 1) {
@@ -225,8 +223,8 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 					break;
 			}
 		}
-		s.setMwlStatus(mwlStatus);
-		saveStudy(s);
+		radiologyOrder.getStudy().setMwlStatus(mwlStatus);
+		saveStudy(radiologyOrder.getStudy());
 	}
 	
 	@Transactional(readOnly = true)

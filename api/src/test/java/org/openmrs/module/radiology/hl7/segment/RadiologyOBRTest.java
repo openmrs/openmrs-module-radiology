@@ -15,7 +15,6 @@ import static org.junit.Assert.assertThat;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openmrs.Order;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
@@ -38,13 +37,10 @@ public class RadiologyOBRTest {
 	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
-	 * Test RadiologyOBR.populateObservationRequest
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, Study, Order)}
+	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, RadiologyOrder)}
 	 */
 	@Test
-	@Verifies(value = "should return populated observation request segment given all params", method = "populateObservationRequest(OBR, Study, Order)")
+	@Verifies(value = "should return populated observation request segment given all params", method = "populateObservationRequest(OBR, RadiologyOrder)")
 	public void populateObservationRequest_shouldReturnPopulatedObservationRequestSegmentGivenAllParams()
 	        throws HL7Exception {
 		
@@ -56,10 +52,11 @@ public class RadiologyOBRTest {
 		study.setStudyId(1);
 		study.setModality(Modality.CT);
 		study.setRadiologyOrder(radiologyOrder);
+		radiologyOrder.setStudy(study);
 		
 		ORM_O01 message = new ORM_O01();
 		RadiologyOBR.populateObservationRequest(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), study, radiologyOrder);
+		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), radiologyOrder);
 		
 		OBR observationRequestSegment = message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
 		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR();
@@ -76,58 +73,51 @@ public class RadiologyOBRTest {
 	}
 	
 	/**
-	 * Test the RadiologyOBR.populateObservationRequest
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, Study, Order)}
+	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, RadiologyOrder)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as observation request segment", method = "populateObservationRequest(OBR, Study, Order)")
-	public void populateObservationRequest_shouldFailGivenNullAsObservationRequestSegment() throws HL7Exception {
+	@Verifies(value = "should throw illegal argument exception given null as observation request segment", method = "populateObservationRequest(OBR, RadiologyOrder)")
+	public void populateObservationRequest_shouldThrowIllegalArgumentExceptionGivenNullAsObservationRequestSegment()
+	        throws HL7Exception {
 		
-		Study study = new Study();
-		Order order = new Order();
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		radiologyOrder.setStudy(new Study());
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("observationRequestSegment cannot be null."));
-		RadiologyOBR.populateObservationRequest(null, study, order);
+		RadiologyOBR.populateObservationRequest(null, radiologyOrder);
 	}
 	
 	/**
-	 * Test RadiologyOBR.populateObservationRequest
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, Study, Order)}
+	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, RadiologyOrder)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as study", method = "populateObservationRequest(OBR, Study, Order)")
-	public void populateObservationRequest_shouldFailGivenNullAsStudy() throws HL7Exception {
+	@Verifies(value = "should throw illegal argument exception given null as radiology order", method = "populateObservationRequest(OBR, RadiologyOrder)")
+	public void populateObservationRequest_shouldThrowIllegalArgumentExceptionGivenNullAsRadiologyOrder()
+	        throws HL7Exception {
 		
-		Order order = new Order();
 		ORM_O01 message = new ORM_O01();
 		
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage(is("study cannot be null."));
+		expectedException.expectMessage(is("radiologyOrder cannot be null."));
 		RadiologyOBR.populateObservationRequest(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), null, order);
+		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), null);
 	}
 	
 	/**
-	 * Test RadiologyOBR.populateObservationRequest
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, Study, Order)}
+	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, RadiologyOrder)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as order", method = "populateObservationRequest(OBR, Study, Order)")
-	public void populateObservationRequest_shouldFailGivenNullAsOrder() throws HL7Exception {
+	@Verifies(value = "should throw illegal argument exception if given radiology orders study is null", method = "populateObservationRequest(OBR, RadiologyOrder)")
+	public void populateObservationRequest_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrdersStudyIsNull()
+	        throws HL7Exception {
 		
-		Study study = new Study();
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
 		ORM_O01 message = new ORM_O01();
 		
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage(is("order cannot be null."));
+		expectedException.expectMessage(is("radiologyOrder.study cannot be null."));
 		RadiologyOBR.populateObservationRequest(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), study, null);
+		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), radiologyOrder);
 	}
 }

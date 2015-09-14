@@ -25,16 +25,13 @@ import ca.uhn.hl7v2.parser.EncodingCharacters;
 import ca.uhn.hl7v2.parser.PipeParser;
 
 /**
- * Tests methods in the {@link ORM_O01}
+ * Tests {@link ORM_O01}
  */
 public class ORM_O01Test {
 	
 	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
-	 * Test ORM_O01.getZDS()
-	 * 
-	 * @throws HL7Exception
 	 * @see {@link ORM_O01#getZDS()}
 	 */
 	@Test
@@ -52,10 +49,6 @@ public class ORM_O01Test {
 	}
 	
 	/**
-	 * Tests the ORM_O01 by creating a new message, populating, encoding and comparing it to the
-	 * expected encoded hl7 message string
-	 * 
-	 * @throws HL7Exception
 	 * @see {@link ORM_O01#ORM_O01()}
 	 */
 	@Test

@@ -22,7 +22,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
@@ -101,20 +100,18 @@ public class RadiologyORMO01Test {
 		study.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		study.setPriority(RequestedProcedurePriority.STAT);
+		radiologyOrder.setStudy(study);
 	}
 	
 	/**
-	 * Test RadiologyORMO01.getRadiologyORMO01Message
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should return ormo01 message given all params", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should return ormo01 message given all params", method = "getRadiologyORMO01Message(RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)")
 	public void getRadiologyORMO01Message_shouldReturnORMO01MessageGivenAllParams() throws HL7Exception {
 		
-		ORM_O01 ormMessage = RadiologyORMO01.getRadiologyORMO01Message(study, radiologyOrder,
-		    CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+		ORM_O01 ormMessage = RadiologyORMO01.getRadiologyORMO01Message(radiologyOrder, CommonOrderOrderControl.NEW_ORDER,
+		    CommonOrderPriority.STAT);
 		
 		String encodedOrmMessage = PipeParser.encode(ormMessage, encodingCharacters);
 		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
@@ -128,63 +125,56 @@ public class RadiologyORMO01Test {
 	}
 	
 	/**
-	 * Test RadiologyORMO01.getRadiologyORMO01Message
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as study", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
-	public void getRadiologyORMO01Message_shouldFailGivenNullAsStudy() throws HL7Exception {
+	@Verifies(value = "should throw illegal argument exception given null as radiology order", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	public void getRadiologyORMO01Message_shouldThrowIllegalArgumentExceptionGivenNullAsRadiologyOrder() throws HL7Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage(is("study cannot be null."));
-		RadiologyORMO01.getRadiologyORMO01Message(null, radiologyOrder, CommonOrderOrderControl.NEW_ORDER,
+		expectedException.expectMessage(is("radiologyOrder cannot be null."));
+		RadiologyORMO01.getRadiologyORMO01Message(null, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+	}
+	
+	/**
+	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)}
+	 */
+	@Test
+	@Verifies(value = "should throw illegal argument exception if given radiology orders study is null", method = "getRadiologyORMO01Message(RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)")
+	public void getRadiologyORMO01Message_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrdersStudyIsNull()
+	        throws HL7Exception {
+		
+		radiologyOrder.setStudy(null);
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage(is("radiologyOrder.study cannot be null."));
+		RadiologyORMO01.getRadiologyORMO01Message(radiologyOrder, CommonOrderOrderControl.NEW_ORDER,
 		    CommonOrderPriority.STAT);
 	}
 	
 	/**
-	 * Tests RadiologyORMO01.getRadiologyORMO01Message
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as order", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
-	public void getRadiologyORMO01Message_shouldFailGivenNullAsOrder() throws HL7Exception {
-		
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage(is("order cannot be null."));
-		RadiologyORMO01.getRadiologyORMO01Message(study, null, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
-	}
-	
-	/**
-	 * Tests RadiologyORMO01.getRadiologyORMO01Message
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
-	 */
-	@Test
-	@Verifies(value = "should fail given null as order control code", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
-	public void getRadiologyORMO01Message_shouldFailGivenNullAsOrderControlCode() throws HL7Exception {
+	@Verifies(value = "should throw illegal argument exception given null as order control code", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	public void getRadiologyORMO01Message_shouldThrowIllegalArgumentExceptionGivenNullAsOrderControlCode()
+	        throws HL7Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("orderControlCode cannot be null."));
-		RadiologyORMO01.getRadiologyORMO01Message(study, radiologyOrder, null, CommonOrderPriority.STAT);
+		RadiologyORMO01.getRadiologyORMO01Message(radiologyOrder, null, CommonOrderPriority.STAT);
 	}
 	
 	/**
-	 * Tests RadiologyORMO01.getRadiologyORMO01Message
-	 * 
-	 * @throws HL7Exception
-	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORMO01#getRadiologyORMO01Message(RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)}
 	 */
 	@Test
-	@Verifies(value = "should fail given null as order control priority", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
-	public void getRadiologyORMO01Message_shouldFailGivenNullAsOrderControlPriority() throws HL7Exception {
+	@Verifies(value = "should throw illegal argument exception given null as order control priority", method = "getRadiologyORMO01Message(Study, Order, CommonOrderOrderControl, CommonOrderPriority)")
+	public void getRadiologyORMO01Message_shouldThrowIllegalArgumentExceptionGivenNullAsOrderControlPriority()
+	        throws HL7Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("orderControlPriority cannot be null."));
-		RadiologyORMO01.getRadiologyORMO01Message(study, radiologyOrder, CommonOrderOrderControl.NEW_ORDER, null);
+		RadiologyORMO01.getRadiologyORMO01Message(radiologyOrder, CommonOrderOrderControl.NEW_ORDER, null);
 	}
 }

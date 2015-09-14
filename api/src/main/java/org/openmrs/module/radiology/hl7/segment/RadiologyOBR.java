@@ -9,8 +9,7 @@
  */
 package org.openmrs.module.radiology.hl7.segment;
 
-import org.openmrs.Order;
-import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.RadiologyOrder;
 
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v231.segment.OBR;
@@ -22,31 +21,34 @@ public class RadiologyOBR {
 	 * and Order
 	 * 
 	 * @param observationRequestSegment segment to populate
-	 * @param study to map to observationRequestSegment segment
-	 * @param order to map to observationRequestSegment segment
+	 * @param radiologyOrder to map to observationRequestSegment segment
 	 * @return populated observationRequestSegment segment
 	 * @throws DataTypeException
 	 * @should return populated observation request segment given all params
-	 * @should fail given null as observation request segment
-	 * @should fail given null as study
-	 * @should fail given null as order
+	 * @should throw illegal argument exception given null as observation request segment
+	 * @should throw illegal argument exception given null as radiology order
+	 * @should throw illegal argument exception if given radiology orders study is null
 	 */
-	public static OBR populateObservationRequest(OBR observationRequestSegment, Study study, Order order)
+	public static OBR populateObservationRequest(OBR observationRequestSegment, RadiologyOrder radiologyOrder)
 	        throws DataTypeException {
 		
 		if (observationRequestSegment == null) {
 			throw new IllegalArgumentException("observationRequestSegment cannot be null.");
-		} else if (study == null) {
-			throw new IllegalArgumentException("study cannot be null.");
-		} else if (order == null) {
-			throw new IllegalArgumentException("order cannot be null.");
 		}
 		
-		observationRequestSegment.getUniversalServiceID().getAlternateText().setValue(order.getInstructions());
-		observationRequestSegment.getPlacerField2().setValue(String.valueOf(study.getStudyId()));
-		observationRequestSegment.getFillerField1().setValue(String.valueOf(study.getStudyId()));
-		observationRequestSegment.getDiagnosticServSectID().setValue(study.getModality().toString());
-		observationRequestSegment.getProcedureCode().getText().setValue(order.getInstructions());
+		if (radiologyOrder == null) {
+			throw new IllegalArgumentException("radiologyOrder cannot be null.");
+		} else {
+			if (radiologyOrder.getStudy() == null) {
+				throw new IllegalArgumentException("radiologyOrder.study cannot be null.");
+			}
+		}
+		
+		observationRequestSegment.getUniversalServiceID().getAlternateText().setValue(radiologyOrder.getInstructions());
+		observationRequestSegment.getPlacerField2().setValue(String.valueOf(radiologyOrder.getStudy().getStudyId()));
+		observationRequestSegment.getFillerField1().setValue(String.valueOf(radiologyOrder.getStudy().getStudyId()));
+		observationRequestSegment.getDiagnosticServSectID().setValue(radiologyOrder.getStudy().getModality().toString());
+		observationRequestSegment.getProcedureCode().getText().setValue(radiologyOrder.getInstructions());
 		
 		return observationRequestSegment;
 	}
