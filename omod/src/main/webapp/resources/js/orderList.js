@@ -5,8 +5,6 @@ var $j=jQuery.noConflict();
 		loading=$j('div#openmrs_msg[name="loading"]');
 		startDate=$j('input[name="startDate"]');
 		endDate=$j('input[name="endDate"]');
-		completed=$j('input[name="completed"]');
-		pending=$j('input[name="pending"]');
 		find=$j('#findButton');
 		results=$j('#results');
 		clearResults=$j('a#clearResults');
@@ -22,8 +20,7 @@ var $j=jQuery.noConflict();
 			$j('#errorSpan').html('');
 			$j.get('portlets/orderSearch.portlet',
 			{patientQuery:pQuery.val(),startDate:startDate.val(),
-			endDate:endDate.val(),completed:completed.attr('checked'),
-			pending:pending.attr('checked')},
+			endDate:endDate.val()},
 			function(data){
 				loading.hide();
 				// crossDate error span rendered/sended from portlet
@@ -100,10 +97,6 @@ var $j=jQuery.noConflict();
 		}
 		
 		// ***********Events*************
-		completed.click(function(){
-			
-		});
-		
 		find.click(function(){
 			page=0;
 			sendRequest();
