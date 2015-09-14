@@ -92,7 +92,7 @@ public interface RadiologyService extends OpenmrsService {
 	 */
 	public Study saveStudy(Study study) throws APIException, IllegalArgumentException;
 	
-	public void sendModalityWorklist(Study s, OrderRequest orderRequest);
+	public void sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest);
 	
 	public Study getStudy(Integer id);
 	

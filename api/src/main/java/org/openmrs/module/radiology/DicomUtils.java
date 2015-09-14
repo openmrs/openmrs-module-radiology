@@ -255,8 +255,7 @@ public class DicomUtils {
 	 * Create HL7 ORM^O01 message to create a worklist request. See IHE Radiology Technical
 	 * Framework Volume 2.
 	 * 
-	 * @param study Study for which the order message is created
-	 * @param order Order for which the order message is created
+	 * @param radiologyOrder radiology order for which the order message is created
 	 * @param orderRequest OrderRequest specifying the action of the order message
 	 * @return encoded HL7 ORM^O01 message
 	 * @should return encoded HL7 ORMO01 message string with new order control given study with
@@ -266,16 +265,16 @@ public class DicomUtils {
 	 * @should return encoded HL7 ORMO01 message string with change order control given study with
 	 *         mwlstatus save ok and save order request
 	 */
-	public static String createHL7Message(Study study, Order order, OrderRequest orderRequest) {
+	public static String createHL7Message(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
 		String encodedHL7OrmMessage = null;
 		
-		MwlStatus mwlstatus = study.getMwlStatus();
+		MwlStatus mwlstatus = radiologyOrder.getStudy().getMwlStatus();
 		CommonOrderOrderControl commonOrderOrderControl = getCommonOrderControlFrom(mwlstatus, orderRequest);
 		
-		CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(study.getPriority());
+		CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(radiologyOrder.getStudy().getPriority());
 		
 		try {
-			encodedHL7OrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(study, order, commonOrderOrderControl,
+			encodedHL7OrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(radiologyOrder, commonOrderOrderControl,
 			    orderPriority);
 			log.info("Created HL7 ORM^O01 message \n" + encodedHL7OrmMessage);
 		}

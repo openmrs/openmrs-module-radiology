@@ -9,8 +9,7 @@
  */
 package org.openmrs.module.radiology.hl7.segment;
 
-import org.openmrs.Order;
-import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
 import org.openmrs.module.radiology.utils.DateTimeUtils;
@@ -25,34 +24,38 @@ public class RadiologyORC {
 	 * Order
 	 * 
 	 * @param commonOrderSegment Common Order Segment to populate
-	 * @param study to map to commonOrderSegment segment
-	 * @param order to map to commonOrderSegment segment
+	 * @param radiologyOrder to map to commonOrderSegment segment
 	 * @param commonOrderOrderControl Order Control element of Common Order (ORC)
 	 * @param commonOrderPriority Priority component of Common Order (ORC) segment attribute
 	 *            Quantity/Timing
 	 * @return populated commonOrderSegment segment
 	 * @throws DataTypeException
 	 * @should return populated common order segment given all params
-	 * @should fail given null as common order segment
-	 * @should fail given null as study
-	 * @should fail given null as order
+	 * @should throw illegal argument exception given null as common order segment
+	 * @should throw illegal argument exception given null as radiology order
+	 * @should throw illegal argument exception if given radiology orders study is null
 	 */
-	public static ORC populateCommonOrder(ORC commonOrderSegment, Study study, Order order,
+	public static ORC populateCommonOrder(ORC commonOrderSegment, RadiologyOrder radiologyOrder,
 	        CommonOrderOrderControl commonOrderOrderControl, CommonOrderPriority commonOrderPriority)
 	        throws DataTypeException {
 		
 		if (commonOrderSegment == null) {
 			throw new IllegalArgumentException("commonOrderSegment cannot be null.");
-		} else if (study == null) {
-			throw new IllegalArgumentException("study cannot be null.");
-		} else if (order == null) {
-			throw new IllegalArgumentException("order cannot be null.");
+		}
+		
+		if (radiologyOrder == null) {
+			throw new IllegalArgumentException("radiologyOrder cannot be null.");
+		} else {
+			if (radiologyOrder.getStudy() == null) {
+				throw new IllegalArgumentException("radiologyOrder.study cannot be null.");
+			}
 		}
 		
 		commonOrderSegment.getOrderControl().setValue(commonOrderOrderControl.getValue());
-		commonOrderSegment.getPlacerOrderNumber().getEntityIdentifier().setValue(String.valueOf(study.getStudyId()));
+		commonOrderSegment.getPlacerOrderNumber().getEntityIdentifier().setValue(
+		    String.valueOf(radiologyOrder.getStudy().getStudyId()));
 		commonOrderSegment.getQuantityTiming().getStartDateTime().getTimeOfAnEvent().setValue(
-		    DateTimeUtils.getPlainDateTimeFrom(order.getStartDate()));
+		    DateTimeUtils.getPlainDateTimeFrom(radiologyOrder.getStartDate()));
 		commonOrderSegment.getQuantityTiming().getPriority().setValue(commonOrderPriority.getValue());
 		
 		return commonOrderSegment;
