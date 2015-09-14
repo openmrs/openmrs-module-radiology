@@ -29,8 +29,10 @@ import org.openmrs.Order;
 import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.User;
+import org.openmrs.api.APIAuthenticationException;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
+import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.MwlStatus;
@@ -46,6 +48,7 @@ import org.openmrs.propertyeditor.EncounterEditor;
 import org.openmrs.propertyeditor.OrderTypeEditor;
 import org.openmrs.propertyeditor.PatientEditor;
 import org.openmrs.propertyeditor.UserEditor;
+import org.openmrs.util.OpenmrsConstants;
 import org.openmrs.validator.OrderValidator;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -72,6 +75,9 @@ public class RadiologyOrderFormController {
 	
 	@Autowired
 	private OrderService orderService;
+	
+	@Autowired
+	private MessageSourceService messageSourceService;
 	
 	@InitBinder
 	void initBinder(WebDataBinder binder) {
@@ -340,33 +346,98 @@ public class RadiologyOrderFormController {
 		return performedStatuses;
 	}
 	
+	/**
+	 * Return true if the current user is authenticated as a referring physician
+	 * 
+	 * @return true if the current user is authenticated as a referring physician
+	 * @should return true if the current user is authenticated as a referring physician
+	 * @should return false if the current user is not authenticated as a referring physician
+	 * @should throw api authentication exception if the current user is not authenticated
+	 */
 	@ModelAttribute("isUserReferringPhysician")
 	private boolean isUserReferringPhysician() {
 		
+		if (!Context.isAuthenticated()) {
+			String[] args = { OpenmrsConstants.PRIV_EDIT_ORDERS };
+			String message = messageSourceService.getMessage("radiology.privilegesRequired", args, Context.getLocale());
+			throw new APIAuthenticationException(message);
+		}
 		return Context.getAuthenticatedUser().hasRole(REFERRRING_PHYSICIAN, true);
 	}
 	
+	/**
+	 * Return true if the current user is authenticated as a scheduler
+	 * 
+	 * @return true if the current user is authenticated as a scheduler
+	 * @should return true if the current user is authenticated as a scheduler
+	 * @should return false if the current user is not authenticated as a scheduler
+	 * @should throw api authentication exception if the current user is not authenticated
+	 */
 	@ModelAttribute("isUserScheduler")
 	private boolean isUserScheduler() {
 		
+		if (!Context.isAuthenticated()) {
+			String[] args = { OpenmrsConstants.PRIV_EDIT_ORDERS };
+			String message = messageSourceService.getMessage("radiology.privilegesRequired", args, Context.getLocale());
+			throw new APIAuthenticationException(message);
+		}
 		return Context.getAuthenticatedUser().hasRole(SCHEDULER, true);
 	}
 	
+	/**
+	 * Return true if the current user is authenticated as a performing physician
+	 * 
+	 * @return true if the current user is authenticated as a performing physician
+	 * @should return true if the current user is authenticated as a performing physician
+	 * @should return false if the current user is not authenticated as a performing physician
+	 * @should throw api authentication exception if the current user is not authenticated
+	 */
 	@ModelAttribute("isUserPerformingPhysician")
 	private boolean isUserPerformingPhysician() {
 		
+		if (!Context.isAuthenticated()) {
+			String[] args = { OpenmrsConstants.PRIV_EDIT_ORDERS };
+			String message = messageSourceService.getMessage("radiology.privilegesRequired", args, Context.getLocale());
+			throw new APIAuthenticationException(message);
+		}
 		return Context.getAuthenticatedUser().hasRole(PERFORMING_PHYSICIAN, true);
 	}
 	
+	/**
+	 * Return true if the current user is authenticated as a reading physician
+	 * 
+	 * @return true if the current user is authenticated as a reading physician
+	 * @should return true if the current user is authenticated as a reading physician
+	 * @should return false if the current user is not authenticated as a reading physician
+	 * @should throw api authentication exception if the current user is not authenticated
+	 */
 	@ModelAttribute("isUserReadingPhysician")
 	private boolean isUserReadingPhysician() {
 		
+		if (!Context.isAuthenticated()) {
+			String[] args = { OpenmrsConstants.PRIV_EDIT_ORDERS };
+			String message = messageSourceService.getMessage("radiology.privilegesRequired", args, Context.getLocale());
+			throw new APIAuthenticationException(message);
+		}
 		return Context.getAuthenticatedUser().hasRole(READING_PHYSICIAN, true);
 	}
 	
+	/**
+	 * Return true if the current user is authenticated as a super user
+	 * 
+	 * @return true if the current user is authenticated as a super user
+	 * @should return true if the current user is authenticated as a super user
+	 * @should return false if the current user is not authenticated as a super user
+	 * @should throw api authentication exception if the current user is not authenticated
+	 */
 	@ModelAttribute("isUserSuper")
 	private boolean isUserSuper() {
 		
+		if (!Context.isAuthenticated()) {
+			String[] args = { OpenmrsConstants.PRIV_EDIT_ORDERS };
+			String message = messageSourceService.getMessage("radiology.privilegesRequired", args, Context.getLocale());
+			throw new APIAuthenticationException(message);
+		}
 		return Context.getAuthenticatedUser().isSuperUser();
 	}
 	

@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.radiology.test;
 
+import static org.openmrs.module.radiology.RadiologyRoles.PERFORMING_PHYSICIAN;
 import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
 import static org.openmrs.module.radiology.RadiologyRoles.REFERRRING_PHYSICIAN;
 import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
@@ -37,6 +38,7 @@ import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Study;
+import org.openmrs.util.RoleConstants;
 
 public class RadiologyTestData {
 	
@@ -299,6 +301,23 @@ public class RadiologyTestData {
 	}
 	
 	/**
+	 * Convenience method constructing a mock user with role RADIOLOGY_PERFORMING_PHYSICIAN for the
+	 * tests
+	 */
+	public static User getMockRadiologyPerformingPhysician() {
+		
+		Role role = new Role(PERFORMING_PHYSICIAN);
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(role);
+		
+		User radiologyPerformingPhysician = new User();
+		radiologyPerformingPhysician.setRoles(roles);
+		radiologyPerformingPhysician.setPerson(getMockUserPerson());
+		
+		return radiologyPerformingPhysician;
+	}
+	
+	/**
 	 * Convenience method constructing a mock user with role RADIOLOGY_READING_PHYSICIAN for the
 	 * tests
 	 */
@@ -328,6 +347,22 @@ public class RadiologyTestData {
 		radiologyScheduler.setPerson(getMockUserPerson());
 		
 		return radiologyScheduler;
+	}
+	
+	/**
+	 * Convenience method constructing a mock user with role RADIOLOGY_SCHEDULER for the tests
+	 */
+	public static User getMockRadiologySuperUser() {
+		
+		Role role = new Role(RoleConstants.SUPERUSER);
+		Set<Role> roles = new HashSet<Role>();
+		roles.add(role);
+		
+		User radiologySuperUser = new User();
+		radiologySuperUser.setRoles(roles);
+		radiologySuperUser.setPerson(getMockUserPerson());
+		
+		return radiologySuperUser;
 	}
 	
 	/**
