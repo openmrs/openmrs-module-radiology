@@ -14,7 +14,7 @@
 	<spring:message code="Order.title" />
 </h2>
 
-<spring:hasBindErrors name="order">
+<spring:hasBindErrors name="radiologyOrder">
 	<spring:message code="fix.error" />
 	<br />
 </spring:hasBindErrors>
@@ -23,14 +23,16 @@
 	<br />
 </spring:hasBindErrors>
 
-<c:if test="${order.voided}">
+<c:if test="${radiologyOrder.voided}">
 	<form method="post">
 		<div class="retiredMessage">
 			<div>
 				<spring:message code="general.voidedBy" />
-				${order.voidedBy.personName}
-				<openmrs:formatDate date="${order.dateVoided}" type="medium" />
-				- ${order.voidReason} <input type="submit" name="unvoidOrder"
+				${radiologyOrder.voidedBy.personName}
+				<openmrs:formatDate date="${radiologyOrder.dateVoided}"
+					type="medium" />
+				- ${radiologyOrder.voidReason} <input type="submit"
+					name="unvoidOrder"
 					value='<spring:message code="Order.unvoidOrder"/>' />
 			</div>
 		</div>
@@ -38,11 +40,11 @@
 </c:if>
 <form method="post" class="box">
 	<input type="hidden" name="patient_id" value="${patientId}" />
-	<spring:bind path="study.studyId">
+	<spring:bind path="radiologyOrder.study.studyId">
 		<input type="hidden" name="${status.expression}"
 			value="${status.value}" />
 	</spring:bind>
-	<spring:bind path="study.mwlStatus">
+	<spring:bind path="radiologyOrder.study.mwlStatus">
 		<input type="hidden" name="${status.expression}"
 			value="${status.value}" />
 		<c:if test="${status.errorMessage != ''}">
@@ -52,7 +54,7 @@
 	<table>
 		<tr>
 			<td valign="top"><spring:message code="Order.patient" /></td>
-			<td valign="top"><spring:bind path="order.patient">
+			<td valign="top"><spring:bind path="radiologyOrder.patient">
 					<c:choose>
 						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<openmrs:fieldGen type="org.openmrs.Patient"
@@ -67,14 +69,15 @@
 						<c:otherwise>
 							<input type="hidden" name="${status.expression}"
 								value="${status.editor.value.id}" />
-							<input readonly="readonly" value="${order.patient.personName}" />
+							<input readonly="readonly"
+								value="${radiologyOrder.patient.personName}" />
 						</c:otherwise>
 					</c:choose>
 				</spring:bind></td>
 		</tr>
 		<tr>
 			<td valign="top"><spring:message code="Order.concept" /></td>
-			<td valign="top"><spring:bind path="order.concept">
+			<td valign="top"><spring:bind path="radiologyOrder.concept">
 					<c:choose>
 						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<openmrs:fieldGen type="org.openmrs.Concept"
@@ -87,14 +90,16 @@
 						<c:otherwise>
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
-							<input readonly="readonly" value="${order.concept.name.name}" />
+							<input readonly="readonly"
+								value="${radiologyOrder.concept.name.name}" />
 						</c:otherwise>
 					</c:choose>
 				</spring:bind></td>
 		</tr>
 		<tr>
 			<td valign="top"><spring:message code="radiology.priority" /></td>
-			<td valign="top"><spring:bind path="study.priority">
+			<td valign="top"><spring:bind
+					path="radiologyOrder.study.priority">
 					<c:choose>
 						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<select name="${status.expression}"
@@ -121,7 +126,8 @@
 			<c:if test="${!isUserScheduler && !isUserSuper}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.scheduledStatus" /></td>
-			<td valign="top"><spring:bind path="study.scheduledStatus">
+			<td valign="top"><spring:bind
+					path="radiologyOrder.study.scheduledStatus">
 					<c:choose>
 						<c:when test="${isUserScheduler || isUserSuper}">
 							<select name="${status.expression}"
@@ -148,7 +154,8 @@
 			<c:if test="${!isUserSuper && !isUserPerformingPhysician}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.performedStatus" /></td>
-			<td valign="top"><spring:bind path="study.performedStatus">
+			<td valign="top"><spring:bind
+					path="radiologyOrder.study.performedStatus">
 					<c:choose>
 						<c:when test="${isUserPerformingPhysician || isUserSuper}">
 							<select name="${status.expression}" id="performedStatusSelect">
@@ -173,7 +180,8 @@
 		</tr>
 		<tr>
 			<td valign="top"><spring:message code="radiology.modality" /></td>
-			<td valign="top"><spring:bind path="study.modality">
+			<td valign="top"><spring:bind
+					path="radiologyOrder.study.modality">
 					<c:choose>
 						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<select name="${status.expression}" id="modalitySelect">
@@ -197,7 +205,7 @@
 		<tr>
 			<td valign="top"><spring:message code="general.instructions" />
 			</td>
-			<td valign="top"><spring:bind path="order.instructions">
+			<td valign="top"><spring:bind path="radiologyOrder.instructions">
 					<textarea name="${status.expression}"
 						<c:if test="${!isUserReferringPhysician && !isUserSuper }">readonly="readonly"</c:if>>${status.value}</textarea>
 					<c:if test="${status.errorMessage != ''}">
@@ -207,7 +215,7 @@
 		</tr>
 		<tr>
 			<td valign="top"><spring:message code="Order.encounter" /></td>
-			<td valign="top"><spring:bind path="order.encounter">
+			<td valign="top"><spring:bind path="radiologyOrder.encounter">
 					<c:choose>
 						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<openmrs:fieldGen type="org.openmrs.Encounter"
@@ -220,14 +228,14 @@
 						<c:otherwise>
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
-							<input readonly="readonly" value="${order.encounter}" />
+							<input readonly="readonly" value="${radiologyOrder.encounter}" />
 						</c:otherwise>
 					</c:choose>
 				</spring:bind>(Optional)</td>
 		</tr>
 		<tr>
 			<td valign="top"><spring:message code="Order.orderer" /></td>
-			<td valign="top"><spring:bind path="order.orderer">
+			<td valign="top"><spring:bind path="radiologyOrder.orderer">
 					<c:choose>
 						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<openmrs:fieldGen type="org.openmrs.User"
@@ -237,7 +245,8 @@
 						<c:otherwise>
 							<input type="hidden" name="${status.expression}"
 								value="${status.editor.value.id}" />
-							<input readonly="readonly" value="${order.orderer.personName}" />
+							<input readonly="readonly"
+								value="${radiologyOrder.orderer.personName}" />
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${status.errorMessage != ''}">
@@ -248,7 +257,7 @@
 		<c:if test="${isUserScheduler || isUserSuper}">
 			<tr>
 				<td valign="top"><spring:message code="general.dateStart" /></td>
-				<td valign="top"><spring:bind path="order.startDate">
+				<td valign="top"><spring:bind path="radiologyOrder.startDate">
 						<openmrs:fieldGen type="java.util.Date"
 							formFieldName="${status.expression}" val="${status.editor.value}" />
 						<c:if test="${status.errorMessage != ''}">
@@ -259,7 +268,8 @@
 			<tr>
 				<td valign="top"><spring:message code="general.dateAutoExpire" />
 				</td>
-				<td valign="top"><spring:bind path="order.autoExpireDate">
+				<td valign="top"><spring:bind
+						path="radiologyOrder.autoExpireDate">
 						<openmrs:fieldGen type="java.util.Date"
 							formFieldName="${status.expression}" val="${status.editor.value}" />
 						<c:if test="${status.errorMessage != ''}">
@@ -270,7 +280,8 @@
 		</c:if>
 		<tr <c:if test="${!isUserSuper}">style="display:none"</c:if>>
 			<td valign="top"><spring:message code="radiology.scheduler" /></td>
-			<td valign="top"><spring:bind path="study.scheduler">
+			<td valign="top"><spring:bind
+					path="radiologyOrder.study.scheduler">
 					<c:choose>
 						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<openmrs:fieldGen type="org.openmrs.User"
@@ -280,7 +291,8 @@
 						<c:otherwise>
 							<input type="hidden" name="${status.expression}"
 								value="${status.editor.value.id}" />
-							<input readonly="readonly" value="${study.scheduler.personName}" />
+							<input readonly="readonly"
+								value="${radiologyOrder.study.scheduler.personName}" />
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${status.errorMessage != ''}">
@@ -291,7 +303,8 @@
 		<tr <c:if test="${!isUserSuper}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.performingPhysician" /></td>
-			<td valign="top"><spring:bind path="study.performingPhysician">
+			<td valign="top"><spring:bind
+					path="radiologyOrder.study.performingPhysician">
 					<c:choose>
 						<c:when test="${isUserReferringPhysician || isUserSuper}">
 							<openmrs:fieldGen type="org.openmrs.User"
@@ -302,7 +315,7 @@
 							<input type="hidden" name="${status.expression }"
 								value="${status.editor.value.id }" />
 							<input readonly="readonly"
-								value="${study.performingPhysician.personName}" />
+								value="${radiologyOrder.study.performingPhysician.personName}" />
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${status.errorMessage != ''}">
@@ -314,7 +327,8 @@
 			<c:if test="${isUserReferringPhysician}">style="display:none"</c:if>>
 			<td valign="top"><spring:message
 					code="radiology.readingPhysician" /></td>
-			<td valign="top"><spring:bind path="study.readingPhysician">
+			<td valign="top"><spring:bind
+					path="radiologyOrder.study.readingPhysician">
 					<c:choose>
 						<c:when test="${isUserScheduler || isUserSuper}">
 							<openmrs:fieldGen type="org.openmrs.User"
@@ -325,7 +339,7 @@
 							<input type="hidden" name="${status.expression}"
 								value="${status.editor.value.id}" />
 							<input readonly="readonly"
-								value="${study.readingPhysician.personName}" />
+								value="${radiologyOrder.study.readingPhysician.personName}" />
 						</c:otherwise>
 					</c:choose>
 					<c:if test="${status.errorMessage != ''}">
@@ -333,39 +347,39 @@
 					</c:if>
 				</spring:bind></td>
 		</tr>
-		<c:if test="${order.discontinued}">
+		<c:if test="${radiologyOrder.discontinued}">
 			<tr id="discontinuedBy">
 				<td valign="top"><spring:message code="general.discontinuedBy" />
 				</td>
-				<td valign="top">${order.discontinuedBy.personName}</td>
+				<td valign="top">${radiologyOrder.discontinuedBy.personName}</td>
 			</tr>
 			<tr id="dateDiscontinued">
 				<td valign="top"><spring:message
 						code="general.dateDiscontinued" /></td>
 				<td valign="top"><openmrs:formatDate
-						date="${order.discontinuedDate}" type="long" /></td>
+						date="${radiologyOrder.discontinuedDate}" type="long" /></td>
 			</tr>
 			<tr id="discontinuedReason">
 				<td valign="top"><spring:message
 						code="general.discontinuedReason" /></td>
-				<td valign="top">${order.discontinuedReason.name}</td>
+				<td valign="top">${radiologyOrder.discontinuedReason.name}</td>
 			</tr>
 		</c:if>
-		<c:if test="${order.creator != null}">
+		<c:if test="${radiologyOrder.creator != null}">
 			<tr>
 				<td><spring:message code="general.createdBy" /></td>
-				<td>${order.creator.personName}-<openmrs:formatDate
-						date="${order.dateCreated}" type="long" />
+				<td>${radiologyOrder.creator.personName}-<openmrs:formatDate
+						date="${radiologyOrder.dateCreated}" type="long" />
 				</td>
 			</tr>
 		</c:if>
 	</table>
-	<br /> <input type="submit" name="saveOrder"
+	<br /> <input type="submit" name="saveRadiologyOrder"
 		value="<spring:message code="Order.save"/>">
 </form>
 
 
-<c:if test="${order.discontinued}">
+<c:if test="${radiologyOrder.discontinued}">
 	<br />
 	<form method="post" class="box">
 		<input type="submit"
@@ -374,14 +388,16 @@
 	</form>
 </c:if>
 
-<c:if test="${not order.discontinued and not empty order.orderId}">
+<c:if
+	test="${not radiologyOrder.discontinued and not empty radiologyOrder.orderId}">
 	<br />
 	<form method="post" class="box">
 		<table>
 			<tr id="dateDiscontinued">
 				<td valign="top"><spring:message
 						code="general.dateDiscontinued" /></td>
-				<td valign="top"><spring:bind path="order.discontinuedDate">
+				<td valign="top"><spring:bind
+						path="radiologyOrder.discontinuedDate">
 						<openmrs:fieldGen type="java.util.Date"
 							formFieldName="${status.expression}" val="${status.editor.value}" />
 						<c:if test="${status.errorMessage != ''}">
@@ -392,7 +408,8 @@
 			<tr id="discontinuedReason">
 				<td valign="top"><spring:message
 						code="general.discontinuedReason" /></td>
-				<td valign="top"><spring:bind path="order.discontinuedReason">
+				<td valign="top"><spring:bind
+						path="radiologyOrder.discontinuedReason">
 						<openmrs:fieldGen type="org.openmrs.Concept"
 							formFieldName="${status.expression}" val="${status.editor.value}" />
 						<c:if test="${status.errorMessage != ''}">
@@ -406,14 +423,15 @@
 	</form>
 </c:if>
 
-<c:if test="${not order.voided and not empty order.orderId}">
+<c:if
+	test="${not radiologyOrder.voided and not empty radiologyOrder.orderId}">
 	<br />
 	<form method="post" class="box">
 		<spring:message code="general.voidReason" />
-		<spring:bind path="order.voidReason">
+		<spring:bind path="radiologyOrder.voidReason">
 			<input type="text" value="${status.value}" size="40"
 				name="${status.expression }" />
-			<spring:hasBindErrors name="order">
+			<spring:hasBindErrors name="radiologyOrder">
 				<c:forEach items="${errors.allErrors}" var="error">
 					<c:if test="${error.code == 'voidReason'}">
 						<span class="error"><spring:message

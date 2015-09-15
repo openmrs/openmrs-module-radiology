@@ -31,8 +31,8 @@ import org.openmrs.Person;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ObsService;
-import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
@@ -72,9 +72,6 @@ public class RadiologyObsFormController {
 	RadiologyService radiologyService;
 	
 	@Autowired
-	OrderService orderService;
-	
-	@Autowired
 	ObsService obsService;
 	
 	@InitBinder
@@ -99,8 +96,8 @@ public class RadiologyObsFormController {
 	 * @return model and view populated with observations matching the given criteria
 	 * @should populate model and view with new obs given valid order
 	 * @should populate model and view with obs for given obs and given valid order
-	 * @should populate model and view with dicom viewer url for completed study and obs for given obs and
-	 *         given valid order
+	 * @should populate model and view with dicom viewer url for completed study and obs for given
+	 *         obs and given valid order
 	 */
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.GET)
 	protected ModelAndView getObs(@RequestParam(value = "orderId", required = false) Integer orderId,
@@ -115,19 +112,21 @@ public class RadiologyObsFormController {
 		// Get previous obs
 		List<Obs> previousObservations = null;
 		
-		Study study = radiologyService.getStudyByOrderId(orderId);
+		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(orderId);
+		Study study = radiologyOrder.getStudy();
+		
 		if (obsId != null) {
 			obs = obsService.getObs(obsId);
 			previousObservations = radiologyService.getObsByOrderId(obs.getOrder().getOrderId());
 		} else {
-			obs = newObs(orderService.getOrder(orderId));
-			previousObservations = radiologyService.getObsByOrderId(study.getRadiologyOrder().getOrderId());
+			obs = newObs(radiologyOrder);
+			previousObservations = radiologyService.getObsByOrderId(radiologyOrder.getOrderId());
 		}
 		
 		mav.addObject("obs", obs);
 		mav.addObject("studyUID", study.isCompleted() ? study.getStudyInstanceUid() : null);
 		if (study.isCompleted()) {
-			String patID = orderService.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();
+			String patID = radiologyOrder.getPatient().getPatientIdentifier().getIdentifier();
 			String dicomViewerUrl = RadiologyProperties.getDicomViewerUrl() + "studyUID=" + study.getStudyInstanceUid()
 			        + "&patientID=" + patID;
 			mav.addObject("dicomViewerUrl", dicomViewerUrl);

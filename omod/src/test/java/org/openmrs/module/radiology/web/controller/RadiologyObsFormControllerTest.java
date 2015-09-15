@@ -32,7 +32,6 @@ import org.openmrs.Concept;
 import org.openmrs.ConceptComplex;
 import org.openmrs.ConceptDatatype;
 import org.openmrs.Obs;
-import org.openmrs.Order;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.EncounterService;
@@ -40,9 +39,9 @@ import org.openmrs.api.ObsService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
+import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.openmrs.test.Verifies;
@@ -79,9 +78,7 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 	@InjectMocks
 	private RadiologyObsFormController radiologyObsFormController = new RadiologyObsFormController();
 	
-	private Study mockStudy;
-	
-	private Order mockOrder;
+	private RadiologyOrder mockOrder;
 	
 	private Obs mockObs;
 	
@@ -98,16 +95,15 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 	@Before
 	public void runBeforeAllTests() {
 		
-		mockStudy = RadiologyTestData.getMockStudy1PostSave();
 		mockOrder = RadiologyTestData.getMockRadiologyOrder1();
 		mockRequest = new MockHttpServletRequest();
 		mockObs = RadiologyTestData.getMockObs();
 		
 		obsErrors = mock(BindingResult.class);
 		
-		when(radiologyService.getStudyByOrderId(validorderId)).thenReturn(mockStudy);
-		when(orderService.getOrder(validorderId)).thenReturn(mockOrder);
-		when(radiologyService.getObsByOrderId(mockStudy.getRadiologyOrder().getOrderId())).thenReturn(new ArrayList<Obs>());
+		when(radiologyService.getStudyByOrderId(validorderId)).thenReturn(mockOrder.getStudy());
+		when(radiologyService.getRadiologyOrderByOrderId(validorderId)).thenReturn(mockOrder);
+		when(radiologyService.getObsByOrderId(mockOrder.getOrderId())).thenReturn(new ArrayList<Obs>());
 		when(obsService.getObs(validObsIdForOrder20)).thenReturn(mockObs);
 		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReadingPhysician());
 		when(radiologyService.getObsByOrderId(mockObs.getOrder().getOrderId())).thenReturn(
@@ -158,7 +154,7 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 	public void getObs_ShouldPopulateModelAndViewWitDicomViewerUrlForCompletedStudyAndObsForGivenObsAndGivenValidOrder()
 	        throws Exception {
 		
-		mockStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		mockOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		
 		when(RadiologyProperties.getServersAddress()).thenReturn("localhost");
 		when(RadiologyProperties.getServersPort()).thenReturn("8081");
@@ -174,8 +170,8 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 		assertNotNull(dicomViewerUrl);
 		
 		String patID = mockOrder.getPatient().getPatientIdentifier().getIdentifier();
-		assertThat(dicomViewerUrl, is("http://localhost:8081/weasis/viewer?studyUID=" + mockStudy.getStudyInstanceUid()
-		        + "&patientID=" + patID));
+		assertThat(dicomViewerUrl, is("http://localhost:8081/weasis/viewer?studyUID="
+		        + mockOrder.getStudy().getStudyInstanceUid() + "&patientID=" + patID));
 	}
 	
 	/**
