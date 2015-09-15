@@ -18,6 +18,8 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Method;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,9 +28,12 @@ import org.mockito.Mock;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.User;
+import org.openmrs.api.APIAuthenticationException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
+import org.openmrs.api.context.Context;
+import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
@@ -64,6 +69,9 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	@Mock
 	private RadiologyService radiologyService;
+	
+	@Mock
+	private MessageSourceService messageSourceService;
 	
 	@Mock
 	private AdministrationService administrationService;
@@ -599,5 +607,277 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
 		        + mockRadiologyOrder.getPatient().getPatientId()));
 		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Order.undiscontinuedSuccessfully"));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserReferringPhysician()
+	 */
+	@Test
+	@Verifies(value = "should return true if the current user is authenticated as a referring physician", method = "isUserReferringPhysician()")
+	public void isUserReferringPhysician_ShouldReturnTrueIfTheCurrentUserIsAuthenticatedAsAReferringPhysician()
+	        throws Exception {
+		
+		User referringPhysician = RadiologyTestData.getMockRadiologyReferringPhysician();
+		when(Context.getAuthenticatedUser()).thenReturn(referringPhysician);
+		
+		Method isUserReferringPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
+		    "isUserReferringPhysician", new Class[] {});
+		isUserReferringPhysicianMethod.setAccessible(true);
+		
+		Boolean isUserReferringPhysician = (Boolean) isUserReferringPhysicianMethod.invoke(radiologyOrderFormController,
+		    new Object[] {});
+		
+		assertThat(isUserReferringPhysician, is(true));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserReferringPhysician()
+	 */
+	@Test
+	@Verifies(value = "should return false if the current user is not authenticated as a referring physician", method = "isUserReferringPhysician()")
+	public void isUserReferringPhysician_ShouldReturnFalseIfTheCurrentUserIsNotAuthenticatedAsAReferringPhysician()
+	        throws Exception {
+		
+		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReadingPhysician());
+		
+		Method isUserReferringPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
+		    "isUserReferringPhysician", new Class[] {});
+		isUserReferringPhysicianMethod.setAccessible(true);
+		
+		Boolean isUserReferringPhysician = (Boolean) isUserReferringPhysicianMethod.invoke(radiologyOrderFormController,
+		    new Object[] {});
+		
+		assertThat(isUserReferringPhysician, is(false));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserReferringPhysician()
+	 */
+	@Test(expected = APIAuthenticationException.class)
+	@Verifies(value = "should throw api authentication exception if the current user is not authenticated", method = "isUserReferringPhysician()")
+	public void isUserReferringPhysician_ShouldThrowApiAuthenticationExceptionIfTheCurrentUserIsNotAuthenticated()
+	        throws Exception {
+		
+		when(Context.getAuthenticatedUser()).thenReturn(null);
+		
+		Method isUserReferringPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
+		    "isUserReferringPhysician", new Class[] {});
+		isUserReferringPhysicianMethod.setAccessible(true);
+		
+		isUserReferringPhysicianMethod.invoke(radiologyOrderFormController, new Object[] {});
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserScheduler()
+	 */
+	@Test
+	@Verifies(value = "should return true if the current user is authenticated as a scheduler", method = "isUserScheduler()")
+	public void isUserScheduler_ShouldReturnTrueIfTheCurrentUserIsAuthenticatedAsAScheduler() throws Exception {
+		
+		User Scheduler = RadiologyTestData.getMockRadiologyScheduler();
+		when(Context.getAuthenticatedUser()).thenReturn(Scheduler);
+		
+		Method isUserSchedulerMethod = radiologyOrderFormController.getClass().getDeclaredMethod("isUserScheduler",
+		    new Class[] {});
+		isUserSchedulerMethod.setAccessible(true);
+		
+		Boolean isUserScheduler = (Boolean) isUserSchedulerMethod.invoke(radiologyOrderFormController, new Object[] {});
+		
+		assertThat(isUserScheduler, is(true));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserScheduler()
+	 */
+	@Test
+	@Verifies(value = "should return false if the current user is not authenticated as a scheduler", method = "isUserScheduler()")
+	public void isUserScheduler_ShouldReturnFalseIfTheCurrentUserIsNotAuthenticatedAsAScheduler() throws Exception {
+		
+		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
+		
+		Method isUserSchedulerMethod = radiologyOrderFormController.getClass().getDeclaredMethod("isUserScheduler",
+		    new Class[] {});
+		isUserSchedulerMethod.setAccessible(true);
+		
+		Boolean isUserScheduler = (Boolean) isUserSchedulerMethod.invoke(radiologyOrderFormController, new Object[] {});
+		
+		assertThat(isUserScheduler, is(false));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserScheduler()
+	 */
+	@Test(expected = APIAuthenticationException.class)
+	@Verifies(value = "should throw api authentication exception if the current user is not authenticated", method = "isUserScheduler()")
+	public void isUserScheduler_ShouldThrowApiAuthenticationExceptionIfTheCurrentUserIsNotAuthenticated() throws Exception {
+		
+		when(Context.getAuthenticatedUser()).thenReturn(null);
+		
+		Method isUserSchedulerMethod = radiologyOrderFormController.getClass().getDeclaredMethod("isUserScheduler",
+		    new Class[] {});
+		isUserSchedulerMethod.setAccessible(true);
+		
+		isUserSchedulerMethod.invoke(radiologyOrderFormController, new Object[] {});
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserPerformingPhysician()
+	 */
+	@Test
+	@Verifies(value = "should return true if the current user is authenticated as a Performing physician", method = "isUserPerformingPhysician()")
+	public void isUserPerformingPhysician_ShouldReturnTrueIfTheCurrentUserIsAuthenticatedAsAPerformingPhysician()
+	        throws Exception {
+		
+		User PerformingPhysician = RadiologyTestData.getMockRadiologyPerformingPhysician();
+		when(Context.getAuthenticatedUser()).thenReturn(PerformingPhysician);
+		
+		Method isUserPerformingPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
+		    "isUserPerformingPhysician", new Class[] {});
+		isUserPerformingPhysicianMethod.setAccessible(true);
+		
+		Boolean isUserPerformingPhysician = (Boolean) isUserPerformingPhysicianMethod.invoke(radiologyOrderFormController,
+		    new Object[] {});
+		
+		assertThat(isUserPerformingPhysician, is(true));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserPerformingPhysician()
+	 */
+	@Test
+	@Verifies(value = "should return false if the current user is not authenticated as a Performing physician", method = "isUserPerformingPhysician()")
+	public void isUserPerformingPhysician_ShouldReturnFalseIfTheCurrentUserIsNotAuthenticatedAsAPerformingPhysician()
+	        throws Exception {
+		
+		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReadingPhysician());
+		
+		Method isUserPerformingPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
+		    "isUserPerformingPhysician", new Class[] {});
+		isUserPerformingPhysicianMethod.setAccessible(true);
+		
+		Boolean isUserPerformingPhysician = (Boolean) isUserPerformingPhysicianMethod.invoke(radiologyOrderFormController,
+		    new Object[] {});
+		
+		assertThat(isUserPerformingPhysician, is(false));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserPerformingPhysician()
+	 */
+	@Test(expected = APIAuthenticationException.class)
+	@Verifies(value = "should throw api authentication exception if the current user is not authenticated", method = "isUserPerformingPhysician()")
+	public void isUserPerformingPhysician_ShouldThrowApiAuthenticationExceptionTheCurrentUserIsNotAuthenticated()
+	        throws Exception {
+		
+		when(Context.getAuthenticatedUser()).thenReturn(null);
+		
+		Method isUserPerformingPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
+		    "isUserPerformingPhysician", new Class[] {});
+		isUserPerformingPhysicianMethod.setAccessible(true);
+		
+		isUserPerformingPhysicianMethod.invoke(radiologyOrderFormController, new Object[] {});
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserReadingPhysician()
+	 */
+	@Test
+	@Verifies(value = "should return true if the current user is authenticated as a Reading physician", method = "isUserReadingPhysician()")
+	public void isUserReadingPhysician_ShouldReturnTrueIfTheCurrentUserIsAuthenticatedAsAReadingPhysician() throws Exception {
+		
+		User ReadingPhysician = RadiologyTestData.getMockRadiologyReadingPhysician();
+		when(Context.getAuthenticatedUser()).thenReturn(ReadingPhysician);
+		
+		Method isUserReadingPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
+		    "isUserReadingPhysician", new Class[] {});
+		isUserReadingPhysicianMethod.setAccessible(true);
+		
+		isUserReadingPhysicianMethod.invoke(radiologyOrderFormController, new Object[] {});
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserReadingPhysician()
+	 */
+	@Test
+	@Verifies(value = "should return false if the current user is not authenticated as a Reading physician", method = "isUserReadingPhysician()")
+	public void isUserReadingPhysician_ShouldReturnFalseIfTheCurrentUserIsNotAuthenticatedAsAReadingPhysician()
+	        throws Exception {
+		
+		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
+		
+		Method isUserReadingPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
+		    "isUserReadingPhysician", new Class[] {});
+		isUserReadingPhysicianMethod.setAccessible(true);
+		
+		Boolean isUserReadingPhysician = (Boolean) isUserReadingPhysicianMethod.invoke(radiologyOrderFormController,
+		    new Object[] {});
+		
+		assertThat(isUserReadingPhysician, is(false));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserReadingPhysician()
+	 */
+	@Test(expected = APIAuthenticationException.class)
+	@Verifies(value = "should throw api authentication exception if the current user is not authenticated", method = "isUserReadingPhysician()")
+	public void isUserReadingPhysician_ShouldThrowApiAuthenticationExceptionIfTheCurrentUserIsNotAuthenticated()
+	        throws Exception {
+		when(Context.getAuthenticatedUser()).thenReturn(null);
+		
+		Method isUserReadingPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
+		    "isUserReadingPhysician", new Class[] {});
+		isUserReadingPhysicianMethod.setAccessible(true);
+		
+		isUserReadingPhysicianMethod.invoke(radiologyOrderFormController, new Object[] {});
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserSuper()
+	 */
+	@Test
+	@Verifies(value = "should return true if the current user is authenticated as a super user", method = "isUserSuper()")
+	public void isUserSuper_ShouldReturnTrueIfTheCurrentUserIsAuthenticatedAsASuperUser() throws Exception {
+		
+		User Super = RadiologyTestData.getMockRadiologySuperUser();
+		when(Context.getAuthenticatedUser()).thenReturn(Super);
+		
+		Method isUserSuperMethod = radiologyOrderFormController.getClass().getDeclaredMethod("isUserSuper", new Class[] {});
+		isUserSuperMethod.setAccessible(true);
+		
+		Boolean isUserSuper = (Boolean) isUserSuperMethod.invoke(radiologyOrderFormController, new Object[] {});
+		
+		assertThat(isUserSuper, is(true));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserSuper()
+	 */
+	@Test
+	@Verifies(value = "should return false if the current user is not authenticated as a super user", method = "isUserSuper()")
+	public void isUserSuper_ShouldReturnFalseIfTheCurrentUserIsNotAuthenticatedAsASuperUser() throws Exception {
+		
+		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
+		
+		Method isUserSuperMethod = radiologyOrderFormController.getClass().getDeclaredMethod("isUserSuper", new Class[] {});
+		isUserSuperMethod.setAccessible(true);
+		
+		Boolean isUserSuper = (Boolean) isUserSuperMethod.invoke(radiologyOrderFormController, new Object[] {});
+		
+		assertThat(isUserSuper, is(false));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#isUserSuper()
+	 */
+	@Test(expected = APIAuthenticationException.class)
+	@Verifies(value = "should throw api authentication exception if the current user is not authenticated", method = "isUserSuper()")
+	public void isUserSuper_ShouldThrowApiAuthenticationExceptionIfTheCurrentUserIsNotAuthenticated() throws Exception {
+		
+		when(Context.getAuthenticatedUser()).thenReturn(null);
+		
+		Method isUserSuperMethod = radiologyOrderFormController.getClass().getDeclaredMethod("isUserSuper", new Class[] {});
+		isUserSuperMethod.setAccessible(true);
+		
+		isUserSuperMethod.invoke(radiologyOrderFormController, new Object[] {});
 	}
 }
