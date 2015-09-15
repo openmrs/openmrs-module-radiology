@@ -18,6 +18,7 @@ import static org.junit.Assert.assertThat;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.HashSet;
@@ -412,7 +413,7 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	/**
 	 * Convenience method to create a mock radiology order
 	 */
-	RadiologyOrder getMockRadiologyOrder() {
+	RadiologyOrder getMockRadiologyOrder() throws Exception {
 		Patient mockPatient = new Patient();
 		mockPatient.setPatientId(1);
 		
@@ -438,15 +439,21 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		personNames.add(personName);
 		mockPatient.setNames(personNames);
 		
-		Calendar cal = Calendar.getInstance();
-		cal.set(1950, Calendar.APRIL, 1, 0, 0, 0);
-		mockPatient.setBirthdate(cal.getTime());
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(1950, Calendar.APRIL, 1, 0, 0, 0);
+		mockPatient.setBirthdate(calendar.getTime());
 		
 		RadiologyOrder mockRadiologyOrder = new RadiologyOrder();
-		mockRadiologyOrder.setId(20);
+		mockRadiologyOrder.setOrderId(20);
+		
+		Field orderNumber = Order.class.getDeclaredField("orderNumber");
+		orderNumber.setAccessible(true);
+		orderNumber.set(mockRadiologyOrder, "ORD-" + mockRadiologyOrder.getOrderId());
+		
 		mockRadiologyOrder.setPatient(mockPatient);
-		cal.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
-		mockRadiologyOrder.setStartDate(cal.getTime());
+		calendar.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
+		mockRadiologyOrder.setScheduledDate(calendar.getTime());
+		mockRadiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		mockRadiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		
 		return mockRadiologyOrder;
@@ -455,13 +462,12 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	/**
 	 * Convenience method to create a mock radiology study
 	 */
-	Study getMockStudy() {
+	Study getMockStudy() throws Exception {
 		Study mockStudy = new Study();
 		mockStudy.setStudyId(1);
 		mockStudy.setRadiologyOrder(getMockRadiologyOrder());
 		mockStudy.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
 		mockStudy.setModality(Modality.CT);
-		mockStudy.setPriority(RequestedProcedurePriority.STAT);
 		
 		return mockStudy;
 	}
@@ -487,8 +493,8 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		    saveOrderHL7String,
 		    endsWith("||ORM^O01||P|2.3.1\r"
 		            + "PID|||100||Doe^John^Francis||19500401000000|M\r"
-		            + "ORC|NW|1|||||^^^20150204143500^^S\r"
-		            + "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||1|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
+		            + "ORC|NW|ORD-20|||||^^^20150204143500^^T\r"
+		            + "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
 		            + "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
 		
 		PipeParser hl7PipeParser = new PipeParser();
@@ -521,17 +527,17 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		// ORC segment
 		ORC orc = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC();
 		assertEquals("NW", orc.getOrderControl().getValue());
-		assertEquals(String.valueOf(study.getStudyId()), orc.getPlacerOrderNumber().getEntityIdentifier().getValue());
+		assertEquals(radiologyOrder.getOrderNumber(), orc.getPlacerOrderNumber().getEntityIdentifier().getValue());
 		assertEquals(null, orc.getOrderStatus().getValue());
-		assertEquals(new SimpleDateFormat("yyyyMMddHHmmss").format(radiologyOrder.getStartDate()), orc.getQuantityTiming()
-		        .getStartDateTime().getTimeOfAnEvent().getValue());
-		assertEquals("S", orc.getQuantityTiming().getPriority().getValue());
+		assertEquals(new SimpleDateFormat("yyyyMMddHHmmss").format(radiologyOrder.getEffectiveStartDate()), orc
+		        .getQuantityTiming().getStartDateTime().getTimeOfAnEvent().getValue());
+		assertEquals("T", orc.getQuantityTiming().getPriority().getValue());
 		
 		// OBR segment
 		OBR obr = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
 		        .getOBR();
 		assertEquals(radiologyOrder.getInstructions(), obr.getUniversalServiceID().getAlternateText().getValue());
-		assertEquals(String.valueOf(study.getStudyId()), obr.getPlacerField2().getValue());
+		assertEquals(radiologyOrder.getOrderNumber(), obr.getPlacerField2().getValue());
 		assertEquals(String.valueOf(study.getStudyId()), obr.getFillerField1().getValue());
 		assertEquals(study.getModality().name(), obr.getDiagnosticServSectID().getValue());
 		assertEquals(radiologyOrder.getInstructions(), obr.getProcedureCode().getText().getValue());
@@ -565,8 +571,8 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		    saveOrderHL7String,
 		    endsWith("||ORM^O01||P|2.3.1\r"
 		            + "PID|||100||Doe^John^Francis||19500401000000|M\r"
-		            + "ORC|CA|1|||||^^^20150204143500^^S\r"
-		            + "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||1|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
+		            + "ORC|CA|ORD-20|||||^^^20150204143500^^T\r"
+		            + "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
 		            + "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
 		
 		PipeParser hl7PipeParser = new PipeParser();
@@ -599,17 +605,17 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		// ORC segment
 		ORC orc = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC();
 		assertEquals("CA", orc.getOrderControl().getValue());
-		assertEquals(String.valueOf(study.getStudyId()), orc.getPlacerOrderNumber().getEntityIdentifier().getValue());
+		assertEquals(radiologyOrder.getOrderNumber(), orc.getPlacerOrderNumber().getEntityIdentifier().getValue());
 		assertEquals(null, orc.getOrderStatus().getValue());
-		assertEquals(new SimpleDateFormat("yyyyMMddHHmmss").format(radiologyOrder.getStartDate()), orc.getQuantityTiming()
-		        .getStartDateTime().getTimeOfAnEvent().getValue());
-		assertEquals("S", orc.getQuantityTiming().getPriority().getValue());
+		assertEquals(new SimpleDateFormat("yyyyMMddHHmmss").format(radiologyOrder.getEffectiveStartDate()), orc
+		        .getQuantityTiming().getStartDateTime().getTimeOfAnEvent().getValue());
+		assertEquals("T", orc.getQuantityTiming().getPriority().getValue());
 		
 		// OBR segment
 		OBR obr = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
 		        .getOBR();
 		assertEquals(radiologyOrder.getInstructions(), obr.getUniversalServiceID().getAlternateText().getValue());
-		assertEquals(String.valueOf(study.getStudyId()), obr.getPlacerField2().getValue());
+		assertEquals(radiologyOrder.getOrderNumber(), obr.getPlacerField2().getValue());
 		assertEquals(String.valueOf(study.getStudyId()), obr.getFillerField1().getValue());
 		assertEquals(study.getModality().name(), obr.getDiagnosticServSectID().getValue());
 		assertEquals(radiologyOrder.getInstructions(), obr.getProcedureCode().getText().getValue());
@@ -643,8 +649,8 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		    saveOrderHL7String,
 		    endsWith("||ORM^O01||P|2.3.1\r"
 		            + "PID|||100||Doe^John^Francis||19500401000000|M\r"
-		            + "ORC|XO|1|||||^^^20150204143500^^S\r"
-		            + "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||1|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
+		            + "ORC|XO|ORD-20|||||^^^20150204143500^^T\r"
+		            + "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
 		            + "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
 		
 		PipeParser hl7PipeParser = new PipeParser();
@@ -677,17 +683,17 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 		// ORC segment
 		ORC orc = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC();
 		assertEquals("XO", orc.getOrderControl().getValue());
-		assertEquals(String.valueOf(study.getStudyId()), orc.getPlacerOrderNumber().getEntityIdentifier().getValue());
+		assertEquals(radiologyOrder.getOrderNumber(), orc.getPlacerOrderNumber().getEntityIdentifier().getValue());
 		assertEquals(null, orc.getOrderStatus().getValue());
-		assertEquals(new SimpleDateFormat("yyyyMMddHHmmss").format(radiologyOrder.getStartDate()), orc.getQuantityTiming()
-		        .getStartDateTime().getTimeOfAnEvent().getValue());
-		assertEquals("S", orc.getQuantityTiming().getPriority().getValue());
+		assertEquals(new SimpleDateFormat("yyyyMMddHHmmss").format(radiologyOrder.getEffectiveStartDate()), orc
+		        .getQuantityTiming().getStartDateTime().getTimeOfAnEvent().getValue());
+		assertEquals("T", orc.getQuantityTiming().getPriority().getValue());
 		
 		// OBR segment
 		OBR obr = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
 		        .getOBR();
 		assertEquals(radiologyOrder.getInstructions(), obr.getUniversalServiceID().getAlternateText().getValue());
-		assertEquals(String.valueOf(study.getStudyId()), obr.getPlacerField2().getValue());
+		assertEquals(radiologyOrder.getOrderNumber(), obr.getPlacerField2().getValue());
 		assertEquals(String.valueOf(study.getStudyId()), obr.getFillerField1().getValue());
 		assertEquals(study.getModality().name(), obr.getDiagnosticServSectID().getValue());
 		assertEquals(radiologyOrder.getInstructions(), obr.getProcedureCode().getText().getValue());
@@ -701,25 +707,23 @@ public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see {@link DicomUtils#getCommonOrderPriorityFrom(RequestedProcedurePriority)}
+	 * @see {@link DicomUtils#getCommonOrderPriorityFrom(Order.Urgency)}
 	 */
 	@Test
-	@Verifies(value = "should return hl7 common order priority given requested procedure priority", method = "getCommonOrderPriorityFrom(RequestedProcedurePriority)")
-	public void getCommonOrderPriorityFrom_shouldReturnHL7CommonOrderPriorityGivenStudyPriority() {
+	@Verifies(value = "should return hl7 common order priority given order urgency", method = "getCommonOrderPriorityFrom(Order.Urgency)")
+	public void getCommonOrderPriorityFrom_shouldReturnHL7CommonOrderPriorityGivenOrderUrgency() {
 		
-		assertEquals(CommonOrderPriority.STAT, DicomUtils.getCommonOrderPriorityFrom(RequestedProcedurePriority.STAT));
-		assertEquals(CommonOrderPriority.ASAP, DicomUtils.getCommonOrderPriorityFrom(RequestedProcedurePriority.HIGH));
-		assertEquals(CommonOrderPriority.ROUTINE, DicomUtils.getCommonOrderPriorityFrom(RequestedProcedurePriority.ROUTINE));
+		assertEquals(CommonOrderPriority.STAT, DicomUtils.getCommonOrderPriorityFrom(Order.Urgency.STAT));
+		assertEquals(CommonOrderPriority.ROUTINE, DicomUtils.getCommonOrderPriorityFrom(Order.Urgency.ROUTINE));
 		assertEquals(CommonOrderPriority.TIMING_CRITICAL, DicomUtils
-		        .getCommonOrderPriorityFrom(RequestedProcedurePriority.MEDIUM));
-		assertEquals(CommonOrderPriority.ROUTINE, DicomUtils.getCommonOrderPriorityFrom(RequestedProcedurePriority.LOW));
+		        .getCommonOrderPriorityFrom(Order.Urgency.ON_SCHEDULED_DATE));
 	}
 	
 	/**
-	 * @see {@link DicomUtils#getCommonOrderPriorityFrom(RequestedProcedurePriority)}
+	 * @see {@link DicomUtils#getCommonOrderPriorityFrom(Order.Urgency)}
 	 */
 	@Test
-	@Verifies(value = "should return default hl7 common order priority given null", method = "getCommonOrderPriorityFrom(RequestedProcedurePriority)")
+	@Verifies(value = "should return default hl7 common order priority given null", method = "getCommonOrderPriorityFrom(Order.Urgency)")
 	public void getCommonOrderPriorityFrom_shouldReturnDefaultHL7CommonOrderPriorityGivenNull() {
 		
 		assertEquals(CommonOrderPriority.ROUTINE, DicomUtils.getCommonOrderPriorityFrom(null));

@@ -45,7 +45,8 @@ public class RadiologyOBR {
 		}
 		
 		observationRequestSegment.getUniversalServiceID().getAlternateText().setValue(radiologyOrder.getInstructions());
-		observationRequestSegment.getPlacerField2().setValue(String.valueOf(radiologyOrder.getStudy().getStudyId()));
+		observationRequestSegment.getPlacerField2().setValue(
+		    radiologyOrder.getOrderNumber() == null ? "" : String.valueOf(radiologyOrder.getOrderNumber()));
 		observationRequestSegment.getFillerField1().setValue(String.valueOf(radiologyOrder.getStudy().getStudyId()));
 		observationRequestSegment.getDiagnosticServSectID().setValue(radiologyOrder.getStudy().getModality().toString());
 		observationRequestSegment.getProcedureCode().getText().setValue(radiologyOrder.getInstructions());

@@ -22,11 +22,6 @@ import org.openmrs.module.radiology.RadiologyOrder;
 public interface RadiologyOrderDAO {
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#saveRadiologyOrder(RadiologyOrder)
-	 */
-	public RadiologyOrder saveRadiologyOrder(RadiologyOrder radiologyOrder);
-	
-	/**
 	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyOrderByOrderId(Integer)
 	 */
 	public RadiologyOrder getRadiologyOrderByOrderId(Integer orderId);
@@ -37,7 +32,8 @@ public interface RadiologyOrderDAO {
 	public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient);
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 * @see 
+	 *      org.openmrs.module.radiology.RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
 	 */
 	public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients);
 	

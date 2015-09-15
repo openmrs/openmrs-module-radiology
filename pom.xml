@@ -28,6 +28,11 @@
 		<module>omod</module>
 	</modules>
 
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<openMRSVersion>1.10.2</openMRSVersion>
+	</properties>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -102,11 +107,6 @@
 		</dependencies>
 
 	</dependencyManagement>
-
-	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<openMRSVersion>1.9.9</openMRSVersion>
-	</properties>
 
 	<build>
 		<pluginManagement>

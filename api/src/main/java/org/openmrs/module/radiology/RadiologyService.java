@@ -9,12 +9,17 @@
  */
 package org.openmrs.module.radiology;
 
+import java.util.Date;
 import java.util.List;
 
 import org.openmrs.Obs;
+import org.openmrs.Order;
 import org.openmrs.Patient;
+import org.openmrs.Provider;
 import org.openmrs.api.APIException;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.api.OrderService;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
@@ -27,16 +32,40 @@ public interface RadiologyService extends OpenmrsService {
 	
 	public void setSdao(StudyDAO dao);
 	
+	public void setOrderService(OrderService orderService);
+	
+	public void setEncounterService(EncounterService encounterService);
+	
 	/**
 	 * Save given <code>RadiologyOrder</code> to the database
 	 * 
-	 * @param radiologyOrder radiology order to be created or updated
-	 * @return RadiologyOrder who was created or updated
+	 * @param radiologyOrder radiology order to be created
+	 * @return RadiologyOrder who was created
 	 * @throws IllegalArgumentException if radiologyOrder is null
+	 * @throws IllegalArgumentException if radiologyOrder orderId is not null
 	 * @should create new radiology order from given radiology order object
 	 * @should throw illegal argument exception given null
+	 * @should throw illegal argument exception given existing radiology order
 	 */
-	public RadiologyOrder saveRadiologyOrder(RadiologyOrder radiologyOrder) throws IllegalArgumentException;
+	public RadiologyOrder placeRadiologyOrder(RadiologyOrder radiologyOrder) throws IllegalArgumentException;
+	
+	/**
+	 * Discontinue given <code>RadiologyOrder</code>
+	 * 
+	 * @param radiologyOrder radiology order to be discontinued
+	 * @return Order who was created to discontinue RadiologyOrder
+	 * @throws IllegalArgumentException if radiologyOrder is null
+	 * @throws IllegalArgumentException if radiologyOrder orderId is null
+	 * @throws IllegalArgumentException if radiologyOrder is not active
+	 * @throws IllegalArgumentException if provider is null
+	 * @should create discontinuation order which discontinues given radiology order object
+	 * @should throw illegal argument exception given empty radiology order
+	 * @should throw illegal argument exception given radiology order with orderId null
+	 * @should throw illegal argument exception if radiology order is not active
+	 * @should throw illegal argument exception given empty provider
+	 */
+	public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrder, Provider orderer, Date discontinueDate,
+	        String discontinueReason) throws Exception;
 	
 	/**
 	 * Get RadiologyOrder by its orderId

@@ -9,19 +9,21 @@
  */
 package org.openmrs.module.radiology.impl;
 
-import static org.openmrs.module.radiology.RadiologyRoles.PERFORMING_PHYSICIAN;
-import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
-import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
-
 import java.io.File;
+import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Encounter;
 import org.openmrs.Obs;
+import org.openmrs.Order;
 import org.openmrs.Patient;
-import org.openmrs.User;
+import org.openmrs.Provider;
 import org.openmrs.api.APIException;
+import org.openmrs.api.EncounterService;
+import org.openmrs.api.OrderContext;
+import org.openmrs.api.OrderService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
@@ -37,11 +39,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 public class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyService {
 	
+	private static final Log log = LogFactory.getLog(RadiologyServiceImpl.class);
+	
 	private RadiologyOrderDAO radiologyOrderDAO;
 	
 	private StudyDAO sdao;
 	
-	private static final Log log = LogFactory.getLog(RadiologyServiceImpl.class);
+	private OrderService orderService;
+	
+	private EncounterService encounterService;
 	
 	@Override
 	public void setRadiologyOrderDao(RadiologyOrderDAO radiologyOrderDAO) {
@@ -53,17 +59,90 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		this.sdao = dao;
 	}
 	
+	@Override
+	public void setOrderService(OrderService orderService) {
+		this.orderService = orderService;
+	}
+	
+	@Override
+	public void setEncounterService(EncounterService encounterService) {
+		this.encounterService = encounterService;
+	}
+	
 	/**
-	 * @see RadiologyService#saveRadiologyOrder(RadiologyOrder)
+	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
 	 */
 	@Transactional
 	@Override
-	public RadiologyOrder saveRadiologyOrder(RadiologyOrder radiologyOrder) {
+	public RadiologyOrder placeRadiologyOrder(RadiologyOrder radiologyOrder) {
 		if (radiologyOrder == null) {
 			throw new IllegalArgumentException("radiologyOrder is required");
 		}
 		
-		return radiologyOrderDAO.saveRadiologyOrder(radiologyOrder);
+		if (radiologyOrder.getOrderId() != null) {
+			throw new IllegalArgumentException("Cannot edit an existing order!");
+		}
+		
+		Encounter encounter = saveRadiologyOrderEncounter(radiologyOrder.getPatient(), radiologyOrder.getOrderer(),
+		    new Date());
+		encounter.addOrder(radiologyOrder);
+		
+		OrderContext orderContext = new OrderContext();
+		orderContext.setCareSetting(RadiologyProperties.getRadiologyCareSetting());
+		orderContext.setOrderType(RadiologyProperties.getRadiologyTestOrderType());
+		
+		return (RadiologyOrder) orderService.saveOrder(radiologyOrder, orderContext);
+	}
+	
+	/**
+	 * Save radiology order encounter for given parameters
+	 * 
+	 * @param patient the encounter patient
+	 * @param provider the encounter provider
+	 * @param encounterDateTime the encounter date
+	 * @return radiology order encounter for given parameters
+	 * @should save radiology order encounter for given parameters
+	 */
+	@Transactional
+	private Encounter saveRadiologyOrderEncounter(Patient patient, Provider provider, Date encounterDateTime) {
+		
+		Encounter encounter = new Encounter();
+		encounter.setPatient(patient);
+		encounter.setEncounterType(RadiologyProperties.getRadiologyEncounterType());
+		encounter.setProvider(RadiologyProperties.getOrderingProviderEncounterRole(), provider);
+		encounter.setEncounterDatetime(encounterDateTime);
+		
+		return encounterService.saveEncounter(encounter);
+	}
+	
+	/**
+	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 */
+	@Transactional
+	@Override
+	public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrderToDiscontinue, Provider orderer,
+	        Date discontinueDate, String nonCodedDiscontinueReason) throws Exception {
+		
+		if (radiologyOrderToDiscontinue == null) {
+			throw new IllegalArgumentException("radiologyOrder is required");
+		}
+		
+		if (radiologyOrderToDiscontinue.getOrderId() == null) {
+			throw new IllegalArgumentException("orderId is null");
+		}
+		
+		if (radiologyOrderToDiscontinue.isActive() == false) {
+			throw new IllegalArgumentException("order is not active");
+		}
+		
+		if (orderer == null) {
+			throw new IllegalArgumentException("provider is required");
+		}
+		
+		Encounter encounter = saveRadiologyOrderEncounter(radiologyOrderToDiscontinue.getPatient(), orderer, discontinueDate);
+		
+		return orderService.discontinueOrder(radiologyOrderToDiscontinue, nonCodedDiscontinueReason, discontinueDate,
+		    orderer, encounter);
 	}
 	
 	/**
@@ -125,25 +204,8 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		
 		RadiologyOrder order = study.getRadiologyOrder();
 		
-		if (study.getScheduledStatus() == null && order.getStartDate() != null) {
+		if (study.getScheduledStatus() == null && order.getScheduledDate() != null) {
 			study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
-		}
-		
-		User orderer = order.getOrderer();
-		if (orderer != null) {
-			if (orderer.hasRole(SCHEDULER, true) && study.getScheduler() == null) {
-				if (study.isScheduleable()) {
-					study.setScheduler(orderer);
-				}
-			}
-			
-			if (orderer.hasRole(PERFORMING_PHYSICIAN, true) && study.getPerformingPhysician() == null) {
-				study.setPerformingPhysician(orderer);
-			}
-			
-			if (orderer.hasRole(READING_PHYSICIAN, true) && study.getReadingPhysician() == null) {
-				study.setReadingPhysician(orderer);
-			}
 		}
 		
 		try {

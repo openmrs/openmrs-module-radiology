@@ -15,12 +15,20 @@
   
   <location location_id="1" name="Radiology Department" creator="1" date_created="2015-01-01 00:00:00.0" retired="false" uuid="c36006e5-9fbb-4f20-866b-0ece245615a1"/>
   
+  <!-- define the metadata for the Radiology Order -->
+  <global_property property="radiology.radiologyCareSetting" property_value="6f0c9a92-6f24-11e3-af88-005056821db0" uuid="a3209d7c-ae4c-41a4-96de-876facd77226"/> <!--  set to uuid from CareSetting OUTPATIENT in openmrs core -->
+  <encounter_type encounter_type_id="1001" name="Radiology Order" description="Ordering radiology exams" creator="1" date_created="2015-09-09 00:00:00.0" retired="false" uuid="19db8c0d-3520-48f2-babd-77f2d450e5c7"/>
+  <encounter_role encounter_role_id="1001" name="Ordering Provider" description="Provider ordering tests, exams, drugs, ..." creator="1" retired="false" date_created="2015-09-09 14:00:00.0" uuid="13fc9b4a-49ed-429c-9dde-ca005b387a3d" />
+
+    <!-- Provider for Radiology Orders -->
+  <provider provider_id="1" name="Radiology Technician" identifier="1" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="c2299800-cca9-11e0-9572-0800200c9a66" />
+  
   <!-- concept name and concept -->
   <concept concept_id="178" retired="false" datatype_id="4" class_id="4" is_set="false" creator="1" date_created="2004-01-01 00:00:00" changed_by="1" date_changed="2005-02-16 00:00:00" version="" uuid="1565b6e6-df81-11e4-98ec-08002798a7ad"/>
   <concept_name concept_id="178" name="FRACTURE" locale="en" creator="1" date_created="2004-01-01 00:00:00" concept_name_id="178" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="15736c16-df81-11e4-98ec-08002798a7ad"/>
   
   <!-- radiology order type -->
-  <order_type order_type_id="5" name="Radiology Order" description="Order type for radiology exams" creator="1" date_created="2015-09-09" retired="0" uuid="dbdb9a9b-56ea-11e5-a47f-08002719a237"/>
+  <order_type order_type_id="5" name="Radiology Order" java_class_name="org.openmrs.module.radiology.RadiologyOrder" description="Order type for radiology exams" creator="1" date_created="2015-09-09" retired="0" uuid="dbdb9a9b-56ea-11e5-a47f-08002719a237"/>
   
   <!-- define metadata for the radiology service -->
   <global_property property="radiology.applicationUID" property_value="1.2.826.0.1.3680043.8.2186" description="You need a application root UID, this will be the prefix of any module DICOM object, the default value serves for debugging purposes" uuid="5d3962e1-eb27-49de-921b-01213ede5c73"/>
@@ -39,7 +47,7 @@
   <person_name person_name_id="2" preferred="true" person_id="70011" given_name="Jane" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="0f1f7d08-076b-4fc6-acac-4bb91515141e"/>
   
   <!-- non radiology order -->
-  <orders order_id="2003" order_type_id="1"   urgency="ROUTINE"  orderer="1" concept_id="1" instructions="Non radiology order" start_date="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70011"/>
+  <orders order_id="2003" order_number="2003" order_type_id="1" order_action="NEW" care_setting="1" encounter_id="1" urgency="ROUTINE"  orderer="1" concept_id="1" instructions="Non radiology order" date_activated="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70011"/>
     
   <!-- patient with two radiology studies -->
   <patient patient_id="70021" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
@@ -48,15 +56,16 @@
   <person_name person_name_id="2" preferred="true" person_id="70021" given_name="John" middle_name="Francis" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="0f1f7d08-076b-4fc6-acac-4bb91515141e"/>
   
   <!-- radiology orders with study -->
-  <orders order_id="2001" order_type_id="2" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" start_date="2015-02-04 14:35:00.0" auto_expire_date="2015-02-17 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70021" />
+  <encounter encounter_id="2001" encounter_type="2" patient_id="70021" location_id="1" form_id="1" encounter_datetime="2008-08-01 00:00:00.0" creator="1" date_created="2008-08-18 14:09:05.0" voided="false" uuid="6849c394-2c58-49d9-b928-215a75a90959"/>
+  <orders order_id="2001" order_number="2001" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2001" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-04 14:35:00.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70021" />
   <test_order order_id="2001"/>
   <radiology_order order_id="2001" />
-  <radiology_study study_id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" priority="ROUTINE" modality="CT" mwl_status="DEFAULT"/>
+  <radiology_study study_id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="CT" mwl_status="DEFAULT"/>
 
-  <orders order_id="2002" order_type_id="2" urgency="ROUTINE"  orderer="1" concept_id="178" instructions="MR Left Knee" start_date="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70021" />
+  <orders order_id="2002" order_number="2002" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="1" urgency="ROUTINE"  orderer="1" concept_id="178" instructions="MR Left Knee" date_activated="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70021" />
   <test_order order_id="2002"/>
   <radiology_order order_id="2002" />
-  <radiology_study study_id="2" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" priority="ROUTINE" modality="MR" mwl_status="DEFAULT"/>
+  <radiology_study study_id="2" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="MR" mwl_status="DEFAULT"/>
 
   <obs obs_id="20021" person_id="70021" order_id="2002" concept_id="178" obs_datetime="2015-02-06 17:14:00.0" location_id="1" creator="1" date_created="2015-02-06 17:14:35.0" voided="false" uuid="be3a4d7a-f9ab-47bb-aaad-bc0b452fcda4" accession_number="RAD2002"/>
   
@@ -67,8 +76,9 @@
   <person_name person_name_id="3" preferred="true" person_id="70022" given_name="John" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="6753aaa1-545d-44e2-9a9f-6c682f37a134"/>
   
   <!-- radiology order with no associated study -->
-  <orders order_id="2004" order_type_id="2" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" start_date="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" discontinued="false" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70022" />
+  <orders order_id="2004" order_number="2004" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="1" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-06 00:00:00.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-05 12:24:10.0" voided="false" patient_id="70022" />
   <test_order order_id="2004"/>
   <radiology_order order_id="2004" />
+  
   
 </dataset>

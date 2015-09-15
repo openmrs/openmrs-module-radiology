@@ -23,12 +23,6 @@
 				<param name="enumClassName">org.openmrs.module.radiology.PerformedProcedureStepStatus</param>
 			</type>
 		</property>
-		<property name="priority" column="priority" length="7"
-			not-null="true">
-			<type name="org.openmrs.util.HibernateEnumType">
-				<param name="enumClassName">org.openmrs.module.radiology.RequestedProcedurePriority</param>
-			</type>
-		</property>
 		<property name="modality" column="modality" length="16"
 			not-null="true">
 			<type name="org.openmrs.util.HibernateEnumType">
@@ -41,17 +35,5 @@
 				<param name="enumClassName">org.openmrs.module.radiology.MwlStatus</param>
 			</type>
 		</property>
-		<many-to-one name="scheduler" class="org.openmrs.User"
-			not-null="false" not-found="ignore">
-			<column name="scheduler_user_id"></column>
-		</many-to-one>
-		<many-to-one name="performingPhysician" class="org.openmrs.User"
-			not-null="false" not-found="ignore">
-			<column name="performing_physician_user_id"></column>
-		</many-to-one>
-		<many-to-one name="readingPhysician" class="org.openmrs.User"
-			not-null="false" not-found="ignore">
-			<column name="reading_physician_user_id"></column>
-		</many-to-one>
 	</class>
 </hibernate-mapping>

@@ -33,7 +33,6 @@ public class RadiologyORC {
 	 * @should return populated common order segment given all params
 	 * @should throw illegal argument exception given null as common order segment
 	 * @should throw illegal argument exception given null as radiology order
-	 * @should throw illegal argument exception if given radiology orders study is null
 	 */
 	public static ORC populateCommonOrder(ORC commonOrderSegment, RadiologyOrder radiologyOrder,
 	        CommonOrderOrderControl commonOrderOrderControl, CommonOrderPriority commonOrderPriority)
@@ -45,17 +44,13 @@ public class RadiologyORC {
 		
 		if (radiologyOrder == null) {
 			throw new IllegalArgumentException("radiologyOrder cannot be null.");
-		} else {
-			if (radiologyOrder.getStudy() == null) {
-				throw new IllegalArgumentException("radiologyOrder.study cannot be null.");
-			}
 		}
 		
 		commonOrderSegment.getOrderControl().setValue(commonOrderOrderControl.getValue());
 		commonOrderSegment.getPlacerOrderNumber().getEntityIdentifier().setValue(
-		    String.valueOf(radiologyOrder.getStudy().getStudyId()));
+		    radiologyOrder.getOrderNumber() == null ? "" : String.valueOf(radiologyOrder.getOrderNumber()));
 		commonOrderSegment.getQuantityTiming().getStartDateTime().getTimeOfAnEvent().setValue(
-		    DateTimeUtils.getPlainDateTimeFrom(radiologyOrder.getStartDate()));
+		    DateTimeUtils.getPlainDateTimeFrom(radiologyOrder.getEffectiveStartDate()));
 		commonOrderSegment.getQuantityTiming().getPriority().setValue(commonOrderPriority.getValue());
 		
 		return commonOrderSegment;

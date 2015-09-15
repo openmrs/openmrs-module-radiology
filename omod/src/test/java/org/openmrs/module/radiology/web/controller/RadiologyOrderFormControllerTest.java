@@ -18,9 +18,12 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.lang.reflect.Method;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -30,11 +33,11 @@ import org.mockito.Mock;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.User;
-import org.openmrs.api.APIAuthenticationException;
+import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
-import org.openmrs.api.context.Context;
 import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
@@ -68,6 +71,9 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	@Mock
 	private OrderService orderService;
+	
+	@Mock
+	private EncounterService encounterService;
 	
 	@Mock
 	private RadiologyService radiologyService;
@@ -112,34 +118,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#getRadiologyOrderFormWithNewRadiologyOrder()
-	 */
-	@Test
-	@Verifies(value = "should populate model and view with new radiology order with prefilled orderer when requested by referring physician", method = "getRadiologyOrderFormWithNewRadiologyOrder()")
-	public void getRadiologyOrderFormWithNewRadiologyOrder_shouldPopulateModelAndViewWithNewRadiologyOrderWithPrefilledOrdererWhenRequestedByReferringPhysician()
-	        throws Exception {
-		
-		//given
-		User mockReferringPhysician = RadiologyTestData.getMockRadiologyReferringPhysician();
-		when(userContext.getAuthenticatedUser()).thenReturn(mockReferringPhysician);
-		
-		ModelAndView modelAndView = radiologyOrderFormController.getRadiologyOrderFormWithNewRadiologyOrder();
-		
-		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
-		
-		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
-		RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
-		assertNull(order.getOrderId());
-		
-		assertNotNull(order.getStudy());
-		assertNull(order.getStudy().getStudyId());
-		
-		assertNotNull(order.getOrderer());
-		assertThat(order.getOrderer(), is(mockReferringPhysician));
-	}
-	
-	/**
 	 * @see RadiologyOrderFormController#getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(Integer)
 	 */
 	@Test
@@ -169,38 +147,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		assertThat(modelAndView.getModelMap(), hasKey("patientId"));
 		Integer patientId = (Integer) modelAndView.getModelMap().get("patientId");
 		assertThat(patientId, is(mockPatient.getPatientId()));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(Integer)
-	 */
-	@Test
-	@Verifies(value = "should populate model and view with new radiology order with prefilled orderer when requested by referring physician", method = "getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(Integer)")
-	public void getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient_shouldPopulateModelAndViewWithNewRadiologyOrderWithPrefilledOrdererWhenRequestedByReferringPhysician()
-	        throws Exception {
-		
-		//given
-		Patient mockPatient = RadiologyTestData.getMockPatient1();
-		User mockReferringPhysician = RadiologyTestData.getMockRadiologyReferringPhysician();
-		
-		when(userContext.getAuthenticatedUser()).thenReturn(mockReferringPhysician);
-		when(patientService.getPatient(mockPatient.getPatientId())).thenReturn(mockPatient);
-		
-		ModelAndView modelAndView = radiologyOrderFormController
-		        .getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(mockPatient);
-		
-		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
-		
-		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
-		RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
-		assertNull(order.getOrderId());
-		
-		assertNotNull(order.getStudy());
-		assertNull(order.getStudy().getStudyId());
-		
-		assertNotNull(order.getOrderer());
-		assertThat(order.getOrderer(), is(mockReferringPhysician));
 	}
 	
 	/**
@@ -243,7 +189,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockRadiologyOrder);
 		
 		ModelAndView modelAndView = radiologyOrderFormController
-		        .getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(mockRadiologyOrder.getOrderId());
+		        .getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(mockRadiologyOrder);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
@@ -267,9 +213,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_OK);
 		
-		when(radiologyService.saveRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
+		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
 		when(radiologyService.saveStudy(mockRadiologyOrder.getStudy())).thenReturn(mockStudyPostSave);
-		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -280,7 +225,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
 		ModelAndView modelAndView = radiologyOrderFormController.postSaveRadiologyOrder(mockRequest, null,
-		    mockRadiologyOrder, orderErrors);
+		    mockRadiologyOrder, mockRadiologyOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.list"));
@@ -301,9 +246,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_OK);
 		
-		when(radiologyService.saveRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
+		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
 		when(radiologyService.saveStudy(mockRadiologyOrder.getStudy())).thenReturn(mockStudyPostSave);
-		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -314,7 +258,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
 		ModelAndView modelAndView = radiologyOrderFormController.postSaveRadiologyOrder(mockRequest, mockRadiologyOrder
-		        .getPatient().getPatientId(), mockRadiologyOrder, orderErrors);
+		        .getPatient().getPatientId(), mockRadiologyOrder, mockRadiologyOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
@@ -337,9 +281,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_ERR);
 		
-		when(radiologyService.saveRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
+		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
 		when(radiologyService.saveStudy(mockRadiologyOrder.getStudy())).thenReturn(mockStudyPostSave);
-		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -350,7 +293,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
 		ModelAndView modelAndView = radiologyOrderFormController.postSaveRadiologyOrder(mockRequest, mockRadiologyOrder
-		        .getPatient().getPatientId(), mockRadiologyOrder, orderErrors);
+		        .getPatient().getPatientId(), mockRadiologyOrder, mockRadiologyOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
@@ -367,7 +310,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		
 		modelAndView = radiologyOrderFormController.postSaveRadiologyOrder(mockRequest, mockRadiologyOrder.getPatient()
-		        .getPatientId(), mockRadiologyOrder, orderErrors);
+		        .getPatientId(), mockRadiologyOrder, mockRadiologyOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
@@ -380,8 +323,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	 *      BindingResult)
 	 */
 	@Test
-	@Verifies(value = "should set http session attribute openmrs message to study performed when study performed status is in progress and scheduler is empty and request was issued by radiology scheduler", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
-	public void postSaveRadiologyOrder_shouldSetHttpSessionAttributeOpenmrsMessageToStudyPerformedWhenStudyPerformedStatusIsInProgressAndSchedulerIsEmptyAndRequestWasIssuedByRadiologyScheduler()
+	@Verifies(value = "should set http session attribute openmrs message to study performed when study performed status is in progress and request was issued by radiology scheduler", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
+	public void postSaveRadiologyOrder_shouldSetHttpSessionAttributeOpenmrsMessageToStudyPerformedWhenStudyPerformedStatusIsInProgressAndRequestWasIssuedByRadiologyScheduler()
 	        throws Exception {
 		
 		//given
@@ -392,9 +335,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		User mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
 		
 		when(userContext.getAuthenticatedUser()).thenReturn(mockRadiologyScheduler);
-		when(radiologyService.saveRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
+		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
 		when(radiologyService.saveStudy(mockRadiologyOrder.getStudy())).thenReturn(mockStudyPostSave);
-		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -405,7 +347,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(orderErrors.hasErrors()).thenReturn(false);
 		
 		ModelAndView modelAndView = radiologyOrderFormController.postSaveRadiologyOrder(mockRequest, mockRadiologyOrder
-		        .getPatient().getPatientId(), mockRadiologyOrder, orderErrors);
+		        .getPatient().getPatientId(), mockRadiologyOrder, mockRadiologyOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
@@ -428,9 +370,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		User mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
 		
 		when(userContext.getAuthenticatedUser()).thenReturn(mockRadiologyScheduler);
-		when(radiologyService.saveRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
+		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
 		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
-		when(radiologyService.getStudy(mockStudyPostSave.getStudyId())).thenReturn(mockStudyPostSave);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -441,401 +382,158 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		when(orderErrors.hasErrors()).thenReturn(true);
 		
 		ModelAndView modelAndView = radiologyOrderFormController.postSaveRadiologyOrder(mockRequest, mockRadiologyOrder
-		        .getPatient().getPatientId(), mockRadiologyOrder, orderErrors);
+		        .getPatient().getPatientId(), mockRadiologyOrder, mockRadiologyOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#post(HttpServletRequest, Integer, Order)
+	 * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest,
+	 *      HttpServletResponse, Order, String, Date)
 	 */
 	@Test
-	@Verifies(value = "should set http session attribute openmrs message to voided successfully and redirect to patient dashboard when void order was successful and given patient id", method = "post(HttpServletRequest, Integer, Order)")
-	public void post_shouldSetHttpSessionAttributeOpenmrsMessageToVoidedSuccessfullyAndRedirectToPatientDashboardWhenVoidOrderWasSuccessfulAndGivenPatientId()
+	@Verifies(value = "should discontinue non discontinued order and redirect to discontinuation order", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String, Date)")
+	public void postDiscontinueRadiologyOrder_shouldDiscontinueNonDiscontinuedOrderAndRedirectToDiscontinuationOrder()
 	        throws Exception {
-		
 		//given
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
-		mockStudyPostSave.setMwlStatus(MwlStatus.VOID_OK);
+		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
+		mockRadiologyOrderToDiscontinue.getStudy().setMwlStatus(MwlStatus.DISCONTINUE_OK);
+		String discontinueReason = "Wrong Procedure";
+		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
 		
-		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockRadiologyOrder);
-		when(radiologyService.getStudyByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockStudyPostSave);
-		
-		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-		mockRequest.addParameter("voidOrder", "voidOrder");
-		MockHttpSession mockSession = new MockHttpSession();
-		mockRequest.setSession(mockSession);
-		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockRadiologyOrder.getPatient()
-		        .getPatientId(), mockRadiologyOrder);
-		
-		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
-		        + mockRadiologyOrder.getPatient().getPatientId()));
-		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Order.voidedSuccessfully"));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#post(HttpServletRequest, Integer, Order)
-	 */
-	@Test
-	@Verifies(value = "should set http session attribute openmrs message to unvoided successfully and redirect to patient dashboard when unvoid order was successful and given patient id", method = "post(HttpServletRequest, Integer, Order)")
-	public void post_shouldSetHttpSessionAttributeOpenmrsMessageToUnvoidedSuccessfullyAndRedirectToPatientDashboardWhenUnvoidOrderWasSuccessfulAndGivenPatientId()
-	        throws Exception {
-		
-		//given
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
-		mockStudyPostSave.setMwlStatus(MwlStatus.UNVOID_OK);
-		
-		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockRadiologyOrder);
-		when(radiologyService.getStudyByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockStudyPostSave);
-		
-		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-		mockRequest.addParameter("unvoidOrder", "unvoidOrder");
-		MockHttpSession mockSession = new MockHttpSession();
-		mockRequest.setSession(mockSession);
-		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockRadiologyOrder.getPatient()
-		        .getPatientId(), mockRadiologyOrder);
-		
-		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
-		        + mockRadiologyOrder.getPatient().getPatientId()));
-		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Order.unvoidedSuccessfully"));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#post(HttpServletRequest, Integer, Order)
-	 */
-	@Test
-	@Verifies(value = "should set http session attribute openmrs message to discontinued successfully and redirect to patient dashboard when discontinue order was successful and given patient id", method = "post(HttpServletRequest, Integer, Order)")
-	public void post_shouldSetHttpSessionAttributeOpenmrsMessageToDiscontinuedSuccessfullyAndRedirectToPatientDashboardWhenDiscontinueOrderWasSuccessfulAndGivenPatientId()
-	        throws Exception {
-		
-		//given
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
-		mockStudyPostSave.setMwlStatus(MwlStatus.DISCONTINUE_OK);
-		
-		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockRadiologyOrder);
-		when(radiologyService.getStudyByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockStudyPostSave);
+		Order mockDiscontinuationOrder = new Order();
+		mockDiscontinuationOrder.setOrderId(2);
+		mockDiscontinuationOrder.setAction(Order.Action.DISCONTINUE);
+		mockDiscontinuationOrder.setOrderer(mockRadiologyOrderToDiscontinue.getOrderer());
+		mockDiscontinuationOrder.setOrderReasonNonCoded(discontinueReason);
+		mockDiscontinuationOrder.setDateActivated(discontinueDate);
+		mockDiscontinuationOrder.setPreviousOrder(mockRadiologyOrderToDiscontinue);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("discontinueOrder", "discontinueOrder");
 		MockHttpSession mockSession = new MockHttpSession();
 		mockRequest.setSession(mockSession);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockRadiologyOrder.getPatient()
-		        .getPatientId(), mockRadiologyOrder);
+		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrderToDiscontinue.getOrderId())).thenReturn(
+		    mockRadiologyOrderToDiscontinue);
+		when(
+		    radiologyService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder
+		            .getOrderer(), mockDiscontinuationOrder.getDateActivated(), mockDiscontinuationOrder
+		            .getOrderReasonNonCoded())).thenReturn(mockDiscontinuationOrder);
+		
+		assertThat(mockRadiologyOrderToDiscontinue.getAction(), is(Order.Action.NEW));
+		ModelAndView modelAndView = radiologyOrderFormController.postDiscontinueRadiologyOrder(mockRequest, null,
+		    mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
-		        + mockRadiologyOrder.getPatient().getPatientId()));
+		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
+		        + mockDiscontinuationOrder.getOrderId()));
 		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Order.discontinuedSuccessfully"));
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#post(HttpServletRequest, Integer, Order)
+	 * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest,
+	 *      HttpServletResponse, Order, String, Date)
 	 */
 	@Test
-	@Verifies(value = "should set http session attribute openmrs message to undiscontinued successfully and redirect to patient dashboard when undiscontinue order was successful and given patient id", method = "post(HttpServletRequest, Integer, Order)")
-	public void post_shouldSetHttpSessionAttributeOpenmrsMessageToUndiscontinueSuccessfullyAndRedirectToPatientDashboardWhenUndiscontinueOrderWasSuccessfulAndGivenPatientId()
+	@Verifies(value = "should not redirect if discontinuation failed through date in the future", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String, Date)")
+	public void postDiscontinueRadiologyOrder_shouldNotRedirectIfDiscontinuationFailedThroughDateInTheFuture()
 	        throws Exception {
-		
 		//given
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
-		mockStudyPostSave.setMwlStatus(MwlStatus.UNDISCONTINUE_OK);
+		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
+		mockRadiologyOrderToDiscontinue.getStudy().setMwlStatus(MwlStatus.DISCONTINUE_OK);
+		String discontinueReason = "Wrong Procedure";
+		Date discontinueDate = new Date();
+		APIException apiException = new APIException("Discontinue date cannot be in the future");
 		
-		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockRadiologyOrder);
-		when(radiologyService.getStudyByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockStudyPostSave);
+		Order mockDiscontinuationOrder = new Order();
+		mockDiscontinuationOrder.setOrderId(2);
+		mockDiscontinuationOrder.setAction(Order.Action.DISCONTINUE);
+		mockDiscontinuationOrder.setOrderer(mockRadiologyOrderToDiscontinue.getOrderer());
+		mockDiscontinuationOrder.setOrderReasonNonCoded(discontinueReason);
+		mockDiscontinuationOrder.setDateActivated(discontinueDate);
+		mockDiscontinuationOrder.setPreviousOrder(mockRadiologyOrderToDiscontinue);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-		mockRequest.addParameter("undiscontinueOrder", "undiscontinueOrder");
+		mockRequest.addParameter("discontinueOrder", "discontinueOrder");
 		MockHttpSession mockSession = new MockHttpSession();
 		mockRequest.setSession(mockSession);
 		
-		ModelAndView modelAndView = radiologyOrderFormController.post(mockRequest, mockRadiologyOrder.getPatient()
-		        .getPatientId(), mockRadiologyOrder);
+		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrderToDiscontinue.getOrderId())).thenReturn(
+		    mockRadiologyOrderToDiscontinue);
+		when(
+		    radiologyService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder
+		            .getOrderer(), mockDiscontinuationOrder.getDateActivated(), mockDiscontinuationOrder
+		            .getOrderReasonNonCoded())).thenThrow(apiException);
+		
+		assertThat(mockRadiologyOrderToDiscontinue.getAction(), is(Order.Action.NEW));
+		ModelAndView modelAndView = radiologyOrderFormController.postDiscontinueRadiologyOrder(mockRequest, null,
+		    mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/patientDashboard.form?patientId="
-		        + mockRadiologyOrder.getPatient().getPatientId()));
-		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Order.undiscontinuedSuccessfully"));
+		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
+		
+		assertThat(modelAndView.getModelMap(), hasKey("order"));
+		Order order = (Order) modelAndView.getModelMap().get("order");
+		assertThat(order, is((Order) mockRadiologyOrderToDiscontinue));
+		
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
+		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
+		assertThat(radiologyOrder, is(mockRadiologyOrderToDiscontinue));
+		
+		assertNotNull(mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR));
+		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR),
+		    is("Discontinue date cannot be in the future"));
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#isUserReferringPhysician()
+	 * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest,
+	 *      HttpServletResponse, Order, String, Date)
 	 */
 	@Test
-	@Verifies(value = "should return true if the current user is authenticated as a referring physician", method = "isUserReferringPhysician()")
-	public void isUserReferringPhysician_ShouldReturnTrueIfTheCurrentUserIsAuthenticatedAsAReferringPhysician()
-	        throws Exception {
+	@Verifies(value = "should not redirect if discontinuation failed in pacs", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String, Date)")
+	public void postDiscontinueRadiologyOrder_shouldNotRedirectIfDiscontinuationFailedInPacs() throws Exception {
+		//given
+		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
+		mockRadiologyOrderToDiscontinue.getStudy().setMwlStatus(MwlStatus.DISCONTINUE_ERR);
+		String discontinueReason = "Wrong Procedure";
+		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
 		
-		User referringPhysician = RadiologyTestData.getMockRadiologyReferringPhysician();
-		when(Context.getAuthenticatedUser()).thenReturn(referringPhysician);
+		Order mockDiscontinuationOrder = new Order();
+		mockDiscontinuationOrder.setOrderId(2);
+		mockDiscontinuationOrder.setAction(Order.Action.DISCONTINUE);
+		mockDiscontinuationOrder.setOrderer(mockRadiologyOrderToDiscontinue.getOrderer());
+		mockDiscontinuationOrder.setOrderReasonNonCoded(discontinueReason);
+		mockDiscontinuationOrder.setPreviousOrder(mockRadiologyOrderToDiscontinue);
 		
-		Method isUserReferringPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
-		    "isUserReferringPhysician", new Class[] {});
-		isUserReferringPhysicianMethod.setAccessible(true);
+		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+		mockRequest.addParameter("discontinueOrder", "discontinueOrder");
+		MockHttpSession mockSession = new MockHttpSession();
+		mockRequest.setSession(mockSession);
 		
-		Boolean isUserReferringPhysician = (Boolean) isUserReferringPhysicianMethod.invoke(radiologyOrderFormController,
-		    new Object[] {});
+		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrderToDiscontinue.getOrderId())).thenReturn(
+		    mockRadiologyOrderToDiscontinue);
+		when(
+		    orderService.discontinueOrder(mockRadiologyOrderToDiscontinue, discontinueReason, discontinueDate,
+		        mockRadiologyOrderToDiscontinue.getOrderer(), mockRadiologyOrderToDiscontinue.getEncounter())).thenReturn(
+		    mockDiscontinuationOrder);
 		
-		assertThat(isUserReferringPhysician, is(true));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserReferringPhysician()
-	 */
-	@Test
-	@Verifies(value = "should return false if the current user is not authenticated as a referring physician", method = "isUserReferringPhysician()")
-	public void isUserReferringPhysician_ShouldReturnFalseIfTheCurrentUserIsNotAuthenticatedAsAReferringPhysician()
-	        throws Exception {
+		ModelAndView modelAndView = radiologyOrderFormController.postDiscontinueRadiologyOrder(mockRequest, null,
+		    mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder);
 		
-		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReadingPhysician());
+		assertNotNull(modelAndView);
+		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
 		
-		Method isUserReferringPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
-		    "isUserReferringPhysician", new Class[] {});
-		isUserReferringPhysicianMethod.setAccessible(true);
+		assertThat(modelAndView.getModelMap(), hasKey("order"));
+		Order order = (Order) modelAndView.getModelMap().get("order");
+		assertThat(order, is((Order) mockRadiologyOrderToDiscontinue));
 		
-		Boolean isUserReferringPhysician = (Boolean) isUserReferringPhysicianMethod.invoke(radiologyOrderFormController,
-		    new Object[] {});
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
+		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
+		assertThat(radiologyOrder, is(mockRadiologyOrderToDiscontinue));
 		
-		assertThat(isUserReferringPhysician, is(false));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserReferringPhysician()
-	 */
-	@Test(expected = APIAuthenticationException.class)
-	@Verifies(value = "should throw api authentication exception if the current user is not authenticated", method = "isUserReferringPhysician()")
-	public void isUserReferringPhysician_ShouldThrowApiAuthenticationExceptionIfTheCurrentUserIsNotAuthenticated()
-	        throws Exception {
-		
-		when(Context.getAuthenticatedUser()).thenReturn(null);
-		
-		Method isUserReferringPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
-		    "isUserReferringPhysician", new Class[] {});
-		isUserReferringPhysicianMethod.setAccessible(true);
-		
-		isUserReferringPhysicianMethod.invoke(radiologyOrderFormController, new Object[] {});
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserScheduler()
-	 */
-	@Test
-	@Verifies(value = "should return true if the current user is authenticated as a scheduler", method = "isUserScheduler()")
-	public void isUserScheduler_ShouldReturnTrueIfTheCurrentUserIsAuthenticatedAsAScheduler() throws Exception {
-		
-		User Scheduler = RadiologyTestData.getMockRadiologyScheduler();
-		when(Context.getAuthenticatedUser()).thenReturn(Scheduler);
-		
-		Method isUserSchedulerMethod = radiologyOrderFormController.getClass().getDeclaredMethod("isUserScheduler",
-		    new Class[] {});
-		isUserSchedulerMethod.setAccessible(true);
-		
-		Boolean isUserScheduler = (Boolean) isUserSchedulerMethod.invoke(radiologyOrderFormController, new Object[] {});
-		
-		assertThat(isUserScheduler, is(true));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserScheduler()
-	 */
-	@Test
-	@Verifies(value = "should return false if the current user is not authenticated as a scheduler", method = "isUserScheduler()")
-	public void isUserScheduler_ShouldReturnFalseIfTheCurrentUserIsNotAuthenticatedAsAScheduler() throws Exception {
-		
-		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
-		
-		Method isUserSchedulerMethod = radiologyOrderFormController.getClass().getDeclaredMethod("isUserScheduler",
-		    new Class[] {});
-		isUserSchedulerMethod.setAccessible(true);
-		
-		Boolean isUserScheduler = (Boolean) isUserSchedulerMethod.invoke(radiologyOrderFormController, new Object[] {});
-		
-		assertThat(isUserScheduler, is(false));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserScheduler()
-	 */
-	@Test(expected = APIAuthenticationException.class)
-	@Verifies(value = "should throw api authentication exception if the current user is not authenticated", method = "isUserScheduler()")
-	public void isUserScheduler_ShouldThrowApiAuthenticationExceptionIfTheCurrentUserIsNotAuthenticated() throws Exception {
-		
-		when(Context.getAuthenticatedUser()).thenReturn(null);
-		
-		Method isUserSchedulerMethod = radiologyOrderFormController.getClass().getDeclaredMethod("isUserScheduler",
-		    new Class[] {});
-		isUserSchedulerMethod.setAccessible(true);
-		
-		isUserSchedulerMethod.invoke(radiologyOrderFormController, new Object[] {});
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserPerformingPhysician()
-	 */
-	@Test
-	@Verifies(value = "should return true if the current user is authenticated as a Performing physician", method = "isUserPerformingPhysician()")
-	public void isUserPerformingPhysician_ShouldReturnTrueIfTheCurrentUserIsAuthenticatedAsAPerformingPhysician()
-	        throws Exception {
-		
-		User PerformingPhysician = RadiologyTestData.getMockRadiologyPerformingPhysician();
-		when(Context.getAuthenticatedUser()).thenReturn(PerformingPhysician);
-		
-		Method isUserPerformingPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
-		    "isUserPerformingPhysician", new Class[] {});
-		isUserPerformingPhysicianMethod.setAccessible(true);
-		
-		Boolean isUserPerformingPhysician = (Boolean) isUserPerformingPhysicianMethod.invoke(radiologyOrderFormController,
-		    new Object[] {});
-		
-		assertThat(isUserPerformingPhysician, is(true));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserPerformingPhysician()
-	 */
-	@Test
-	@Verifies(value = "should return false if the current user is not authenticated as a Performing physician", method = "isUserPerformingPhysician()")
-	public void isUserPerformingPhysician_ShouldReturnFalseIfTheCurrentUserIsNotAuthenticatedAsAPerformingPhysician()
-	        throws Exception {
-		
-		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReadingPhysician());
-		
-		Method isUserPerformingPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
-		    "isUserPerformingPhysician", new Class[] {});
-		isUserPerformingPhysicianMethod.setAccessible(true);
-		
-		Boolean isUserPerformingPhysician = (Boolean) isUserPerformingPhysicianMethod.invoke(radiologyOrderFormController,
-		    new Object[] {});
-		
-		assertThat(isUserPerformingPhysician, is(false));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserPerformingPhysician()
-	 */
-	@Test(expected = APIAuthenticationException.class)
-	@Verifies(value = "should throw api authentication exception if the current user is not authenticated", method = "isUserPerformingPhysician()")
-	public void isUserPerformingPhysician_ShouldThrowApiAuthenticationExceptionTheCurrentUserIsNotAuthenticated()
-	        throws Exception {
-		
-		when(Context.getAuthenticatedUser()).thenReturn(null);
-		
-		Method isUserPerformingPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
-		    "isUserPerformingPhysician", new Class[] {});
-		isUserPerformingPhysicianMethod.setAccessible(true);
-		
-		isUserPerformingPhysicianMethod.invoke(radiologyOrderFormController, new Object[] {});
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserReadingPhysician()
-	 */
-	@Test
-	@Verifies(value = "should return true if the current user is authenticated as a Reading physician", method = "isUserReadingPhysician()")
-	public void isUserReadingPhysician_ShouldReturnTrueIfTheCurrentUserIsAuthenticatedAsAReadingPhysician() throws Exception {
-		
-		User ReadingPhysician = RadiologyTestData.getMockRadiologyReadingPhysician();
-		when(Context.getAuthenticatedUser()).thenReturn(ReadingPhysician);
-		
-		Method isUserReadingPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
-		    "isUserReadingPhysician", new Class[] {});
-		isUserReadingPhysicianMethod.setAccessible(true);
-		
-		isUserReadingPhysicianMethod.invoke(radiologyOrderFormController, new Object[] {});
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserReadingPhysician()
-	 */
-	@Test
-	@Verifies(value = "should return false if the current user is not authenticated as a Reading physician", method = "isUserReadingPhysician()")
-	public void isUserReadingPhysician_ShouldReturnFalseIfTheCurrentUserIsNotAuthenticatedAsAReadingPhysician()
-	        throws Exception {
-		
-		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
-		
-		Method isUserReadingPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
-		    "isUserReadingPhysician", new Class[] {});
-		isUserReadingPhysicianMethod.setAccessible(true);
-		
-		Boolean isUserReadingPhysician = (Boolean) isUserReadingPhysicianMethod.invoke(radiologyOrderFormController,
-		    new Object[] {});
-		
-		assertThat(isUserReadingPhysician, is(false));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserReadingPhysician()
-	 */
-	@Test(expected = APIAuthenticationException.class)
-	@Verifies(value = "should throw api authentication exception if the current user is not authenticated", method = "isUserReadingPhysician()")
-	public void isUserReadingPhysician_ShouldThrowApiAuthenticationExceptionIfTheCurrentUserIsNotAuthenticated()
-	        throws Exception {
-		when(Context.getAuthenticatedUser()).thenReturn(null);
-		
-		Method isUserReadingPhysicianMethod = radiologyOrderFormController.getClass().getDeclaredMethod(
-		    "isUserReadingPhysician", new Class[] {});
-		isUserReadingPhysicianMethod.setAccessible(true);
-		
-		isUserReadingPhysicianMethod.invoke(radiologyOrderFormController, new Object[] {});
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserSuper()
-	 */
-	@Test
-	@Verifies(value = "should return true if the current user is authenticated as a super user", method = "isUserSuper()")
-	public void isUserSuper_ShouldReturnTrueIfTheCurrentUserIsAuthenticatedAsASuperUser() throws Exception {
-		
-		User Super = RadiologyTestData.getMockRadiologySuperUser();
-		when(Context.getAuthenticatedUser()).thenReturn(Super);
-		
-		Method isUserSuperMethod = radiologyOrderFormController.getClass().getDeclaredMethod("isUserSuper", new Class[] {});
-		isUserSuperMethod.setAccessible(true);
-		
-		Boolean isUserSuper = (Boolean) isUserSuperMethod.invoke(radiologyOrderFormController, new Object[] {});
-		
-		assertThat(isUserSuper, is(true));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserSuper()
-	 */
-	@Test
-	@Verifies(value = "should return false if the current user is not authenticated as a super user", method = "isUserSuper()")
-	public void isUserSuper_ShouldReturnFalseIfTheCurrentUserIsNotAuthenticatedAsASuperUser() throws Exception {
-		
-		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
-		
-		Method isUserSuperMethod = radiologyOrderFormController.getClass().getDeclaredMethod("isUserSuper", new Class[] {});
-		isUserSuperMethod.setAccessible(true);
-		
-		Boolean isUserSuper = (Boolean) isUserSuperMethod.invoke(radiologyOrderFormController, new Object[] {});
-		
-		assertThat(isUserSuper, is(false));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#isUserSuper()
-	 */
-	@Test(expected = APIAuthenticationException.class)
-	@Verifies(value = "should throw api authentication exception if the current user is not authenticated", method = "isUserSuper()")
-	public void isUserSuper_ShouldThrowApiAuthenticationExceptionIfTheCurrentUserIsNotAuthenticated() throws Exception {
-		
-		when(Context.getAuthenticatedUser()).thenReturn(null);
-		
-		Method isUserSuperMethod = radiologyOrderFormController.getClass().getDeclaredMethod("isUserSuper", new Class[] {});
-		isUserSuperMethod.setAccessible(true);
-		
-		isUserSuperMethod.invoke(radiologyOrderFormController, new Object[] {});
+		assertNotNull(mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR));
+		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR), is("radiology.failWorklist"));
 	}
 }

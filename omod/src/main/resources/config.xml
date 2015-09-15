@@ -17,9 +17,8 @@
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.RadiologyActivator
 	</activator>
 
-	<require_version>1.9.9</require_version>
+	<require_version>1.10.2</require_version>
 	<require_database_version>1.0.0</require_database_version>
-
 
 	<!-- Extensions -->
 	<extension>
@@ -126,6 +125,16 @@
 		<property>@MODULE_ID@.specificCharacterSet</property>
 		<defaultValue>ISO-8859-1</defaultValue>
 		<description>DICOM working character set
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.radiologyCareSetting</property>
+		<defaultValue>6f0c9a92-6f24-11e3-af88-005056821db0</defaultValue>
+		<description>
+			UUID of the Care Setting to use when creating radiology
+			orders; the
+			default is the uuid of the "Outpatient" setting baked into
+			core
 		</description>
 	</globalProperty>
 	<!--Required Global Properties -->
