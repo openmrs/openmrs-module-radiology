@@ -50,7 +50,6 @@ public class RadiologyTestData {
 	public static Study getMockStudy1PreSave() {
 		
 		Study mockStudy = new Study();
-		mockStudy.setRadiologyOrder(getMockRadiologyOrder1());
 		mockStudy.setModality(Modality.CT);
 		mockStudy.setPriority(RequestedProcedurePriority.STAT);
 		
@@ -142,6 +141,7 @@ public class RadiologyTestData {
 		mockRadiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		mockRadiologyOrder.setDiscontinued(false);
 		mockRadiologyOrder.setVoided(false);
+		mockRadiologyOrder.setStudy(getMockStudy1PostSave());
 		
 		return mockRadiologyOrder;
 	}
