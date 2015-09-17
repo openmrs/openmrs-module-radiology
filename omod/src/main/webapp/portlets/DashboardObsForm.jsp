@@ -23,7 +23,7 @@
 	<c:if test="${not empty studyUID}">
 		<p>
 			<a
-				href="module/radiology/radiologyObs.form?orderId=${obs.order.orderId }&obsId">Add/Edit
+				href="module/radiology/radiologyObs.form?orderId=${obs.order.orderId }">Add/Edit
 				Observations</a>
 		</p>
 	</c:if>
