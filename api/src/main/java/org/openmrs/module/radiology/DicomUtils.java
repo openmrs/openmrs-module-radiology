@@ -113,7 +113,7 @@ public class DicomUtils {
 		// ! requires form enhancement, multiple steps
 		spss.putString(Tag.Modality, VR.CS, s.getModality().toString());
 		spss.putString(Tag.RequestedContrastAgent, VR.LO, "");
-		spss.putString(Tag.ScheduledStationAETitle, VR.AE, RadiologyProperties.getAeTitle());
+		spss.putString(Tag.ScheduledStationAETitle, VR.AE, RadiologyProperties.getApplicationEntityTitle());
 		try {
 			spss.putString(Tag.ScheduledProcedureStepStartDate, VR.DA, Utils.plain(o.getStartDate()));
 			spss.putString(Tag.ScheduledProcedureStepStartTime, VR.TM, Utils.time(o.getStartDate()));
