@@ -37,7 +37,7 @@ public class RadiologyActivator extends BaseModuleActivator {
 	public void startDicomOrderFiller() {
 		try {
 			String[] args2 = { "-mwl", RadiologyProperties.getMwlDir(), "-mpps", RadiologyProperties.getMppsDir(),
-			        RadiologyProperties.getAeTitle() + ":" + RadiologyProperties.getMwlMppsPort() };
+			        RadiologyProperties.getApplicationEntityTitle() + ":" + RadiologyProperties.getMwlMppsPort() };
 			dicomOrderFiller = DcmOF.main(args2);
 			log.info("Started MPPSScu : OpenMRS MPPS SCU Client (dcmof)");
 		}
