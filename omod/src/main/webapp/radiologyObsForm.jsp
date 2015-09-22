@@ -293,16 +293,16 @@ th {
 }
 </style>
 
-<c:if test="${not empty prevs}">
+<c:if test="${not empty previousObs}">
 	<h2>
 		<spring:message code="radiology.previousObs" />
 	</h2>
 	<br />
-	<button onclick="jQuery('#prevs').toggle('blind');">
+	<button onclick="jQuery('#previousObs').toggle('blind');">
 		<spring:message code="radiology.showHide" />
 	</button>
 	<br />
-	<table id="prevs">
+	<table id="previousObs">
 		<tr class="boxHeader" style="display: table-row;">
 			<th><spring:message code="general.id" /></th>
 			<th><spring:message code="radiology.readingPhysician" /></th>
@@ -312,8 +312,7 @@ th {
 			<th><spring:message code="general.value" /></th>
 			<th><spring:message code="Obs.comment" /></th>
 		</tr>
-		<c:forEach items="${prevs}" begin="0" end="${prevsSize}" var="obs"
-			varStatus="status">
+		<c:forEach items="${previousObs}" var="obs">
 			<tr>
 				<td>${obs.obsId }</td>
 				<td>${obs.creator.personName }</td>
