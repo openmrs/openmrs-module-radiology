@@ -121,6 +121,22 @@ public interface RadiologyService extends OpenmrsService {
 	 */
 	public Study saveStudy(Study study) throws APIException, IllegalArgumentException;
 	
+	/**
+	 * <p>
+	 * Update the performedStatus of the <code>Study</code> associated with studyInstanceUid in the database
+	 * </p>
+	 * 
+	 * @param studyInstanceUid study instance uid of study whos performedStatus should be updated
+	 * @param performedStatus performed procedure step status to which study should be set to
+	 * @return study whos performedStatus was updated
+	 * @throws IllegalArgumentException if study instance uid is null
+	 * @should update performed status of study associated with given study instance uid
+	 * @should throw illegal argument exception if study instance uid is null
+	 * @should throw illegal argument exception if performed status is null
+	 */
+	public Study updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus)
+	        throws IllegalArgumentException;
+	
 	public void sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest);
 	
 	public Study getStudy(Integer id);
