@@ -103,7 +103,6 @@ public class RadiologyORMO01Test {
 		
 		study = new Study();
 		study.setStudyId(1);
-		study.setRadiologyOrder(radiologyOrder);
 		study.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
 		radiologyOrder.setStudy(study);

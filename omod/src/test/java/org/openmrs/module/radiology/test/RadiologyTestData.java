@@ -76,7 +76,6 @@ public class RadiologyTestData {
 	public static Study getMockStudy2PreSave() {
 		
 		Study mockStudy = new Study();
-		mockStudy.setRadiologyOrder(getMockRadiologyOrder2());
 		mockStudy.setModality(Modality.CT);
 		
 		return mockStudy;
@@ -118,7 +117,7 @@ public class RadiologyTestData {
 		
 		EncounterProvider encounterProvider = new EncounterProvider();
 		encounterProvider.setId(1);
-		Set providerSet = new HashSet();
+		Set<EncounterProvider> providerSet = new HashSet<EncounterProvider>();
 		providerSet.add(encounterProvider);
 		mockEncounter.setEncounterProviders(providerSet);
 		

@@ -16,7 +16,6 @@ import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
-import org.openmrs.api.APIException;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.api.OrderService;
@@ -37,15 +36,19 @@ public interface RadiologyService extends OpenmrsService {
 	public void setEncounterService(EncounterService encounterService);
 	
 	/**
-	 * Save given <code>RadiologyOrder</code> to the database
+	 * Save given <code>RadiologyOrder</code> and its <code>RadiologyOrder.study</code> to the
+	 * database
 	 * 
 	 * @param radiologyOrder radiology order to be created
 	 * @return RadiologyOrder who was created
 	 * @throws IllegalArgumentException if radiologyOrder is null
 	 * @throws IllegalArgumentException if radiologyOrder orderId is not null
-	 * @should create new radiology order from given radiology order object
+	 * @throws IllegalArgumentException if radiologyOrder.study is null
+	 * @should create new radiology order and study from given radiology order object
 	 * @should throw illegal argument exception given null
 	 * @should throw illegal argument exception given existing radiology order
+	 * @should throw illegal argument exception if given radiology order has no study
+	 * @should throw illegal argument exception if given study modality is null
 	 */
 	public RadiologyOrder placeRadiologyOrder(RadiologyOrder radiologyOrder) throws IllegalArgumentException;
 	
@@ -105,25 +108,8 @@ public interface RadiologyService extends OpenmrsService {
 	
 	/**
 	 * <p>
-	 * Save the given <code>Study</code> to the database
-	 * </p>
-	 * Additionally, study and study.order information are written into a DICOM xml file.
-	 * 
-	 * @param study study to be created or updated
-	 * @return study who was created or updated
-	 * @throws IllegalArgumentException
-	 * @throws APIException
-	 * @should create new study from given study object
-	 * @should update existing study
-	 * @should throw IllegalArgumentException if study is null
-	 * @should throw APIException given study with empty order id
-	 * @should throw APIException given study with empty modality
-	 */
-	public Study saveStudy(Study study) throws APIException, IllegalArgumentException;
-	
-	/**
-	 * <p>
-	 * Update the performedStatus of the <code>Study</code> associated with studyInstanceUid in the database
+	 * Update the performedStatus of the <code>Study</code> associated with studyInstanceUid in the
+	 * database
 	 * </p>
 	 * 
 	 * @param studyInstanceUid study instance uid of study whos performedStatus should be updated

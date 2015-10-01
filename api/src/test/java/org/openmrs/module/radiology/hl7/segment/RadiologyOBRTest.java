@@ -58,7 +58,6 @@ public class RadiologyOBRTest {
 		Study study = new Study();
 		study.setStudyId(1);
 		study.setModality(Modality.CT);
-		study.setRadiologyOrder(radiologyOrder);
 		radiologyOrder.setStudy(study);
 		
 		ORM_O01 message = new ORM_O01();

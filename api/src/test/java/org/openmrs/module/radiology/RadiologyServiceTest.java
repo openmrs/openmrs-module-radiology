@@ -20,7 +20,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -33,13 +32,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
-import org.openmrs.Encounter;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
-import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
@@ -47,7 +44,6 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.impl.RadiologyServiceImpl;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
 
@@ -144,10 +140,15 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 * @verifies create new radiology order and study from given radiology order object
 	 */
 	@Test
-	@Verifies(value = "should create new radiology order from given radiology order object", method = "placeRadiologyOrder(RadiologyOrder)")
-	public void placeRadiologyOrder_shouldCreateNewRadiologyOrderGivenRadiologyOrderObject() {
+	public void placeRadiologyOrder_shouldCreateNewRadiologyOrderAndStudyGivenRadiologyOrderObject() throws Exception {
+		
+		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
+		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
+		        .getAbsolutePath()));
 		
 		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
 		
@@ -155,6 +156,8 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		
 		assertNotNull(radiologyOrder);
 		assertNotNull(radiologyOrder.getOrderId());
+		assertNotNull(radiologyOrder.getStudy());
+		assertNotNull(radiologyOrder.getStudy().getStudyId());
 	}
 	
 	/**
@@ -177,15 +180,26 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		radiologyOrder.setScheduledDate(calendar.getTime());
 		radiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		
+		Study study = new Study();
+		study.setModality(Modality.CT);
+		study.setMwlStatus(MwlStatus.DEFAULT);
+		study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
+		radiologyOrder.setStudy(study);
+		
 		return radiologyOrder;
 	}
 	
 	/**
 	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 * @verifies throw illegal argument exception given null
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception given null", method = "placeRadiologyOrder(RadiologyOrder)")
-	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenNull() {
+	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
+		
+		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
+		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
+		        .getAbsolutePath()));
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is required");
@@ -194,10 +208,15 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 * @verifies throw illegal argument exception given existing radiology order
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception given existing radiology order", method = "placeRadiologyOrder(RadiologyOrder)")
-	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenExistingRadiologyOrder() {
+	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenExistingRadiologyOrder() throws Exception {
+		
+		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
+		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
+		        .getAbsolutePath()));
 		
 		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
 		
@@ -212,34 +231,43 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see RadiologyService#saveRadiologyOrderEncounter(Patient, Provider, Date)
+	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 * @verifies throw illegal argument exception if given radiology order has no study
 	 */
 	@Test
-	@Verifies(value = "should save radiology order encounter for given parameters", method = "saveRadiologyOrderEncounter(Patient, Provider, Date)")
-	public void saveRadiologyOrderEncounter_shouldSaveRadiologyOrderEncounterForGivenParameters() throws Exception {
+	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderHasNoStudy() throws Exception {
 		
-		Patient patient = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER);
-		Provider provider = providerService.getProviderByIdentifier("1");
-		Date encounterDatetime = new GregorianCalendar(2010, Calendar.OCTOBER, 10).getTime();
+		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
+		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
+		        .getAbsolutePath()));
 		
-		Method saveRadiologyOrderEncounterMethod = RadiologyServiceImpl.class.getDeclaredMethod(
-		    "saveRadiologyOrderEncounter", new Class[] { org.openmrs.Patient.class, org.openmrs.Provider.class,
-		            java.util.Date.class });
-		saveRadiologyOrderEncounterMethod.setAccessible(true);
+		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
+		radiologyOrder.setStudy(null);
 		
-		RadiologyServiceImpl radiologyService = new RadiologyServiceImpl();
-		radiologyService.setEncounterService(encounterService);
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder.study is required");
+		radiologyService.placeRadiologyOrder(radiologyOrder);
+	}
+	
+	/**
+	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 * @verifies throw illegal argument exception if given study modality is null
+	 */
+	@Test
+	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenStudyModalityIsNull() throws Exception {
 		
-		Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyService, new Object[] { patient,
-		        provider, encounterDatetime });
+		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
+		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
+		        .getAbsolutePath()));
 		
-		assertNotNull(encounter);
-		assertThat(encounter.getPatient(), is(patient));
-		assertThat(encounter.getProvidersByRole(RadiologyProperties.getOrderingProviderEncounterRole()).size(), is(1));
-		assertThat(encounter.getProvidersByRole(RadiologyProperties.getOrderingProviderEncounterRole()).contains(provider),
-		    is(true));
-		assertThat(encounter.getEncounterDatetime(), is(encounterDatetime));
-		assertThat(encounter.getEncounterType(), is(RadiologyProperties.getRadiologyEncounterType()));
+		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
+		radiologyOrder.getStudy().setModality(null);
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder.study.modality is required");
+		radiologyService.placeRadiologyOrder(radiologyOrder);
 	}
 	
 	/**
@@ -453,136 +481,6 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("patients is required");
 		radiologyService.getRadiologyOrdersByPatients(null);
-	}
-	
-	/**
-	 * @see RadiologyService#saveStudy(Study)
-	 */
-	@Test
-	@Verifies(value = "should create new study from given study object", method = "saveStudy(Study)")
-	public void saveStudy_shouldCreateNewStudyFromGivenStudyObject() throws Exception {
-		
-		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
-		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
-		        .getAbsolutePath()));
-		
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
-		Study radiologyStudy = getUnsavedStudy();
-		radiologyStudy.setRadiologyOrder(radiologyOrder);
-		
-		radiologyService.saveStudy(radiologyStudy);
-		
-		Study createdStudy = radiologyService.getStudy(radiologyStudy.getStudyId());
-		assertNotNull(createdStudy);
-		assertThat(createdStudy, is(radiologyStudy));
-		assertThat(createdStudy.getStudyId(), is(radiologyStudy.getStudyId()));
-		assertNotNull(createdStudy.getStudyInstanceUid());
-		assertThat(createdStudy.getStudyInstanceUid(), is(RadiologyProperties.getStudyPrefix() + createdStudy.getStudyId()));
-		assertThat(createdStudy.getModality(), is(radiologyStudy.getModality()));
-		assertThat(createdStudy.getRadiologyOrder(), is(radiologyStudy.getRadiologyOrder()));
-	}
-	
-	/**
-	 * Convenience method to get a Study object with all required values filled in but which is not
-	 * yet saved in the database
-	 * 
-	 * @return Study object that can be saved to the database
-	 */
-	public Study getUnsavedStudy() {
-		
-		Study study = new Study();
-		study.setRadiologyOrder(radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY));
-		study.setModality(Modality.CT);
-		study.setMwlStatus(MwlStatus.DEFAULT);
-		study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
-		
-		return study;
-	}
-	
-	/**
-	 * @see RadiologyService#saveStudy(Study)
-	 */
-	@Test
-	@Verifies(value = "should update existing study", method = "saveStudy(Study)")
-	public void saveStudy_shouldUpdateExistingStudy() throws Exception {
-		
-		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
-		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
-		        .getAbsolutePath()));
-		
-		Study existingStudy = radiologyService.getStudy(EXISTING_STUDY_ID);
-		Modality modalityPreUpdate = existingStudy.getModality();
-		Modality modalityPostUpdate = Modality.XA;
-		existingStudy.setModality(modalityPostUpdate);
-		
-		Study updatedStudy = radiologyService.saveStudy(existingStudy);
-		
-		updatedStudy = radiologyService.getStudy(updatedStudy.getStudyId());
-		assertNotNull(updatedStudy);
-		assertThat(updatedStudy, is(existingStudy));
-		assertThat(modalityPreUpdate, is(not(modalityPostUpdate)));
-		assertThat(updatedStudy.getModality(), is(modalityPostUpdate));
-	}
-	
-	/**
-	 * @see RadiologyService#saveStudy(Study)
-	 */
-	@Test
-	@Verifies(value = "should throw IllegalArgumentException if study is null", method = "saveStudy(Study)")
-	public void saveStudy_shouldThrowIllegalArgumentExceptionIfStudyIsNull() throws Exception {
-		
-		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
-		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
-		        .getAbsolutePath()));
-		
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("study is required");
-		radiologyService.saveStudy(null);
-	}
-	
-	/**
-	 * @see RadiologyService#saveStudy(Study)
-	 */
-	@Test
-	@Verifies(value = "should throw APIException given study with empty order id", method = "saveStudy(Study)")
-	public void saveStudy_shouldThrowAPIExceptionGivenStudyWithEmptyOrderId() throws Exception {
-		
-		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
-		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
-		        .getAbsolutePath()));
-		
-		Study radiologyStudy = getUnsavedStudy();
-		radiologyStudy.setRadiologyOrder(null);
-		
-		expectedException.expect(APIException.class);
-		expectedException.expectMessage("Study.order.required");
-		radiologyService.saveStudy(radiologyStudy);
-	}
-	
-	/**
-	 * @see RadiologyService#saveStudy(Study)
-	 */
-	@Test
-	@Verifies(value = "should throw APIException given study with empty modality", method = "saveStudy(Study)")
-	public void saveStudy_shouldThrowAPIExceptionGivenStudyWithEmptyModality() throws Exception {
-		
-		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
-		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
-		        .getAbsolutePath()));
-		
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
-		Study radiologyStudy = getUnsavedStudy();
-		radiologyStudy.setRadiologyOrder(radiologyOrder);
-		radiologyStudy.setModality(null);
-		
-		expectedException.expect(APIException.class);
-		expectedException.expectMessage("Study.modality.required");
-		radiologyService.saveStudy(radiologyStudy);
 	}
 	
 	/**

@@ -176,11 +176,10 @@ public class RadiologyOrderFormController {
 			
 			try {
 				radiologyService.placeRadiologyOrder(radiologyOrder);
-				radiologyOrder.getStudy().setRadiologyOrder(radiologyOrder);
-				Study savedStudy = radiologyService.saveStudy(radiologyOrder.getStudy());
 				
 				radiologyService.sendModalityWorklist(radiologyOrder, OrderRequest.Save_Order);
-				if (savedStudy.getMwlStatus() == MwlStatus.SAVE_ERR || savedStudy.getMwlStatus() == MwlStatus.UPDATE_ERR) {
+				if (radiologyOrder.getStudy().getMwlStatus() == MwlStatus.SAVE_ERR
+				        || radiologyOrder.getStudy().getMwlStatus() == MwlStatus.UPDATE_ERR) {
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.savedFailWorklist");
 				} else {
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");

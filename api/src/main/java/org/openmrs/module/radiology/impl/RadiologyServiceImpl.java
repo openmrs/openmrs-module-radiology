@@ -20,7 +20,6 @@ import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
-import org.openmrs.api.APIException;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderContext;
 import org.openmrs.api.OrderService;
@@ -84,6 +83,14 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 			throw new IllegalArgumentException("Cannot edit an existing order!");
 		}
 		
+		if (radiologyOrder.getStudy() == null) {
+			throw new IllegalArgumentException("radiologyOrder.study is required");
+		}
+		
+		if (radiologyOrder.getStudy().getModality() == null) {
+			throw new IllegalArgumentException("radiologyOrder.study.modality is required");
+		}
+		
 		Encounter encounter = saveRadiologyOrderEncounter(radiologyOrder.getPatient(), radiologyOrder.getOrderer(),
 		    new Date());
 		encounter.addOrder(radiologyOrder);
@@ -92,7 +99,9 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		orderContext.setCareSetting(RadiologyProperties.getRadiologyCareSetting());
 		orderContext.setOrderType(RadiologyProperties.getRadiologyTestOrderType());
 		
-		return (RadiologyOrder) orderService.saveOrder(radiologyOrder, orderContext);
+		RadiologyOrder result = (RadiologyOrder) orderService.saveOrder(radiologyOrder, orderContext);
+		saveStudy(result.getStudy());
+		return result;
 	}
 	
 	/**
@@ -114,6 +123,46 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		encounter.setEncounterDatetime(encounterDateTime);
 		
 		return encounterService.saveEncounter(encounter);
+	}
+	
+	/**
+	 * <p>
+	 * Save the given <code>Study</code> to the database
+	 * </p>
+	 * Additionally, study and study.order information are written into a DICOM xml file.
+	 * 
+	 * @param study study to be created or updated
+	 * @return study who was created or updated
+	 * @should create new study from given study object
+	 * @should update existing study
+	 */
+	@Transactional
+	private Study saveStudy(Study study) {
+		
+		RadiologyOrder order = study.getRadiologyOrder();
+		
+		if (study.getScheduledStatus() == null && order.getScheduledDate() != null) {
+			study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
+		}
+		
+		try {
+			Study savedStudy = sdao.saveStudy(study);
+			String studyInstanceUid = RadiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
+			savedStudy.setStudyInstanceUid(studyInstanceUid);
+			savedStudy = sdao.saveStudy(savedStudy);
+			
+			File file = new File(RadiologyProperties.getMwlDir(), savedStudy.getStudyId() + ".xml");
+			String path = "";
+			path = file.getCanonicalPath();
+			DicomUtils.write(order, savedStudy, file);
+			log.debug("Order and study saved in " + path);
+			return savedStudy;
+		}
+		catch (Exception e) {
+			log.error(e.getMessage(), e);
+			log.warn("Can not save study in openmrs or dmc4che.");
+		}
+		return null;
 	}
 	
 	/**
@@ -183,50 +232,6 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 		}
 		
 		return radiologyOrderDAO.getRadiologyOrdersByPatients(patients);
-	}
-	
-	/**
-	 * @see RadiologyService#saveStudy(Study)
-	 */
-	@Transactional
-	@Override
-	public Study saveStudy(Study study) {
-		if (study == null) {
-			throw new IllegalArgumentException("study is required");
-		}
-		
-		if (study.getRadiologyOrder() == null) {
-			throw new APIException("Study.order.required");
-		}
-		
-		if (study.getModality() == null) {
-			throw new APIException("Study.modality.required");
-		}
-		
-		RadiologyOrder order = study.getRadiologyOrder();
-		
-		if (study.getScheduledStatus() == null && order.getScheduledDate() != null) {
-			study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
-		}
-		
-		try {
-			Study savedStudy = sdao.saveStudy(study);
-			String studyInstanceUid = RadiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
-			savedStudy.setStudyInstanceUid(studyInstanceUid);
-			savedStudy = sdao.saveStudy(savedStudy);
-			
-			File file = new File(RadiologyProperties.getMwlDir(), savedStudy.getStudyId() + ".xml");
-			String path = "";
-			path = file.getCanonicalPath();
-			DicomUtils.write(order, savedStudy, file);
-			log.debug("Order and study saved in " + path);
-			return savedStudy;
-		}
-		catch (Exception e) {
-			log.error(e.getMessage(), e);
-			log.warn("Can not save study in openmrs or dmc4che.");
-		}
-		return null;
 	}
 	
 	/**

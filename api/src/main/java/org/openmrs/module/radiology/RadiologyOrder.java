@@ -22,7 +22,18 @@ public class RadiologyOrder extends TestOrder {
 		return study;
 	}
 	
+	/**
+	 * Set the Order.study to the given Study. Keeps the bi-directional (one-to-one) association
+	 * between RadiologyOrder and Study in sync.
+	 *
+	 * @param study study which should be associated with this radiology order
+	 * @should set the study attribute to given study
+	 * @should set the radiology order of given study to this radiology order
+	 * @should not fail given null
+	 */
 	public void setStudy(Study study) {
+		if (study != null)
+			study.setRadiologyOrder(this);
 		this.study = study;
 	}
 }

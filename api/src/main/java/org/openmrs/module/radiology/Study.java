@@ -79,7 +79,7 @@ public class Study {
 		this.modality = modality;
 	}
 	
-	public void setRadiologyOrder(RadiologyOrder radiologyOrder) {
+	void setRadiologyOrder(RadiologyOrder radiologyOrder) {
 		this.radiologyOrder = radiologyOrder;
 	}
 	
