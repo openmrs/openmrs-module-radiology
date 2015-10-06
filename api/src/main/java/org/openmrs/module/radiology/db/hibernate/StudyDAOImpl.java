@@ -19,25 +19,19 @@ import org.openmrs.Obs;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.StudyDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class StudyDAOImpl implements StudyDAO {
 	
-	private SessionFactory sessionFactory;
-	
 	/**
-	 * This is a Hibernate object. It gives us metadata about the currently connected database, the
-	 * current session, the current db user, etc. To save and get objects, calls should go through
-	 * sessionFactory.getCurrentSession() <br/>
-	 * <br/>
-	 * This is called by Spring. See the /metadata/moduleApplicationContext.xml for the
-	 * "sessionFactory" setting. See the applicationContext-service.xml file in CORE openmrs for
-	 * where the actual "sessionFactory" object is first defined.
-	 * 
+	 * session factory that allows us to connect to the database that Hibernate knows about.
+	 *
 	 * @param sessionFactory
 	 */
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+	@Autowired
+	private SessionFactory sessionFactory;
 	
 	@Override
 	public Study getStudy(Integer studyId) {

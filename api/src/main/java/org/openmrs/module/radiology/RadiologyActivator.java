@@ -12,6 +12,7 @@ package org.openmrs.module.radiology;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dcm4che2.tool.dcmof.DcmOF;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
 
 /**
@@ -21,6 +22,8 @@ import org.openmrs.module.BaseModuleActivator;
 public class RadiologyActivator extends BaseModuleActivator {
 	
 	private static final Log log = LogFactory.getLog(RadiologyActivator.class);
+
+	RadiologyProperties radiologyProperties;
 	
 	private DcmOF dicomOrderFiller;
 	
@@ -36,8 +39,9 @@ public class RadiologyActivator extends BaseModuleActivator {
 	
 	public void startDicomOrderFiller() {
 		try {
-			String[] args2 = { "-mwl", RadiologyProperties.getMwlDir(), "-mpps", RadiologyProperties.getMppsDir(),
-			        RadiologyProperties.getApplicationEntityTitle() + ":" + RadiologyProperties.getMwlMppsPort() };
+			radiologyProperties = Context.getRegisteredComponent("radiologyProperties", RadiologyProperties.class);
+			String[] args2 = { "-mwl", radiologyProperties.getMwlDir(), "-mpps", radiologyProperties.getMppsDir(),
+			        radiologyProperties.getApplicationEntityTitle() + ":" + radiologyProperties.getMwlMppsPort() };
 			dicomOrderFiller = DcmOF.main(args2);
 			log.info("Started MPPSScu : OpenMRS MPPS SCU Client (dcmof)");
 		}

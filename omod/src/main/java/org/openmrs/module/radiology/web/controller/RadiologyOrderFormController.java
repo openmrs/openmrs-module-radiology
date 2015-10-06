@@ -27,7 +27,6 @@ import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
-import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Modality;
@@ -58,9 +57,6 @@ public class RadiologyOrderFormController {
 	
 	@Autowired
 	private RadiologyService radiologyService;
-	
-	@Autowired
-	private OrderService orderService;
 	
 	@InitBinder
 	void initBinder(WebDataBinder binder) {
