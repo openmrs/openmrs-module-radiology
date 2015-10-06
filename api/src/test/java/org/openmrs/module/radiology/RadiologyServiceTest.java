@@ -37,12 +37,12 @@ import org.openmrs.Provider;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
-import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
-import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Tests {@link RadiologyService}
@@ -79,53 +79,33 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	
 	private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 3;
 	
-	private PatientService patientService = null;
+	@Autowired
+	private PatientService patientService;
 	
-	private ConceptService conceptService = null;
+	@Autowired
+	private ConceptService conceptService;
 	
-	private AdministrationService administrationService = null;
+	@Autowired
+	@Qualifier("adminService")
+	private AdministrationService administrationService;
 	
-	private EncounterService encounterService = null;
+	@Autowired
+	private ProviderService providerService;
 	
-	private ProviderService providerService = null;
+	@Autowired
+	private RadiologyService radiologyService;
 	
-	private OrderService orderService = null;
+	@Autowired
+	private RadiologyProperties radiologyProperties;
 	
-	private RadiologyService radiologyService = null;
+	@Autowired
+	private EncounterService encounterService;
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
 	
 	@Before
 	public void runBeforeAllTests() throws Exception {
-		
-		if (patientService == null) {
-			patientService = Context.getPatientService();
-		}
-		
-		if (conceptService == null) {
-			conceptService = Context.getConceptService();
-		}
-		
-		if (administrationService == null) {
-			administrationService = Context.getAdministrationService();
-		}
-		
-		if (encounterService == null) {
-			encounterService = Context.getEncounterService();
-		}
-		
-		if (providerService == null) {
-			providerService = Context.getProviderService();
-		}
-		
-		if (orderService == null) {
-			orderService = Context.getOrderService();
-		}
-		
-		if (radiologyService == null) {
-			radiologyService = Context.getService(RadiologyService.class);
-		}
 		
 		executeDataSet(STUDIES_TEST_DATASET);
 	}

@@ -16,14 +16,22 @@ import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.SpecificCharacterSet;
 import org.dcm4che2.data.Tag;
 import org.openmrs.Order;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
 import org.openmrs.module.radiology.hl7.HL7Generator;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import ca.uhn.hl7v2.HL7Exception;
 
+@Component
 public class DicomUtils {
+	
+	@Autowired
+	private RadiologyProperties radiologyProperties;
+	
+	@Autowired
+	private RadiologyService radiologyService;
 	
 	private static final Logger log = Logger.getLogger(DicomUtils.class);
 	
@@ -43,7 +51,7 @@ public class DicomUtils {
 	 *         status COMPLETED of given mpps object
 	 * @should not fail if study instance uid referenced in dicom mpps cannot be found
 	 */
-	public static void updateStudyPerformedStatusByMpps(DicomObject mppsObject) {
+	public void updateStudyPerformedStatusByMpps(DicomObject mppsObject) {
 		try {
 			String studyInstanceUid = getStudyInstanceUidFromMpps(mppsObject);
 			
@@ -51,7 +59,8 @@ public class DicomUtils {
 			PerformedProcedureStepStatus performedProcedureStepStatus = PerformedProcedureStepStatus
 			        .getMatchForDisplayName(performedProcedureStepStatusString);
 			
-			radiologyService().updateStudyPerformedStatus(studyInstanceUid, performedProcedureStepStatus);
+			radiologyService.updateStudyPerformedStatus(studyInstanceUid, performedProcedureStepStatus);
+			
 			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :"
 			        + studyInstanceUid + " to Status : "
 			        + PerformedProcedureStepStatus.getNameOrUnknown(performedProcedureStepStatus));
@@ -75,9 +84,9 @@ public class DicomUtils {
 	 * @should return null given dicom mpps object with scheduled step attributes sequence missing
 	 *         study instance uid tag
 	 */
-	public static String getStudyInstanceUidFromMpps(DicomObject mppsObject) {
+	public String getStudyInstanceUidFromMpps(DicomObject mppsObject) {
 		
-		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(RadiologyProperties.getSpecificCharacterSet());
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties.getSpecificCharacterSet());
 		
 		DicomElement scheduledStepAttributesSequenceElement = mppsObject.get(Tag.ScheduledStepAttributesSequence);
 		if (scheduledStepAttributesSequenceElement == null)
@@ -103,9 +112,9 @@ public class DicomUtils {
 	 * @should return performed procedure step status given dicom object
 	 * @should return null given given dicom object without performed procedure step status
 	 */
-	public static String getPerformedProcedureStepStatus(DicomObject dicomObject) {
+	public String getPerformedProcedureStepStatus(DicomObject dicomObject) {
 		
-		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(RadiologyProperties.getSpecificCharacterSet());
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties.getSpecificCharacterSet());
 		
 		DicomElement performedProcedureStepStatusElement = dicomObject.get(Tag.PerformedProcedureStepStatus);
 		if (performedProcedureStepStatusElement == null)
@@ -225,16 +234,12 @@ public class DicomUtils {
 	}
 	
 	//Send HL7 ORU message to dcm4chee.
-	public static int sendHL7Worklist(String hl7blob) {
-		String serverIP = RadiologyProperties.getServersAddress();
-		String input[] = { "-c", serverIP.substring(7) + ":" + RadiologyProperties.getServersHL7Port(), hl7blob };
+	public int sendHL7Worklist(String hl7blob) {
+		String serverIP = radiologyProperties.getServersAddress();
+		String input[] = { "-c", serverIP.substring(7) + ":" + radiologyProperties.getServersHL7Port(), hl7blob };
 		//String input[]={"--help"};
 		int result = HL7Snd.main(input);
 		return result;
-	}
-	
-	static RadiologyService radiologyService() {
-		return Context.getService(RadiologyService.class);
 	}
 	
 }

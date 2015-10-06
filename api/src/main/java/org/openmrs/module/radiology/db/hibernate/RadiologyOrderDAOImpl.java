@@ -18,6 +18,8 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.Patient;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  * Hibernate specific RadiologyOrder related functions. This class should not be used directly. All
@@ -26,18 +28,16 @@ import org.openmrs.module.radiology.db.RadiologyOrderDAO;
  * @see org.openmrs.module.radiology.db.RadiologyOrderDAO
  * @see org.openmrs.module.radiology.RadiologyService
  */
+@Repository
 public class RadiologyOrderDAOImpl implements RadiologyOrderDAO {
 	
-	private SessionFactory sessionFactory;
-	
 	/**
-	 * Set session factory that allows us to connect to the database that Hibernate knows about.
+	 * session factory that allows us to connect to the database that Hibernate knows about.
 	 *
 	 * @param sessionFactory
 	 */
-	public void setSessionFactory(SessionFactory sessionFactory) {
-		this.sessionFactory = sessionFactory;
-	}
+	@Autowired
+	private SessionFactory sessionFactory;
 	
 	/**
 	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyOrderByOrderId(Integer)

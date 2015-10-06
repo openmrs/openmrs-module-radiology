@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.radiology.impl;
 
-import java.io.File;
 import java.util.Date;
 import java.util.List;
 
@@ -35,39 +34,32 @@ import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+@Component
 class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyService {
 	
 	private static final Log log = LogFactory.getLog(RadiologyServiceImpl.class);
 	
+	@Autowired
 	private RadiologyOrderDAO radiologyOrderDAO;
 	
-	private StudyDAO sdao;
+	@Autowired
+	private StudyDAO studyDAO;
 	
+	@Autowired
 	private OrderService orderService;
 	
+	@Autowired
 	private EncounterService encounterService;
 	
-	@Override
-	public void setRadiologyOrderDao(RadiologyOrderDAO radiologyOrderDAO) {
-		this.radiologyOrderDAO = radiologyOrderDAO;
-	}
+	@Autowired
+	private RadiologyProperties radiologyProperties;
 	
-	@Override
-	public void setSdao(StudyDAO dao) {
-		this.sdao = dao;
-	}
-	
-	@Override
-	public void setOrderService(OrderService orderService) {
-		this.orderService = orderService;
-	}
-	
-	@Override
-	public void setEncounterService(EncounterService encounterService) {
-		this.encounterService = encounterService;
-	}
+	@Autowired
+	private DicomUtils dicomUtils;
 	
 	/**
 	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
@@ -96,8 +88,8 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		encounter.addOrder(radiologyOrder);
 		
 		OrderContext orderContext = new OrderContext();
-		orderContext.setCareSetting(RadiologyProperties.getRadiologyCareSetting());
-		orderContext.setOrderType(RadiologyProperties.getRadiologyTestOrderType());
+		orderContext.setCareSetting(radiologyProperties.getRadiologyCareSetting());
+		orderContext.setOrderType(radiologyProperties.getRadiologyTestOrderType());
 		
 		RadiologyOrder result = (RadiologyOrder) orderService.saveOrder(radiologyOrder, orderContext);
 		saveStudy(result.getStudy());
@@ -118,8 +110,8 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		
 		Encounter encounter = new Encounter();
 		encounter.setPatient(patient);
-		encounter.setEncounterType(RadiologyProperties.getRadiologyEncounterType());
-		encounter.setProvider(RadiologyProperties.getOrderingProviderEncounterRole(), provider);
+		encounter.setEncounterType(radiologyProperties.getRadiologyEncounterType());
+		encounter.setProvider(radiologyProperties.getOrderingProviderEncounterRole(), provider);
 		encounter.setEncounterDatetime(encounterDateTime);
 		
 		return encounterService.saveEncounter(encounter);
@@ -146,10 +138,10 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		}
 		
 		try {
-			Study savedStudy = sdao.saveStudy(study);
-			String studyInstanceUid = RadiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
+			Study savedStudy = studyDAO.saveStudy(study);
+			String studyInstanceUid = radiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
 			savedStudy.setStudyInstanceUid(studyInstanceUid);
-			savedStudy = sdao.saveStudy(savedStudy);
+			savedStudy = studyDAO.saveStudy(savedStudy);
 			return savedStudy;
 		}
 		catch (Exception e) {
@@ -244,16 +236,16 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("performedStatus is required");
 		}
 		
-		Study studyToBeUpdated = sdao.getStudyByStudyInstanceUid(studyInstanceUid);
+		Study studyToBeUpdated = studyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
 		studyToBeUpdated.setPerformedStatus(performedStatus);
-		return sdao.saveStudy(studyToBeUpdated);
+		return studyDAO.saveStudy(studyToBeUpdated);
 	}
 	
 	@Override
 	public void sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
 		MwlStatus mwlStatus = radiologyOrder.getStudy().getMwlStatus();
-		String hl7blob = DicomUtils.createHL7Message(radiologyOrder, orderRequest);
-		int status = DicomUtils.sendHL7Worklist(hl7blob);
+		String hl7blob = dicomUtils.createHL7Message(radiologyOrder, orderRequest);
+		int status = dicomUtils.sendHL7Worklist(hl7blob);
 		
 		if (status == 1) {
 			switch (orderRequest) {
@@ -313,7 +305,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Transactional(readOnly = true)
 	@Override
 	public Study getStudy(Integer id) {
-		return sdao.getStudy(id);
+		return studyDAO.getStudy(id);
 	}
 	
 	@Transactional(readOnly = true)
@@ -323,7 +315,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("orderId is required");
 		}
 		
-		return sdao.getStudyByOrderId(orderId);
+		return studyDAO.getStudyByOrderId(orderId);
 	}
 	
 	/**
@@ -335,7 +327,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("studyInstanceUid is required");
 		}
 		
-		return sdao.getStudyByStudyInstanceUid(studyInstanceUid);
+		return studyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
 	}
 	
 	/**
@@ -348,7 +340,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("radiologyOrders are required");
 		}
 		
-		List<Study> result = sdao.getStudiesByRadiologyOrders(radiologyOrders);
+		List<Study> result = studyDAO.getStudiesByRadiologyOrders(radiologyOrders);
 		return result;
 	}
 	
@@ -361,7 +353,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("orderId is required");
 		}
 		
-		return sdao.getObsByOrderId(orderId);
+		return studyDAO.getObsByOrderId(orderId);
 	}
 	
 }
