@@ -262,13 +262,11 @@ public class RadiologyObsFormController {
 							// with
 							// the given complex data
 							obsService.saveObs(obs, editReason);
-							updateReadingPhysician(radiologyOrder.getStudy());
 							complexDataInputStream.close();
 						}
 					}
 				} else {
 					obsService.saveObs(obs, editReason);
-					updateReadingPhysician(radiologyOrder.getStudy());
 				}
 				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.saved");
 			}
@@ -282,21 +280,5 @@ public class RadiologyObsFormController {
 		}
 		return new ModelAndView("redirect:" + RADIOLOGY_OBS_FORM_URL + "orderId=" + obs.getOrder().getId() + "&obsId="
 		        + obs.getId());
-	}
-	
-	/**
-	 * Updates reading physician for given study
-	 * 
-	 * @param study for which the reading physician should be updated
-	 * @should update reading physician for given study and user authenticated as reading physician
-	 * @should not update reading physician if user is not authenticated as reading physician
-	 * @should not update reading physician for given study with reading physician
-	 */
-	private void updateReadingPhysician(Study study) {
-		
-		User user = Context.getAuthenticatedUser();
-		if (user.hasRole(READING_PHYSICIAN, true) && study.getReadingPhysician() == null)
-			study.setReadingPhysician(user);
-		radiologyService.saveStudy(study);
 	}
 }

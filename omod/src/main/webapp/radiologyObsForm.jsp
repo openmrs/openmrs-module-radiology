@@ -327,7 +327,7 @@ th {
 		</c:forEach>
 	</table>
 	<br />
-	<a href="radiologyObs.form?orderId=${obs.order.orderId }&obsId"><spring:message
+	<a href="radiologyObs.form?orderId=${obs.order.orderId}"><spring:message
 			code="Obs.add" /></a>
 	<br />
 </c:if>

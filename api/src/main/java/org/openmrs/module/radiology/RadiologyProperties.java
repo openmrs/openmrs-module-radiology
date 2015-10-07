@@ -9,8 +9,12 @@
  */
 package org.openmrs.module.radiology;
 
+import org.openmrs.CareSetting;
+import org.openmrs.EncounterRole;
+import org.openmrs.EncounterType;
 import org.openmrs.OrderType;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 
@@ -22,6 +26,8 @@ public class RadiologyProperties {
 	private static AdministrationService administrationService = Context.getAdministrationService();
 	
 	private static OrderService orderService = Context.getOrderService();
+	
+	private static EncounterService encounterService = Context.getEncounterService();
 	
 	/**
 	 * Return application entity title
@@ -96,8 +102,7 @@ public class RadiologyProperties {
 	}
 	
 	/**
-	 * Return study prefix
-	 * Example: 1.2.826.0.1.3680043.8.2186.1. (With last dot)
+	 * Return study prefix Example: 1.2.826.0.1.3680043.8.2186.1. (With last dot)
 	 * 
 	 * @return study prefix
 	 * @should should return study prefix consisting of application uid and study uid slug
@@ -129,7 +134,8 @@ public class RadiologyProperties {
 	 * 
 	 * @return server name of local dicom viewer
 	 * @should return dicom viewer local server name if defined in global properties
-	 * @should return empty string if dicom viewer local server name if not defined in global properties
+	 * @should return empty string if dicom viewer local server name if not defined in global
+	 *         properties
 	 */
 	public static String getDicomViewerLocalServerName() {
 		String dicomViewerLocalServerName = administrationService
@@ -153,13 +159,34 @@ public class RadiologyProperties {
 	 * Return url of dicom viewer
 	 * 
 	 * @return url of dicom viewer as string
-	 * @should return dicom viewer url consisting of server adress and server port and dicom viewer url base and dicom viewer local server name for oviyam
-	 * @should return dicom viewer url consisting of server adress and server port and dicom viewer url base and dicom viewer local server name for weasis
+	 * @should return dicom viewer url consisting of server adress and server port and dicom viewer
+	 *         url base and dicom viewer local server name for oviyam
+	 * @should return dicom viewer url consisting of server adress and server port and dicom viewer
+	 *         url base and dicom viewer local server name for weasis
 	 */
 	public static String getDicomViewerUrl() {
 		String dicomViewerUrl = getServersAddress() + ":" + getServersPort() + getDicomViewerUrlBase()
 		        + getDicomViewerLocalServerName();
 		return dicomViewerUrl;
+	}
+	
+	/**
+	 * Get CareSetting for RadiologyOrder's
+	 * 
+	 * @return CareSetting for radiology orders
+	 * @should return radiology care setting
+	 * @should throw illegal state exception if radiology care setting cannot be found
+	 */
+	public static CareSetting getRadiologyCareSetting() {
+		String radiologyCareSettingUuid = administrationService
+		        .getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
+		CareSetting result = orderService.getCareSettingByUuid(radiologyCareSettingUuid);
+		
+		if (result == null) {
+			throw new IllegalStateException("Configuration required for property: "
+			        + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
+		}
+		return result;
 	}
 	
 	/**
@@ -174,6 +201,39 @@ public class RadiologyProperties {
 		if (result == null) {
 			throw new IllegalStateException("OrderType for radiology orders not in database (not found under uuid="
 			        + RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID + ").");
+		}
+		return result;
+	}
+	
+	/**
+	 * Get EncounterType for RadiologyOrder's
+	 * 
+	 * @return EncounterType for radiology orders
+	 * @should return encounter type for radiology orders
+	 * @should throw illegal state exception for non existing radiology encounter type
+	 */
+	public static EncounterType getRadiologyEncounterType() {
+		EncounterType result = encounterService.getEncounterTypeByUuid(RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID);
+		if (result == null) {
+			throw new IllegalStateException("EncounterType for radiology orders not in database (not found under uuid="
+			        + RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID + ").");
+		}
+		return result;
+	}
+	
+	/**
+	 * Get EncounterRole for the ordering provider
+	 * 
+	 * @return EncounterRole for ordering provider
+	 * @should return encounter role for ordering provider
+	 * @should throw illegal state exception for non existing ordering provider encounter role
+	 */
+	public static EncounterRole getOrderingProviderEncounterRole() {
+		EncounterRole result = encounterService
+		        .getEncounterRoleByUuid(RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID);
+		if (result == null) {
+			throw new IllegalStateException("EncounterRole for ordering provider not in database (not found under uuid="
+			        + RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID + ").");
 		}
 		return result;
 	}

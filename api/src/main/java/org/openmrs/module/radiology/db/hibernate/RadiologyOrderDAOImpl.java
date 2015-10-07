@@ -40,15 +40,6 @@ public class RadiologyOrderDAOImpl implements RadiologyOrderDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#saveRadiologyOrder(RadiologyOrder)
-	 */
-	@Override
-	public RadiologyOrder saveRadiologyOrder(RadiologyOrder radiologyOrder) {
-		sessionFactory.getCurrentSession().saveOrUpdate(radiologyOrder);
-		return radiologyOrder;
-	}
-	
-	/**
 	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyOrderByOrderId(Integer)
 	 */
 	@Override

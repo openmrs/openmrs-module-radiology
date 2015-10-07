@@ -18,9 +18,6 @@
 					<th><spring:message code="radiology.patientFullName" /></th>
 					<th><spring:message code="radiology.priority" /></th>
 					<th><spring:message code="radiology.referringPhysician" /></th>
-					<th><spring:message code="radiology.scheduler" /></th>
-					<th><spring:message code="radiology.performingPhysician" /></th>
-					<th><spring:message code="radiology.readingPhysician" /></th>
 					<th><spring:message code="radiology.appoinmentDate" /></th>
 					<th><spring:message code="radiology.modality" /></th>
 					<th><spring:message code="radiology.scheduledStatus" /></th>
@@ -40,12 +37,9 @@
 							</c:if></td>
 						<td style="text-align: center">${order.patient.patientIdentifier}</td>
 						<td>${order.patient.personName}</td>
-						<td>${order.study.priority}</td>
-						<td>${order.orderer.personName}</td>
-						<td>${order.study.scheduler}</td>
-						<td>${order.study.performingPhysician}</td>
-						<td>${order.study.readingPhysician}</td>
-						<td name="appointmentDate">${order.startDate}</td>
+						<td>${order.urgency}</td>
+						<td>${order.orderer.name}</td>
+						<td name="appointmentDate">${order.effectiveStartDate}</td>
 						<td>${order.study.modality.fullName}</td>
 						<td>${order.study.scheduledStatus}</td>
 						<td>${order.study.performedStatus}</td>

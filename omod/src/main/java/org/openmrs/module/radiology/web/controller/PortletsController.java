@@ -76,7 +76,8 @@ public class PortletsController {
 	 * @should populate model and view with table of orders associated with given empty patient and
 	 *         given date range null
 	 * @should not populate model and view with table of orders if start date is after end date
-	 * @should populate model and view with table of orders including obsId accessed as reading physician
+	 * @should populate model and view with table of orders including obsId accessed as reading
+	 *         physician
 	 */
 	@RequestMapping(value = "/module/radiology/portlets/orderSearch.portlet")
 	ModelAndView getRadiologyOrdersByPatientQueryAndDateRange(
@@ -111,8 +112,10 @@ public class PortletsController {
 	 * @return list of radiology orders corresponding to given criteria
 	 * @should return list of orders matching a given date range
 	 * @should return list of all orders with start date if start date is null and end date is null
-	 * @should return empty list of orders with given end date and start date before any order has started
-	 * @should return empty list of orders with given end date and start date after any order has started
+	 * @should return empty list of orders with given end date and start date before any order has
+	 *         started
+	 * @should return empty list of orders with given end date and start date after any order has
+	 *         started
 	 * @should return list of orders started after given start date but given end date null
 	 * @should return list of orders started before given end date but given start date null
 	 */
@@ -125,7 +128,7 @@ public class PortletsController {
 			return unfilteredRadiologyOrders;
 		} else if (startDate == null && endDate != null) {
 			for (RadiologyOrder order : unfilteredRadiologyOrders) {
-				if (order.getStartDate() != null && order.getStartDate().compareTo(endDate) <= 0) {
+				if (order.getEffectiveStartDate() != null && order.getEffectiveStartDate().compareTo(endDate) <= 0) {
 					
 					result.add(order);
 				}
@@ -133,7 +136,7 @@ public class PortletsController {
 			
 		} else if (startDate != null && endDate == null) {
 			for (RadiologyOrder order : unfilteredRadiologyOrders) {
-				if (order.getStartDate() != null && order.getStartDate().compareTo(startDate) >= 0) {
+				if (order.getEffectiveStartDate() != null && order.getEffectiveStartDate().compareTo(startDate) >= 0) {
 					result.add(order);
 				}
 			}
@@ -141,8 +144,8 @@ public class PortletsController {
 
 		else {
 			for (RadiologyOrder order : unfilteredRadiologyOrders) {
-				if (order.getStartDate() != null && order.getStartDate().compareTo(startDate) >= 0
-				        && order.getStartDate().compareTo(endDate) <= 0) {
+				if (order.getEffectiveStartDate() != null && order.getEffectiveStartDate().compareTo(startDate) >= 0
+				        && order.getEffectiveStartDate().compareTo(endDate) <= 0) {
 					result.add(order);
 				}
 			}
@@ -158,7 +161,7 @@ public class PortletsController {
 	 * @param endDate end date of the date range
 	 * @return true if end date is before start date
 	 * @should return true if end date is after start date
-	 * @should return false if end date is not after start date 
+	 * @should return false if end date is not after start date
 	 * @should return false with given start date but end date null
 	 * @should return false with given end date but start date null
 	 * @should return false with given end date and end date null
@@ -175,7 +178,8 @@ public class PortletsController {
 	/**
 	 * Get orders of type radiology for patientQuery
 	 * 
-	 * @param patientQuery Patient string for which radiology orders and studies should be returned for
+	 * @param patientQuery Patient string for which radiology orders and studies should be returned
+	 *            for
 	 * @return list of radiology orders associated with patientQuery
 	 * @should return list of all radiology orders given patientQuery empty
 	 * @should return list of all radiology orders given patientQuery null

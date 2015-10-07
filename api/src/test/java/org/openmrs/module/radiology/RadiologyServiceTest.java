@@ -20,9 +20,12 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import org.junit.Before;
@@ -30,15 +33,21 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
-import org.openmrs.Concept;
+import org.openmrs.Encounter;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Obs;
+import org.openmrs.Order;
 import org.openmrs.Patient;
+import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
+import org.openmrs.api.EncounterService;
+import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
+import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.impl.RadiologyServiceImpl;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
 
@@ -85,6 +94,12 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	
 	private AdministrationService administrationService = null;
 	
+	private EncounterService encounterService = null;
+	
+	private ProviderService providerService = null;
+	
+	private OrderService orderService = null;
+	
 	private RadiologyService radiologyService = null;
 	
 	@Rule
@@ -108,6 +123,18 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 			administrationService = Context.getAdministrationService();
 		}
 		
+		if (encounterService == null) {
+			encounterService = Context.getEncounterService();
+		}
+		
+		if (providerService == null) {
+			providerService = Context.getProviderService();
+		}
+		
+		if (orderService == null) {
+			orderService = Context.getOrderService();
+		}
+		
 		if (radiologyService == null) {
 			radiologyService = Context.getService(RadiologyService.class);
 		}
@@ -116,15 +143,15 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see RadiologyService#saveRadiologyOrder(RadiologyOrder)
+	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
 	 */
 	@Test
-	@Verifies(value = "should create new radiology order from given radiology order object", method = "saveRadiologyOrder(RadiologyOrder)")
-	public void saveRadiologyOrder_shouldCreateNewRadiologyOrderGivenRadiologyOrderObject() {
+	@Verifies(value = "should create new radiology order from given radiology order object", method = "placeRadiologyOrder(RadiologyOrder)")
+	public void placeRadiologyOrder_shouldCreateNewRadiologyOrderGivenRadiologyOrderObject() {
 		
 		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
 		
-		radiologyOrder = radiologyService.saveRadiologyOrder(radiologyOrder);
+		radiologyOrder = radiologyService.placeRadiologyOrder(radiologyOrder);
 		
 		assertNotNull(radiologyOrder);
 		assertNotNull(radiologyOrder.getOrderId());
@@ -139,31 +166,170 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	public RadiologyOrder getUnsavedRadiologyOrder() {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		
 		radiologyOrder.setPatient(patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER));
+		radiologyOrder.setOrderer(providerService.getProviderByIdentifier("1"));
+		radiologyOrder.setConcept(conceptService.getConcept(CONCEPT_ID_FOR_FRACTURE));
 		radiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		
 		Calendar calendar = Calendar.getInstance();
 		calendar.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
-		radiologyOrder.setStartDate(calendar.getTime());
-		
-		Concept conceptFracture = conceptService.getConcept(CONCEPT_ID_FOR_FRACTURE);
-		radiologyOrder.setConcept(conceptFracture);
-		
-		radiologyOrder.setOrderType(RadiologyProperties.getRadiologyTestOrderType());
+		radiologyOrder.setScheduledDate(calendar.getTime());
+		radiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		
 		return radiologyOrder;
 	}
 	
 	/**
-	 * @see RadiologyService#saveRadiologyOrder(RadiologyOrder)
+	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception given null", method = "saveRadiologyOrder(RadiologyOrder)")
-	public void saveRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenNull() {
+	@Verifies(value = "should throw illegal argument exception given null", method = "placeRadiologyOrder(RadiologyOrder)")
+	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenNull() {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is required");
-		radiologyService.saveRadiologyOrder(null);
+		radiologyService.placeRadiologyOrder(null);
+	}
+	
+	/**
+	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 */
+	@Test
+	@Verifies(value = "should throw illegal argument exception given existing radiology order", method = "placeRadiologyOrder(RadiologyOrder)")
+	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenExistingRadiologyOrder() {
+		
+		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
+		
+		radiologyOrder = radiologyService.placeRadiologyOrder(radiologyOrder);
+		
+		assertNotNull(radiologyOrder);
+		assertNotNull(radiologyOrder.getOrderId());
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("Cannot edit an existing order!");
+		radiologyService.placeRadiologyOrder(radiologyOrder);
+	}
+	
+	/**
+	 * @see RadiologyService#saveRadiologyOrderEncounter(Patient, Provider, Date)
+	 */
+	@Test
+	@Verifies(value = "should save radiology order encounter for given parameters", method = "saveRadiologyOrderEncounter(Patient, Provider, Date)")
+	public void saveRadiologyOrderEncounter_shouldSaveRadiologyOrderEncounterForGivenParameters() throws Exception {
+		
+		Patient patient = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER);
+		Provider provider = providerService.getProviderByIdentifier("1");
+		Date encounterDatetime = new GregorianCalendar(2010, Calendar.OCTOBER, 10).getTime();
+		
+		Method saveRadiologyOrderEncounterMethod = RadiologyServiceImpl.class.getDeclaredMethod(
+		    "saveRadiologyOrderEncounter", new Class[] { org.openmrs.Patient.class, org.openmrs.Provider.class,
+		            java.util.Date.class });
+		saveRadiologyOrderEncounterMethod.setAccessible(true);
+		
+		RadiologyServiceImpl radiologyService = new RadiologyServiceImpl();
+		radiologyService.setEncounterService(encounterService);
+		
+		Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyService, new Object[] { patient,
+		        provider, encounterDatetime });
+		
+		assertNotNull(encounter);
+		assertThat(encounter.getPatient(), is(patient));
+		assertThat(encounter.getProvidersByRole(RadiologyProperties.getOrderingProviderEncounterRole()).size(), is(1));
+		assertThat(encounter.getProvidersByRole(RadiologyProperties.getOrderingProviderEncounterRole()).contains(provider),
+		    is(true));
+		assertThat(encounter.getEncounterDatetime(), is(encounterDatetime));
+		assertThat(encounter.getEncounterType(), is(RadiologyProperties.getRadiologyEncounterType()));
+	}
+	
+	/**
+	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 */
+	@Test
+	@Verifies(value = "should create discontinuation order which discontinues given radiology order object", method = "discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)")
+	public void discontinueRadiologyOrder_shouldCreateDiscontinuationOrderWhichDiscontinuesGivenRadiologyOrderObject()
+	        throws Exception {
+		
+		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		String discontinueReason = "Wrong Procedure";
+		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
+		
+		Order discontinuationOrder = radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(),
+		    discontinueDate, discontinueReason);
+		
+		assertNotNull(discontinuationOrder);
+		assertThat(discontinuationOrder.getAction(), is(Order.Action.DISCONTINUE));
+		
+		assertThat(discontinuationOrder.getPreviousOrder(), is((Order) radiologyOrder));
+		assertThat(radiologyOrder.isActive(), is(false));
+	}
+	
+	/**
+	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 */
+	@Test
+	@Verifies(value = "should throw illegal argument exception given empty radiology order", method = "discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)")
+	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenEmptyRadiologyOrder() throws Exception {
+		
+		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		String discontinueReason = "Wrong Procedure";
+		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder is required");
+		radiologyService.discontinueRadiologyOrder(null, radiologyOrder.getOrderer(), discontinueDate, discontinueReason);
+	}
+	
+	/**
+	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 */
+	@Test
+	@Verifies(value = "should throw illegal argument exception given radiology order with orderId null", method = "discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)")
+	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenRadiologyOrderWithOrderIdNull()
+	        throws Exception {
+		
+		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
+		String discontinueReason = "Wrong Procedure";
+		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("orderId is null");
+		radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueDate,
+		    discontinueReason);
+	}
+	
+	/**
+	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 */
+	@Test
+	@Verifies(value = "should throw illegal argument exception if radiology order is not active", method = "discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)")
+	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsNotActive() throws Exception {
+		
+		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		radiologyOrder.setAction(Order.Action.DISCONTINUE);
+		String discontinueReason = "Wrong Procedure";
+		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("order is not active");
+		radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueDate,
+		    discontinueReason);
+	}
+	
+	/**
+	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 */
+	@Test
+	@Verifies(value = "should throw illegal argument exception given empty provider", method = "discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)")
+	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenEmptyProvider() throws Exception {
+		
+		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		String discontinueReason = "Wrong Procedure";
+		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("provider is required");
+		radiologyService.discontinueRadiologyOrder(radiologyOrder, null, discontinueDate, discontinueReason);
 	}
 	
 	/**
@@ -328,7 +494,6 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		Study study = new Study();
 		study.setRadiologyOrder(radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY));
 		study.setModality(Modality.CT);
-		study.setPriority(RequestedProcedurePriority.LOW);
 		study.setMwlStatus(MwlStatus.DEFAULT);
 		study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
 		

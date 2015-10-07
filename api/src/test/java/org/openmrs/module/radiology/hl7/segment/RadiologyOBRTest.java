@@ -12,9 +12,12 @@ package org.openmrs.module.radiology.hl7.segment;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
+import java.lang.reflect.Field;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.openmrs.Order;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
@@ -41,11 +44,15 @@ public class RadiologyOBRTest {
 	 */
 	@Test
 	@Verifies(value = "should return populated observation request segment given all params", method = "populateObservationRequest(OBR, RadiologyOrder)")
-	public void populateObservationRequest_shouldReturnPopulatedObservationRequestSegmentGivenAllParams()
-	        throws HL7Exception {
+	public void populateObservationRequest_shouldReturnPopulatedObservationRequestSegmentGivenAllParams() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setId(1);
+		radiologyOrder.setOrderId(1);
+		
+		Field orderNumber = Order.class.getDeclaredField("orderNumber");
+		orderNumber.setAccessible(true);
+		orderNumber.set(radiologyOrder, "ORD-" + radiologyOrder.getOrderId());
+		
 		radiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		
 		Study study = new Study();
@@ -62,14 +69,14 @@ public class RadiologyOBRTest {
 		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR();
 		assertThat(observationRequestSegment.getUniversalServiceID().getAlternateText().getValue(),
 		    is("CT ABDOMEN PANCREAS WITH IV CONTRAST"));
-		assertThat(observationRequestSegment.getPlacerField2().getValue(), is("1"));
+		assertThat(observationRequestSegment.getPlacerField2().getValue(), is("ORD-1"));
 		assertThat(observationRequestSegment.getFillerField1().getValue(), is("1"));
 		assertThat(observationRequestSegment.getDiagnosticServSectID().getValue(), is("CT"));
 		assertThat(observationRequestSegment.getProcedureCode().getText().getValue(),
 		    is("CT ABDOMEN PANCREAS WITH IV CONTRAST"));
 		assertThat(
 		    PipeParser.encode(observationRequestSegment, encodingCharacters),
-		    is("OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||1|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST"));
+		    is("OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-1|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST"));
 	}
 	
 	/**

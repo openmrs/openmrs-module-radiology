@@ -14,6 +14,7 @@ import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.hamcrest.core.StringStartsWith.startsWith;
 import static org.junit.Assert.assertThat;
 
+import java.lang.reflect.Field;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,13 +23,13 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
@@ -83,15 +84,21 @@ public class RadiologyORMO01Test {
 		personNames.add(personName);
 		patient.setNames(personNames);
 		
-		Calendar cal = Calendar.getInstance();
-		cal.set(1950, Calendar.APRIL, 1, 0, 0, 0);
-		patient.setBirthdate(cal.getTime());
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(1950, Calendar.APRIL, 1, 0, 0, 0);
+		patient.setBirthdate(calendar.getTime());
 		
 		radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setId(20);
+		radiologyOrder.setOrderId(20);
+		
+		Field orderNumber = Order.class.getDeclaredField("orderNumber");
+		orderNumber.setAccessible(true);
+		orderNumber.set(radiologyOrder, "ORD-" + radiologyOrder.getOrderId());
+		
 		radiologyOrder.setPatient(patient);
-		cal.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
-		radiologyOrder.setStartDate(cal.getTime());
+		calendar.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
+		radiologyOrder.setScheduledDate(calendar.getTime());
+		radiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		radiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		
 		study = new Study();
@@ -99,7 +106,6 @@ public class RadiologyORMO01Test {
 		study.setRadiologyOrder(radiologyOrder);
 		study.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
 		study.setModality(Modality.CT);
-		study.setPriority(RequestedProcedurePriority.STAT);
 		radiologyOrder.setStudy(study);
 	}
 	
@@ -119,9 +125,10 @@ public class RadiologyORMO01Test {
 		    encodedOrmMessage,
 		    endsWith("||ORM^O01||P|2.3.1\r"
 		            + "PID|||100||Doe^John^Francis||19500401000000|M\r"
-		            + "ORC|NW|1|||||^^^20150204143500^^S\r"
-		            + "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||1|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
+		            + "ORC|NW|ORD-20|||||^^^20150204143500^^S\r"
+		            + "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
 		            + "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
+		
 	}
 	
 	/**

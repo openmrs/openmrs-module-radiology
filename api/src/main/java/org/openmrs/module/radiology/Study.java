@@ -11,8 +11,6 @@ package org.openmrs.module.radiology;
 
 import java.lang.reflect.Field;
 
-import org.openmrs.User;
-
 /**
  * A class that supports on openmrs's orders to make the module DICOM compatible, corresponds to the
  * table order_dicom_complment
@@ -29,17 +27,9 @@ public class Study {
 	
 	private PerformedProcedureStepStatus performedStatus;
 	
-	private RequestedProcedurePriority priority = RequestedProcedurePriority.ROUTINE;
-	
 	private Modality modality;
 	
 	private MwlStatus mwlStatus = MwlStatus.DEFAULT;
-	
-	private User scheduler;
-	
-	private User performingPhysician;
-	
-	private User readingPhysician;
 	
 	public Integer getStudyId() {
 		return studyId;
@@ -57,24 +47,8 @@ public class Study {
 		return performedStatus;
 	}
 	
-	public User getPerformingPhysician() {
-		return performingPhysician;
-	}
-	
-	public RequestedProcedurePriority getPriority() {
-		return priority;
-	}
-	
-	public User getReadingPhysician() {
-		return readingPhysician;
-	}
-	
 	public ScheduledProcedureStepStatus getScheduledStatus() {
 		return scheduledStatus;
-	}
-	
-	public User getScheduler() {
-		return scheduler;
 	}
 	
 	public String getStudyInstanceUid() {
@@ -91,18 +65,6 @@ public class Study {
 	
 	public boolean isScheduleable() {
 		return performedStatus == null;
-	}
-	
-	public String performing() {
-		return getPerformingPhysician() == null ? "" : getPerformingPhysician().getPersonName().getFullName();
-	}
-	
-	public String reading() {
-		return getReadingPhysician() == null ? "" : getReadingPhysician().getPersonName().getFullName();
-	}
-	
-	public String scheduler() {
-		return getScheduler() == null ? "" : getScheduler().getPersonName().getFullName();
 	}
 	
 	public void setMwlStatus(MwlStatus mwlStatus) {
@@ -125,24 +87,8 @@ public class Study {
 		this.performedStatus = performedStatus;
 	}
 	
-	public void setPerformingPhysician(User performingPhysician) {
-		this.performingPhysician = performingPhysician;
-	}
-	
-	public void setPriority(RequestedProcedurePriority priority) {
-		this.priority = priority;
-	}
-	
-	public void setReadingPhysician(User readingPhysician) {
-		this.readingPhysician = readingPhysician;
-	}
-	
 	public void setScheduledStatus(ScheduledProcedureStepStatus scheduledStatus) {
 		this.scheduledStatus = scheduledStatus;
-	}
-	
-	public void setScheduler(User scheduler) {
-		this.scheduler = scheduler;
 	}
 	
 	public void setStudyInstanceUid(String studyInstanceUid) {

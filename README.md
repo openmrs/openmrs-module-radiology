@@ -57,8 +57,5 @@ Remove unused imports by using **control-shift-o** in Eclipse.
 
 ## Limitations
 
-This module currently only works with OpenMRS Version 1.9.9
-
-This limitation is due to the deprecation of OrderType and this modules
-dependency on OrderType and OrderService methods for OrderType.
+This module currently only works with OpenMRS Version 1.10.2
 

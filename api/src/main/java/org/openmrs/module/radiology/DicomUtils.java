@@ -62,8 +62,7 @@ public class DicomUtils {
 		workitem.putString(Tag.SpecificCharacterSet, VR.CS, RadiologyProperties.getSpecificCharacterSet());
 		workitem.putString(Tag.AccessionNumber, VR.SH, "");
 		try {
-			workitem.putString(Tag.ReferringPhysicianName, VR.PN, o.getOrderer().getPersonName().getFullName().replace(' ',
-			    '^'));
+			workitem.putString(Tag.ReferringPhysicianName, VR.PN, o.getOrderer().getName().replace(' ', '^'));
 		}
 		catch (Exception e) {
 			debug("Not saving referring physician");
@@ -85,8 +84,7 @@ public class DicomUtils {
 		workitem.putString(Tag.PregnancyStatus, VR.US, "");
 		workitem.putString(Tag.StudyInstanceUID, VR.UI, RadiologyProperties.getStudyPrefix() + s.getStudyId());
 		try {
-			workitem.putString(Tag.RequestingPhysician, VR.PN, o.getOrderer().getPersonName().getFullName()
-			        .replace(' ', '^'));
+			workitem.putString(Tag.RequestingPhysician, VR.PN, o.getOrderer().getName().replace(' ', '^'));
 		}
 		catch (Exception e) {
 			debug("Not saving requesting physician");
@@ -115,8 +113,8 @@ public class DicomUtils {
 		spss.putString(Tag.RequestedContrastAgent, VR.LO, "");
 		spss.putString(Tag.ScheduledStationAETitle, VR.AE, RadiologyProperties.getApplicationEntityTitle());
 		try {
-			spss.putString(Tag.ScheduledProcedureStepStartDate, VR.DA, Utils.plain(o.getStartDate()));
-			spss.putString(Tag.ScheduledProcedureStepStartTime, VR.TM, Utils.time(o.getStartDate()));
+			spss.putString(Tag.ScheduledProcedureStepStartDate, VR.DA, Utils.plain(o.getEffectiveStartDate()));
+			spss.putString(Tag.ScheduledProcedureStepStartTime, VR.TM, Utils.time(o.getEffectiveStartDate()));
 			spss.putString(Tag.ScheduledPerformingPhysicianName, VR.PN, "!");
 			spss.putString(Tag.ScheduledProcedureStepDescription, VR.LO, o.getInstructions());
 		}
@@ -143,7 +141,7 @@ public class DicomUtils {
 		workitem.putNestedDicomObject(Tag.ScheduledProcedureStepSequence, spss);
 		
 		workitem.putString(Tag.RequestedProcedureID, VR.SH, String.valueOf(s.getStudyId()));
-		workitem.putString(Tag.RequestedProcedurePriority, VR.SH, s.getPriority().name());
+		workitem.putString(Tag.RequestedProcedurePriority, VR.SH, o.getUrgency().name());
 		workitem.putString(Tag.PatientTransportArrangements, VR.LO, "");
 		workitem.putString(Tag.ConfidentialityConstraintOnPatientDataDescription, VR.LO, "");
 		
@@ -271,7 +269,7 @@ public class DicomUtils {
 		MwlStatus mwlstatus = radiologyOrder.getStudy().getMwlStatus();
 		CommonOrderOrderControl commonOrderOrderControl = getCommonOrderControlFrom(mwlstatus, orderRequest);
 		
-		CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(radiologyOrder.getStudy().getPriority());
+		CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(radiologyOrder.getUrgency());
 		
 		try {
 			encodedHL7OrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(radiologyOrder, commonOrderOrderControl,
@@ -327,38 +325,28 @@ public class DicomUtils {
 	
 	/**
 	 * Get the HL7 Priority component of Quantity/Timing (ORC-7) field included in an HL7 version
-	 * 2.3.1 Common Order segment given the DICOM Requested Procedure Priority. See IHE Radiology
-	 * Technical Framework Volume 2 for mapping of DICOM Requested Procedure Priority to HL7
-	 * Priority.
+	 * 2.3.1 Common Order segment given the Order Urgency.
 	 * 
-	 * @param requestedProcedurePriority RequestedProcedurePriority representing DICOM Requested
-	 *            Procedure Priority
-	 * @return string representation of hl7 common order priority mapping to requested procedure
-	 *         priority
-	 * @should return hl7 common order priority given requested procedure priority
+	 * @param urgency order urgency
+	 * @return string representation of hl7 common order priority mapping to order urgency
+	 * @should return hl7 common order priority given order urgency
 	 * @should return default hl7 common order priority given null
 	 */
-	public static CommonOrderPriority getCommonOrderPriorityFrom(RequestedProcedurePriority requestedProcedurePriority) {
+	public static CommonOrderPriority getCommonOrderPriorityFrom(Order.Urgency urgency) {
 		CommonOrderPriority result = null;
 		
-		if (requestedProcedurePriority == null) {
+		if (urgency == null) {
 			result = CommonOrderPriority.ROUTINE;
 		} else {
-			switch (requestedProcedurePriority) {
+			switch (urgency) {
 				case STAT:
 					result = CommonOrderPriority.STAT;
-					break;
-				case HIGH:
-					result = CommonOrderPriority.ASAP;
 					break;
 				case ROUTINE:
 					result = CommonOrderPriority.ROUTINE;
 					break;
-				case MEDIUM:
+				case ON_SCHEDULED_DATE:
 					result = CommonOrderPriority.TIMING_CRITICAL;
-					break;
-				case LOW:
-					result = CommonOrderPriority.ROUTINE;
 					break;
 			}
 		}

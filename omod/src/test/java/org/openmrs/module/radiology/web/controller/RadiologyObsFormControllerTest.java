@@ -11,7 +11,6 @@ package org.openmrs.module.radiology.web.controller;
 
 import static org.hamcrest.collection.IsMapContaining.hasKey;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -19,7 +18,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.List;
 
@@ -514,73 +512,6 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 		assertThat(previousObs, is(radiologyService.getObsByOrderId(mockRadiologyOrder.getId())));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
-	}
-	
-	/**
-	 * @see RadiologyObsFormController#updateReadingPhysician(Study)
-	 */
-	@Test
-	@Verifies(value = "should update reading physician for given study and user authenticated  as reading physician", method = "updateReadingPhysician(Study)")
-	public void updateReadingPhysician_shouldUpdateReadingPhysicianForGivenStudyAndUserAuthenticatedAsReadingPhysician()
-	        throws Exception {
-		
-		when(Context.getAuthenticatedUser()).thenReturn(mockReadingPhysician);
-		
-		Method updateReadingPhysicianMethod = radiologyObsFormController.getClass().getDeclaredMethod(
-		    "updateReadingPhysician", new Class[] { org.openmrs.module.radiology.Study.class });
-		updateReadingPhysicianMethod.setAccessible(true);
-		
-		assertThat(mockStudy.getReadingPhysician(), nullValue());
-		
-		updateReadingPhysicianMethod.invoke(radiologyObsFormController, new Object[] { mockStudy });
-		
-		assertThat(mockStudy.getReadingPhysician(), is(mockReadingPhysician));
-	}
-	
-	/**
-	 * @see RadiologyObsFormController#updateReadingPhysician(Study)
-	 */
-	@Test
-	@Verifies(value = "should not update reading physician if user is not authenticated as reading physician", method = "updateReadingPhysician(Study)")
-	public void updateReadingPhysician_shouldNotUpdateReadingPhysicianIfUserIsNotAuthenticatedAsReadingPhysician()
-	        throws Exception {
-		
-		when(Context.getAuthenticatedUser()).thenReturn(mockRadiologyScheduler);
-		
-		Method updateReadingPhysicianMethod = radiologyObsFormController.getClass().getDeclaredMethod(
-		    "updateReadingPhysician", new Class[] { org.openmrs.module.radiology.Study.class });
-		updateReadingPhysicianMethod.setAccessible(true);
-		
-		assertThat(mockStudy.getReadingPhysician(), nullValue());
-		
-		updateReadingPhysicianMethod.invoke(radiologyObsFormController, new Object[] { mockStudy });
-		
-		assertThat(mockStudy.getReadingPhysician(), nullValue());
-	}
-	
-	/**
-	 * @see RadiologyObsFormController#updateReadingPhysician(Study)
-	 */
-	@Test
-	@Verifies(value = "should not update reading physician for given study with reading physician", method = "updateReadingPhysician(Study)")
-	public void updateReadingPhysician_shouldNotUpdateReadingPhysicianForGivenStudyWithReadingPhysician() throws Exception {
-		
-		User otherMockReadingPhysician = RadiologyTestData.getMockRadiologyReadingPhysician();
-		assertThat(mockReadingPhysician, is(not(otherMockReadingPhysician)));
-		
-		mockStudy.setReadingPhysician(mockReadingPhysician);
-		when(Context.getAuthenticatedUser()).thenReturn(otherMockReadingPhysician);
-		
-		Method updateReadingPhysicianMethod = radiologyObsFormController.getClass().getDeclaredMethod(
-		    "updateReadingPhysician", new Class[] { org.openmrs.module.radiology.Study.class });
-		updateReadingPhysicianMethod.setAccessible(true);
-		
-		assertThat(mockStudy.getReadingPhysician(), is(mockReadingPhysician));
-		
-		updateReadingPhysicianMethod.invoke(radiologyObsFormController, new Object[] { mockStudy });
-		
-		assertThat(mockStudy.getReadingPhysician(), is(mockReadingPhysician));
-		
 	}
 	
 	/**

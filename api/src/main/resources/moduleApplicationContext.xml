@@ -37,6 +37,8 @@
 						</property>
 					</bean>
 				</property>
+				<property name="orderService" ref="orderService"></property>
+				<property name="encounterService" ref="encounterService"></property>
 			</bean>
 		</property>
 		<property name="preInterceptors">
@@ -56,5 +58,7 @@
 		</property>
 	</bean>
 
+	<bean id="radiologyOrderValidator"
+		class="org.openmrs.module.radiology.validator.RadiologyOrderValidator" />
 
 </beans>

@@ -9,12 +9,8 @@
  */
 package org.openmrs.module.radiology.web.controller;
 
-import static org.openmrs.module.radiology.RadiologyRoles.PERFORMING_PHYSICIAN;
-import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
-import static org.openmrs.module.radiology.RadiologyRoles.REFERRRING_PHYSICIAN;
 import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
@@ -22,39 +18,29 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-import org.openmrs.Concept;
-import org.openmrs.Encounter;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.openmrs.Order;
-import org.openmrs.OrderType;
 import org.openmrs.Patient;
+import org.openmrs.Provider;
 import org.openmrs.User;
-import org.openmrs.api.APIAuthenticationException;
+import org.openmrs.api.APIException;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
-import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.RequestedProcedurePriority;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.propertyeditor.ConceptEditor;
-import org.openmrs.propertyeditor.EncounterEditor;
-import org.openmrs.propertyeditor.OrderTypeEditor;
-import org.openmrs.propertyeditor.PatientEditor;
-import org.openmrs.propertyeditor.UserEditor;
-import org.openmrs.util.OpenmrsConstants;
-import org.openmrs.validator.OrderValidator;
+import org.openmrs.module.radiology.propertyeditor.ProviderEditor;
+import org.openmrs.module.radiology.validator.RadiologyOrderValidator;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomBooleanEditor;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.WebDataBinder;
@@ -68,7 +54,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class RadiologyOrderFormController {
 	
-	// private Log log = LogFactory.getLog(this.getClass());
+	private static final Log log = LogFactory.getLog(RadiologyOrderFormController.class);
 	
 	@Autowired
 	private RadiologyService radiologyService;
@@ -76,19 +62,9 @@ public class RadiologyOrderFormController {
 	@Autowired
 	private OrderService orderService;
 	
-	@Autowired
-	private MessageSourceService messageSourceService;
-	
 	@InitBinder
 	void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(OrderType.class, new OrderTypeEditor());
-		binder.registerCustomEditor(Boolean.class, new CustomBooleanEditor("t", "f", true));
-		binder.registerCustomEditor(Integer.class, new CustomNumberEditor(Integer.class, true));
-		binder.registerCustomEditor(Concept.class, new ConceptEditor());
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(Context.getDateFormat(), true));
-		binder.registerCustomEditor(User.class, new UserEditor());
-		binder.registerCustomEditor(Patient.class, new PatientEditor());
-		binder.registerCustomEditor(Encounter.class, new EncounterEditor());
+		binder.registerCustomEditor(Provider.class, new ProviderEditor());
 	}
 	
 	/**
@@ -96,8 +72,6 @@ public class RadiologyOrderFormController {
 	 * 
 	 * @return model and view containing new radiology order
 	 * @should populate model and view with new radiology order
-	 * @should populate model and view with new radiology order with prefilled orderer when
-	 *         requested by referring physician
 	 */
 	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET)
 	protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrder() {
@@ -106,12 +80,8 @@ public class RadiologyOrderFormController {
 		if (Context.isAuthenticated()) {
 			RadiologyOrder radiologyOrder = new RadiologyOrder();
 			radiologyOrder.setStudy(new Study());
-			
-			User user = Context.getAuthenticatedUser();
-			if (user.hasRole(REFERRRING_PHYSICIAN, true) && radiologyOrder.getOrderer() == null) {
-				radiologyOrder.setOrderer(user);
-			}
-			
+			modelAndView.addObject("order", new Order());
+			modelAndView.addObject("isOrderActive", true);
 			modelAndView.addObject("radiologyOrder", radiologyOrder);
 		}
 		
@@ -126,8 +96,6 @@ public class RadiologyOrderFormController {
 	 *            returned in the model and view
 	 * @return model and view containing new radiology order
 	 * @should populate model and view with new radiology order prefilled with given patient
-	 * @should populate model and view with new radiology order with prefilled orderer when
-	 *         requested by referring physician
 	 * @should populate model and view with new radiology order without prefilled patient if given
 	 *         patient is null
 	 */
@@ -155,12 +123,15 @@ public class RadiologyOrderFormController {
 	 */
 	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET, params = "orderId")
 	protected ModelAndView getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(
-	        @RequestParam(value = "orderId", required = true) Integer orderId) {
+	        @RequestParam(value = "orderId", required = true) Order order) {
 		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
 		
 		if (Context.isAuthenticated()) {
-			RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(orderId);
+			RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
+			modelAndView.addObject("order", order);
+			modelAndView.addObject("isOrderActive", order.isActive());
 			modelAndView.addObject("radiologyOrder", radiologyOrder);
+			modelAndView.addObject("discontinuationOrder", new Order());
 		}
 		
 		return modelAndView;
@@ -173,7 +144,7 @@ public class RadiologyOrderFormController {
 	 * @param patientId patient id of an existing patient which is used to redirect to the patient
 	 *            dashboard
 	 * @param radiologyOrder radiology order object
-	 * @param orderErrors binding result containing order errors for a non valid order
+	 * @param radiologyOrderErrors binding result containing order errors for a non valid order
 	 * @return model and view
 	 * @should set http session attribute openmrs message to order saved and redirect to radiology
 	 *         order list when save study was successful
@@ -182,41 +153,33 @@ public class RadiologyOrderFormController {
 	 * @should set http session attribute openmrs message to saved fail worklist and redirect to
 	 *         patient dashboard when save study was not successful and given patient id
 	 * @should set http session attribute openmrs message to study performed when study performed
-	 *         status is in progress and scheduler is empty and request was issued by radiology
-	 *         scheduler
+	 *         status is in progress and request was issued by radiology scheduler
 	 * @should not redirect if radiology order is not valid according to order validator
 	 */
 	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.POST, params = "saveRadiologyOrder")
 	protected ModelAndView postSaveRadiologyOrder(HttpServletRequest request,
-	        @RequestParam(value = "patient_id", required = false) Integer patientId,
-	        @ModelAttribute("radiologyOrder") RadiologyOrder radiologyOrder, BindingResult orderErrors) throws Exception {
+	        @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("order") Order order,
+	        @ModelAttribute("radiologyOrder") RadiologyOrder radiologyOrder, BindingResult radiologyOrderErrors)
+	        throws Exception {
 		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
 		
-		radiologyOrder.setOrderType(RadiologyProperties.getRadiologyTestOrderType());
-		
 		User authenticatedUser = Context.getAuthenticatedUser();
-		if (radiologyOrder.getOrderer() == null)
-			radiologyOrder.setOrderer(authenticatedUser);
 		
-		if (authenticatedUser.hasRole(SCHEDULER, true) && radiologyOrder.getStudy().getScheduler() == null
-		        && !radiologyOrder.getStudy().isScheduleable()) {
+		if (authenticatedUser.hasRole(SCHEDULER, true) && !radiologyOrder.getStudy().isScheduleable()) {
 			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
-			modelAndView.addObject("radiologyOrder", radiologyOrder);
 		} else {
-			new OrderValidator().validate(radiologyOrder, orderErrors);
-			if (orderErrors.hasErrors()) {
-				modelAndView.addObject("radiologyOrder", radiologyOrder);
+			new RadiologyOrderValidator().validate(radiologyOrder, radiologyOrderErrors);
+			if (radiologyOrderErrors.hasErrors()) {
+				modelAndView.addObject("isOrderActive", radiologyOrder.isActive());
 				return modelAndView;
 			}
 			
 			try {
-				radiologyService.saveRadiologyOrder(radiologyOrder);
+				radiologyService.placeRadiologyOrder(radiologyOrder);
 				radiologyOrder.getStudy().setRadiologyOrder(radiologyOrder);
 				Study savedStudy = radiologyService.saveStudy(radiologyOrder.getStudy());
 				
 				radiologyService.sendModalityWorklist(radiologyOrder, OrderRequest.Save_Order);
-				
-				savedStudy = radiologyService.getStudy(savedStudy.getStudyId());
 				if (savedStudy.getMwlStatus() == MwlStatus.SAVE_ERR || savedStudy.getMwlStatus() == MwlStatus.UPDATE_ERR) {
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.savedFailWorklist");
 				} else {
@@ -232,7 +195,6 @@ public class RadiologyOrderFormController {
 			catch (Exception ex) {
 				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, ex.getMessage());
 				ex.printStackTrace();
-				modelAndView.addObject("radiologyOrder", radiologyOrder);
 			}
 		}
 		
@@ -240,48 +202,47 @@ public class RadiologyOrderFormController {
 	}
 	
 	/**
-	 * Handles POST requests for the radiologyOrderForm with request parameter attributes
-	 * <p>
-	 * <ul>
-	 * <li>voidOrder
-	 * <li>unvoidOrder
-	 * <li>discontinueOrder
-	 * <li>undiscontinueOrder
-	 * </ul>
-	 * <p>
+	 * Handles POST requests for the radiologyOrderForm with request parameter attribute
+	 * discontinueOrder
 	 * 
-	 * @param patientId patient id of an existing patient which is used to redirect to the patient
-	 *            dashboard
-	 * @param radiologyOrder order object
-	 * @return model and view
-	 * @should set http session attribute openmrs message to voided successfully and redirect to
-	 *         patient dashboard when void order was successful and given patient id
-	 * @should set http session attribute openmrs message to unvoided successfully and redirect to
-	 *         patient dashboard when unvoid order was successful and given patient id
-	 * @should set http session attribute openmrs message to discontinued successfully and redirect
-	 *         to patient dashboard when discontinue order was successful and given patient id
-	 * @should set http session attribute openmrs message to undiscontinued successfully and
-	 *         redirect to patient dashboard when undiscontinue order was successful and given
-	 *         patient id
+	 * @param radiologyOrderToDiscontinue order to discontinue
+	 * @param nonCodedDiscontinueReason non coded discontinue reason
+	 * @param discontinueDate discontinue date
+	 * @return model and view populated with discontinuation order
+	 * @throws Exception
+	 * @should discontinue non discontinued order and redirect to discontinuation order
+	 * @should not redirect if discontinuation failed through date in the future
+	 * @should not redirect if discontinuation failed in pacs
 	 */
-	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.POST)
-	protected ModelAndView post(HttpServletRequest request,
-	        @RequestParam(value = "patient_id", required = false) Integer patientId,
-	        @ModelAttribute("radiologyOrder") Order order) throws Exception {
+	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.POST, params = "discontinueOrder")
+	protected ModelAndView postDiscontinueRadiologyOrder(HttpServletRequest request, HttpServletResponse response,
+	        @RequestParam("orderId") RadiologyOrder radiologyOrderToDiscontinue,
+	        @ModelAttribute("discontinuationOrder") Order discontinuationOrder) throws Exception {
 		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
 		
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
-		
-		boolean ok = executeCommand(radiologyOrder, request);
-		if (ok) {
-			if (patientId == null)
-				modelAndView.setViewName("redirect:/module/radiology/radiologyOrder.list");
-			else
-				modelAndView.setViewName("redirect:/patientDashboard.form?patientId=" + patientId);
-		} else {
-			modelAndView.addObject("radiologyOrder", radiologyOrder);
+		try {
+			discontinuationOrder = radiologyService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
+			    discontinuationOrder.getOrderer(), discontinuationOrder.getDateActivated(), discontinuationOrder
+			            .getOrderReasonNonCoded());
+			
+			radiologyService.sendModalityWorklist(radiologyOrderToDiscontinue, OrderRequest.Discontinue_Order);
+			if (radiologyOrderToDiscontinue.getStudy().getMwlStatus() == MwlStatus.DISCONTINUE_OK) {
+				request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
+				modelAndView.setViewName("redirect:/module/radiology/radiologyOrder.form?orderId="
+				        + discontinuationOrder.getOrderId());
+			} else {
+				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.failWorklist");
+			}
+		}
+		catch (APIException apiException) {
+			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, apiException.getMessage());
 		}
 		
+		modelAndView.addObject("order", radiologyOrderToDiscontinue);
+		modelAndView.addObject("isOrderActive", radiologyOrderToDiscontinue.isActive());
+		modelAndView.addObject("radiologyOrder", radiologyService.getRadiologyOrderByOrderId(radiologyOrderToDiscontinue
+		        .getOrderId()));
+		modelAndView.addObject("discontinuationOrder", discontinuationOrder);
 		return modelAndView;
 	}
 	
@@ -297,16 +258,16 @@ public class RadiologyOrderFormController {
 		return modalities;
 	}
 	
-	@ModelAttribute("requestedProcedurePriorities")
-	private List<String> getRequestedProcedurePriorityList() {
+	@ModelAttribute("urgencies")
+	private List<String> getUrgenciesList() {
 		
-		List<String> requestedProcedurePriorities = new LinkedList<String>();
+		List<String> urgencies = new LinkedList<String>();
 		
-		for (RequestedProcedurePriority requestedProcedurePriority : RequestedProcedurePriority.values()) {
-			requestedProcedurePriorities.add(requestedProcedurePriority.name());
+		for (Order.Urgency urgency : Order.Urgency.values()) {
+			urgencies.add(urgency.name());
 		}
 		
-		return requestedProcedurePriorities;
+		return urgencies;
 	}
 	
 	@ModelAttribute("scheduledProcedureStepStatuses")
@@ -333,150 +294,5 @@ public class RadiologyOrderFormController {
 		}
 		
 		return performedStatuses;
-	}
-	
-	/**
-	 * Return true if the current user is authenticated as a referring physician
-	 * 
-	 * @return true if the current user is authenticated as a referring physician
-	 * @should return true if the current user is authenticated as a referring physician
-	 * @should return false if the current user is not authenticated as a referring physician
-	 * @should throw api authentication exception if the current user is not authenticated
-	 */
-	@ModelAttribute("isUserReferringPhysician")
-	private boolean isUserReferringPhysician() {
-		
-		if (!Context.isAuthenticated()) {
-			String[] args = { OpenmrsConstants.PRIV_EDIT_ORDERS };
-			String message = messageSourceService.getMessage("radiology.privilegesRequired", args, Context.getLocale());
-			throw new APIAuthenticationException(message);
-		}
-		return Context.getAuthenticatedUser().hasRole(REFERRRING_PHYSICIAN, true);
-	}
-	
-	/**
-	 * Return true if the current user is authenticated as a scheduler
-	 * 
-	 * @return true if the current user is authenticated as a scheduler
-	 * @should return true if the current user is authenticated as a scheduler
-	 * @should return false if the current user is not authenticated as a scheduler
-	 * @should throw api authentication exception if the current user is not authenticated
-	 */
-	@ModelAttribute("isUserScheduler")
-	private boolean isUserScheduler() {
-		
-		if (!Context.isAuthenticated()) {
-			String[] args = { OpenmrsConstants.PRIV_EDIT_ORDERS };
-			String message = messageSourceService.getMessage("radiology.privilegesRequired", args, Context.getLocale());
-			throw new APIAuthenticationException(message);
-		}
-		return Context.getAuthenticatedUser().hasRole(SCHEDULER, true);
-	}
-	
-	/**
-	 * Return true if the current user is authenticated as a performing physician
-	 * 
-	 * @return true if the current user is authenticated as a performing physician
-	 * @should return true if the current user is authenticated as a performing physician
-	 * @should return false if the current user is not authenticated as a performing physician
-	 * @should throw api authentication exception if the current user is not authenticated
-	 */
-	@ModelAttribute("isUserPerformingPhysician")
-	private boolean isUserPerformingPhysician() {
-		
-		if (!Context.isAuthenticated()) {
-			String[] args = { OpenmrsConstants.PRIV_EDIT_ORDERS };
-			String message = messageSourceService.getMessage("radiology.privilegesRequired", args, Context.getLocale());
-			throw new APIAuthenticationException(message);
-		}
-		return Context.getAuthenticatedUser().hasRole(PERFORMING_PHYSICIAN, true);
-	}
-	
-	/**
-	 * Return true if the current user is authenticated as a reading physician
-	 * 
-	 * @return true if the current user is authenticated as a reading physician
-	 * @should return true if the current user is authenticated as a reading physician
-	 * @should return false if the current user is not authenticated as a reading physician
-	 * @should throw api authentication exception if the current user is not authenticated
-	 */
-	@ModelAttribute("isUserReadingPhysician")
-	private boolean isUserReadingPhysician() {
-		
-		if (!Context.isAuthenticated()) {
-			String[] args = { OpenmrsConstants.PRIV_EDIT_ORDERS };
-			String message = messageSourceService.getMessage("radiology.privilegesRequired", args, Context.getLocale());
-			throw new APIAuthenticationException(message);
-		}
-		return Context.getAuthenticatedUser().hasRole(READING_PHYSICIAN, true);
-	}
-	
-	/**
-	 * Return true if the current user is authenticated as a super user
-	 * 
-	 * @return true if the current user is authenticated as a super user
-	 * @should return true if the current user is authenticated as a super user
-	 * @should return false if the current user is not authenticated as a super user
-	 * @should throw api authentication exception if the current user is not authenticated
-	 */
-	@ModelAttribute("isUserSuper")
-	private boolean isUserSuper() {
-		
-		if (!Context.isAuthenticated()) {
-			String[] args = { OpenmrsConstants.PRIV_EDIT_ORDERS };
-			String message = messageSourceService.getMessage("radiology.privilegesRequired", args, Context.getLocale());
-			throw new APIAuthenticationException(message);
-		}
-		return Context.getAuthenticatedUser().isSuperUser();
-	}
-	
-	protected boolean executeCommand(RadiologyOrder radiologyOrder, HttpServletRequest request) {
-		if (!Context.isAuthenticated()) {
-			return false;
-		}
-		
-		try {
-			if (request.getParameter("voidOrder") != null) {
-				radiologyService.sendModalityWorklist(radiologyOrder, OrderRequest.Void_Order);
-				if (radiologyService.getStudyByOrderId(radiologyOrder.getOrderId()).getMwlStatus() == MwlStatus.VOID_OK) {
-					orderService.voidOrder(radiologyOrder, radiologyOrder.getVoidReason());
-					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.voidedSuccessfully");
-				} else {
-					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.failWorklist");
-				}
-			} else if (request.getParameter("unvoidOrder") != null) {
-				radiologyService.sendModalityWorklist(radiologyOrder, OrderRequest.Unvoid_Order);
-				if (radiologyService.getStudyByOrderId(radiologyOrder.getOrderId()).getMwlStatus() == MwlStatus.UNVOID_OK) {
-					orderService.unvoidOrder(radiologyOrder);
-					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.unvoidedSuccessfully");
-				} else {
-					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.failWorklist");
-				}
-			} else if (request.getParameter("discontinueOrder") != null) {
-				radiologyService.sendModalityWorklist(radiologyOrder, OrderRequest.Discontinue_Order);
-				if (radiologyService.getStudyByOrderId(radiologyOrder.getOrderId()).getMwlStatus() == MwlStatus.DISCONTINUE_OK) {
-					orderService.discontinueOrder(radiologyOrder, radiologyOrder.getDiscontinuedReason(), radiologyOrder
-					        .getDiscontinuedDate());
-					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
-				} else {
-					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.failWorklist");
-				}
-			} else if (request.getParameter("undiscontinueOrder") != null) {
-				radiologyService.sendModalityWorklist(radiologyOrder, OrderRequest.Undiscontinue_Order);
-				if (radiologyService.getStudyByOrderId(radiologyOrder.getOrderId()).getMwlStatus() == MwlStatus.UNDISCONTINUE_OK) {
-					orderService.undiscontinueOrder(radiologyOrder);
-					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.undiscontinuedSuccessfully");
-				} else {
-					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.failWorklist");
-				}
-			}
-		}
-		catch (Exception ex) {
-			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, ex.getMessage());
-			ex.printStackTrace();
-			return false;
-		}
-		
-		return true;
 	}
 }
