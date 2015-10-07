@@ -170,17 +170,13 @@ public class DicomUtils {
 	 */
 	public static void updateStudyPerformedStatusByMpps(DicomObject mppsObject) {
 		try {
-			
 			String studyInstanceUid = getStudyInstanceUidFromMpps(mppsObject);
-			Study studyToBeUpdated = radiologyService().getStudyByStudyInstanceUid(studyInstanceUid);
-			debug(studyToBeUpdated.toString());
 			
 			String performedProcedureStepStatusString = getPerformedProcedureStepStatus(mppsObject);
 			PerformedProcedureStepStatus performedProcedureStepStatus = PerformedProcedureStepStatus
 			        .getMatchForDisplayName(performedProcedureStepStatusString);
-			studyToBeUpdated.setPerformedStatus(performedProcedureStepStatus);
 			
-			radiologyService().saveStudy(studyToBeUpdated);
+			radiologyService().updateStudyPerformedStatus(studyInstanceUid, performedProcedureStepStatus);
 			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :"
 			        + studyInstanceUid + " to Status : "
 			        + PerformedProcedureStepStatus.getNameOrUnknown(performedProcedureStepStatus));

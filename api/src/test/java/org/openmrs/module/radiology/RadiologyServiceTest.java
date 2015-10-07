@@ -751,4 +751,49 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 		expectedException.expectMessage("orderId is required");
 		radiologyService.getObsByOrderId(null);
 	}
+	
+	/**
+	 * @see RadiologyService#updateStudyPerformedStatus(String,PerformedProcedureStepStatus)
+	 * @verifies update performed status of study associated with given study instance uid
+	 */
+	@Test
+	public void updateStudyPerformedStatus_shouldUpdatePerformedStatusOfStudyAssociatedWithGivenStudyInstanceUid()
+	        throws Exception {
+		
+		Study existingStudy = radiologyService.getStudy(EXISTING_STUDY_ID);
+		PerformedProcedureStepStatus performedStatusPreUpdate = existingStudy.getPerformedStatus();
+		PerformedProcedureStepStatus performedStatusPostUpdate = PerformedProcedureStepStatus.COMPLETED;
+		
+		Study updatedStudy = radiologyService.updateStudyPerformedStatus(existingStudy.getStudyInstanceUid(),
+		    performedStatusPostUpdate);
+		
+		assertNotNull(updatedStudy);
+		assertThat(updatedStudy, is(existingStudy));
+		assertThat(performedStatusPreUpdate, is(not(performedStatusPostUpdate)));
+		assertThat(updatedStudy.getPerformedStatus(), is(performedStatusPostUpdate));
+	}
+	
+	/**
+	 * @see RadiologyService#updateStudyPerformedStatus(String,PerformedProcedureStepStatus)
+	 * @verifies throw illegal argument exception if study instance uid is null
+	 */
+	@Test
+	public void updateStudyPerformedStatus_shouldThrowIllegalArgumentExceptionIfStudyInstanceUidIsNull() throws Exception {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("studyInstanceUid is required");
+		radiologyService.updateStudyPerformedStatus(null, PerformedProcedureStepStatus.COMPLETED);
+	}
+	
+	/**
+	 * @see RadiologyService#updateStudyPerformedStatus(String,PerformedProcedureStepStatus)
+	 * @verifies throw illegal argument exception if performed status is null
+	 */
+	@Test
+	public void updateStudyPerformedStatus_shouldThrowIllegalArgumentExceptionIfPerformedStatusIsNull() throws Exception {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("performedStatus is required");
+		radiologyService.updateStudyPerformedStatus(EXISTING_STUDY_INSTANCE_UID, null);
+	}
 }

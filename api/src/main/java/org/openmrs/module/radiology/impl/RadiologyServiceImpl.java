@@ -28,6 +28,7 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.MwlStatus;
+import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
@@ -226,6 +227,27 @@ public class RadiologyServiceImpl extends BaseOpenmrsService implements Radiolog
 			log.warn("Can not save study in openmrs or dmc4che.");
 		}
 		return null;
+	}
+	
+	/**
+	 * @see RadiologyService#updateStudyPerformedStatus(String, PerformedProcedureStepStatus)
+	 */
+	@Transactional
+	@Override
+	public Study updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus)
+	        throws IllegalArgumentException {
+		
+		if (studyInstanceUid == null) {
+			throw new IllegalArgumentException("studyInstanceUid is required");
+		}
+		
+		if (performedStatus == null) {
+			throw new IllegalArgumentException("performedStatus is required");
+		}
+		
+		Study studyToBeUpdated = sdao.getStudyByStudyInstanceUid(studyInstanceUid);
+		studyToBeUpdated.setPerformedStatus(performedStatus);
+		return sdao.saveStudy(studyToBeUpdated);
 	}
 	
 	@Override
