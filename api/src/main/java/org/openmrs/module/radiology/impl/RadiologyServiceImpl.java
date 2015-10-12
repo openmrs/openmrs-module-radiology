@@ -37,7 +37,7 @@ import org.openmrs.module.radiology.db.RadiologyOrderDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
 import org.springframework.transaction.annotation.Transactional;
 
-public class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyService {
+class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyService {
 	
 	private static final Log log = LogFactory.getLog(RadiologyServiceImpl.class);
 	
