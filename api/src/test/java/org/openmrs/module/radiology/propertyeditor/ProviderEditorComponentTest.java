@@ -13,7 +13,7 @@ import org.junit.Assert;
 import org.junit.Test;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
-public class ProviderEditorTest extends BaseModuleContextSensitiveTest {
+public class ProviderEditorComponentTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * @see ProviderEditor#setAsText(String)

@@ -28,7 +28,7 @@ import org.springframework.validation.ObjectError;
 /**
  * Tests methods on the {@link RadiologyOrderValidator} class.
  */
-public class RadiologyOrderValidatorTest extends BaseModuleContextSensitiveTest {
+public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensitiveTest {
 	
 	/**
 	 * @see {@link RadiologyOrderValidator#validate(Object, Errors)}

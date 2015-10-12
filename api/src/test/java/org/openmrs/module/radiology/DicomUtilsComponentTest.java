@@ -65,9 +65,9 @@ import ca.uhn.hl7v2.util.Terser;
 /**
  * Tests {@link DicomUtils}
  */
-public class DicomUtilsTest extends BaseModuleContextSensitiveTest {
+public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	
-	private static final String STUDIES_TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyServiceTestDataSet.xml";
+	private static final String STUDIES_TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyServiceComponentTestDataset.xml";
 	
 	protected static final int STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER = 1;
 	

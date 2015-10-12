@@ -32,7 +32,7 @@ import org.openmrs.test.Verifies;
 /**
  * Tests {@link RadiologyProperties}
  */
-public class RadiologyPropertiesTest extends BaseModuleContextSensitiveTest {
+public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitiveTest {
 	
 	private AdministrationService administrationService = null;
 	

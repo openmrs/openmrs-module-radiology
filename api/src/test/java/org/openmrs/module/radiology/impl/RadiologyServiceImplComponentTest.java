@@ -45,9 +45,9 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 /**
  * Tests {@link RadiologyServiceImpl}
  */
-public class RadiologyServiceImplTest extends BaseModuleContextSensitiveTest {
+public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiveTest {
 	
-	private static final String STUDIES_TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyServiceTestDataSet.xml";
+	private static final String STUDIES_TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyServiceComponentTestDataset.xml";
 	
 	private static final int PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER = 70011;
 	
