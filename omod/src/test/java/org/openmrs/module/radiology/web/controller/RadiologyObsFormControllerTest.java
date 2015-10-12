@@ -37,12 +37,8 @@ import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Person;
-import org.openmrs.User;
 import org.openmrs.api.APIException;
-import org.openmrs.api.AdministrationService;
-import org.openmrs.api.EncounterService;
 import org.openmrs.api.ObsService;
-import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
@@ -73,13 +69,7 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 	private ObsService obsService;
 	
 	@Mock
-	private OrderService orderService;
-	
-	@Mock
-	private EncounterService encounterService;
-	
-	@Mock
-	private AdministrationService administrationService;
+	private RadiologyProperties radiologyProperties;
 	
 	@Mock
 	private RadiologyService radiologyService;
@@ -92,10 +82,6 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 	private RadiologyOrder mockRadiologyOrder;
 	
 	private Obs mockObs;
-	
-	private User mockReadingPhysician;
-	
-	private User mockRadiologyScheduler;
 	
 	private Patient mockPatient;
 	
@@ -115,8 +101,6 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 		mockObs = RadiologyTestData.getMockObs();
 		mockObs.setPatient(mockPatient);
 		mockObs.setOrder(mockRadiologyOrder);
-		mockReadingPhysician = RadiologyTestData.getMockRadiologyReadingPhysician();
-		mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
 		
 		obsErrors = mock(BindingResult.class);
 	}
@@ -523,9 +507,7 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 		
 		mockStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		
-		when(RadiologyProperties.getServersAddress()).thenReturn("localhost");
-		when(RadiologyProperties.getServersPort()).thenReturn("8081");
-		when(RadiologyProperties.getDicomViewerUrlBase()).thenReturn("/weasis/viewer?");
+		when(radiologyProperties.getDicomViewerUrl()).thenReturn("http://localhost:8081/weasis/viewer?");
 		
 		Method getDicomViewerUrlMethod = radiologyObsFormController.getClass().getDeclaredMethod("getDicomViewerUrl",
 		    new Class[] { org.openmrs.module.radiology.Study.class, org.openmrs.Patient.class });
@@ -550,9 +532,7 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 		
 		mockStudy.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
 		
-		when(RadiologyProperties.getServersAddress()).thenReturn("localhost");
-		when(RadiologyProperties.getServersPort()).thenReturn("8081");
-		when(RadiologyProperties.getDicomViewerUrlBase()).thenReturn("/weasis/viewer?");
+		when(radiologyProperties.getDicomViewerUrl()).thenReturn("http://localhost:8081/weasis/viewer?");
 		
 		Method getDicomViewerUrlMethod = radiologyObsFormController.getClass().getDeclaredMethod("getDicomViewerUrl",
 		    new Class[] { org.openmrs.module.radiology.Study.class, org.openmrs.Patient.class });

@@ -52,6 +52,7 @@ import org.dcm4che2.net.service.NCreateService;
 import org.dcm4che2.net.service.NSetService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * @author gunter zeilinger(gunterze@gmail.com)
@@ -62,6 +63,9 @@ import org.openmrs.module.radiology.DicomUtils;
  */
 class MPPSSCP {
 
+	@Autowired
+	DicomUtils dicomUtils;
+	
 	private static Logger log=Logger.getLogger(MPPSSCP.class);
 	private static void debug(String message){
 		if(log.isDebugEnabled()) log.debug(message);
@@ -124,7 +128,7 @@ class MPPSSCP {
 			store(f, data);
 			try {
 				Context.openSession();
-				DicomUtils.updateStudyPerformedStatusByMpps(data);
+				dicomUtils.updateStudyPerformedStatusByMpps(data);
 			} catch (Exception e) {
 				debug("Can not update database with");
 				debug(data.toString());
@@ -164,7 +168,7 @@ class MPPSSCP {
 			store(f, mpps);
 			try {
 				Context.openSession();
-				DicomUtils.updateStudyPerformedStatusByMpps(mpps);
+				dicomUtils.updateStudyPerformedStatusByMpps(mpps);
 			} catch (Exception e) {
 				debug("Can not update database with");
 				debug(mpps.toString());

@@ -16,24 +16,10 @@ import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
-import org.openmrs.api.EncounterService;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.api.OrderService;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
-import org.openmrs.module.radiology.db.RadiologyOrderDAO;
-import org.openmrs.module.radiology.db.StudyDAO;
-import org.springframework.transaction.annotation.Transactional;
 
-@Transactional
 public interface RadiologyService extends OpenmrsService {
-	
-	public void setRadiologyOrderDao(RadiologyOrderDAO radiologyOrderDao);
-	
-	public void setSdao(StudyDAO dao);
-	
-	public void setOrderService(OrderService orderService);
-	
-	public void setEncounterService(EncounterService encounterService);
 	
 	/**
 	 * Save given <code>RadiologyOrder</code> and its <code>RadiologyOrder.study</code> to the
