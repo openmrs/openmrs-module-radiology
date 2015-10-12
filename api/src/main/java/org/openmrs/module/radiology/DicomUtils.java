@@ -19,7 +19,7 @@ import org.openmrs.Order;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
-import org.openmrs.module.radiology.hl7.HL7Generator;
+import org.openmrs.module.radiology.hl7.message.RadiologyORMO01;
 
 import ca.uhn.hl7v2.HL7Exception;
 
@@ -143,8 +143,9 @@ public class DicomUtils {
 		CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(radiologyOrder.getUrgency());
 		
 		try {
-			encodedHL7OrmMessage = HL7Generator.createEncodedRadiologyORMO01Message(radiologyOrder, commonOrderOrderControl,
-			    orderPriority);
+			RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, commonOrderOrderControl,
+			        orderPriority);
+			encodedHL7OrmMessage = radiologyOrderMessage.createEncodedRadiologyORMO01Message();
 			log.info("Created HL7 ORM^O01 message \n" + encodedHL7OrmMessage);
 		}
 		catch (HL7Exception e) {
