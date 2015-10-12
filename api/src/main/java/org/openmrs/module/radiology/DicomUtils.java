@@ -9,148 +9,23 @@
  */
 package org.openmrs.module.radiology;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.xml.transform.OutputKeys;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerFactory;
-import javax.xml.transform.TransformerFactoryConfigurationError;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.sax.TransformerHandler;
-import javax.xml.transform.stream.StreamResult;
-
 import org.apache.log4j.Logger;
 import org.dcm4che.tool.hl7snd.HL7Snd;
-import org.dcm4che2.data.BasicDicomObject;
 import org.dcm4che2.data.DicomElement;
 import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.SpecificCharacterSet;
 import org.dcm4che2.data.Tag;
-import org.dcm4che2.data.VR;
-import org.dcm4che2.io.SAXWriter;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
 import org.openmrs.module.radiology.hl7.HL7Generator;
-import org.xml.sax.SAXException;
 
 import ca.uhn.hl7v2.HL7Exception;
 
 public class DicomUtils {
 	
 	private static final Logger log = Logger.getLogger(DicomUtils.class);
-	
-	private static void debug(String message) {
-		if (log.isDebugEnabled())
-			log.debug(message);
-	}
-	
-	/**
-	 * Writes o to MWL file in XML format
-	 * 
-	 * @throws Exception multiple ones, but just handled as one in the controller
-	 */
-	public static void write(Order o, Study s, File file) throws TransformerConfigurationException,
-	        TransformerFactoryConfigurationError, SAXException, IOException {
-		
-		BasicDicomObject workitem = new BasicDicomObject();
-		BasicDicomObject rpcs = new BasicDicomObject();
-		BasicDicomObject spss = new BasicDicomObject();
-		BasicDicomObject spcs = new BasicDicomObject();
-		workitem.putString(Tag.SpecificCharacterSet, VR.CS, RadiologyProperties.getSpecificCharacterSet());
-		workitem.putString(Tag.AccessionNumber, VR.SH, "");
-		try {
-			workitem.putString(Tag.ReferringPhysicianName, VR.PN, o.getOrderer().getName().replace(' ', '^'));
-		}
-		catch (Exception e) {
-			debug("Not saving referring physician");
-		}
-		workitem.putSequence(Tag.ReferencedStudySequence);
-		workitem.putSequence(Tag.ReferencedPatientSequence);
-		try {
-			workitem.putString(Tag.PatientName, VR.PN, o.getPatient().getPersonName().getFullName().replace(' ', '^'));
-			workitem.putString(Tag.PatientID, VR.LO, o.getPatient().getPatientIdentifier().getIdentifier());
-			workitem.putString(Tag.PatientBirthDate, VR.DA, Utils.plain(o.getPatient().getBirthdate()));
-			workitem.putString(Tag.PatientSex, VR.CS, o.getPatient().getGender());
-		}
-		catch (Exception e) {
-			debug("Not saving patient details");
-		}
-		workitem.putString(Tag.PatientWeight, VR.DS, "");
-		workitem.putString(Tag.MedicalAlerts, VR.LO, "");
-		workitem.putString(Tag.Allergies, VR.LO, "");
-		workitem.putString(Tag.PregnancyStatus, VR.US, "");
-		workitem.putString(Tag.StudyInstanceUID, VR.UI, RadiologyProperties.getStudyPrefix() + s.getStudyId());
-		try {
-			workitem.putString(Tag.RequestingPhysician, VR.PN, o.getOrderer().getName().replace(' ', '^'));
-		}
-		catch (Exception e) {
-			debug("Not saving requesting physician");
-		}
-		try {
-			workitem.putString(Tag.RequestedProcedureDescription, VR.LO, o.getInstructions());
-		}
-		catch (Exception e) {
-			debug("Not saving order instructions");
-		}
-		// Requested Procedure Code Sequence - I Left !, requires coding scheme
-		// (SNOMED, DCM, etc) selection
-		rpcs.putString(Tag.CodeValue, VR.SH, "!");
-		rpcs.putString(Tag.CodingSchemeDesignator, VR.SH, "!");
-		rpcs.putString(Tag.CodeMeaning, VR.LO, "!");
-		workitem.putNestedDicomObject(Tag.RequestedProcedureCodeSequence, rpcs);
-		
-		workitem.putString(Tag.AdmissionID, VR.LO, "");
-		workitem.putString(Tag.SpecialNeeds, VR.LO, "");
-		workitem.putString(Tag.CurrentPatientLocation, VR.LO, "");
-		workitem.putString(Tag.PatientState, VR.LO, "");
-		
-		// Scheduled Procedure Step Sequence
-		// ! requires form enhancement, multiple steps
-		spss.putString(Tag.Modality, VR.CS, s.getModality().toString());
-		spss.putString(Tag.RequestedContrastAgent, VR.LO, "");
-		spss.putString(Tag.ScheduledStationAETitle, VR.AE, RadiologyProperties.getApplicationEntityTitle());
-		try {
-			spss.putString(Tag.ScheduledProcedureStepStartDate, VR.DA, Utils.plain(o.getEffectiveStartDate()));
-			spss.putString(Tag.ScheduledProcedureStepStartTime, VR.TM, Utils.time(o.getEffectiveStartDate()));
-			spss.putString(Tag.ScheduledPerformingPhysicianName, VR.PN, "!");
-			spss.putString(Tag.ScheduledProcedureStepDescription, VR.LO, o.getInstructions());
-		}
-		catch (Exception e) {
-			debug("Not saving scheduled procedure");
-		}
-		// Scheduled Protocol Code Sequence, requires coding scheme
-		spcs.putString(Tag.CodeValue, VR.SH, "!");
-		spcs.putString(Tag.CodingSchemeDesignator, VR.SH, "!");
-		spcs.putString(Tag.CodeMeaning, VR.LO, "!");
-		spss.putNestedDicomObject(Tag.ScheduledProtocolCodeSequence, spcs);
-		
-		spss.putString(Tag.ScheduledProcedureStepID, VR.SH, String.valueOf(s.getStudyId()));
-		spss.putString(Tag.ScheduledStationName, VR.SH, "");
-		spss.putString(Tag.ScheduledProcedureStepLocation, VR.SH, "");
-		spss.putString(Tag.PreMedication, VR.LO, "");
-		
-		ScheduledProcedureStepStatus scheduledProcedureStepStatus = s.getScheduledStatus();
-		if (scheduledProcedureStepStatus == null) {
-			spss.putString(Tag.ScheduledProcedureStepStatus, VR.CS, "");
-		} else {
-			spss.putString(Tag.ScheduledProcedureStepStatus, VR.CS, scheduledProcedureStepStatus.name());
-		}
-		workitem.putNestedDicomObject(Tag.ScheduledProcedureStepSequence, spss);
-		
-		workitem.putString(Tag.RequestedProcedureID, VR.SH, String.valueOf(s.getStudyId()));
-		workitem.putString(Tag.RequestedProcedurePriority, VR.SH, o.getUrgency().name());
-		workitem.putString(Tag.PatientTransportArrangements, VR.LO, "");
-		workitem.putString(Tag.ConfidentialityConstraintOnPatientDataDescription, VR.LO, "");
-		
-		TransformerHandler th = ((SAXTransformerFactory) TransformerFactory.newInstance()).newTransformerHandler();
-		th.getTransformer().setOutputProperty(OutputKeys.INDENT, "yes");
-		th.setResult(new StreamResult(file));
-		final SAXWriter writer = new SAXWriter(th, null);
-		writer.write(workitem);
-	}
 	
 	/**
 	 * <p>

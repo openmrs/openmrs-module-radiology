@@ -19,7 +19,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -31,8 +30,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.rules.TemporaryFolder;
-import org.openmrs.GlobalProperty;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
@@ -82,8 +79,6 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	
 	private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 3;
 	
-	private static final String MWL_DIRECTORY = "mwl";
-	
 	private PatientService patientService = null;
 	
 	private ConceptService conceptService = null;
@@ -100,9 +95,6 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
-	
-	@Rule
-	public TemporaryFolder temporaryBaseFolder = new TemporaryFolder();
 	
 	@Before
 	public void runBeforeAllTests() throws Exception {
@@ -144,11 +136,6 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	public void placeRadiologyOrder_shouldCreateNewRadiologyOrderAndStudyGivenRadiologyOrderObject() throws Exception {
-		
-		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
-		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
-		        .getAbsolutePath()));
 		
 		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
 		
@@ -196,11 +183,6 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	@Test
 	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
 		
-		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
-		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
-		        .getAbsolutePath()));
-		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is required");
 		radiologyService.placeRadiologyOrder(null);
@@ -212,11 +194,6 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenExistingRadiologyOrder() throws Exception {
-		
-		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
-		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
-		        .getAbsolutePath()));
 		
 		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
 		
@@ -237,11 +214,6 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	@Test
 	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderHasNoStudy() throws Exception {
 		
-		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
-		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
-		        .getAbsolutePath()));
-		
 		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
 		radiologyOrder.setStudy(null);
 		
@@ -256,11 +228,6 @@ public class RadiologyServiceTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenStudyModalityIsNull() throws Exception {
-		
-		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
-		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
-		        .getAbsolutePath()));
 		
 		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
 		radiologyOrder.getStudy().setModality(null);

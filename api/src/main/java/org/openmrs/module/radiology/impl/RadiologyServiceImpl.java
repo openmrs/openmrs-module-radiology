@@ -150,12 +150,6 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			String studyInstanceUid = RadiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
 			savedStudy.setStudyInstanceUid(studyInstanceUid);
 			savedStudy = sdao.saveStudy(savedStudy);
-			
-			File file = new File(RadiologyProperties.getMwlDir(), savedStudy.getStudyId() + ".xml");
-			String path = "";
-			path = file.getCanonicalPath();
-			DicomUtils.write(order, savedStudy, file);
-			log.debug("Order and study saved in " + path);
 			return savedStudy;
 		}
 		catch (Exception e) {
