@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.radiology.impl;
 
-import java.io.File;
 import java.util.Date;
 import java.util.List;
 
