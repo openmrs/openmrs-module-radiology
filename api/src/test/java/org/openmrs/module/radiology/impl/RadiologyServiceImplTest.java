@@ -14,7 +14,6 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.io.File;
 import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.Date;
@@ -22,11 +21,8 @@ import java.util.GregorianCalendar;
 
 import org.hibernate.SessionFactory;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.TemporaryFolder;
 import org.openmrs.Encounter;
-import org.openmrs.GlobalProperty;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.AdministrationService;
@@ -37,7 +33,6 @@ import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.MwlStatus;
-import org.openmrs.module.radiology.RadiologyConstants;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
@@ -60,8 +55,6 @@ public class RadiologyServiceImplTest extends BaseModuleContextSensitiveTest {
 	
 	private static final int EXISTING_STUDY_ID = 1;
 	
-	private static final String MWL_DIRECTORY = "mwl";
-	
 	private PatientService patientService = null;
 	
 	private AdministrationService administrationService = null;
@@ -81,9 +74,6 @@ public class RadiologyServiceImplTest extends BaseModuleContextSensitiveTest {
 	private Method saveRadiologyOrderEncounterMethod = null;
 	
 	private Method saveStudyMethod = null;
-	
-	@Rule
-	public TemporaryFolder temporaryBaseFolder = new TemporaryFolder();
 	
 	@Before
 	public void runBeforeAllTests() throws Exception {
@@ -165,11 +155,6 @@ public class RadiologyServiceImplTest extends BaseModuleContextSensitiveTest {
 	@Test
 	public void saveStudy_shouldCreateNewStudyFromGivenStudyObject() throws Exception {
 		
-		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
-		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
-		        .getAbsolutePath()));
-		
 		Study radiologyStudy = getUnsavedStudy();
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
 		radiologyOrder.setStudy(radiologyStudy);
@@ -206,11 +191,6 @@ public class RadiologyServiceImplTest extends BaseModuleContextSensitiveTest {
 	 */
 	@Test
 	public void saveStudy_shouldUpdateExistingStudy() throws Exception {
-		
-		// Set temporary mwl folder, so that the DICOM MWL xml file created on saveStudy() will be removed after test finishes.
-		File temporaryMwlFolder = temporaryBaseFolder.newFolder(MWL_DIRECTORY);
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_MWL_DIR, temporaryMwlFolder
-		        .getAbsolutePath()));
 		
 		Study existingStudy = radiologyServiceImpl.getStudy(EXISTING_STUDY_ID);
 		Modality modalityPreUpdate = existingStudy.getModality();
