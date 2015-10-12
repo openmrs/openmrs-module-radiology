@@ -210,11 +210,9 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		//given
 		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
-		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_OK);
+		mockRadiologyOrder.getStudy().setMwlStatus(MwlStatus.SAVE_OK);
 		
 		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
-		when(radiologyService.saveStudy(mockRadiologyOrder.getStudy())).thenReturn(mockStudyPostSave);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -243,11 +241,9 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		//given
 		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
-		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_OK);
+		mockRadiologyOrder.getStudy().setMwlStatus(MwlStatus.SAVE_OK);
 		
 		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
-		when(radiologyService.saveStudy(mockRadiologyOrder.getStudy())).thenReturn(mockStudyPostSave);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -277,12 +273,9 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		//given
 		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		Study mockStudyPreSave = RadiologyTestData.getMockStudy1PreSave();
-		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
-		mockStudyPostSave.setMwlStatus(MwlStatus.SAVE_ERR);
+		mockRadiologyOrder.getStudy().setMwlStatus(MwlStatus.SAVE_ERR);
 		
 		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
-		when(radiologyService.saveStudy(mockRadiologyOrder.getStudy())).thenReturn(mockStudyPostSave);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -305,9 +298,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		mockSession = new MockHttpSession();
 		mockRequest.setSession(mockSession);
 		
-		mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
-		mockStudyPostSave.setMwlStatus(MwlStatus.UPDATE_ERR);
-		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
+		mockRadiologyOrder.getStudy().setMwlStatus(MwlStatus.SAVE_ERR);
+		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
 		
 		modelAndView = radiologyOrderFormController.postSaveRadiologyOrder(mockRequest, mockRadiologyOrder.getPatient()
 		        .getPatientId(), mockRadiologyOrder, mockRadiologyOrder, orderErrors);
@@ -329,14 +321,11 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		//given
 		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		mockRadiologyOrder.setStudy(RadiologyTestData.getMockStudy1PostSave());
 		mockRadiologyOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
-		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		User mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
 		
 		when(userContext.getAuthenticatedUser()).thenReturn(mockRadiologyScheduler);
 		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
-		when(radiologyService.saveStudy(mockRadiologyOrder.getStudy())).thenReturn(mockStudyPostSave);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -365,13 +354,10 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		//given
 		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		Study mockStudyPreSave = RadiologyTestData.getMockStudy1PreSave();
-		Study mockStudyPostSave = RadiologyTestData.getMockStudy1PostSave();
 		User mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
 		
 		when(userContext.getAuthenticatedUser()).thenReturn(mockRadiologyScheduler);
 		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
-		when(radiologyService.saveStudy(mockStudyPreSave)).thenReturn(mockStudyPostSave);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
