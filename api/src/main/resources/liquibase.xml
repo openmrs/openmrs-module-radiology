@@ -199,4 +199,9 @@
 			<column name="study_instance_uid" type="varchar(255)" />
 		</createIndex>
 	</changeSet>
+	<changeSet id="radiology-20" author="teleivo">
+		<comment>radiology_study shall only exist with a radiology_order. foreign key already in place, not null constraint missing</comment>
+		<addNotNullConstraint columnDataType="int"
+			columnName="order_id" tableName="radiology_study" />
+	</changeSet>
 </databaseChangeLog>
