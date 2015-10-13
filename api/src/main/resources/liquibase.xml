@@ -192,4 +192,11 @@
 			<column name="uuid" value="13fc9b4a-49ed-429c-9dde-ca005b387a3d" />
 		</insert>
 	</changeSet>
+	<changeSet id="radiology-19" author="teleivo">
+		<comment>Study Instance UID is queried for and it shall be unique see DICOM standard (2013: Part 5, Chapter 9 Unique Identifiers)</comment>
+		<createIndex indexName="radiology_study_study_instance_uid_index"
+			tableName="radiology_study" unique="true">
+			<column name="study_instance_uid" type="varchar(255)" />
+		</createIndex>
+	</changeSet>
 </databaseChangeLog>

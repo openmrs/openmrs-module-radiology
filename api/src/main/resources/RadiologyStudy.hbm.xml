@@ -8,7 +8,9 @@
 				<param name="sequence">radiology_study_study_id_seq</param>
 			</generator>
 		</id>
-		<property name="studyInstanceUid" column="study_instance_uid"></property>
+		<property name="studyInstanceUid" column="study_instance_uid"
+			unique="true">
+		</property>
 		<many-to-one name="radiologyOrder" column="order_id"
 			unique="true" not-null="true" />
 		<property name="scheduledStatus" column="scheduled_status"
