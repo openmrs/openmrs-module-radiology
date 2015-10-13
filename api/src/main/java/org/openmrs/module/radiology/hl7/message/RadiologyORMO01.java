@@ -11,7 +11,6 @@ package org.openmrs.module.radiology.hl7.message;
 
 import java.util.Date;
 
-import org.openmrs.Patient;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
@@ -23,36 +22,45 @@ import org.openmrs.module.radiology.hl7.segment.RadiologyPID;
 import org.openmrs.module.radiology.hl7.segment.RadiologyZDS;
 
 import ca.uhn.hl7v2.HL7Exception;
-import ca.uhn.hl7v2.model.DataTypeException;
+import ca.uhn.hl7v2.parser.EncodingCharacters;
+import ca.uhn.hl7v2.parser.PipeParser;
 
+/**
+ * Translates a <code>RadiologyOrder</code> to an HL7 ORM^O01 message
+ */
 public class RadiologyORMO01 {
 	
-	private static final String orderMessageType = "ORM";
-	
-	private static final String orderMessageTriggerEvent = "O01";
+	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	private static final String sendingApplication = "OpenMRSRadiologyModule";
 	
 	private static final String sendingFacility = "OpenMRS";
 	
+	private static final String orderMessageType = "ORM";
+	
+	private static final String orderMessageTriggerEvent = "O01";
+	
+	private final RadiologyOrder radiologyOrder;
+	
+	private final CommonOrderOrderControl commonOrderControl;
+	
+	private final CommonOrderPriority commonOrderPriority;
+	
 	/**
-	 * Get ORM_O01 message for given RadiologyOrder, ORC Order Control Code and Priority
+	 * Constructor for <code>RadiologyORMO01</code>
 	 * 
-	 * @param radiologyOrder Order corresponding to study
+	 * @param radiologyOrder radiology order
 	 * @param commonOrderOrderControl Order Control Code of Common Order (ORC) segment
 	 * @param commonOrderPriority Priority component of Common Order (ORC) segment attribute
 	 *            Quantity/Timing
-	 * @return ORMO01 message
-	 * @throws HL7Exception, DataTypeException
-	 * @should return ormo01 message given all params
+	 * @should create new radiology ormo01 object given all params
 	 * @should throw illegal argument exception given null as radiologyOrder
 	 * @should throw illegal argument exception if given radiology orders study is null
 	 * @should throw illegal argument exception given null as orderControlCode
 	 * @should throw illegal argument exception given null as orderControlPriority
 	 */
-	public static ORM_O01 getRadiologyORMO01Message(RadiologyOrder radiologyOrder,
-	        CommonOrderOrderControl commonOrderOrderControl, CommonOrderPriority commonOrderPriority) throws HL7Exception,
-	        DataTypeException {
+	public RadiologyORMO01(RadiologyOrder radiologyOrder, CommonOrderOrderControl commonOrderOrderControl,
+	    CommonOrderPriority commonOrderPriority) {
 		
 		if (radiologyOrder == null) {
 			throw new IllegalArgumentException("radiologyOrder cannot be null.");
@@ -68,17 +76,42 @@ public class RadiologyORMO01 {
 			throw new IllegalArgumentException("orderControlPriority cannot be null.");
 		}
 		
+		this.radiologyOrder = radiologyOrder;
+		this.commonOrderControl = commonOrderOrderControl;
+		this.commonOrderPriority = commonOrderPriority;
+	}
+	
+	/**
+	 * Create an encoded HL7 ORM^O01 message (version 2.3.1) from this <code>RadiologyORMO01</code>
+	 * 
+	 * @return encoded HL7 ORM^O01 message
+	 * @throws HL7Exception
+	 * @should create encoded hl7 ormo01 message
+	 */
+	public String createEncodedRadiologyORMO01Message() throws HL7Exception {
+		
+		return PipeParser.encode(createRadiologyORMO01Message(), encodingCharacters);
+	}
+	
+	/**
+	 * Create <code>ORM_O01</code> message for this <code>RadiologyORMO01</code>
+	 * 
+	 * @return ORM_O01 message
+	 * @throws HL7Exception
+	 * @should create ormo01 message
+	 */
+	private ORM_O01 createRadiologyORMO01Message() throws HL7Exception {
+		
 		ORM_O01 result = new ORM_O01();
 		
-		Date dateTimeOfMessage = new Date();
-		RadiologyMSH.populateMessageHeader(result.getMSH(), sendingApplication, sendingFacility, dateTimeOfMessage,
+		RadiologyMSH.populateMessageHeader(result.getMSH(), sendingApplication, sendingFacility, new Date(),
 		    orderMessageType, orderMessageTriggerEvent);
 		
-		Patient patient = radiologyOrder.getPatient();
-		RadiologyPID.populatePatientIdentifier(result.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), patient);
+		RadiologyPID.populatePatientIdentifier(result.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), radiologyOrder
+		        .getPatient());
 		
 		RadiologyORC.populateCommonOrder(result.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC(),
-		    radiologyOrder, commonOrderOrderControl, commonOrderPriority);
+		    radiologyOrder, commonOrderControl, commonOrderPriority);
 		
 		RadiologyOBR.populateObservationRequest(result.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
 		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), radiologyOrder);
@@ -87,5 +120,4 @@ public class RadiologyORMO01 {
 		
 		return result;
 	}
-	
 }
