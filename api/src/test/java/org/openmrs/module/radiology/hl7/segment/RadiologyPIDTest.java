@@ -85,7 +85,8 @@ public class RadiologyPIDTest {
 		ORM_O01 message = new ORM_O01();
 		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), patient);
 		
-		assertThat(PipeParser.encode(message, encodingCharacters), is("PID|||100||Doe^John^Francis||19800228222510|M\r"));
+		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), encodingCharacters),
+		    is("PID|||100||Doe^John^Francis||19800228222510|M"));
 	}
 	
 	/**
@@ -131,7 +132,8 @@ public class RadiologyPIDTest {
 		ORM_O01 message = new ORM_O01();
 		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), patient);
 		
-		assertThat(PipeParser.encode(message, encodingCharacters), is("PID|||100||||19800228222510|M\r"));
+		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), encodingCharacters),
+		    is("PID|||100||||19800228222510|M"));
 	}
 	
 	/**
@@ -172,7 +174,8 @@ public class RadiologyPIDTest {
 		ORM_O01 message = new ORM_O01();
 		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), patient);
 		
-		assertThat(PipeParser.encode(message, encodingCharacters), is("PID|||100||||19800228222510|M\r"));
+		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), encodingCharacters),
+		    is("PID|||100||||19800228222510|M"));
 	}
 	
 	/**
@@ -213,8 +216,8 @@ public class RadiologyPIDTest {
 		
 		ORM_O01 message = new ORM_O01();
 		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), patient);
-		
-		assertThat(PipeParser.encode(message, encodingCharacters), is("PID|||100||Doe^John^Francis|||M\r"));
+		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), encodingCharacters),
+		    is("PID|||100||Doe^John^Francis|||M"));
 	}
 	
 	/**
@@ -261,7 +264,8 @@ public class RadiologyPIDTest {
 		ORM_O01 message = new ORM_O01();
 		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), patient);
 		
-		assertThat(PipeParser.encode(message, encodingCharacters), is("PID|||100||Doe^John^Francis||19800228222510\r"));
+		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), encodingCharacters),
+		    is("PID|||100||Doe^John^Francis||19800228222510"));
 	}
 	
 	/**

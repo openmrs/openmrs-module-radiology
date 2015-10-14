@@ -57,5 +57,7 @@ Remove unused imports by using **control-shift-o** in Eclipse.
 
 ## Limitations
 
-This module currently only works with OpenMRS Version 1.10.2
+This module is not yet officially released to the [openmrs modules](https://modules.openmrs.org/#/).
+The API and UI are not yet stable and subject to frequent changes.
+The module currently only works with OpenMRS Version 1.11.4
 

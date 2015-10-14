@@ -13,10 +13,10 @@ import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openmrs.test.BaseContextSensitiveTest;
+import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
 
-public class ObsEditorTest extends BaseContextSensitiveTest {
+public class ObsEditorTest extends BaseModuleContextSensitiveTest {
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();

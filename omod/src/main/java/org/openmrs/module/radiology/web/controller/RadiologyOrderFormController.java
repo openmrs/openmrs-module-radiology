@@ -24,7 +24,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Order;
 import org.openmrs.Patient;
-import org.openmrs.Provider;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
@@ -36,14 +35,11 @@ import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.propertyeditor.ProviderEditor;
 import org.openmrs.module.radiology.validator.RadiologyOrderValidator;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -57,11 +53,6 @@ public class RadiologyOrderFormController {
 	
 	@Autowired
 	private RadiologyService radiologyService;
-	
-	@InitBinder
-	void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(Provider.class, new ProviderEditor());
-	}
 	
 	/**
 	 * Handles GET requests for the radiologyOrderForm with new radiology order
