@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.radiology;
 
+import java.util.Arrays;
+
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dcm4che2.tool.dcmof.DcmOF;
@@ -25,30 +27,58 @@ public class RadiologyActivator extends BaseModuleActivator {
 	private DcmOF dicomOrderFiller;
 	
 	@Override
+	public void willStart() {
+		log.info("Trying to start up Radiology Module");
+	}
+	
+	@Override
 	public void started() {
 		startDicomOrderFiller();
+		log.info("Radiology Module successfully started");
+	}
+	
+	@Override
+	public void willStop() {
+		log.info("Trying to shut down Radiology Module");
 	}
 	
 	@Override
 	public void stopped() {
 		stopDicomOrderFiller();
+		log.info("Radiology Module successfully stopped");
 	}
 	
-	public void startDicomOrderFiller() {
-		try {
-			String[] args2 = { "-mwl", RadiologyProperties.getMwlDir(), "-mpps", RadiologyProperties.getMppsDir(),
-			        RadiologyProperties.getApplicationEntityTitle() + ":" + RadiologyProperties.getMwlMppsPort() };
-			dicomOrderFiller = DcmOF.main(args2);
-			log.info("Started MPPSScu : OpenMRS MPPS SCU Client (dcmof)");
-		}
-		catch (Exception e) {
-			log.warn("Can not start MWL/MPPS DICOM server");
-			log.warn("Unable to start MPPSScu : OpenMRS MPPS SCU Client (dcmof)");
-		}
+	/**
+	 * Start dicom order filler
+	 * 
+	 * @should successfully start the dicom order filler
+	 */
+	void startDicomOrderFiller() {
+		String[] dicomOrderFillerArguments = getDicomOrderFillerArguments();
+		log.info("Trying to start OpenMRS MPPS SCU Client (dcmof) with: " + Arrays.asList(dicomOrderFillerArguments));
+		dicomOrderFiller = DcmOF.main(dicomOrderFillerArguments);
 	}
 	
-	public void stopDicomOrderFiller() {
+	/**
+	 * Return dicom order filler arguments
+	 * 
+	 * @return dicom order filler arguments
+	 * @should return dicom order filler arguments
+	 */
+	String[] getDicomOrderFillerArguments() {
+		log.info("Loading dicom order filler arguments");
+		return new String[] { "-mwl", RadiologyProperties.getMwlDir(), "-mpps", RadiologyProperties.getMppsDir(),
+		        RadiologyProperties.getApplicationEntityTitle() + ":" + RadiologyProperties.getMwlMppsPort() };
+	}
+	
+	/**
+	 * Stop dicom order filler
+	 * 
+	 * @should throw exception when unable to stop the dicom order filler
+	 * @should successfully stop the dicom order filler
+	 */
+	void stopDicomOrderFiller() {
+		log.info("Trying to stop MPPSScu : OpenMRS MPPS SCU Client (dcmof)");
 		dicomOrderFiller.stop();
-		log.info("Stopped MPPSScu : OpenMRS MPPS SCU Client (dcmof)");
 	}
 }
