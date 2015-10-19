@@ -86,7 +86,6 @@ public class RadiologyObsFormController {
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.GET, params = "obsId")
 	protected ModelAndView getObs(@RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder,
 	        @RequestParam(value = "obsId", required = true) Obs obs) {
-		
 		return populateModelAndView(radiologyOrder, obs);
 	}
 	
@@ -141,7 +140,6 @@ public class RadiologyObsFormController {
 	 */
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.GET)
 	protected ModelAndView getNewObs(@RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder) {
-		
 		Obs obs = new Obs();
 		obs.setOrder(radiologyOrder);
 		obs.setPerson(radiologyOrder.getPatient());
@@ -261,12 +259,12 @@ public class RadiologyObsFormController {
 							// the handler on the obs.concept is called
 							// with
 							// the given complex data
-							obsService.saveObs(obs, editReason);
+							obs = obsService.saveObs(obs, editReason);
 							complexDataInputStream.close();
 						}
 					}
 				} else {
-					obsService.saveObs(obs, editReason);
+					obs = obsService.saveObs(obs, editReason);
 				}
 				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.saved");
 			}

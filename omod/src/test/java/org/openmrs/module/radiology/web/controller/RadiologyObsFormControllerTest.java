@@ -378,6 +378,8 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 		
 		mockRequest.addFile(mockMultipartFile);
 		
+		when(obsService.saveObs(mockObs, "Test Edit Reason")).thenReturn(RadiologyTestData.getEditedMockObs());
+		
 		radiologyObsFormController.saveObs(mockRequest, null, "Test Edit Reason", mockRadiologyOrder, mockObs, obsErrors);
 		
 		assertNotNull(mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR));
@@ -397,7 +399,6 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 		mockRequest.setSession(mockSession);
 		
 		when(obsErrors.hasErrors()).thenReturn(false);
-		;
 		mockObs.setConcept(new Concept());
 		final String fileName = "test.txt";
 		final byte[] content = "Hello World".getBytes();
@@ -405,13 +406,15 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 		
 		mockRequest.addFile(mockMultipartFile);
 		
+		when(obsService.saveObs(mockObs, "Test Edit Reason")).thenReturn(RadiologyTestData.getEditedMockObs());
+		
 		ModelAndView modelAndView = radiologyObsFormController.saveObs(mockRequest, null, "Test Edit Reason",
 		    mockRadiologyOrder, mockObs, obsErrors);
 		
 		assertNotNull(mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR));
 		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Obs.saved"));
 		assertThat(modelAndView.getViewName(), is("redirect:" + RADIOLOGY_OBS_FORM_URL + "orderId="
-		        + mockRadiologyOrder.getId() + "&obsId=" + mockObs.getId()));
+		        + mockRadiologyOrder.getId() + "&obsId=" + RadiologyTestData.getEditedMockObs().getId()));
 	}
 	
 	/**

@@ -107,12 +107,32 @@ public class RadiologyTestData {
 	/**
 	 * Convenience method constructing an encounter for the tests
 	 */
-	public static Encounter getMockEncounter() {
+	public static Encounter getMockEncounter1() {
 		
 		Encounter mockEncounter = new Encounter();
 		mockEncounter.setId(1);
 		mockEncounter.setEncounterType(new EncounterType(1));
 		mockEncounter.setEncounterDatetime(new GregorianCalendar(2015, 0, 01).getTime());
+		mockEncounter.setLocation(new Location(1));
+		
+		EncounterProvider encounterProvider = new EncounterProvider();
+		encounterProvider.setId(1);
+		Set<EncounterProvider> providerSet = new HashSet<EncounterProvider>();
+		providerSet.add(encounterProvider);
+		mockEncounter.setEncounterProviders(providerSet);
+		
+		return mockEncounter;
+	}
+	
+	/**
+	 * Convenience method constructing an encounter for the tests
+	 */
+	public static Encounter getMockEncounter2() {
+		
+		Encounter mockEncounter = new Encounter();
+		mockEncounter.setId(2);
+		mockEncounter.setEncounterType(new EncounterType(1));
+		mockEncounter.setEncounterDatetime(new GregorianCalendar(2015, 1, 02).getTime());
 		mockEncounter.setLocation(new Location(1));
 		
 		EncounterProvider encounterProvider = new EncounterProvider();
@@ -170,9 +190,23 @@ public class RadiologyTestData {
 		
 		Obs mockObs = new Obs();
 		mockObs.setId(1);
-		mockObs.setEncounter(getMockEncounter());
+		mockObs.setEncounter(getMockEncounter1());
 		mockObs.setOrder(getMockRadiologyOrder1());
 		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
+		return mockObs;
+	}
+	
+	/**
+	 * Convenience method constructing a mock obs for the tests
+	 */
+	public static Obs getEditedMockObs() {
+		
+		Obs mockObs = new Obs();
+		mockObs.setId(2);
+		mockObs.setEncounter(getMockEncounter2());
+		mockObs.setOrder(getMockRadiologyOrder1());
+		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
+		mockObs.setPreviousVersion(getMockObs());
 		return mockObs;
 	}
 	
@@ -184,13 +218,13 @@ public class RadiologyTestData {
 		ArrayList<Obs> previousObs = new ArrayList<Obs>();
 		Obs mockObs = new Obs();
 		mockObs.setId(2);
-		mockObs.setEncounter(getMockEncounter());
+		mockObs.setEncounter(getMockEncounter1());
 		mockObs.setOrder(getMockRadiologyOrder1());
 		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
 		previousObs.add(mockObs);
 		Obs mockObs2 = new Obs();
 		mockObs2.setId(3);
-		mockObs2.setEncounter(getMockEncounter());
+		mockObs2.setEncounter(getMockEncounter1());
 		mockObs2.setOrder(getMockRadiologyOrder1());
 		mockObs2.setPerson(getMockRadiologyOrder1().getPatient());
 		previousObs.add(mockObs2);
