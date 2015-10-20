@@ -27,6 +27,9 @@ public class DicomUtils {
 	
 	private static final Logger log = Logger.getLogger(DicomUtils.class);
 	
+	private static RadiologyProperties radiologyProperties = Context.getRegisteredComponent("radiologyProperties",
+	    RadiologyProperties.class);
+	
 	/**
 	 * <p>
 	 * Updates the PerformedStatus of an existing Study in the database to the Performed Procedure
@@ -77,7 +80,7 @@ public class DicomUtils {
 	 */
 	public static String getStudyInstanceUidFromMpps(DicomObject mppsObject) {
 		
-		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(RadiologyProperties.getSpecificCharacterSet());
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties.getSpecificCharacterSet());
 		
 		DicomElement scheduledStepAttributesSequenceElement = mppsObject.get(Tag.ScheduledStepAttributesSequence);
 		if (scheduledStepAttributesSequenceElement == null)
@@ -105,7 +108,7 @@ public class DicomUtils {
 	 */
 	public static String getPerformedProcedureStepStatus(DicomObject dicomObject) {
 		
-		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(RadiologyProperties.getSpecificCharacterSet());
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties.getSpecificCharacterSet());
 		
 		DicomElement performedProcedureStepStatusElement = dicomObject.get(Tag.PerformedProcedureStepStatus);
 		if (performedProcedureStepStatusElement == null)
@@ -227,8 +230,8 @@ public class DicomUtils {
 	
 	//Send HL7 ORU message to dcm4chee.
 	public static int sendHL7Worklist(String hl7blob) {
-		String serverIP = RadiologyProperties.getServersAddress();
-		String input[] = { "-c", serverIP.substring(7) + ":" + RadiologyProperties.getServersHL7Port(), hl7blob };
+		String serverIP = radiologyProperties.getServersAddress();
+		String input[] = { "-c", serverIP.substring(7) + ":" + radiologyProperties.getServersHL7Port(), hl7blob };
 		//String input[]={"--help"};
 		int result = HL7Snd.main(input);
 		return result;

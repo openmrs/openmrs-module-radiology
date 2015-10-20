@@ -9,8 +9,6 @@
  */
 package org.openmrs.module.radiology.web.controller;
 
-import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
@@ -24,10 +22,8 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
-import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ObsService;
-import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
@@ -64,10 +60,10 @@ public class RadiologyObsFormController {
 	RadiologyService radiologyService;
 	
 	@Autowired
-	OrderService orderService;
+	ObsService obsService;
 	
 	@Autowired
-	ObsService obsService;
+	RadiologyProperties radiologyProperties;
 	
 	@InitBinder
 	void initBinder(WebDataBinder binder) {
@@ -126,7 +122,7 @@ public class RadiologyObsFormController {
 		if (study.isCompleted()) {
 			String studyUidUrl = "studyUID=" + study.getStudyInstanceUid();
 			String patientIdUrl = "patientID=" + patient.getPatientIdentifier().getIdentifier();
-			return RadiologyProperties.getDicomViewerUrl() + studyUidUrl + "&" + patientIdUrl;
+			return radiologyProperties.getDicomViewerUrl() + studyUidUrl + "&" + patientIdUrl;
 		} else {
 			return null;
 		}

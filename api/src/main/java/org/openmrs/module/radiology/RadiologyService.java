@@ -29,11 +29,13 @@ public interface RadiologyService extends OpenmrsService {
 	
 	public void setRadiologyOrderDao(RadiologyOrderDAO radiologyOrderDao);
 	
-	public void setSdao(StudyDAO dao);
+	public void setStudyDAO(StudyDAO studyDAO);
 	
 	public void setOrderService(OrderService orderService);
 	
 	public void setEncounterService(EncounterService encounterService);
+	
+	void setRadiologyProperties(RadiologyProperties radiologyProperties);
 	
 	/**
 	 * Save given <code>RadiologyOrder</code> and its <code>RadiologyOrder.study</code> to the

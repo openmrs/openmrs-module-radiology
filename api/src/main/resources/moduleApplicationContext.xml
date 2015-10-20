@@ -30,7 +30,7 @@
 						</property>
 					</bean>
 				</property>
-				<property name="sdao">
+				<property name="studyDAO">
 					<bean class="org.openmrs.module.radiology.db.hibernate.StudyDAOImpl">
 						<property name="sessionFactory">
 							<ref bean="sessionFactory" />
@@ -39,6 +39,7 @@
 				</property>
 				<property name="orderService" ref="orderService"></property>
 				<property name="encounterService" ref="encounterService"></property>
+				<property name="radiologyProperties" ref="radiologyProperties"></property>
 			</bean>
 		</property>
 		<property name="preInterceptors">
@@ -57,8 +58,4 @@
 			</list>
 		</property>
 	</bean>
-
-	<bean id="radiologyOrderValidator"
-		class="org.openmrs.module.radiology.validator.RadiologyOrderValidator" />
-
 </beans>
