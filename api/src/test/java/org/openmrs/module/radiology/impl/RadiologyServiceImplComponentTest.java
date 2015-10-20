@@ -69,6 +69,8 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	
 	private RadiologyService radiologyService = null;
 	
+	private RadiologyProperties radiologyProperties = null;
+	
 	private StudyDAO studyDAO = null;
 	
 	private Method saveRadiologyOrderEncounterMethod = null;
@@ -101,6 +103,10 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 			encounterService = Context.getEncounterService();
 		}
 		
+		if (radiologyProperties == null) {
+			radiologyProperties = Context.getRegisteredComponent("radiologyProperties", RadiologyProperties.class);
+		}
+		
 		if (studyDAO == null) {
 			StudyDAOImpl studyDAOImpl = new StudyDAOImpl();
 			studyDAOImpl.setSessionFactory(Context.getRegisteredComponent("sessionFactory", SessionFactory.class));
@@ -111,7 +117,8 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 			radiologyServiceImpl = new RadiologyServiceImpl();
 			radiologyServiceImpl.setOrderService(orderService);
 			radiologyServiceImpl.setEncounterService(encounterService);
-			radiologyServiceImpl.setSdao(studyDAO);
+			radiologyServiceImpl.setStudyDAO(studyDAO);
+			radiologyServiceImpl.setRadiologyProperties(radiologyProperties);
 		}
 		
 		saveRadiologyOrderEncounterMethod = RadiologyServiceImpl.class.getDeclaredMethod("saveRadiologyOrderEncounter",
@@ -141,11 +148,11 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		
 		assertNotNull(encounter);
 		assertThat(encounter.getPatient(), is(patient));
-		assertThat(encounter.getProvidersByRole(RadiologyProperties.getOrderingProviderEncounterRole()).size(), is(1));
-		assertThat(encounter.getProvidersByRole(RadiologyProperties.getOrderingProviderEncounterRole()).contains(provider),
+		assertThat(encounter.getProvidersByRole(radiologyProperties.getOrderingProviderEncounterRole()).size(), is(1));
+		assertThat(encounter.getProvidersByRole(radiologyProperties.getOrderingProviderEncounterRole()).contains(provider),
 		    is(true));
 		assertThat(encounter.getEncounterDatetime(), is(encounterDatetime));
-		assertThat(encounter.getEncounterType(), is(RadiologyProperties.getRadiologyEncounterType()));
+		assertThat(encounter.getEncounterType(), is(radiologyProperties.getRadiologyEncounterType()));
 	}
 	
 	/**
@@ -165,7 +172,7 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		assertThat(createdStudy, is(radiologyStudy));
 		assertThat(createdStudy.getStudyId(), is(radiologyStudy.getStudyId()));
 		assertNotNull(createdStudy.getStudyInstanceUid());
-		assertThat(createdStudy.getStudyInstanceUid(), is(RadiologyProperties.getStudyPrefix() + createdStudy.getStudyId()));
+		assertThat(createdStudy.getStudyInstanceUid(), is(radiologyProperties.getStudyPrefix() + createdStudy.getStudyId()));
 		assertThat(createdStudy.getModality(), is(radiologyStudy.getModality()));
 		assertThat(createdStudy.getRadiologyOrder(), is(radiologyStudy.getRadiologyOrder()));
 	}

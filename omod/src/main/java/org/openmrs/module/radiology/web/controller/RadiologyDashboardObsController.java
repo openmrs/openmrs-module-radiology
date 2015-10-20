@@ -31,6 +31,7 @@ import org.openmrs.propertyeditor.EncounterEditor;
 import org.openmrs.propertyeditor.LocationEditor;
 import org.openmrs.propertyeditor.OrderEditor;
 import org.openmrs.propertyeditor.PersonEditor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.propertyeditors.CustomBooleanEditor;
 import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.beans.propertyeditors.CustomNumberEditor;
@@ -51,9 +52,17 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class RadiologyDashboardObsController {
 	
-	static RadiologyService radiologyService() {
-		return Context.getService(RadiologyService.class);
-	}
+	@Autowired
+	private RadiologyService radiologyService;
+	
+	@Autowired
+	private RadiologyProperties radiologyProperties;
+	
+	@Autowired
+	private OrderService orderService;
+	
+	@Autowired
+	private ObsService obsService;
 	
 	@InitBinder
 	void initBinder(WebDataBinder binder) {
@@ -81,30 +90,28 @@ public class RadiologyDashboardObsController {
 		Obs obs = null;
 		// Get previous obs
 		List<Obs> prevs = null;
-		ObsService os = Context.getObsService();
-		OrderService or = Context.getOrderService();
-		Study study = radiologyService().getStudyByOrderId(orderId);
+		Study study = radiologyService.getStudyByOrderId(orderId);
 		if (obsId != null) {
-			obs = os.getObs(obsId);
+			obs = obsService.getObs(obsId);
 			mav.addObject("obsAnswer", obs.getValueAsString(Locale.ENGLISH));
-			prevs = radiologyService().getObsByOrderId(obs.getOrder().getOrderId());
+			prevs = radiologyService.getObsByOrderId(obs.getOrder().getOrderId());
 		} else {
-			obs = newObs(or.getOrder(orderId));
-			prevs = radiologyService().getObsByOrderId(study.getRadiologyOrder().getOrderId());
+			obs = newObs(orderService.getOrder(orderId));
+			prevs = radiologyService.getObsByOrderId(study.getRadiologyOrder().getOrderId());
 		}
 		
 		mav.addObject("obs", obs);
 		mav.addObject("studyUID", study.isCompleted() ? study.getStudyInstanceUid() : null);
 		if (study.isCompleted()) {
-			String patID = or.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();
-			String dicomViewerUrl = RadiologyProperties.getDicomViewerUrl() + "studyUID=" + study.getStudyInstanceUid()
+			String patID = orderService.getOrder(orderId).getPatient().getPatientIdentifier().getIdentifier();
+			String dicomViewerUrl = radiologyProperties.getDicomViewerUrl() + "studyUID=" + study.getStudyInstanceUid()
 			        + "&patientID=" + patID;
 			mav.addObject("dicomViewerUrl", dicomViewerUrl);
 		} else
 			mav.addObject("dicomViewerUrl", null);
 		mav.addObject("prevs", prevs);
 		mav.addObject("prevsSize", prevs.size());
-		mav.addObject("personName", or.getOrder(orderId).getPatient().getPersonName().getFullName());
+		mav.addObject("personName", orderService.getOrder(orderId).getPatient().getPersonName().getFullName());
 		mav.addObject("orderId", orderId);
 		
 	}

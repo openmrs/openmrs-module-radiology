@@ -42,11 +42,13 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	
 	private RadiologyOrderDAO radiologyOrderDAO;
 	
-	private StudyDAO sdao;
+	private StudyDAO studyDAO;
 	
 	private OrderService orderService;
 	
 	private EncounterService encounterService;
+	
+	private RadiologyProperties radiologyProperties;
 	
 	@Override
 	public void setRadiologyOrderDao(RadiologyOrderDAO radiologyOrderDAO) {
@@ -54,8 +56,8 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	}
 	
 	@Override
-	public void setSdao(StudyDAO dao) {
-		this.sdao = dao;
+	public void setStudyDAO(StudyDAO studyDAO) {
+		this.studyDAO = studyDAO;
 	}
 	
 	@Override
@@ -66,6 +68,11 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Override
 	public void setEncounterService(EncounterService encounterService) {
 		this.encounterService = encounterService;
+	}
+	
+	@Override
+	public void setRadiologyProperties(RadiologyProperties radiologyProperties) {
+		this.radiologyProperties = radiologyProperties;
 	}
 	
 	/**
@@ -95,8 +102,8 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		encounter.addOrder(radiologyOrder);
 		
 		OrderContext orderContext = new OrderContext();
-		orderContext.setCareSetting(RadiologyProperties.getRadiologyCareSetting());
-		orderContext.setOrderType(RadiologyProperties.getRadiologyTestOrderType());
+		orderContext.setCareSetting(radiologyProperties.getRadiologyCareSetting());
+		orderContext.setOrderType(radiologyProperties.getRadiologyTestOrderType());
 		
 		RadiologyOrder result = (RadiologyOrder) orderService.saveOrder(radiologyOrder, orderContext);
 		saveStudy(result.getStudy());
@@ -117,8 +124,8 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		
 		Encounter encounter = new Encounter();
 		encounter.setPatient(patient);
-		encounter.setEncounterType(RadiologyProperties.getRadiologyEncounterType());
-		encounter.setProvider(RadiologyProperties.getOrderingProviderEncounterRole(), provider);
+		encounter.setEncounterType(radiologyProperties.getRadiologyEncounterType());
+		encounter.setProvider(radiologyProperties.getOrderingProviderEncounterRole(), provider);
 		encounter.setEncounterDatetime(encounterDateTime);
 		
 		return encounterService.saveEncounter(encounter);
@@ -145,10 +152,10 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		}
 		
 		try {
-			Study savedStudy = sdao.saveStudy(study);
-			String studyInstanceUid = RadiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
+			Study savedStudy = studyDAO.saveStudy(study);
+			String studyInstanceUid = radiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
 			savedStudy.setStudyInstanceUid(studyInstanceUid);
-			savedStudy = sdao.saveStudy(savedStudy);
+			savedStudy = studyDAO.saveStudy(savedStudy);
 			return savedStudy;
 		}
 		catch (Exception e) {
@@ -243,9 +250,9 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("performedStatus is required");
 		}
 		
-		Study studyToBeUpdated = sdao.getStudyByStudyInstanceUid(studyInstanceUid);
+		Study studyToBeUpdated = studyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
 		studyToBeUpdated.setPerformedStatus(performedStatus);
-		return sdao.saveStudy(studyToBeUpdated);
+		return studyDAO.saveStudy(studyToBeUpdated);
 	}
 	
 	@Override
@@ -312,7 +319,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Transactional(readOnly = true)
 	@Override
 	public Study getStudy(Integer id) {
-		return sdao.getStudy(id);
+		return studyDAO.getStudy(id);
 	}
 	
 	@Transactional(readOnly = true)
@@ -322,7 +329,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("orderId is required");
 		}
 		
-		return sdao.getStudyByOrderId(orderId);
+		return studyDAO.getStudyByOrderId(orderId);
 	}
 	
 	/**
@@ -334,7 +341,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("studyInstanceUid is required");
 		}
 		
-		return sdao.getStudyByStudyInstanceUid(studyInstanceUid);
+		return studyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
 	}
 	
 	/**
@@ -347,7 +354,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("radiologyOrders are required");
 		}
 		
-		List<Study> result = sdao.getStudiesByRadiologyOrders(radiologyOrders);
+		List<Study> result = studyDAO.getStudiesByRadiologyOrders(radiologyOrders);
 		return result;
 	}
 	
@@ -360,7 +367,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("orderId is required");
 		}
 		
-		return sdao.getObsByOrderId(orderId);
+		return studyDAO.getObsByOrderId(orderId);
 	}
 	
 }
