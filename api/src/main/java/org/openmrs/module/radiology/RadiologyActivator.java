@@ -14,6 +14,7 @@ import java.util.Arrays;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.dcm4che2.tool.dcmof.DcmOF;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.BaseModuleActivator;
 
 /**
@@ -25,6 +26,8 @@ public class RadiologyActivator extends BaseModuleActivator {
 	private static final Log log = LogFactory.getLog(RadiologyActivator.class);
 	
 	private DcmOF dicomOrderFiller;
+	
+	private RadiologyProperties radiologyProperties;
 	
 	@Override
 	public void willStart() {
@@ -67,8 +70,9 @@ public class RadiologyActivator extends BaseModuleActivator {
 	 */
 	String[] getDicomOrderFillerArguments() {
 		log.info("Loading dicom order filler arguments");
-		return new String[] { "-mwl", RadiologyProperties.getMwlDir(), "-mpps", RadiologyProperties.getMppsDir(),
-		        RadiologyProperties.getApplicationEntityTitle() + ":" + RadiologyProperties.getMwlMppsPort() };
+		radiologyProperties = Context.getRegisteredComponent("radiologyProperties", RadiologyProperties.class);
+		return new String[] { "-mwl", radiologyProperties.getMwlDir(), "-mpps", radiologyProperties.getMppsDir(),
+		        radiologyProperties.getApplicationEntityTitle() + ":" + radiologyProperties.getMwlMppsPort() };
 	}
 	
 	/**

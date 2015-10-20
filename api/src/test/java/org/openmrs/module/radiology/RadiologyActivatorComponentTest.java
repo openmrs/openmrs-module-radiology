@@ -22,6 +22,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Tests {@link RadiologyActivator}
@@ -31,6 +32,9 @@ public class RadiologyActivatorComponentTest extends BaseModuleContextSensitiveT
 	private static final String ACTIVATOR_TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyActivatorComponentTestDataset.xml";
 	
 	private RadiologyActivator radiologyActivator;
+	
+	@Autowired
+	private RadiologyProperties radiologyProperties;
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
@@ -70,9 +74,9 @@ public class RadiologyActivatorComponentTest extends BaseModuleContextSensitiveT
 		
 		Field dicomOrderFillerField = RadiologyActivator.class.getDeclaredField("dicomOrderFiller");
 		dicomOrderFillerField.setAccessible(true);
-		String[] dicomOrderFillerArguments = new String[] { "-mwl", RadiologyProperties.getMwlDir(), "-mpps",
-		        RadiologyProperties.getMppsDir(),
-		        RadiologyProperties.getApplicationEntityTitle() + ":" + RadiologyProperties.getMwlMppsPort() };
+		String[] dicomOrderFillerArguments = new String[] { "-mwl", radiologyProperties.getMwlDir(), "-mpps",
+		        radiologyProperties.getMppsDir(),
+		        radiologyProperties.getApplicationEntityTitle() + ":" + radiologyProperties.getMwlMppsPort() };
 		DcmOF dicomOrderFiller = DcmOF.main(dicomOrderFillerArguments);
 		dicomOrderFillerField.set(radiologyActivator, dicomOrderFiller);
 		
