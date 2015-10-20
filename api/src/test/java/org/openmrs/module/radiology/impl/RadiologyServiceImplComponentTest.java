@@ -199,7 +199,7 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	@Test
 	public void saveStudy_shouldUpdateExistingStudy() throws Exception {
 		
-		Study existingStudy = radiologyServiceImpl.getStudy(EXISTING_STUDY_ID);
+		Study existingStudy = radiologyServiceImpl.getStudyByStudyId(EXISTING_STUDY_ID);
 		Modality modalityPreUpdate = existingStudy.getModality();
 		Modality modalityPostUpdate = Modality.XA;
 		existingStudy.setModality(modalityPostUpdate);

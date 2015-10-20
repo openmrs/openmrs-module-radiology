@@ -20,41 +20,45 @@ import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.StudyDAO;
 
+/**
+ * Hibernate specific Study related functions. This class should not be used directly. All
+ * calls should go through the {@link org.openmrs.module.radiology.RadiologyService} methods.
+ *
+ * @see org.openmrs.module.radiology.db.StudyDAO
+ * @see org.openmrs.module.radiology.RadiologyService
+ */
 public class StudyDAOImpl implements StudyDAO {
 	
 	private SessionFactory sessionFactory;
 	
 	/**
-	 * This is a Hibernate object. It gives us metadata about the currently connected database, the
-	 * current session, the current db user, etc. To save and get objects, calls should go through
-	 * sessionFactory.getCurrentSession() <br/>
-	 * <br/>
-	 * This is called by Spring. See the /metadata/moduleApplicationContext.xml for the
-	 * "sessionFactory" setting. See the applicationContext-service.xml file in CORE openmrs for
-	 * where the actual "sessionFactory" object is first defined.
-	 * 
+	 * Set session factory that allows us to connect to the database that Hibernate knows about.
+	 *
 	 * @param sessionFactory
 	 */
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
 	
+	/**
+	 * @see org.openmrs.module.radiology.RadiologyService#saveStudy(Integer)
+	 */
 	@Override
-	public Study getStudy(Integer studyId) {
+	public Study saveStudy(Study study) {
+		sessionFactory.getCurrentSession().saveOrUpdate(study);
+		return study;
+	}
+	
+	/**
+	 * @see org.openmrs.module.radiology.RadiologyService#getStudyByStudyId(Integer)
+	 */
+	@Override
+	public Study getStudyByStudyId(Integer studyId) {
 		return (Study) sessionFactory.getCurrentSession().get(Study.class, studyId);
 	}
 	
 	/**
-	 * @see StudyDAO#getStudyByStudyInstanceUid(String)
-	 */
-	@Override
-	public Study getStudyByStudyInstanceUid(String studyInstanceUid) {
-		return (Study) sessionFactory.getCurrentSession().createCriteria(Study.class).add(
-		    Restrictions.eq("studyInstanceUid", studyInstanceUid)).uniqueResult();
-	}
-	
-	/**
-	 * @see StudyDAO#getStudyByOrderId(Integer)
+	 * @see org.openmrs.module.radiology.RadiologyService#getStudyByOrderId(Integer)
 	 */
 	@Override
 	public Study getStudyByOrderId(Integer orderId) {
@@ -63,7 +67,16 @@ public class StudyDAOImpl implements StudyDAO {
 	}
 	
 	/**
-	 * @see StudyDAO#getStudiesByRadiologyOrders(List<RadiologyOrder>)
+	 * @see org.openmrs.module.radiology.RadiologyService#getStudyByStudyInstanceUid(String)
+	 */
+	@Override
+	public Study getStudyByStudyInstanceUid(String studyInstanceUid) {
+		return (Study) sessionFactory.getCurrentSession().createCriteria(Study.class).add(
+		    Restrictions.eq("studyInstanceUid", studyInstanceUid)).uniqueResult();
+	}
+	
+	/**
+	 * @see org.openmrs.module.radiology.RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
 	 */
 	@Override
 	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
@@ -91,16 +104,7 @@ public class StudyDAOImpl implements StudyDAO {
 	}
 	
 	/**
-	 * @see StudyDAO#saveStudy(Study)
-	 */
-	@Override
-	public Study saveStudy(Study study) {
-		sessionFactory.getCurrentSession().saveOrUpdate(study);
-		return study;
-	}
-	
-	/**
-	 * @see StudyDAO#getObsByOrderId(Integer)
+	 * @see org.openmrs.module.radiology.RadiologyService#getObsByOrderId(Integer)
 	 */
 	@Override
 	public List<Obs> getObsByOrderId(Integer orderId) {

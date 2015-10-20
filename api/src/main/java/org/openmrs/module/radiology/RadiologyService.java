@@ -127,7 +127,15 @@ public interface RadiologyService extends OpenmrsService {
 	
 	public void sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest);
 	
-	public Study getStudy(Integer id);
+	/**
+	 * Get Study by studyId
+	 * 
+	 * @param studyId of the study
+	 * @return study associated with studyId
+	 * @should return study for given study id
+	 * @should return null if no match was found
+	 */
+	public Study getStudyByStudyId(Integer studyId);
 	
 	/**
 	 * Get Study by its associated RadiologyOrder's orderId
