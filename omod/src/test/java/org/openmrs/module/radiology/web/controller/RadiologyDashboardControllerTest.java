@@ -12,8 +12,6 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Patient;
-import org.openmrs.api.AdministrationService;
-import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
@@ -37,13 +35,7 @@ public class RadiologyDashboardControllerTest extends BaseContextMockTest {
 	private List<Study> mockStudies;
 	
 	@Mock
-	private PatientService patientService;
-	
-	@Mock
 	private RadiologyService radiologyService;
-	
-	@Mock
-	private AdministrationService administrationService;
 	
 	@InjectMocks
 	private RadiologyDashboardController radiologyDashboardController = new RadiologyDashboardController();

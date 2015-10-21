@@ -16,25 +16,32 @@ import org.openmrs.OrderType;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
-import org.openmrs.api.context.Context;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
 
 /**
  * Properties, mostly configured via GPs for this module.
  */
+@Component
 public class RadiologyProperties {
 	
-	private static AdministrationService administrationService = Context.getAdministrationService();
+	@Autowired
+	@Qualifier("adminService")
+	private AdministrationService administrationService;
 	
-	private static OrderService orderService = Context.getOrderService();
+	@Autowired
+	private OrderService orderService;
 	
-	private static EncounterService encounterService = Context.getEncounterService();
+	@Autowired
+	private EncounterService encounterService;
 	
 	/**
 	 * Return application entity title
 	 * 
 	 * @return application entity title
 	 */
-	public static String getApplicationEntityTitle() {
+	public String getApplicationEntityTitle() {
 		return administrationService.getGlobalProperty(RadiologyConstants.GP_APPLICATION_ENTITY_TITLE);
 	}
 	
@@ -43,7 +50,7 @@ public class RadiologyProperties {
 	 * 
 	 * @return mpps directory
 	 */
-	public static String getMppsDir() {
+	public String getMppsDir() {
 		return administrationService.getGlobalProperty(RadiologyConstants.GP_MPPS_DIR);
 	}
 	
@@ -52,7 +59,7 @@ public class RadiologyProperties {
 	 * 
 	 * @return mwl directory
 	 */
-	public static String getMwlDir() {
+	public String getMwlDir() {
 		return administrationService.getGlobalProperty(RadiologyConstants.GP_MWL_DIR);
 	}
 	
@@ -61,7 +68,7 @@ public class RadiologyProperties {
 	 * 
 	 * @return mwl mpps port
 	 */
-	public static String getMwlMppsPort() {
+	public String getMwlMppsPort() {
 		return administrationService.getGlobalProperty(RadiologyConstants.GP_MWL_MPPS_PORT);
 	}
 	
@@ -70,7 +77,7 @@ public class RadiologyProperties {
 	 * 
 	 * @return server address
 	 */
-	public static String getServersAddress() {
+	public String getServersAddress() {
 		return "http://" + administrationService.getGlobalProperty(RadiologyConstants.GP_SERVERS_ADDRESS);
 	}
 	
@@ -79,7 +86,7 @@ public class RadiologyProperties {
 	 * 
 	 * @return prefix for dicom objects in the application
 	 */
-	public static String getApplicationUID() {
+	public String getApplicationUID() {
 		return administrationService.getGlobalProperty(RadiologyConstants.GP_APPLICATION_UID);
 	}
 	
@@ -88,7 +95,7 @@ public class RadiologyProperties {
 	 * 
 	 * @return study uid slug
 	 */
-	public static String getStudyUIDSlug() {
+	public String getStudyUIDSlug() {
 		return administrationService.getGlobalProperty(RadiologyConstants.GP_STUDY_UID_SLUG);
 	}
 	
@@ -97,7 +104,7 @@ public class RadiologyProperties {
 	 * 
 	 * @return specific character set
 	 */
-	public static String getSpecificCharacterSet() {
+	public String getSpecificCharacterSet() {
 		return administrationService.getGlobalProperty(RadiologyConstants.GP_SPECIFIC_CHARCATER_SET);
 	}
 	
@@ -107,7 +114,7 @@ public class RadiologyProperties {
 	 * @return study prefix
 	 * @should should return study prefix consisting of application uid and study uid slug
 	 */
-	public static String getStudyPrefix() {
+	public String getStudyPrefix() {
 		return getApplicationUID() + "." + getStudyUIDSlug() + ".";
 	}
 	
@@ -116,7 +123,7 @@ public class RadiologyProperties {
 	 * 
 	 * @return servers port
 	 */
-	public static String getServersPort() {
+	public String getServersPort() {
 		return administrationService.getGlobalProperty(RadiologyConstants.GP_SERVERS_PORT);
 	}
 	
@@ -125,7 +132,7 @@ public class RadiologyProperties {
 	 * 
 	 * @return servers hl7 port
 	 */
-	public static String getServersHL7Port() {
+	public String getServersHL7Port() {
 		return administrationService.getGlobalProperty(RadiologyConstants.GP_SERVERS_HL7_PORT);
 	}
 	
@@ -137,7 +144,7 @@ public class RadiologyProperties {
 	 * @should return empty string if dicom viewer local server name if not defined in global
 	 *         properties
 	 */
-	public static String getDicomViewerLocalServerName() {
+	public String getDicomViewerLocalServerName() {
 		String dicomViewerLocalServerName = administrationService
 		        .getGlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME);
 		if (dicomViewerLocalServerName == null)
@@ -151,7 +158,7 @@ public class RadiologyProperties {
 	 * 
 	 * @return dicom viewer url base
 	 */
-	public static String getDicomViewerUrlBase() {
+	public String getDicomViewerUrlBase() {
 		return administrationService.getGlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_URL_BASE);
 	}
 	
@@ -164,7 +171,7 @@ public class RadiologyProperties {
 	 * @should return dicom viewer url consisting of server adress and server port and dicom viewer
 	 *         url base and dicom viewer local server name for weasis
 	 */
-	public static String getDicomViewerUrl() {
+	public String getDicomViewerUrl() {
 		String dicomViewerUrl = getServersAddress() + ":" + getServersPort() + getDicomViewerUrlBase()
 		        + getDicomViewerLocalServerName();
 		return dicomViewerUrl;
@@ -177,7 +184,7 @@ public class RadiologyProperties {
 	 * @should return radiology care setting
 	 * @should throw illegal state exception if radiology care setting cannot be found
 	 */
-	public static CareSetting getRadiologyCareSetting() {
+	public CareSetting getRadiologyCareSetting() {
 		String radiologyCareSettingUuid = administrationService
 		        .getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
 		CareSetting result = orderService.getCareSettingByUuid(radiologyCareSettingUuid);
@@ -196,7 +203,7 @@ public class RadiologyProperties {
 	 * @should return order type for radiology test orders
 	 * @should throw illegal state exception for non existing radiology test order type
 	 */
-	public static OrderType getRadiologyTestOrderType() {
+	public OrderType getRadiologyTestOrderType() {
 		OrderType result = orderService.getOrderTypeByUuid(RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID);
 		if (result == null) {
 			throw new IllegalStateException("OrderType for radiology orders not in database (not found under uuid="
@@ -212,7 +219,7 @@ public class RadiologyProperties {
 	 * @should return encounter type for radiology orders
 	 * @should throw illegal state exception for non existing radiology encounter type
 	 */
-	public static EncounterType getRadiologyEncounterType() {
+	public EncounterType getRadiologyEncounterType() {
 		EncounterType result = encounterService.getEncounterTypeByUuid(RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID);
 		if (result == null) {
 			throw new IllegalStateException("EncounterType for radiology orders not in database (not found under uuid="
@@ -228,7 +235,7 @@ public class RadiologyProperties {
 	 * @should return encounter role for ordering provider
 	 * @should throw illegal state exception for non existing ordering provider encounter role
 	 */
-	public static EncounterRole getOrderingProviderEncounterRole() {
+	public EncounterRole getOrderingProviderEncounterRole() {
 		EncounterRole result = encounterService
 		        .getEncounterRoleByUuid(RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID);
 		if (result == null) {

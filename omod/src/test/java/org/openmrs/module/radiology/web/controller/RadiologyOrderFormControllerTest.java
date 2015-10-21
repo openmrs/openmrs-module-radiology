@@ -27,32 +27,22 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
-import org.openmrs.api.AdministrationService;
-import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
-import org.openmrs.api.PatientService;
-import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.openmrs.test.Verifies;
 import org.openmrs.web.WebConstants;
-import org.powermock.api.mockito.PowerMockito;
-import org.powermock.core.classloader.annotations.PowerMockIgnore;
-import org.powermock.core.classloader.annotations.PrepareForTest;
-import org.powermock.modules.junit4.PowerMockRunner;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.validation.BindingResult;
@@ -61,37 +51,23 @@ import org.springframework.web.servlet.ModelAndView;
 /**
  * Tests {@link RadiologyOrderFormController}
  */
-@RunWith(PowerMockRunner.class)
-@PrepareForTest(RadiologyProperties.class)
-@PowerMockIgnore( { "org.apache.commons.logging.*" })
 public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
-	
-	@Mock
-	private PatientService patientService;
 	
 	@Mock
 	private OrderService orderService;
 	
 	@Mock
-	private EncounterService encounterService;
-	
-	@Mock
 	private RadiologyService radiologyService;
 	
 	@Mock
-	private MessageSourceService messageSourceService;
-	
-	@Mock
-	private AdministrationService administrationService;
+	private RadiologyProperties radiologyProperties;
 	
 	@InjectMocks
 	private RadiologyOrderFormController radiologyOrderFormController = new RadiologyOrderFormController();
 	
 	@Before
 	public void runBeforeAllTests() {
-		PowerMockito.mockStatic(RadiologyProperties.class);
-		
-		when(RadiologyProperties.getRadiologyTestOrderType()).thenReturn(RadiologyTestData.getMockRadiologyOrderType());
+		when(radiologyProperties.getRadiologyTestOrderType()).thenReturn(RadiologyTestData.getMockRadiologyOrderType());
 	}
 	
 	/**

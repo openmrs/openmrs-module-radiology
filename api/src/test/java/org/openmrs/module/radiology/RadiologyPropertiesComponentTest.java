@@ -14,7 +14,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -25,45 +24,31 @@ import org.openmrs.OrderType;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
-import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.openmrs.test.Verifies;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Tests {@link RadiologyProperties}
  */
 public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitiveTest {
 	
-	private AdministrationService administrationService = null;
+	@Autowired
+	@Qualifier("adminService")
+	private AdministrationService administrationService;
 	
-	private OrderService orderService = null;
+	@Autowired
+	private OrderService orderService;
 	
-	private EncounterService encounterService = null;
+	@Autowired
+	private RadiologyProperties radiologyProperties;
+	
+	@Autowired
+	private EncounterService encounterService;
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
-	
-	/**
-	 * Run this before each unit test in this class. It simply assigns the services used in this
-	 * class to private variables.
-	 * 
-	 * @throws Exception
-	 */
-	@Before
-	public void runBeforeEachTest() throws Exception {
-		
-		if (administrationService == null) {
-			administrationService = Context.getAdministrationService();
-		}
-		
-		if (orderService == null) {
-			orderService = Context.getOrderService();
-		}
-		
-		if (encounterService == null) {
-			encounterService = Context.getEncounterService();
-		}
-	}
 	
 	/**
 	 * @see {@link RadiologyProperties#getStudyPrefix()}
@@ -76,7 +61,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		        "1.2.826.0.1.3680043.8.2186"));
 		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_STUDY_UID_SLUG, "1"));
 		
-		assertEquals(RadiologyProperties.getStudyPrefix(), "1.2.826.0.1.3680043.8.2186.1.");
+		assertEquals(radiologyProperties.getStudyPrefix(), "1.2.826.0.1.3680043.8.2186.1.");
 	}
 	
 	/**
@@ -89,7 +74,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME,
 		        "oviyamlocal"));
 		
-		assertEquals(RadiologyProperties.getDicomViewerLocalServerName(), "serverName=oviyamlocal&");
+		assertEquals(radiologyProperties.getDicomViewerLocalServerName(), "serverName=oviyamlocal&");
 	}
 	
 	/**
@@ -102,7 +87,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME,
 		        null));
 		
-		assertEquals(RadiologyProperties.getDicomViewerLocalServerName(), "");
+		assertEquals(radiologyProperties.getDicomViewerLocalServerName(), "");
 	}
 	
 	/**
@@ -119,7 +104,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME,
 		        "oviyamlocal"));
 		
-		assertEquals(RadiologyProperties.getDicomViewerUrl(),
+		assertEquals(radiologyProperties.getDicomViewerUrl(),
 		    "http://localhost:8081/oviyam2/viewer.html?serverName=oviyamlocal&");
 	}
 	
@@ -137,7 +122,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME,
 		        null));
 		
-		assertEquals(RadiologyProperties.getDicomViewerUrl(), "http://localhost:8081/weasis-pacs-connector/viewer?");
+		assertEquals(radiologyProperties.getDicomViewerUrl(), "http://localhost:8081/weasis-pacs-connector/viewer?");
 	}
 	
 	/**
@@ -151,7 +136,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING,
 		        outpatientCareSettingUuidInOpenMrsCore));
 		
-		assertThat(RadiologyProperties.getRadiologyCareSetting().getUuid(), is(outpatientCareSettingUuidInOpenMrsCore));
+		assertThat(radiologyProperties.getRadiologyCareSetting().getUuid(), is(outpatientCareSettingUuidInOpenMrsCore));
 	}
 	
 	/**
@@ -164,7 +149,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		expectedException.expect(IllegalStateException.class);
 		expectedException.expectMessage("Configuration required for property: "
 		        + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
-		assertNull(RadiologyProperties.getRadiologyCareSetting());
+		assertNull(radiologyProperties.getRadiologyCareSetting());
 	}
 	
 	/**
@@ -178,8 +163,8 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		radiologyOrderType.setUuid(RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID);
 		orderService.saveOrderType(radiologyOrderType);
 		
-		assertEquals(RadiologyProperties.getRadiologyTestOrderType().getName(), "Radiology Order");
-		assertEquals(RadiologyProperties.getRadiologyTestOrderType().getUuid(),
+		assertEquals(radiologyProperties.getRadiologyTestOrderType().getName(), "Radiology Order");
+		assertEquals(radiologyProperties.getRadiologyTestOrderType().getUuid(),
 		    RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID);
 	}
 	
@@ -194,7 +179,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		expectedException.expectMessage("OrderType for radiology orders not in database (not found under uuid="
 		        + RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID + ").");
 		
-		RadiologyProperties.getRadiologyTestOrderType();
+		radiologyProperties.getRadiologyTestOrderType();
 	}
 	
 	/**
@@ -208,7 +193,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		encounterType.setUuid(RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID);
 		encounterService.saveEncounterType(encounterType);
 		
-		assertEquals(RadiologyProperties.getRadiologyEncounterType().getUuid(),
+		assertEquals(radiologyProperties.getRadiologyEncounterType().getUuid(),
 		    RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID);
 	}
 	
@@ -223,7 +208,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		expectedException.expectMessage("EncounterType for radiology orders not in database (not found under uuid="
 		        + RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID + ").");
 		
-		RadiologyProperties.getRadiologyEncounterType();
+		radiologyProperties.getRadiologyEncounterType();
 	}
 	
 	/**
@@ -238,7 +223,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		encounterRole.setUuid(RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID);
 		encounterService.saveEncounterRole(encounterRole);
 		
-		assertEquals(RadiologyProperties.getOrderingProviderEncounterRole().getUuid(),
+		assertEquals(radiologyProperties.getOrderingProviderEncounterRole().getUuid(),
 		    RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID);
 	}
 	
@@ -253,6 +238,6 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		expectedException.expectMessage("EncounterRole for ordering provider not in database (not found under uuid="
 		        + RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID + ").");
 		
-		RadiologyProperties.getOrderingProviderEncounterRole();
+		radiologyProperties.getOrderingProviderEncounterRole();
 	}
 }

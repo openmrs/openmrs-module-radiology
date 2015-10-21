@@ -42,13 +42,13 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
-import org.openmrs.api.OrderService;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.CommonOrderPriority;
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.xml.sax.SAXException;
 
 import ca.uhn.hl7v2.model.Message;
@@ -73,11 +73,15 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	
 	protected static final String MWL_DIRECTORY = "mwl";
 	
-	private AdministrationService administrationService = null;
+	@Autowired
+	@Qualifier("adminService")
+	private AdministrationService administrationService;
 	
-	private RadiologyService radiologyService = null;
+	@Autowired
+	private RadiologyService radiologyService;
 	
-	private OrderService orderService = null;
+	@Autowired
+	private RadiologyProperties radiologyProperties;
 	
 	@Rule
 	public TemporaryFolder temporaryBaseFolder = new TemporaryFolder();
@@ -91,19 +95,8 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	@Before
 	public void runBeforeEachTest() throws Exception {
 		
-		if (administrationService == null) {
-			administrationService = Context.getAdministrationService();
-		}
 		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_SPECIFIC_CHARCATER_SET,
 		        DICOM_SPECIFIC_CHARACTER_SET));
-		
-		if (orderService == null) {
-			orderService = Context.getOrderService();
-		}
-		
-		if (radiologyService == null) {
-			radiologyService = Context.getService(RadiologyService.class);
-		}
 		
 		executeDataSet(STUDIES_TEST_DATASET);
 	}
@@ -245,7 +238,7 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	 */
 	DicomObject getDicomNSet(Study study, Order radiologyOrder, String performedProcedureStatus) {
 		
-		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(RadiologyProperties.getSpecificCharacterSet());
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties.getSpecificCharacterSet());
 		
 		String performedProcedureStepEndDate = "20150313";
 		String performedProcedureStepEndTime = "133725";

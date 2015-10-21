@@ -34,12 +34,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Patient;
 import org.openmrs.api.AdministrationService;
-import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
-import org.openmrs.messagesource.MessageSourceService;
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.test.RadiologyTestData;
@@ -78,20 +75,14 @@ public class PortletsControllerTest {
 	private RadiologyService radiologyService;
 	
 	@Mock
-	private OrderService orderService;
-	
-	@Mock
 	private AdministrationService administrationService;
-	
-	@Mock
-	private MessageSourceService messageSourceService;
 	
 	@InjectMocks
 	private PortletsController portletsController = new PortletsController();
 	
 	@Before
 	public void runBeforeAllTests() {
-		PowerMockito.mockStatic(Context.class, RadiologyProperties.class);
+		PowerMockito.mockStatic(Context.class);
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yyyy");
 		
 		mockRadiologyOrders = new ArrayList<RadiologyOrder>();
@@ -108,7 +99,6 @@ public class PortletsControllerTest {
 		mockPatient3 = RadiologyTestData.getMockPatient3();
 		
 		when(Context.getDateFormat()).thenReturn(simpleDateFormat);
-		when(Context.getOrderService()).thenReturn(orderService);
 		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
 		when(radiologyService.getStudiesByRadiologyOrders(mockRadiologyOrders)).thenReturn(mockStudies);
 		when(radiologyService.getRadiologyOrdersByPatients(patientService.getPatients(""))).thenReturn(mockRadiologyOrders);

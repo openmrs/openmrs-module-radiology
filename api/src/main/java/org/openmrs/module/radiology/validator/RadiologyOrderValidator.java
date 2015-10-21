@@ -17,6 +17,7 @@ import org.openmrs.Encounter;
 import org.openmrs.Order;
 import org.openmrs.annotation.Handler;
 import org.openmrs.module.radiology.RadiologyOrder;
+import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
@@ -25,6 +26,7 @@ import org.springframework.validation.Validator;
  * Validates the {@link RadiologyOrder} class.
  */
 @Handler(supports = { RadiologyOrder.class })
+@Component
 public class RadiologyOrderValidator implements Validator {
 	
 	/** Log for this class and subclasses */
