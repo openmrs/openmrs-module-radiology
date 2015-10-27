@@ -39,6 +39,7 @@
 	}
 
 	function updateObsValues(tmpConcept) {
+		$j("#saveObsButton").prop('name', 'saveObs');
 		var values = [ 'valueBooleanRow', 'valueCodedRow', 'valueDatetimeRow',
 				'valueDateRow', 'valueTimeRow', 'valueModifierRow',
 				'valueTextRow', 'valueNumericRow', 'valueInvalidRow',
@@ -95,6 +96,7 @@
 			}
 			// TODO move datatype 'TM' to own time box.  How to have them select?
 			else if (datatype == 'ED') {
+				$j("#saveObsButton").prop('name', 'saveComplexObs');
 				$j('#valueComplex').show();
 			} else {
 				$j('#valueInvalidRow').show();
@@ -469,12 +471,13 @@ th {
 				</tr>
 				<tr id="valueComplex" class="obsValue">
 					<th><openmrs:message code="Obs.complexAnswer" /></th>
-					<spring:bind path="valueComplex">
-						<td>${status.value}<br /> <a href="${hyperlinkView}"
-							target="_blank"><openmrs:message
-									code="Obs.viewCurrentComplexValue" /></a><br /> ${htmlView}<br />
-							<br /> <openmrs:message code="Obs.valueComplex.uploadNew" /> <input
-							type="file" name="complexDataFile" /> <c:if
+					<spring:bind path="valueComplex"><br />
+						<td>${status.value}<c:if test="${obs.obsId != null}">
+								<a href="${hyperlinkView}" target="_blank"><openmrs:message
+										code="Obs.viewCurrentComplexValue" /></a>
+							</c:if> <br /> ${htmlView}<br /> <br /> <openmrs:message
+								code="Obs.valueComplex.uploadNew" /> <input type="file"
+							name="complexDataFile" /> <c:if
 								test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if>
@@ -541,7 +544,7 @@ th {
 		</c:if>
 
 		<%-- You can't edit a voided obs --%>
-		<input type="submit" name="saveObs"
+		<input type="submit" id="saveObsButton" name="saveObs"
 			value='<openmrs:message code="Obs.save"/>'
 			<c:if test="${obs.voided}">disabled</c:if>> &nbsp; <input
 			type="button" value='<openmrs:message code="general.cancel"/>'
