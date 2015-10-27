@@ -89,6 +89,7 @@ public class RadiologyObsFormController {
 	 * @param obs to populate the model and view
 	 * @should populate the model and view for given radiology order with completed study and obs
 	 * @should populate the model and view for given radiology order without completed study and obs
+	 * @should populate the model and view for given obs with complex concept
 	 */
 	private ModelAndView populateModelAndView(RadiologyOrder radiologyOrder, Obs obs) {
 		
@@ -101,6 +102,15 @@ public class RadiologyObsFormController {
 		Study study = radiologyOrder.getStudy();
 		result.addObject("studyUID", study.isCompleted() ? study.getStudyInstanceUid() : null);
 		result.addObject("dicomViewerUrl", getDicomViewerUrl(study, radiologyOrder.getPatient()));
+		
+		if (obs.getId() != null && obs.getConcept().isComplex()) {
+			Obs complexObsAsHtmlView = obsService.getComplexObs(Integer.valueOf(obs.getId()), WebConstants.HTML_VIEW);
+			result.addObject("htmlView", complexObsAsHtmlView.getComplexData().getData());
+			
+			Obs complexObsAsHyperlinkView = obsService.getComplexObs(Integer.valueOf(obs.getId()),
+			    WebConstants.HYPERLINK_VIEW);
+			result.addObject("hyperlinkView", complexObsAsHyperlinkView.getComplexData().getData());
+		}
 		
 		return result;
 	}
@@ -202,75 +212,170 @@ public class RadiologyObsFormController {
 	 * @param obs the obs
 	 * @param obsErrors the result of the parameter binding
 	 * @return ModelAndView populated with obs matching the given criteria
-	 * @should save obs with given parameters
-	 * @should return populated model and view if binding errors occur
-	 * @should return populated model and view if edit reason is empty and obs id not null
-	 * @should return populated model and view if edit reason is null and obs id not null
+	 * @should populate model and view with obs occuring thrown Exception
 	 * @should return redirecting model and view for not authenticated user
-	 * @should edit obs with edit reason and complex concept
-	 * @should edit obs with edit reason, complex concept and request which is an instance
-	 *         of multihttpserveletrequest
-	 * @should edit obs with edit reason concept not complex and request which is an
-	 *         instance of multihttpserveletrequest
-	 * @should populate model and view with obs occuring thrown APIException
+	 * @should return populated model and view for obs
 	 */
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.POST, params = "saveObs")
 	ModelAndView saveObs(HttpServletRequest request, HttpServletResponse response,
 	        @RequestParam(value = "editReason", required = false) String editReason,
 	        @RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder, @ModelAttribute("obs") Obs obs,
 	        BindingResult obsErrors) {
-		
+		log.info("saveObs");
 		HttpSession httpSession = request.getSession();
-		
-		new ObsValidator().validate(obs, obsErrors);
-		
-		if (obsErrors.hasErrors()) {
-			return populateModelAndView(radiologyOrder, obs, editReason);
-		}
+		log.info(obs);
 		if (Context.isAuthenticated()) {
 			
 			try {
-				// if the user is just editing the obs
-				if (obs.getObsId() != null && (editReason == null || editReason.isEmpty())) {
-					obsErrors.reject("editReason", "Obs.edit.reason.empty");
-					
-					return populateModelAndView(radiologyOrder, obs);
+				//validate
+				if (isObsValid(obs, obsErrors, editReason)) {
+					//save
+					obs = obsService.saveObs(obs, editReason);
+					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.saved");
+				} else {
+					return populateModelAndView(radiologyOrder, obs, editReason);
 				}
 				
-				if (obs.getConcept().isComplex()) {
-					if (request instanceof MultipartHttpServletRequest) {
-						MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
-						MultipartFile complexDataFile = multipartRequest.getFile("complexDataFile");
-						if (complexDataFile != null && !complexDataFile.isEmpty()) {
-							InputStream complexDataInputStream = complexDataFile.getInputStream();
-							
-							ComplexData complexData = new ComplexData(complexDataFile.getOriginalFilename(),
-							        complexDataInputStream);
-							
-							obs.setComplexData(complexData);
-							
-							// the handler on the obs.concept is called
-							// with
-							// the given complex data
-							obs = obsService.saveObs(obs, editReason);
-							complexDataInputStream.close();
-						}
-					}
-				} else {
-					obs = obsService.saveObs(obs, editReason);
-				}
-				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.saved");
 			}
-			catch (APIException e) {
+			catch (Exception e) {
 				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, e.getMessage());
-				return populateModelAndView(radiologyOrder, obs, editReason);
-			}
-			catch (IOException e) {
 				return populateModelAndView(radiologyOrder, obs, editReason);
 			}
 		}
 		return new ModelAndView("redirect:" + RADIOLOGY_OBS_FORM_URL + "orderId=" + obs.getOrder().getId() + "&obsId="
 		        + obs.getId());
+	}
+	
+	/**
+	 * Save obs corresponding to given http servlet request, http servlet response, radiologyOrder, obs, obs, obsErrors
+	 *  
+	 * @param request the http servlet request with all parameters
+	 * @param response the http servlet response
+	 * @param radiologyOrder the corresponding radiology order
+	 * @param obs the obs
+	 * @param obsErrors the result of the parameter binding
+	 * @return ModelAndView populated with obs matching the given criteria
+	 * @should populate model and view with obs occuring thrown Exception
+	 * @should return redirecting model and view for not authenticated user
+	 * @should return populated model and view for complex obs
+	 */
+	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.POST, params = "saveComplexObs")
+	ModelAndView saveComplexObs(MultipartHttpServletRequest request, HttpServletResponse response,
+	        @RequestParam(value = "editReason", required = false) String editReason,
+	        @RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder, @ModelAttribute("obs") Obs obs,
+	        BindingResult obsErrors) {
+		log.info("saveComplexObs");
+		log.info(obs);
+		HttpSession httpSession = request.getSession();
+		
+		if (Context.isAuthenticated()) {
+			
+			try {
+				
+				//openInputStream
+				InputStream complexDataInputStream = openInputStreamForComplexDataFile(request);
+				
+				//populate
+				obs = populateComplexObs(request, obs, complexDataInputStream);
+				
+				//validate
+				if (isObsValid(obs, obsErrors, editReason)) {
+					//save
+					obs = obsService.saveObs(obs, editReason);
+					httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.saved");
+				} else {
+					return populateModelAndView(radiologyOrder, obs, editReason);
+				}
+				//close inputstream
+				complexDataInputStream.close();
+				
+			}
+			catch (Exception e) {
+				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, e.getMessage());
+				return populateModelAndView(radiologyOrder, obs, editReason);
+			}
+		}
+		return new ModelAndView("redirect:" + RADIOLOGY_OBS_FORM_URL + "orderId=" + obs.getOrder().getId() + "&obsId="
+		        + obs.getId());
+		
+	}
+	
+	/**
+	 * Open input stream for complex data file
+	 * 
+	 * @param multipartRequest containing the complex data file
+	 * @return input stream for complex data file
+	 * @throws IOException if stream could not be opened
+	 * @should open input stream for complex data file
+	 * @should throw exception if input stream could not be opened
+	 */
+	private InputStream openInputStreamForComplexDataFile(MultipartHttpServletRequest multipartRequest) throws IOException {
+		MultipartFile complexDataFile = multipartRequest.getFile("complexDataFile");
+		if (complexDataFile == null)
+		{
+			throw new IOException("Requested File does not Exist");
+		}
+		InputStream complexDataInputStream = complexDataFile.getInputStream();
+		return complexDataInputStream;
+	}
+	
+	/**
+	 * Save complex obs with complex data
+	 * 
+	 * @param request the http servlet request with all parameters
+	 * @param obs to be populated
+	 * @param obsErrors the result of the parameter binding
+	 * @return saved complex obs with complex data
+	 * @throws IOException
+	 * @should populate new obs with new complex data
+	 * @should populate obs with new complex data
+	 */
+	private Obs populateComplexObs(MultipartHttpServletRequest multipartRequest, Obs obs, InputStream complexDataInputStream) throws IOException {
+		
+		MultipartFile complexDataFile = multipartRequest.getFile("complexDataFile");
+		boolean isComplexDataFileInRequest = complexDataFile != null && !complexDataFile.isEmpty();
+		//new Complex Obs or existing Complex Obs with new File
+		if (isComplexDataFileInRequest) {
+			obs.setComplexData(new ComplexData(complexDataFile.getOriginalFilename(), complexDataInputStream));
+			return obs;
+		}
+		//existing Complex Obs without new File
+		else if ((obs.getId() != null) && (!isComplexDataFileInRequest)) {
+			obs.setComplexData(obsService.getComplexObs(Integer.valueOf(obs.getId()), null).getComplexData());
+			return obs;
+		}
+		//new Complex Obs without new File
+		else {
+			throw new IOException("Unable to read File");
+		}
+		
+	}
+	
+	/**
+	 * Check if Obs is Valid
+	 * 
+	 * @param obs to be validated
+	 * @param obsErrors the result of the parameter binding
+	 * @param editReason reason why the obs was edited
+	 * @return true if obs is valid
+	 * @should return true if obs is valid
+	 * @should return false if edit reason is empty and obs id not null
+	 * @should return false if edit reason is null and obs id not null
+	 * @should return false if validation of the obs validator fails
+	 */
+	private boolean isObsValid(Obs obs, BindingResult obsErrors, String editReason) {
+		log.info("isObsValid");
+		// if the user is just editing the obs
+		if (obs.getObsId() != null && (editReason == null || editReason.isEmpty())) {
+			obsErrors.reject("editReason", "Obs.edit.reason.empty");
+			return false;
+		}
+		
+		new ObsValidator().validate(obs, obsErrors);
+		if (obsErrors.hasErrors()) {
+			return false;
+		}
+		return true;
 	}
 	
 	/**
