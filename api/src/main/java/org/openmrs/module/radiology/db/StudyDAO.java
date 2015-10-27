@@ -16,42 +16,39 @@ import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
 
 /**
- * radiologyResponse-related database functions
+ * Study-related database functions
  * 
+ * @see org.openmrs.module.radiology.RadiologyService
  */
 public interface StudyDAO {
 	
 	/**
-	 * Save the given <code>Study</code> to the database
-	 * 
-	 * @param study study to be created or updated
-	 * @return study who was created or updated
+	 * @see org.openmrs.module.radiology.RadiologyService#saveStudy(Integer)
 	 */
 	public Study saveStudy(Study study);
 	
-	public Study getStudy(Integer id);
+	/**
+	 * @see org.openmrs.module.radiology.RadiologyService#getStudyByStudyId(Integer)
+	 */
+	public Study getStudyByStudyId(Integer studyId);
 	
 	/**
-	 * @param orderId
-	 * @return the study matching orderId, or new Study() if there is no such study
+	 * @see org.openmrs.module.radiology.RadiologyService#getStudyByOrderId(Integer)
 	 */
 	public Study getStudyByOrderId(Integer orderId);
 	
 	/**
-	 * @param studyInstanceUid
-	 * @return the study for given studyInstanceUid
+	 * @see org.openmrs.module.radiology.RadiologyService#getStudyByStudyInstanceUid(String)
 	 */
 	public Study getStudyByStudyInstanceUid(String studyInstanceUid);
 	
 	/**
-	 * @param radiologyOrders
-	 * @return studies for given radiology orders
+	 * @see org.openmrs.module.radiology.RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
 	 */
 	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
 	
 	/**
-	 * @param orderId
-	 * @return obs for given orderId
+	 * @see org.openmrs.module.radiology.RadiologyService#getObsByOrderId(Integer)
 	 */
 	public List<Obs> getObsByOrderId(Integer orderId);
 	

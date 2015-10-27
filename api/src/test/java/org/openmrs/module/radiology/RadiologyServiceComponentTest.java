@@ -75,6 +75,8 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	private static final int EXISTING_STUDY_ID = 1;
 	
+	private static final int NON_EXISTING_STUDY_ID = 99999;
+	
 	private static final int CONCEPT_ID_FOR_FRACTURE = 178;
 	
 	private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 3;
@@ -239,9 +241,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 * @verifies should create discontinuation order which discontinues given radiology order object
 	 */
 	@Test
-	@Verifies(value = "should create discontinuation order which discontinues given radiology order object", method = "discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)")
 	public void discontinueRadiologyOrder_shouldCreateDiscontinuationOrderWhichDiscontinuesGivenRadiologyOrderObject()
 	        throws Exception {
 		
@@ -261,9 +263,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 * @verifies should throw illegal argument exception given empty radiology order
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception given empty radiology order", method = "discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)")
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenEmptyRadiologyOrder() throws Exception {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
@@ -277,9 +279,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 * @verifies should throw illegal argument exception given radiology order with orderId null
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception given radiology order with orderId null", method = "discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)")
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenRadiologyOrderWithOrderIdNull()
 	        throws Exception {
 		
@@ -295,9 +297,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 * @verifies should throw illegal argument exception if radiology order is not active
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception if radiology order is not active", method = "discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)")
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsNotActive() throws Exception {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
@@ -313,9 +315,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 * @verifies should throw illegal argument exception given empty provider
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception given empty provider", method = "discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)")
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenEmptyProvider() throws Exception {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
@@ -329,9 +331,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 * @verifies should return radiology order matching order id
 	 */
 	@Test
-	@Verifies(value = "should return radiology order matching order id", method = "getRadiologyOrderByOrderId(Integer)")
 	public void getRadiologyOrderByOrderId_shouldReturnRadiologyOrderMatchingOrderId() {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
@@ -342,9 +344,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 * @verifies should return null if no match was found
 	 */
 	@Test
-	@Verifies(value = "should return null if no match was found", method = "getRadiologyOrderByOrderId(Integer)")
 	public void getRadiologyOrderByOrderId_shouldReturnNullIfNoMatchIsFound() {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(NON_EXISTING_RADIOLOGY_ORDER_ID);
@@ -354,9 +356,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 * @verifies should throw illegal argument exception given null
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception given null", method = "getRadiologyOrderByOrderId(Integer)")
 	public void getRadiologyOrderByOrderId_shouldThrowIllegalArgumentExceptionGivenNull() {
 		
 		expectedException.expect(IllegalArgumentException.class);
@@ -366,9 +368,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getRadiologyOrdersByPatient(Patient)
+	 * @verifies should return all radiology orders associated with given patient
 	 */
 	@Test
-	@Verifies(value = "should return all radiology orders associated with given patient", method = "getRadiologyOrdersByPatient(Patient)")
 	public void getRadiologyOrdersByPatient_shouldReturnAllRadiologyOrdersAssociatedWithGivenPatient() {
 		
 		Patient patientWithTwoRadiologyOrders = patientService
@@ -381,9 +383,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getRadiologyOrdersByPatient(Patient)
+	 * @verifies should return empty list given patient without associated radiology orders
 	 */
 	@Test
-	@Verifies(value = "should return empty list given patient without associated radiology orders", method = "getRadiologyOrdersByPatient(Patient)")
 	public void getRadiologyOrdersByPatient_shouldReturnEmptyListGivenPatientWithoutAssociatedRadiologyOrders() {
 		
 		Patient patientWithoutRadiologyOrders = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER);
@@ -395,9 +397,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getRadiologyOrdersByPatient(Patient)
+	 * @verifies should throw illegal argument exception given null
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception given null", method = "getRadiologyOrdersByPatient(Patient)")
 	public void getRadiologyOrdersByPatient_shouldThrowIllegalArgumentExceptionGivenNull() {
 		
 		expectedException.expect(IllegalArgumentException.class);
@@ -407,9 +409,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 * @verifies should return all radiology orders associated with given patients
 	 */
 	@Test
-	@Verifies(value = "should return all radiology orders associated with given patients", method = "getRadiologyOrdersByPatients(List<Patient>)")
 	public void getRadiologyOrdersByPatients_shouldReturnAllRadiologyOrdersAssociatedWithGivenPatients() {
 		
 		Patient patientWithTwoRadiologyOrders = patientService.getPatient(PATIENT_ID_WITH_TWO_RADIOLOGY_ORDERS);
@@ -426,9 +428,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 * @verifies should return all radiology orders given empty patient list
 	 */
 	@Test
-	@Verifies(value = "should return all radiology orders given empty patient list", method = "getRadiologyOrdersByPatients(List<Patient>)")
 	public void getRadiologyOrdersByPatients_shouldReturnAllRadiologyOrdersGivenEmptyPatientList() {
 		
 		List<Patient> emptyPatientList = new ArrayList<Patient>();
@@ -440,9 +442,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 * @verifies should throw illegal argument exception given null
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception given null", method = "getRadiologyOrdersByPatients(List<Patient>)")
 	public void getRadiologyOrdersByPatients_shouldThrowIllegalArgumentExceptionGivenNull() {
 		
 		expectedException.expect(IllegalArgumentException.class);
@@ -451,10 +453,35 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	}
 	
 	/**
-	 * @see RadiologyService#getStudyByOrderId(Integer)
+	 * @see RadiologyService#getStudyByStudyId(Integer)
+	 * @verifies should return study for given study id
 	 */
 	@Test
-	@Verifies(value = "should return study associated with radiology order for which order id is given", method = "getStudyByOrderId(Integer)")
+	public void getStudyByStudyId_shouldReturnStudyForGivenStudyId() throws Exception {
+		
+		Study study = radiologyService.getStudyByStudyId(EXISTING_STUDY_ID);
+		
+		assertNotNull(study);
+		assertThat(study.getRadiologyOrder().getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
+	}
+	
+	/**
+	 * @see RadiologyService#getStudyByStudyId(Integer)
+	 * @verifies should return null if no match was found
+	 */
+	@Test
+	public void getStudyByStudyId_shouldReturnNullIfNoMatchIsFound() throws Exception {
+		
+		Study study = radiologyService.getStudyByStudyId(NON_EXISTING_STUDY_ID);
+		
+		assertNull(study);
+	}
+	
+	/**
+	 * @see RadiologyService#getStudyByOrderId(Integer)
+	 * @verifies should return study associated with radiology order for which order id is given
+	 */
+	@Test
 	public void getStudyByOrderId_shouldReturnStudyMatching() throws Exception {
 		
 		Study study = radiologyService.getStudyByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
@@ -465,9 +492,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getStudyByOrderId(Integer)
+	 * @verifies should return null if no match was found
 	 */
 	@Test
-	@Verifies(value = "should return null if no match was found", method = "getStudyByOrderId(Integer)")
 	public void getStudyByOrderId_shouldReturnNullIfNoMatchIsFound() {
 		
 		Study study = radiologyService.getStudyByOrderId(NON_EXISTING_RADIOLOGY_ORDER_ID);
@@ -477,9 +504,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getStudyByOrderId(Integer)
+	 * @verifies should throw illegal argument exception given null
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception given null", method = "getStudyByOrderId(Integer)")
 	public void getStudyByOrderId_shouldThrowIllegalArgumentExceptionGivenNull() {
 		
 		expectedException.expect(IllegalArgumentException.class);
@@ -489,9 +516,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getStudyByStudyInstanceUid(String)
+	 * @verifies should return study matching study instance uid
 	 */
 	@Test
-	@Verifies(value = "should return study matching study instance uid", method = "getStudyByStudyInstanceUid(String)")
 	public void getStudyByStudyInstanceUid_shouldReturnStudyMatchingUid() throws Exception {
 		Study study = radiologyService.getStudyByStudyInstanceUid(EXISTING_STUDY_INSTANCE_UID);
 		
@@ -501,9 +528,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getStudyByStudyInstanceUid(String)
+	 * @verifies should return null if no match was found
 	 */
 	@Test
-	@Verifies(value = "should return null if no match was found", method = "getStudyByStudyInstanceUid(String)")
 	public void getStudyByStudyInstanceUid_shouldReturnNullIfNoMatchIsFound() throws Exception {
 		Study study = radiologyService.getStudyByStudyInstanceUid(NON_EXISTING_STUDY_INSTANCE_UID);
 		
@@ -512,9 +539,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getStudyByStudyInstanceUid(String)
+	 * @verifies should throw IllegalArgumentException if study instance uid is null
 	 */
 	@Test
-	@Verifies(value = "should throw IllegalArgumentException if study instance uid is null", method = "getStudyByStudyInstanceUid(String)")
 	public void getStudyByStudyInstanceUid_shouldThrowIllegalArgumentExceptionIfUidIsNull() throws Exception {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("studyInstanceUid is required");
@@ -523,9 +550,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
+	 * @verifies should fetch all studies for given radiology orders
 	 */
 	@Test
-	@Verifies(value = "should fetch all studies for given radiology orders", method = "getStudiesByRadiologyOrders(List<RadiologyOrder>)")
 	public void getStudiesByRadiologyOrders_shouldFetchAllStudiesForGivenRadiologyOrders() throws Exception {
 		
 		Patient patient = patientService.getPatient(PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER);
@@ -540,9 +567,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
+	 * @verifies should return empty list given radiology orders without associated studies
 	 */
 	@Test
-	@Verifies(value = "should return empty list given radiology orders without associated studies", method = "getStudiesByRadiologyOrders(List<RadiologyOrder>)")
 	public void getStudiesByRadiologyOrders_shouldReturnEmptyListGivenRadiologyOrdersWithoutAssociatedStudies()
 	        throws Exception {
 		
@@ -558,9 +585,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
+	 * @verifies should return empty list given empty radiology order list
 	 */
 	@Test
-	@Verifies(value = "should return empty list given empty radiology order list", method = "getStudiesByRadiologyOrders(List<RadiologyOrder>)")
 	public void getStudiesByRadiologyOrders_shouldReturnEmptyListGivenEmptyRadiologyOrderList() throws Exception {
 		
 		List<RadiologyOrder> orders = new ArrayList<RadiologyOrder>();
@@ -573,9 +600,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
+	 * @verifies should throw IllegalArgumentException given null
 	 */
 	@Test
-	@Verifies(value = "should throw IllegalArgumentException given null", method = "getStudiesByRadiologyOrders(List<RadiologyOrder>)")
 	public void getStudiesByRadiologyOrders_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
@@ -585,9 +612,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getObsByOrderId(Integer)
+	 * @verifies should fetch all obs for given orderId
 	 */
 	@Test
-	@Verifies(value = "should fetch all obs for given orderId", method = "getObsByOrderId(Integer)")
 	public void getObsByOrderId_shouldFetchAllObsForGivenOrderId() throws Exception {
 		List<Obs> obs = radiologyService.getObsByOrderId(RADIOLOGY_ORDER_ID_WITH_ONE_OBS);
 		
@@ -597,9 +624,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getObsByOrderId(Integer)
+	 * @verifies should return empty list given orderId without associated obs
 	 */
 	@Test
-	@Verifies(value = "should return empty list given orderId without associated obs", method = "getObsByOrderId(Integer)")
 	public void getObsByOrderId_shouldReturnEmptyListGivenOrderIdWithoutAssociatedObs() throws Exception {
 		List<Obs> obs = radiologyService.getObsByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_OBS);
 		
@@ -608,9 +635,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#getObsByOrderId(Integer)
+	 * @verifies should throw IllegalArgumentException given null
 	 */
 	@Test
-	@Verifies(value = "should throw IllegalArgumentException given null", method = "getObsByOrderId(Integer)")
 	public void getObsByOrderId_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("orderId is required");
@@ -625,7 +652,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	public void updateStudyPerformedStatus_shouldUpdatePerformedStatusOfStudyAssociatedWithGivenStudyInstanceUid()
 	        throws Exception {
 		
-		Study existingStudy = radiologyService.getStudy(EXISTING_STUDY_ID);
+		Study existingStudy = radiologyService.getStudyByStudyId(EXISTING_STUDY_ID);
 		PerformedProcedureStepStatus performedStatusPreUpdate = existingStudy.getPerformedStatus();
 		PerformedProcedureStepStatus performedStatusPostUpdate = PerformedProcedureStepStatus.COMPLETED;
 		

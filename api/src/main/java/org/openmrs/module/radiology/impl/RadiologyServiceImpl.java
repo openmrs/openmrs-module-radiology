@@ -316,12 +316,18 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		saveStudy(radiologyOrder.getStudy());
 	}
 	
+	/**
+	 * @see RadiologyService#getStudyByStudyId(Integer)
+	 */
 	@Transactional(readOnly = true)
 	@Override
-	public Study getStudy(Integer id) {
-		return studyDAO.getStudy(id);
+	public Study getStudyByStudyId(Integer studyId) {
+		return studyDAO.getStudyByStudyId(studyId);
 	}
 	
+	/**
+	 * @see RadiologyService#getStudyByOrderId(Integer)
+	 */
 	@Transactional(readOnly = true)
 	@Override
 	public Study getStudyByOrderId(Integer orderId) {
