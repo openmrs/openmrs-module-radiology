@@ -7,127 +7,31 @@
 <%@ include file="localHeader.jsp"%>
 
 <openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
-<openmrs:htmlInclude file="/scripts/dojo/dojo.js" />
 <%@ include
 	file="/WEB-INF/view/module/radiology/resources/js/moreInfo.js"%>
+<openmrs:htmlInclude file="/scripts/timepicker/timepicker.js" />
 
 <script type="text/javascript">
-	dojo.require("dojo.widget.openmrs.ConceptSearch");
-	dojo.require("dojo.widget.openmrs.EncounterSearch");
-	dojo.require("dojo.widget.openmrs.OpenmrsPopup");
+	// on concept select:
+	function onQuestionSelect(concept) {
+		$j("#conceptDescription").show();
+		$j("#conceptDescription").html(concept.description);
+		updateObsValues(concept);
+	}
 
-	var encounterSearch;
-	var encounterSelection;
-	var conceptSearch;
-	var conceptSelection;
-	var codedSearch;
-	var codedSelection;
-
-	dojo
-			.addOnLoad(function() {
-				encounterSelection = dojo.widget.manager
-						.getWidgetById("encounterSelection");
-				encounterSearch = dojo.widget.manager.getWidgetById("eSearch");
-				conceptSelection = dojo.widget.manager
-						.getWidgetById("conceptSelection");
-				conceptSearch = dojo.widget.manager.getWidgetById("cSearch");
-				codedSelection = dojo.widget.manager
-						.getWidgetById("codedSelection");
-				codedSearch = dojo.widget.manager.getWidgetById("codedSearch");
-
-				dojo.event.topic
-						.subscribe(
-								"eSearch/select",
-								function(msg) {
-									var encounterSearch = dojo.widget.manager
-											.getWidgetById("eSearch");
-									encounterSelection.hiddenInputNode.value = msg.objs[0].encounterId;
-									encounterSelection.displayNode.innerHTML = msg.objs[0].location
-											+ " - "
-											+ encounterSearch
-													.getDateString(msg.objs[0].encounterDateTime);
-								});
-
-				dojo.event.topic
-						.subscribe(
-								"cSearch/select",
-								function(msg) {
-									var conceptSelection = dojo.widget.manager
-											.getWidgetById("conceptSelection");
-									conceptSelection.hiddenInputNode.value = msg.objs[0].conceptId;
-									conceptSelection.displayNode.innerHTML = msg.objs[0].name;
-									conceptSelection.descriptionDisplayNode.innerHTML = msg.objs[0].description;
-									updateObsValues(msg.objs[0]);
-								});
-
-				dojo.event
-						.connect(
-								codedSelection,
-								"onChangeButtonClick",
-								function() {
-									var codedSearch = dojo.widget.manager
-											.getWidgetById("codedSearch");
-									var conceptId = conceptSelection.hiddenInputNode.value;
-									DWRConceptService.findConceptAnswers('',
-											conceptId, false, true, codedSearch
-													.simpleClosure(codedSearch,
-															'doObjectsFound'));
-								});
-
-				dojo.event.topic
-						.subscribe(
-								"codedSearch/select",
-								function(msg) {
-									var obj = msg.objs[0];
-									var codedSelection = dojo.widget.manager
-											.getWidgetById("codedSelection");
-									if (obj.drugId) {
-										codedSelection.displayNode.innerHTML = obj.fullName;
-										codedSelection.descriptionDisplayNode.innerHTML = "";
-										codedSelection.hiddenInputNode.value = obj.conceptId;
-										$('valueDrugId').value = obj.drugId;
-									} else if (obj.conceptId) {
-										codedSelection.displayNode.innerHTML = obj.name;
-										codedSelection.descriptionDisplayNode.innerHTML = obj.description;
-										codedSelection.hiddenInputNode.value = obj.conceptId;
-									}
-
-								});
-
-				codedSearch.doFindObjects = function(txt) {
-					var codedSearch = dojo.widget.manager
-							.getWidgetById("codedSearch");
-					var codedSelection = dojo.widget.manager
-							.getWidgetById("codedSelection");
-					var conceptId = codedSelection.conceptId;
-					DWRConceptService.findConceptAnswers(txt, conceptId, false,
-							true, codedSearch.simpleClosure(codedSearch,
-									'doObjectsFound'));
-				}
-
-				dojo.event.topic
-						.subscribe(
-								"codedSearch/objectsFound",
-								function(msg) {
-									msg.objs
-											.push('<a href="#proposeConcept" onclick="javascript:return showProposeConceptForm();"><spring:message code="ConceptProposal.propose.new"/></a>');
-								});
-
-				<c:if test="${obs.concept.conceptId == null}">
-				updateObsValues();
-				</c:if>
-
-				$('obsTable').style.visibility = 'visible';
-
-			});
+	// on answer select:
+	function onAnswerSelect(concept) {
+		$j("#codedDescription").show();
+		$j("#codedDescription").html(concept.description);
+	}
 
 	function showProposeConceptForm() {
 		var qs = "?";
 		var encounterId = "${obs.encounter.encounterId}"
-				|| $("encounterId").value;
+				|| $j("#encounterId").val();
 		if (encounterId != "")
 			qs += "&encounterId=" + encounterId;
-		var obsConceptId = "${obs.concept.conceptId}" || $("conceptId").value
+		var obsConceptId = "${obs.concept.conceptId}" || $j("#conceptId").val();
 		if (obsConceptId != "")
 			qs += "&obsConceptId=" + obsConceptId;
 		document.location = "${pageContext.request.contextPath}/admin/concepts/proposeConcept.form"
@@ -136,11 +40,12 @@
 
 	function updateObsValues(tmpConcept) {
 		var values = [ 'valueBooleanRow', 'valueCodedRow', 'valueDatetimeRow',
-				'valueModifierRow', 'valueTextRow', 'valueNumericRow',
-				'valueInvalidRow', 'valueComplex' ];
-		for (var i = 0; i < values.length; i++) {
-			$(values[i]).style.display = "none";
-		}
+				'valueDateRow', 'valueTimeRow', 'valueModifierRow',
+				'valueTextRow', 'valueNumericRow', 'valueInvalidRow',
+				'valueComplex' ];
+		$j.each(values, function(x, val) {
+			$j("#" + val).hide()
+		});
 
 		if (tmpConcept != null) {
 			var datatype = tmpConcept.hl7Abbreviation;
@@ -148,37 +53,51 @@
 				datatype = tmpConcept.datatype.hl7Abbreviation;
 
 			if (datatype == 'BIT') {
-				$('valueBooleanRow').style.display = "";
-				$('valueBooleanRow').style.visibility = "visible";
+				$j('#valueBooleanRow').show();
 			} else if (datatype == 'NM' || datatype == 'SN') {
-				$('valueNumericRow').style.display = "";
-				$('valueNumericRow').style.visibility = "visible";
+				$j('#valueNumericRow').show();
 				DWRConceptService.getConceptNumericUnits(tmpConcept.conceptId,
 						fillNumericUnits);
 			} else if (datatype == 'CWE') {
-				$('valueCodedRow').style.display = "";
-				$('valueCodedRow').style.visibility = "visible";
+				$j('#valueCodedRow').show();
+
 				// clear any old values:
-				var codedSelection = dojo.widget.manager
-						.getWidgetById("codedSelection");
-				codedSelection.conceptId = tmpConcept.conceptId;
-				codedSelection.displayNode.innerHTML = "";
-				codedSelection.descriptionDisplayNode.innerHTML = "";
-				codedSelection.hiddenInputNode.value = "";
+				$j("#valueCoded").val("");
+				$j("#valueCoded_selection").val("");
+				$j("#codedDescription").html("");
+
+				// set up the autocomplete for the answers
+				var conceptId = $j("#conceptId").val();
+				new AutoComplete("valueCoded_selection", new CreateCallback({
+					showAnswersFor : conceptId
+				}).conceptAnswersCallback(), {
+					'minLength' : '0'
+				});
+				$j("#valueCoded_selection").autocomplete().focus(
+						function(event, ui) {
+							if (event.target.value == "")
+								$j("#valueCoded_selection").trigger(
+										'keydown.autocomplete');
+						}); // trigger the drop down on focus
+
+				// something in the autocomplete is setting the focus to the conceptId box after
+				// this method is done.  get around this and focus on our answer box by putting
+				// a very small delay on the call using setTimeout
+				setTimeout("$j('#valueCoded_selection').focus();", 0);
 			} else if (datatype == 'ST') {
-				$('valueTextRow').style.display = "";
-				$('valueTextRow').style.visibility = "visible";
-			} else if (datatype == 'DT' || datatype == 'TS' || datatype == 'TM') {
-				$('valueDatetimeRow').style.display = "";
-				$('valueDatetimeRow').style.visibility = "visible";
+				$j('#valueTextRow').show();
+			} else if (datatype == 'DT') {
+				$j('#valueDateRow').show();
+			} else if (datatype == 'TS') {
+				$j('#valueDatetimeRow').show();
+			} else if (datatype == 'TM') {
+				$j('#valueTimeRow').show();
 			}
 			// TODO move datatype 'TM' to own time box.  How to have them select?
 			else if (datatype == 'ED') {
-				$('valueComplex').style.display = "";
-				$('valueComplex').style.visibility = "visible";
+				$j('#valueComplex').show();
 			} else {
-				$('valueInvalidRow').style.display = "";
-				$('valueInvalidRow').style.visibility = "visible";
+				$j('#valueInvalidRow').show();
 				DWRConceptService.getQuestionsForAnswer(tmpConcept.conceptId,
 						fillValueInvalidPossible(tmpConcept));
 			}
@@ -186,17 +105,17 @@
 	}
 
 	function fillNumericUnits(units) {
-		$('numericUnits').innerHTML = units;
+		$j('#numericUnits').html(units);
 	}
 
 	function validateNumericRange(value) {
 		if (!isNaN(value) && value != '') {
-			var conceptId = conceptSelection.hiddenInputNode.value;
+			var conceptId = $j("#conceptId").val();
 			var numericErrorMessage = function(validValue) {
-				var errorTag = $('numericRangeError');
+				var errorTag = document.getElementById('numericRangeError');
 				errorTag.className = "error";
 				if (validValue == false)
-					errorTag.innerHTML = '<spring:message code="ConceptNumeric.invalid.msg"/>';
+					errorTag.innerHTML = '<openmrs:message code="ConceptNumeric.invalid.msg"/>';
 				else
 					errorTag.innerHTML = errorTag.className = "";
 			}
@@ -218,10 +137,10 @@
 
 	var fillValueInvalidPossible = function(invalidConcept) {
 		return function(questions) {
-			var div = $('valueInvalidPossibleConcepts');
+			var div = document.getElementById('valueInvalidPossibleConcepts');
 			div.innerHTML = "";
 			var txt = document
-					.createTextNode('<spring:message code="Obs.valueInvalid.didYouMean"/> ');
+					.createTextNode('<openmrs:message code="Obs.valueInvalid.didYouMean"/> ');
 			for (var i = 0; i < questions.length && i < 10; i++) {
 				if (i == 0)
 					div.appendChild(txt);
@@ -242,8 +161,6 @@
 
 	var selectNewQuestion = function(question, answer) {
 		return function() {
-			var conceptSearch = dojo.widget.manager.getWidgetById("cSearch");
-			var codedSearch = dojo.widget.manager.getWidgetById("codedSearch");
 			var msg = new Object();
 			msg.objs = [ question ];
 			dojo.event.topic.publish(conceptSearch.eventNames.select, msg);
@@ -288,8 +205,8 @@ th {
 	color: white;
 }
 
-#encounterSelection .popupSearchForm {
-	width: 700px;
+.obsValue {
+	display: none;
 }
 </style>
 
@@ -333,23 +250,22 @@ th {
 </c:if>
 
 <h2>
-	<spring:message code="Obs.title" />
+	<openmrs:message code="Obs.title" />
 </h2>
 
 <spring:hasBindErrors name="obs">
-	<spring:message code="fix.error" />
-	<br />
+	<openmrs_tag:errorNotify errors="${errors}" />
 </spring:hasBindErrors>
 
 <c:if test="${obs.voided}">
 	<form action="" method="post">
 		<div class="retiredMessage">
 			<div>
-				<spring:message code="general.voidedBy" />
+				<openmrs:message code="general.voidedBy" />
 				${obs.voidedBy.personName}
 				<openmrs:formatDate date="${obs.dateVoided}" type="medium" />
 				- ${obs.voidReason} <input type="submit"
-					value='<spring:message code="Obs.unvoidObs"/>' name="unvoidObs" />
+					value='<openmrs:message code="Obs.unvoidObs"/>' name="unvoidObs" />
 			</div>
 		</div>
 	</form>
@@ -365,20 +281,19 @@ th {
 			<table id="obsTable">
 				<c:if test="${obs.obsId != null}">
 					<tr>
-						<th><spring:message code="general.id" /></th>
+						<th><openmrs:message code="general.id" /></th>
 						<td><spring:bind path="obsId">
 					${status.value}
 				</spring:bind></td>
 					</tr>
 				</c:if>
 				<tr>
-					<th><spring:message code="Obs.person" /></th>
-					<td><script type="text/javascript">
-						$('obsTable').style.visibility = 'hidden';
-					</script> <spring:bind path="person">
+					<th><openmrs:message code="Obs.person" /></th>
+					<td><spring:bind path="person">
 							<openmrs_tag:personField formFieldName="person"
 								searchLabelCode="Person.findBy"
-								initialValue="${obs.person.personId}" linkUrl="" callback="" />
+								initialValue="${status.editor.value.personId}" linkUrl=""
+								callback="" />
 							<a style="cursor: pointer;" id="moreInfo"><spring:message
 									code="radiology.moreInfo" /></a>
 							<c:if test="${status.errorMessage != ''}">
@@ -387,15 +302,12 @@ th {
 						</spring:bind></td>
 				</tr>
 				<tr>
-					<th><spring:message code="Obs.encounter" /></th>
+					<th><openmrs:message code="Obs.encounter" /></th>
 					<td><spring:bind path="encounter">
 							<c:choose>
 								<c:when test="${obs.encounter == null}">
-									<div dojoType="EncounterSearch" widgetId="eSearch"></div>
-									<div dojoType="OpenmrsPopup" widgetId="encounterSelection"
-										hiddenInputName="encounter" hiddenInputId="encounterId"
-										searchWidget="eSearch"
-										searchTitle='<spring:message code="Encounter.find" />'></div>
+									<openmrs_tag:encounterField formFieldName="encounter"
+										formFieldId="encounterId" />
 									<c:if test="${status.errorMessage != ''}">
 										<span class="error">${status.errorMessage}</span>
 									</c:if>
@@ -404,14 +316,14 @@ th {
 						${status.editor.value.location.name} - <openmrs:formatDate
 										date="${status.editor.value.encounterDatetime}" type="medium" />
 									<a
-										href="${pageContext.request.contextPath}/admin/encounters/encounter.form?encounterId=${obs.encounter.encounterId}"><spring:message
-											code="general.view" />/<spring:message code="general.edit" /></a>
+										href="${pageContext.request.contextPath}/admin/encounters/encounter.form?encounterId=${status.editor.value.encounterId}"><openmrs:message
+											code="general.view" />/<openmrs:message code="general.edit" /></a>
 								</c:otherwise>
 							</c:choose>
 						</spring:bind></td>
 				</tr>
 				<tr>
-					<th><spring:message code="Obs.order" /></th>
+					<th><openmrs:message code="Obs.order" /></th>
 					<td><spring:bind path="order">
 							<input type="hidden" name="order" id="order"
 								value="${obs.order.orderId}" size="7" readonly="readonly" />
@@ -423,7 +335,7 @@ th {
 						</spring:bind></td>
 				</tr>
 				<tr>
-					<th><spring:message code="Obs.location" /></th>
+					<th><openmrs:message code="Obs.location" /></th>
 					<td><spring:bind path="location">
 							<openmrs_tag:locationField formFieldName="location"
 								initialValue="${status.value}" />
@@ -433,87 +345,99 @@ th {
 						</spring:bind></td>
 				</tr>
 				<tr>
-					<th><spring:message code="Obs.datetime" /></th>
+					<th><openmrs:message code="Obs.datetime" /></th>
 					<td><spring:bind path="obsDatetime">
 							<input type="text" name="${status.expression}" size="10"
-								value="${status.value}" onClick="showCalendar(this)"
+								value="${status.value}" onfocus="showCalendar(this)"
 								id="${status.expression}" />
-				(<spring:message code="general.format" />: <openmrs:datePattern />)
+				(<openmrs:message code="general.format" />: <openmrs:datePattern />)
 				<c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if>
 						</spring:bind></td>
 				</tr>
 				<tr>
-					<th><spring:message code="Obs.concept" /></th>
+					<th><openmrs:message code="Obs.concept" /></th>
 					<td><spring:bind path="obs.concept">
-							<div dojoType="ConceptSearch" widgetId="cSearch"
-								conceptId="${status.editor.value.conceptId}"
-								showVerboseListing="true" ignoreClasses="N/A"></div>
-							<div dojoType="OpenmrsPopup" widgetId="conceptSelection"
-								hiddenInputName="concept" hiddenInputId="conceptId"
-								searchWidget="cSearch"
-								searchTitle='<spring:message code="Concept.find" />'
-								<c:if test="${obs.obsId != null}">showChangeButton="false"</c:if>></div>
+							<openmrs_tag:conceptField formFieldName="concept"
+								formFieldId="conceptId" excludeDatatypes="N/A"
+								initialValue="${status.editor.value.conceptId}"
+								onSelectFunction="onQuestionSelect" />
+							<div class="description" id="conceptDescription"></div>
 							<c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if>
 						</spring:bind></td>
 				</tr>
 				<tr id="valueBooleanRow" class="obsValue">
-					<th><spring:message code="general.value" /></th>
+					<th><openmrs:message code="Obs.booleanAnswer" /></th>
 					<spring:bind path="valueBoolean">
 						<td><select name="${status.expression}"
 							id="valueBooleanSelect">
 								<option value=""
 									<c:if test="${status.value == null || status.value == ''}">selected</c:if>></option>
 								<option value="true"
-									<c:if test="${status.value == 'true'}">selected</c:if>>
-									<spring:message code="general.true" />
-								</option>
+									<c:if test="${status.value == 'true'}">selected</c:if>><openmrs:message
+										code="general.true" /></option>
 								<option value="false"
-									<c:if test="${status.value == 'false'}">selected</c:if>>
-									<spring:message code="general.false" />
-								</option>
+									<c:if test="${status.value == 'false'}">selected</c:if>><openmrs:message
+										code="general.false" /></option>
 						</select> <c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if></td>
 					</spring:bind>
 				</tr>
 				<tr id="valueCodedRow" class="obsValue">
-					<th valign="top"><spring:message code="general.value" /></th>
+					<th valign="top"><openmrs:message code="Obs.codedAnswer" /></th>
 					<td><spring:bind path="valueCoded">
-							<div dojoType="ConceptSearch" widgetId="codedSearch"
-								conceptId="${status.editor.value.conceptId}"
-								drugId="${obs.valueDrug.drugId}" showVerboseListing="true"
-								includeDrugConcepts="true"></div>
-							<div dojoType="OpenmrsPopup" widgetId="codedSelection"
-								hiddenInputName="valueCoded" searchWidget="codedSearch"
-								searchTitle='<spring:message code="Concept.find" />'></div>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind> <spring:bind path="valueDrug">
-							<input type="hidden" id="valueDrugId"
-								value="${status.editor.value.drugId}" name="valueDrug" />
+							<openmrs_tag:conceptField formFieldName="valueCoded"
+								formFieldId="valueCoded"
+								initialValue="${status.editor.value.conceptId}"
+								showAnswers="${obs.concept.conceptId}"
+								onSelectFunction="onAnswerSelect" />
+							<div class="description" id="codedDescription"></div>
 							<c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if>
 						</spring:bind></td>
 				</tr>
-				<tr id="valueDatetimeRow">
-					<th><spring:message code="general.value" /></th>
-					<td><spring:bind path="valueDatetime">
+				<tr id="valueDateRow" class="obsValue">
+					<th><openmrs:message code="Obs.dateAnswer" /></th>
+					<td><spring:bind path="valueDate">
 							<input type="text" name="${status.expression}" size="10"
 								value="${status.value}" onClick="showCalendar(this)" />
-				  (<spring:message code="general.format" />: <openmrs:datePattern />)
+				  (<openmrs:message code="general.format" />: <openmrs:datePattern />)
+				<c:if test="${status.errorMessage != ''}">
+								<span class="error">${status.errorMessage}</span>
+							</c:if>
+						</spring:bind></td>
+				</tr>
+				<tr id="valueDatetimeRow" class="obsValue">
+					<th><openmrs:message code="Obs.datetimeAnswer" /></th>
+					<td><spring:bind path="valueDatetime">
+							<input type="text" name="${status.expression}" size="15"
+								value="${status.value}" onClick="showDateTimePicker(this)" />
+				  (<openmrs:message code="general.format" />: <openmrs:datePattern />
+							<openmrs:timePattern format="jquery" />)
+				<c:if test="${status.errorMessage != ''}">
+								<span class="error">${status.errorMessage}</span>
+							</c:if>
+						</spring:bind></td>
+				</tr>
+				<tr id="valueTimeRow" class="obsValue">
+					<th><openmrs:message code="Obs.timeAnswer" /></th>
+					<td><spring:bind path="valueTime">
+							<input type="text" name="${status.expression}" size="10"
+								value="${status.value}" onfocus="showTimePicker(this)" />
+				  (<openmrs:message code="general.format" />: <openmrs:timePattern
+								format="jquery" />)
 				<c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if>
 						</spring:bind></td>
 				</tr>
 				<tr id="valueNumericRow" class="obsValue">
-					<th><spring:message code="general.value" /></th>
+					<th><openmrs:message code="Obs.numericAnswer" /></th>
 					<spring:bind path="valueNumeric">
 						<td><input type="text" name="${status.expression}"
 							value="${status.value}" size="10"
@@ -525,7 +449,7 @@ th {
 					</spring:bind>
 				</tr>
 				<tr id="valueModifierRow" class="obsValue">
-					<th><spring:message code="Obs.valueModifier" /></th>
+					<th><openmrs:message code="Obs.valueModifier" /></th>
 					<spring:bind path="valueModifier">
 						<td><input type="text" name="${status.expression}"
 							id="valueModifierInput" value="${status.value}" size="3"
@@ -535,7 +459,7 @@ th {
 					</spring:bind>
 				</tr>
 				<tr id="valueTextRow" class="obsValue">
-					<th><spring:message code="general.value" /></th>
+					<th><openmrs:message code="Obs.textAnswer" /></th>
 					<spring:bind path="valueText">
 						<td><textarea name="${status.expression}" rows="9" cols="80">${status.value}</textarea>
 							<c:if test="${status.errorMessage != ''}">
@@ -544,12 +468,12 @@ th {
 					</spring:bind>
 				</tr>
 				<tr id="valueComplex" class="obsValue">
-					<th><spring:message code="general.value" /></th>
+					<th><openmrs:message code="Obs.complexAnswer" /></th>
 					<spring:bind path="valueComplex">
 						<td>${status.value}<br /> <a href="${hyperlinkView}"
-							target="_blank"><spring:message
+							target="_blank"><openmrs:message
 									code="Obs.viewCurrentComplexValue" /></a><br /> ${htmlView}<br />
-							<br /> <spring:message code="Obs.valueComplex.uploadNew" /> <input
+							<br /> <openmrs:message code="Obs.valueComplex.uploadNew" /> <input
 							type="file" name="complexDataFile" /> <c:if
 								test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
@@ -558,16 +482,21 @@ th {
 					</spring:bind>
 				</tr>
 				<tr id="valueInvalidRow" class="obsValue">
-					<th><spring:message code="general.value" /></th>
+					<th>&nbsp;</th>
 					<td>
 						<div class="error">
-							<spring:message code="Obs.valueInvalid.description" />
+							<openmrs:message code="Obs.valueInvalid.description" />
 						</div>
 						<div id="valueInvalidPossibleConcepts"></div>
 					</td>
 				</tr>
+
+				<openmrs:extensionPoint
+					pointId="org.openmrs.admin.observations.belowValueRow" type="html"
+					parameters="obsId=${obs.obsId}"></openmrs:extensionPoint>
+
 				<tr>
-					<th><spring:message code="Obs.comment" /></th>
+					<th><openmrs:message code="Obs.comment" /></th>
 					<spring:bind path="comment">
 						<td><textarea name="${status.expression}" rows="2" cols="45">${status.value}</textarea>
 							<c:if test="${status.errorMessage != ''}">
@@ -585,7 +514,7 @@ th {
 				</c:if>
 				<c:if test="${obs.creator != null}">
 					<tr>
-						<th><spring:message code="general.createdBy" /></th>
+						<th><openmrs:message code="general.createdBy" /></th>
 						<td>${obs.creator.personName}-<openmrs:formatDate
 								date="${obs.dateCreated}" type="medium" />
 						</td>
@@ -611,12 +540,11 @@ th {
 			<br />
 		</c:if>
 
-
 		<%-- You can't edit a voided obs --%>
 		<input type="submit" name="saveObs"
-			value='<spring:message code="Obs.save"/>'
+			value='<openmrs:message code="Obs.save"/>'
 			<c:if test="${obs.voided}">disabled</c:if>> &nbsp; <input
-			type="button" value='<spring:message code="general.cancel"/>'
+			type="button" value='<openmrs:message code="general.cancel"/>'
 			onclick="history.go(-1);">
 
 	</fieldset>
@@ -654,10 +582,10 @@ th {
 		parameters="obsId=${obs.obsId}">
 		<openmrs:hasPrivilege privilege="${extension.requiredPrivilege}">
 			<div class="boxHeader" style="font-weight: bold;">
-				<spring:message code="${extension.title}" />
+				<openmrs:message code="${extension.title}" />
 			</div>
 			<div class="box" style="padding: 0px 0px 5px;">
-				<spring:message code="${extension.content}" />
+				<openmrs:message code="${extension.content}" />
 				<c:if test="${extension.portletUrl != null}">
 					<openmrs:portlet url="${extension.portletUrl}"
 						moduleId="${extension.moduleId}" id="${extension.portletUrl}"
@@ -669,8 +597,5 @@ th {
 	</openmrs:extensionPoint>
 </c:if>
 
-<script type="text/javascript">
-	$('obsTable').style.visibility = 'visible';
-</script>
 <div id="moreInfoPopup"></div>
 <%@ include file="/WEB-INF/template/footer.jsp"%>
