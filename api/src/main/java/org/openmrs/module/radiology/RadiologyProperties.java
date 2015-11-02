@@ -112,7 +112,7 @@ public class RadiologyProperties {
 	 * Return study prefix Example: 1.2.826.0.1.3680043.8.2186.1. (With last dot)
 	 * 
 	 * @return study prefix
-	 * @should should return study prefix consisting of application uid and study uid slug
+	 * @should return study prefix consisting of application uid and study uid slug
 	 */
 	public String getStudyPrefix() {
 		return getApplicationUID() + "." + getStudyUIDSlug() + ".";
