@@ -176,9 +176,14 @@
 					</tr>
 					<tr>
 						<td><spring:message code="Order.patient" /></td>
-						<td><spring:bind path="patient.personName.fullName">
+						<td><a
+							href="/openmrs/patientDashboard.form?patientId=<spring:bind path="patient.id">
 								${status.value}
-							</spring:bind></td>
+							</spring:bind>">
+								<spring:bind path="patient.personName.fullName">
+								${status.value}
+							</spring:bind>
+						</a></td>
 					</tr>
 					<tr>
 						<td><spring:message code="Order.concept" /></td>
@@ -233,9 +238,14 @@
 					</tr>
 					<tr>
 						<td><spring:message code="Order.patient" /></td>
-						<td><spring:bind path="patient.personName.fullName">
+						<td><a
+							href="/openmrs/patientDashboard.form?patientId=<spring:bind path="patient.id">
 								${status.value}
-							</spring:bind></td>
+							</spring:bind>">
+								<spring:bind path="patient.personName.fullName">
+								${status.value}
+							</spring:bind>
+						</a></td>
 					</tr>
 					<tr>
 						<td><spring:message code="Order.concept" /></td>
