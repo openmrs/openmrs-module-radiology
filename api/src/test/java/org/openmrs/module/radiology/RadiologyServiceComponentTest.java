@@ -25,7 +25,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
+import java.util.Properties;
 
+import org.hibernate.cfg.Environment;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -42,7 +44,6 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
-import org.openmrs.test.Verifies;
 
 /**
  * Tests {@link RadiologyService}
@@ -97,6 +98,24 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
+	
+	/**
+	 * Overriding following method is necessary to enable MVCC which is disabled by default in DB h2
+	 * used for the component tests. This prevents following exception:
+	 * org.hibernate.exception.GenericJDBCException: could not load an entity:
+	 * [org.openmrs.GlobalProperty#order.nextOrderNumberSeed] due to
+	 * "Timeout trying to lock table "GLOBAL_PROPERTY"; SQL statement:" which occurs in all tests
+	 * touching methods that call orderService.saveOrder()
+	 */
+	@Override
+	public Properties getRuntimeProperties() {
+		Properties result = super.getRuntimeProperties();
+		String url = result.getProperty(Environment.URL);
+		if (url.contains("jdbc:h2:") && !url.contains(";MVCC=TRUE")) {
+			result.setProperty(Environment.URL, url + ";MVCC=TRUE");
+		}
+		return result;
+	}
 	
 	@Before
 	public void runBeforeAllTests() throws Exception {
