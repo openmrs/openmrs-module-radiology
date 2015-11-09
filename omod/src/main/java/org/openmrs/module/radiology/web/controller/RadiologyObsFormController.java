@@ -225,7 +225,7 @@ public class RadiologyObsFormController {
 		new ObsValidator().validate(obs, obsErrors);
 		
 		if (obsErrors.hasErrors()) {
-			return populateModelAndView(radiologyOrder, obs);
+			return populateModelAndView(radiologyOrder, obs, editReason);
 		}
 		if (Context.isAuthenticated()) {
 			
@@ -263,13 +263,32 @@ public class RadiologyObsFormController {
 			}
 			catch (APIException e) {
 				httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, e.getMessage());
-				return populateModelAndView(radiologyOrder, obs);
+				return populateModelAndView(radiologyOrder, obs, editReason);
 			}
 			catch (IOException e) {
-				return populateModelAndView(radiologyOrder, obs);
+				return populateModelAndView(radiologyOrder, obs, editReason);
 			}
 		}
 		return new ModelAndView("redirect:" + RADIOLOGY_OBS_FORM_URL + "orderId=" + obs.getOrder().getId() + "&obsId="
 		        + obs.getId());
+	}
+	
+	/**
+	 * Populate model and view given radiologyOrder, obs and editReason
+	 * 
+	 * @param radiologyOrder to populate the model and view
+	 * @param obs to populate the model and view
+	 * @param reason, why the obs was edited
+	 * @should populate model and view with edit reason
+	 */
+	private ModelAndView populateModelAndView(RadiologyOrder radiologyOrder, Obs obs, String editReason) {
+		
+		ModelAndView result = populateModelAndView(radiologyOrder, obs);
+		
+		if (editReason == null) {
+			editReason = "";
+		}
+		result.addObject("editReason", editReason);
+		return result;
 	}
 }
