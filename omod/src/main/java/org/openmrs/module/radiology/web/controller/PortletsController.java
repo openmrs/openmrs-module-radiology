@@ -25,13 +25,10 @@ import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.format.annotation.DateTimeFormat.ISO;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
@@ -46,11 +43,6 @@ public class PortletsController {
 	
 	@Autowired
 	private PatientService patientService;
-	
-	@InitBinder
-	void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(Date.class, new CustomDateEditor(Context.getDateFormat(), true));
-	}
 	
 	/**
 	 * Get URL to the patientOverview portlet
