@@ -12,33 +12,16 @@ package org.openmrs.module.radiology.web.controller;
 import java.util.List;
 import java.util.Locale;
 
-import org.openmrs.Concept;
-import org.openmrs.Drug;
-import org.openmrs.Encounter;
-import org.openmrs.Location;
 import org.openmrs.Obs;
 import org.openmrs.Order;
-import org.openmrs.Person;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.OrderService;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.propertyeditor.ConceptEditor;
-import org.openmrs.propertyeditor.DrugEditor;
-import org.openmrs.propertyeditor.EncounterEditor;
-import org.openmrs.propertyeditor.LocationEditor;
-import org.openmrs.propertyeditor.OrderEditor;
-import org.openmrs.propertyeditor.PersonEditor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.propertyeditors.CustomBooleanEditor;
-import org.springframework.beans.propertyeditors.CustomDateEditor;
-import org.springframework.beans.propertyeditors.CustomNumberEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -63,20 +46,6 @@ public class RadiologyDashboardObsController {
 	
 	@Autowired
 	private ObsService obsService;
-	
-	@InitBinder
-	void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(java.lang.Integer.class, new CustomNumberEditor(java.lang.Integer.class, true));
-		binder.registerCustomEditor(java.util.Date.class, new CustomDateEditor(Context.getDateFormat(), true));
-		binder.registerCustomEditor(Location.class, new LocationEditor());
-		binder.registerCustomEditor(java.lang.Boolean.class, new CustomBooleanEditor(true)); //allow for an empty boolean value
-		binder.registerCustomEditor(Person.class, new PersonEditor());
-		binder.registerCustomEditor(Order.class, new OrderEditor());
-		binder.registerCustomEditor(Concept.class, new ConceptEditor());
-		binder.registerCustomEditor(Drug.class, new DrugEditor());
-		binder.registerCustomEditor(Location.class, new LocationEditor());
-		binder.registerCustomEditor(Encounter.class, new EncounterEditor());
-	}
 	
 	@RequestMapping("/module/radiology/portlets/radiologyObsDashboard.form")
 	ModelAndView getObs(@RequestParam(value = "orderId", required = true) Integer orderId,

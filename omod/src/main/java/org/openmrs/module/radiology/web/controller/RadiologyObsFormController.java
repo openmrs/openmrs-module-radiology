@@ -20,7 +20,6 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Obs;
-import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ObsService;
@@ -31,7 +30,6 @@ import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.obs.ComplexData;
 import org.openmrs.propertyeditor.ObsEditor;
-import org.openmrs.propertyeditor.OrderEditor;
 import org.openmrs.validator.ObsValidator;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -67,7 +65,6 @@ public class RadiologyObsFormController {
 	
 	@InitBinder
 	void initBinder(WebDataBinder binder) {
-		binder.registerCustomEditor(Order.class, new OrderEditor());
 		binder.registerCustomEditor(Obs.class, new ObsEditor());
 	}
 	
