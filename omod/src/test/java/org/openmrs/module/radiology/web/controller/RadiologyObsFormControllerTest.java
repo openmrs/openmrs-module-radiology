@@ -433,6 +433,28 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
+	 * @see RadiologyObsFormController#populateModelAndView(RadiologyOrder,Obs,String)
+	 * @verifies populate model and view with edit reason
+	 */
+	@Test
+	public void populateModelAndView_shouldPopulateModelAndViewWithEditReason() throws Exception {
+		
+		Method populateModelAndViewMethod = radiologyObsFormController.getClass()
+		        .getDeclaredMethod(
+		            "populateModelAndView",
+		            new Class[] { org.openmrs.module.radiology.RadiologyOrder.class, org.openmrs.Obs.class,
+		                    java.lang.String.class });
+		populateModelAndViewMethod.setAccessible(true);
+		
+		ModelAndView modelAndView = (ModelAndView) populateModelAndViewMethod.invoke(radiologyObsFormController,
+		    new Object[] { mockRadiologyOrder, mockObs, "Changed obs date" });
+		
+		assertThat(modelAndView.getModelMap(), hasKey("editReason"));
+		String editReason = (String) modelAndView.getModelMap().get("editReason");
+		assertThat(editReason, is("Changed obs date"));
+	}
+	
+	/**
 	 * @see RadiologyObsFormController#populateModelAndView(RadiologyOrder, Obs)
 	 */
 	@Test
