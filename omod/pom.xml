@@ -206,6 +206,15 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.jacoco</groupId>
+				<artifactId>jacoco-maven-plugin</artifactId>
+				<configuration>
+					<includes>
+						<include>org/openmrs/module/radiology/web/**</include>
+					</includes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

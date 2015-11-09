@@ -1,6 +1,6 @@
 # openmrs-module-radiologydcm4chee
 
-[![Build Status](https://secure.travis-ci.org/openmrs/openmrs-module-radiologydcm4chee.png?branch=master)](https://travis-ci.org/openmrs/openmrs-module-radiologydcm4chee)
+[![Build Status](https://secure.travis-ci.org/openmrs/openmrs-module-radiologydcm4chee.png?branch=master)](https://travis-ci.org/openmrs/openmrs-module-radiologydcm4chee) [![Coverage Status](https://coveralls.io/repos/openmrs/openmrs-module-radiologydcm4chee/badge.svg?branch=master&service=github)](https://coveralls.io/github/openmrs/openmrs-module-radiologydcm4chee?branch=master)
 
 ## Overview
 
