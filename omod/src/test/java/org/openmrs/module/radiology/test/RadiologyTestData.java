@@ -14,6 +14,8 @@ import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
 import static org.openmrs.module.radiology.RadiologyRoles.REFERRRING_PHYSICIAN;
 import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
 
+import java.io.CharArrayReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -21,6 +23,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.openmrs.Concept;
+import org.openmrs.ConceptComplex;
+import org.openmrs.ConceptDatatype;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterProvider;
 import org.openmrs.EncounterType;
@@ -38,6 +43,7 @@ import org.openmrs.User;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
+import org.openmrs.obs.ComplexData;
 import org.openmrs.util.RoleConstants;
 
 public class RadiologyTestData {
@@ -145,6 +151,26 @@ public class RadiologyTestData {
 	}
 	
 	/**
+	 * Convenience method constructing an encounter for the tests
+	 */
+	public static Encounter getMockEncounter3() {
+		
+		Encounter mockEncounter = new Encounter();
+		mockEncounter.setId(3);
+		mockEncounter.setEncounterType(new EncounterType(1));
+		mockEncounter.setEncounterDatetime(new GregorianCalendar(2015, 1, 03).getTime());
+		mockEncounter.setLocation(new Location(1));
+		
+		EncounterProvider encounterProvider = new EncounterProvider();
+		encounterProvider.setId(1);
+		Set<EncounterProvider> providerSet = new HashSet<EncounterProvider>();
+		providerSet.add(encounterProvider);
+		mockEncounter.setEncounterProviders(providerSet);
+		
+		return mockEncounter;
+	}
+	
+	/**
 	 * Convenience method constructing a mock RadiologyOrder for the tests
 	 */
 	public static RadiologyOrder getMockRadiologyOrder1() {
@@ -193,6 +219,7 @@ public class RadiologyTestData {
 		mockObs.setEncounter(getMockEncounter1());
 		mockObs.setOrder(getMockRadiologyOrder1());
 		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
+		mockObs.setConcept(new Concept());
 		return mockObs;
 	}
 	
@@ -207,6 +234,48 @@ public class RadiologyTestData {
 		mockObs.setOrder(getMockRadiologyOrder1());
 		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
 		mockObs.setPreviousVersion(getMockObs());
+		return mockObs;
+	}
+	
+	/**
+	 * Convenience method constructing a mock obs with complex concept for the tests
+	 */
+	public static Obs getMockObsWithComplexConcept() {
+		
+		Obs mockObs = new Obs();
+		mockObs.setId(3);
+		mockObs.setEncounter(getMockEncounter3());
+		mockObs.setOrder(getMockRadiologyOrder1());
+		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
+		ConceptComplex concept = new ConceptComplex();
+		ConceptDatatype cdt = new ConceptDatatype();
+		cdt.setHl7Abbreviation("ED");
+		concept.setDatatype(cdt);
+		mockObs.setConcept(concept);
+		return mockObs;
+	}
+	
+	/**
+	 * Convenience method constructing a complex obs for the tests
+	 */
+	public static Obs getMockComplexObsAsHtmlViewForMockObs3() {
+		
+		Obs mockObs = new Obs();
+		Reader input = new CharArrayReader("<img src='/openmrs/complexObsServlet?obsId=3'/>".toCharArray());
+		ComplexData complexData = new ComplexData("htmlView", input);
+		mockObs.setComplexData(complexData);
+		return mockObs;
+	}
+	
+	/**
+	 * Convenience method constructing a complex obs for the tests
+	 */
+	public static Obs getMockComplexObsAsHyperlinkViewForMockObs3() {
+		
+		Obs mockObs = new Obs();
+		Reader input = new CharArrayReader("openmrs/complexObsServlet?obsId=3".toCharArray());
+		ComplexData complexData = new ComplexData("hyperlinkView", input);
+		mockObs.setComplexData(complexData);
 		return mockObs;
 	}
 	
