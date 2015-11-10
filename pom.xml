@@ -78,7 +78,7 @@
 			</dependency>
 
 			<!-- Added logging libraries at the parent project level so that its inherited 
-				by child modules. -->
+				by child modules. Scope is 'provided' since they come with openmrs.war -->
 			<dependency>
 				<groupId>org.slf4j</groupId>
 				<artifactId>slf4j-api</artifactId>
