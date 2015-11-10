@@ -89,7 +89,6 @@ public class RadiologyObsFormController {
 	 * @param obs to populate the model and view
 	 * @should populate the model and view for given radiology order with completed study and obs
 	 * @should populate the model and view for given radiology order without completed study and obs
-	 * @should populate the model and view for given obs with complex concept
 	 */
 	private ModelAndView populateModelAndView(RadiologyOrder radiologyOrder, Obs obs) {
 		
@@ -102,15 +101,6 @@ public class RadiologyObsFormController {
 		Study study = radiologyOrder.getStudy();
 		result.addObject("studyUID", study.isCompleted() ? study.getStudyInstanceUid() : null);
 		result.addObject("dicomViewerUrl", getDicomViewerUrl(study, radiologyOrder.getPatient()));
-		
-		if (obs.getId() != null && obs.getConcept().isComplex()) {
-			Obs complexObsAsHtmlView = obsService.getComplexObs(Integer.valueOf(obs.getId()), WebConstants.HTML_VIEW);
-			result.addObject("htmlView", complexObsAsHtmlView.getComplexData().getData());
-			
-			Obs complexObsAsHyperlinkView = obsService.getComplexObs(Integer.valueOf(obs.getId()),
-			    WebConstants.HYPERLINK_VIEW);
-			result.addObject("hyperlinkView", complexObsAsHyperlinkView.getComplexData().getData());
-		}
 		
 		return result;
 	}
@@ -223,7 +213,6 @@ public class RadiologyObsFormController {
 	 * @should edit obs with edit reason concept not complex and request which is an
 	 *         instance of multihttpserveletrequest
 	 * @should populate model and view with obs occuring thrown APIException
-	 * @should return populated model and view if binding errors occur for complex concept
 	 */
 	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.POST, params = "saveObs")
 	ModelAndView saveObs(HttpServletRequest request, HttpServletResponse response,
@@ -233,6 +222,11 @@ public class RadiologyObsFormController {
 		
 		HttpSession httpSession = request.getSession();
 		
+		new ObsValidator().validate(obs, obsErrors);
+		
+		if (obsErrors.hasErrors()) {
+			return populateModelAndView(radiologyOrder, obs, editReason);
+		}
 		if (Context.isAuthenticated()) {
 			
 			try {
@@ -242,6 +236,7 @@ public class RadiologyObsFormController {
 					
 					return populateModelAndView(radiologyOrder, obs);
 				}
+				
 				if (obs.getConcept().isComplex()) {
 					if (request instanceof MultipartHttpServletRequest) {
 						MultipartHttpServletRequest multipartRequest = (MultipartHttpServletRequest) request;
@@ -257,20 +252,11 @@ public class RadiologyObsFormController {
 							// the handler on the obs.concept is called
 							// with
 							// the given complex data
-							new ObsValidator().validate(obs, obsErrors);
-							if (obsErrors.hasErrors()) {
-								return populateModelAndView(radiologyOrder, obs, editReason);
-							}
 							obs = obsService.saveObs(obs, editReason);
 							complexDataInputStream.close();
 						}
 					}
 				} else {
-					new ObsValidator().validate(obs, obsErrors);
-					
-					if (obsErrors.hasErrors()) {
-						return populateModelAndView(radiologyOrder, obs, editReason);
-					}
 					obs = obsService.saveObs(obs, editReason);
 				}
 				httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.saved");
