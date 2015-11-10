@@ -151,12 +151,6 @@
 			<plugin>
 				<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
 				<artifactId>maven-java-formatter-plugin</artifactId>
-				<configuration>
-					<excludes>
-						<exclude>**/DicomObjectGet.java</exclude>
-						<exclude>**/Scratch.java</exclude>
-					</excludes>
-				</configuration>
 				<executions>
 					<execution>
 						<goals>
