@@ -15,12 +15,10 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Obs;
-import org.openmrs.Patient;
 import org.openmrs.api.ObsService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyOrder;
@@ -45,6 +43,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequestMapping(value = "/module/radiology/radiologyObs.form")
 public class RadiologyObsFormController {
 	
 	Log log = LogFactory.getLog(getClass());
@@ -75,7 +74,7 @@ public class RadiologyObsFormController {
 	 * @return model and view populated with an obs matching the given criteria
 	 * @should populate model and view with obs for given obs and given valid radiology order
 	 */
-	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.GET, params = "obsId")
+	@RequestMapping(method = RequestMethod.GET, params = "obsId")
 	protected ModelAndView getObs(@RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder,
 	        @RequestParam(value = "obsId", required = true) Obs obs) {
 		return populateModelAndView(radiologyOrder, obs);
@@ -100,7 +99,7 @@ public class RadiologyObsFormController {
 		
 		Study study = radiologyOrder.getStudy();
 		result.addObject("studyUID", study.isCompleted() ? study.getStudyInstanceUid() : null);
-		result.addObject("dicomViewerUrl", getDicomViewerUrl(study, radiologyOrder.getPatient()));
+		result.addObject("dicomViewerUrl", getDicomViewerUrl(study));
 		
 		if (obs.getId() != null && obs.getConcept() != null && obs.getConcept().isComplex()) {
 			Obs complexObsAsHtmlView = obsService.getComplexObs(obs.getId(), WebConstants.HTML_VIEW);
@@ -114,22 +113,15 @@ public class RadiologyObsFormController {
 	}
 	
 	/**
-	 * Get dicom viewer URL for given study and patient
+	 * Get dicom viewer URL for given study
 	 * 
 	 * @param study study for the dicom viewer url
-	 * @param patient patient for the dicom viewer url
-	 * @should return dicom viewer url given completed study and patient
-	 * @should return null given non completed study and patient
+	 * @should return dicom viewer url given completed study
+	 * @should return null given non completed study
 	 */
-	private String getDicomViewerUrl(Study study, Patient patient) {
-		
-		if (study.isCompleted()) {
-			String studyUidUrl = "studyUID=" + study.getStudyInstanceUid();
-			String patientIdUrl = "patientID=" + patient.getPatientIdentifier().getIdentifier();
-			return radiologyProperties.getDicomViewerUrl() + studyUidUrl + "&" + patientIdUrl;
-		} else {
-			return null;
-		}
+	private String getDicomViewerUrl(Study study) {
+		return study.isCompleted() ? radiologyProperties.getDicomViewerUrl() + "studyUID=" + study.getStudyInstanceUid()
+		        : null;
 	}
 	
 	/**
@@ -139,7 +131,7 @@ public class RadiologyObsFormController {
 	 * @return model and view populated with a new obs
 	 * @should populate model and view with new obs given a valid radiology order
 	 */
-	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView getNewObs(@RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder) {
 		Obs obs = new Obs();
 		obs.setOrder(radiologyOrder);
@@ -162,20 +154,19 @@ public class RadiologyObsFormController {
 	 * @should not void obs with empty voiding reason
 	 * @should not void obs with voiding reason null
 	 */
-	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.POST, params = "voidObs")
+	@RequestMapping(method = RequestMethod.POST, params = "voidObs")
 	protected ModelAndView voidObs(HttpServletRequest request, HttpServletResponse response,
 	        @RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder,
 	        @RequestParam(value = "obsId", required = true) Obs obs,
 	        @RequestParam(value = "voidReason", required = true) String voidReason) {
 		
-		HttpSession httpSession = request.getSession();
 		if (voidReason == null || voidReason.isEmpty()) {
-			httpSession.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Obs.void.reason.empty");
+			request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Obs.void.reason.empty");
 			return populateModelAndView(radiologyOrder, obs);
 		}
 		
 		obsService.voidObs(obs, voidReason);
-		httpSession.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.voidedSuccessfully");
+		request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Obs.voidedSuccessfully");
 		return new ModelAndView("redirect:" + RADIOLOGY_OBS_FORM_URL + "orderId=" + radiologyOrder.getId() + "&obsId="
 		        + obs.getId());
 	}
@@ -190,7 +181,7 @@ public class RadiologyObsFormController {
 	 * @return ModelAndView for radiology order list
 	 * @should unvoid voided obs for given request, response and obs
 	 */
-	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.POST, params = "unvoidObs")
+	@RequestMapping(method = RequestMethod.POST, params = "unvoidObs")
 	protected ModelAndView unvoidObs(HttpServletRequest request, HttpServletResponse response,
 	        @RequestParam(value = "obsId", required = true) Obs obs) {
 		
@@ -215,7 +206,7 @@ public class RadiologyObsFormController {
 	 * @should return populated model and view for invalid obs
 	 * @should populate model and view with obs for occuring Exception
 	 */
-	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.POST, params = "saveObs")
+	@RequestMapping(method = RequestMethod.POST, params = "saveObs")
 	protected ModelAndView saveObs(HttpServletRequest request, HttpServletResponse response,
 	        @RequestParam(value = "editReason", required = false) String editReason,
 	        @RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder, @ModelAttribute("obs") Obs obs,
@@ -256,7 +247,7 @@ public class RadiologyObsFormController {
 	 * @should return populated model and view for invalid complex obs
 	 * @should populate model and view with obs for occuring Exception
 	 */
-	@RequestMapping(value = "/module/radiology/radiologyObs.form", method = RequestMethod.POST, params = "saveComplexObs")
+	@RequestMapping(method = RequestMethod.POST, params = "saveComplexObs")
 	protected ModelAndView saveComplexObs(MultipartHttpServletRequest request, HttpServletResponse response,
 	        @RequestParam(value = "editReason", required = false) String editReason,
 	        @RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder, @ModelAttribute("obs") Obs obs,
@@ -296,8 +287,7 @@ public class RadiologyObsFormController {
 		if (complexDataFile == null) {
 			throw new IOException("error.general");
 		}
-		InputStream complexDataInputStream = complexDataFile.getInputStream();
-		return complexDataInputStream;
+		return complexDataFile.getInputStream();
 	}
 	
 	/**
@@ -320,7 +310,7 @@ public class RadiologyObsFormController {
 			obs.setComplexData(new ComplexData(complexDataFile.getOriginalFilename(), complexDataInputStream));
 			return obs;
 		} else if (obs.getId() != null) {
-			obs.setComplexData(obsService.getComplexObs(Integer.valueOf(obs.getId()), null).getComplexData());
+			obs.setComplexData(obsService.getComplexObs(obs.getId(), null).getComplexData());
 			return obs;
 		} else {
 			throw new IOException("Obs.invalidImage");
@@ -363,11 +353,6 @@ public class RadiologyObsFormController {
 	private ModelAndView populateModelAndView(RadiologyOrder radiologyOrder, Obs obs, String editReason) {
 		
 		ModelAndView result = populateModelAndView(radiologyOrder, obs);
-		
-		if (editReason == null) {
-			editReason = "";
-		}
-		result.addObject("editReason", editReason);
-		return result;
+		return editReason == null ? result.addObject("editReason", "") : result.addObject("editReason", editReason);
 	}
 }

@@ -186,8 +186,7 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 		assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
 		String dicomViewerUrl = (String) modelAndView.getModelMap().get("dicomViewerUrl");
 		assertThat(dicomViewerUrl, is(notNullValue()));
-		assertThat(dicomViewerUrl,
-		    is("http://localhost:8081/weasis/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1&patientID=100"));
+		assertThat(dicomViewerUrl, is("http://localhost:8081/weasis/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey(not("htmlView")));
 		assertThat(modelAndView.getModelMap(), hasKey(not("hyperlinkView")));
@@ -281,48 +280,44 @@ public class RadiologyObsFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see RadiologyObsFormController#getDicomViewerUrl(Study,Patient)
-	 * @verifies return dicom viewer url given completed study and patient
+	 * @see RadiologyObsFormController#getDicomViewerUrl(Study)
+	 * @verifies return dicom viewer url given completed study
 	 */
 	@Test
-	public void getDicomViewerUrl_shouldReturnDicomViewerUrlGivenCompletedStudyAndPatient() throws Exception {
+	public void getDicomViewerUrl_shouldReturnDicomViewerUrlGivenCompletedStudy() throws Exception {
 		//given
 		mockStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		
 		when(radiologyProperties.getDicomViewerUrl()).thenReturn("http://localhost:8081/weasis/viewer?");
 		
 		Method getDicomViewerUrlMethod = radiologyObsFormController.getClass().getDeclaredMethod("getDicomViewerUrl",
-		    new Class[] { org.openmrs.module.radiology.Study.class, org.openmrs.Patient.class });
+		    new Class[] { org.openmrs.module.radiology.Study.class });
 		getDicomViewerUrlMethod.setAccessible(true);
 		
-		String dicomViewerUrl = (String) getDicomViewerUrlMethod.invoke(radiologyObsFormController, new Object[] {
-		        mockStudy, mockPatient });
+		String dicomViewerUrl = (String) getDicomViewerUrlMethod.invoke(radiologyObsFormController,
+		    new Object[] { mockStudy });
 		
 		assertThat(dicomViewerUrl, is(notNullValue()));
-		
-		String patID = mockPatient.getPatientIdentifier().getIdentifier();
-		assertThat(dicomViewerUrl, is("http://localhost:8081/weasis/viewer?studyUID=" + mockStudy.getStudyInstanceUid()
-		        + "&patientID=" + patID));
+		assertThat(dicomViewerUrl, is("http://localhost:8081/weasis/viewer?studyUID=" + mockStudy.getStudyInstanceUid()));
 	}
 	
 	/**
-	 * @see RadiologyObsFormController#getDicomViewerUrl(Study,Patient)
-	 * @verifies return null given non completed study and patient
+	 * @see RadiologyObsFormController#getDicomViewerUrl(Study)
+	 * @verifies return null given non completed study
 	 */
 	@Test
-	public void getDicomViewerUrl_shouldReturnNullGivenNonCompletedStudyAndPatient() throws Exception {
+	public void getDicomViewerUrl_shouldReturnNullGivenNonCompletedStudy() throws Exception {
 		//given
 		mockStudy.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
 		
 		when(radiologyProperties.getDicomViewerUrl()).thenReturn("http://localhost:8081/weasis/viewer?");
 		
 		Method getDicomViewerUrlMethod = radiologyObsFormController.getClass().getDeclaredMethod("getDicomViewerUrl",
-		    new Class[] { org.openmrs.module.radiology.Study.class, org.openmrs.Patient.class });
+		    new Class[] { org.openmrs.module.radiology.Study.class });
 		getDicomViewerUrlMethod.setAccessible(true);
 		
-		String dicomViewerUrl = (String) getDicomViewerUrlMethod.invoke(radiologyObsFormController, new Object[] {
-		        mockStudy, mockPatient });
-		
+		String dicomViewerUrl = (String) getDicomViewerUrlMethod.invoke(radiologyObsFormController,
+		    new Object[] { mockStudy });
 		assertThat(dicomViewerUrl, nullValue());
 	}
 	
