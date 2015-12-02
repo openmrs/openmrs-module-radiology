@@ -43,6 +43,17 @@
 							</c:if>
 						</spring:bind></td>
 				</tr>
+				<tr>
+     Values:<br>
+      <c:forEach var="concept" items="${FilteredConcepts}">
+          <c:out value="${concept}"></c:out><br>
+      </c:forEach>
+     <%--<form:select path="FilteredConcepts" items="${FilteredConcepts}">
+         <form:option value="NONE" label="--- Select ---"/>
+         <form:options items="${FilteredConcepts}" />
+     </form:select>--%>
+
+ </tr>
 
 				<tr>
 					<td><spring:message code="Order.concept" /></td>

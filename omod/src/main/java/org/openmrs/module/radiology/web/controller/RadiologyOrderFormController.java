@@ -22,6 +22,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Concept;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.User;
@@ -280,5 +281,25 @@ public class RadiologyOrderFormController {
 		}
 		
 		return performedStatuses;
+	}
+	
+	//gibt derzeit die Concepts vom ConceptSet "Radiology" aus.
+	//Das Concept Set musst du selber erstellen dann kannst dus testen
+	//Allgemein sollte es so funktionieren wir müssten es nur schaffen das jetzt in die Auswahl zu bekommen.
+	@ModelAttribute("FilteredConcepts")
+	private List<String> getRadiologyConcepts() {
+		List<Concept> list = new LinkedList<Concept>();
+		list = Context.getConceptService().getAllConcepts();
+		List<String> b = new LinkedList<String>();
+		for (Concept all : list) {
+			if (all.getName().getName().equals("Radiology")) {
+				List<Concept> conceptSets = new LinkedList<Concept>();
+				conceptSets = all.getSetMembers();
+				for (Concept sets : conceptSets) {
+					b.add(sets.getName().getName());
+				}
+			}
+		}
+		return b;
 	}
 }
