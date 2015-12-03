@@ -272,287 +272,468 @@ th {
 		</div>
 	</form>
 </c:if>
+<c:choose>
+	<c:when test="${not obs.voided}">
+		<form method="post" onSubmit="removeHiddenRows()"
+			enctype="multipart/form-data">
 
-<form method="post" onSubmit="removeHiddenRows()"
-	enctype="multipart/form-data">
+			<fieldset>
 
-	<fieldset>
+				<spring:nestedPath path="obs">
 
-		<spring:nestedPath path="obs">
-
-			<table id="obsTable">
-				<c:if test="${obs.obsId != null}">
-					<tr>
-						<th><openmrs:message code="general.id" /></th>
-						<td><spring:bind path="obsId">
+					<table id="obsTable">
+						<c:if test="${obs.obsId != null}">
+							<tr>
+								<th><openmrs:message code="general.id" /></th>
+								<td><spring:bind path="obsId">
 					${status.value}
 				</spring:bind></td>
-					</tr>
-				</c:if>
-				<tr>
-					<th><openmrs:message code="Obs.person" /></th>
-					<td><spring:bind path="person">
-							<openmrs_tag:personField formFieldName="person"
-								searchLabelCode="Person.findBy"
-								initialValue="${status.editor.value.personId}" linkUrl=""
-								callback="" />
-							<a style="cursor: pointer;" id="moreInfo"><spring:message
-									code="radiology.moreInfo" /></a>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<th><openmrs:message code="Obs.encounter" /></th>
-					<td><spring:bind path="encounter">
-							<c:choose>
-								<c:when test="${obs.encounter == null}">
-									<openmrs_tag:encounterField formFieldName="encounter"
-										formFieldId="encounterId" />
+							</tr>
+						</c:if>
+						<tr>
+							<th><openmrs:message code="Obs.person" /></th>
+							<td><spring:bind path="person">
+									<openmrs_tag:personField formFieldName="person"
+										searchLabelCode="Person.findBy"
+										initialValue="${status.editor.value.personId}" linkUrl=""
+										callback="" />
+									<a style="cursor: pointer;" id="moreInfo"><spring:message
+											code="radiology.moreInfo" /></a>
 									<c:if test="${status.errorMessage != ''}">
 										<span class="error">${status.errorMessage}</span>
 									</c:if>
-								</c:when>
-								<c:otherwise>
+								</spring:bind></td>
+						</tr>
+						<tr>
+							<th><openmrs:message code="Obs.encounter" /></th>
+							<td><spring:bind path="encounter">
+									<c:choose>
+										<c:when test="${obs.encounter == null}">
+											<openmrs_tag:encounterField formFieldName="encounter"
+												formFieldId="encounterId" />
+											<c:if test="${status.errorMessage != ''}">
+												<span class="error">${status.errorMessage}</span>
+											</c:if>
+										</c:when>
+										<c:otherwise>
 						${status.editor.value.location.name} - <openmrs:formatDate
-										date="${status.editor.value.encounterDatetime}" type="medium" />
-									<a
-										href="${pageContext.request.contextPath}/admin/encounters/encounter.form?encounterId=${status.editor.value.encounterId}"><openmrs:message
-											code="general.view" />/<openmrs:message code="general.edit" /></a>
-								</c:otherwise>
-							</c:choose>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<th><openmrs:message code="Obs.order" /></th>
-					<td><spring:bind path="order">
-							<input type="hidden" name="order" id="order"
-								value="${obs.order.orderId}" size="7" readonly="readonly" />
-							<a href="radiologyOrder.form?orderId=${obs.order.orderId}"
-								target="_blank">${obs.order.orderId}</a>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<th><openmrs:message code="Obs.location" /></th>
-					<td><spring:bind path="location">
-							<openmrs_tag:locationField formFieldName="location"
-								initialValue="${status.value}" />
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<th><openmrs:message code="Obs.datetime" /></th>
-					<td><spring:bind path="obsDatetime">
-							<input type="text" name="${status.expression}" size="10"
-								value="${status.value}" onfocus="showCalendar(this)"
-								id="${status.expression}" />
+												date="${status.editor.value.encounterDatetime}"
+												type="medium" />
+											<a
+												href="${pageContext.request.contextPath}/admin/encounters/encounter.form?encounterId=${status.editor.value.encounterId}"><openmrs:message
+													code="general.view" />/<openmrs:message
+													code="general.edit" /></a>
+										</c:otherwise>
+									</c:choose>
+								</spring:bind></td>
+						</tr>
+						<tr>
+							<th><openmrs:message code="Obs.order" /></th>
+							<td><spring:bind path="order">
+									<input type="hidden" name="order" id="order"
+										value="${obs.order.orderId}" size="7" readonly="readonly" />
+									<a href="radiologyOrder.form?orderId=${obs.order.orderId}"
+										target="_blank">${obs.order.orderId}</a>
+									<c:if test="${status.errorMessage != ''}">
+										<span class="error">${status.errorMessage}</span>
+									</c:if>
+								</spring:bind></td>
+						</tr>
+						<tr>
+							<th><openmrs:message code="Obs.location" /></th>
+							<td><spring:bind path="location">
+									<openmrs_tag:locationField formFieldName="location"
+										initialValue="${status.value}" />
+									<c:if test="${status.errorMessage != ''}">
+										<span class="error">${status.errorMessage}</span>
+									</c:if>
+								</spring:bind></td>
+						</tr>
+						<tr>
+							<th><openmrs:message code="Obs.datetime" /></th>
+							<td><spring:bind path="obsDatetime">
+									<input type="text" name="${status.expression}" size="10"
+										value="${status.value}" onfocus="showCalendar(this)"
+										id="${status.expression}" />
 				(<openmrs:message code="general.format" />: <openmrs:datePattern />)
 				<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<th><openmrs:message code="Obs.concept" /></th>
-					<td><spring:bind path="obs.concept">
-							<openmrs_tag:conceptField formFieldName="concept"
-								formFieldId="conceptId" excludeDatatypes="N/A"
-								initialValue="${status.editor.value.conceptId}"
-								onSelectFunction="onQuestionSelect" />
-							<div class="description" id="conceptDescription"></div>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr id="valueBooleanRow" class="obsValue">
-					<th><openmrs:message code="Obs.booleanAnswer" /></th>
-					<spring:bind path="valueBoolean">
-						<td><select name="${status.expression}"
-							id="valueBooleanSelect">
-								<option value=""
-									<c:if test="${status.value == null || status.value == ''}">selected</c:if>></option>
-								<option value="true"
-									<c:if test="${status.value == 'true'}">selected</c:if>><openmrs:message
-										code="general.true" /></option>
-								<option value="false"
-									<c:if test="${status.value == 'false'}">selected</c:if>><openmrs:message
-										code="general.false" /></option>
-						</select> <c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if></td>
-					</spring:bind>
-				</tr>
-				<tr id="valueCodedRow" class="obsValue">
-					<th valign="top"><openmrs:message code="Obs.codedAnswer" /></th>
-					<td><spring:bind path="valueCoded">
-							<openmrs_tag:conceptField formFieldName="valueCoded"
-								formFieldId="valueCoded"
-								initialValue="${status.editor.value.conceptId}"
-								showAnswers="${obs.concept.conceptId}"
-								onSelectFunction="onAnswerSelect" />
-							<div class="description" id="codedDescription"></div>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr id="valueDateRow" class="obsValue">
-					<th><openmrs:message code="Obs.dateAnswer" /></th>
-					<td><spring:bind path="valueDate">
-							<input type="text" name="${status.expression}" size="10"
-								value="${status.value}" onClick="showCalendar(this)" />
+										<span class="error">${status.errorMessage}</span>
+									</c:if>
+								</spring:bind></td>
+						</tr>
+						<tr>
+							<th><openmrs:message code="Obs.concept" /></th>
+							<td><spring:bind path="obs.concept">
+									<openmrs_tag:conceptField formFieldName="concept"
+										formFieldId="conceptId" excludeDatatypes="N/A"
+										initialValue="${status.editor.value.conceptId}"
+										onSelectFunction="onQuestionSelect" />
+									<div class="description" id="conceptDescription"></div>
+									<c:if test="${status.errorMessage != ''}">
+										<span class="error">${status.errorMessage}</span>
+									</c:if>
+								</spring:bind></td>
+						</tr>
+						<tr id="valueBooleanRow" class="obsValue">
+							<th><openmrs:message code="Obs.booleanAnswer" /></th>
+							<spring:bind path="valueBoolean">
+								<td><select name="${status.expression}"
+									id="valueBooleanSelect">
+										<option value=""
+											<c:if test="${status.value == null || status.value == ''}">selected</c:if>></option>
+										<option value="true"
+											<c:if test="${status.value == 'true'}">selected</c:if>><openmrs:message
+												code="general.true" /></option>
+										<option value="false"
+											<c:if test="${status.value == 'false'}">selected</c:if>><openmrs:message
+												code="general.false" /></option>
+								</select> <c:if test="${status.errorMessage != ''}">
+										<span class="error">${status.errorMessage}</span>
+									</c:if></td>
+							</spring:bind>
+						</tr>
+						<tr id="valueCodedRow" class="obsValue">
+							<th valign="top"><openmrs:message code="Obs.codedAnswer" /></th>
+							<td><spring:bind path="valueCoded">
+									<openmrs_tag:conceptField formFieldName="valueCoded"
+										formFieldId="valueCoded"
+										initialValue="${status.editor.value.conceptId}"
+										showAnswers="${obs.concept.conceptId}"
+										onSelectFunction="onAnswerSelect" />
+									<div class="description" id="codedDescription"></div>
+									<c:if test="${status.errorMessage != ''}">
+										<span class="error">${status.errorMessage}</span>
+									</c:if>
+								</spring:bind></td>
+						</tr>
+						<tr id="valueDateRow" class="obsValue">
+							<th><openmrs:message code="Obs.dateAnswer" /></th>
+							<td><spring:bind path="valueDate">
+									<input type="text" name="${status.expression}" size="10"
+										value="${status.value}" onClick="showCalendar(this)" />
 				  (<openmrs:message code="general.format" />: <openmrs:datePattern />)
 				<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr id="valueDatetimeRow" class="obsValue">
-					<th><openmrs:message code="Obs.datetimeAnswer" /></th>
-					<td><spring:bind path="valueDatetime">
-							<input type="text" name="${status.expression}" size="15"
-								value="${status.value}" onClick="showDateTimePicker(this)" />
+										<span class="error">${status.errorMessage}</span>
+									</c:if>
+								</spring:bind></td>
+						</tr>
+						<tr id="valueDatetimeRow" class="obsValue">
+							<th><openmrs:message code="Obs.datetimeAnswer" /></th>
+							<td><spring:bind path="valueDatetime">
+									<input type="text" name="${status.expression}" size="15"
+										value="${status.value}" onClick="showDateTimePicker(this)" />
 				  (<openmrs:message code="general.format" />: <openmrs:datePattern />
-							<openmrs:timePattern format="jquery" />)
+									<openmrs:timePattern format="jquery" />)
 				<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr id="valueTimeRow" class="obsValue">
-					<th><openmrs:message code="Obs.timeAnswer" /></th>
-					<td><spring:bind path="valueTime">
-							<input type="text" name="${status.expression}" size="10"
-								value="${status.value}" onfocus="showTimePicker(this)" />
+										<span class="error">${status.errorMessage}</span>
+									</c:if>
+								</spring:bind></td>
+						</tr>
+						<tr id="valueTimeRow" class="obsValue">
+							<th><openmrs:message code="Obs.timeAnswer" /></th>
+							<td><spring:bind path="valueTime">
+									<input type="text" name="${status.expression}" size="10"
+										value="${status.value}" onfocus="showTimePicker(this)" />
 				  (<openmrs:message code="general.format" />: <openmrs:timePattern
-								format="jquery" />)
+										format="jquery" />)
 				<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
+										<span class="error">${status.errorMessage}</span>
+									</c:if>
+								</spring:bind></td>
+						</tr>
+						<tr id="valueNumericRow" class="obsValue">
+							<th><openmrs:message code="Obs.numericAnswer" /></th>
+							<spring:bind path="valueNumeric">
+								<td><input type="text" name="${status.expression}"
+									value="${status.value}" size="10"
+									onKeyUp="validateNumericRange(this.value)" /> <span
+									id="numericUnits"></span> <span id="numericRangeError"></span>
+									<c:if test="${status.errorMessage != ''}">
+										<span class="error">${status.errorMessage}</span>
+									</c:if></td>
+							</spring:bind>
+						</tr>
+						<tr id="valueModifierRow" class="obsValue">
+							<th><openmrs:message code="Obs.valueModifier" /></th>
+							<spring:bind path="valueModifier">
+								<td><input type="text" name="${status.expression}"
+									id="valueModifierInput" value="${status.value}" size="3"
+									maxlength="2" /> <c:if test="${status.errorMessage != ''}">
+										<span class="error">${status.errorMessage}</span>
+									</c:if></td>
+							</spring:bind>
+						</tr>
+						<tr id="valueTextRow" class="obsValue">
+							<th><openmrs:message code="Obs.textAnswer" /></th>
+							<spring:bind path="valueText">
+								<td><textarea name="${status.expression}" rows="9"
+										cols="80">${status.value}</textarea> <c:if
+										test="${status.errorMessage != ''}">
+										<span class="error">${status.errorMessage}</span>
+									</c:if></td>
+							</spring:bind>
+						</tr>
+						<tr id="valueComplex" class="obsValue">
+							<th><openmrs:message code="Obs.complexAnswer" /></th>
+							<spring:bind path="valueComplex">
+								<br />
+								<td>${status.value}<c:if test="${obs.obsId != null}">
+										<a href="${hyperlinkView}" target="_blank"><openmrs:message
+												code="Obs.viewCurrentComplexValue" /></a>
+									</c:if> <br /> ${htmlView}<br /> <br /> <openmrs:message
+										code="Obs.valueComplex.uploadNew" /> <input type="file"
+									name="complexDataFile" /> <c:if
+										test="${status.errorMessage != ''}">
+										<span class="error">${status.errorMessage}</span>
+									</c:if>
+								</td>
+							</spring:bind>
+						</tr>
+						<tr id="valueInvalidRow" class="obsValue">
+							<th>&nbsp;</th>
+							<td>
+								<div class="error">
+									<openmrs:message code="Obs.valueInvalid.description" />
+								</div>
+								<div id="valueInvalidPossibleConcepts"></div>
+							</td>
+						</tr>
+
+						<openmrs:extensionPoint
+							pointId="org.openmrs.admin.observations.belowValueRow"
+							type="html" parameters="obsId=${obs.obsId}"></openmrs:extensionPoint>
+
+						<tr>
+							<th><openmrs:message code="Obs.comment" /></th>
+							<spring:bind path="comment">
+								<td><textarea name="${status.expression}" rows="2"
+										cols="45">${status.value}</textarea> <c:if
+										test="${status.errorMessage != ''}">
+										<span class="error">${status.errorMessage}</span>
+									</c:if></td>
+							</spring:bind>
+						</tr>
+						<%-- TODO change openmrs to variable route --%>
+						<c:if test="${not empty studyUID}">
+							<tr>
+								<th><spring:message code="radiology.studyResults" /></th>
+								<%--<td><a href="/openmrs/moduleServlet/radiology/viewer.jnlp?studyUID=${studyUID}"><spring:message code="general.download" /></a></td>--%>
+								<td><a href="${dicomViewerUrl}" target="_tab">View
+										Study</a></td>
+							</tr>
+						</c:if>
+						<c:if test="${obs.creator != null}">
+							<tr>
+								<th><openmrs:message code="general.createdBy" /></th>
+								<td>${obs.creator.personName}-<openmrs:formatDate
+										date="${obs.dateCreated}" type="medium" />
+								</td>
+							</tr>
+						</c:if>
+					</table>
+				</spring:nestedPath>
+				<input type="hidden" name="phrase"
+					value="<request:parameter name="phrase" />" /> <br /> <br />
+
+				<c:if test="${obs.obsId != null}">
+					<b><openmrs:message code="Obs.edit.reason" /></b>
+					<input type="text" value="${editReason}" size="40"
+						name="editReason" />
+					<spring:hasBindErrors name="obs">
+						<c:forEach items="${errors.allErrors}" var="error">
+							<c:if test="${error.code == 'editReason'}">
+								<span class="error"><openmrs:message
+										code="${error.defaultMessage}" text="${error.defaultMessage}" /></span>
 							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr id="valueNumericRow" class="obsValue">
-					<th><openmrs:message code="Obs.numericAnswer" /></th>
-					<spring:bind path="valueNumeric">
-						<td><input type="text" name="${status.expression}"
-							value="${status.value}" size="10"
-							onKeyUp="validateNumericRange(this.value)" /> <span
-							id="numericUnits"></span> <span id="numericRangeError"></span> <c:if
-								test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if></td>
-					</spring:bind>
-				</tr>
-				<tr id="valueModifierRow" class="obsValue">
-					<th><openmrs:message code="Obs.valueModifier" /></th>
-					<spring:bind path="valueModifier">
-						<td><input type="text" name="${status.expression}"
-							id="valueModifierInput" value="${status.value}" size="3"
-							maxlength="2" /> <c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if></td>
-					</spring:bind>
-				</tr>
-				<tr id="valueTextRow" class="obsValue">
-					<th><openmrs:message code="Obs.textAnswer" /></th>
-					<spring:bind path="valueText">
-						<td><textarea name="${status.expression}" rows="9" cols="80">${status.value}</textarea>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if></td>
-					</spring:bind>
-				</tr>
-				<tr id="valueComplex" class="obsValue">
-					<th><openmrs:message code="Obs.complexAnswer" /></th>
-					<spring:bind path="valueComplex"><br />
-						<td>${status.value}<c:if test="${obs.obsId != null}">
-								<a href="${hyperlinkView}" target="_blank"><openmrs:message
-										code="Obs.viewCurrentComplexValue" /></a>
-							</c:if> <br /> ${htmlView}<br /> <br /> <openmrs:message
-								code="Obs.valueComplex.uploadNew" /> <input type="file"
-							name="complexDataFile" /> <c:if
-								test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</td>
-					</spring:bind>
-				</tr>
-				<tr id="valueInvalidRow" class="obsValue">
-					<th>&nbsp;</th>
-					<td>
-						<div class="error">
-							<openmrs:message code="Obs.valueInvalid.description" />
-						</div>
-						<div id="valueInvalidPossibleConcepts"></div>
-					</td>
-				</tr>
-
-				<openmrs:extensionPoint
-					pointId="org.openmrs.admin.observations.belowValueRow" type="html"
-					parameters="obsId=${obs.obsId}"></openmrs:extensionPoint>
-
-				<tr>
-					<th><openmrs:message code="Obs.comment" /></th>
-					<spring:bind path="comment">
-						<td><textarea name="${status.expression}" rows="2" cols="45">${status.value}</textarea>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if></td>
-					</spring:bind>
-				</tr>
-				<%-- TODO change openmrs to variable route --%>
-				<c:if test="${not empty studyUID}">
-					<tr>
-						<th><spring:message code="radiology.studyResults" /></th>
-						<%--<td><a href="/openmrs/moduleServlet/radiology/viewer.jnlp?studyUID=${studyUID}"><spring:message code="general.download" /></a></td>--%>
-						<td><a href="${dicomViewerUrl}" target="_tab">View Study</a></td>
-					</tr>
+						</c:forEach>
+					</spring:hasBindErrors>
+					<br />
+					<br />
 				</c:if>
-				<c:if test="${obs.creator != null}">
-					<tr>
-						<th><openmrs:message code="general.createdBy" /></th>
-						<td>${obs.creator.personName}-<openmrs:formatDate
-								date="${obs.dateCreated}" type="medium" />
-						</td>
-					</tr>
-				</c:if>
-			</table>
-		</spring:nestedPath>
-		<input type="hidden" name="phrase"
-			value="<request:parameter name="phrase" />" /> <br /> <br />
 
-		<c:if test="${obs.obsId != null}">
-			<b><openmrs:message code="Obs.edit.reason" /></b>
-			<input type="text" value="${editReason}" size="40" name="editReason" />
-			<spring:hasBindErrors name="obs">
-				<c:forEach items="${errors.allErrors}" var="error">
-					<c:if test="${error.code == 'editReason'}">
-						<span class="error"><openmrs:message
-								code="${error.defaultMessage}" text="${error.defaultMessage}" /></span>
-					</c:if>
-				</c:forEach>
-			</spring:hasBindErrors>
-			<br />
-			<br />
-		</c:if>
+				<%-- You can't edit a voided obs --%>
+				<input type="submit" id="saveObsButton" name="saveObs"
+					value='<openmrs:message code="Obs.save"/>'
+					<c:if test="${obs.voided}">disabled</c:if>> &nbsp; <input
+					type="button" value='<openmrs:message code="general.cancel"/>'
+					onclick="history.go(-1);">
 
-		<%-- You can't edit a voided obs --%>
-		<input type="submit" id="saveObsButton" name="saveObs"
-			value='<openmrs:message code="Obs.save"/>'
-			<c:if test="${obs.voided}">disabled</c:if>> &nbsp; <input
-			type="button" value='<openmrs:message code="general.cancel"/>'
-			onclick="history.go(-1);">
+			</fieldset>
+		</form>
+	</c:when>
+	<c:otherwise>
+		<form method="post" onSubmit="removeHiddenRows()"
+			enctype="multipart/form-data">
+			<fieldset>
+				<spring:nestedPath path="obs">
 
-	</fieldset>
-</form>
+					<table id="obsTable">
+						<c:if test="${obs.obsId != null}">
+							<tr>
+								<th><openmrs:message code="general.id" /></th>
+								<td><spring:bind path="obsId">
+					${status.value}
+				</spring:bind></td>
+							</tr>
+						</c:if>
+						<tr>
+							<th><openmrs:message code="Obs.person" /></th>
+							<td><spring:bind path="person.personName.fullName">
+								${status.value}
+							</spring:bind></td>
+						</tr>
+						<tr>
+							<th><openmrs:message code="Obs.encounter" /></th>
+							<td><spring:bind path="encounter">
+									${status.value}
+								</spring:bind></td>
+						</tr>
+						<tr>
+							<th><openmrs:message code="Obs.order" /></th>
+							<td><a
+								href="/openmrs/module/radiology/radiologyOrder.form?orderId=<spring:bind path="order.id">
+								${status.value}
+							</spring:bind>">
+									<spring:bind path="order.id">
+								${status.value}
+							</spring:bind>
+							</a></td>
+						</tr>
 
+						<tr>
+							<th><openmrs:message code="Obs.location" /></th>
+							<td><spring:bind path="location.displayString">
+									${status.value}
+								</spring:bind></td>
+						</tr>
+						<tr>
+							<th><openmrs:message code="Obs.datetime" /></th>
+							<td><spring:bind path="obsDatetime">
+									${status.value}
+								</spring:bind> (<openmrs:message code="general.format" />: <openmrs:datePattern />)</td>
+						</tr>
+						<tr style="display: none; other-property: value;">
+							<th><openmrs:message code="Obs.concept" /></th>
+							<td><spring:bind path="obs.concept">
+									<openmrs_tag:conceptField formFieldName="concept"
+										formFieldId="conceptId" excludeDatatypes="N/A"
+										initialValue="${status.editor.value.conceptId}"
+										onSelectFunction="onQuestionSelect" />
+									<div class="description" id="conceptDescription"></div>
+								</spring:bind></td>
+						</tr>
+						<tr>
+							<th><openmrs:message code="Obs.concept" /></th>
+							<td><spring:bind path="concept.name.name">
+								${status.value}
+							</spring:bind></td>
+						</tr>
+						<tr id="valueBooleanRow" class="obsValue">
+							<th><openmrs:message code="Obs.booleanAnswer" /></th>
+							<spring:bind path="valueBoolean">
+								<td>${status.value}</td>
+							</spring:bind>
+						</tr>
+						<tr id="valueCodedRow" class="obsValue">
+							<th valign="top"><openmrs:message code="Obs.codedAnswer" /></th>
+							<td><spring:bind path="valueCoded.displayString">
+									${status.value}
+								</spring:bind></td>
+						</tr>
+						<tr id="valueDateRow" class="obsValue">
+							<th><openmrs:message code="Obs.dateAnswer" /></th>
+							<td><spring:bind path="valueDate">
+									${status.value}
+								</spring:bind></td>
+						</tr>
+						<tr id="valueDatetimeRow" class="obsValue">
+							<th><openmrs:message code="Obs.datetimeAnswer" /></th>
+							<td><spring:bind path="valueDatetime">
+									${status.value}
+								</spring:bind></td>
+						</tr>
+						<tr id="valueTimeRow" class="obsValue">
+							<th><openmrs:message code="Obs.timeAnswer" /></th>
+							<td><spring:bind path="valueTime">
+									${status.value}
+								</spring:bind></td>
+						</tr>
+						<tr id="valueNumericRow" class="obsValue">
+							<th><openmrs:message code="Obs.numericAnswer" /></th>
+							<td><spring:bind path="valueNumeric">
+								${status.value}
+							</spring:bind></td>
+						</tr>
+						<tr id="valueModifierRow" class="obsValue">
+							<th><openmrs:message code="Obs.valueModifier" /></th>
+							<td><spring:bind path="valueModifier">
+							${status.value}
+							</spring:bind>
+							<td>
+						</tr>
+						<tr id="valueTextRow" class="obsValue">
+							<th><openmrs:message code="Obs.textAnswer" /></th>
+							<td><spring:bind path="valueText">
+							${status.value}
+							</spring:bind>
+							<td>
+						</tr>
+						<tr id="valueComplex" class="obsValue">
+							<th><openmrs:message code="Obs.complexAnswer" /></th>
+							<spring:bind path="valueComplex">
+								<br />
+								<td>${status.value}<a href="${hyperlinkView}"
+									target="_blank"><openmrs:message
+											code="Obs.viewCurrentComplexValue" /></a><br /> ${htmlView}<br />
+									<br />
+								</td>
+							</spring:bind>
+						</tr>
+						<tr id="valueInvalidRow" class="obsValue">
+							<th>&nbsp;</th>
+							<td>
+								<div class="error">
+									<openmrs:message code="Obs.valueInvalid.description" />
+								</div>
+								<div id="valueInvalidPossibleConcepts"></div>
+							</td>
+						</tr>
+
+						<openmrs:extensionPoint
+							pointId="org.openmrs.admin.observations.belowValueRow"
+							type="html" parameters="obsId=${obs.obsId}"></openmrs:extensionPoint>
+
+						<tr>
+							<th><openmrs:message code="Obs.comment" /></th>
+							<spring:bind path="comment">
+								<td>${status.value}</td>
+							</spring:bind>
+						</tr>
+						<%-- TODO change openmrs to variable route --%>
+						<c:if test="${not empty studyUID}">
+							<tr>
+								<th><spring:message code="radiology.studyResults" /></th>
+								<%--<td><a href="/openmrs/moduleServlet/radiology/viewer.jnlp?studyUID=${studyUID}"><spring:message code="general.download" /></a></td>--%>
+								<td><a href="${dicomViewerUrl}" target="_tab">View
+										Study</a></td>
+							</tr>
+						</c:if>
+						<c:if test="${obs.creator != null}">
+							<tr>
+								<th><openmrs:message code="general.createdBy" /></th>
+								<td>${obs.creator.personName}-<openmrs:formatDate
+										date="${obs.dateCreated}" type="medium" />
+								</td>
+							</tr>
+						</c:if>
+					</table>
+				</spring:nestedPath>
+				<input type="hidden" name="phrase"
+					value="<request:parameter name="phrase" />" /> <br /> <br />
+			</fieldset>
+		</form>
+	</c:otherwise>
+</c:choose>
 <br />
 <br />
 
