@@ -17,16 +17,16 @@ import java.util.List;
 
 public class FilteredConcept extends Concept {
 	
-	public List<Concept> getRadiologyConcepts() {
+	public List<String> getRadiologyConcepts() {
 		List<Concept> list = new LinkedList<Concept>();
 		list = Context.getConceptService().getAllConcepts();
-		List<Concept> b = new LinkedList<Concept>();
+		List<String> b = new LinkedList<String>();
 		for (Concept all : list) {
 			if (all.getName().getName().equals("Radiology")) {
 				List<Concept> conceptSets = new LinkedList<Concept>();
 				conceptSets = all.getSetMembers();
 				for (Concept sets : conceptSets) {
-					b.add(sets);
+					b.add(sets.getName().getName());
 				}
 			}
 		}
