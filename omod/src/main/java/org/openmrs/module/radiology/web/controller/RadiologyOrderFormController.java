@@ -28,14 +28,8 @@ import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.*;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
-import org.openmrs.module.radiology.Modality;
-import org.openmrs.module.radiology.MwlStatus;
-import org.openmrs.module.radiology.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
-import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.validator.RadiologyOrderValidator;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -282,24 +276,10 @@ public class RadiologyOrderFormController {
 		
 		return performedStatuses;
 	}
-	
-	//gibt derzeit die Concepts vom ConceptSet "Radiology" aus.
-	//Das Concept Set musst du selber erstellen dann kannst dus testen
-	//Allgemein sollte es so funktionieren wir müssten es nur schaffen das jetzt in die Auswahl zu bekommen.
-	@ModelAttribute("FilteredConcepts")
-	private List<String> getRadiologyConcepts() {
-		List<Concept> list = new LinkedList<Concept>();
-		list = Context.getConceptService().getAllConcepts();
-		List<String> b = new LinkedList<String>();
-		for (Concept all : list) {
-			if (all.getName().getName().equals("Radiology")) {
-				List<Concept> conceptSets = new LinkedList();
-				conceptSets = all.getSetMembers();
-				for (Concept sets : conceptSets) {
-					b.add(sets.getName().getName());
-				}
-			}
-		}
-		return b;
+
+	@ModelAttribute("filteredConcept")
+	private List<Concept> getRadiologyConcepts() {
+		FilteredConcept fc = new FilteredConcept();
+		return fc.getRadiologyConcepts();
 	}
 }

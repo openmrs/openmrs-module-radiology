@@ -5,9 +5,10 @@
 	http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd -->
 
 <beans xmlns="http://www.springframework.org/schema/beans"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
-	xmlns:util="http://www.springframework.org/schema/util"
-	xsi:schemaLocation=" 
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
                         http://www.springframework.org/schema/beans 
                         http://www.springframework.org/schema/beans/spring-beans-3.0.xsd                         
                         http://www.springframework.org/schema/context
@@ -15,10 +16,19 @@
                         http://www.springframework.org/schema/util
                         http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
-	<context:component-scan base-package="@MODULE_PACKAGE@" />
+    <context:component-scan base-package="@MODULE_PACKAGE@"/>
 
-	<bean
-		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver" />
+    <bean
+            class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerExceptionResolver"/>
 
-
+    <bean id="fieldGenHandlerFactory"
+          class="org.openmrs.web.taglib.fieldgen.FieldGenHandlerFactory">
+        <property name="handlers">
+            <props>
+                <prop key="org.openmrs.module.radiology.FilteredConcept">
+                    org.openmrs.module.radiology.FilteredConceptHandler
+                </prop>
+            </props>
+        </property>
+    </bean>
 </beans>
