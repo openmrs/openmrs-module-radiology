@@ -293,7 +293,7 @@ public class RadiologyOrderFormController {
 		List<String> b = new LinkedList<String>();
 		for (Concept all : list) {
 			if (all.getName().getName().equals("Radiology")) {
-				List<Concept> conceptSets = new LinkedList<Concept>();
+				List<Concept> conceptSets = new LinkedList();
 				conceptSets = all.getSetMembers();
 				for (Concept sets : conceptSets) {
 					b.add(sets.getName().getName());

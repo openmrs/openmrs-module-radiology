@@ -14,6 +14,7 @@
 	<spring:message code="Order.title" />
 </h2>
 
+
 <spring:hasBindErrors name="radiologyOrder">
 	<spring:message code="fix.error" />
 	<br />
@@ -44,17 +45,19 @@
 						</spring:bind></td>
 				</tr>
 				<tr>
-     Values:<br>
-      <c:forEach var="concept" items="${FilteredConcepts}">
-          <c:out value="${concept}"></c:out><br>
-      </c:forEach>
+                    Valueslist:<br>
+                    <select name="item">
+                        <option value="-">--Pick Concept--</option>
+                        <c:forEach var="concepts" items="${FilteredConcepts}">
+                            <option value="${concepts}"><c:out value="${concepts}"></c:out></option>
+                        </c:forEach>
+                    </select>
      <%--<form:select path="FilteredConcepts" items="${FilteredConcepts}">
          <form:option value="NONE" label="--- Select ---"/>
          <form:options items="${FilteredConcepts}" />
      </form:select>--%>
 
  </tr>
-
 				<tr>
 					<td><spring:message code="Order.concept" /></td>
 					<td><spring:bind path="concept">
@@ -363,7 +366,6 @@
 		</c:if>
 	</c:otherwise>
 </c:choose>
-
 
 <div id="moreInfoPopup"></div>
 <%@ include file="/WEB-INF/template/footer.jsp"%>
