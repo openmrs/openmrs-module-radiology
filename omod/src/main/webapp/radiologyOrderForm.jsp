@@ -43,8 +43,21 @@
                         </c:if>
                     </spring:bind></td>
                 </tr>
+
                 <tr>
-                    <td><spring:message code="Order.concept"/></td>
+                					<td><spring:message code="Order.concept" /></td>
+                					<td><spring:bind path="concept">
+                							<openmrs:fieldGen type="org.openmrs.Concept"
+                								formFieldName="${status.expression}"
+                								val="${status.editor.value}" />
+                							<c:if test="${status.errorMessage != ''}">
+                								<span class="error">${status.errorMessage}</span>
+                							</c:if>
+                						</spring:bind></td>
+                				</tr>
+
+                <tr>
+                    <td><spring:message code="Order.concept"/> (testing)</td>
 <%--                    <td><spring:bind path="concept">
                         <openmrs:fieldGen type="org.openmrs.module.radiology.FilteredConcept"
                                           formFieldName="${status.expression}"
