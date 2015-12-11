@@ -58,8 +58,8 @@
 
                 <tr>
                     <td><spring:message code="Order.concept"/> (testing)</td>
-<%--                    <td><spring:bind path="concept">
-                        <openmrs:fieldGen type="org.openmrs.module.radiology.FilteredConcept"
+<%--                    <td><spring:bind path="filteredConcept">
+                        <openmrs:fieldGen type="java.lang.String"
                                           formFieldName="${status.expression}"
                                           val="${status.editor.value}"/>
                         <c:if test="${status.errorMessage != ''}">
@@ -73,6 +73,22 @@
                             </c:forEach>
                         </select> </td>
                 </tr>
+<%--            <tr>
+                    <th>Test1</th>
+                    <td>
+                        <spring:bind path="testOne">
+                            <input type="text" name="${status.expression}" value="${status.value}"><br />
+                        </spring:bind>
+                    </td>
+                </tr> --%>
+<%--            <tr>
+                    <th>Test2</th>
+                    <td>
+                        <spring:bind path="testTwo">
+                            <input type="text" name="${status.expression}" value="${status.value}"><br />
+                        </spring:bind>
+                    </td>
+                </tr> --%>
                 <tr>
                     <td><spring:message code="radiology.urgency"/></td>
                     <td><spring:bind path="urgency">

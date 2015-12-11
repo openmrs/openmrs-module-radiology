@@ -65,6 +65,7 @@ public class RadiologyOrderFormController {
 			modelAndView.addObject("order", new Order());
 			modelAndView.addObject("isOrderActive", true);
 			modelAndView.addObject("radiologyOrder", radiologyOrder);
+			modelAndView.addObject("testTwo", "testTwo");
 		}
 		
 		return modelAndView;
@@ -281,5 +282,10 @@ public class RadiologyOrderFormController {
 	private List<String> getRadiologyConcepts() {
 		FilteredConcept fc = new FilteredConcept();
 		return fc.getRadiologyConcepts();
+	}
+	
+	@ModelAttribute("testOne")
+	private String getTestOne() {
+		return "Test";
 	}
 }
