@@ -362,7 +362,8 @@ th {
 							<openmrs_tag:conceptField formFieldName="concept"
 								formFieldId="conceptId" excludeDatatypes="N/A"
 								initialValue="${status.editor.value.conceptId}"
-								onSelectFunction="onQuestionSelect" />
+								onSelectFunction="onQuestionSelect"
+                                includeClasses="X-RAY" />
 							<div class="description" id="conceptDescription"></div>
 							<c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>

@@ -8,6 +8,165 @@
 <openmrs:htmlInclude file="/scripts/calendar/calendar.js"/>
 <%@ include
         file="/WEB-INF/view/module/radiology/resources/js/moreInfo.js" %>
+<script type="text/javascript">
+    // on concept select:
+    function onQuestionSelect(concept) {
+        $j("#conceptDescription").show();
+        $j("#conceptDescription").html(concept.description);
+        updateObsValues(concept);
+    }
+
+    // on answer select:
+    function onAnswerSelect(concept) {
+        $j("#codedDescription").show();
+        $j("#codedDescription").html(concept.description);
+    }
+
+    function showProposeConceptForm() {
+        var qs = "?";
+        var encounterId = "${obs.encounter.encounterId}"
+                || $j("#encounterId").val();
+        if (encounterId != "")
+            qs += "&encounterId=" + encounterId;
+        var obsConceptId = "${obs.concept.conceptId}" || $j("#conceptId").val();
+        if (obsConceptId != "")
+            qs += "&obsConceptId=" + obsConceptId;
+        document.location = "${pageContext.request.contextPath}/admin/concepts/proposeConcept.form"
+                + qs;
+    }
+
+    function updateObsValues(tmpConcept) {
+        var values = [ 'valueBooleanRow', 'valueCodedRow', 'valueDatetimeRow',
+            'valueDateRow', 'valueTimeRow', 'valueModifierRow',
+            'valueTextRow', 'valueNumericRow', 'valueInvalidRow',
+            'valueComplex' ];
+        $j.each(values, function(x, val) {
+            $j("#" + val).hide()
+        });
+
+        if (tmpConcept != null) {
+            var datatype = tmpConcept.hl7Abbreviation;
+            if (typeof datatype != 'string')
+                datatype = tmpConcept.datatype.hl7Abbreviation;
+
+            if (datatype == 'BIT') {
+                $j('#valueBooleanRow').show();
+            } else if (datatype == 'NM' || datatype == 'SN') {
+                $j('#valueNumericRow').show();
+                DWRConceptService.getConceptNumericUnits(tmpConcept.conceptId,
+                        fillNumericUnits);
+            } else if (datatype == 'CWE') {
+                $j('#valueCodedRow').show();
+
+                // clear any old values:
+                $j("#valueCoded").val("");
+                $j("#valueCoded_selection").val("");
+                $j("#codedDescription").html("");
+
+                // set up the autocomplete for the answers
+                var conceptId = $j("#conceptId").val();
+                new AutoComplete("valueCoded_selection", new CreateCallback({
+                    showAnswersFor : conceptId
+                }).conceptAnswersCallback(), {
+                    'minLength' : '0'
+                });
+                $j("#valueCoded_selection").autocomplete().focus(
+                        function(event, ui) {
+                            if (event.target.value == "")
+                                $j("#valueCoded_selection").trigger(
+                                        'keydown.autocomplete');
+                        }); // trigger the drop down on focus
+
+                // something in the autocomplete is setting the focus to the conceptId box after
+                // this method is done.  get around this and focus on our answer box by putting
+                // a very small delay on the call using setTimeout
+                setTimeout("$j('#valueCoded_selection').focus();", 0);
+            } else if (datatype == 'ST') {
+                $j('#valueTextRow').show();
+            } else if (datatype == 'DT') {
+                $j('#valueDateRow').show();
+            } else if (datatype == 'TS') {
+                $j('#valueDatetimeRow').show();
+            } else if (datatype == 'TM') {
+                $j('#valueTimeRow').show();
+            }
+            // TODO move datatype 'TM' to own time box.  How to have them select?
+            else if (datatype == 'ED') {
+                $j('#valueComplex').show();
+            } else {
+                $j('#valueInvalidRow').show();
+                DWRConceptService.getQuestionsForAnswer(tmpConcept.conceptId,
+                        fillValueInvalidPossible(tmpConcept));
+            }
+        }
+    }
+
+    function fillNumericUnits(units) {
+        $j('#numericUnits').html(units);
+    }
+
+    function validateNumericRange(value) {
+        if (!isNaN(value) && value != '') {
+            var conceptId = $j("#conceptId").val();
+            var numericErrorMessage = function(validValue) {
+                var errorTag = document.getElementById('numericRangeError');
+                errorTag.className = "error";
+                if (validValue == false)
+                    errorTag.innerHTML = '<openmrs:message code="ConceptNumeric.invalid.msg"/>';
+                else
+                    errorTag.innerHTML = errorTag.className = "";
+            }
+            DWRConceptService.isValidNumericValue(value, conceptId,
+                    numericErrorMessage);
+        }
+    }
+
+    function removeHiddenRows() {
+        var rows = document.getElementsByTagName("TR");
+        var i = 0;
+        while (i < rows.length) {
+            if (rows[i].style.display == "none")
+                rows[i].parentNode.removeChild(rows[i]);
+            else
+                i = i + 1;
+        }
+    }
+
+    var fillValueInvalidPossible = function(invalidConcept) {
+        return function(questions) {
+            var div = document.getElementById('valueInvalidPossibleConcepts');
+            div.innerHTML = "";
+            var txt = document
+                    .createTextNode('<openmrs:message code="Obs.valueInvalid.didYouMean"/> ');
+            for (var i = 0; i < questions.length && i < 10; i++) {
+                if (i == 0)
+                    div.appendChild(txt);
+                var concept = questions[i];
+                var link = document.createElement("a");
+                link.href = "#selectAsQuestion";
+                link.onclick = selectNewQuestion(concept, invalidConcept);
+                link.title = concept.description;
+                link.innerHTML = concept.name;
+                if (i == (questions.length - 1) || i == 9)
+                    link.innerHTML += "?";
+                else
+                    link.innerHTML += ", ";
+                div.appendChild(link);
+            }
+        }
+    }
+
+    var selectNewQuestion = function(question, answer) {
+        return function() {
+            var msg = new Object();
+            msg.objs = [ question ];
+            dojo.event.topic.publish(conceptSearch.eventNames.select, msg);
+            msg.objs = [ answer ];
+            dojo.event.topic.publish(codedSearch.eventNames.select, msg);
+            return false;
+        };
+    }
+</script>
 
 <h2>
     <spring:message code="Order.title"/>
@@ -42,53 +201,25 @@
                             <span class="error">${status.errorMessage}</span>
                         </c:if>
                     </spring:bind></td>
+
                 </tr>
 
                 <tr>
-                					<td><spring:message code="Order.concept" /></td>
-                					<td><spring:bind path="concept">
-                							<openmrs:fieldGen type="org.openmrs.Concept"
-                								formFieldName="${status.expression}"
-                								val="${status.editor.value}" />
-                							<c:if test="${status.errorMessage != ''}">
-                								<span class="error">${status.errorMessage}</span>
-                							</c:if>
-                						</spring:bind></td>
-                				</tr>
-
-                <tr>
-                    <td><spring:message code="Order.concept"/> (testing)</td>
-<%--                    <td><spring:bind path="filteredConcept">
-                        <openmrs:fieldGen type="java.lang.String"
-                                          formFieldName="${status.expression}"
-                                          val="${status.editor.value}"/>
+                    <openmrs:globalProperty key="radiology.radiologyConcepts" var="allowedConcepts"/>
+                	<td><spring:message code="Order.concept" /></td>
+                    <td><spring:bind path="concept">
+                        <openmrs_tag:conceptField formFieldName="concept"
+                                                  formFieldId="conceptId"
+                                                  excludeDatatypes="N/A"
+                                                  initialValue="${status.editor.value.conceptId}"
+                                                  onSelectFunction="onQuestionSelect"
+                                                  includeClasses="${allowedConcepts}" />
+                        <div class="description" id="conceptDescription"></div>
                         <c:if test="${status.errorMessage != ''}">
                             <span class="error">${status.errorMessage}</span>
                         </c:if>
-                    </spring:bind></td>--%>
-                    <td> <select name="item">
-                            <option value="-">--Pick Concept--</option>
-                            <c:forEach var="concepts" items="${filteredConcept}">
-                                <option value="${concepts}"><c:out value="${concepts}"></c:out></option>
-                            </c:forEach>
-                        </select> </td>
-                </tr>
-<%--            <tr>
-                    <th>Test1</th>
-                    <td>
-                        <spring:bind path="testOne">
-                            <input type="text" name="${status.expression}" value="${status.value}"><br />
-                        </spring:bind>
-                    </td>
-                </tr> --%>
-<%--            <tr>
-                    <th>Test2</th>
-                    <td>
-                        <spring:bind path="testTwo">
-                            <input type="text" name="${status.expression}" value="${status.value}"><br />
-                        </spring:bind>
-                    </td>
-                </tr> --%>
+                    </spring:bind></td>
+            	</tr>
                 <tr>
                     <td><spring:message code="radiology.urgency"/></td>
                     <td><spring:bind path="urgency">

@@ -137,6 +137,11 @@
 			core
 		</description>
 	</globalProperty>
+    <globalProperty>
+        <property>@MODULE_ID@.radiologyConcepts</property>
+        <defaultValue>X-Ray</defaultValue>
+        <description>Allowed Concept Class in the Radiology Module</description>
+    </globalProperty>
 	<!--Required Global Properties -->
 
 	<!-- Internationalization -->

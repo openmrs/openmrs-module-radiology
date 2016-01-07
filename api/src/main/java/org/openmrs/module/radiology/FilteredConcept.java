@@ -18,12 +18,12 @@ import java.util.List;
 public class FilteredConcept extends Concept {
 	
 	public List<String> getRadiologyConcepts() {
-		List<Concept> list = new LinkedList<Concept>();
+		List<Concept> list;
 		list = Context.getConceptService().getAllConcepts();
 		List<String> b = new LinkedList<String>();
 		for (Concept all : list) {
 			if (all.getName().getName().equals("Radiology")) {
-				List<Concept> conceptSets = new LinkedList<Concept>();
+				List<Concept> conceptSets;
 				conceptSets = all.getSetMembers();
 				for (Concept sets : conceptSets) {
 					b.add(sets.getName().getName());
