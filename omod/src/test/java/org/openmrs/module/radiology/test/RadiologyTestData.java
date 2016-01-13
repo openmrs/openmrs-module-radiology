@@ -14,6 +14,8 @@ import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
 import static org.openmrs.module.radiology.RadiologyRoles.REFERRRING_PHYSICIAN;
 import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
 
+import java.io.CharArrayReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -21,6 +23,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterProvider;
 import org.openmrs.EncounterType;
@@ -38,7 +41,10 @@ import org.openmrs.User;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
+import org.openmrs.obs.ComplexData;
 import org.openmrs.util.RoleConstants;
+import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.mock.web.MockMultipartHttpServletRequest;
 
 public class RadiologyTestData {
 	
@@ -193,6 +199,7 @@ public class RadiologyTestData {
 		mockObs.setEncounter(getMockEncounter1());
 		mockObs.setOrder(getMockRadiologyOrder1());
 		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
+		mockObs.setConcept(new Concept());
 		return mockObs;
 	}
 	
@@ -208,6 +215,80 @@ public class RadiologyTestData {
 		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
 		mockObs.setPreviousVersion(getMockObs());
 		return mockObs;
+	}
+	
+	/**
+	 * Convenience method constructing a mock obs with complex concept for the tests
+	 */
+	public static Obs getMockObsWithComplexConcept() {
+		
+		Obs mockObs = new Obs();
+		mockObs.setId(1);
+		mockObs.setEncounter(getMockEncounter1());
+		mockObs.setOrder(getMockRadiologyOrder1());
+		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
+		mockObs.setComplexData(getMockComplexDataForMockObsWithComplexConcept());
+		return mockObs;
+	}
+	
+	/**
+	 * Convenience method constructing a complex obs for the tests
+	 */
+	public static Obs getMockComplexObsAsHtmlViewForMockObs() {
+		
+		Obs mockObs = new Obs();
+		Reader input = new CharArrayReader("<img src='/openmrs/complexObsServlet?obsId=1'/>".toCharArray());
+		ComplexData complexData = new ComplexData("htmlView", input);
+		mockObs.setComplexData(complexData);
+		return mockObs;
+	}
+	
+	/**
+	 * Convenience method constructing a complex obs for the tests
+	 */
+	public static Obs getMockComplexObsAsHyperlinkViewForMockObs() {
+		
+		Obs mockObs = new Obs();
+		Reader input = new CharArrayReader("openmrs/complexObsServlet?obsId=1".toCharArray());
+		ComplexData complexData = new ComplexData("hyperlinkView", input);
+		mockObs.setComplexData(complexData);
+		return mockObs;
+	}
+	
+	/**
+	 * Convenience method constructing a multipart http servlet request for the tests
+	 */
+	public static MockMultipartHttpServletRequest getMockMultipartHttpServletRequestForMockObsWithComplexConcept() {
+		MockMultipartHttpServletRequest mockRequest = new MockMultipartHttpServletRequest();
+		mockRequest.addFile(getMockMultipartFileForMockObsWithComplexConcept());
+		
+		return mockRequest;
+	}
+	
+	/**
+	 * Convenience method constructing a multipart file for the tests
+	 */
+	public static MockMultipartFile getMockMultipartFileForMockObsWithComplexConcept() {
+		final String fileName = "test.jpg";
+		final byte[] content = "FFD8FFE000104A46".getBytes();
+		return new MockMultipartFile("complexDataFile", fileName, "image/jpeg", content);
+	}
+	
+	/**
+	 * Convenience method constructing an empty multipart file for the tests
+	 */
+	public static MockMultipartFile getEmptyMockMultipartFileForMockObsWithComplexConcept() {
+		final String fileName = "test.jpg";
+		final byte[] content = "".getBytes();
+		return new MockMultipartFile("complexDataFile", fileName, "image/jpeg", content);
+	}
+	
+	/**
+	 * Convenience method constructing complex data for the tests
+	 */
+	public static ComplexData getMockComplexDataForMockObsWithComplexConcept() {
+		return new ComplexData(getMockMultipartFileForMockObsWithComplexConcept().getOriginalFilename(),
+		        getMockMultipartHttpServletRequestForMockObsWithComplexConcept().getInputStream());
 	}
 	
 	/**
