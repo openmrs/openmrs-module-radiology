@@ -205,15 +205,13 @@
                 </tr>
 
                 <tr>
-                    <openmrs:globalProperty key="radiology.radiologyConcepts" var="allowedConcepts"/>
                 	<td><spring:message code="Order.concept" /></td>
                     <td><spring:bind path="concept">
                         <openmrs_tag:conceptField formFieldName="concept"
                                                   formFieldId="conceptId"
-                                                  excludeDatatypes="N/A"
                                                   initialValue="${status.editor.value.conceptId}"
                                                   onSelectFunction="onQuestionSelect"
-                                                  includeClasses="${allowedConcepts}" />
+                                                  includeClasses="${filteredConcept}" />
                         <div class="description" id="conceptDescription"></div>
                         <c:if test="${status.errorMessage != ''}">
                             <span class="error">${status.errorMessage}</span>

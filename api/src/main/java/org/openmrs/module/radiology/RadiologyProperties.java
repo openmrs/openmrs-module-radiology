@@ -9,16 +9,17 @@
  */
 package org.openmrs.module.radiology;
 
-import org.openmrs.CareSetting;
-import org.openmrs.EncounterRole;
-import org.openmrs.EncounterType;
-import org.openmrs.OrderType;
+import org.openmrs.*;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
+import org.openmrs.api.context.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Properties, mostly configured via GPs for this module.
@@ -244,4 +245,38 @@ public class RadiologyProperties {
 		}
 		return result;
 	}
+
+    public String getRadiologyConceptClassNames(){
+
+        String[] ids;
+        try {
+            ids = administrationService.getGlobalProperty("radiology.radiologyConcepts").split(",");
+        }
+        catch(NullPointerException e1){
+            throw new IllegalStateException("There is no Concept Class defined for the Concept Filter, Setting: radiologyConcepts");
+        }
+
+        String finalname="";
+        List<ConceptClass> concepts=Context.getConceptService().getAllConceptClasses();
+        int control=0;
+
+        for(ConceptClass classes:concepts){
+            for(String classUUIDS:ids){
+                if(classes.getUuid().equals(classUUIDS)){
+                    control++;
+                    if(finalname.equals("")){
+                        finalname=finalname+classes.getName();
+                    }
+                    else
+                    {
+                        finalname=finalname+","+classes.getName();
+                    }
+                }
+            }
+        }
+        if(control!=ids.length){
+            throw new IllegalStateException("One of the UUIDs is not correct");
+        }
+        return finalname;
+    }
 }

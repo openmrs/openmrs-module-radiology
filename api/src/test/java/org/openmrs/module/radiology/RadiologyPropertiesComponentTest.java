@@ -11,6 +11,7 @@ package org.openmrs.module.radiology;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Rule;
@@ -238,4 +239,43 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		
 		radiologyProperties.getOrderingProviderEncounterRole();
 	}
+
+    @Test
+    public void getConceptClassNameTest_conceptClassDrug(){
+        administrationService.setGlobalProperty("radiology.radiologyConcepts","3d065ed4-b0b9-4710-9a17-6d8c4fd259b7");
+
+        String text=radiologyProperties.getRadiologyConceptClassNames();
+
+        assertEquals("Drug",text);
+    }
+
+    @Test
+    public void getConceptClassNameTest_conceptClassDrug_LabSet(){
+        administrationService.setGlobalProperty("radiology.radiologyConcepts","3d065ed4-b0b9-4710-9a17-6d8c4fd259b7,4719138c-8553-4c81-bb92-753f41f8be16");
+
+        String text=radiologyProperties.getRadiologyConceptClassNames();
+
+        assertEquals("Drug,LabSet",text);
+    }
+
+    @Test
+    public void getConceptClassNameTest_shouldThrowIllegalStateExceptionForNonExistingConceptClassUUID(){
+        administrationService.setGlobalProperty("radiology.radiologyConcepts","3d065ed4-b0b9-4710-9h17-6d8c4fd259b7");
+
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("One of the UUIDs is not correct");
+
+        String text=radiologyProperties.getRadiologyConceptClassNames();
+    }
+
+    @Test
+    public void getConceptClassNameTest_shouldThrowIllegalStateExceptionForNoConceptClassUUID(){
+        administrationService.setGlobalProperty("radiology.radiologyConcepts","");
+
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("There is no Concept Class defined for the Concept Filter, Setting: radiologyConcepts");
+
+        String text=radiologyProperties.getRadiologyConceptClassNames();
+    }
+
 }

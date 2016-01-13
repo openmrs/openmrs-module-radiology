@@ -279,9 +279,9 @@ public class RadiologyOrderFormController {
 	}
 	
 	@ModelAttribute("filteredConcept")
-	private List<String> getRadiologyConcepts() {
-		FilteredConcept fc = new FilteredConcept();
-		return fc.getRadiologyConcepts();
+	private String getRadiologyConcepts() {
+		RadiologyProperties properties = new RadiologyProperties();
+        return properties.getRadiologyConceptClassNames();
 	}
 	
 	@ModelAttribute("testOne")
