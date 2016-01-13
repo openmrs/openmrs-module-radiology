@@ -139,7 +139,7 @@
 	</globalProperty>
     <globalProperty>
         <property>@MODULE_ID@.radiologyConcepts</property>
-        <defaultValue>X-Ray</defaultValue>
+        <defaultValue>3d065ed4-b0b9-4710-9a17-6d8c4fd259b7</defaultValue>
         <description>Allowed Concept Class in the Radiology Module</description>
     </globalProperty>
 	<!--Required Global Properties -->

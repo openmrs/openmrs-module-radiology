@@ -245,38 +245,46 @@ public class RadiologyProperties {
 		}
 		return result;
 	}
-
-    public String getRadiologyConceptClassNames(){
-
-        String[] ids;
-        try {
-            ids = administrationService.getGlobalProperty("radiology.radiologyConcepts").split(",");
-        }
-        catch(NullPointerException e1){
-            throw new IllegalStateException("There is no Concept Class defined for the Concept Filter, Setting: radiologyConcepts");
-        }
-
-        String finalname="";
-        List<ConceptClass> concepts=Context.getConceptService().getAllConceptClasses();
-        int control=0;
-
-        for(ConceptClass classes:concepts){
-            for(String classUUIDS:ids){
-                if(classes.getUuid().equals(classUUIDS)){
-                    control++;
-                    if(finalname.equals("")){
-                        finalname=finalname+classes.getName();
-                    }
-                    else
-                    {
-                        finalname=finalname+","+classes.getName();
-                    }
-                }
-            }
-        }
-        if(control!=ids.length){
-            throw new IllegalStateException("One of the UUIDs is not correct");
-        }
-        return finalname;
-    }
+	
+	/**
+	 * Gets the Name of the ConceptClass for the UUID from the config
+	 *
+	 * @return a String that contains the Names of the ConceptClasses seperated by a comma
+	 * @should return String with ConceptClass Name Drug
+	 * @should return String with ConceptClass Name Drug and LabSet
+	 * @should throw illegal state exception for a non existent UUID
+	 * @should throw illegal state exception if false ConceptClass UUID
+	 */
+	public String getRadiologyConceptClassNames() {
+		String[] ids;
+		try {
+			ids = Context.getAdministrationService().getGlobalProperty("radiology.radiologyConcepts").split(",");
+		}
+		catch (NullPointerException e1) {
+			throw new IllegalStateException(
+			        "There is no Concept Class defined for the Concept Filter, Setting: radiologyConcepts");
+		}
+		
+		String finalName = "";
+		List<ConceptClass> concepts = Context.getConceptService().getAllConceptClasses();
+		int control = 0;
+		for (ConceptClass classes : concepts) {
+			for (String classUUIDS : ids) {
+				classUUIDS.trim();
+				if (classes.getUuid().equals(classUUIDS)) {
+					control++;
+					if (finalName.equals("")) {
+						finalName = finalName + classes.getName();
+					} else {
+						finalName = finalName + "," + classes.getName();
+					}
+					
+				}
+			}
+		}
+		if (control != ids.length) {
+			throw new IllegalStateException("One of the UUIDs is not correct");
+		}
+		return finalName;
+	}
 }
