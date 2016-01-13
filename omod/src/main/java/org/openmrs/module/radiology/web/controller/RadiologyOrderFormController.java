@@ -277,7 +277,12 @@ public class RadiologyOrderFormController {
 		
 		return performedStatuses;
 	}
-	
+
+    /**
+     * Gets the Names of the ConceptClasses which UUID is defined in the config.xml
+     *
+     * @return Names of ConceptClasses that should be displayed through the Filter
+     */
 	@ModelAttribute("filteredConcept")
 	private String getRadiologyConcepts() {
 		RadiologyProperties properties = new RadiologyProperties();
