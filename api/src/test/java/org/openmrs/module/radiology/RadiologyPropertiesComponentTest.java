@@ -11,18 +11,17 @@ package org.openmrs.module.radiology;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openmrs.EncounterRole;
-import org.openmrs.EncounterType;
-import org.openmrs.GlobalProperty;
-import org.openmrs.OrderType;
+import org.openmrs.*;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
+import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -237,5 +236,65 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		        + RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID + ").");
 		
 		radiologyProperties.getOrderingProviderEncounterRole();
+	}
+	
+	/**
+	 * @verifies throw illegal state exception if false ConceptClass UUID
+	 * @see RadiologyProperties#getRadiologyConceptClassNames()
+	 */
+	@org.junit.Test
+	public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfFalseConceptClassUUID() throws Exception {
+		ConceptClass drug = Context.getConceptService().getConceptClassByName("Drug");
+		administrationService.setGlobalProperty("radiology.radiologyConcepts", drug.getUuid() + "test");
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("One of the UUIDs is not correct");
+		
+		String text = radiologyProperties.getRadiologyConceptClassNames();
+	}
+	
+	/**
+	 * @verifies return String with ConceptClass Name Drug
+	 * @see RadiologyProperties#getRadiologyConceptClassNames()
+	 */
+	@org.junit.Test
+	public void getRadiologyConceptClassNames_shouldReturnStringWithConceptClassNameDrug() throws Exception {
+		ConceptClass drug = Context.getConceptService().getConceptClassByName("Drug");
+		administrationService.setGlobalProperty("radiology.radiologyConcepts", drug.getUuid());
+		
+		String text = radiologyProperties.getRadiologyConceptClassNames();
+		
+		assertEquals("Drug", text);
+	}
+	
+	/**
+	 * @verifies return String with ConceptClass Name Drug and LabSet
+	 * @see RadiologyProperties#getRadiologyConceptClassNames()
+	 */
+	@org.junit.Test
+	public void getRadiologyConceptClassNames_shouldReturnStringWithConceptClassNameDrugAndLabSet() throws Exception {
+		ConceptClass drug = Context.getConceptService().getConceptClassByName("Drug");
+		ConceptClass labset = Context.getConceptService().getConceptClassByName("LabSet");
+		administrationService.setGlobalProperty("radiology.radiologyConcepts", drug.getUuid() + "," + labset.getUuid());
+		
+		String text = radiologyProperties.getRadiologyConceptClassNames();
+		
+		assertEquals("Drug,LabSet", text);
+	}
+	
+	/**
+	 * @verifies throw illegal state exception for a non existent UUID
+	 * @see RadiologyProperties#getRadiologyConceptClassNames()
+	 */
+	@org.junit.Test
+	public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionForANonExistentUUID() throws Exception {
+		administrationService.setGlobalProperty("radiology.radiologyConcepts", "");
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException
+		        .expectMessage("There is no Concept Class defined for the Concept Filter, Setting: radiologyConcepts");
+		
+		String text = radiologyProperties.getRadiologyConceptClassNames();
+		
 	}
 }
