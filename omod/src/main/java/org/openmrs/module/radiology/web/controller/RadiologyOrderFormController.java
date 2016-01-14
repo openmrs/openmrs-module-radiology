@@ -22,19 +22,14 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.Concept;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.*;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
-import org.openmrs.module.radiology.Modality;
-import org.openmrs.module.radiology.MwlStatus;
-import org.openmrs.module.radiology.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
-import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.validator.RadiologyOrderValidator;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,6 +65,7 @@ public class RadiologyOrderFormController {
 			modelAndView.addObject("order", new Order());
 			modelAndView.addObject("isOrderActive", true);
 			modelAndView.addObject("radiologyOrder", radiologyOrder);
+			modelAndView.addObject("testTwo", "testTwo");
 		}
 		
 		return modelAndView;
@@ -280,5 +276,21 @@ public class RadiologyOrderFormController {
 		}
 		
 		return performedStatuses;
+	}
+	
+	/**
+	 * Gets the Names of the ConceptClasses which UUID is defined in the config.xml
+	 *
+	 * @return Names of ConceptClasses that should be displayed through the Filter
+	 */
+	@ModelAttribute("filteredConcept")
+	private String getRadiologyConcepts() {
+		RadiologyProperties properties = new RadiologyProperties();
+		return properties.getRadiologyConceptClassNames();
+	}
+	
+	@ModelAttribute("testOne")
+	private String getTestOne() {
+		return "Test";
 	}
 }

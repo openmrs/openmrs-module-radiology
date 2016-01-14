@@ -72,8 +72,8 @@
 									<a href="radiologyOrder.form?orderId=${order.orderId}">${status.count}</a>
 								</c:if> <c:if test="${not empty obsId}">
 									<a
-										href="module/radiology/portlets/radiologyObsDashboard.form?orderId=${order.orderId}"
-										style="cursor: pointer;" class="viewRadiologyObservations">${status.count}</a>
+										href="module/radiology/radiologyObs.form?orderId=${order.orderId}"
+										style="cursor: pointer;">${status.count}</a>
 								</c:if></td>
 							<td>${order.urgency}</td>
 							<td>${order.orderer.name}</td>
@@ -101,25 +101,6 @@
 	$j(document)
 			.ready(
 					function() {
-						$j('#viewRadiologyObservationsPopup')
-								.dialog(
-										{
-											autoOpen : false,
-											modal : true,
-											position : top,
-											title : '<spring:message code="radiology.radiologyObservations" javaScriptEscape="true"/>',
-											width : '90%',
-										});
-						$j('.viewRadiologyObservations').click(
-								function(e) {
-									e.preventDefault();
-									var url = $j(this).attr('href');
-									$j('#viewRadiologyObservationsPopup').load(
-											url);
-									$j('#viewRadiologyObservationsPopup')
-											.dialog('open');
-								});
-
 						$j('table#matchedOrders')
 								.dataTable(
 										{

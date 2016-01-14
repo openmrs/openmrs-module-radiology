@@ -9,16 +9,17 @@
  */
 package org.openmrs.module.radiology;
 
-import org.openmrs.CareSetting;
-import org.openmrs.EncounterRole;
-import org.openmrs.EncounterType;
-import org.openmrs.OrderType;
+import org.openmrs.*;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
+import org.openmrs.api.context.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
+
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Properties, mostly configured via GPs for this module.
@@ -243,5 +244,47 @@ public class RadiologyProperties {
 			        + RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID + ").");
 		}
 		return result;
+	}
+	
+	/**
+	 * Gets the Name of the ConceptClass for the UUID from the config
+	 *
+	 * @return a String that contains the Names of the ConceptClasses seperated by a comma
+	 * @should return String with ConceptClass Name Drug
+	 * @should return String with ConceptClass Name Drug and LabSet
+	 * @should throw illegal state exception for a non existent UUID
+	 * @should throw illegal state exception if false ConceptClass UUID
+	 */
+	public String getRadiologyConceptClassNames() {
+		String[] ids;
+		try {
+			ids = Context.getAdministrationService().getGlobalProperty("radiology.radiologyConcepts").split(",");
+		}
+		catch (NullPointerException e1) {
+			throw new IllegalStateException(
+			        "There is no Concept Class defined for the Concept Filter, Setting: radiologyConcepts");
+		}
+		
+		String finalName = "";
+		List<ConceptClass> concepts = Context.getConceptService().getAllConceptClasses();
+		int control = 0;
+		for (ConceptClass classes : concepts) {
+			for (String classUUIDS : ids) {
+				classUUIDS.trim();
+				if (classes.getUuid().equals(classUUIDS)) {
+					control++;
+					if (finalName.equals("")) {
+						finalName = finalName + classes.getName();
+					} else {
+						finalName = finalName + "," + classes.getName();
+					}
+					
+				}
+			}
+		}
+		if (control != ids.length) {
+			throw new IllegalStateException("One of the UUIDs is not correct");
+		}
+		return finalName;
 	}
 }
