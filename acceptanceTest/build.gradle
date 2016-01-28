@@ -1,0 +1,153 @@
+import org.apache.tools.ant.taskdefs.condition.Os
+import java.text.SimpleDateFormat
+
+
+def userName = "admin"
+def userPW = "Admin123"
+def baseUrl = "http://localhost:8080/"
+
+task loginConfig {
+    if(System.getProperty("configFile")!=null)
+    {
+        try{
+            File configFile = new File(System.getProperty("configFile"));
+            if(configFile.exists())
+            {
+                Properties properties = new Properties()
+                configFile.withInputStream {
+                    properties.load(it)
+                }
+                userName = properties.userName
+                userPW = properties.userPW
+            }
+            else
+            {
+                ant.fail("The used config-file doesn't exists in: \""+configFile.getAbsolutePath()+"\"");
+            }
+        }
+        catch(Exception e)
+        {
+            ant.fail("The used config-file \""+System.getProperty("configFile")+"\" cannot be used. Reason: "+e.getMessage());
+        }
+    }
+    if(System.getProperty("baseUrl")!=null)
+    {
+        baseUrl = System.getProperty("baseUrl")
+    }
+}
+
+
+ext {
+    // The used drivers
+    drivers = ["chrome", "phantomJs"]
+
+    ext {
+        groovyVersion = '2.4.1'
+        gebVersion = '0.12.2'
+        seleniumVersion = '2.46.0'
+        chromeDriverVersion = '2.19'
+        phantomJsVersion = '1.9.7'
+    }
+}
+
+apply plugin: "groovy"
+apply from: "gradle/idea.gradle"
+apply from: "gradle/osSpecificDownloads.gradle"
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+    testCompile "org.gebish:geb-spock:$gebVersion"
+    testCompile("org.spockframework:spock-core:1.0-groovy-2.4") {
+        exclude group: "org.codehaus.groovy"
+    }
+    testCompile "org.codehaus.groovy:groovy-all:$groovyVersion"
+    testCompile "org.gebish:geb-junit4:$gebVersion"
+
+
+    // Drivers:
+    testCompile "org.seleniumhq.selenium:selenium-chrome-driver:$seleniumVersion"
+    testCompile "org.seleniumhq.selenium:selenium-htmlunit-driver:$seleniumVersion"
+    testCompile("com.codeborne:phantomjsdriver:1.2.1") {
+        transitive = false
+    }
+
+}
+
+drivers.each { driver ->
+    task "${driver}Test"(type: Test) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy_MM_dd_HH-mm-ss_");
+        String dateString = dateFormat.format(new Date());
+
+        reports {
+            html.destination = reporting.file(dateString+"$name/tests")
+            junitXml.destination = file("$buildDir/test-results/"+dateString+"$name")
+
+        }
+
+
+        outputs.upToDateWhen { false }
+
+        systemProperty "geb.build.reportsDir", reporting.file("$name/geb")
+        systemProperty "geb.env", driver
+        systemProperty "userName", userName
+        systemProperty "userPW", userPW
+        systemProperty "geb.build.baseUrl", baseUrl
+    }
+}
+
+chromeTest {
+    dependsOn unzipChromeDriver
+
+    def chromedriverFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "chromedriver.exe" : "chromedriver"
+    systemProperty "webdriver.chrome.driver", new File(unzipChromeDriver.outputs.files.singleFile, chromedriverFilename).absolutePath
+}
+
+phantomJsTest {
+    dependsOn unzipPhantomJs
+
+    def phantomJsFilename = Os.isFamily(Os.FAMILY_WINDOWS) ? "phantomjs.exe" : "bin/phantomjs"
+    systemProperty "phantomjs.binary.path", new File(unzipPhantomJs.outputs.files.singleFile, phantomJsFilename).absolutePath
+}
+
+test {
+    dependsOn drivers.collect { tasks["${it}Test"] }
+    enabled = false
+}
+
+apply from: "gradle/ci.gradle"
+
+
+
+buildscript {
+    repositories{
+        mavenLocal()
+        mavenCentral()
+    }
+    dependencies {
+        classpath group: 'org.openmrs.module.radiology.gradle', name: 'ModuleUpdaterPlugin',
+                version: '1.0-SNAPSHOT'
+    }
+}
+
+apply plugin: 'org.openmrs.module.radiology.gradle.moduleUpdater'
+
+task updateModule(type: org.openmrs.module.radiology.gradle.ModuleUpdaterTask) {
+    uName = userName;
+    uPW = userPW;
+    updaterBaseUrl = baseUrl;
+}
+
+
+updateModule.dependsOn compileJava
+updateModule.dependsOn compileGroovy
+updateModule.dependsOn processResources
+updateModule.dependsOn classes
+updateModule.dependsOn compileTestJava
+updateModule.dependsOn compileTestGroovy
+updateModule.dependsOn processTestResources
+updateModule.dependsOn testClasses
+
