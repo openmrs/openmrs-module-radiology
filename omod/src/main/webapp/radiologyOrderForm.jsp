@@ -9,7 +9,12 @@
 <openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
 <%@ include
 	file="/WEB-INF/view/module/radiology/resources/js/moreInfo.js"%>
-
+<script type="text/javascript">
+	function onQuestionSelect(concept) {
+		$j("#conceptDescription").show();
+		$j("#conceptDescription").html(concept.description);
+	}
+</script>
 <h2>
 	<spring:message code="Order.title" />
 </h2>
@@ -47,13 +52,14 @@
 				<tr>
 					<td><spring:message code="Order.concept" /></td>
 					<td><spring:bind path="concept">
-							<openmrs:fieldGen type="org.openmrs.Concept"
-								formFieldName="${status.expression}"
-								val="${status.editor.value}" />
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
+						<openmrs_tag:conceptField formFieldName="concept"
+						                          formFieldId="conceptId"
+						                          initialValue="${status.editor.value.conceptId}"
+						                          onSelectFunction="onQuestionSelect"
+						                          includeClasses="${radiologyConceptClassNames}" />
+
+						<div class="description" id="conceptDescription"></div>
+					</spring:bind></td>
 				</tr>
 				<tr>
 					<td><spring:message code="radiology.urgency" /></td>

@@ -13,14 +13,19 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
+import java.util.LinkedList;
+import java.util.List;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.openmrs.ConceptClass;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.GlobalProperty;
 import org.openmrs.OrderType;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -44,6 +49,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	
 	@Autowired
 	private EncounterService encounterService;
+	
+	@Autowired
+	private ConceptService conceptService;
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
@@ -237,5 +245,102 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		        + RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID + ").");
 		
 		radiologyProperties.getOrderingProviderEncounterRole();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getRadiologyConceptClassNames()
+	 * @verifies returns comma separated list of ConceptClass names configured via ConceptClass
+	 *           UUIDs in global property radiologyConceptClasses
+	 */
+	@Test
+	public void getRadiologyConceptClassNames_shouldReturnsCommaSeparatedListOfConceptClassNamesConfiguredViaConceptClassUUIDsInGlobalPropertyRadiologyConceptClasses()
+	        throws Exception {
+		List<ConceptClass> conceptClasses = new LinkedList<ConceptClass>();
+		conceptClasses.add(conceptService.getConceptClassByName("Drug"));
+		conceptClasses.add(conceptService.getConceptClassByName("Test"));
+		conceptClasses.add(conceptService.getConceptClassByName("Anatomy"));
+		conceptClasses.add(conceptService.getConceptClassByName("Question"));
+		String uuidFromConceptClasses = "";
+		String expectedNames = "";
+		for (ConceptClass conceptClass : conceptClasses) {
+			if (expectedNames.equals("")) {
+				uuidFromConceptClasses = conceptClass.getUuid();
+				expectedNames = conceptClass.getName();
+			}
+			uuidFromConceptClasses = uuidFromConceptClasses + "," + conceptClass.getUuid();
+			expectedNames = expectedNames + "," + conceptClass.getName();
+		}
+		administrationService.setGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES, uuidFromConceptClasses);
+		assertThat(radiologyProperties.getRadiologyConceptClassNames(), is(expectedNames));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getRadiologyConceptClassNames()
+	 * @verifies throw illegal state exception if global property radiologyConceptClasses is null
+	 */
+	@Test
+	public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsNull()
+	        throws Exception {
+		administrationService.setGlobalProperty("radiology.radiologyConcepts", null);
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException
+		        .expectMessage("There is no Concept Class defined for the Concept Filter, Setting: radiologyConceptClasses");
+		
+		radiologyProperties.getRadiologyConceptClassNames();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getRadiologyConceptClassNames()
+	 * @verifies throw illegal state exception if global property radiologyConceptClasses is an
+	 *           empty String
+	 */
+	@Test
+	public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsAnEmptyString()
+	        throws Exception {
+		administrationService.setGlobalProperty("radiology.radiologyConcepts", "");
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException
+		        .expectMessage("There is no Concept Class defined for the Concept Filter, Setting: radiologyConceptClasses");
+		
+		radiologyProperties.getRadiologyConceptClassNames();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getRadiologyConceptClassNames()
+	 * @verifies throw illegal state exception if global property radiologyConceptClasses is badly
+	 *           formatted
+	 */
+	@Test
+	public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsBadlyFormatted()
+	        throws Exception {
+		administrationService.setGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES,
+		    "AAAA-bbbbb-1111-2222/AAAA-BBBB-2222-3333");
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException
+		        .expectMessage("Property radiology.radiologyConcepts needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
+		
+		radiologyProperties.getRadiologyConceptClassNames();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getRadiologyConceptClassNames()
+	 * @verifies throw illegal state exception if global property radiologyConceptClasses contains a
+	 *           UUID not found among ConceptClasses
+	 */
+	@Test
+	public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesContainsAUUIDNotFoundAmongConceptClasses()
+	        throws Exception {
+		
+		administrationService.setGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES, conceptService
+		        .getConceptClassByName("Drug").getUuid()
+		        + "5");
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Property radiology.radiologyConceptClasses contains UUID");
+		
+		radiologyProperties.getRadiologyConceptClassNames();
 	}
 }

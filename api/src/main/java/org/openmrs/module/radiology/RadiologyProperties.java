@@ -10,12 +10,15 @@
 package org.openmrs.module.radiology;
 
 import org.openmrs.CareSetting;
+import org.openmrs.ConceptClass;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.OrderType;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
+import org.openmrs.api.context.Context;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -35,6 +38,9 @@ public class RadiologyProperties {
 	
 	@Autowired
 	private EncounterService encounterService;
+	
+	@Autowired
+	private ConceptService conceptService;
 	
 	/**
 	 * Return application entity title
@@ -242,6 +248,49 @@ public class RadiologyProperties {
 			throw new IllegalStateException("EncounterRole for ordering provider not in database (not found under uuid="
 			        + RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID + ").");
 		}
+		return result;
+	}
+	
+	/**
+	 * Gets the Name of the ConceptClass for the UUID from the config
+	 *
+	 * @return a String that contains the Names of the ConceptClasses seperated by a comma
+	 * @should throw illegal state exception if global property radiologyConceptClasses is null
+	 * @should throw illegal state exception if global property radiologyConceptClasses is an empty
+	 *         string
+	 * @should throw illegal state exception if global property radiologyConceptClasses is badly
+	 *         formatted
+	 * @should throw illegal state exception if global property radiologyConceptClasses contains a
+	 *         UUID not found among ConceptClasses
+	 * @should returns comma separated list of ConceptClass names configured via ConceptClass UUIDs
+	 *         in global property radiologyConceptClasses
+	 */
+	public String getRadiologyConceptClassNames() {
+		
+		String radiologyConceptClassUuidSetting = Context.getAdministrationService().getGlobalProperty(
+		    RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES);
+		if (radiologyConceptClassUuidSetting == null) {
+			throw new IllegalStateException(
+			        "There is no Concept Class defined for the Concept Filter, Setting: radiologyConceptClasses");
+		}
+		radiologyConceptClassUuidSetting = radiologyConceptClassUuidSetting.replace(" ", "");
+		if (!radiologyConceptClassUuidSetting.matches("^[0-9a-fA-f,-]+$")) {
+			throw new IllegalStateException(
+			        "Property radiology.radiologyConcepts needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
+		}
+		
+		String[] radiologyConceptClassUuids = radiologyConceptClassUuidSetting.split(",");
+		
+		String result = "";
+		for (String radiologyConceptClassUuid : radiologyConceptClassUuids) {
+			ConceptClass fetchedConceptClass = conceptService.getConceptClassByUuid(radiologyConceptClassUuid);
+			if (fetchedConceptClass == null) {
+				throw new IllegalStateException("Property radiology.radiologyConceptClasses contains UUID "
+				        + radiologyConceptClassUuid + " which cannot be found as ConceptClass in the database.");
+			}
+			result = result + fetchedConceptClass.getName() + ",";
+		}
+		result = result.substring(0, result.length() - 1);
 		return result;
 	}
 }
