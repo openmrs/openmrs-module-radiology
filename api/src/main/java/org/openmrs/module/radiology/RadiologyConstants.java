@@ -40,6 +40,8 @@ public class RadiologyConstants {
 	
 	public static final String GP_RADIOLOGY_CARE_SETTING = "radiology.radiologyCareSetting";
 	
+	public static final String GP_RADIOLOGY_CONCEPT_CLASSES = "radiology.radiologyConceptClasses";
+	
 	public static final String RADIOLOGY_TEST_ORDER_TYPE_UUID = "dbdb9a9b-56ea-11e5-a47f-08002719a237";
 	
 	public static final String RADIOLOGY_ENCOUNTER_TYPE_UUID = "19db8c0d-3520-48f2-babd-77f2d450e5c7";

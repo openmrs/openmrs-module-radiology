@@ -32,6 +32,7 @@ import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
@@ -53,6 +54,9 @@ public class RadiologyOrderFormController {
 	
 	@Autowired
 	private RadiologyService radiologyService;
+	
+	@Autowired
+	private RadiologyProperties radiologyProperties;
 	
 	/**
 	 * Handles GET requests for the radiologyOrderForm with new radiology order
@@ -280,5 +284,15 @@ public class RadiologyOrderFormController {
 		}
 		
 		return performedStatuses;
+	}
+	
+	/**
+	 * Gets the Name of the ConceptClasses that should be filtered
+	 *
+	 * @return Name of ConceptClasses
+	 */
+	@ModelAttribute("radiologyConceptClassNames")
+	private String getRadiologyConceptClassNames() {
+		return radiologyProperties.getRadiologyConceptClassNames();
 	}
 }

@@ -137,6 +137,12 @@
 			core
 		</description>
 	</globalProperty>
+    <globalProperty>
+    	<property>@MODULE_ID@.radiologyConceptClasses</property>
+    	<defaultValue></defaultValue>
+    	<description>Comma separated list of concept class UUIDs which define
+        	concepts that are orderable as radiology orders</description>
+    </globalProperty>
 	<!--Required Global Properties -->
 
 	<!-- Internationalization -->
