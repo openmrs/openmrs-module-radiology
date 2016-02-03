@@ -10,54 +10,44 @@ enterprise electronic medical record system [OpenMRS](http://www.openmrs.org)
 with the open source clinical image and object management system
 [dcm4che](http://www.dcm4che.org).
 
-## Installation
+## Quickstart
+
+### Build
+
+Make sure you have a java jdk and [maven](https://maven.apache.org/) installed.
+
+Clone this project:
+```bash
+git clone https://github.com/openmrs/openmrs-module-radiologydcm4chee.git
+```
+
+And execute the following command on the command line:
+```bash
+mvn clean package
+```
+
+### Installation
 
 For a detailed guide on how to install and configure this module see
 
 https://wiki.openmrs.org/display/docs/Radiology+Module+with+dcm4chee
 
-## Development
+### Contributing
+
+Contributions are very welcome, we can definitely use your help!
+
+Check out our [contributing guidelines](CONTRIBUTING.md) to get started.
+
+## Issues
 
 To file new issues or help to fix existing ones please check out
 
 https://issues.openmrs.org/browse/RAD
 
-###Build
-
-To ensure that your commit builds fine run
-```
-mvn clean package
-```
-before opening a new pull request.
-
-###Coding conventions
-
-This module adheres to the OpenMRS coding conventions, please read
-
-https://wiki.openmrs.org/display/docs/Coding+Conventions
-
-####Code style
-
-Help us to keep the code consistent!
-This will produce readable diffs and make merging easier and quicker!
-
-This module uses the Eclipse formatter plugin to automatically format *.java
-files. This plugin is automatically executed when you build the module.
-
-To manually run the formatter plugin, do
-```
-mvn java-formatter:format
-```
-
-For xml and javascript files use **control-shift-f** in Eclipse.
-You will need to configure Eclipse to use the [OpenMRSFormatter.xml](tools/src/main/resources/eclipse/OpenMRSFormatter.xml)
-provided by this module.
-
-Remove unused imports by using **control-shift-o** in Eclipse.
-
 ## Limitations
 
 This module is not yet officially released to the [openmrs modules](https://modules.openmrs.org/#/).
-The API and UI are not yet stable and subject to frequent changes.
-The module currently only works with OpenMRS Version 1.11.4
 
+The API and UI are not yet stable and subject to frequent changes.
+
+The module currently only works with OpenMRS Version 1.11.4
