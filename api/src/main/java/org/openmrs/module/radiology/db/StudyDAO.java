@@ -47,9 +47,4 @@ public interface StudyDAO {
 	 */
 	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
 	
-	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getObsByOrderId(Integer)
-	 */
-	public List<Obs> getObsByOrderId(Integer orderId);
-	
 }

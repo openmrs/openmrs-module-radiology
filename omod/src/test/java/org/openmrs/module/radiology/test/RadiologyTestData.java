@@ -14,21 +14,15 @@ import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
 import static org.openmrs.module.radiology.RadiologyRoles.REFERRRING_PHYSICIAN;
 import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
 
-import java.io.CharArrayReader;
-import java.io.Reader;
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import org.openmrs.Concept;
 import org.openmrs.Encounter;
 import org.openmrs.EncounterProvider;
 import org.openmrs.EncounterType;
 import org.openmrs.Location;
-import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
 import org.openmrs.Patient;
@@ -36,12 +30,13 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.Person;
 import org.openmrs.PersonName;
+import org.openmrs.Provider;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.obs.ComplexData;
+import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.util.RoleConstants;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
@@ -151,6 +146,23 @@ public class RadiologyTestData {
 	}
 	
 	/**
+	 * Convenience method constructing an order for the tests
+	 */
+	public static Order getMockOrder1() {
+		
+		Order mockOrder = new Order();
+		mockOrder.setOrderId(1);
+		mockOrder.setPatient(getMockPatient1());
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(2015, Calendar.FEBRUARY, 4, 14, 35, 0);
+		mockOrder.setScheduledDate(calendar.getTime());
+		mockOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
+		mockOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
+		mockOrder.setVoided(false);
+		return mockOrder;
+	}
+	
+	/**
 	 * Convenience method constructing a mock RadiologyOrder for the tests
 	 */
 	public static RadiologyOrder getMockRadiologyOrder1() {
@@ -190,72 +202,6 @@ public class RadiologyTestData {
 	}
 	
 	/**
-	 * Convenience method constructing a mock obs for the tests
-	 */
-	public static Obs getMockObs() {
-		
-		Obs mockObs = new Obs();
-		mockObs.setId(1);
-		mockObs.setEncounter(getMockEncounter1());
-		mockObs.setOrder(getMockRadiologyOrder1());
-		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
-		mockObs.setConcept(new Concept());
-		return mockObs;
-	}
-	
-	/**
-	 * Convenience method constructing a mock obs for the tests
-	 */
-	public static Obs getEditedMockObs() {
-		
-		Obs mockObs = new Obs();
-		mockObs.setId(2);
-		mockObs.setEncounter(getMockEncounter2());
-		mockObs.setOrder(getMockRadiologyOrder1());
-		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
-		mockObs.setPreviousVersion(getMockObs());
-		return mockObs;
-	}
-	
-	/**
-	 * Convenience method constructing a mock obs with complex concept for the tests
-	 */
-	public static Obs getMockObsWithComplexConcept() {
-		
-		Obs mockObs = new Obs();
-		mockObs.setId(1);
-		mockObs.setEncounter(getMockEncounter1());
-		mockObs.setOrder(getMockRadiologyOrder1());
-		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
-		mockObs.setComplexData(getMockComplexDataForMockObsWithComplexConcept());
-		return mockObs;
-	}
-	
-	/**
-	 * Convenience method constructing a complex obs for the tests
-	 */
-	public static Obs getMockComplexObsAsHtmlViewForMockObs() {
-		
-		Obs mockObs = new Obs();
-		Reader input = new CharArrayReader("<img src='/openmrs/complexObsServlet?obsId=1'/>".toCharArray());
-		ComplexData complexData = new ComplexData("htmlView", input);
-		mockObs.setComplexData(complexData);
-		return mockObs;
-	}
-	
-	/**
-	 * Convenience method constructing a complex obs for the tests
-	 */
-	public static Obs getMockComplexObsAsHyperlinkViewForMockObs() {
-		
-		Obs mockObs = new Obs();
-		Reader input = new CharArrayReader("openmrs/complexObsServlet?obsId=1".toCharArray());
-		ComplexData complexData = new ComplexData("hyperlinkView", input);
-		mockObs.setComplexData(complexData);
-		return mockObs;
-	}
-	
-	/**
 	 * Convenience method constructing a multipart http servlet request for the tests
 	 */
 	public static MockMultipartHttpServletRequest getMockMultipartHttpServletRequestForMockObsWithComplexConcept() {
@@ -281,36 +227,6 @@ public class RadiologyTestData {
 		final String fileName = "test.jpg";
 		final byte[] content = "".getBytes();
 		return new MockMultipartFile("complexDataFile", fileName, "image/jpeg", content);
-	}
-	
-	/**
-	 * Convenience method constructing complex data for the tests
-	 */
-	public static ComplexData getMockComplexDataForMockObsWithComplexConcept() {
-		return new ComplexData(getMockMultipartFileForMockObsWithComplexConcept().getOriginalFilename(),
-		        getMockMultipartHttpServletRequestForMockObsWithComplexConcept().getInputStream());
-	}
-	
-	/**
-	 * Convenience method constructing a list of previous mock obs for the tests
-	 */
-	public static List<Obs> getPreviousMockObs() {
-		
-		ArrayList<Obs> previousObs = new ArrayList<Obs>();
-		Obs mockObs = new Obs();
-		mockObs.setId(2);
-		mockObs.setEncounter(getMockEncounter1());
-		mockObs.setOrder(getMockRadiologyOrder1());
-		mockObs.setPerson(getMockRadiologyOrder1().getPatient());
-		previousObs.add(mockObs);
-		Obs mockObs2 = new Obs();
-		mockObs2.setId(3);
-		mockObs2.setEncounter(getMockEncounter1());
-		mockObs2.setOrder(getMockRadiologyOrder1());
-		mockObs2.setPerson(getMockRadiologyOrder1().getPatient());
-		previousObs.add(mockObs2);
-		
-		return previousObs;
 	}
 	
 	/**
@@ -520,4 +436,17 @@ public class RadiologyTestData {
 		return person;
 	}
 	
+	public static Provider getMockProvider1() {
+		Provider provider = new Provider();
+		provider.setId(1);
+		provider.setName("doctor");
+		return provider;
+	}
+	
+	public static RadiologyReport getMockRadiologyReport1() {
+		RadiologyReport radiologyReport = new RadiologyReport(getMockRadiologyOrder1());
+		radiologyReport.setId(1);
+		radiologyReport.setRadiologyOrder(getMockRadiologyOrder1());
+		return radiologyReport;
+	}
 }

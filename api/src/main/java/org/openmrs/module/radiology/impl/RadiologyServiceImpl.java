@@ -9,19 +9,20 @@
  */
 package org.openmrs.module.radiology.impl;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
-import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderContext;
 import org.openmrs.api.OrderService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
@@ -33,7 +34,10 @@ import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
+import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
+import org.openmrs.module.radiology.report.RadiologyReport;
+import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyService {
@@ -49,6 +53,8 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	private EncounterService encounterService;
 	
 	private RadiologyProperties radiologyProperties;
+	
+	private RadiologyReportDAO radiologyReportDAO;
 	
 	@Override
 	public void setRadiologyOrderDao(RadiologyOrderDAO radiologyOrderDAO) {
@@ -73,6 +79,11 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Override
 	public void setRadiologyProperties(RadiologyProperties radiologyProperties) {
 		this.radiologyProperties = radiologyProperties;
+	}
+	
+	@Override
+	public void setRadiologyReportDAO(RadiologyReportDAO radiologyReportDao) {
+		this.radiologyReportDAO = radiologyReportDao;
 	}
 	
 	/**
@@ -365,15 +376,166 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	}
 	
 	/**
-	 * @see RadiologyService#getObsByOrderId(Integer)
+	 * @see RadiologyService#createAndClaimRadiologyReport(RadiologyOrder)
 	 */
-	@Transactional(readOnly = true)
-	public List<Obs> getObsByOrderId(Integer orderId) {
-		if (orderId == null) {
-			throw new IllegalArgumentException("orderId is required");
+	@Transactional
+	@Override
+	public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder) throws IllegalArgumentException,
+	        UnsupportedOperationException {
+		if (radiologyOrder == null) {
+			throw new IllegalArgumentException("radiologyOrder cannot be null");
 		}
-		
-		return studyDAO.getObsByOrderId(orderId);
+		if (radiologyOrder.getStudy() == null) {
+			throw new IllegalArgumentException("study cannot be null");
+		}
+		if (radiologyOrder.getStudy().isCompleted() == false) {
+			throw new IllegalArgumentException("cannot create RadiologyReport for uncompleted radiologyOrder");
+		}
+		if (radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyOrder)) {
+			throw new UnsupportedOperationException(
+			        "cannot create radiologyReport for this radiologyOrder because it is already completed");
+		}
+		if (radiologyReportDAO.hasRadiologyOrderClaimedRadiologyReport(radiologyOrder)) {
+			throw new UnsupportedOperationException(
+			        "cannot create radiologyReport for this radiologyOrder because it is already claimed");
+		}
+		RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
+		radiologyReport.setCreator(Context.getAuthenticatedUser());
+		return radiologyReportDAO.saveRadiologyReport(radiologyReport);
 	}
 	
+	/**
+	 * @see RadiologyService#saveRadiologyReport(RadiologyReport)
+	 */
+	@Transactional
+	@Override
+	public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
+	        UnsupportedOperationException {
+		if (radiologyReport == null) {
+			throw new IllegalArgumentException("radiologyReport cannot be null");
+		}
+		if (radiologyReport.getReportStatus() == null) {
+			throw new IllegalArgumentException("radiologyReportStatus cannot be null");
+		}
+		if (radiologyReport.getReportStatus() == RadiologyReportStatus.DISCONTINUED) {
+			throw new UnsupportedOperationException("a discontinued radiologyReport cannot be saved");
+		}
+		if (radiologyReport.getReportStatus() == RadiologyReportStatus.COMPLETED) {
+			throw new UnsupportedOperationException("a completed radiologyReport cannot be saved");
+		}
+		return radiologyReportDAO.saveRadiologyReport(radiologyReport);
+	}
+	
+	/**
+	 * @see RadiologyService#unclaimRadiologyReport(RadiologyReport)
+	 */
+	@Transactional
+	@Override
+	public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
+	        UnsupportedOperationException {
+		if (radiologyReport == null) {
+			throw new IllegalArgumentException("radiologyReport cannot be null");
+		}
+		if (radiologyReport.getReportStatus() == null) {
+			throw new IllegalArgumentException("radiologyReportStatus cannot be null");
+		}
+		if (radiologyReport.getReportStatus() == RadiologyReportStatus.DISCONTINUED) {
+			throw new UnsupportedOperationException("a discontinued radiologyReport cannot be unclaimed");
+		}
+		if (radiologyReport.getReportStatus() == RadiologyReportStatus.COMPLETED) {
+			throw new UnsupportedOperationException("a completed radiologyReport cannot be unclaimed");
+		}
+		radiologyReport.setReportStatus(RadiologyReportStatus.DISCONTINUED);
+		return radiologyReportDAO.saveRadiologyReport(radiologyReport);
+	}
+	
+	/**
+	 * @see RadiologyService#completeRadiologyReport(RadiologyReport, Provider)
+	 */
+	@Override
+	public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter)
+	        throws IllegalArgumentException, UnsupportedOperationException {
+		if (radiologyReport == null) {
+			throw new IllegalArgumentException("radiologyReport cannot be null");
+		}
+		if (principalResultsInterpreter == null) {
+			throw new IllegalArgumentException("principalResultsInterpreter cannot be null");
+		}
+		if (radiologyReport.getReportStatus() == null) {
+			throw new IllegalArgumentException("radiologyReportStatus cannot be null");
+		}
+		if (radiologyReport.getReportStatus() == RadiologyReportStatus.DISCONTINUED) {
+			throw new UnsupportedOperationException("a discontinued radiologyReport cannot be completed");
+		}
+		if (radiologyReport.getReportStatus() == RadiologyReportStatus.COMPLETED) {
+			throw new UnsupportedOperationException("a completed radiologyReport cannot be completed");
+		}
+		radiologyReport.setReportDate(new Date());
+		radiologyReport.setPrincipalResultsInterpreter(principalResultsInterpreter);
+		radiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
+		return radiologyReportDAO.saveRadiologyReport(radiologyReport);
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyReportByRadiologyReportId(Integer)
+	 */
+	@Transactional
+	@Override
+	public RadiologyReport getRadiologyReportByRadiologyReportId(Integer radiologyReportId) throws IllegalArgumentException {
+		if (radiologyReportId == null) {
+			throw new IllegalArgumentException("radiologyReportId cannot be null");
+		}
+		return radiologyReportDAO.getRadiologyReportById(radiologyReportId);
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder,
+	 *      RadiologyReportStatus)
+	 */
+	public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder radiologyOrder,
+	        RadiologyReportStatus radiologyReportStatus) throws IllegalArgumentException {
+		if (radiologyOrder == null) {
+			throw new IllegalArgumentException("radiologyOrder cannot be null");
+		}
+		if (radiologyReportStatus == null) {
+			throw new IllegalArgumentException("radiologyReportStatus cannot be null");
+		}
+		return radiologyReportDAO.getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder,
+		    radiologyReportStatus).size() > 0 ? radiologyReportDAO
+		        .getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder, radiologyReportStatus)
+		        : new ArrayList<RadiologyReport>();
+	}
+	
+	/**
+	 * @see RadiologyService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
+	 */
+	public boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder) {
+		return radiologyOrder != null ? radiologyReportDAO.hasRadiologyOrderClaimedRadiologyReport(radiologyOrder) : false;
+	}
+	
+	/**
+	 * @see RadiologyService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
+	 */
+	public boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder) {
+		if (radiologyOrder == null) {
+			throw new IllegalArgumentException("radiologyOrder cannot be null");
+		}
+		return radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyOrder) ? true : false;
+	}
+	
+	/**
+	 * @see RadiologyService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
+	 */
+	public RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder) {
+		if (radiologyOrder == null) {
+			throw new IllegalArgumentException("radiologyOrder cannot be null");
+		}
+		if (hasRadiologyOrderCompletedRadiologyReport(radiologyOrder)) {
+			return radiologyReportDAO.getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
+		}
+		if (hasRadiologyOrderClaimedRadiologyReport(radiologyOrder)) {
+			return radiologyReportDAO.getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
+		}
+		return null;
+	}
 }

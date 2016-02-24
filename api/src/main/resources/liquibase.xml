@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-	<!-- See http://www.liquibase.org/manual/home#available_database_refactorings 
+	<!-- See http://www.liquibase.org/manual/home#available_database_refactorings
 		for a list of supported elements and attributes -->
 
 	<changeSet id="radiology-1" author="cortex">
@@ -41,7 +41,9 @@
 	</changeSet>
 	<changeSet id="radiology-5" author="teleivo">
 		<comment>Change modality column type to varchar(16) in radiology_study
-			table to represent DICOM Tag Modality (0008,0060) value representation CS (Code String) defined in DICOM PS3.5 2014b - Data Structures and Encoding</comment>
+			table to represent DICOM Tag Modality (0008,0060) value
+			representation CS (Code String) defined in DICOM PS3.5 2014b - Data
+			Structures and Encoding</comment>
 		<modifyDataType tableName="radiology_study" columnName="modality"
 			newDataType="varchar(16)" />
 		<dropDefaultValue tableName="radiology_study"
@@ -51,7 +53,8 @@
 	</changeSet>
 	<changeSet author="teleivo" id="radiology-6">
 		<comment>priority column represents DICOM Tag (0040,1003) Requested
-			Procedure Priority. Max length 7 chosen for the column because of max priority "ROUTINE"</comment>
+			Procedure Priority. Max length 7 chosen for the column because of max
+			priority "ROUTINE"</comment>
 		<modifyDataType tableName="radiology_study" columnName="priority"
 			newDataType="varchar(7)" />
 		<dropDefaultValue tableName="radiology_study"
@@ -73,7 +76,10 @@
 			defaultValue="null" />
 	</changeSet>
 	<changeSet id="radiology-8" author="teleivo">
-		<comment>column performed_status represents DICOM Performed Procedure Step Status (0040,0252) which is now mapped to by enum PerformedProcedureStepStatus. Max length 12 chosen for the column because of max PerformedProcedureStepStatus "DISCONTINUED"</comment>
+		<comment>column performed_status represents DICOM Performed Procedure
+			Step Status (0040,0252) which is now mapped to by enum
+			PerformedProcedureStepStatus. Max length 12 chosen for the column
+			because of max PerformedProcedureStepStatus "DISCONTINUED"</comment>
 		<modifyDataType tableName="radiology_study" columnName="performed_status"
 			newDataType="varchar(12)" />
 		<dropDefaultValue tableName="radiology_study"
@@ -83,7 +89,9 @@
 			defaultValue="null" />
 	</changeSet>
 	<changeSet id="radiology-9" author="teleivo">
-		<comment>column mwl status is now mapped to by enum MwlStatus. Max length 17 chosen for the column because of max element "UNDISCONTINUE_ERR"</comment>
+		<comment>column mwl status is now mapped to by enum MwlStatus. Max
+			length 17 chosen for the column because of max element
+			"UNDISCONTINUE_ERR"</comment>
 		<modifyDataType tableName="radiology_study" columnName="mwl_status"
 			newDataType="varchar(17)" />
 		<dropDefaultValue tableName="radiology_study"
@@ -92,7 +100,9 @@
 			columnName="mwl_status" columnDataType="varchar(17)" />
 	</changeSet>
 	<changeSet id="radiology-10" author="teleivo">
-		<comment>rename column 'uid' to 'study_instance_uid' to make clear that the column represents the Study Instance UID defined by the DICOM standard</comment>
+		<comment>rename column 'uid' to 'study_instance_uid' to make clear
+			that the column represents the Study Instance UID defined by the
+			DICOM standard</comment>
 		<renameColumn columnDataType="varchar(255)"
 			newColumnName="study_instance_uid" oldColumnName="uid" tableName="radiology_study" />
 	</changeSet>
@@ -102,7 +112,9 @@
 			oldColumnName="id" tableName="radiology_study" />
 	</changeSet>
 	<changeSet id="radiology-12" author="teleivo">
-		<comment>necessary because of changeset 'radiology-11'. mysql looses 'NOT NULL' and 'AUTOINCREMENT' these properties are therefore added again explicitly (see https://liquibase.jira.com/browse/CORE-1019)</comment>
+		<comment>necessary because of changeset 'radiology-11'. mysql looses
+			'NOT NULL' and 'AUTOINCREMENT' these properties are therefore added
+			again explicitly (see https://liquibase.jira.com/browse/CORE-1019)</comment>
 		<dropDefaultValue columnDataType="int" columnName="study_id"
 			tableName="radiology_study" />
 		<addNotNullConstraint columnDataType="int"
@@ -172,7 +184,8 @@
 			referencedTableName="radiology_order" referencedColumnNames="order_id" />
 	</changeSet>
 	<changeSet id="radiology-17" author="teleivo">
-		<comment>Remove columns from radiology_study which are not used anymore</comment>
+		<comment>Remove columns from radiology_study which are not used
+			anymore</comment>
 		<dropColumn columnName="priority" tableName="radiology_study" />
 		<dropColumn columnName="scheduler_user_id" tableName="radiology_study" />
 		<dropColumn columnName="performing_physician_user_id"
@@ -181,7 +194,8 @@
 			tableName="radiology_study" />
 	</changeSet>
 	<changeSet id="radiology-18" author="teleivo">
-		<comment>Add radiology encounter type and role necessary to add orders, encounters in core 10.2</comment>
+		<comment>Add radiology encounter type and role necessary to add
+			orders, encounters in core 10.2</comment>
 		<insert tableName="encounter_type">
 			<column name="name" value="Radiology Order" />
 			<column name="description" value="Ordering radiology exams" />
@@ -198,15 +212,46 @@
 		</insert>
 	</changeSet>
 	<changeSet id="radiology-19" author="teleivo">
-		<comment>Study Instance UID is queried for and it shall be unique see DICOM standard (2013: Part 5, Chapter 9 Unique Identifiers)</comment>
+		<comment>Study Instance UID is queried for and it shall be unique see
+			DICOM standard (2013: Part 5, Chapter 9 Unique Identifiers)</comment>
 		<createIndex indexName="radiology_study_study_instance_uid_index"
 			tableName="radiology_study" unique="true">
 			<column name="study_instance_uid" type="varchar(255)" />
 		</createIndex>
 	</changeSet>
 	<changeSet id="radiology-20" author="teleivo">
-		<comment>radiology_study shall only exist with a radiology_order. foreign key already in place, not null constraint missing</comment>
+		<comment>radiology_study shall only exist with a radiology_order.
+			foreign key already in place, not null constraint missing</comment>
 		<addNotNullConstraint columnDataType="int"
 			columnName="order_id" tableName="radiology_study" />
+	</changeSet>
+	<changeSet id="radiology-21" author="jakobf">
+		<sql>
+			drop table if exists radiology_report;
+		</sql>
+		<comment>radiology_report</comment>
+		<createTable tableName="radiology_report">
+			<column name="radiology_report_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+			<column name="order_id" type="int" />
+			<column name="report_status" type="varchar(25)" />
+			<column name="principalResultsInterpreter_id" type="int" />
+			<column name="report_date" type="date" />
+			<column name="report_body" type="longtext" />
+			<column name="creator" type="int">
+				<constraints unique="false"/>
+			</column>
+			<column name="creationDate" type="date"></column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="radiology_report_order_id_fk"
+			baseTableName="radiology_report" baseColumnNames="order_id"
+			referencedTableName="radiology_order" referencedColumnNames="order_id" />
+		<addForeignKeyConstraint constraintName="radiology_report_provider_id_fk"
+			baseTableName="radiology_report" baseColumnNames="principalResultsInterpreter_id"
+			referencedTableName="provider" referencedColumnNames="provider_id" />
+		<addForeignKeyConstraint constraintName="radiology_report_creator_id_fk"
+			 baseTableName="radiology_report" baseColumnNames="creator"
+			 referencedTableName="users" referencedColumnNames="user_id"/>
 	</changeSet>
 </databaseChangeLog>

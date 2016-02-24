@@ -36,6 +36,8 @@ import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.report.RadiologyReport;
+import org.openmrs.module.radiology.validator.RadiologyDiscontinuedOrderValidator;
 import org.openmrs.module.radiology.validator.RadiologyOrderValidator;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +75,7 @@ public class RadiologyOrderFormController {
 			radiologyOrder.setStudy(new Study());
 			modelAndView.addObject("order", new Order());
 			modelAndView.addObject("isOrderActive", true);
+			modelAndView.addObject("radiologyReport", null);
 			modelAndView.addObject("radiologyOrder", radiologyOrder);
 		}
 		
@@ -107,8 +110,7 @@ public class RadiologyOrderFormController {
 	/**
 	 * Handles GET requests for the radiologyOrderForm with existing radiology order
 	 * 
-	 * @param orderId order id of an existing radiology order which should be put into the model and
-	 *            view
+	 * @param order Order of an existing radiology order which should be put into the model and view
 	 * @return model and view containing radiology order
 	 * @should populate model and view with existing radiology order matching given order id
 	 */
@@ -123,6 +125,7 @@ public class RadiologyOrderFormController {
 			modelAndView.addObject("isOrderActive", order.isActive());
 			modelAndView.addObject("radiologyOrder", radiologyOrder);
 			modelAndView.addObject("discontinuationOrder", new Order());
+			radiologyReportNeedsToBeCreated(modelAndView, order);
 		}
 		
 		return modelAndView;
@@ -131,7 +134,7 @@ public class RadiologyOrderFormController {
 	/**
 	 * Handles POST requests for the radiologyOrderForm with request parameter attribute
 	 * saveRadiologyOrder
-	 * 
+	 *
 	 * @param patientId patient id of an existing patient which is used to redirect to the patient
 	 *            dashboard
 	 * @param radiologyOrder radiology order object
@@ -194,7 +197,7 @@ public class RadiologyOrderFormController {
 	/**
 	 * Handles POST requests for the radiologyOrderForm with request parameter attribute
 	 * discontinueOrder
-	 * 
+	 *
 	 * @param radiologyOrderToDiscontinue order to discontinue
 	 * @param nonCodedDiscontinueReason non coded discontinue reason
 	 * @param discontinueDate discontinue date
@@ -207,10 +210,21 @@ public class RadiologyOrderFormController {
 	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.POST, params = "discontinueOrder")
 	protected ModelAndView postDiscontinueRadiologyOrder(HttpServletRequest request, HttpServletResponse response,
 	        @RequestParam("orderId") RadiologyOrder radiologyOrderToDiscontinue,
-	        @ModelAttribute("discontinuationOrder") Order discontinuationOrder) throws Exception {
+	        @ModelAttribute("discontinuationOrder") Order discontinuationOrder, BindingResult radiologyOrderErrors)
+	        throws Exception {
 		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
 		
 		try {
+			new RadiologyDiscontinuedOrderValidator().validate(discontinuationOrder, radiologyOrderErrors);
+			if (radiologyOrderErrors.hasErrors()) {
+				modelAndView.addObject("order", radiologyOrderToDiscontinue);
+				modelAndView.addObject("isOrderActive", radiologyOrderToDiscontinue.isActive());
+				log.error(radiologyService.getRadiologyOrderByOrderId(radiologyOrderToDiscontinue.getOrderId()));
+				modelAndView.addObject("radiologyOrder", radiologyService
+				        .getRadiologyOrderByOrderId(radiologyOrderToDiscontinue.getOrderId()));
+				
+				return modelAndView;
+			}
 			discontinuationOrder = radiologyService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
 			    discontinuationOrder.getOrderer(), discontinuationOrder.getDateActivated(), discontinuationOrder
 			            .getOrderReasonNonCoded());
@@ -234,6 +248,35 @@ public class RadiologyOrderFormController {
 		        .getOrderId()));
 		modelAndView.addObject("discontinuationOrder", discontinuationOrder);
 		return modelAndView;
+	}
+	
+	/**
+	 * Convenient method to check if a radiologyReport needs to be created. Adds true to the modelAndView, if a
+	 * RadiologyReport needs to be created, otherwise false.
+	 *
+	 * @param modelAndView ModelAndView of the RadiologyOrderForm
+	 * @param order Order which should be verified if a RadiologyReport needs to be created
+	 * @return true if a RadiologyReport needs to be created, false if no RadiologyReport needs to
+	 *         be created
+	 * @should return false if the RadiologyOrder has a claimed RadiologyReport
+	 * @should return false if the RadiologyOrder has a completed RadiologyReport
+	 * @should return false if the order is discontinued
+	 * @should return true if the RadiologyOrder has no claimed RadiologyReport
+	 */
+	private boolean radiologyReportNeedsToBeCreated(ModelAndView modelAndView, Order order) {
+		if (order.isActive()) {
+			RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
+			RadiologyReport radiologyReport = radiologyService.getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
+			if (radiologyReport == null) {
+				modelAndView.addObject("radiologyReportNeedsToBeCreated", true);
+			} else {
+				modelAndView.addObject("radiologyReportNeedsToBeCreated", false);
+			}
+			
+			modelAndView.addObject("radiologyReport", radiologyReport);
+			return true;
+		}
+		return false;
 	}
 	
 	@ModelAttribute("modalities")

@@ -67,14 +67,6 @@
                     ${status.value}
                 </spring:bind></td>
             </tr>
-            <c:if test="${obs.creator != null}">
-                <tr>
-                    <th><openmrs:message code="general.createdBy"/></th>
-                    <td>${obs.creator.personName}-<openmrs:formatDate
-                            date="${obs.dateCreated}" type="medium"/>
-                    </td>
-                </tr>
-            </c:if>
         </table>
     </form:form>
 </div>

@@ -48,11 +48,7 @@
 				width="100%">
 				<thead>
 					<tr>
-						<th><c:if test="${empty obsId}">
-								<spring:message code="general.edit" />
-							</c:if> <c:if test="${not empty obsId}">
-                                                                    View Obs.
-                                                            </c:if></th>
+						<th><spring:message code="general.edit" /></th>
 						<th><spring:message code="radiology.priority" /></th>
 						<th><spring:message code="radiology.referringPhysician" /></th>
 						<th><spring:message code="radiology.appoinmentDate" /></th>
@@ -68,13 +64,9 @@
 					<c:forEach items="${orderList}" begin="0"
 						end="${matchedOrdersSize}" var="order" varStatus="status">
 						<tr>
-							<td style="text-align: center"><c:if test="${empty obsId}">
-									<a href="radiologyOrder.form?orderId=${order.orderId}">${status.count}</a>
-								</c:if> <c:if test="${not empty obsId}">
-									<a
-										href="module/radiology/radiologyObs.form?orderId=${order.orderId}"
-										style="cursor: pointer;">${status.count}</a>
-								</c:if></td>
+							<td style="text-align: center"><a
+								href="module/radiology/radiologyOrder.form?orderId=${order.orderId}">${order.orderId}
+							</a></td>
 							<td>${order.urgency}</td>
 							<td>${order.orderer.name}</td>
 							<td name="appointmentDate">${order.effectiveStartDate}</td>

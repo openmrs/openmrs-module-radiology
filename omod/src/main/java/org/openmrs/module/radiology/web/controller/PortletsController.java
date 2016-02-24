@@ -9,8 +9,6 @@
  */
 package org.openmrs.module.radiology.web.controller;
 
-import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
-
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -20,7 +18,6 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
 import org.springframework.beans.TypeMismatchException;
@@ -68,8 +65,6 @@ public class PortletsController {
 	 * @should populate model and view with table of orders associated with given empty patient and
 	 *         given date range null
 	 * @should not populate model and view with table of orders if start date is after end date
-	 * @should populate model and view with table of orders including obsId accessed as reading
-	 *         physician
 	 */
 	@RequestMapping(value = "/module/radiology/portlets/orderSearch.portlet")
 	ModelAndView getRadiologyOrdersByPatientQueryAndDateRange(
@@ -87,10 +82,6 @@ public class PortletsController {
 		List<RadiologyOrder> matchedOrders = getRadiologyOrdersForPatientQuery(patientQuery);
 		matchedOrders = filterRadiologyOrdersByDateRange(matchedOrders, startDate, endDate);
 		mav.addObject("orderList", matchedOrders);
-		
-		if (Context.getAuthenticatedUser().hasRole(READING_PHYSICIAN, true)) {
-			mav.addObject("obsId", "&obsId");
-		}
 		
 		return mav;
 	}

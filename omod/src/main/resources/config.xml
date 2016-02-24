@@ -162,7 +162,7 @@
 	</messages>
 	<!-- /Internationalization -->
 
-	<mappingFiles>RadiologyStudy.hbm.xml RadiologyOrder.hbm.xml
+	<mappingFiles>RadiologyStudy.hbm.xml RadiologyOrder.hbm.xml RadiologyReport.hbm.xml
 	</mappingFiles>
 
 	<!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> -->

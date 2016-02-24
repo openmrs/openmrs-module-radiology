@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping package="org.openmrs.module.radiology">
+	<class name="org.openmrs.module.radiology.report.RadiologyReport"
+		table="radiology_report" lazy="false">
+		<id name="radiologyReportId" column="radiology_report_id">
+			<generator class="native">
+				<param name="sequence">radiology_report_id_seq</param>
+			</generator>
+		</id>
+		<many-to-one name="radiologyOrder" column="order_id"
+			unique="true" not-null="true" />
+		<property name="reportStatus" column="report_status">
+			<type name="org.openmrs.util.HibernateEnumType">
+				<param name="enumClassName">org.openmrs.module.radiology.report.RadiologyReportStatus</param>
+				<param name="useNamed">true</param>
+			</type>
+		</property>
+		<many-to-one name="principalResultsInterpreter" column="principalResultsInterpreter_id" unique="false"
+			not-null="false" />
+		<property name="reportDate" column="report_date" />
+		<property name="reportBody" column="report_body" not-null="false" />
+		<many-to-one name="creator" column="creator" unique="false" not-null="false"/>
+		<property name="dateCreated" column="creationDate"/>
+	</class>
+</hibernate-mapping>

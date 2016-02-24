@@ -21,7 +21,9 @@ import java.util.GregorianCalendar;
 
 import org.hibernate.SessionFactory;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
@@ -38,7 +40,9 @@ import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
+import org.openmrs.module.radiology.db.hibernate.RadiologyReportDAOImpl;
 import org.openmrs.module.radiology.db.hibernate.StudyDAOImpl;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
@@ -77,6 +81,11 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	
 	private Method saveStudyMethod = null;
 	
+	private RadiologyReportDAO radiologyReportDAO;
+	
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
+	
 	@Before
 	public void runBeforeAllTests() throws Exception {
 		
@@ -113,11 +122,18 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 			studyDAO = studyDAOImpl;
 		}
 		
+		if (radiologyReportDAO == null) {
+			RadiologyReportDAOImpl reportDAOImpl = new RadiologyReportDAOImpl();
+			reportDAOImpl.setSessionFactory(Context.getRegisteredComponent("sessionFactory", SessionFactory.class));
+			radiologyReportDAO = reportDAOImpl;
+		}
+		
 		if (radiologyServiceImpl == null) {
 			radiologyServiceImpl = new RadiologyServiceImpl();
 			radiologyServiceImpl.setOrderService(orderService);
 			radiologyServiceImpl.setEncounterService(encounterService);
 			radiologyServiceImpl.setStudyDAO(studyDAO);
+			radiologyServiceImpl.setRadiologyReportDAO(radiologyReportDAO);
 			radiologyServiceImpl.setRadiologyProperties(radiologyProperties);
 		}
 		

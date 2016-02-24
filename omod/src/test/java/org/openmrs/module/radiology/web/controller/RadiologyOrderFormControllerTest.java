@@ -99,7 +99,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	@Test
 	@Verifies(value = "should populate model and view with new radiology order prefilled with given patient", method = "getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(Integer)")
 	public void getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient_shouldPopulateModelAndViewWithNewRadiologyOrderPrefilledWithGivenPatient()
-	        throws Exception {
+
+	throws Exception {
 		
 		//given
 		Patient mockPatient = RadiologyTestData.getMockPatient1();
@@ -177,7 +178,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postSaveRadiologyOrder(HttpServletRequest, Integer, Order,
-	 *      BindingResult)
+	 * BindingResult)
 	 */
 	@Test
 	@Verifies(value = "should set http session attribute openmrs message to order saved and redirect to radiology order list when save study was successful", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
@@ -208,7 +209,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postSaveRadiologyOrder(HttpServletRequest, Integer, Order,
-	 *      BindingResult)
+	 * BindingResult)
 	 */
 	@Test
 	@Verifies(value = "should set http session attribute openmrs message to order saved and redirect to patient dashboard when save study was successful and given patient id", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
@@ -240,7 +241,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postSaveRadiologyOrder(HttpServletRequest, Integer, Order,
-	 *      BindingResult)
+	 * BindingResult)
 	 */
 	@Test
 	@Verifies(value = "should set http session attribute openmrs message to saved fail worklist and redirect to patient dashboard when save study was not successful and given patient id", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
@@ -288,7 +289,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postSaveRadiologyOrder(HttpServletRequest, Integer, Order,
-	 *      BindingResult)
+	 * BindingResult)
 	 */
 	@Test
 	@Verifies(value = "should set http session attribute openmrs message to study performed when study performed status is in progress and request was issued by radiology scheduler", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
@@ -321,7 +322,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postSaveRadiologyOrder(HttpServletRequest, Integer, Order,
-	 *      BindingResult)
+	 * BindingResult)
 	 */
 	@Test
 	@Verifies(value = "should not redirect if radiology order is not valid according to order validator", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
@@ -352,7 +353,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest,
-	 *      HttpServletResponse, Order, String, Date)
+	 * HttpServletResponse, Order, String, Date)
 	 */
 	@Test
 	@Verifies(value = "should discontinue non discontinued order and redirect to discontinuation order", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String, Date)")
@@ -384,9 +385,10 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		            .getOrderer(), mockDiscontinuationOrder.getDateActivated(), mockDiscontinuationOrder
 		            .getOrderReasonNonCoded())).thenReturn(mockDiscontinuationOrder);
 		
+		BindingResult orderErrors = mock(BindingResult.class);
 		assertThat(mockRadiologyOrderToDiscontinue.getAction(), is(Order.Action.NEW));
 		ModelAndView modelAndView = radiologyOrderFormController.postDiscontinueRadiologyOrder(mockRequest, null,
-		    mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder);
+		    mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
@@ -396,7 +398,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest,
-	 *      HttpServletResponse, Order, String, Date)
+	 * HttpServletResponse, Order, String, Date)
 	 */
 	@Test
 	@Verifies(value = "should not redirect if discontinuation failed through date in the future", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String, Date)")
@@ -429,9 +431,10 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		            .getOrderer(), mockDiscontinuationOrder.getDateActivated(), mockDiscontinuationOrder
 		            .getOrderReasonNonCoded())).thenThrow(apiException);
 		
+		BindingResult orderErrors = mock(BindingResult.class);
 		assertThat(mockRadiologyOrderToDiscontinue.getAction(), is(Order.Action.NEW));
 		ModelAndView modelAndView = radiologyOrderFormController.postDiscontinueRadiologyOrder(mockRequest, null,
-		    mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder);
+		    mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
@@ -451,7 +454,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest,
-	 *      HttpServletResponse, Order, String, Date)
+	 * HttpServletResponse, Order, String, Date)
 	 */
 	@Test
 	@Verifies(value = "should not redirect if discontinuation failed in pacs", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String, Date)")
@@ -481,8 +484,9 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		        mockRadiologyOrderToDiscontinue.getOrderer(), mockRadiologyOrderToDiscontinue.getEncounter())).thenReturn(
 		    mockDiscontinuationOrder);
 		
+		BindingResult orderErrors = mock(BindingResult.class);
 		ModelAndView modelAndView = radiologyOrderFormController.postDiscontinueRadiologyOrder(mockRequest, null,
-		    mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder);
+		    mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));

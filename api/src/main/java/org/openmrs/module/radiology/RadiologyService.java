@@ -12,7 +12,6 @@ package org.openmrs.module.radiology;
 import java.util.Date;
 import java.util.List;
 
-import org.openmrs.Obs;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
@@ -21,7 +20,10 @@ import org.openmrs.api.OpenmrsService;
 import org.openmrs.api.OrderService;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
+import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
+import org.openmrs.module.radiology.report.RadiologyReport;
+import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional
@@ -37,10 +39,12 @@ public interface RadiologyService extends OpenmrsService {
 	
 	void setRadiologyProperties(RadiologyProperties radiologyProperties);
 	
+	public void setRadiologyReportDAO(RadiologyReportDAO radiologyReportDAO);
+	
 	/**
 	 * Save given <code>RadiologyOrder</code> and its <code>RadiologyOrder.study</code> to the
 	 * database
-	 * 
+	 *
 	 * @param radiologyOrder radiology order to be created
 	 * @return RadiologyOrder who was created
 	 * @throws IllegalArgumentException if radiologyOrder is null
@@ -56,7 +60,7 @@ public interface RadiologyService extends OpenmrsService {
 	
 	/**
 	 * Discontinue given <code>RadiologyOrder</code>
-	 * 
+	 *
 	 * @param radiologyOrder radiology order to be discontinued
 	 * @return Order who was created to discontinue RadiologyOrder
 	 * @throws IllegalArgumentException if radiologyOrder is null
@@ -74,7 +78,7 @@ public interface RadiologyService extends OpenmrsService {
 	
 	/**
 	 * Get RadiologyOrder by its orderId
-	 * 
+	 *
 	 * @param orderId of wanted RadiologyOrder
 	 * @return RadiologyOrder matching given orderId
 	 * @throws IllegalArgumentException if order id is null
@@ -86,7 +90,7 @@ public interface RadiologyService extends OpenmrsService {
 	
 	/**
 	 * Get RadiologyOrder's by its associated Patient
-	 * 
+	 *
 	 * @param patient patient of wanted RadiologyOrders
 	 * @return RadiologyOrders associated with given patient
 	 * @throws IllegalArgumentException if patient is null
@@ -98,7 +102,7 @@ public interface RadiologyService extends OpenmrsService {
 	
 	/**
 	 * Get RadiologyOrder's by its associated Patients
-	 * 
+	 *
 	 * @param patients list of patients for which RadiologyOrders are queried
 	 * @return RadiologyOrders associated with given patients
 	 * @throws IllegalArgumentException if patients is null
@@ -113,7 +117,7 @@ public interface RadiologyService extends OpenmrsService {
 	 * Update the performedStatus of the <code>Study</code> associated with studyInstanceUid in the
 	 * database
 	 * </p>
-	 * 
+	 *
 	 * @param studyInstanceUid study instance uid of study whos performedStatus should be updated
 	 * @param performedStatus performed procedure step status to which study should be set to
 	 * @return study whos performedStatus was updated
@@ -129,7 +133,7 @@ public interface RadiologyService extends OpenmrsService {
 	
 	/**
 	 * Get Study by studyId
-	 * 
+	 *
 	 * @param studyId of the study
 	 * @return study associated with studyId
 	 * @should return study for given study id
@@ -139,7 +143,7 @@ public interface RadiologyService extends OpenmrsService {
 	
 	/**
 	 * Get Study by its associated RadiologyOrder's orderId
-	 * 
+	 *
 	 * @param orderId of RadiologyOrder associated with wanted Study
 	 * @return Study associated with RadiologyOrder for which orderId is given
 	 * @throws IllegalArgumentException if order id is null
@@ -151,7 +155,7 @@ public interface RadiologyService extends OpenmrsService {
 	
 	/**
 	 * Get study by its Study Instance UID
-	 * 
+	 *
 	 * @param studyInstanceUid
 	 * @return study
 	 * @should return study matching study instance uid
@@ -162,7 +166,7 @@ public interface RadiologyService extends OpenmrsService {
 	
 	/**
 	 * Get all studies corresponding to list of RadiologyOrder's
-	 * 
+	 *
 	 * @param radiologyOrders radiology orders for which studies will be returned
 	 * @return studies corresponding to given radiology orders
 	 * @throws IllegalArgumentException
@@ -174,15 +178,149 @@ public interface RadiologyService extends OpenmrsService {
 	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) throws IllegalArgumentException;
 	
 	/**
-	 * Get all obs matching the orderId
-	 * 
-	 * @param orderId orderId of obs
-	 * @return list of obs
-	 * @throws IllegalArgumentException
-	 * @should fetch all obs for given orderId
-	 * @should return empty list given orderId without associated obs
-	 * @should throw IllegalArgumentException given null
+	 * Creates a RadiologyReport and sets the radiologyReportStatus to claimed
+	 *
+	 * @param radiologyOrder RadiologyOrder
+	 * @return a new claimed RadiologyReport
+	 * @throws IllegalArgumentException if given RadiologyOrder is null
+	 * @throws IllegalArgumentException if Study of given radiologyReport is null
+	 * @throws IllegalArgumentException if Study of given RadiologyOrder is not completed
+	 * @throws UnsupportedOperationException if given order has a completed RadiologyReport
+	 * @throws UnsupportedOperationException if given order has a claimed RadiologyReport
+	 * @should create a new RadiologyReport and set the reportStatus to claimed
+	 * @should throw an IllegalArgumentException if given RadiologyOrder is null
+	 * @should throw an IllegalArgumentException if Study of given radiologyReport is null
+	 * @should throw an IllegalArgumentException if study of given RadiologyOrder is not completed
+	 * @should throw an UnsupportedOperationException if given order has a completed RadiologyReport
+	 * @should throw an UnsupportedOperationException if given order has a claimed RadiologyReport
 	 */
-	public List<Obs> getObsByOrderId(Integer orderId) throws IllegalArgumentException;
+	RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder) throws IllegalArgumentException,
+	        UnsupportedOperationException;
+	
+	/**
+	 * Save the given radiologyReport
+	 *
+	 * @param radiologyReport RadiologyReport to be saved
+	 * @return the saved radiologyReport
+	 * @throws IllegalArgumentException if radiologyReport is null
+	 * @throws IllegalArgumentException if radiologyReportStatus is null
+	 * @throws UnsupportedOperationException if radiologyReport is discontinued
+	 * @throws UnsupportedOperationException if radiologyReport is completed
+	 * @should save radiologyReport in database and return it
+	 * @should throw an IllegalArgumentException if radiologyReport is null
+	 * @should throw an IllegalArgumentException if radiologyReportStatus is null
+	 * @should throw an UnsupportedOperationException if radiologyReport is discontinued
+	 * @should throw an UnsupportedOperationException if radiologyReport is completed
+	 */
+	RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
+	        UnsupportedOperationException;
+	
+	/**
+	 * Unclaims the given radiologyReport and sets the radiologyReportStatus to discontinued
+	 *
+	 * @param radiologyReport RadiologyReport to be unclaimed
+	 * @return the discontinued RadiologyReport
+	 * @throws IllegalArgumentException if radiologyReport is null
+	 * @throws IllegalArgumentException if radiologyReportStatus is null
+	 * @throws UnsupportedOperationException if radiologyReport is discontinued
+	 * @throws UnsupportedOperationException if radiologyReport is completed
+	 * @should set the radiologyReportStatus of radiologyReport to discontinued
+	 * @should throw an IllegalArgumentException if radiologyReport is null
+	 * @should throw an IllegalArgumentException if radiologyReportStatus is null
+	 * @should throw an UnsupportedOperationException if radiologyReport is discontinued
+	 * @should throw an UnsupportedOperationException if radiologyReport is completed
+	 */
+	RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
+	        UnsupportedOperationException;
+	
+	/**
+	 * Completes the given radiologyReport and sets the radiologyReportStatus to completed
+	 *
+	 * @param radiologyReport RadiologyReport to be completed
+	 * @param principalResultsInterpreter which the RadiologyReport should be set to
+	 * @return completed RadiologyReport matching given radiologyReport with
+	 *         principalResultsInterpreter
+	 * @throws IllegalArgumentException if radiologyReport is null
+	 * @throws IllegalArgumentException if principalResultsInterpreter is null
+	 * @throws IllegalArgumentException if radiologyReportStatus is null
+	 * @throws UnsupportedOperationException if radiologyReport is discontinued
+	 * @throws UnsupportedOperationException if radiologyReport is completed
+	 * @should set the reportDate of the radiologyReport to the day the RadiologyReport was
+	 *         completed
+	 * @should set the radiologyReportStatus to complete
+	 * @should throw an IllegalArgumentException if principalResultsInterpreter is null
+	 * @should throw an IllegalArgumentException if radiologyReport is null
+	 * @should throw an IllegalArgumentException if radiologyReportStatus is null
+	 * @should throw an UnsupportedOperationException if radiologyReport is discontinued
+	 * @should throw an UnsupportedOperationException if radiologyReport is completed
+	 */
+	RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter)
+	        throws IllegalArgumentException, UnsupportedOperationException;
+	
+	/**
+	 * Get a RadiologyReport matching the radiologyReportId
+	 *
+	 * @param radiologyReportId of RadiologyReport
+	 * @return RadiologyReport matching given radiologyReportId
+	 * @throws IllegalArgumentException if radiologyReportId is null
+	 * @should fetch RadiologyReport matching given radiologyReportId
+	 * @should throw IllegalArgumentException if radiologyReportId is null
+	 */
+	RadiologyReport getRadiologyReportByRadiologyReportId(Integer radiologyReportId) throws IllegalArgumentException;
+	
+	/**
+	 * Get all RadiologyReports fetched by radiologyOrder and radiologyReportStatus
+	 *
+	 * @param radiologyOrder RadiologyOrder for which the RadiologyReport should be fetched
+	 * @param reportStatus RadiologyReportStatus the RadiologyReport should have
+	 * @return List with RadiologyReport filtered by radiologyOrder and reportStatus
+	 * @throws IllegalArgumentException if given radiologyOrder is null
+	 * @throws IllegalArgumentException if given reportStatus is null
+	 * @should return a list of completed RadiologyReport if reportStatus is completed
+	 * @should return a list of claimed RadiologyReport if reportStatus is claimed
+	 * @should return a list of discontinued RadiologyReport if reportStatus is discontinued
+	 * @should return an empty list if there are no RadiologyReports for this radiologyOrder
+	 * @should throw an IllegalArgumentException if given radiologyOrder is null
+	 * @should throw an IllegalArgumentException if given reportStatus is null
+	 */
+	List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder radiologyOrder,
+	        RadiologyReportStatus reportStatus) throws IllegalArgumentException;
+	
+	/**
+	 * Convenience method to check if a RadiologyOrder has a claimed RadiologyReport
+	 *
+	 * @param radiologyOrder RadiologyOrder the radiologyOrder which should be checked
+	 * @return true if RadiologyOrder has a claimed RadiologyReport, otherwise false and also if RadiologyOrder is null
+	 * @should return true if the RadiologyOrder has a claimed RadiologyReport
+	 * @should return false if the RadiologyOrder has no claimed RadiologyReport
+	 * @should return false if the RadiologyOrder is null
+	 */
+	boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder);
+	
+	/**
+	 * Convenience method to check if a RadiologyOrder has a completed RadiologyReport
+	 *
+	 * @param radiologyOrder RadiologyOrder the radiologyOrder which should be checked
+	 * @return true if RadiologyOrder has a completed RadiologyReport, otherwise false
+	 * @throws IllegalArgumentException if radiologyOrder is null
+	 * @should return true if the RadiologyOrder has a completed RadiologyReport
+	 * @should return false if the RadiologyOrder has no completed RadiologyReport
+	 * @should throw an IllegalArgumentException if radiologyOrder is null
+	 */
+	boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder);
+	
+	/**
+	 * Get the active (can be claimed or completed) RadiologyReport matching the radiologyOrder
+	 *
+	 * @param radiologyOrder RadiologyOrder the radiologyOrder which should be checked
+	 * @return RadiologyReport filtered by radiologyOrder and radiologyReportStatus not equal to
+	 *         discontinued
+	 * @throws IllegalArgumentException if radiologyOrder is null
+	 * @should return a RadiologyReport if the reportStatus is completed
+	 * @should return a RadiologyReport if the reportStatus is claimed
+	 * @should return null if
+	 * @should throw an IllegalArgumentException if radiologyOrder is null
+	 */
+	RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder);
 	
 }
