@@ -30,7 +30,7 @@ mvn clean package
 
 For a detailed guide on how to install and configure this module see
 
-https://wiki.openmrs.org/display/docs/Radiology+Module+with+dcm4chee
+https://wiki.openmrs.org/display/docs/Radiology+Module
 
 ### Contributing
 
