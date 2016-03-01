@@ -15,7 +15,7 @@
 	<name>Radiology</name>
 	<description>Parent project for Radiology</description>
 
-	<url>https://wiki.openmrs.org/display/docs/Radiology+Module+with+dcm4chee</url>
+	<url>https://wiki.openmrs.org/display/docs/Radiology+Module</url>
 
 	<scm>
 		<connection>scm:git:https://github.com/openmrs/openmrs-module-radiologydcm4chee</connection>
