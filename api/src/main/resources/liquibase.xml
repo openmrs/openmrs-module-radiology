@@ -115,18 +115,22 @@
 		<insert tableName="role">
 			<column name="role" value="Radiology: Referring physician" />
 			<column name="description" value="The physician who refers the radiology order" />
+			<column name="uuid" value="15c4c14a-e11b-11e5-b4b0-08002719a237" />
 		</insert>
 		<insert tableName="role">
 			<column name="role" value="Radiology: Reading physician" />
 			<column name="description" value="The physician who reads the performed study" />
+			<column name="uuid" value="16e4d536-e11b-11e5-b4b0-08002719a237" />
 		</insert>
 		<insert tableName="role">
 			<column name="role" value="Radiology: Performing physician" />
 			<column name="description" value="The physician who performs the radiology order" />
+			<column name="uuid" value="175f1c62-e11b-11e5-b4b0-08002719a237" />
 		</insert>
 		<insert tableName="role">
 			<column name="role" value="Radiology: Scheduler" />
 			<column name="description" value="The person who schedules the radiology order" />
+			<column name="uuid" value="17c32561-e11b-11e5-b4b0-08002719a237" />
 		</insert>
 	</changeSet>
 	<changeSet id="radiology-14" author="bgeVam">
@@ -135,6 +139,7 @@
 			<column name="privilege" value="Patient Dashboard - View Radiology Section" />
 			<column name="description"
 				value="Able to view the 'Radiology' tab on the patient dashboard" />
+			<column name="uuid" value="ba21d6b5-e11e-11e5-9a38-08002719a237" />
 		</insert>
 	</changeSet>
 	<changeSet id="radiology-15" author="bgeVam">
