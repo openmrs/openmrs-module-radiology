@@ -18,9 +18,9 @@
 	<url>https://wiki.openmrs.org/display/docs/Radiology+Module</url>
 
 	<scm>
-		<connection>scm:git:https://github.com/openmrs/openmrs-module-radiologydcm4chee</connection>
-		<developerConnection>scm:git:https://github.com/openmrs/openmrs-module-radiologydcm4chee</developerConnection>
-		<url>https://github.com/openmrs/openmrs-module-radiologydcm4chee</url>
+		<connection>scm:git:https://github.com/openmrs/openmrs-module-radiology</connection>
+		<developerConnection>scm:git:https://github.com/openmrs/openmrs-module-radiology</developerConnection>
+		<url>https://github.com/openmrs/openmrs-module-radiology</url>
 	</scm>
 
 	<modules>
