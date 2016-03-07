@@ -41,8 +41,8 @@ To help developers understand the problem, please include as much information as
 
 2. [Fork the repo](http://help.github.com/fork-a-repo) on which you're working, clone your forked repo to your local computer, and set up the upstream remote:
 
-        git clone git://github.com/YourGitHubUserName/openmrs-module-radiologydcm4chee.git
-        git remote add upstream https://github.com/openmrs/openmrs-module-radiologydcm4chee.git
+        git clone git://github.com/YourGitHubUserName/openmrs-module-radiology.git
+        git remote add upstream https://github.com/openmrs/openmrs-module-radiology.git
 
 3. Checkout out a new local branch based on your master and update it to the latest. The convention is to name the branch after the current ticket, e.g. RAD-123:
 
@@ -61,7 +61,7 @@ To help developers understand the problem, please include as much information as
  * follow the OpenMRS coding conventions, please read https://wiki.openmrs.org/display/docs/Coding+Conventions
    * take the existing code in the module as a guide as well!
 
- * add unit tests, we will not accept pull requests which lower the unit test coverage https://coveralls.io/github/openmrs/openmrs-module-radiologydcm4chee?branch=master
+ * add unit tests, we will not accept pull requests which lower the unit test coverage https://coveralls.io/github/openmrs/openmrs-module-radiology?branch=master
     * see https://wiki.openmrs.org/display/docs/Unit+Tests
     * see https://wiki.openmrs.org/display/docs/Unit+Testing+Conventions
     * see https://wiki.openmrs.org/display/docs/Module+Unit+Testing
@@ -105,7 +105,7 @@ To help developers understand the problem, please include as much information as
         git push -f
 
   In order to make a pull request,
-  * Navigate to the modules repository you just pushed to (e.g. https://github.com/your-user-name/openmrs-module-radiologydcm4chee)
+  * Navigate to the modules repository you just pushed to (e.g. https://github.com/your-user-name/openmrs-module-radiology)
   * Click "Pull Request".
   * Write your branch name in the branch field (this is filled with "master" by default)
   * Click "Update Commit Range".
@@ -129,7 +129,7 @@ To help developers understand the problem, please include as much information as
 * If you haven't already, get an [OpenMRS ID](https://id.openmrs.org)
 * Make sure you have a [GitHub account](https://github.com/signup/free)
 * Submit or select a [JIRA issue](https://issues.openmrs.org/browse/RAD)
-* Fork [openmrs-module-radiologydcm4chee](https://github.com/openmrs/openmrs-module-radiologydcm4chee/)
+* Fork [openmrs-module-radiology](https://github.com/openmrs/openmrs-module-radiology/)
 
 ### Interact with the community
 
