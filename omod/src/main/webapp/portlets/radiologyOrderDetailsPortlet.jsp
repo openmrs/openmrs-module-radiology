@@ -48,12 +48,6 @@
                 </spring:bind></td>
             </tr>
             <tr>
-                <td><spring:message code="Order.orderer"/></td>
-                <td><spring:bind path="orderer.name">
-                    ${status.value}
-                </spring:bind></td>
-            </tr>
-            <tr>
                 <td><spring:message code="radiology.scheduledDate"/></td>
                 <td><spring:bind path="effectiveStartDate">
                     ${status.value}
