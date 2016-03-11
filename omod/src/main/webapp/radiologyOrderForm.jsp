@@ -57,7 +57,9 @@
 						                          initialValue="${status.editor.value.conceptId}"
 						                          onSelectFunction="onQuestionSelect"
 						                          includeClasses="${radiologyConceptClassNames}" />
-
+							<c:if test="${status.errorMessage != ''}">
+								<span class="error">${status.errorMessage}</span>
+							</c:if>
 						<div class="description" id="conceptDescription"></div>
 					</spring:bind></td>
 				</tr>
