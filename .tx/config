@@ -1,0 +1,7 @@
+[main]
+host = https://www.transifex.com
+
+[OpenMRS.radiology-module]
+file_filter = omod/src/main/resources/messages_<lang>.properties
+source_file = omod/src/main/resources/messages.properties
+source_lang = en
