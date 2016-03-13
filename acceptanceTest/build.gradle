@@ -5,12 +5,16 @@ import java.text.SimpleDateFormat
 def userName = "admin"
 def userPW = "Admin123"
 def baseUrl = "http://localhost:8080/"
+def db_host = "127.0.0.1"
+def db_port = "3306"
+def db_username = "openmrs"
+def db_password = "openmrs"
 
 task loginConfig {
-    if(System.getProperty("configFile")!=null)
+    if(System.getProperty("configLoginFile")!=null)
     {
         try{
-            File configFile = new File(System.getProperty("configFile"));
+            File configFile = new File(System.getProperty("configLoginFile"));
             if(configFile.exists())
             {
                 Properties properties = new Properties()
@@ -22,14 +26,41 @@ task loginConfig {
             }
             else
             {
-                ant.fail("The used config-file doesn't exists in: \""+configFile.getAbsolutePath()+"\"");
+                ant.fail("The used login config-file doesn't exists in: \""+configFile.getAbsolutePath()+"\"");
             }
         }
         catch(Exception e)
         {
-            ant.fail("The used config-file \""+System.getProperty("configFile")+"\" cannot be used. Reason: "+e.getMessage());
+            ant.fail("The used login config-file \""+System.getProperty("configFile")+"\" cannot be used. Reason: "+e.getMessage());
         }
     }
+
+    if(System.getProperty("configDBFile")!=null)
+    {
+        try{
+            File configFile = new File(System.getProperty("configDBFile"));
+            if(configFile.exists())
+            {
+                Properties properties = new Properties()
+                configFile.withInputStream {
+                    properties.load(it)
+                }
+                db_host = properties.db_host
+                db_port = properties.db_port
+                db_username = properties.db_username
+                db_password = properties.db_password
+            }
+            else
+            {
+                ant.fail("The used database config-file doesn't exists in: \""+configFile.getAbsolutePath()+"\"");
+            }
+        }
+        catch(Exception e)
+        {
+            ant.fail("The used database config-file \""+System.getProperty("configFile")+"\" cannot be used. Reason: "+e.getMessage());
+        }
+    }
+
     if(System.getProperty("baseUrl")!=null)
     {
         baseUrl = System.getProperty("baseUrl")
@@ -53,8 +84,11 @@ ext {
 apply plugin: "groovy"
 apply from: "gradle/idea.gradle"
 apply from: "gradle/osSpecificDownloads.gradle"
+apply plugin: "java"
+apply plugin: "org.gradle.idea"
 
 repositories {
+    mavenLocal()
     mavenCentral()
 }
 
@@ -75,6 +109,15 @@ dependencies {
         transitive = false
     }
 
+    compile group: "commons-lang", name: "commons-lang", version: "2.5"
+    compile group: "org.springframework", name: "spring-jdbc", version: "3.0.3.RELEASE"
+    compile 'mysql:mysql-connector-java:5.1.16'
+    testCompile group: "junit",  name: "junit", version: "4.8.1"
+    testCompile group: "org.dbunit", name: "dbunit", version: "2.4.7"
+    testCompile group: "org.slf4j", name: "slf4j-simple", version: "1.5.6"
+    testCompile group: "org.springframework", name: "spring-tx", version: "3.0.0.RELEASE"
+    testCompile group: "org.springframework", name: "spring-beans", version: "3.0.0.RELEASE"
+    testCompile 'mysql:mysql-connector-java:5.1.16'
 }
 
 drivers.each { driver ->
@@ -88,7 +131,6 @@ drivers.each { driver ->
 
         }
 
-
         outputs.upToDateWhen { false }
 
         systemProperty "geb.build.reportsDir", reporting.file("$name/geb")
@@ -96,6 +138,10 @@ drivers.each { driver ->
         systemProperty "userName", userName
         systemProperty "userPW", userPW
         systemProperty "geb.build.baseUrl", baseUrl
+        systemProperty "db.driver", "com.mysql.jdbc.Driver"
+        systemProperty "db.url", "jdbc:mysql://"+db_host+":"+db_port+"/openmrs"
+        systemProperty "db.userid", db_username
+        systemProperty "db.password", db_password
     }
 }
 
@@ -113,23 +159,27 @@ phantomJsTest {
     systemProperty "phantomjs.binary.path", new File(unzipPhantomJs.outputs.files.singleFile, phantomJsFilename).absolutePath
 }
 
+
 test {
-    dependsOn drivers.collect { tasks["${it}Test"] }
     enabled = false
+	
+    dependsOn drivers.collect { tasks["${it}Test"] }
 }
 
 apply from: "gradle/ci.gradle"
-
-
 
 buildscript {
     repositories{
         mavenLocal()
         mavenCentral()
+        maven {
+            url 'http://gradle.artifactoryonline.com/gradle/plugins'
+        }
     }
     dependencies {
         classpath group: 'org.openmrs.module.radiology.gradle', name: 'ModuleUpdaterPlugin',
                 version: '1.0-SNAPSHOT'
+        classpath "org.gradle.plugins:gradle-idea-plugin:0.2"
     }
 }
 
