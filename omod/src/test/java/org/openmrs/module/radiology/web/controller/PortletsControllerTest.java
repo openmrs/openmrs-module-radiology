@@ -149,11 +149,10 @@ public class PortletsControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see PortletsController#getRadiologyOrdersByPatientQueryAndDateRange(String, Date, Date)
-	 * @verifies populate model and view with table of orders including obsId accessed as reading physician
+	 * @verifies populate model and view with table of orders
 	 */
 	@Test
-	public void getRadiologyOrdersByPatientQueryAndDateRange_shouldPopulateModelAndViewWithTableOfOrdersIncludingObsIdAccessedAsReadingPhysician()
-	        throws Exception {
+	public void getRadiologyOrdersByPatientQueryAndDateRange_shouldPopulateModelAndViewWithTableOfOrders() throws Exception {
 		
 		//given
 		String patientQuery = "";
@@ -169,11 +168,6 @@ public class PortletsControllerTest extends BaseContextMockTest {
 		List<RadiologyOrder> orderList = (List<RadiologyOrder>) mav.getModelMap().get("orderList");
 		assertThat(orderList, is(notNullValue()));
 		assertThat(orderList, is(Arrays.asList(mockRadiologyOrder1)));
-		
-		assertThat(mav.getModelMap(), hasKey("obsId"));
-		String obsId = (String) mav.getModelMap().get("obsId");
-		assertThat(obsId, is(notNullValue()));
-		assertThat(obsId, is("&obsId"));
 	}
 	
 	/**

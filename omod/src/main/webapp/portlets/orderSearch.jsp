@@ -9,11 +9,7 @@
 		<table id="matchedOrders" cellpadding="2" cellspacing="0" width="100%">
 			<thead>
 				<tr>
-					<th><c:if test="${empty obsId}">
-							<spring:message code="general.edit" />
-						</c:if> <c:if test="${not empty obsId}">
-							Obs.
-						</c:if></th>
+					<th><spring:message code="general.edit" /></th>
 					<th><spring:message code="radiology.patientId" /></th>
 					<th><spring:message code="radiology.patientFullName" /></th>
 					<th><spring:message code="radiology.priority" /></th>
@@ -29,12 +25,7 @@
 			<tbody id="matchedOrdersBody">
 				<c:forEach items="${orderList}" var="order">
 					<tr>
-						<td><c:if test="${empty obsId}">
-								<a href="radiologyOrder.form?orderId=${order.orderId}">${order.orderId}</a>
-							</c:if> <c:if test="${not empty obsId}">
-								<!-- TODO  select observation-->
-								<a href="radiologyObs.form?orderId=${order.orderId}${obsId}">${order.orderId}</a>
-							</c:if></td>
+						<td><a href="radiologyOrder.form?orderId=${order.orderId}">${order.orderId}</a></td>
 						<td style="text-align: center">${order.patient.patientIdentifier}</td>
 						<td>${order.patient.personName}</td>
 						<td>${order.urgency}</td>

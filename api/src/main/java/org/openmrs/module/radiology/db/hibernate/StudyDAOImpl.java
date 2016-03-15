@@ -21,8 +21,8 @@ import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.StudyDAO;
 
 /**
- * Hibernate specific Study related functions. This class should not be used directly. All
- * calls should go through the {@link org.openmrs.module.radiology.RadiologyService} methods.
+ * Hibernate specific Study related functions. This class should not be used directly. All calls
+ * should go through the {@link org.openmrs.module.radiology.RadiologyService} methods.
  *
  * @see org.openmrs.module.radiology.db.StudyDAO
  * @see org.openmrs.module.radiology.RadiologyService
@@ -76,7 +76,8 @@ public class StudyDAOImpl implements StudyDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
+	 * @see org.openmrs.module.radiology.RadiologyService#getStudiesByRadiologyOrders(List
+	 *      <RadiologyOrder>)
 	 */
 	@Override
 	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
@@ -101,22 +102,6 @@ public class StudyDAOImpl implements StudyDAO {
 	private void addRestrictionOnRadiologyOrders(Criteria criteria, List<RadiologyOrder> radiologyOrders) {
 		if (radiologyOrders.size() > 0)
 			criteria.add(Restrictions.in("radiologyOrder", radiologyOrders));
-	}
-	
-	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getObsByOrderId(Integer)
-	 */
-	@Override
-	public List<Obs> getObsByOrderId(Integer orderId) {
-		String innerQuery = "(Select oo.previousVersion from Obs as oo where oo.order.orderId=" + orderId
-		        + " and oo.previousVersion IS NOT NULL)";
-		String query = "from Obs as o where o.order.orderId = " + orderId + " and o.obsId NOT IN " + innerQuery;
-		
-		List<Obs> observations;
-		
-		observations = sessionFactory.getCurrentSession().createQuery(query).list();
-		
-		return observations;
 	}
 	
 }

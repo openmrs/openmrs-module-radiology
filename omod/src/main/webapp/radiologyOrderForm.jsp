@@ -52,16 +52,16 @@
 				<tr>
 					<td><spring:message code="Order.concept" /></td>
 					<td><spring:bind path="concept">
-						<openmrs_tag:conceptField formFieldName="concept"
-						                          formFieldId="conceptId"
-						                          initialValue="${status.editor.value.conceptId}"
-						                          onSelectFunction="onQuestionSelect"
-						                          includeClasses="${radiologyConceptClassNames}" />
+							<openmrs_tag:conceptField formFieldName="concept"
+								formFieldId="conceptId"
+								initialValue="${status.editor.value.conceptId}"
+								onSelectFunction="onQuestionSelect"
+								includeClasses="${radiologyConceptClassNames}" />
 							<c:if test="${status.errorMessage != ''}">
 								<span class="error">${status.errorMessage}</span>
 							</c:if>
-						<div class="description" id="conceptDescription"></div>
-					</spring:bind></td>
+							<div class="description" id="conceptDescription"></div>
+						</spring:bind></td>
 				</tr>
 				<tr>
 					<td><spring:message code="radiology.urgency" /></td>
@@ -236,7 +236,45 @@
 			</form:form>
 		</c:if>
 		<c:if test="${not empty radiologyOrder}">
-			<%@ include file="portlets/radiologyOrderDetailsPortlet.jsp" %>
+			<%@ include file="portlets/radiologyOrderDetailsPortlet.jsp"%>
+			<c:if test="${radiologyOrder.study.completed}">
+				<h2>
+					<spring:message code="radiology.radiologyReportTitle" />
+				</h2>
+				<c:choose>
+					<c:when test="${radiologyReportNeedsToBeCreated}">
+						<form:form method="post" modelAttribute="radiologyOrder"
+							cssClass="box">
+							<tr>
+								<td><spring:bind path="orderId">
+										<a
+											href="/openmrs/module/radiology/radiologyReport.form?orderId=${status.value}&radiologyReportId=">
+											<spring:message code="radiology.radiologyReportClaim" />
+										</a>
+									</spring:bind></td>
+							</tr>
+						</form:form>
+					</c:when>
+					<c:otherwise>
+						<form:form method="post" modelAttribute="radiologyReport"
+							cssClass="box">
+							<tr>
+								<td><a
+									href="/openmrs/module/radiology/radiologyReport.form?orderId=${radiologyReport.radiologyOrder.id}&radiologyReportId=${radiologyReport.id}">
+										<c:choose>
+											<c:when test="${radiologyReport.reportStatus == 'CLAIMED'}">
+												<spring:message code="radiology.radiologyReportResume" />
+											</c:when>
+											<c:otherwise>
+												<spring:message code="radiology.radiologyReportShow" />
+											</c:otherwise>
+										</c:choose>
+								</a></td>
+							</tr>
+						</form:form>
+					</c:otherwise>
+				</c:choose>
+			</c:if>
 			<c:if test="${isOrderActive}">
 				<br />
 				<form:form method="post" modelAttribute="discontinuationOrder"

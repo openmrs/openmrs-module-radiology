@@ -47,8 +47,6 @@ public class RadiologyDashboardController {
 		mav.addObject("orderList", matchedOrders);
 		mav.addObject("matchedOrdersSize", matchedOrders.size());
 		
-		mav.addObject("obsId", "&obsId");
-		
 		return mav;
 	}
 	
