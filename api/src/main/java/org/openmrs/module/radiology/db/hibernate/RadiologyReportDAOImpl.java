@@ -12,6 +12,7 @@ package org.openmrs.module.radiology.db.hibernate;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.db.RadiologyReportDAO;
@@ -19,8 +20,8 @@ import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 
 /**
- * Hibernate specific RadiologyReport related functions. This class should not be used directly. All calls
- * should go through the {@link org.openmrs.module.radiology.RadiologyService} methods.
+ * Hibernate specific RadiologyReport related functions. This class should not be used directly. All
+ * calls should go through the {@link org.openmrs.module.radiology.RadiologyService} methods.
  *
  * @see org.openmrs.module.radiology.db.RadiologyReportDAO
  * @see org.openmrs.module.radiology.RadiologyService
@@ -98,5 +99,27 @@ public class RadiologyReportDAOImpl implements RadiologyReportDAO {
 		    Restrictions.eq("radiologyOrder", radiologyOrder)).add(
 		    Restrictions.disjunction().add(Restrictions.eq("reportStatus", RadiologyReportStatus.CLAIMED)).add(
 		        Restrictions.eq("reportStatus", RadiologyReportStatus.COMPLETED))).list().get(0);
+	}
+	
+	/**
+	 * @see org.openmrs.module.radiology.RadiologyService#getCompletedRadiologyOrdersWithAnActiveRadiologyReport()
+	 */
+	@Override
+	public List<RadiologyOrder> getCompletedRadiologyOrdersWithAnActiveRadiologyReport() {
+		List<RadiologyOrder> radiologyOrders = sessionFactory.getCurrentSession().createCriteria(RadiologyReport.class).add(
+		    Restrictions.disjunction().add(Restrictions.eq("reportStatus", RadiologyReportStatus.CLAIMED)).add(
+		        Restrictions.eq("reportStatus", RadiologyReportStatus.COMPLETED))).setProjection(
+		    Projections.property("radiologyOrder")).list();
+		return radiologyOrders;
+	}
+	
+	/**
+	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyReports()
+	 */
+	@Override
+	public List<RadiologyReport> getRadiologyReports() {
+		List<RadiologyReport> radiologyReports = sessionFactory.getCurrentSession().createCriteria(RadiologyReport.class)
+		        .list();
+		return radiologyReports;
 	}
 }

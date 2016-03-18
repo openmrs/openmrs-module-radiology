@@ -538,4 +538,22 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		}
 		return null;
 	}
+	
+	/**
+	 * @see RadiologyService#getCompletedRadiologyOrdersWithAnActiveRadiologyReport()
+	 */
+	@Transactional(readOnly = true)
+	@Override
+	public List<RadiologyOrder> getCompletedRadiologyOrdersWithAnActiveRadiologyReport() {
+		return radiologyReportDAO.getCompletedRadiologyOrdersWithAnActiveRadiologyReport();
+	}
+	
+	/**
+	 * @see RadiologyService#getRadiologyReports()
+	 */
+	@Transactional(readOnly = true)
+	@Override
+	public List<RadiologyReport> getRadiologyReports() {
+		return radiologyReportDAO.getRadiologyReports();
+	}
 }
