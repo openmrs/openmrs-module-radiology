@@ -32,199 +32,139 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 	private RadiologyReportFormController radiologyReportFormController = new RadiologyReportFormController();
 	
 	/**
-	 * @verifies populate ModelAndView RadiologyReportForm containing a new created RadiologyReport
-	 * @see RadiologyReportFormController#getRadiologyReport(org.openmrs.Order, Integer) for an
-	 *      RadiologyOrder if radiologyReportId is null
+	 * @verifies populate model and view with new radiology report for given radiology order
+	 * @see RadiologyReportFormController#getRadiologyReportFormWithNewRadiologyReport(RadiologyOrder)
 	 */
 	@Test
-	public void getRadiologyReport_shouldPopulateModelAndViewRadiologyReportFormContainingANewCreatedRadiologyReportForAnRadiologyOrderIfRadiologyReportIdIsNull()
-	        throws Exception {
+	public void getRadiologyReportFormWithNewRadiologyReport_shouldPopulateModelAndViewWithNewRadiologyReportForGivenRadiologyOrder() {
 		
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
+		// given
 		RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
+		RadiologyOrder mockRadiologyOrder = mockRadiologyReport.getRadiologyOrder();
 		
-		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockRadiologyOrder);
 		when(radiologyService.createAndClaimRadiologyReport(mockRadiologyOrder)).thenReturn(mockRadiologyReport);
-		when(radiologyService.hasRadiologyOrderClaimedRadiologyReport(mockRadiologyOrder)).thenReturn(false);
 		
-		ModelAndView modelAndView = radiologyReportFormController.getRadiologyReport(mockRadiologyOrder, null);
+		ModelAndView modelAndView = radiologyReportFormController
+		        .getRadiologyReportFormWithNewRadiologyReport(mockRadiologyOrder);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(),
-		    is("redirect:/module/radiology/radiologyReport.form?orderId=1&radiologyReportId=1"));
+		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyReport.form?radiologyReportId="
+		        + mockRadiologyReport.getId()));
+		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");
 		assertNotNull(order);
-		assertThat(modelAndView.getModelMap(), hasKey("radiologyReport"));
+		assertThat(order, is((Order) mockRadiologyOrder));
+		
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
+		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
+		assertThat(radiologyOrder, is(mockRadiologyOrder));
+		
 		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap().get("radiologyReport");
 		assertNotNull(radiologyReport);
 		assertThat(radiologyReport, is(mockRadiologyReport));
 	}
 	
 	/**
-	 * @verifies populate ModelAndView RadiologyReportForm containing a RadiologyReport for a
-	 *           RadiologyOrder
-	 * @see RadiologyReportFormController#getRadiologyReport(org.openmrs.Order, Integer)
+	 * @verifies populate model and view with existing radiology report matching given radiology
+	 *           report id
+	 * @see RadiologyReportFormController#getRadiologyReportFormWithExistingRadiologyReport(Integer)
 	 */
 	@Test
-	public void getRadiologyReport_shouldPopulateModelAndViewRadiologyReportFormContainingARadiologyReportForARadiologyOrder()
-	        throws Exception {
+	public void getRadiologyReportFormWithExistingRadiologyReport_shouldPopulateModelAndViewWithExistingRadiologyReportMatchingGivenRadiologyReportId() {
 		
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
+		// given
 		RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
 		
-		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockRadiologyOrder);
 		when(radiologyService.getRadiologyReportByRadiologyReportId(mockRadiologyReport.getId())).thenReturn(
 		    mockRadiologyReport);
 		
-		ModelAndView modelAndView = radiologyReportFormController.getRadiologyReport(mockRadiologyOrder, mockRadiologyReport
-		        .getId());
+		ModelAndView modelAndView = radiologyReportFormController
+		        .getRadiologyReportFormWithExistingRadiologyReport(mockRadiologyReport.getId());
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyReportForm"));
+		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");
 		assertNotNull(order);
+		assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
+		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
 		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
-		assertNotNull(radiologyOrder);
-		assertThat(mockRadiologyOrder, is(radiologyOrder));
-	}
-	
-	/**
-	 * @verifies populate ModelAndView RadiologyOrderListForm if radiologyReport could not has been
-	 *           created
-	 * @see RadiologyReportFormController#getRadiologyReport(Order, Integer)
-	 */
-	@Test
-	public void getRadiologyReport_shouldPopulateModelAndViewRadiologyOrderListFormIfRadiologyReportCouldNotHasBeenCreated()
-	        throws Exception {
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
+		assertThat(radiologyOrder, is(mockRadiologyReport.getRadiologyOrder()));
 		
-		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockRadiologyOrder);
-		when(radiologyService.createAndClaimRadiologyReport(mockRadiologyOrder)).thenReturn(null);
-		
-		ModelAndView modelAndView = radiologyReportFormController.getRadiologyReport(mockRadiologyOrder, mockRadiologyReport
-		        .getId());
-		
-		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.list"));
-	}
-	
-	/**
-	 * @verifies populate ModelAndView RadiologyOrderListForm if the given order does not match with
-	 *           the radiologyOrder of the creted radiologyReport
-	 * @see RadiologyReportFormController#getRadiologyReport(Order, Integer)
-	 */
-	@Test
-	public void getRadiologyReport_shouldPopulateModelAndViewRadiologyOrderListFormIfTheGivenOrderDoesNotMatchWithTheRadiologyOrderOfTheCretedRadiologyReport()
-	        throws Exception {
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
-		RadiologyReport mockRadiologyReport2 = RadiologyTestData.getMockRadiologyReport1();
-		mockRadiologyReport2.setRadiologyOrder(RadiologyTestData.getMockRadiologyOrder2());
-		
-		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockRadiologyOrder);
-		when(radiologyService.createAndClaimRadiologyReport(mockRadiologyOrder)).thenReturn(mockRadiologyReport2);
-		
-		ModelAndView modelAndView = radiologyReportFormController.getRadiologyReport(mockRadiologyOrder, mockRadiologyReport
-		        .getId());
-		
-		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.list"));
-	}
-	
-	/**
-	 * @verifies populate ModelAndView RadiologyReportForm containing the saved RadiologyReport for
-	 *           a RadiologyOrder
-	 * @see RadiologyReportFormController#saveRadiologyReport(org.openmrs.Order,
-	 *      org.openmrs.module.radiology.report.RadiologyReport)
-	 */
-	@Test
-	public void saveRadiologyReport_shouldPopulateModelAndViewRadiologyReportFormContainingTheSavedRadiologyReportForARadiologyOrder()
-	        throws Exception {
-		Order mockOrder = RadiologyTestData.getMockOrder1();
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
-		List<RadiologyReport> radiologyReportList = new ArrayList();
-		radiologyReportList.add(mockRadiologyReport);
-		
-		when(radiologyService.getRadiologyOrderByOrderId(mockOrder.getOrderId())).thenReturn(mockRadiologyOrder);
-		when(
-		    radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(mockRadiologyOrder,
-		        RadiologyReportStatus.CLAIMED)).thenReturn(radiologyReportList);
-		
-		ModelAndView modelAndView = radiologyReportFormController.saveRadiologyReport(mockRadiologyOrder,
-		    mockRadiologyReport);
-		
-		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyReportForm"));
-		assertThat(modelAndView.getModelMap(), hasKey("order"));
-		Order order = (Order) modelAndView.getModelMap().get("order");
-		assertNotNull(order);
-		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
-		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
-		assertNotNull(radiologyOrder);
-		assertThat(mockRadiologyOrder, is(radiologyOrder));
-		assertThat(modelAndView.getModelMap(), hasKey("radiologyReport"));
 		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap().get("radiologyReport");
 		assertNotNull(radiologyReport);
+		assertThat(radiologyReport, is(mockRadiologyReport));
 	}
 	
 	/**
-	 * @verifies populate ModelAndView RadiologyOrderForm if unclaim was successful
-	 * @see RadiologyReportFormController#unclaimRadiologyReport(org.openmrs.Order,
-	 *      org.openmrs.module.radiology.report.RadiologyReport)
+	 * @verifies save given radiology report and populate model and view with it
+	 * @see RadiologyReportFormController#saveRadiologyReport(RadiologyReport)
 	 */
 	@Test
-	public void unclaimRadiologyReport_shouldPopulateModelAndViewRadiologyOrderFormIfUnclaimWasSuccessful() throws Exception {
-		Order mockOrder = RadiologyTestData.getMockOrder1();
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
+	public void saveRadiologyReport_shouldSaveGivenRadiologyReportAndPopulateModelAndViewWithIt() {
+		
+		// given
 		RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
-		List<RadiologyReport> radiologyReportList = new ArrayList();
-		radiologyReportList.add(mockRadiologyReport);
 		
-		when(radiologyService.getRadiologyOrderByOrderId(mockOrder.getOrderId())).thenReturn(mockRadiologyOrder);
-		when(
-		    radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(mockRadiologyOrder,
-		        RadiologyReportStatus.CLAIMED)).thenReturn(radiologyReportList);
-		
-		ModelAndView modelAndView = radiologyReportFormController.unclaimRadiologyReport(mockOrder, mockRadiologyReport);
+		ModelAndView modelAndView = radiologyReportFormController.saveRadiologyReport(mockRadiologyReport);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId=1"));
+		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyReportForm"));
+		
+		assertThat(modelAndView.getModelMap(), hasKey("order"));
+		Order order = (Order) modelAndView.getModelMap().get("order");
+		assertNotNull(order);
+		assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
+		
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
+		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
+		assertThat(radiologyOrder, is(mockRadiologyReport.getRadiologyOrder()));
+		
+		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap().get("radiologyReport");
+		assertNotNull(radiologyReport);
+		assertThat(radiologyReport, is(mockRadiologyReport));
 	}
 	
 	/**
-	 * @verifies populate ModelAndView RadiologyReportForm containing the completed RadiologyReport
-	 * @see RadiologyReportFormController#completeRadiologyReport(org.openmrs.Order,
-	 *      org.openmrs.module.radiology.report.RadiologyReport,
+	 * @verifies redirect to radiology order form if unclaim was successful
+	 * @see RadiologyReportFormController#unclaimRadiologyReport(RadiologyReport)
+	 */
+	@Test
+	public void unclaimRadiologyReport_shouldRedirectToRadiologyOrderFormIfUnclaimWasSuccessful() {
+		
+		// given
+		RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
+		
+		ModelAndView modelAndView = radiologyReportFormController.unclaimRadiologyReport(mockRadiologyReport);
+		
+		assertNotNull(modelAndView);
+		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
+		        + mockRadiologyReport.getRadiologyOrder().getOrderId()));
+	}
+	
+	/**
+	 * @verifies complete given radiology report and populate model and view with it
+	 * @see RadiologyReportFormController#completeRadiologyReport(RadiologyReport,
 	 *      org.springframework.validation.BindingResult)
 	 */
 	@Test
-	public void completeRadiologyReport_shouldPopulateModelAndViewRadiologyReportFormContainingTheCompletedRadiologyReport()
-	        throws Exception {
-		Order mockOrder = RadiologyTestData.getMockOrder1();
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
+	public void completeRadiologyReport_shouldCompleteGivenRadiologyReportAndPopulateModelAndViewWithIt() {
+		
+		// given
 		RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
 		mockRadiologyReport.setPrincipalResultsInterpreter(RadiologyTestData.getMockProvider1());
-		List<RadiologyReport> radiologyReportList = new ArrayList();
-		radiologyReportList.add(mockRadiologyReport);
-		BindingResult reportErrors = mock(BindingResult.class);
-		RadiologyReport mockCompletedRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
+		RadiologyReport mockCompletedRadiologyReport = mockRadiologyReport;
 		mockCompletedRadiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
+		BindingResult reportErrors = mock(BindingResult.class);
 		
-		when(radiologyService.getRadiologyOrderByOrderId(mockOrder.getOrderId())).thenReturn(mockRadiologyOrder);
-		when(
-		    radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(mockRadiologyOrder,
-		        RadiologyReportStatus.CLAIMED)).thenReturn(radiologyReportList);
 		when(
 		    radiologyService.completeRadiologyReport(mockRadiologyReport, mockRadiologyReport
 		            .getPrincipalResultsInterpreter())).thenReturn(mockCompletedRadiologyReport);
 		
-		ModelAndView modelAndView = radiologyReportFormController.completeRadiologyReport(mockOrder, mockRadiologyReport,
-		    reportErrors);
+		ModelAndView modelAndView = radiologyReportFormController.completeRadiologyReport(mockRadiologyReport, reportErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyReportForm"));
@@ -232,38 +172,36 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");
 		assertNotNull(order);
+		assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
 		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
 		assertNotNull(radiologyOrder);
+		assertThat(radiologyOrder, is(mockRadiologyReport.getRadiologyOrder()));
+		
+		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap().get("radiologyReport");
+		assertNotNull(radiologyReport);
+		assertThat(radiologyReport, is(mockRadiologyReport));
 	}
 	
 	/**
-	 * @verifies populate ModelAndView RadiologyReportForm with BindingResult errors if provider is
-	 *           null
-	 * @see RadiologyReportFormController#completeRadiologyReport(org.openmrs.Order,
-	 *      org.openmrs.module.radiology.report.RadiologyReport,
+	 * @verifies populate model and view radiology report form with BindingResult errors if provider
+	 *           is null
+	 * @see RadiologyReportFormController#completeRadiologyReport(RadiologyReport,
 	 *      org.springframework.validation.BindingResult)
 	 */
 	@Test
-	public void completeRadiologyReport_shouldPopulateModelAndViewRadiologyReportFormWithBindingResultErrorsIfProviderIsNull()
-	        throws Exception {
-		Order mockOrder = RadiologyTestData.getMockOrder1();
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
+	public void completeRadiologyReport_shouldPopulateModelAndViewRadiologyReportFormWithBindingResultErrorsIfProviderIsNull() {
+		
+		// given
 		RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
 		mockRadiologyReport.setPrincipalResultsInterpreter(null);
-		List<RadiologyReport> radiologyReportList = new ArrayList();
-		radiologyReportList.add(mockRadiologyReport);
+		
 		BindingResult reportErrors = mock(BindingResult.class);
 		
-		when(radiologyService.getRadiologyOrderByOrderId(mockOrder.getOrderId())).thenReturn(mockRadiologyOrder);
-		when(
-		    radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(mockRadiologyOrder,
-		        RadiologyReportStatus.CLAIMED)).thenReturn(radiologyReportList);
 		when(reportErrors.hasErrors()).thenReturn(true);
 		
-		ModelAndView modelAndView = radiologyReportFormController.completeRadiologyReport(mockOrder, mockRadiologyReport,
-		    reportErrors);
+		ModelAndView modelAndView = radiologyReportFormController.completeRadiologyReport(mockRadiologyReport, reportErrors);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyReportForm"));
@@ -276,7 +214,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
 		assertNotNull(radiologyOrder);
 		
-		assertThat(mockRadiologyOrder, is(radiologyOrder));
+		assertThat(mockRadiologyReport.getRadiologyOrder(), is(radiologyOrder));
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyReport"));
 		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap().get("radiologyReport");
 		assertNotNull(radiologyReport);

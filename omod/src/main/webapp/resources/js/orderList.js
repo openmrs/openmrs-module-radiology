@@ -12,7 +12,7 @@ var $j=jQuery.noConflict();
 
 		function format(order_id,report_id, physician, status, instructions, mwl) {
 			var link ="";
-			if(report_id!=0){ link = '<a href="/openmrs/module/radiology/radiologyReport.form?orderId='+order_id+'&radiologyReportId='+report_id+'">'+report_id+'</a>'}
+			if(report_id!=0){ link = '<a href="/openmrs/module/radiology/radiologyReport.form?radiologyReportId='+report_id+'">'+report_id+'</a>'}
 			// `d` is the original data object for the row
 			return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
 				'<tr>' +

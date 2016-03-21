@@ -248,7 +248,7 @@
 							<tr>
 								<td><spring:bind path="orderId">
 										<a
-											href="/openmrs/module/radiology/radiologyReport.form?orderId=${status.value}&radiologyReportId=">
+											href="/openmrs/module/radiology/radiologyReport.form?orderId=${status.value}">
 											<spring:message code="radiology.radiologyReportClaim" />
 										</a>
 									</spring:bind></td>
@@ -260,7 +260,7 @@
 							cssClass="box">
 							<tr>
 								<td><a
-									href="/openmrs/module/radiology/radiologyReport.form?orderId=${radiologyReport.radiologyOrder.id}&radiologyReportId=${radiologyReport.id}">
+									href="/openmrs/module/radiology/radiologyReport.form?radiologyReportId=${radiologyReport.id}">
 										<c:choose>
 											<c:when test="${radiologyReport.reportStatus == 'CLAIMED'}">
 												<spring:message code="radiology.radiologyReportResume" />
