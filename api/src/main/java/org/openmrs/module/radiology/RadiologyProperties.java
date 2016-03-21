@@ -14,33 +14,14 @@ import org.openmrs.ConceptClass;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.OrderType;
-import org.openmrs.api.AdministrationService;
-import org.openmrs.api.ConceptService;
-import org.openmrs.api.EncounterService;
-import org.openmrs.api.OrderService;
-import org.openmrs.api.context.Context;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
+import org.openmrs.module.emrapi.utils.ModuleProperties;
 import org.springframework.stereotype.Component;
 
 /**
  * Properties, mostly configured via GPs for this module.
  */
 @Component
-public class RadiologyProperties {
-	
-	@Autowired
-	@Qualifier("adminService")
-	private AdministrationService administrationService;
-	
-	@Autowired
-	private OrderService orderService;
-	
-	@Autowired
-	private EncounterService encounterService;
-	
-	@Autowired
-	private ConceptService conceptService;
+public class RadiologyProperties extends ModuleProperties {
 	
 	/**
 	 * Return application entity title
@@ -48,7 +29,7 @@ public class RadiologyProperties {
 	 * @return application entity title
 	 */
 	public String getApplicationEntityTitle() {
-		return administrationService.getGlobalProperty(RadiologyConstants.GP_APPLICATION_ENTITY_TITLE);
+		return getGlobalProperty(RadiologyConstants.GP_APPLICATION_ENTITY_TITLE, true);
 	}
 	
 	/**
@@ -57,7 +38,7 @@ public class RadiologyProperties {
 	 * @return mpps directory
 	 */
 	public String getMppsDir() {
-		return administrationService.getGlobalProperty(RadiologyConstants.GP_MPPS_DIR);
+		return getGlobalProperty(RadiologyConstants.GP_MPPS_DIR, true);
 	}
 	
 	/**
@@ -66,7 +47,7 @@ public class RadiologyProperties {
 	 * @return mwl directory
 	 */
 	public String getMwlDir() {
-		return administrationService.getGlobalProperty(RadiologyConstants.GP_MWL_DIR);
+		return getGlobalProperty(RadiologyConstants.GP_MWL_DIR, true);
 	}
 	
 	/**
@@ -75,7 +56,7 @@ public class RadiologyProperties {
 	 * @return mwl mpps port
 	 */
 	public String getMwlMppsPort() {
-		return administrationService.getGlobalProperty(RadiologyConstants.GP_MWL_MPPS_PORT);
+		return getGlobalProperty(RadiologyConstants.GP_MWL_MPPS_PORT, true);
 	}
 	
 	/**
@@ -84,7 +65,7 @@ public class RadiologyProperties {
 	 * @return server address
 	 */
 	public String getServersAddress() {
-		return "http://" + administrationService.getGlobalProperty(RadiologyConstants.GP_SERVERS_ADDRESS);
+		return "http://" + getGlobalProperty(RadiologyConstants.GP_SERVERS_ADDRESS, true);
 	}
 	
 	/**
@@ -93,7 +74,7 @@ public class RadiologyProperties {
 	 * @return prefix for dicom objects in the application
 	 */
 	public String getApplicationUID() {
-		return administrationService.getGlobalProperty(RadiologyConstants.GP_APPLICATION_UID);
+		return getGlobalProperty(RadiologyConstants.GP_APPLICATION_UID, true);
 	}
 	
 	/**
@@ -102,7 +83,7 @@ public class RadiologyProperties {
 	 * @return study uid slug
 	 */
 	public String getStudyUIDSlug() {
-		return administrationService.getGlobalProperty(RadiologyConstants.GP_STUDY_UID_SLUG);
+		return getGlobalProperty(RadiologyConstants.GP_STUDY_UID_SLUG, true);
 	}
 	
 	/**
@@ -111,7 +92,7 @@ public class RadiologyProperties {
 	 * @return specific character set
 	 */
 	public String getSpecificCharacterSet() {
-		return administrationService.getGlobalProperty(RadiologyConstants.GP_SPECIFIC_CHARCATER_SET);
+		return getGlobalProperty(RadiologyConstants.GP_SPECIFIC_CHARCATER_SET, true);
 	}
 	
 	/**
@@ -130,16 +111,17 @@ public class RadiologyProperties {
 	 * @return servers port
 	 */
 	public String getServersPort() {
-		return administrationService.getGlobalProperty(RadiologyConstants.GP_SERVERS_PORT);
+		return getGlobalProperty(RadiologyConstants.GP_SERVERS_PORT, true);
 	}
 	
 	/**
 	 * Return servers hl7 port
 	 * 
 	 * @return servers hl7 port
+	 * @should return port of the dcm4chee hl7 receiver/sender
 	 */
 	public String getServersHL7Port() {
-		return administrationService.getGlobalProperty(RadiologyConstants.GP_SERVERS_HL7_PORT);
+		return getGlobalProperty(RadiologyConstants.GP_SERVERS_HL7_PORT, true);
 	}
 	
 	/**
@@ -151,12 +133,8 @@ public class RadiologyProperties {
 	 *         properties
 	 */
 	public String getDicomViewerLocalServerName() {
-		String dicomViewerLocalServerName = administrationService
-		        .getGlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME);
-		if (dicomViewerLocalServerName == null)
-			return "";
-		else
-			return "serverName=" + dicomViewerLocalServerName + "&";
+		String dicomViewerLocalServerName = getGlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME, false);
+		return dicomViewerLocalServerName == null ? "" : "serverName=" + dicomViewerLocalServerName + "&";
 	}
 	
 	/**
@@ -165,7 +143,7 @@ public class RadiologyProperties {
 	 * @return dicom viewer url base
 	 */
 	public String getDicomViewerUrlBase() {
-		return administrationService.getGlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_URL_BASE);
+		return getGlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_URL_BASE, true);
 	}
 	
 	/**
@@ -188,15 +166,14 @@ public class RadiologyProperties {
 	 * 
 	 * @return CareSetting for radiology orders
 	 * @should return radiology care setting
+	 * @should throw illegal state exception if global property for radiology care setting cannot be found
 	 * @should throw illegal state exception if radiology care setting cannot be found
 	 */
 	public CareSetting getRadiologyCareSetting() {
-		String radiologyCareSettingUuid = administrationService
-		        .getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
+		String radiologyCareSettingUuid = getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING, true);
 		CareSetting result = orderService.getCareSettingByUuid(radiologyCareSettingUuid);
-		
 		if (result == null) {
-			throw new IllegalStateException("Configuration required for property: "
+			throw new IllegalStateException("No existing care setting for uuid: "
 			        + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
 		}
 		return result;
@@ -267,12 +244,7 @@ public class RadiologyProperties {
 	 */
 	public String getRadiologyConceptClassNames() {
 		
-		String radiologyConceptClassUuidSetting = Context.getAdministrationService().getGlobalProperty(
-		    RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES);
-		if (radiologyConceptClassUuidSetting == null) {
-			throw new IllegalStateException(
-			        "There is no Concept Class defined for the Concept Filter, Setting: radiologyConceptClasses");
-		}
+		String radiologyConceptClassUuidSetting = getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES, true);
 		radiologyConceptClassUuidSetting = radiologyConceptClassUuidSetting.replace(" ", "");
 		if (!radiologyConceptClassUuidSetting.matches("^[0-9a-fA-f,-]+$")) {
 			throw new IllegalStateException(

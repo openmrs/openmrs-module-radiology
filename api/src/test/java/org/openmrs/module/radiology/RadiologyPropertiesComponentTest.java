@@ -10,7 +10,6 @@
 package org.openmrs.module.radiology;
 
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
 import java.util.LinkedList;
@@ -84,6 +83,17 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	}
 	
 	/**
+	 * @see RadiologyProperties#getServersHL7Port()
+	 * @verifies return port of the dcm4chee hl7 receiver/sender
+	 */
+	@Test
+	public void getServersHL7Port_shouldReturnPortOfTheDcm4cheeHl7Receiversender() throws Exception {
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_SERVERS_HL7_PORT, "2575"));
+		
+		assertThat(radiologyProperties.getServersHL7Port(), is("2575"));
+	}
+	
+	/**
 	 * @see RadiologyProperties#getDicomViewerLocalServerName()
 	 * @verifies return empty string if dicom viewer local server name if not defined in global properties
 	 */
@@ -147,15 +157,34 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	
 	/**
 	 * @see RadiologyProperties#getRadiologyCareSetting()
+	 * @verifies throw illegal state exception if global property for radiology care setting cannot be found
+	 */
+	@Test
+	public void getRadiologyCareSetting_shouldThrowIllegalStateExceptionIfGlobalPropertyForRadiologyCareSettingCannotBeFound()
+	        throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
+		
+		radiologyProperties.getRadiologyCareSetting();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getRadiologyCareSetting()
 	 * @verifies throw illegal state exception if radiology care setting cannot be found
 	 */
 	@Test
 	public void getRadiologyCareSetting_shouldThrowIllegalStateExceptionIfRadiologyCareSettingCannotBeFound() {
 		
+		String nonExistingCareSettingUuid = "5a1b8b43-6f24-11e3-af99-005056821db0";
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING,
+		        nonExistingCareSettingUuid));
+		
 		expectedException.expect(IllegalStateException.class);
-		expectedException.expectMessage("Configuration required for property: "
-		        + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
-		assertThat(radiologyProperties.getRadiologyCareSetting(), is(nullValue()));
+		expectedException
+		        .expectMessage("No existing care setting for uuid: " + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
+		
+		radiologyProperties.getRadiologyCareSetting();
 	}
 	
 	/**
@@ -281,11 +310,10 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	@Test
 	public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsNull()
 	        throws Exception {
-		administrationService.setGlobalProperty("radiology.radiologyConcepts", null);
+		administrationService.setGlobalProperty("radiology.radiologyConceptClasses", null);
 		
 		expectedException.expect(IllegalStateException.class);
-		expectedException
-		        .expectMessage("There is no Concept Class defined for the Concept Filter, Setting: radiologyConceptClasses");
+		expectedException.expectMessage("Configuration required: radiology.radiologyConceptClasses");
 		
 		radiologyProperties.getRadiologyConceptClassNames();
 	}
@@ -298,11 +326,10 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	@Test
 	public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsAnEmptyString()
 	        throws Exception {
-		administrationService.setGlobalProperty("radiology.radiologyConcepts", "");
+		administrationService.setGlobalProperty("radiology.radiologyConceptClasses", "");
 		
 		expectedException.expect(IllegalStateException.class);
-		expectedException
-		        .expectMessage("There is no Concept Class defined for the Concept Filter, Setting: radiologyConceptClasses");
+		expectedException.expectMessage("Configuration required: radiology.radiologyConceptClasses");
 		
 		radiologyProperties.getRadiologyConceptClassNames();
 	}

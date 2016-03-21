@@ -19,6 +19,12 @@
 
 	<require_version>1.11.4</require_version>
 	<require_database_version>1.0.0</require_database_version>
+	<!-- Required Modules -->
+	<require_modules>
+		<require_module version="${emr-apiVersion}">org.openmrs.module.emrapi
+		</require_module>
+	</require_modules>
+	<!-- / Required Modules -->
 
 	<!-- Extensions -->
 	<extension>
@@ -137,12 +143,29 @@
 			core
 		</description>
 	</globalProperty>
-    <globalProperty>
-    	<property>@MODULE_ID@.radiologyConceptClasses</property>
-    	<defaultValue></defaultValue>
-    	<description>Comma separated list of concept class UUIDs which define
-        	concepts that are orderable as radiology orders</description>
-    </globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.radiologyConceptClasses</property>
+		<defaultValue></defaultValue>
+		<description>Comma separated list of concept class UUIDs which define
+			concepts that are orderable as radiology orders
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.radiologyEncounterRole</property>
+		<defaultValue>13fc9b4a-49ed-429c-9dde-ca005b387a3d</defaultValue>
+		<description>Radiology Encounter Role UUID</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.radiologyTestOrderType</property>
+		<defaultValue>dbdb9a9b-56ea-11e5-a47f-08002719a237</defaultValue>
+		<description>Radiology Test Order Type UUID</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.radiologyOrderEncounterType</property>
+		<defaultValue>19db8c0d-3520-48f2-babd-77f2d450e5c7</defaultValue>
+		<description>Radiology Order Encounter Type UUID</description>
+	</globalProperty>
+
 	<!--Required Global Properties -->
 
 	<!-- Internationalization -->
