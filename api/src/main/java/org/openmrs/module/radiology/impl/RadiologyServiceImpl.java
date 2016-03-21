@@ -11,19 +11,26 @@ package org.openmrs.module.radiology.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
+import org.openmrs.EncounterRole;
+import org.openmrs.EncounterType;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
+import org.openmrs.VisitType;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderContext;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.emrapi.encounter.EmrEncounterService;
+import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.MwlStatus;
@@ -52,6 +59,8 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	
 	private EncounterService encounterService;
 	
+	private EmrEncounterService emrEncounterService;
+	
 	private RadiologyProperties radiologyProperties;
 	
 	private RadiologyReportDAO radiologyReportDAO;
@@ -74,6 +83,11 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Override
 	public void setEncounterService(EncounterService encounterService) {
 		this.encounterService = encounterService;
+	}
+	
+	@Override
+	public void setEmrEncounterService(EmrEncounterService emrEncounterService) {
+		this.emrEncounterService = emrEncounterService;
 	}
 	
 	@Override
@@ -128,18 +142,86 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	 * @param provider the encounter provider
 	 * @param encounterDateTime the encounter date
 	 * @return radiology order encounter for given parameters
-	 * @should save radiology order encounter for given parameters
+	 * @should create encounter for radiology order for given parameters
+	 * @should create encounter for new radiology order for patient with existing visit
+	 * @should create encounter for new radiology order for patient without existing visit
+	 * @should throw illegal state exception if encounter cannot be created
 	 */
 	@Transactional
-	private Encounter saveRadiologyOrderEncounter(Patient patient, Provider provider, Date encounterDateTime) {
+	private Encounter saveRadiologyOrderEncounter(Patient patient, Provider provider, Date encounterDateTime)
+	        throws IllegalStateException {
+		try {
+			EncounterTransaction encounterTransaction = setUpEncounterTransaction(patient, encounterDateTime,
+			    radiologyProperties.getRadiologyVisitType(), radiologyProperties.getRadiologyOrderEncounterType(), provider,
+			    radiologyProperties.getOrderingProviderEncounterRole());
+			encounterTransaction = emrEncounterService.save(encounterTransaction);
+			return encounterService.saveEncounter(encounterService.getEncounterByUuid(encounterTransaction
+			        .getEncounterUuid()));
+		}
+		catch (Exception e) {
+			log.error(e.getMessage(), e);
+			log.error("Unable to save radiology order encounter");
+			throw new IllegalStateException("Unable to save radiology order encounter");
+		}
+	}
+	
+	/**
+	 * Create encounter transaction for given parameters
+	 * 
+	 * @param patient encounter transaction patient
+	 * @param encounterDateTime encounter transaction date time
+	 * @param visit type encounter transaction visit type
+	 * @param encounter type encounter transaction encounter type
+	 * @return encounter transaction for given parameters
+	 * @should create encounter transaction for given parameters
+	 * @should throw illegal state exception if patient is null
+	 * @should throw illegal state exception if encounter date time is null
+	 * @should throw illegal state exception if visit type is null
+	 * @should throw illegal state exception if encounter type is null
+	 * @should throw illegal state exception if provider is null
+	 * @should throw illegal state exception if encounter role is null
+	 */
+	private EncounterTransaction setUpEncounterTransaction(Patient patient, Date encounterDateTime, VisitType visitType,
+	        EncounterType encounterType, Provider provider, EncounterRole encounterRole) throws IllegalArgumentException {
 		
-		Encounter encounter = new Encounter();
-		encounter.setPatient(patient);
-		encounter.setEncounterType(radiologyProperties.getRadiologyEncounterType());
-		encounter.setProvider(radiologyProperties.getOrderingProviderEncounterRole(), provider);
-		encounter.setEncounterDatetime(encounterDateTime);
+		if (patient == null) {
+			throw new IllegalArgumentException("patient is required");
+		}
 		
-		return encounterService.saveEncounter(encounter);
+		if (encounterDateTime == null) {
+			throw new IllegalArgumentException("date is required");
+		}
+		
+		if (visitType == null) {
+			throw new IllegalArgumentException("visit type is required");
+		}
+		
+		if (encounterType == null) {
+			throw new IllegalArgumentException("encounter type is required");
+		}
+		
+		if (provider == null) {
+			throw new IllegalArgumentException("provider is required");
+		}
+		
+		if (encounterRole == null) {
+			throw new IllegalArgumentException("encounter role is required");
+		}
+		
+		EncounterTransaction encounterTransaction = new EncounterTransaction();
+		encounterTransaction.setPatientUuid(patient.getUuid());
+		encounterTransaction.setEncounterDateTime(encounterDateTime);
+		encounterTransaction.setVisitTypeUuid(visitType.getUuid());
+		encounterTransaction.setEncounterTypeUuid(encounterType.getUuid());
+		EncounterTransaction.Provider encounterProvider = new EncounterTransaction.Provider();
+		encounterProvider.setEncounterRoleUuid(encounterRole.getUuid());
+		//sets the provider of the encounterprovider
+		encounterProvider.setUuid(provider.getUuid());
+		
+		Set<EncounterTransaction.Provider> encounterProviderSet = new HashSet<EncounterTransaction.Provider>();
+		encounterProviderSet.add(encounterProvider);
+		encounterTransaction.setProviders(encounterProviderSet);
+		return encounterTransaction;
 	}
 	
 	/**
