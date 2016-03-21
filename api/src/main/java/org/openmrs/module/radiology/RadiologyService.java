@@ -290,7 +290,8 @@ public interface RadiologyService extends OpenmrsService {
 	 * Convenience method to check if a RadiologyOrder has a claimed RadiologyReport
 	 *
 	 * @param radiologyOrder RadiologyOrder the radiologyOrder which should be checked
-	 * @return true if RadiologyOrder has a claimed RadiologyReport, otherwise false and also if RadiologyOrder is null
+	 * @return true if RadiologyOrder has a claimed RadiologyReport, otherwise false and also if
+	 *         RadiologyOrder is null
 	 * @should return true if the RadiologyOrder has a claimed RadiologyReport
 	 * @should return false if the RadiologyOrder has no claimed RadiologyReport
 	 * @should return false if the RadiologyOrder is null
@@ -323,4 +324,20 @@ public interface RadiologyService extends OpenmrsService {
 	 */
 	RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder);
 	
+	/**
+	 * Get all completed RadiologyOrders with an active (can be claimed or completed)
+	 * RadiologyReport
+	 *
+	 * @return RadiologyOrders filtered by completed radiologyOrder and an active radiologyReport
+	 * @should return a list with radiologyOrders which have an active radiologyReport
+	 */
+	List<RadiologyOrder> getCompletedRadiologyOrdersWithAnActiveRadiologyReport();
+	
+	/**
+	 * Get all RadiologyReports
+	 *
+	 * @return all RadiologyReports
+	 * @should return a list with all radiologyReports
+	 */
+	List<RadiologyReport> getRadiologyReports();
 }

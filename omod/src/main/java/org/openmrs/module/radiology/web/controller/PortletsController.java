@@ -20,6 +20,8 @@ import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
+import org.openmrs.module.radiology.report.RadiologyReport;
+import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -43,7 +45,7 @@ public class PortletsController {
 	
 	/**
 	 * Get URL to the patientOverview portlet
-	 * 
+	 *
 	 * @return patient info route
 	 * @should return string with patient info route
 	 */
@@ -55,22 +57,30 @@ public class PortletsController {
 	/**
 	 * Get model and view containing radiology orders and studies for given patient string and date
 	 * range
-	 * 
+	 *
 	 * @param patientQuery Patient string for which radiology orders and studies should be returned
 	 *            for
 	 * @param startDate Date from which on the radiology orders and studies should be returned for
 	 * @param endDate Date until which the radiology orders and studies should be returned for
+	 * @param sortType String that displays, which sort type will be used
 	 * @return model and view containing radiology orders and studies corresponding to given
 	 *         criteria
 	 * @should populate model and view with table of orders associated with given empty patient and
 	 *         given date range null
 	 * @should not populate model and view with table of orders if start date is after end date
+	 * @should populate model and view with table of orders including obsId accessed as reading
+	 *         physician
+	 * @should populate model and view with table of completed orders without a radiologyReport
+	 *         filtered by selectSortType compledteOrdersWithNoReport
+	 * @should populate model and view with table of completed orders with an active radiologyReport
+	 *         filtered by selectSortType completedOrdersWithAReport
 	 */
 	@RequestMapping(value = "/module/radiology/portlets/orderSearch.portlet")
 	ModelAndView getRadiologyOrdersByPatientQueryAndDateRange(
 	        @RequestParam(value = "patientQuery", required = false) String patientQuery,
 	        @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = ISO.DATE) Date startDate,
-	        @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = ISO.DATE) Date endDate) {
+	        @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = ISO.DATE) Date endDate,
+	        @RequestParam(value = "selectSortType", required = false) String sortType) {
 		ModelAndView mav = new ModelAndView("module/radiology/portlets/orderSearch");
 		
 		if (isEndDateBeforeStartDate(startDate, endDate)) {
@@ -83,12 +93,54 @@ public class PortletsController {
 		matchedOrders = filterRadiologyOrdersByDateRange(matchedOrders, startDate, endDate);
 		mav.addObject("orderList", matchedOrders);
 		
+		if ("completedOrdersWithNoReport".equals(sortType)) {
+			matchedOrders.removeAll(radiologyService.getCompletedRadiologyOrdersWithAnActiveRadiologyReport());
+		}
+		if ("completedOrdersWithAReport".equals(sortType)) {
+			matchedOrders = radiologyService.getCompletedRadiologyOrdersWithAnActiveRadiologyReport();
+		}
+		
+		mav.addObject("orderList", getOrCreateRadiologyReportByRadiologyOrder(matchedOrders));
+		
 		return mav;
 	}
 	
 	/**
+	 * Get all radiologyReports for given radiologyOrders
+	 *
+	 * @param radiologyOrders list of orders
+	 * @return list of radiologyReports matiching a given radiologyOrder list
+	 * @should list of radiologyReports matiching a given radiologyOrder list
+	 * @should add a radiologyReport to the list with the id=0 if there is no radiologyReport (with
+	 *         the radiologyReportStatus COMPLETED or CLAIMED) matching the current radiologyOrder
+	 * @should add a radiologyReport to the list if there is a radiologyReport matching the current
+	 *         radiologyOrder
+	 */
+	public List<RadiologyReport> getOrCreateRadiologyReportByRadiologyOrder(List<RadiologyOrder> matchedOrders) {
+		List<RadiologyReport> allReports = new ArrayList();
+		for (RadiologyOrder currentOrder : matchedOrders) {
+			RadiologyReport radiologyReport = null;
+			List<RadiologyReport> tmpList = radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(
+			    currentOrder, RadiologyReportStatus.COMPLETED);
+			radiologyReport = (tmpList == null || tmpList.size() <= 0 ? null : tmpList.get(0));
+			if (radiologyReport == null) {
+				tmpList = radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(currentOrder,
+				    RadiologyReportStatus.CLAIMED);
+				radiologyReport = (tmpList == null || tmpList.size() <= 0 ? null : tmpList.get(0));
+			}
+			if (radiologyReport == null) {
+				radiologyReport = new RadiologyReport(currentOrder);
+				radiologyReport.setId(0);
+				allReports.add(radiologyReport);
+			} else
+				allReports.add(radiologyReport);
+		}
+		return allReports;
+	}
+	
+	/**
 	 * Get all orders for given date range
-	 * 
+	 *
 	 * @param unfilteredRadiologyOrders list of orders which matches a patientQuery
 	 * @param startDate Date from which on the radiology orders should be returned for
 	 * @param endDate Date until which the radiology should be returned for
@@ -139,7 +191,7 @@ public class PortletsController {
 	
 	/**
 	 * Return true if end date is before start date
-	 * 
+	 *
 	 * @param startDate start date of the date range
 	 * @param endDate end date of the date range
 	 * @return true if end date is before start date
@@ -160,7 +212,7 @@ public class PortletsController {
 	
 	/**
 	 * Get orders of type radiology for patientQuery
-	 * 
+	 *
 	 * @param patientQuery Patient string for which radiology orders and studies should be returned
 	 *            for
 	 * @return list of radiology orders associated with patientQuery
@@ -177,7 +229,7 @@ public class PortletsController {
 	
 	/**
 	 * Handle all exceptions of type TypeMismatchException which occur in this class
-	 * 
+	 *
 	 * @param TypeMismatchException the thrown TypeMismatchException
 	 * @return model and view with exception information
 	 * @should populate model with exception text from message properties and invalid value if date
