@@ -31,6 +31,9 @@
 				<form:hidden path="id" />
 			</tr>
 			<tr>
+				<form:hidden path="radiologyOrder" />
+			</tr>
+			<tr>
 				<td><spring:message code="radiology.reportStatus" /></td>
 				<td>${radiologyReport.reportStatus}</td>
 				<form:hidden path="reportStatus" />
@@ -44,23 +47,24 @@
 			</c:if>
 			<tr>
 				<td><spring:message code="radiology.radiologyReportDiagnosis" /></td>
-				<td>
-					<c:choose>
+				<td><c:choose>
 						<c:when test="${radiologyReport.reportStatus == 'COMPLETED'}">
 							<form:textarea path="reportBody" disabled="true"></form:textarea>
 						</c:when>
 						<c:otherwise>
-							<form:textarea path="reportBody" ></form:textarea>
+							<form:textarea path="reportBody"></form:textarea>
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
 			<tr>
 				<td><spring:message code="radiology.radiologyReportProvider" /></td>
 				<td><c:choose>
-						<c:when test="${not empty radiologyReport.principalResultsInterpreter.id}">
+						<c:when
+							test="${not empty radiologyReport.principalResultsInterpreter.id}">
                             ${radiologyReport.principalResultsInterpreter.name}
-                            <form:hidden path="principalResultsInterpreter" />
-                        </c:when>
+                            <form:hidden
+								path="principalResultsInterpreter" />
+						</c:when>
 						<c:otherwise>
 							<spring:bind path="principalResultsInterpreter">
 								<openmrs:fieldGen type="org.openmrs.Provider"
@@ -78,16 +82,15 @@
 				<td><spring:bind path="creator.personName">
 					${status.value}
 					<form:hidden path="creator" />
-				</spring:bind> - <spring:bind path="dateCreated">
+					</spring:bind> - <spring:bind path="dateCreated">
 					${status.value}
 					<form:hidden path="dateCreated" />
-				</spring:bind></td>
+					</spring:bind></td>
 			</tr>
 		</table>
 		<br>
 		<c:if test="${radiologyReport.reportStatus != 'COMPLETED'}">
-			<c:if
-				test="${radiologyReport.reportStatus != 'DISCONTINUED'}">
+			<c:if test="${radiologyReport.reportStatus != 'DISCONTINUED'}">
 				<input type="submit"
 					value="<spring:message code="radiology.radiologyReportUnclaim"/>"
 					name="unclaimRadiologyReport" />

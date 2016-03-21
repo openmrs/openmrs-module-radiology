@@ -28,7 +28,7 @@
 					Radiology Order </a></li>
 			<li class="active"><a
 				href="${pageContext.request.contextPath}/module/radiology/radiologyReport
-				.form?orderId=${radiologyOrder.orderId}&radiologyReportId=${radiologyReport.id}">
+				.form?radiologyReportId=${radiologyReport.id}">
 					Radiology Report </a></li>
 		</c:if>
 	</openmrs:hasPrivilege>

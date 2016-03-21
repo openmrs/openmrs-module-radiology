@@ -37,49 +37,49 @@ public class RadiologyReportFormController {
 	
 	private final String RADIOLOGY_REPORT_FORM_URL = "redirect:/module/radiology/radiologyReport.form?";
 	
-	private final String RADIOLOGY_ORDER_LIST_PATH = "redirect:/module/radiology/radiologyOrder.list";
+	/**
+	 * Handles GET requests for the radiologyReportForm creating a new radiology report for given
+	 * radiology order
+	 * 
+	 * @param radiologyOrder radiology order for which a radiology report will be created
+	 * @return model and view containing new radiology report for given radiology order
+	 * @should populate model and view with new radiology report for given radiology order
+	 */
+	@RequestMapping(method = RequestMethod.GET, params = "orderId")
+	protected ModelAndView getRadiologyReportFormWithNewRadiologyReport(
+	        @RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder) {
+		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_PATH);
+		
+		if (Context.isAuthenticated()) {
+			
+			RadiologyReport radiologyReport = radiologyService.createAndClaimRadiologyReport(radiologyOrder);
+			modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_URL + "radiologyReportId=" + radiologyReport.getId());
+			
+			addObjectsToModelAndView(modelAndView, radiologyReport);
+			return modelAndView;
+		}
+		return modelAndView;
+	}
 	
 	/**
-	 * Handles GET requests for the radiologyReportForm
-	 *
-	 * @param order Order
-	 * @param radiologyReportId Integer
-	 * @return model and view containing a RadiologyReport
-	 * @should populate ModelAndView RadiologyReportForm containing a RadiologyReport for a
-	 *         RadiologyOrder
-	 * @should populate ModelAndView RadiologyReportForm containing a new created RadiologyReport
-	 *         for an RadiologyOrder if radiologyReportId is null
-	 * @should populate ModelAndView RadiologyOrderListForm if radiologyReport could not has been
-	 *         created
-	 * @should populate ModelAndView RadiologyOrderListForm if the given order does not match with
-	 *         the radiologyOrder of the creted radiologyReport
+	 * Handles GET requests for the radiologyReportForm when called for existing radiology reports
+	 * 
+	 * @param radiologyReportId radiology report id of the existing radiology report which should be
+	 *            put into the model and view
+	 * @return model and view containing radiology report for given radiology report id
+	 * @should populate model and view with existing radiology report matching given radiology
+	 *         report id
 	 */
-	@RequestMapping(method = RequestMethod.GET)
-	protected ModelAndView getRadiologyReport(@RequestParam(value = "orderId", required = true) Order order,
-	        @RequestParam(value = "radiologyReportId", required = false) Integer radiologyReportId) {
+	@RequestMapping(method = RequestMethod.GET, params = "radiologyReportId")
+	protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(
+	        @RequestParam(value = "radiologyReportId", required = true) Integer radiologyReportId) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_PATH);
+		
 		if (Context.isAuthenticated()) {
-			RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
 			
-			RadiologyReport radiologyReport;
-			if (radiologyReportId == null) {
-				radiologyReport = radiologyService.createAndClaimRadiologyReport(radiologyOrder);
-				modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_URL + "orderId=" + order.getOrderId()
-				        + "&radiologyReportId=" + radiologyReport.getId());
-			} else {
-				radiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(radiologyReportId);
-			}
+			RadiologyReport radiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(radiologyReportId);
 			
-			if (radiologyReport == null) {
-				modelAndView = new ModelAndView(RADIOLOGY_ORDER_LIST_PATH);
-				return modelAndView;
-			}
-			if (!radiologyReport.getRadiologyOrder().getId().equals(order.getId())) {
-				modelAndView = new ModelAndView(RADIOLOGY_ORDER_LIST_PATH);
-				return modelAndView;
-			}
-			
-			addObjectsToModelAndView(modelAndView, order, radiologyOrder, radiologyReport);
+			addObjectsToModelAndView(modelAndView, radiologyReport);
 			return modelAndView;
 		}
 		return modelAndView;
@@ -88,80 +88,66 @@ public class RadiologyReportFormController {
 	/**
 	 * Handles POST request for the RadiologyReportForm to save a RadiologyReport
 	 *
-	 * @param order Order
-	 * @param radiologyReport RadiologyReport
-	 * @return ModelAndView containing the saved RadiologyReport
-	 * @should populate ModelAndView RadiologyReportForm containing the saved RadiologyReport for a
-	 *         RadiologyOrder
+	 * @param radiologyReport radiology report to be saved
+	 * @return ModelAndView containing saved radiology report
+	 * @should save given radiology report and populate model and view with it
 	 */
 	@RequestMapping(method = RequestMethod.POST, params = "saveRadiologyReport")
-	protected ModelAndView saveRadiologyReport(@RequestParam(value = "orderId", required = true) Order order,
-	        @ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
+	protected ModelAndView saveRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_PATH);
+		
 		if (Context.isAuthenticated()) {
-			RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
-			radiologyReport.setRadiologyOrder(radiologyOrder);
-			radiologyReport.setReportBody(radiologyReport.getReportBody());
-			radiologyReport.setPrincipalResultsInterpreter(radiologyReport.getPrincipalResultsInterpreter());
-			
 			radiologyService.saveRadiologyReport(radiologyReport);
-			addObjectsToModelAndView(modelAndView, order, radiologyOrder, radiologyReport);
+			
+			addObjectsToModelAndView(modelAndView, radiologyReport);
 			return modelAndView;
 		}
 		return modelAndView;
 	}
 	
 	/**
-	 * Handles POST request for the RadiologyReportForm to unclaim a RadiologyReport
+	 * Handles POST request for the RadiologyReportForm to unclaim given RadiologyReport
 	 *
-	 * @param order Order
-	 * @param radiologyReport RadiologyReport
-	 * @return ModelAndView RadiologyOrderForm if unclaim was successful, otherwise
-	 *         RadiologyReportForm
-	 * @should populate ModelAndView RadiologyOrderForm if unclaim was successful
-	 * @should populate ModelAndView RadiologyReportForm if unclaim failed
+	 * @param radiologyReport radiology report to be unclaimed
+	 * @return ModelAndView with redirect to order form if unclaim was successful, otherwise stay on
+	 *         report form
+	 * @should redirect to radiology order form if unclaim was successful
 	 */
 	@RequestMapping(method = RequestMethod.POST, params = "unclaimRadiologyReport")
-	protected ModelAndView unclaimRadiologyReport(@RequestParam(value = "orderId", required = true) Order order,
-	        @ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
+	protected ModelAndView unclaimRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_PATH);
+		
 		if (Context.isAuthenticated()) {
-			RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
-			radiologyReport.setRadiologyOrder(radiologyOrder);
 			radiologyService.unclaimRadiologyReport(radiologyReport);
-			return new ModelAndView(RADIOLOGY_ORDER_FORM_URL + "orderId=" + order.getOrderId());
+			return new ModelAndView(RADIOLOGY_ORDER_FORM_URL + "orderId=" + radiologyReport.getRadiologyOrder().getOrderId());
 		}
 		return modelAndView;
 	}
 	
 	/**
-	 * Handles POST request for the RadiologyReportForm to complete a RadiologyReport
+	 * Handles POST request for the RadiologyReportForm to complete given RadiologyReport
 	 *
-	 * @param order Order
-	 * @param radiologyReport RadiologyReport
+	 * @param radiologyReport radiology report to be completed
 	 * @param bindingResult BindingResult
 	 * @return ModelAndView RadiologyOrderForm if complete was successful, otherwise the
 	 *         ModelAndView with BindingResult errors
-	 * @should populate ModelAndView RadiologyReportForm containing the completed RadiologyReport
-	 * @should populate ModelAndView RadiologyReportForm with BindingResult errors if provider is
+	 * @should complete given radiology report and populate model and view with it
+	 * @should populate model and view radiology report form with BindingResult errors if provider is
 	 *         null
 	 */
 	@RequestMapping(method = RequestMethod.POST, params = "completeRadiologyReport")
-	protected ModelAndView completeRadiologyReport(@RequestParam(value = "orderId", required = true) Order order,
-	        @ModelAttribute("radiologyReport") RadiologyReport radiologyReport, BindingResult bindingResult) {
+	protected ModelAndView completeRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport,
+	        BindingResult bindingResult) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_PATH);
+		
 		if (Context.isAuthenticated()) {
-			RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
-			radiologyReport.setRadiologyOrder(radiologyOrder);
-			radiologyReport.setReportBody(radiologyReport.getReportBody());
-			radiologyReport.setPrincipalResultsInterpreter(radiologyReport.getPrincipalResultsInterpreter());
-			
-			if (validateForm(radiologyReport, bindingResult, modelAndView, order, radiologyOrder)) {
+			if (validateForm(modelAndView, radiologyReport, bindingResult)) {
 				return modelAndView;
 			}
 			
-			radiologyService.completeRadiologyReport(radiologyReport, radiologyReport.getPrincipalResultsInterpreter());
-			addObjectsToModelAndView(modelAndView, order, radiologyOrder, radiologyReport);
+			RadiologyReport completedRadiologyReport = radiologyService.completeRadiologyReport(radiologyReport,
+			    radiologyReport.getPrincipalResultsInterpreter());
+			addObjectsToModelAndView(modelAndView, completedRadiologyReport);
 			return modelAndView;
 		}
 		return modelAndView;
@@ -171,38 +157,34 @@ public class RadiologyReportFormController {
 	 * Convenience method to check, if RadiologyReportForm has BindingErrors (e.g. Provider is not
 	 * set)
 	 *
-	 * @param radiologyReport RadiologyReport
+	 * @param radiologyReport radiology report to be validated
 	 * @param bindingResult BindingResult
-	 * @param modelAndView ModelAndView
-	 * @param order Order
-	 * @param radiologyOrder RadiologyOrder
+	 * @param modelAndView model and view where radiology report is added
 	 * @return true, if RadiologyReportFrom has errors (e.g. Provider is missing), false if
 	 *         RadiologyReportForm has no errors
 	 */
-	private boolean validateForm(RadiologyReport radiologyReport, BindingResult bindingResult, ModelAndView modelAndView,
-	        Order order, RadiologyOrder radiologyOrder) {
+	private boolean validateForm(ModelAndView modelAndView, RadiologyReport radiologyReport, BindingResult bindingResult) {
 		if (radiologyReport.getPrincipalResultsInterpreter() == null) {
 			new RadiologyReportValidator().validate(radiologyReport, bindingResult);
 		}
 		if (bindingResult.hasErrors()) {
-			addObjectsToModelAndView(modelAndView, order, radiologyOrder, radiologyReport);
+			addObjectsToModelAndView(modelAndView, radiologyReport);
 			return true;
 		}
 		return false;
 	}
 	
 	/**
-	 * Convenience method to add objects (order, radiologyOrder, radiologyReport) to modelAndView
+	 * Convenience method to add objects (Order, RadiologyOrder, RadiologyReport) to given
+	 * ModelAndView
 	 *
-	 * @param modelAndView ModelAndView
-	 * @param order Order
-	 * @param radiologyOrder RadiologyOrder
-	 * @param radiologyReport RadiologyReport
+	 * @param modelAndView model and view to which objects should be added
+	 * @param radiologyReport radiology report from which objects should be added to the model and
+	 *            view
 	 */
-	private void addObjectsToModelAndView(ModelAndView modelAndView, Order order, RadiologyOrder radiologyOrder,
-	        RadiologyReport radiologyReport) {
-		modelAndView.addObject("order", order);
-		modelAndView.addObject("radiologyOrder", radiologyOrder);
+	private void addObjectsToModelAndView(ModelAndView modelAndView, RadiologyReport radiologyReport) {
+		modelAndView.addObject("order", (Order) radiologyReport.getRadiologyOrder());
+		modelAndView.addObject("radiologyOrder", radiologyReport.getRadiologyOrder());
 		modelAndView.addObject("radiologyReport", radiologyReport);
 	}
 }

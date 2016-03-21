@@ -43,8 +43,7 @@
 						<td>${report.radiologyOrder.study.modality.fullName}</td>
 						<td>${report.radiologyOrder.study.performedStatus}</td>
 						<td><c:if test="${report.id != '0'}">
-								<a
-									href="/openmrs/module/radiology/radiologyReport.form?orderId=${report.radiologyOrder.orderId}">${report.id}</a>
+								<a href="/openmrs/module/radiology/radiologyReport.form?radiologyReportId=">${report.id}</a>
 							</c:if></td>
 						<td>${report.radiologyOrder.orderer.name}</td>
 						<td>${report.radiologyOrder.study.scheduledStatus}</td>
@@ -53,7 +52,8 @@
 							onclick="$j('<p>'+this.innerHTML+'</p>').dialog({autoOpen:true,modal:true});"
 							title="<spring:message code="general.view"/>">${report.radiologyOrder.instructions}
 						</a></td>
-						<td><spring:message code="radiology.${report.radiologyOrder.study.mwlStatus}"
+						<td><spring:message
+								code="radiology.${report.radiologyOrder.study.mwlStatus}"
 								text="${report.radiologyOrder.study.mwlStatus}" /></td>
 					</tr>
 				</c:forEach>
