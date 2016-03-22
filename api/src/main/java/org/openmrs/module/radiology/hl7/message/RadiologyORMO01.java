@@ -102,7 +102,7 @@ public class RadiologyORMO01 {
 	 */
 	private ORM_O01 createRadiologyORMO01Message() throws HL7Exception {
 		
-		ORM_O01 result = new ORM_O01();
+		final ORM_O01 result = new ORM_O01();
 		
 		RadiologyMSH.populateMessageHeader(result.getMSH(), sendingApplication, sendingFacility, new Date(),
 		    orderMessageType, orderMessageTriggerEvent);

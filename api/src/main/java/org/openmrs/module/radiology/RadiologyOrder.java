@@ -32,8 +32,9 @@ public class RadiologyOrder extends TestOrder {
 	 * @should not fail given null
 	 */
 	public void setStudy(Study study) {
-		if (study != null)
+		if (study != null) {
 			study.setRadiologyOrder(this);
+		}
 		this.study = study;
 	}
 }

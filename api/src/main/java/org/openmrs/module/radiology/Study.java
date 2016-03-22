@@ -97,9 +97,9 @@ public class Study {
 	
 	@Override
 	public String toString() {
-		StringBuilder buff = new StringBuilder();
+		final StringBuilder buff = new StringBuilder();
 		
-		Field[] fields = this.getClass().getDeclaredFields();
+		final Field[] fields = this.getClass().getDeclaredFields();
 		for (Field field : fields) {
 			try {
 				buff.append(field.getName()).append(": ").append(field.get(this)).append(" ");

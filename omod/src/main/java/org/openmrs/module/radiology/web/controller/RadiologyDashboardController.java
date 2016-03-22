@@ -11,8 +11,6 @@ package org.openmrs.module.radiology.web.controller;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
@@ -24,8 +22,6 @@ import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 public class RadiologyDashboardController {
-	
-	Log log = LogFactory.getLog(getClass());
 	
 	@Autowired
 	RadiologyService radiologyService;

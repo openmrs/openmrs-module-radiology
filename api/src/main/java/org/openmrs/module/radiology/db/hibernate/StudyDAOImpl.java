@@ -15,7 +15,6 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.openmrs.Obs;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.StudyDAO;
@@ -62,7 +61,7 @@ public class StudyDAOImpl implements StudyDAO {
 	 */
 	@Override
 	public Study getStudyByOrderId(Integer orderId) {
-		String query = "from Study s where s.radiologyOrder.orderId = '" + orderId + "'";
+		final String query = "from Study s where s.radiologyOrder.orderId = '" + orderId + "'";
 		return (Study) sessionFactory.getCurrentSession().createQuery(query).uniqueResult();
 	}
 	
@@ -83,7 +82,7 @@ public class StudyDAOImpl implements StudyDAO {
 	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
 		List<Study> result = new ArrayList<Study>();
 		
-		if (radiologyOrders.size() > 0) {
+		if (!radiologyOrders.isEmpty()) {
 			Criteria studyCriteria = sessionFactory.getCurrentSession().createCriteria(Study.class);
 			addRestrictionOnRadiologyOrders(studyCriteria, radiologyOrders);
 			result = (List<Study>) studyCriteria.list();
@@ -100,8 +99,9 @@ public class StudyDAOImpl implements StudyDAO {
 	 * @param radiologyOrders radiology order list for which in restriction will be set
 	 */
 	private void addRestrictionOnRadiologyOrders(Criteria criteria, List<RadiologyOrder> radiologyOrders) {
-		if (radiologyOrders.size() > 0)
+		if (!radiologyOrders.isEmpty()) {
 			criteria.add(Restrictions.in("radiologyOrder", radiologyOrders));
+		}
 	}
 	
 }

@@ -11,7 +11,6 @@ package org.openmrs.module.radiology.db;
 
 import java.util.List;
 
-import org.openmrs.Obs;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
 

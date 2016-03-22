@@ -77,18 +77,20 @@ public class RadiologyOrderDAOImpl implements RadiologyOrderDAO {
 	 * @param patient patient for which equality restriction will be set
 	 */
 	private void addRestrictionOnPatient(Criteria criteria, Patient patient) {
-		if (patient != null)
+		if (patient != null) {
 			criteria.add(Restrictions.eq("patient", patient));
+		}
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 * @see 
+	 *      org.openmrs.module.radiology.RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
 	 */
 	@Override
 	public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients) {
 		List<RadiologyOrder> result = new ArrayList<RadiologyOrder>();
 		
-		Criteria radiologyOrderCriteria = createRadiologyOrderCriteria();
+		final Criteria radiologyOrderCriteria = createRadiologyOrderCriteria();
 		addRestrictionOnPatients(radiologyOrderCriteria, patients);
 		
 		result = (List<RadiologyOrder>) radiologyOrderCriteria.list();
@@ -102,7 +104,8 @@ public class RadiologyOrderDAOImpl implements RadiologyOrderDAO {
 	 * @param patients patient list for which in restriction will be set
 	 */
 	private void addRestrictionOnPatients(Criteria criteria, List<Patient> patients) {
-		if (patients.size() > 0)
+		if (!patients.isEmpty()) {
 			criteria.add(Restrictions.in("patient", patients));
+		}
 	}
 }

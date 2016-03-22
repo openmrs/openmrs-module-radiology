@@ -23,9 +23,17 @@ import org.openmrs.module.radiology.hl7.message.RadiologyORMO01;
 
 import ca.uhn.hl7v2.HL7Exception;
 
+/**
+ * DicomUtils is a utility class helping to process DicomObject's like DICOM MPPS messages and
+ * create and send HL7 order messages for RadiologyOrder's
+ */
 public class DicomUtils {
 	
 	private static final Logger log = Logger.getLogger(DicomUtils.class);
+	
+	private DicomUtils() {
+		// This class is a utility class which should not be instantiated
+	};
 	
 	private static RadiologyProperties radiologyProperties = Context.getRegisteredComponent("radiologyProperties",
 	    RadiologyProperties.class);
@@ -48,10 +56,10 @@ public class DicomUtils {
 	 */
 	public static void updateStudyPerformedStatusByMpps(DicomObject mppsObject) {
 		try {
-			String studyInstanceUid = getStudyInstanceUidFromMpps(mppsObject);
+			final String studyInstanceUid = getStudyInstanceUidFromMpps(mppsObject);
 			
-			String performedProcedureStepStatusString = getPerformedProcedureStepStatus(mppsObject);
-			PerformedProcedureStepStatus performedProcedureStepStatus = PerformedProcedureStepStatus
+			final String performedProcedureStepStatusString = getPerformedProcedureStepStatus(mppsObject);
+			final PerformedProcedureStepStatus performedProcedureStepStatus = PerformedProcedureStepStatus
 			        .getMatchForDisplayName(performedProcedureStepStatusString);
 			
 			radiologyService().updateStudyPerformedStatus(studyInstanceUid, performedProcedureStepStatus);
@@ -80,19 +88,22 @@ public class DicomUtils {
 	 */
 	public static String getStudyInstanceUidFromMpps(DicomObject mppsObject) {
 		
-		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties.getSpecificCharacterSet());
+		final SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties
+		        .getSpecificCharacterSet());
 		
-		DicomElement scheduledStepAttributesSequenceElement = mppsObject.get(Tag.ScheduledStepAttributesSequence);
-		if (scheduledStepAttributesSequenceElement == null)
+		final DicomElement scheduledStepAttributesSequenceElement = mppsObject.get(Tag.ScheduledStepAttributesSequence);
+		if (scheduledStepAttributesSequenceElement == null) {
 			return null;
+		}
 		
-		DicomObject scheduledStepAttributesSequence = scheduledStepAttributesSequenceElement.getDicomObject();
+		final DicomObject scheduledStepAttributesSequence = scheduledStepAttributesSequenceElement.getDicomObject();
 		
-		DicomElement studyInstanceUidElement = scheduledStepAttributesSequence.get(Tag.StudyInstanceUID);
-		if (studyInstanceUidElement == null)
+		final DicomElement studyInstanceUidElement = scheduledStepAttributesSequence.get(Tag.StudyInstanceUID);
+		if (studyInstanceUidElement == null) {
 			return null;
+		}
 		
-		String studyInstanceUid = studyInstanceUidElement.getValueAsString(specificCharacterSet, 0);
+		final String studyInstanceUid = studyInstanceUidElement.getValueAsString(specificCharacterSet, 0);
 		
 		return studyInstanceUid;
 	}
@@ -108,13 +119,16 @@ public class DicomUtils {
 	 */
 	public static String getPerformedProcedureStepStatus(DicomObject dicomObject) {
 		
-		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties.getSpecificCharacterSet());
+		final SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties
+		        .getSpecificCharacterSet());
 		
-		DicomElement performedProcedureStepStatusElement = dicomObject.get(Tag.PerformedProcedureStepStatus);
-		if (performedProcedureStepStatusElement == null)
+		final DicomElement performedProcedureStepStatusElement = dicomObject.get(Tag.PerformedProcedureStepStatus);
+		if (performedProcedureStepStatusElement == null) {
 			return null;
+		}
 		
-		String performedProcedureStepStatus = performedProcedureStepStatusElement.getValueAsString(specificCharacterSet, 0);
+		final String performedProcedureStepStatus = performedProcedureStepStatusElement.getValueAsString(
+		    specificCharacterSet, 0);
 		
 		return performedProcedureStepStatus;
 	}
@@ -140,13 +154,13 @@ public class DicomUtils {
 	public static String createHL7Message(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
 		String encodedHL7OrmMessage = null;
 		
-		MwlStatus mwlstatus = radiologyOrder.getStudy().getMwlStatus();
-		CommonOrderOrderControl commonOrderOrderControl = getCommonOrderControlFrom(mwlstatus, orderRequest);
+		final MwlStatus mwlstatus = radiologyOrder.getStudy().getMwlStatus();
+		final CommonOrderOrderControl commonOrderOrderControl = getCommonOrderControlFrom(mwlstatus, orderRequest);
 		
-		CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(radiologyOrder.getUrgency());
+		final CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(radiologyOrder.getUrgency());
 		
 		try {
-			RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, commonOrderOrderControl,
+			final RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, commonOrderOrderControl,
 			        orderPriority);
 			encodedHL7OrmMessage = radiologyOrderMessage.createEncodedRadiologyORMO01Message();
 			log.info("Created HL7 ORM^O01 message \n" + encodedHL7OrmMessage);
@@ -230,10 +244,9 @@ public class DicomUtils {
 	
 	//Send HL7 ORU message to dcm4chee.
 	public static int sendHL7Worklist(String hl7blob) {
-		String serverIP = radiologyProperties.getServersAddress();
-		String input[] = { "-c", serverIP.substring(7) + ":" + radiologyProperties.getServersHL7Port(), hl7blob };
-		//String input[]={"--help"};
-		int result = HL7Snd.main(input);
+		final String serverIP = radiologyProperties.getServersAddress();
+		final String input[] = { "-c", serverIP.substring(7) + ":" + radiologyProperties.getServersHL7Port(), hl7blob };
+		final int result = HL7Snd.main(input);
 		return result;
 	}
 	

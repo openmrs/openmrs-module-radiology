@@ -19,7 +19,15 @@ import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v231.datatype.XPN;
 import ca.uhn.hl7v2.model.v231.segment.PID;
 
+/**
+ * RadiologyPID is a utility class populating an HL7 Patient Identifier Segment with an OpenMRS
+ * Patient
+ */
 public class RadiologyPID {
+	
+	private RadiologyPID() {
+		// This class is a utility class which should not be instantiated
+	};
 	
 	/**
 	 * Fill HL7 (version 2.3.1) Patient Identification Segment (PID) with data from given OpenMRS
@@ -53,8 +61,8 @@ public class RadiologyPID {
 		    DateTimeUtils.getPlainDateTimeFrom(patient.getBirthdate()));
 		patientIdentifierSegment.getSex().setValue(patient.getGender());
 		
-		PersonName personName = patient.getPersonName();
-		XPN xpnPatientName = HL7Utils.getExtendedPersonNameFrom(personName);
+		final PersonName personName = patient.getPersonName();
+		final XPN xpnPatientName = HL7Utils.getExtendedPersonNameFrom(personName);
 		patientIdentifierSegment.getPatientName(0).getFamilyLastName().getFamilyName().setValue(
 		    xpnPatientName.getFamilyLastName().getFamilyName().getValue());
 		patientIdentifierSegment.getPatientName(0).getGivenName().setValue(xpnPatientName.getGivenName().getValue());

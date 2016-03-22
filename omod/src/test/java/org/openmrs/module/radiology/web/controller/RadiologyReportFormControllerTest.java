@@ -7,9 +7,6 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -83,7 +80,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		        .getRadiologyReportFormWithExistingRadiologyReport(mockRadiologyReport.getId());
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyReportForm"));
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyReportForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");
@@ -112,7 +109,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		ModelAndView modelAndView = radiologyReportFormController.saveRadiologyReport(mockRadiologyReport);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyReportForm"));
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyReportForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");
@@ -167,7 +164,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		ModelAndView modelAndView = radiologyReportFormController.completeRadiologyReport(mockRadiologyReport, reportErrors);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyReportForm"));
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyReportForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");
@@ -204,7 +201,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		ModelAndView modelAndView = radiologyReportFormController.completeRadiologyReport(mockRadiologyReport, reportErrors);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyReportForm"));
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyReportForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");

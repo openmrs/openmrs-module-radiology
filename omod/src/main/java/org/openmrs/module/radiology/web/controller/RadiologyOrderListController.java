@@ -15,13 +15,16 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping("/module/radiology/radiologyOrder.list")
+@RequestMapping(RadiologyOrderListController.RADIOLOGY_ORDER_LIST_REQUEST_MAPPING)
 public class RadiologyOrderListController {
+	
+	protected static final String RADIOLOGY_ORDER_LIST_REQUEST_MAPPING = "/module/radiology/radiologyOrder.list";
+	
+	private static final String RADIOLOGY_ORDER_LIST_VIEW = "/module/radiology/radiologyOrderList";
 	
 	@RequestMapping(method = RequestMethod.GET)
 	public ModelAndView handleRequest() {
-		ModelAndView mav = new ModelAndView();
-		mav.setViewName("module/radiology/radiologyOrderList");
+		final ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_LIST_VIEW);
 		return mav;
 	}
 }

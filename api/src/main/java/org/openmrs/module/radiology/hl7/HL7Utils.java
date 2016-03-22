@@ -14,7 +14,15 @@ import org.openmrs.PersonName;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v231.datatype.XPN;
 
+/**
+ * HL7Utils is a utility class transforming OpenMRS PersonName into an HL7 conform Extended Person
+ * Name
+ */
 public class HL7Utils {
+	
+	private HL7Utils() {
+		// This class is a utility class which should not be instantiated
+	};
 	
 	/**
 	 * Map an OpenMRS PersonName to an HL7 conform Extended Person Name (XPN) as defined in HL7
@@ -32,7 +40,7 @@ public class HL7Utils {
 	 * @should return empty extended person name given null
 	 */
 	public static XPN getExtendedPersonNameFrom(PersonName personName) throws DataTypeException {
-		XPN result = new XPN(null);
+		final XPN result = new XPN(null);
 		
 		if (personName != null) {
 			result.getFamilyLastName().getFamilyName().setValue(personName.getFamilyName());
