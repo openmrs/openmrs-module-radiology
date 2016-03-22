@@ -151,9 +151,9 @@
 		</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.radiologyEncounterRole</property>
+		<property>@MODULE_ID@.radiologyOrderingProviderEncounterRole</property>
 		<defaultValue>13fc9b4a-49ed-429c-9dde-ca005b387a3d</defaultValue>
-		<description>Radiology Encounter Role UUID</description>
+		<description>Radiology Ordering Provider Encounter Role UUID</description>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.radiologyTestOrderType</property>
@@ -164,6 +164,11 @@
 		<property>@MODULE_ID@.radiologyOrderEncounterType</property>
 		<defaultValue>19db8c0d-3520-48f2-babd-77f2d450e5c7</defaultValue>
 		<description>Radiology Order Encounter Type UUID</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.radiologyVisitType</property>
+		<defaultValue>fe898a34-1ade-11e1-9c71-00248140a5eb</defaultValue>
+		<description>Radiology Visit Type UUID</description>
 	</globalProperty>
 
 	<!--Required Global Properties -->

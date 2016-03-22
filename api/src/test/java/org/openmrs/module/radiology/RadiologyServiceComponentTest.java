@@ -44,6 +44,7 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.emrapi.encounter.EmrEncounterService;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -105,6 +106,8 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	private OrderService orderService = null;
 	
+	private EmrEncounterService emrEncounterService = null;
+	
 	private RadiologyService radiologyService = null;
 	
 	@Rule
@@ -155,8 +158,13 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 			orderService = Context.getOrderService();
 		}
 		
+		if (emrEncounterService == null) {
+			emrEncounterService = Context.getService(EmrEncounterService.class);
+		}
+		
 		if (radiologyService == null) {
 			radiologyService = Context.getService(RadiologyService.class);
+			radiologyService.setEmrEncounterService(emrEncounterService);
 		}
 		
 		executeDataSet(STUDIES_TEST_DATASET);
@@ -177,6 +185,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		assertNotNull(radiologyOrder.getOrderId());
 		assertNotNull(radiologyOrder.getStudy());
 		assertNotNull(radiologyOrder.getStudy().getStudyId());
+		assertNotNull(radiologyOrder.getEncounter());
 	}
 	
 	/**

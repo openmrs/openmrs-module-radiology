@@ -197,14 +197,14 @@
 		<comment>Add radiology encounter type and role necessary to add
 			orders, encounters in core 10.2</comment>
 		<insert tableName="encounter_type">
-			<column name="name" value="Radiology Order" />
+			<column name="name" value="Radiology Order Encounter Type" />
 			<column name="description" value="Ordering radiology exams" />
 			<column name="creator" valueNumeric="1" />
 			<column name="date_created" valueDate="2015-09-18" />
 			<column name="uuid" value="19db8c0d-3520-48f2-babd-77f2d450e5c7" />
 		</insert>
 		<insert tableName="encounter_role">
-			<column name="name" value="Ordering Provider" />
+			<column name="name" value="Radiology Ordering Provider Encounter Role" />
 			<column name="description" value="Provider ordering tests, exams, drugs, ..." />
 			<column name="creator" valueNumeric="1" />
 			<column name="date_created" valueDate="2015-09-18" />
@@ -260,5 +260,22 @@
 		<addForeignKeyConstraint constraintName="radiology_report_creator_fk"
 			baseTableName="radiology_report" baseColumnNames="creator"
 			referencedTableName="users" referencedColumnNames="user_id" />
+	</changeSet>
+	<changeSet id="radiology-22" author="bgeVam">
+		<comment>Add radiology encounter type and visit type</comment>
+		<insert tableName="encounter_type">
+			<column name="name" value="Radiology Order Discontinuation" />
+			<column name="description" value="Discontinue radiology exams" />
+			<column name="creator" valueNumeric="1" />
+			<column name="date_created" valueDate="2016-03-07" />
+			<column name="uuid" value="206788d1-e43d-11e5-8986-3402862935eb" />
+		</insert>
+		<insert tableName="visit_type">
+			<column name="name" value="Radiology Visit Type" />
+			<column name="description" value="Visit type for radiology orders" />
+			<column name="creator" value="1" />
+			<column name="date_created" valueDate="2016-03-07" />
+			<column name="uuid" value="fe898a34-1ade-11e1-9c71-00248140a5eb" />
+		</insert>
 	</changeSet>
 </databaseChangeLog>
