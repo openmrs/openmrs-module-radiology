@@ -5,7 +5,7 @@
 	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-2.0.xsd
     http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 
-	<!-- See http://www.liquibase.org/manual/home#available_database_refactorings
+	<!-- See http://www.liquibase.org/manual/home#available_database_refactorings 
 		for a list of supported elements and attributes -->
 
 	<changeSet id="radiology-1" author="cortex">
@@ -231,27 +231,34 @@
 		</sql>
 		<comment>radiology_report</comment>
 		<createTable tableName="radiology_report">
-			<column name="radiology_report_id" type="int" autoIncrement="true">
+			<column name="report_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
-			<column name="order_id" type="int" />
-			<column name="report_status" type="varchar(25)" />
-			<column name="principalResultsInterpreter_id" type="int" />
+			<column name="order_id" type="int">
+				<constraints nullable="false" />
+			</column>
+			<column name="report_status" type="varchar(12)">
+				<constraints nullable="false" />
+			</column>
+			<column name="principal_results_interpreter" type="int" />
 			<column name="report_date" type="date" />
 			<column name="report_body" type="longtext" />
-			<column name="creator" type="int">
-				<constraints unique="false"/>
+			<column name="creator" type="int" defaultValueNumeric="0">
+				<constraints nullable="false" />
 			</column>
-			<column name="creationDate" type="date"></column>
+			<column name="date_created" type="DATETIME">
+				<constraints nullable="false" />
+			</column>
 		</createTable>
 		<addForeignKeyConstraint constraintName="radiology_report_order_id_fk"
 			baseTableName="radiology_report" baseColumnNames="order_id"
 			referencedTableName="radiology_order" referencedColumnNames="order_id" />
-		<addForeignKeyConstraint constraintName="radiology_report_provider_id_fk"
-			baseTableName="radiology_report" baseColumnNames="principalResultsInterpreter_id"
+		<addForeignKeyConstraint
+			constraintName="radiology_report_principal_results_interpreter_fk"
+			baseTableName="radiology_report" baseColumnNames="principal_results_interpreter"
 			referencedTableName="provider" referencedColumnNames="provider_id" />
-		<addForeignKeyConstraint constraintName="radiology_report_creator_id_fk"
-			 baseTableName="radiology_report" baseColumnNames="creator"
-			 referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="radiology_report_creator_fk"
+			baseTableName="radiology_report" baseColumnNames="creator"
+			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
 </databaseChangeLog>

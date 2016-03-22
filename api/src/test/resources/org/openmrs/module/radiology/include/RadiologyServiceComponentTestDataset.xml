@@ -86,20 +86,20 @@
   <test_order order_id="2006" />
   <radiology_order order_id="2006" />
   <radiology_study study_id="4" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.4" order_id="2006" scheduled_status="SCHEDULED" performed_status="COMPLETED" modality="CT" mwl_status="DEFAULT" />
-  <radiology_report radiology_report_id="1" order_id="2006" report_status="CLAIMED" principalResultsInterpreter_id="1" />
+  <radiology_report report_id="1" order_id="2006" report_status="CLAIMED" principal_results_interpreter="1" creator="1" date_created="2015-02-15 13:17:15.0" />
 
   <!-- radiology order with associated study and a completed report -->
   <orders order_id="2007" order_number="2007" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" />
   <test_order order_id="2007" />
   <radiology_order order_id="2007" />
   <radiology_study study_id="5" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.5" order_id="2007" scheduled_status="SCHEDULED" performed_status="COMPLETED" modality="CT" mwl_status="DEFAULT" />
-  <radiology_report radiology_report_id="2" order_id="2007" report_status="COMPLETED" principalResultsInterpreter_id="1" />
+  <radiology_report report_id="2" order_id="2007" report_status="COMPLETED" principal_results_interpreter="1" creator="1" date_created="2015-02-14 09:25:16.0" />
 
   <!-- radiology order with associated study and with a discontinued report -->
   <orders order_id="2008" order_number="2008" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" />
   <test_order order_id="2008" />
   <radiology_order order_id="2008" />
   <radiology_study study_id="6" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.6" order_id="2008" scheduled_status="SCHEDULED" performed_status="COMPLETED" modality="CT" mwl_status="DEFAULT" />
-  <radiology_report radiology_report_id="3" order_id="2008" report_status="DISCONTINUED" principalResultsInterpreter_id="1" />
+  <radiology_report report_id="3" order_id="2008" report_status="DISCONTINUED" principal_results_interpreter="1" creator="1" date_created="2015-02-07 18:20:12.0" />
 
 </dataset>
