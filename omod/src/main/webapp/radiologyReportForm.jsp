@@ -8,6 +8,25 @@
 <spring:hasBindErrors name="radiologyReport">
 	<spring:message code="fix.error" />
 </spring:hasBindErrors>
+<openmrs:htmlInclude file="/moduleResources/radiology/js/tinymce/tinymce.min.js" />
+<script type="text/javascript">
+	onload = initEverything();
+	function initEverything()
+	{
+		tinymce.init(
+				{
+					selector:'#textarea',
+					setup:function(ed){
+						if(document.getElementById("textarea").getAttribute("disabled")!=null)
+						{
+							ed.settings.readonly=true;
+						}
+					},
+					menubar: "edit,format"
+				}
+		);
+	}
+</script>
 <br>
 <openmrs:portlet url="personHeader" id="personDashboardHeader"
 	patientId="${order.patient.patientId}" />
@@ -49,10 +68,10 @@
 				<td><spring:message code="radiology.radiologyReportDiagnosis" /></td>
 				<td><c:choose>
 						<c:when test="${radiologyReport.reportStatus == 'COMPLETED'}">
-							<form:textarea path="reportBody" disabled="true"></form:textarea>
+							<form:textarea id="textarea" path="reportBody" disabled="true"></form:textarea>
 						</c:when>
 						<c:otherwise>
-							<form:textarea path="reportBody"></form:textarea>
+							<form:textarea id="textarea" path="reportBody"></form:textarea>
 						</c:otherwise>
 					</c:choose></td>
 			</tr>
