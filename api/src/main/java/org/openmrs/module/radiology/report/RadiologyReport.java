@@ -37,7 +37,6 @@ public class RadiologyReport extends BaseOpenmrsData {
 	}
 	
 	public RadiologyReport(RadiologyOrder radiologyOrder) {
-		super.setDateCreated(new Date());
 		this.radiologyOrder = radiologyOrder;
 		this.reportStatus = RadiologyReportStatus.CLAIMED;
 	}
