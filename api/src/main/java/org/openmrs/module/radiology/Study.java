@@ -59,6 +59,14 @@ public class Study {
 		return mwlStatus;
 	}
 	
+	/**
+	 * Returns true when this Study's performedStatus is completed and false otherwise.
+	 * 
+	 * @return true on performedStatus completed and false otherwise
+	 * @should return false if performedStatus is null
+	 * @should return false if performedStatus is not completed
+	 * @should return true if performedStatus is completed
+	 */
 	public boolean isCompleted() {
 		return performedStatus == PerformedProcedureStepStatus.COMPLETED;
 	}

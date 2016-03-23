@@ -57,7 +57,7 @@ public class RadiologyOrderFormController {
 	
 	protected static final String RADIOLOGY_ORDER_FORM_REQUEST_MAPPING = "/module/radiology/radiologyOrder.form";
 	
-	private static final String RADIOLOGY_ORDER_FORM_VIEW = "/module/radiology/radiologyOrderForm";
+	static final String RADIOLOGY_ORDER_FORM_VIEW = "/module/radiology/radiologyOrderForm";
 	
 	@Autowired
 	private RadiologyService radiologyService;
@@ -261,28 +261,37 @@ public class RadiologyOrderFormController {
 	 *
 	 * @param modelAndView ModelAndView of the RadiologyOrderForm
 	 * @param order Order which should be verified if a RadiologyReport needs to be created
-	 * @return true if a RadiologyReport needs to be created, false if no RadiologyReport needs to
-	 *         be created
-	 * @should return false if the RadiologyOrder has a claimed RadiologyReport
-	 * @should return false if the RadiologyOrder has a completed RadiologyReport
-	 * @should return false if the order is discontinued
-	 * @should return true if the RadiologyOrder has no claimed RadiologyReport
+	 * @return true if a RadiologyReport needs to be created, false otherwise
+	 * @should return false if order is not a radiology order
+	 * @should return false if radiology order is not completed
+	 * @should return false if radiology order is completed but has a claimed report
+	 * @should return false if radiology order is completed but has a completed report
+	 * @should return true if radiology order is completed and has no claimed report
 	 */
 	private boolean radiologyReportNeedsToBeCreated(ModelAndView modelAndView, Order order) {
-		if (order.isActive()) {
-			final RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
-			final RadiologyReport radiologyReport = radiologyService
-			        .getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
-			if (radiologyReport == null) {
-				modelAndView.addObject("radiologyReportNeedsToBeCreated", true);
-			} else {
-				modelAndView.addObject("radiologyReportNeedsToBeCreated", false);
-			}
-			
-			modelAndView.addObject("radiologyReport", radiologyReport);
-			return true;
+		
+		final RadiologyOrder radiologyOrder;
+		if (order instanceof RadiologyOrder) {
+			radiologyOrder = (RadiologyOrder) order;
+		} else {
+			modelAndView.addObject("radiologyReportNeedsToBeCreated", false);
+			return false;
 		}
-		return false;
+		
+		if (radiologyOrder.isNotCompleted()) {
+			modelAndView.addObject("radiologyReportNeedsToBeCreated", false);
+			return false;
+		}
+		
+		final RadiologyReport radiologyReport = radiologyService.getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
+		if (radiologyReport == null) {
+			modelAndView.addObject("radiologyReportNeedsToBeCreated", true);
+			return true;
+		} else {
+			modelAndView.addObject("radiologyReportNeedsToBeCreated", false);
+			modelAndView.addObject("radiologyReport", radiologyReport);
+			return false;
+		}
 	}
 	
 	@ModelAttribute("modalities")

@@ -37,4 +37,34 @@ public class RadiologyOrder extends TestOrder {
 		}
 		this.study = study;
 	}
+	
+	/**
+	 * Returns true when this RadiologyOrder has a completed Study and false otherwise.
+	 * 
+	 * @return true if order has completed study and false otherwise
+	 * @should return false if associated study is null
+	 * @should return false if associated study is not completed
+	 * @should return true if associated study is completed
+	 */
+	public boolean isCompleted() {
+		
+		if (this.study == null) {
+			return false;
+		} else {
+			return this.study.isCompleted();
+		}
+	}
+	
+	/**
+	 * Returns true when this RadiologyOrder does not have a completed Study and false otherwise.
+	 * 
+	 * @return true if order has no completed study and false otherwise
+	 * @should return true if associated study is null
+	 * @should return true if associated study is not completed
+	 * @should return false if associated study is completed
+	 */
+	public boolean isNotCompleted() {
+		
+		return !this.isCompleted();
+	}
 }

@@ -237,7 +237,7 @@
 		</c:if>
 		<c:if test="${not empty radiologyOrder}">
 			<%@ include file="portlets/radiologyOrderDetailsPortlet.jsp"%>
-			<c:if test="${radiologyOrder.study.completed}">
+			<c:if test="${radiologyOrder.completed}">
 				<h2>
 					<spring:message code="radiology.radiologyReportTitle" />
 				</h2>

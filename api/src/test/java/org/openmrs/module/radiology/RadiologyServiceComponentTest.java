@@ -687,10 +687,12 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#createAndClaimRadiologyReport(RadiologyOrder)
-	 * @verifies create a new RadiologyReport
+	 * @verifies create a radiology order with report status claimed given a completed radiology
+	 *           order
 	 */
 	@Test
-	public void createAndClaimRadiologyReport_shouldCreateANewRadiologyReport() throws Exception {
+	public void createAndClaimRadiologyReport_shouldCreateARadiologyOrderWithReportStatusClaimedGivenACompletedRadiologyOrder()
+	        throws Exception {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
 		radiologyOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
@@ -701,7 +703,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#createAndClaimRadiologyReport(RadiologyOrder)
-	 * @verifies throw an IllegalArgumentException if given RadiologyOrder is null
+	 * @verifies throw an illegal argument exception if given radiology order is null
 	 */
 	@Test
 	public void createAndClaimRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNull()
@@ -714,33 +716,17 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	/**
 	 * @see RadiologyService#createAndClaimRadiologyReport(RadiologyOrder)
-	 * @verifies throw an IllegalArgumentException if Study of given radiologyReport is null
+	 * @verifies throw an illegal argument exception if given radiology order is not completed
 	 */
 	@Test
-	public void createAndClaimRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfStudyOfGivenRadiologyReportIsNull()
-	        throws Exception {
-		
-		RadiologyOrder existingRadiologyOrder = radiologyService
-		        .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT);
-		existingRadiologyOrder.setStudy(null);
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("study cannot be null");
-		radiologyService.createAndClaimRadiologyReport(existingRadiologyOrder);
-	}
-	
-	/**
-	 * @see RadiologyService#createAndClaimRadiologyReport(RadiologyOrder)
-	 * @verifies throw an IllegalArgumentException if study of given RadiologyOrder is not completed
-	 */
-	@Test
-	public void createAndClaimRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfStudyOfGivenRadiologyOrderIsNotCompleted()
+	public void createAndClaimRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNotCompleted()
 	        throws Exception {
 		
 		RadiologyOrder existingRadiologyOrder = radiologyService
 		        .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT);
 		existingRadiologyOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage("cannot create RadiologyReport for uncompleted radiologyOrder");
+		expectedException.expectMessage("radiologyOrder needs to be completed");
 		radiologyService.createAndClaimRadiologyReport(existingRadiologyOrder);
 	}
 	

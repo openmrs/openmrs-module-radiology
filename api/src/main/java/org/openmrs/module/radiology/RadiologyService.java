@@ -187,10 +187,9 @@ public interface RadiologyService extends OpenmrsService {
 	 * @throws IllegalArgumentException if Study of given RadiologyOrder is not completed
 	 * @throws UnsupportedOperationException if given order has a completed RadiologyReport
 	 * @throws UnsupportedOperationException if given order has a claimed RadiologyReport
-	 * @should create a new RadiologyReport and set the reportStatus to claimed
-	 * @should throw an IllegalArgumentException if given RadiologyOrder is null
-	 * @should throw an IllegalArgumentException if Study of given radiologyReport is null
-	 * @should throw an IllegalArgumentException if study of given RadiologyOrder is not completed
+	 * @should create a radiology order with report status claimed given a completed radiology order
+	 * @should throw an illegal argument exception if given radiology order is null
+	 * @should throw an illegal argument exception if given radiology order is not completed
 	 * @should throw an UnsupportedOperationException if given order has a completed RadiologyReport
 	 * @should throw an UnsupportedOperationException if given order has a claimed RadiologyReport
 	 */
