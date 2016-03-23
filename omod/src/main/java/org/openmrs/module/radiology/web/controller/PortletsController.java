@@ -35,7 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class PortletsController {
 	
-	Log log = LogFactory.getLog(getClass());
+	private static final Log log = LogFactory.getLog(PortletsController.class);
 	
 	@Autowired
 	private RadiologyService radiologyService;

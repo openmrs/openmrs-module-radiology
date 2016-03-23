@@ -30,7 +30,7 @@ public class AdminList extends AdministrationSectionExt {
 	@Override
 	public Map<String, String> getLinks() {
 		
-		Map<String, String> map = new HashMap<String, String>();
+		final Map<String, String> map = new HashMap<String, String>();
 		
 		map.put("module/radiology/radiologyOrder.list", "radiology.manageOrders");
 		

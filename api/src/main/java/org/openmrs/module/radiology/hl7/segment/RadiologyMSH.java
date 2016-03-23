@@ -16,7 +16,14 @@ import org.openmrs.module.radiology.utils.DateTimeUtils;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v231.segment.MSH;
 
+/**
+ * RadiologyMSH is a utility class populating an HL7 Message Header
+ */
 public class RadiologyMSH {
+	
+	private RadiologyMSH() {
+		// This class is a utility class which should not be instantiated
+	};
 	
 	/**
 	 * Fill HL7 (version 2.3.1) Message Header (MSH) with Sending Facility, Date/Time Of Message,

@@ -50,9 +50,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
+@RequestMapping(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING)
 public class RadiologyOrderFormController {
 	
 	private static final Log log = LogFactory.getLog(RadiologyOrderFormController.class);
+	
+	protected static final String RADIOLOGY_ORDER_FORM_REQUEST_MAPPING = "/module/radiology/radiologyOrder.form";
+	
+	private static final String RADIOLOGY_ORDER_FORM_VIEW = "/module/radiology/radiologyOrderForm";
 	
 	@Autowired
 	private RadiologyService radiologyService;
@@ -66,12 +71,12 @@ public class RadiologyOrderFormController {
 	 * @return model and view containing new radiology order
 	 * @should populate model and view with new radiology order
 	 */
-	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET)
+	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrder() {
-		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
+		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
-			RadiologyOrder radiologyOrder = new RadiologyOrder();
+			final RadiologyOrder radiologyOrder = new RadiologyOrder();
 			radiologyOrder.setStudy(new Study());
 			modelAndView.addObject("order", new Order());
 			modelAndView.addObject("isOrderActive", true);
@@ -93,7 +98,7 @@ public class RadiologyOrderFormController {
 	 * @should populate model and view with new radiology order without prefilled patient if given
 	 *         patient is null
 	 */
-	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET, params = "patientId")
+	@RequestMapping(method = RequestMethod.GET, params = "patientId")
 	protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(
 	        @RequestParam(value = "patientId", required = true) Patient patient) {
 		ModelAndView modelAndView = getRadiologyOrderFormWithNewRadiologyOrder();
@@ -114,13 +119,13 @@ public class RadiologyOrderFormController {
 	 * @return model and view containing radiology order
 	 * @should populate model and view with existing radiology order matching given order id
 	 */
-	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.GET, params = "orderId")
+	@RequestMapping(method = RequestMethod.GET, params = "orderId")
 	protected ModelAndView getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(
 	        @RequestParam(value = "orderId", required = true) Order order) {
-		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
+		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
-			RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
+			final RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
 			modelAndView.addObject("order", order);
 			modelAndView.addObject("isOrderActive", order.isActive());
 			modelAndView.addObject("radiologyOrder", radiologyOrder);
@@ -150,12 +155,12 @@ public class RadiologyOrderFormController {
 	 *         status is in progress and request was issued by radiology scheduler
 	 * @should not redirect if radiology order is not valid according to order validator
 	 */
-	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.POST, params = "saveRadiologyOrder")
+	@RequestMapping(method = RequestMethod.POST, params = "saveRadiologyOrder")
 	protected ModelAndView postSaveRadiologyOrder(HttpServletRequest request,
 	        @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("order") Order order,
 	        @ModelAttribute("radiologyOrder") RadiologyOrder radiologyOrder, BindingResult radiologyOrderErrors)
 	        throws Exception {
-		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
+		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
 		
 		User authenticatedUser = Context.getAuthenticatedUser();
 		
@@ -207,12 +212,12 @@ public class RadiologyOrderFormController {
 	 * @should not redirect if discontinuation failed through date in the future
 	 * @should not redirect if discontinuation failed in pacs
 	 */
-	@RequestMapping(value = "/module/radiology/radiologyOrder.form", method = RequestMethod.POST, params = "discontinueOrder")
+	@RequestMapping(method = RequestMethod.POST, params = "discontinueOrder")
 	protected ModelAndView postDiscontinueRadiologyOrder(HttpServletRequest request, HttpServletResponse response,
 	        @RequestParam("orderId") RadiologyOrder radiologyOrderToDiscontinue,
 	        @ModelAttribute("discontinuationOrder") Order discontinuationOrder, BindingResult radiologyOrderErrors)
 	        throws Exception {
-		ModelAndView modelAndView = new ModelAndView("module/radiology/radiologyOrderForm");
+		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
 		
 		try {
 			new RadiologyDiscontinuedOrderValidator().validate(discontinuationOrder, radiologyOrderErrors);
@@ -232,7 +237,7 @@ public class RadiologyOrderFormController {
 			radiologyService.sendModalityWorklist(radiologyOrderToDiscontinue, OrderRequest.Discontinue_Order);
 			if (radiologyOrderToDiscontinue.getStudy().getMwlStatus() == MwlStatus.DISCONTINUE_OK) {
 				request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
-				modelAndView.setViewName("redirect:/module/radiology/radiologyOrder.form?orderId="
+				modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
 				        + discontinuationOrder.getOrderId());
 			} else {
 				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.failWorklist");
@@ -251,8 +256,8 @@ public class RadiologyOrderFormController {
 	}
 	
 	/**
-	 * Convenient method to check if a radiologyReport needs to be created. Adds true to the modelAndView, if a
-	 * RadiologyReport needs to be created, otherwise false.
+	 * Convenient method to check if a radiologyReport needs to be created. Adds true to the
+	 * modelAndView, if a RadiologyReport needs to be created, otherwise false.
 	 *
 	 * @param modelAndView ModelAndView of the RadiologyOrderForm
 	 * @param order Order which should be verified if a RadiologyReport needs to be created
@@ -265,8 +270,9 @@ public class RadiologyOrderFormController {
 	 */
 	private boolean radiologyReportNeedsToBeCreated(ModelAndView modelAndView, Order order) {
 		if (order.isActive()) {
-			RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
-			RadiologyReport radiologyReport = radiologyService.getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
+			final RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
+			final RadiologyReport radiologyReport = radiologyService
+			        .getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
 			if (radiologyReport == null) {
 				modelAndView.addObject("radiologyReportNeedsToBeCreated", true);
 			} else {
@@ -282,7 +288,7 @@ public class RadiologyOrderFormController {
 	@ModelAttribute("modalities")
 	private Map<String, String> getModalityList() {
 		
-		Map<String, String> modalities = new HashMap<String, String>();
+		final Map<String, String> modalities = new HashMap<String, String>();
 		
 		for (Modality modality : Modality.values()) {
 			modalities.put(modality.name(), modality.getFullName());
@@ -294,7 +300,7 @@ public class RadiologyOrderFormController {
 	@ModelAttribute("urgencies")
 	private List<String> getUrgenciesList() {
 		
-		List<String> urgencies = new LinkedList<String>();
+		final List<String> urgencies = new LinkedList<String>();
 		
 		for (Order.Urgency urgency : Order.Urgency.values()) {
 			urgencies.add(urgency.name());
@@ -306,7 +312,7 @@ public class RadiologyOrderFormController {
 	@ModelAttribute("scheduledProcedureStepStatuses")
 	private Map<String, String> getScheduledProcedureStepStatusList() {
 		
-		Map<String, String> scheduledProcedureStepStatuses = new LinkedHashMap<String, String>();
+		final Map<String, String> scheduledProcedureStepStatuses = new LinkedHashMap<String, String>();
 		scheduledProcedureStepStatuses.put("", "Select");
 		
 		for (ScheduledProcedureStepStatus scheduledProcedureStepStatus : ScheduledProcedureStepStatus.values()) {
@@ -319,7 +325,7 @@ public class RadiologyOrderFormController {
 	@ModelAttribute("performedStatuses")
 	private Map<String, String> getPerformedStatusList() {
 		
-		Map<String, String> performedStatuses = new HashMap<String, String>();
+		final Map<String, String> performedStatuses = new HashMap<String, String>();
 		performedStatuses.put("", "Select");
 		
 		for (PerformedProcedureStepStatus performedStatus : PerformedProcedureStepStatus.values()) {

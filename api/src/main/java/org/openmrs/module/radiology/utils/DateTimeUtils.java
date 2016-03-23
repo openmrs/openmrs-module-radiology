@@ -12,7 +12,15 @@ package org.openmrs.module.radiology.utils;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+/**
+ * DateTimeUtils is a utility class converting Date into String using SimpleDateFormat such as
+ * 'yyyyMMdd' and 'yyyyMddHHmmss'
+ */
 public class DateTimeUtils {
+	
+	private DateTimeUtils() {
+		// This class is a utility class which should not be instantiated
+	};
 	
 	/**
 	 * Get the date portion of a date as string in format yyyymmdd
@@ -26,7 +34,7 @@ public class DateTimeUtils {
 		if (date == null) {
 			return "";
 		} else {
-			SimpleDateFormat plainDateFormat = new SimpleDateFormat("yyyyMMdd");
+			final SimpleDateFormat plainDateFormat = new SimpleDateFormat("yyyyMMdd");
 			return plainDateFormat.format(date);
 		}
 	}
@@ -53,7 +61,7 @@ public class DateTimeUtils {
 		if (date == null) {
 			return "";
 		} else {
-			SimpleDateFormat plainTimeFormat = new SimpleDateFormat("HHmmss");
+			final SimpleDateFormat plainTimeFormat = new SimpleDateFormat("HHmmss");
 			return plainTimeFormat.format(date);
 		}
 	}
@@ -80,7 +88,7 @@ public class DateTimeUtils {
 		if (date == null) {
 			return "";
 		} else {
-			SimpleDateFormat plainDateTimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
+			final SimpleDateFormat plainDateTimeFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 			return plainDateTimeFormat.format(date);
 		}
 	}

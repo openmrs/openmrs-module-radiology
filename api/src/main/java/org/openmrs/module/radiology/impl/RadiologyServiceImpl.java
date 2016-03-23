@@ -108,7 +108,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("radiologyOrder.study.modality is required");
 		}
 		
-		Encounter encounter = saveRadiologyOrderEncounter(radiologyOrder.getPatient(), radiologyOrder.getOrderer(),
+		final Encounter encounter = saveRadiologyOrderEncounter(radiologyOrder.getPatient(), radiologyOrder.getOrderer(),
 		    new Date());
 		encounter.addOrder(radiologyOrder);
 		
@@ -116,7 +116,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		orderContext.setCareSetting(radiologyProperties.getRadiologyCareSetting());
 		orderContext.setOrderType(radiologyProperties.getRadiologyTestOrderType());
 		
-		RadiologyOrder result = (RadiologyOrder) orderService.saveOrder(radiologyOrder, orderContext);
+		final RadiologyOrder result = (RadiologyOrder) orderService.saveOrder(radiologyOrder, orderContext);
 		saveStudy(result.getStudy());
 		return result;
 	}
@@ -133,7 +133,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Transactional
 	private Encounter saveRadiologyOrderEncounter(Patient patient, Provider provider, Date encounterDateTime) {
 		
-		Encounter encounter = new Encounter();
+		final Encounter encounter = new Encounter();
 		encounter.setPatient(patient);
 		encounter.setEncounterType(radiologyProperties.getRadiologyEncounterType());
 		encounter.setProvider(radiologyProperties.getOrderingProviderEncounterRole(), provider);
@@ -156,7 +156,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Transactional
 	private Study saveStudy(Study study) {
 		
-		RadiologyOrder order = study.getRadiologyOrder();
+		final RadiologyOrder order = study.getRadiologyOrder();
 		
 		if (study.getScheduledStatus() == null && order.getScheduledDate() != null) {
 			study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
@@ -164,7 +164,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		
 		try {
 			Study savedStudy = studyDAO.saveStudy(study);
-			String studyInstanceUid = radiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
+			final String studyInstanceUid = radiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
 			savedStudy.setStudyInstanceUid(studyInstanceUid);
 			savedStudy = studyDAO.saveStudy(savedStudy);
 			return savedStudy;
@@ -192,7 +192,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("orderId is null");
 		}
 		
-		if (radiologyOrderToDiscontinue.isActive() == false) {
+		if (!radiologyOrderToDiscontinue.isActive()) {
 			throw new IllegalArgumentException("order is not active");
 		}
 		
@@ -261,18 +261,20 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("performedStatus is required");
 		}
 		
-		Study studyToBeUpdated = studyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
+		final Study studyToBeUpdated = studyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
 		studyToBeUpdated.setPerformedStatus(performedStatus);
 		return studyDAO.saveStudy(studyToBeUpdated);
 	}
 	
 	@Override
 	public void sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
+		final int HL7_SEND_SUCCESS = 1;
+		final int HL7_SEND_ERROR = 0;
 		MwlStatus mwlStatus = radiologyOrder.getStudy().getMwlStatus();
-		String hl7blob = DicomUtils.createHL7Message(radiologyOrder, orderRequest);
-		int status = DicomUtils.sendHL7Worklist(hl7blob);
+		final String hl7blob = DicomUtils.createHL7Message(radiologyOrder, orderRequest);
+		final int status = DicomUtils.sendHL7Worklist(hl7blob);
 		
-		if (status == 1) {
+		if (status == HL7_SEND_SUCCESS) {
 			switch (orderRequest) {
 				case Save_Order:
 					if (mwlStatus == MwlStatus.DEFAULT || mwlStatus == MwlStatus.SAVE_ERR) {
@@ -295,10 +297,9 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 					break;
 				default:
 					break;
-				
 			}
 			
-		} else if (status == 0) {
+		} else if (status == HL7_SEND_ERROR) {
 			switch (orderRequest) {
 				case Save_Order:
 					if (mwlStatus == MwlStatus.DEFAULT || mwlStatus == MwlStatus.SAVE_ERR) {
@@ -371,7 +372,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("radiologyOrders are required");
 		}
 		
-		List<Study> result = studyDAO.getStudiesByRadiologyOrders(radiologyOrders);
+		final List<Study> result = studyDAO.getStudiesByRadiologyOrders(radiologyOrders);
 		return result;
 	}
 	
@@ -399,7 +400,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new UnsupportedOperationException(
 			        "cannot create radiologyReport for this radiologyOrder because it is already claimed");
 		}
-		RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
+		final RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
 		radiologyReport.setCreator(Context.getAuthenticatedUser());
 		return radiologyReportDAO.saveRadiologyReport(radiologyReport);
 	}
@@ -510,7 +511,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	 * @see RadiologyService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
 	 */
 	public boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder) {
-		return radiologyOrder != null ? radiologyReportDAO.hasRadiologyOrderClaimedRadiologyReport(radiologyOrder) : false;
+		return radiologyOrder == null ? false : radiologyReportDAO.hasRadiologyOrderClaimedRadiologyReport(radiologyOrder);
 	}
 	
 	/**

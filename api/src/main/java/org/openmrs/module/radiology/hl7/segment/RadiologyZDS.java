@@ -14,7 +14,15 @@ import org.openmrs.module.radiology.hl7.custommodel.v231.segment.ZDS;
 
 import ca.uhn.hl7v2.HL7Exception;
 
+/**
+ * RadiologyZDS is a utility class populating an HL7 custom ZDS Segment with an OpenMRS
+ * Study
+ */
 public class RadiologyZDS {
+	
+	private RadiologyZDS() {
+		// This class is a utility class which should not be instantiated
+	};
 	
 	/**
 	 * Fill custom HL7 segment (ZDS) with data from given OpenMRS Radiology Study. See HL7 ZDS

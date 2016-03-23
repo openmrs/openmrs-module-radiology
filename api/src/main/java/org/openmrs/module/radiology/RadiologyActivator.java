@@ -27,8 +27,6 @@ public class RadiologyActivator extends BaseModuleActivator {
 	
 	private DcmOF dicomOrderFiller;
 	
-	private RadiologyProperties radiologyProperties;
-	
 	@Override
 	public void willStart() {
 		log.info("Trying to start up Radiology Module");
@@ -57,7 +55,7 @@ public class RadiologyActivator extends BaseModuleActivator {
 	 * @should successfully start the dicom order filler
 	 */
 	void startDicomOrderFiller() {
-		String[] dicomOrderFillerArguments = getDicomOrderFillerArguments();
+		final String[] dicomOrderFillerArguments = getDicomOrderFillerArguments();
 		log.info("Trying to start OpenMRS MPPS SCU Client (dcmof) with: " + Arrays.asList(dicomOrderFillerArguments));
 		dicomOrderFiller = DcmOF.main(dicomOrderFillerArguments);
 	}
@@ -70,7 +68,8 @@ public class RadiologyActivator extends BaseModuleActivator {
 	 */
 	String[] getDicomOrderFillerArguments() {
 		log.info("Loading dicom order filler arguments");
-		radiologyProperties = Context.getRegisteredComponent("radiologyProperties", RadiologyProperties.class);
+		final RadiologyProperties radiologyProperties = Context.getRegisteredComponent("radiologyProperties",
+		    RadiologyProperties.class);
 		return new String[] { "-mwl", radiologyProperties.getMwlDir(), "-mpps", radiologyProperties.getMppsDir(),
 		        radiologyProperties.getApplicationEntityTitle() + ":" + radiologyProperties.getMwlMppsPort() };
 	}

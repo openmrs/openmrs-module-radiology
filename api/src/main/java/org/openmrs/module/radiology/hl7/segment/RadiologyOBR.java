@@ -14,7 +14,15 @@ import org.openmrs.module.radiology.RadiologyOrder;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v231.segment.OBR;
 
+/**
+ * RadiologyOBR is a utility class populating an HL7 Observation Request Segment with an OpenMRS
+ * RadiologyOrder
+ */
 public class RadiologyOBR {
+	
+	private RadiologyOBR() {
+		// This class is a utility class which should not be instantiated
+	};
 	
 	/**
 	 * Fill HL7 (version 2.3.1) Observation Request Segment (OBR) with data from given OpenMRS Study

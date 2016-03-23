@@ -63,7 +63,7 @@ public class RadiologyOrderValidator implements Validator {
 	 * @should not allow a future dateActivated
 	 */
 	public void validate(Object obj, Errors errors) {
-		RadiologyOrder radiologyOrder = (RadiologyOrder) obj;
+		final RadiologyOrder radiologyOrder = (RadiologyOrder) obj;
 		if (radiologyOrder == null) {
 			errors.reject("error.general");
 		} else {
@@ -83,23 +83,23 @@ public class RadiologyOrderValidator implements Validator {
 	}
 	
 	private void validateDateActivated(Order order, Errors errors) {
-		Date dateActivated = order.getDateActivated();
+		final Date dateActivated = order.getDateActivated();
 		if (dateActivated != null) {
 			if (dateActivated.after(new Date())) {
 				errors.rejectValue("dateActivated", "Order.error.dateActivatedInFuture");
 				return;
 			}
-			Date dateStopped = order.getDateStopped();
+			final Date dateStopped = order.getDateStopped();
 			if (dateStopped != null && dateActivated.after(dateStopped)) {
 				errors.rejectValue("dateActivated", "Order.error.dateActivatedAfterDiscontinuedDate");
 				errors.rejectValue("dateStopped", "Order.error.dateActivatedAfterDiscontinuedDate");
 			}
-			Date autoExpireDate = order.getAutoExpireDate();
+			final Date autoExpireDate = order.getAutoExpireDate();
 			if (autoExpireDate != null && dateActivated.after(autoExpireDate)) {
 				errors.rejectValue("dateActivated", "Order.error.dateActivatedAfterAutoExpireDate");
 				errors.rejectValue("autoExpireDate", "Order.error.dateActivatedAfterAutoExpireDate");
 			}
-			Encounter encounter = order.getEncounter();
+			final Encounter encounter = order.getEncounter();
 			if (encounter != null && encounter.getEncounterDatetime() != null
 			        && encounter.getEncounterDatetime().after(dateActivated)) {
 				errors.rejectValue("dateActivated", "Order.error.dateActivatedAfterEncounterDatetime");
@@ -108,7 +108,7 @@ public class RadiologyOrderValidator implements Validator {
 	}
 	
 	private void validateScheduledDate(Order order, Errors errors) {
-		boolean isUrgencyOnScheduledDate = (order.getUrgency() != null && order.getUrgency().equals(
+		final boolean isUrgencyOnScheduledDate = (order.getUrgency() != null && order.getUrgency().equals(
 		    Order.Urgency.ON_SCHEDULED_DATE));
 		if (order.getScheduledDate() != null && !isUrgencyOnScheduledDate) {
 			errors.rejectValue("urgency", "Order.error.urgencyNotOnScheduledDate");

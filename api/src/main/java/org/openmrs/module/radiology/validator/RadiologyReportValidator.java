@@ -11,7 +11,6 @@ package org.openmrs.module.radiology.validator;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.annotation.Handler;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;

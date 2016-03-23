@@ -17,7 +17,15 @@ import org.openmrs.module.radiology.utils.DateTimeUtils;
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v231.segment.ORC;
 
+/**
+ * RadiologyORC is a utility class populating an HL7 Common Order Segment with an OpenMRS
+ * RadiologyOrder
+ */
 public class RadiologyORC {
+	
+	private RadiologyORC() {
+		// This class is a utility class which should not be instantiated
+	};
 	
 	/**
 	 * Fill HL7 (version 2.3.1) Common Order Segment (ORC) with data from given OpenMRS Study and

@@ -30,7 +30,7 @@ public class RadiologyDiscontinuedOrderValidator implements Validator {
 	}
 	
 	public void validate(Object obj, Errors errors) {
-		Order order = (Order) obj;
+		final Order order = (Order) obj;
 		if (order == null) {
 			errors.reject("error.general");
 		} else {

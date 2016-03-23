@@ -53,8 +53,8 @@ public class ORM_O01 extends ca.uhn.hl7v2.model.v231.message.ORM_O01 {
 	}
 	
 	private void init() throws HL7Exception {
-		boolean required = true;
-		boolean repeating = false;
+		final boolean required = true;
+		final boolean repeating = false;
 		this.add(ZDS.class, required, repeating);
 	}
 	

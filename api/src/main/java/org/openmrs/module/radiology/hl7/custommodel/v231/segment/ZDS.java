@@ -45,7 +45,7 @@ public class ZDS extends AbstractSegment {
 	private void init() throws HL7Exception {
 		
 		// Study Instance UID Field (DataType RP - reference pointer)
-		boolean segmentIsRequired = true;
+		final boolean segmentIsRequired = true;
 		int segmentMaxRepetitions = 0;
 		int segmentLength = 200;
 		this.add(RP.class, segmentIsRequired, segmentMaxRepetitions, segmentLength, new Object[] { getMessage() });

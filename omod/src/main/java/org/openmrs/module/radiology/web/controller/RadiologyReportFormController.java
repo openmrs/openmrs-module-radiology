@@ -25,17 +25,15 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
-@RequestMapping(value = "/module/radiology/radiologyReport.form")
+@RequestMapping(value = RadiologyReportFormController.RADIOLOGY_REPORT_FORM_REQUEST_MAPPING)
 public class RadiologyReportFormController {
+	
+	protected static final String RADIOLOGY_REPORT_FORM_REQUEST_MAPPING = "/module/radiology/radiologyReport.form";
+	
+	private static final String RADIOLOGY_REPORT_FORM_VIEW = "/module/radiology/radiologyReportForm";
 	
 	@Autowired
 	private RadiologyService radiologyService;
-	
-	private final String RADIOLOGY_REPORT_FORM_PATH = "module/radiology/radiologyReportForm";
-	
-	private final String RADIOLOGY_ORDER_FORM_URL = "redirect:/module/radiology/radiologyOrder.form?";
-	
-	private final String RADIOLOGY_REPORT_FORM_URL = "redirect:/module/radiology/radiologyReport.form?";
 	
 	/**
 	 * Handles GET requests for the radiologyReportForm creating a new radiology report for given
@@ -48,12 +46,13 @@ public class RadiologyReportFormController {
 	@RequestMapping(method = RequestMethod.GET, params = "orderId")
 	protected ModelAndView getRadiologyReportFormWithNewRadiologyReport(
 	        @RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder) {
-		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_PATH);
+		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
 			
 			RadiologyReport radiologyReport = radiologyService.createAndClaimRadiologyReport(radiologyOrder);
-			modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_URL + "radiologyReportId=" + radiologyReport.getId());
+			modelAndView = new ModelAndView("redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?radiologyReportId="
+			        + radiologyReport.getId());
 			
 			addObjectsToModelAndView(modelAndView, radiologyReport);
 			return modelAndView;
@@ -73,7 +72,7 @@ public class RadiologyReportFormController {
 	@RequestMapping(method = RequestMethod.GET, params = "radiologyReportId")
 	protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(
 	        @RequestParam(value = "radiologyReportId", required = true) Integer radiologyReportId) {
-		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_PATH);
+		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
 			
@@ -94,7 +93,7 @@ public class RadiologyReportFormController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, params = "saveRadiologyReport")
 	protected ModelAndView saveRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
-		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_PATH);
+		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
 			radiologyService.saveRadiologyReport(radiologyReport);
@@ -115,11 +114,12 @@ public class RadiologyReportFormController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, params = "unclaimRadiologyReport")
 	protected ModelAndView unclaimRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
-		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_PATH);
+		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
 			radiologyService.unclaimRadiologyReport(radiologyReport);
-			return new ModelAndView(RADIOLOGY_ORDER_FORM_URL + "orderId=" + radiologyReport.getRadiologyOrder().getOrderId());
+			return new ModelAndView("redirect:" + RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING
+			        + "?orderId=" + radiologyReport.getRadiologyOrder().getOrderId());
 		}
 		return modelAndView;
 	}
@@ -132,20 +132,20 @@ public class RadiologyReportFormController {
 	 * @return ModelAndView RadiologyOrderForm if complete was successful, otherwise the
 	 *         ModelAndView with BindingResult errors
 	 * @should complete given radiology report and populate model and view with it
-	 * @should populate model and view radiology report form with BindingResult errors if provider is
-	 *         null
+	 * @should populate model and view radiology report form with BindingResult errors if provider
+	 *         is null
 	 */
 	@RequestMapping(method = RequestMethod.POST, params = "completeRadiologyReport")
 	protected ModelAndView completeRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport,
 	        BindingResult bindingResult) {
-		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_PATH);
+		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
 			if (validateForm(modelAndView, radiologyReport, bindingResult)) {
 				return modelAndView;
 			}
 			
-			RadiologyReport completedRadiologyReport = radiologyService.completeRadiologyReport(radiologyReport,
+			final RadiologyReport completedRadiologyReport = radiologyService.completeRadiologyReport(radiologyReport,
 			    radiologyReport.getPrincipalResultsInterpreter());
 			addObjectsToModelAndView(modelAndView, completedRadiologyReport);
 			return modelAndView;

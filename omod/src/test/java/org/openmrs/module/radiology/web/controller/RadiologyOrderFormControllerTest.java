@@ -81,7 +81,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		ModelAndView modelAndView = radiologyOrderFormController.getRadiologyOrderFormWithNewRadiologyOrder();
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
 		RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
@@ -109,7 +109,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		        .getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(mockPatient);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
 		RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
@@ -138,7 +138,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		        .getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(null);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
 		RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
@@ -169,7 +169,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		        .getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(mockRadiologyOrder);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
 		RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
@@ -178,7 +178,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postSaveRadiologyOrder(HttpServletRequest, Integer, Order,
-	 * BindingResult)
+	 *      BindingResult)
 	 */
 	@Test
 	@Verifies(value = "should set http session attribute openmrs message to order saved and redirect to radiology order list when save study was successful", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
@@ -209,7 +209,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postSaveRadiologyOrder(HttpServletRequest, Integer, Order,
-	 * BindingResult)
+	 *      BindingResult)
 	 */
 	@Test
 	@Verifies(value = "should set http session attribute openmrs message to order saved and redirect to patient dashboard when save study was successful and given patient id", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
@@ -241,7 +241,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postSaveRadiologyOrder(HttpServletRequest, Integer, Order,
-	 * BindingResult)
+	 *      BindingResult)
 	 */
 	@Test
 	@Verifies(value = "should set http session attribute openmrs message to saved fail worklist and redirect to patient dashboard when save study was not successful and given patient id", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
@@ -289,7 +289,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postSaveRadiologyOrder(HttpServletRequest, Integer, Order,
-	 * BindingResult)
+	 *      BindingResult)
 	 */
 	@Test
 	@Verifies(value = "should set http session attribute openmrs message to study performed when study performed status is in progress and request was issued by radiology scheduler", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
@@ -316,13 +316,13 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		        .getPatient().getPatientId(), mockRadiologyOrder, mockRadiologyOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
 		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR), is("radiology.studyPerformed"));
 	}
 	
 	/**
 	 * @see RadiologyOrderFormController#postSaveRadiologyOrder(HttpServletRequest, Integer, Order,
-	 * BindingResult)
+	 *      BindingResult)
 	 */
 	@Test
 	@Verifies(value = "should not redirect if radiology order is not valid according to order validator", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
@@ -348,12 +348,12 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		        .getPatient().getPatientId(), mockRadiologyOrder, mockRadiologyOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
 	}
 	
 	/**
 	 * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest,
-	 * HttpServletResponse, Order, String, Date)
+	 *      HttpServletResponse, Order, String, Date)
 	 */
 	@Test
 	@Verifies(value = "should discontinue non discontinued order and redirect to discontinuation order", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String, Date)")
@@ -398,7 +398,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest,
-	 * HttpServletResponse, Order, String, Date)
+	 *      HttpServletResponse, Order, String, Date)
 	 */
 	@Test
 	@Verifies(value = "should not redirect if discontinuation failed through date in the future", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String, Date)")
@@ -437,7 +437,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		    mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");
@@ -454,7 +454,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest,
-	 * HttpServletResponse, Order, String, Date)
+	 *      HttpServletResponse, Order, String, Date)
 	 */
 	@Test
 	@Verifies(value = "should not redirect if discontinuation failed in pacs", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String, Date)")
@@ -489,7 +489,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		    mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("module/radiology/radiologyOrderForm"));
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
 		Order order = (Order) modelAndView.getModelMap().get("order");

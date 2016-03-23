@@ -133,7 +133,8 @@ public class RadiologyProperties extends ModuleProperties {
 	 *         properties
 	 */
 	public String getDicomViewerLocalServerName() {
-		String dicomViewerLocalServerName = getGlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME, false);
+		final String dicomViewerLocalServerName = getGlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME,
+		    false);
 		return dicomViewerLocalServerName == null ? "" : "serverName=" + dicomViewerLocalServerName + "&";
 	}
 	
@@ -156,7 +157,7 @@ public class RadiologyProperties extends ModuleProperties {
 	 *         url base and dicom viewer local server name for weasis
 	 */
 	public String getDicomViewerUrl() {
-		String dicomViewerUrl = getServersAddress() + ":" + getServersPort() + getDicomViewerUrlBase()
+		final String dicomViewerUrl = getServersAddress() + ":" + getServersPort() + getDicomViewerUrlBase()
 		        + getDicomViewerLocalServerName();
 		return dicomViewerUrl;
 	}
@@ -170,8 +171,8 @@ public class RadiologyProperties extends ModuleProperties {
 	 * @should throw illegal state exception if radiology care setting cannot be found
 	 */
 	public CareSetting getRadiologyCareSetting() {
-		String radiologyCareSettingUuid = getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING, true);
-		CareSetting result = orderService.getCareSettingByUuid(radiologyCareSettingUuid);
+		final String radiologyCareSettingUuid = getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING, true);
+		final CareSetting result = orderService.getCareSettingByUuid(radiologyCareSettingUuid);
 		if (result == null) {
 			throw new IllegalStateException("No existing care setting for uuid: "
 			        + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
@@ -187,7 +188,7 @@ public class RadiologyProperties extends ModuleProperties {
 	 * @should throw illegal state exception for non existing radiology test order type
 	 */
 	public OrderType getRadiologyTestOrderType() {
-		OrderType result = orderService.getOrderTypeByUuid(RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID);
+		final OrderType result = orderService.getOrderTypeByUuid(RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID);
 		if (result == null) {
 			throw new IllegalStateException("OrderType for radiology orders not in database (not found under uuid="
 			        + RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID + ").");
@@ -203,7 +204,8 @@ public class RadiologyProperties extends ModuleProperties {
 	 * @should throw illegal state exception for non existing radiology encounter type
 	 */
 	public EncounterType getRadiologyEncounterType() {
-		EncounterType result = encounterService.getEncounterTypeByUuid(RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID);
+		final EncounterType result = encounterService
+		        .getEncounterTypeByUuid(RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID);
 		if (result == null) {
 			throw new IllegalStateException("EncounterType for radiology orders not in database (not found under uuid="
 			        + RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID + ").");
@@ -219,7 +221,7 @@ public class RadiologyProperties extends ModuleProperties {
 	 * @should throw illegal state exception for non existing ordering provider encounter role
 	 */
 	public EncounterRole getOrderingProviderEncounterRole() {
-		EncounterRole result = encounterService
+		final EncounterRole result = encounterService
 		        .getEncounterRoleByUuid(RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID);
 		if (result == null) {
 			throw new IllegalStateException("EncounterRole for ordering provider not in database (not found under uuid="
@@ -251,7 +253,7 @@ public class RadiologyProperties extends ModuleProperties {
 			        "Property radiology.radiologyConcepts needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
 		}
 		
-		String[] radiologyConceptClassUuids = radiologyConceptClassUuidSetting.split(",");
+		final String[] radiologyConceptClassUuids = radiologyConceptClassUuidSetting.split(",");
 		
 		String result = "";
 		for (String radiologyConceptClassUuid : radiologyConceptClassUuids) {
