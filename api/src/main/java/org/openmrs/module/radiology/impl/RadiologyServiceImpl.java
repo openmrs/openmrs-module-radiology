@@ -386,11 +386,8 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		if (radiologyOrder == null) {
 			throw new IllegalArgumentException("radiologyOrder cannot be null");
 		}
-		if (radiologyOrder.getStudy() == null) {
-			throw new IllegalArgumentException("study cannot be null");
-		}
-		if (radiologyOrder.getStudy().isCompleted() == false) {
-			throw new IllegalArgumentException("cannot create RadiologyReport for uncompleted radiologyOrder");
+		if (radiologyOrder.isNotCompleted()) {
+			throw new IllegalArgumentException("radiologyOrder needs to be completed");
 		}
 		if (radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyOrder)) {
 			throw new UnsupportedOperationException(

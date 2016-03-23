@@ -12,12 +12,15 @@ package org.openmrs.module.radiology.web.controller;
 import static org.hamcrest.collection.IsMapContaining.hasKey;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNot.not;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -39,6 +42,8 @@ import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
+import org.openmrs.module.radiology.report.RadiologyReport;
+import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.openmrs.test.Verifies;
@@ -65,9 +70,16 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	@InjectMocks
 	private RadiologyOrderFormController radiologyOrderFormController = new RadiologyOrderFormController();
 	
+	private Method radiologyReportNeedsToBeCreatedMethod = null;
+	
 	@Before
-	public void runBeforeAllTests() {
+	public void runBeforeAllTests() throws Exception {
 		when(radiologyProperties.getRadiologyTestOrderType()).thenReturn(RadiologyTestData.getMockRadiologyOrderType());
+		
+		radiologyReportNeedsToBeCreatedMethod = RadiologyOrderFormController.class.getDeclaredMethod(
+		    "radiologyReportNeedsToBeCreated", new Class[] { org.springframework.web.servlet.ModelAndView.class,
+		            org.openmrs.Order.class });
+		radiologyReportNeedsToBeCreatedMethod.setAccessible(true);
 	}
 	
 	/**
@@ -501,5 +513,136 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		assertNotNull(mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR));
 		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR), is("radiology.failWorklist"));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#radiologyReportNeedsToBeCreated(ModelAndView,Order)
+	 * @verifies return false if order is not a radiology order
+	 */
+	@Test
+	public void radiologyReportNeedsToBeCreated_shouldReturnFalseIfOrderIsNotARadiologyOrder() throws Exception {
+		
+		// given
+		ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);
+		
+		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
+		mockRadiologyOrderToDiscontinue.getStudy().setMwlStatus(MwlStatus.DISCONTINUE_ERR);
+		String discontinueReason = "Wrong Procedure";
+		
+		Order mockDiscontinuationOrder = new Order();
+		mockDiscontinuationOrder.setOrderId(2);
+		mockDiscontinuationOrder.setAction(Order.Action.DISCONTINUE);
+		mockDiscontinuationOrder.setOrderer(mockRadiologyOrderToDiscontinue.getOrderer());
+		mockDiscontinuationOrder.setOrderReasonNonCoded(discontinueReason);
+		mockDiscontinuationOrder.setPreviousOrder(mockRadiologyOrderToDiscontinue);
+		
+		final boolean result = (Boolean) radiologyReportNeedsToBeCreatedMethod.invoke(radiologyOrderFormController,
+		    new Object[] { modelAndView, mockDiscontinuationOrder });
+		assertFalse(result);
+		
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyReportNeedsToBeCreated"));
+		assertFalse((Boolean) modelAndView.getModelMap().get("radiologyReportNeedsToBeCreated"));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#radiologyReportNeedsToBeCreated(ModelAndView,Order)
+	 * @verifies return false if radiology order is not completed
+	 */
+	@Test
+	public void radiologyReportNeedsToBeCreated_shouldReturnFalseIfRadiologyOrderIsNotCompleted() throws Exception {
+		
+		// given
+		ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);
+		
+		RadiologyOrder incompleteRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
+		incompleteRadiologyOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
+		
+		final boolean result = (Boolean) radiologyReportNeedsToBeCreatedMethod.invoke(radiologyOrderFormController,
+		    new Object[] { modelAndView, incompleteRadiologyOrder });
+		assertFalse(result);
+		
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyReportNeedsToBeCreated"));
+		assertFalse((Boolean) modelAndView.getModelMap().get("radiologyReportNeedsToBeCreated"));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#radiologyReportNeedsToBeCreated(ModelAndView,Order)
+	 * @verifies return false if radiology order is completed but has a claimed report
+	 */
+	@Test
+	public void radiologyReportNeedsToBeCreated_shouldReturnFalseIfRadiologyOrderIsCompletedButHasAClaimedReport()
+	        throws Exception {
+		
+		// given
+		ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);
+		
+		RadiologyReport claimedReport = RadiologyTestData.getMockRadiologyReport1();
+		claimedReport.setReportStatus(RadiologyReportStatus.CLAIMED);
+		
+		RadiologyOrder completedRadiologyOrderWithClaimedReport = claimedReport.getRadiologyOrder();
+		completedRadiologyOrderWithClaimedReport.getStudy().setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		
+		when(radiologyService.getActiveRadiologyReportByRadiologyOrder(completedRadiologyOrderWithClaimedReport))
+		        .thenReturn(claimedReport);
+		
+		final boolean result = (Boolean) radiologyReportNeedsToBeCreatedMethod.invoke(radiologyOrderFormController,
+		    new Object[] { modelAndView, completedRadiologyOrderWithClaimedReport });
+		assertFalse(result);
+		
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyReportNeedsToBeCreated"));
+		assertFalse((Boolean) modelAndView.getModelMap().get("radiologyReportNeedsToBeCreated"));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#radiologyReportNeedsToBeCreated(ModelAndView,Order)
+	 * @verifies return false if radiology order is completed but has a completed report
+	 */
+	@Test
+	public void radiologyReportNeedsToBeCreated_shouldReturnFalseIfRadiologyOrderIsCompletedButHasACompletedReport()
+	        throws Exception {
+		
+		// given
+		ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);
+		
+		RadiologyReport completedReport = RadiologyTestData.getMockRadiologyReport1();
+		completedReport.setReportStatus(RadiologyReportStatus.COMPLETED);
+		
+		RadiologyOrder completedRadiologyOrderWithCompletedReport = completedReport.getRadiologyOrder();
+		completedRadiologyOrderWithCompletedReport.getStudy().setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		
+		when(radiologyService.getActiveRadiologyReportByRadiologyOrder(completedRadiologyOrderWithCompletedReport))
+		        .thenReturn(completedReport);
+		
+		final boolean result = (Boolean) radiologyReportNeedsToBeCreatedMethod.invoke(radiologyOrderFormController,
+		    new Object[] { modelAndView, completedRadiologyOrderWithCompletedReport });
+		assertFalse(result);
+		
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyReportNeedsToBeCreated"));
+		assertFalse((Boolean) modelAndView.getModelMap().get("radiologyReportNeedsToBeCreated"));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#radiologyReportNeedsToBeCreated(ModelAndView,Order)
+	 * @verifies return true if radiology order is completed and has no claimed report
+	 */
+	@Test
+	public void radiologyReportNeedsToBeCreated_shouldReturnTrueIfRadiologyOrderIsCompletedAndHasNoClaimedReport()
+	        throws Exception {
+		
+		// given
+		ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);
+		
+		RadiologyOrder completedRadiologyOrderWithNoClaimedReport = RadiologyTestData.getMockRadiologyOrder1();
+		completedRadiologyOrderWithNoClaimedReport.getStudy().setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		
+		when(radiologyService.getActiveRadiologyReportByRadiologyOrder(completedRadiologyOrderWithNoClaimedReport))
+		        .thenReturn(null);
+		
+		final boolean result = (Boolean) radiologyReportNeedsToBeCreatedMethod.invoke(radiologyOrderFormController,
+		    new Object[] { modelAndView, completedRadiologyOrderWithNoClaimedReport });
+		assertTrue(result);
+		
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyReportNeedsToBeCreated"));
+		assertTrue((Boolean) modelAndView.getModelMap().get("radiologyReportNeedsToBeCreated"));
 	}
 }
