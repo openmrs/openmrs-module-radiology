@@ -261,4 +261,12 @@
 			baseTableName="radiology_report" baseColumnNames="creator"
 			referencedTableName="users" referencedColumnNames="user_id" />
 	</changeSet>
+	<changeSet id="radiology-22" author="teleivo">
+		<comment>Add column uuid to radiology_report since its a BaseOpenmrsObject</comment>
+		<addColumn tableName="radiology_report">
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true" />
+			</column>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>
