@@ -34,6 +34,7 @@ import org.openmrs.Provider;
 import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.report.RadiologyReport;
@@ -177,7 +178,9 @@ public class RadiologyTestData {
 		mockRadiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		mockRadiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		mockRadiologyOrder.setVoided(false);
-		mockRadiologyOrder.setStudy(getMockStudy1PostSave());
+		Study study = getMockStudy1PostSave();
+		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		mockRadiologyOrder.setStudy(study);
 		
 		return mockRadiologyOrder;
 	}
@@ -197,6 +200,9 @@ public class RadiologyTestData {
 		mockRadiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		mockRadiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITHOUT IV CONTRAST");
 		mockRadiologyOrder.setVoided(false);
+		Study study = getMockStudy2PostSave();
+		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		mockRadiologyOrder.setStudy(study);
 		
 		return mockRadiologyOrder;
 	}
@@ -444,9 +450,9 @@ public class RadiologyTestData {
 	}
 	
 	public static RadiologyReport getMockRadiologyReport1() {
+		
 		RadiologyReport radiologyReport = new RadiologyReport(getMockRadiologyOrder1());
 		radiologyReport.setId(1);
-		radiologyReport.setRadiologyOrder(getMockRadiologyOrder1());
 		return radiologyReport;
 	}
 }
