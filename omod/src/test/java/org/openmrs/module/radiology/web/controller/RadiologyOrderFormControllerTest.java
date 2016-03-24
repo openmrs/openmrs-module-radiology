@@ -52,6 +52,8 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
+import org.openmrs.module.radiology.dicom.DicomViewer;
+import org.openmrs.module.radiology.Study;
 
 /**
  * Tests {@link RadiologyOrderFormController}
@@ -66,6 +68,9 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	@Mock
 	private RadiologyProperties radiologyProperties;
+	
+	@Mock
+	private DicomViewer dicomViewer;
 	
 	@InjectMocks
 	private RadiologyOrderFormController radiologyOrderFormController = new RadiologyOrderFormController();
@@ -176,6 +181,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
 		
 		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockRadiologyOrder);
+		when(dicomViewer.getDicomViewerUrl(mockRadiologyOrder.getStudy())).thenReturn(
+		    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
 		
 		ModelAndView modelAndView = radiologyOrderFormController
 		        .getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(mockRadiologyOrder);
@@ -186,6 +193,14 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
 		RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
 		assertThat(order, is(mockRadiologyOrder));
+		
+		assertThat(modelAndView.getModelMap(), hasKey("studyUID"));
+		String studyUID = (String) modelAndView.getModelMap().get("studyUID");
+		assertThat(studyUID, is(mockRadiologyOrder.getStudy().getStudyInstanceUid()));
+		assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
+		String dicomViewerUrl = (String) modelAndView.getModelMap().get("dicomViewerUrl");
+		assertThat(dicomViewerUrl,
+		    is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
 	}
 	
 	/**
