@@ -13,35 +13,40 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.Calendar;
-import java.util.Date;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.openmrs.Order;
 import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
+import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
+import org.openmrs.module.radiology.Study;
 
+/**
+ * Tests {@link RadiologyReport}
+ */
 public class RadiologyReportTest {
 	
 	private RadiologyOrder radiologyOrder;
 	
-	private Provider provider1;
+	private RadiologyReport radiologyReport;
 	
-	private Provider provider2;
-	
-	static OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams",
-	        "org.openmrs.module.radiology.RadiologyOrder");
+	@Rule
+	public ExpectedException expectedException = ExpectedException.none();
 	
 	@Before
 	public void setUp() {
-		provider1 = new Provider();
-		provider1.setId(1);
-		provider1.setName("doctor");
-		provider2 = new Provider();
-		provider2.setId(2);
-		provider2.setName("Nurse");
+		
+		final OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams",
+		        "org.openmrs.module.radiology.RadiologyOrder");
+		final Provider principalResultsInterpreter = new Provider();
+		principalResultsInterpreter.setId(1);
+		principalResultsInterpreter.setName("doctor");
+		
 		radiologyOrder = new RadiologyOrder();
 		radiologyOrder.setOrderId(1);
 		radiologyOrder.setOrderType(radiologyOrderType);
@@ -52,66 +57,51 @@ public class RadiologyReportTest {
 		radiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		radiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		radiologyOrder.setVoided(false);
-		radiologyOrder.setStudy(null);
-	}
-	
-	/**
-	 * @see RadiologyReport#setPrincipalResultsInterpreter(Provider)
-	 * @verifies set provider for RadiologyReport if status is not discontinued and given provider
-	 *           is not null
-	 */
-	@Test
-	public void setPrincipalResultsInterpreter_shouldSetPrincipalResultsInterpreterForRadiologyReportIfStatusIsNotDiscontinuedAndGivenProviderIsNotNull()
-	        throws Exception {
-		RadiologyReport report = new RadiologyReport(radiologyOrder);
-		report.setPrincipalResultsInterpreter(provider2);
-		assertThat(report.getPrincipalResultsInterpreter(), is(provider2));
-	}
-	
-	/**
-	 * @see RadiologyReport#setPrincipalResultsInterpreter(Provider) (Provider)
-	 * @verifies not set provider if given provider is null
-	 */
-	@Test
-	public void setProvider_shouldNotSetProviderIfGivenProviderIsNull() throws Exception {
-		RadiologyReport report = new RadiologyReport(radiologyOrder);
+		Study study = new Study();
+		study.setStudyId(1);
+		study.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
+		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		radiologyOrder.setStudy(study);
 		
-		try {
-			report.setPrincipalResultsInterpreter(null);
-		}
-		catch (IllegalArgumentException e) {
-			assertThat(report.getPrincipalResultsInterpreter(), is(provider1));
-		}
+		radiologyReport = new RadiologyReport(radiologyOrder);
 	}
 	
 	/**
-	 * @see RadiologyReport#setReportDate(java.util.Date)
-	 * @verifies set completionDate for RadiologyReport if status is not discontinued and given
-	 *           completionDate is not null
+	 * @see RadiologyReport#RadiologyReport(RadiologyOrder)
+	 * @verifies set radiology order to given radiology order and report status to claimed
 	 */
 	@Test
-	public void setCompletionDate_shouldSetCompletionDateForRadiologyReportIfStatusIsNotDiscontinuedAndGivenCompletionDateIsNotNull()
-	        throws Exception {
-		RadiologyReport report = new RadiologyReport(radiologyOrder);
-		Date date = new Date();
-		report.setReportDate(date);
-		assertThat(report.getReportDate(), is(date));
+	public void RadiologyReport_shouldSetRadiologyOrderToGivenRadiologyOrderAndReportStatusToClaimed() throws Exception {
+		
+		radiologyReport = new RadiologyReport(radiologyOrder);
+		
+		assertThat(radiologyReport.getRadiologyOrder(), is(radiologyOrder));
+		assertThat(radiologyReport.getReportStatus(), is(RadiologyReportStatus.CLAIMED));
 	}
 	
 	/**
-	 * @see RadiologyReport#setReportDate(java.util.Date)
-	 * @verifies not set completionDate if given completionDate is null
+	 * @see RadiologyReport#RadiologyReport(RadiologyOrder)
+	 * @verifies throw an illegal argument exception if given radiology order is not completed
 	 */
 	@Test
-	public void setCompletionDate_shouldNotSetCompletionDateIfGivenCompletionDateIsNull() throws Exception {
-		RadiologyReport report = new RadiologyReport(radiologyOrder);
-		report.setReportDate(new Date());
-		Date compDate = report.getReportDate();
-		try {
-			report.setReportDate(null);
-		}
-		catch (IllegalArgumentException e) {
-			assertThat(report.getReportDate(), is(compDate));
-		}
+	public void RadiologyReport_shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNotCompleted() throws Exception {
+		
+		radiologyOrder.setStudy(new Study());
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder is not completed");
+		radiologyReport = new RadiologyReport(radiologyOrder);
+	}
+	
+	/**
+	 * @see RadiologyReport#RadiologyReport(RadiologyOrder)
+	 * @verifies throw an illegal argument exception if given radiology order is null
+	 */
+	@Test
+	public void RadiologyReport_shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNull() throws Exception {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder cannot be null");
+		radiologyReport = new RadiologyReport(null);
 	}
 }
