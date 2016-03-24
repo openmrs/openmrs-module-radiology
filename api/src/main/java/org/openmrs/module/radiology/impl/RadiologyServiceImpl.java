@@ -22,7 +22,6 @@ import org.openmrs.Provider;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderContext;
 import org.openmrs.api.OrderService;
-import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
@@ -398,7 +397,6 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			        "cannot create radiologyReport for this radiologyOrder because it is already claimed");
 		}
 		final RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
-		radiologyReport.setCreator(Context.getAuthenticatedUser());
 		return radiologyReportDAO.saveRadiologyReport(radiologyReport);
 	}
 	
