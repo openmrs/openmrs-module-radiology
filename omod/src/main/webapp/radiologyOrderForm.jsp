@@ -15,266 +15,298 @@
 		$j("#conceptDescription").html(concept.description);
 	}
 </script>
-<h2>
-	<spring:message code="Order.title" />
-</h2>
-
-<spring:hasBindErrors name="radiologyOrder">
-	<spring:message code="fix.error" />
-	<br />
-</spring:hasBindErrors>
-<spring:hasBindErrors name="study">
-	<spring:message code="fix.error" />
-	<br />
-</spring:hasBindErrors>
 
 <c:choose>
 	<c:when
 		test="${not empty radiologyOrder && empty radiologyOrder.orderId}">
 		<!--  Create a new RadiologyOrder -->
-		<form:form method="post" modelAttribute="radiologyOrder"
-			cssClass="box">
-			<table>
-				<tr>
-					<td><spring:message code="Order.patient" /></td>
-					<td><spring:bind path="patient">
-							<openmrs:fieldGen type="org.openmrs.Patient"
-								formFieldName="${status.expression}"
-								val="${status.editor.value}" />
-							<a style="cursor: pointer;" id="moreInfo"><spring:message
-									code="radiology.moreInfo" /></a>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
 
-				<tr>
-					<td><spring:message code="Order.concept" /></td>
-					<td><spring:bind path="concept">
-							<openmrs_tag:conceptField formFieldName="concept"
-								formFieldId="conceptId"
-								initialValue="${status.editor.value.conceptId}"
-								onSelectFunction="onQuestionSelect"
-								includeClasses="${radiologyConceptClassNames}" />
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-							<div class="description" id="conceptDescription"></div>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<td><spring:message code="radiology.urgency" /></td>
-					<td><spring:bind path="urgency">
-							<select name="${status.expression}" id="urgencySelect">
-								<c:forEach var="urgency" items="${urgencies}">
-									<option value="${urgency}"
-										${status.value == urgency ? 'selected="selected"' : ''}>${urgency}</option>
-								</c:forEach>
-							</select>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<td><spring:message code="radiology.scheduledStatus" /></td>
-					<td><spring:bind path="study.scheduledStatus">
-							<select name="${status.expression}"
-								id="scheduledProcedureStepStatusSelect">
-								<c:forEach var="scheduledProcedureStepStatus"
-									items="${scheduledProcedureStepStatuses}">
-									<option value="${scheduledProcedureStepStatus.key}"
-										${status.value == scheduledProcedureStepStatus.key ? 'selected="selected"' : ''}>${scheduledProcedureStepStatus.value}</option>
-								</c:forEach>
-							</select>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<td><spring:message code="radiology.performedStatus" /></td>
-					<td><spring:bind path="study.performedStatus">
-							<select name="${status.expression}" id="performedStatusSelect">
-								<c:forEach var="performedStatus" items="${performedStatuses}">
-									<option value="${performedStatus.key}"
-										${status.value == performedStatus.key ? 'selected="selected"' : ''}><spring:message
-											code="radiology.${performedStatus.key}"
-											text="${performedStatus.value}" /></option>
-								</c:forEach>
-							</select>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<td><spring:message code="radiology.modality" /></td>
-					<td><spring:bind path="study.modality">
-							<select name="${status.expression}" id="modalitySelect">
-								<c:forEach var="modality" items="${modalities}">
-									<option value="${modality.key}"
-										${status.value == modality.key ? 'selected="selected"' : ''}>${modality.value}</option>
-								</c:forEach>
-							</select>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<td><spring:message code="general.instructions" /></td>
-					<td><spring:bind path="instructions">
-							<textarea name="${status.expression}">${status.value}</textarea>
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<td><spring:message code="Order.orderer" /></td>
-					<td><spring:bind path="orderer">
-							<openmrs:fieldGen type="org.openmrs.Provider"
-								formFieldName="${status.expression}"
-								val="${status.editor.value}" />
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<td><spring:message code="radiology.scheduledDate" /></td>
-					<td><spring:bind path="scheduledDate">
-							<openmrs:fieldGen type="java.util.Date"
-								formFieldName="${status.expression}"
-								val="${status.editor.value}" />
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-				<tr>
-					<td><spring:message code="general.dateAutoExpire" /></td>
-					<td><spring:bind path="autoExpireDate">
-							<openmrs:fieldGen type="java.util.Date"
-								formFieldName="${status.expression}"
-								val="${status.editor.value}" />
-							<c:if test="${status.errorMessage != ''}">
-								<span class="error">${status.errorMessage}</span>
-							</c:if>
-						</spring:bind></td>
-				</tr>
-			</table>
+		<spring:hasBindErrors name="radiologyOrder">
+			<spring:message code="fix.error" />
 			<br />
-			<input type="submit" name="saveRadiologyOrder"
-				value="<spring:message code="Order.save"/>">
-		</form:form>
-	</c:when>
+		</spring:hasBindErrors>
+		<spring:hasBindErrors name="study">
+			<spring:message code="fix.error" />
+			<br />
+		</spring:hasBindErrors>
 
-	<c:otherwise>
-		<c:if test="${empty radiologyOrder}">
-			<!--  Show discontinuation Order's -->
-			<form:form method="post" modelAttribute="order" cssClass="box">
+		<div>
+			<span class="boxHeader"> <b><spring:message
+						code="radiology.addOrder" /></b>
+			</span>
+			<form:form method="post" modelAttribute="radiologyOrder"
+				cssClass="box">
 				<table>
 					<tr>
-						<td><spring:message code="Order.title" /> <spring:message
-								code="general.id" /></td>
-						<td><spring:bind path="orderId">${status.value}</spring:bind></td>
-					</tr>
-					<tr>
 						<td><spring:message code="Order.patient" /></td>
-						<td><a
-							href="/openmrs/patientDashboard.form?patientId=<spring:bind path="patient.id">
-								${status.value}
-							</spring:bind>">
-								<spring:bind path="patient.personName.fullName">
-								${status.value}
-							</spring:bind>
-						</a></td>
+						<td><spring:bind path="patient">
+								<openmrs:fieldGen type="org.openmrs.Patient"
+									formFieldName="${status.expression}"
+									val="${status.editor.value}" />
+								<a style="cursor: pointer;" id="moreInfo"><spring:message
+										code="radiology.moreInfo" /></a>
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind></td>
 					</tr>
+
 					<tr>
-						<td><spring:message code="Order.concept" /></td>
-						<td><spring:bind path="concept.name.name">
-								${status.value}
-					</spring:bind></td>
-					</tr>
-					<tr>
-						<td><spring:message code="Order.orderer" /></td>
-						<td><spring:bind path="orderer.name">
-								${status.value}
-					</spring:bind></td>
-					</tr>
-					<tr>
-						<td><spring:message code="general.dateDiscontinued" /></td>
-						<td><spring:bind path="dateActivated">
-								${status.value}
-					</spring:bind></td>
-					</tr>
-					<tr>
-						<td><spring:message code="general.discontinuedReason" /></td>
-						<td><spring:bind path="orderReasonNonCoded">
-								${status.value}
-					</spring:bind></td>
-					</tr>
-					<tr>
-						<td><spring:message code="radiology.discontinuedOrder" /></td>
-						<td><spring:bind path="previousOrder">
-								<a href="radiologyOrder.form?orderId=${status.value}">${status.value}</a>
+						<td><spring:message code="radiology.imagingProcedure" /></td>
+						<td><spring:bind path="concept">
+								<openmrs_tag:conceptField formFieldName="concept"
+									formFieldId="conceptId"
+									initialValue="${status.editor.value.conceptId}"
+									onSelectFunction="onQuestionSelect"
+									includeClasses="${radiologyConceptClassNames}" />
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+								<div class="description" id="conceptDescription"></div>
 							</spring:bind></td>
 					</tr>
 					<tr>
-						<td><spring:message code="general.createdBy" /></td>
-						<td><spring:bind path="creator.personName">
-								${status.value}
-							</spring:bind> - <spring:bind path="dateCreated">
-								${status.value}
+						<td><spring:message code="radiology.urgency" /></td>
+						<td><spring:bind path="urgency">
+								<select name="${status.expression}" id="urgencySelect">
+									<c:forEach var="urgency" items="${urgencies}">
+										<option value="${urgency}"
+											${status.value == urgency ? 'selected="selected"' : ''}>${urgency}</option>
+									</c:forEach>
+								</select>
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind></td>
+					</tr>
+					<tr>
+						<td><spring:message code="radiology.scheduledStatus" /></td>
+						<td><spring:bind path="study.scheduledStatus">
+								<select name="${status.expression}"
+									id="scheduledProcedureStepStatusSelect">
+									<c:forEach var="scheduledProcedureStepStatus"
+										items="${scheduledProcedureStepStatuses}">
+										<option value="${scheduledProcedureStepStatus.key}"
+											${status.value == scheduledProcedureStepStatus.key ? 'selected="selected"' : ''}>${scheduledProcedureStepStatus.value}</option>
+									</c:forEach>
+								</select>
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind></td>
+					</tr>
+					<tr>
+						<td><spring:message code="radiology.performedStatus" /></td>
+						<td><spring:bind path="study.performedStatus">
+								<select name="${status.expression}" id="performedStatusSelect">
+									<c:forEach var="performedStatus" items="${performedStatuses}">
+										<option value="${performedStatus.key}"
+											${status.value == performedStatus.key ? 'selected="selected"' : ''}><spring:message
+												code="radiology.${performedStatus.key}"
+												text="${performedStatus.value}" /></option>
+									</c:forEach>
+								</select>
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind></td>
+					</tr>
+					<tr>
+						<td><spring:message code="radiology.modality" /></td>
+						<td><spring:bind path="study.modality">
+								<select name="${status.expression}" id="modalitySelect">
+									<c:forEach var="modality" items="${modalities}">
+										<option value="${modality.key}"
+											${status.value == modality.key ? 'selected="selected"' : ''}>${modality.value}</option>
+									</c:forEach>
+								</select>
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind></td>
+					</tr>
+					<tr>
+						<td><spring:message code="general.instructions" /></td>
+						<td><spring:bind path="instructions">
+								<textarea name="${status.expression}">${status.value}</textarea>
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind></td>
+					</tr>
+					<tr>
+						<td><spring:message code="Order.orderer" /></td>
+						<td><spring:bind path="orderer">
+								<openmrs:fieldGen type="org.openmrs.Provider"
+									formFieldName="${status.expression}"
+									val="${status.editor.value}" />
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind></td>
+					</tr>
+					<tr>
+						<td><spring:message code="radiology.scheduledDate" /></td>
+						<td><spring:bind path="scheduledDate">
+								<openmrs:fieldGen type="java.util.Date"
+									formFieldName="${status.expression}"
+									val="${status.editor.value}" />
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind></td>
+					</tr>
+					<tr>
+						<td><spring:message code="general.dateAutoExpire" /></td>
+						<td><spring:bind path="autoExpireDate">
+								<openmrs:fieldGen type="java.util.Date"
+									formFieldName="${status.expression}"
+									val="${status.editor.value}" />
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
 							</spring:bind></td>
 					</tr>
 				</table>
 				<br />
+				<input type="submit" name="saveRadiologyOrder"
+					value="<spring:message code="Order.save"/>">
 			</form:form>
+		</div>
+	</c:when>
+
+	<c:otherwise>
+		<!--  Show existing Order/RadiologyOrder -->
+
+		<br>
+		<openmrs:portlet url="personHeader" id="personDashboardHeader"
+			patientId="${order.patient.patientId}" />
+		<br>
+
+		<c:if test="${empty radiologyOrder}">
+			<!--  Show read-only view of discontinuation Order -->
+			<div>
+				<span class="boxHeader"> <b><spring:message code="Order.title" /></b>
+				</span>
+				<form:form method="post" modelAttribute="order" cssClass="box">
+					<table>
+						<tr>
+							<td><spring:message code="general.id" /></td>
+							<td><spring:bind path="orderId">${status.value}</spring:bind></td>
+						</tr>
+						<tr>
+							<td><spring:message code="Order.patient" /></td>
+							<td><a
+								href="/openmrs/patientDashboard.form?patientId=<spring:bind path="patient.id">
+								${status.value}
+							</spring:bind>">
+									<spring:bind path="patient.personName.fullName">
+								${status.value}
+							</spring:bind>
+							</a></td>
+						</tr>
+						<tr>
+							<td><spring:message code="radiology.imagingProcedure" /></td>
+							<td><spring:bind path="concept.name.name">
+								${status.value}
+					</spring:bind></td>
+						</tr>
+						<tr>
+							<td><spring:message code="Order.orderer" /></td>
+							<td><spring:bind path="orderer.name">
+								${status.value}
+					</spring:bind></td>
+						</tr>
+						<tr>
+							<td><spring:message code="general.dateDiscontinued" /></td>
+							<td><spring:bind path="dateActivated">
+								${status.value}
+					</spring:bind></td>
+						</tr>
+						<tr>
+							<td><spring:message code="general.discontinuedReason" /></td>
+							<td><spring:bind path="orderReasonNonCoded">
+								${status.value}
+					</spring:bind></td>
+						</tr>
+						<tr>
+							<td><spring:message code="radiology.discontinuedOrder" /></td>
+							<td><spring:bind path="previousOrder">
+									<a href="radiologyOrder.form?orderId=${status.value}">${status.value}</a>
+								</spring:bind></td>
+						</tr>
+						<tr>
+							<td><spring:message code="general.createdBy" /></td>
+							<td><spring:bind path="creator.personName">
+								${status.value}
+							</spring:bind> - <spring:bind path="dateCreated">
+								${status.value}
+							</spring:bind></td>
+						</tr>
+					</table>
+					<br />
+				</form:form>
+			</div>
 		</c:if>
 		<c:if test="${not empty radiologyOrder}">
-			<!--  Show existing RadiologyOrder's -->
-			<%@ include file="portlets/radiologyOrderDetailsPortlet.jsp"%>
+			<!--  Show existing RadiologyOrder -->
+
+			<spring:hasBindErrors name="radiologyOrder">
+				<spring:message code="fix.error" />
+				<br />
+			</spring:hasBindErrors>
+			<spring:hasBindErrors name="study">
+				<spring:message code="fix.error" />
+				<br />
+			</spring:hasBindErrors>
+
+			<div>
+				<span class="boxHeader"> <b><spring:message
+							code="radiology.radiologyOrder" /></b>
+				</span>
+				<%@ include file="portlets/radiologyOrderDetailsPortlet.jsp"%>
+			</div>
+
 			<c:if test="${radiologyOrder.completed}">
-				<h2>
-					<spring:message code="radiology.radiologyReportTitle" />
-				</h2>
-				<c:choose>
-					<c:when test="${radiologyReportNeedsToBeCreated}">
-						<form:form method="post" modelAttribute="radiologyOrder"
-							cssClass="box">
-							<tr>
-								<td><spring:bind path="orderId">
-										<a
-											href="/openmrs/module/radiology/radiologyReport.form?orderId=${status.value}">
-											<spring:message code="radiology.radiologyReportClaim" />
-										</a>
-									</spring:bind></td>
-							</tr>
-						</form:form>
-					</c:when>
-					<c:otherwise>
-						<form:form method="post" modelAttribute="radiologyReport"
-							cssClass="box">
-							<tr>
-								<td><a
-									href="/openmrs/module/radiology/radiologyReport.form?radiologyReportId=${radiologyReport.id}">
-										<c:choose>
-											<c:when test="${radiologyReport.reportStatus == 'CLAIMED'}">
-												<spring:message code="radiology.radiologyReportResume" />
-											</c:when>
-											<c:otherwise>
-												<spring:message code="radiology.radiologyReportShow" />
-											</c:otherwise>
-										</c:choose>
-								</a></td>
-							</tr>
-						</form:form>
-					</c:otherwise>
-				</c:choose>
+				<br>
+				<div>
+					<span class="boxHeader"> <b><spring:message
+								code="radiology.radiologyReportTitle" /></b>
+					</span>
+					<c:choose>
+						<c:when test="${radiologyReportNeedsToBeCreated}">
+							<form:form method="post" modelAttribute="radiologyOrder"
+								cssClass="box">
+								<tr>
+									<td><spring:bind path="orderId">
+											<a
+												href="/openmrs/module/radiology/radiologyReport.form?orderId=${status.value}">
+												<spring:message code="radiology.radiologyReportClaim" />
+											</a>
+										</spring:bind></td>
+								</tr>
+							</form:form>
+						</c:when>
+						<c:otherwise>
+							<form:form method="post" modelAttribute="radiologyReport"
+								cssClass="box">
+								<tr>
+									<td><a
+										href="/openmrs/module/radiology/radiologyReport.form?radiologyReportId=${radiologyReport.id}">
+											<c:choose>
+												<c:when test="${radiologyReport.reportStatus == 'CLAIMED'}">
+													<spring:message code="radiology.radiologyReportResume" />
+												</c:when>
+												<c:otherwise>
+													<spring:message code="radiology.radiologyReportShow" />
+												</c:otherwise>
+											</c:choose>
+									</a></td>
+								</tr>
+							</form:form>
+						</c:otherwise>
+					</c:choose>
+				</div>
 			</c:if>
 			<c:if test="${radiologyOrder.discontinuationAllowed}">
 				<!--  Show form to discontinue an active non in progress/completed RadiologyOrder -->
@@ -318,6 +350,7 @@
 						value='<spring:message code="Order.discontinueOrder"/>' />
 				</form:form>
 			</c:if>
+			</div>
 		</c:if>
 	</c:otherwise>
 </c:choose>

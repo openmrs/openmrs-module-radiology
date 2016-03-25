@@ -4,12 +4,11 @@
 	<form:form modelAttribute="radiologyOrder" cssClass="box">
 		<table>
 			<tr>
-				<td><spring:message code="Order.title" /> <spring:message
-						code="general.id" /></td>
+				<td><spring:message code="general.id" /></td>
 				<td><spring:bind path="orderId">${status.value}</spring:bind></td>
 			</tr>
 			<tr>
-				<td><spring:message code="Order.concept" /></td>
+				<td><spring:message code="radiology.imagingProcedure" /></td>
 				<td><spring:bind path="concept.name.name">
                     ${status.value}
                 </spring:bind></td>
