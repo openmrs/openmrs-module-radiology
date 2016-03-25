@@ -159,12 +159,9 @@ public class RadiologyOrderFormController {
 	 * @param radiologyOrder radiology order object
 	 * @param radiologyOrderErrors binding result containing order errors for a non valid order
 	 * @return model and view
-	 * @should set http session attribute openmrs message to order saved and redirect to radiology
-	 *         order list when save study was successful
-	 * @should set http session attribute openmrs message to order saved and redirect to patient
-	 *         dashboard when save study was successful and given patient id
-	 * @should set http session attribute openmrs message to saved fail worklist and redirect to
-	 *         patient dashboard when save study was not successful and given patient id
+	 * @should set http session attribute openmrs message to order saved and redirect to to radiologyOrderForm when save study was successful
+	 * @should set http session attribute openmrs message to order saved and redirect to radiologyOrderForm when save study was successful and given patient id
+	 * @should set http session attribute openmrs message to saved fail worklist and redirect to radiologyOrderForm when save study was not successful and given patient id
 	 * @should set http session attribute openmrs message to study performed when study performed
 	 *         status is in progress and request was issued by radiology scheduler
 	 * @should not redirect if radiology order is not valid according to order validator
@@ -197,11 +194,8 @@ public class RadiologyOrderFormController {
 					request.getSession().setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
 				}
 				
-				if (patientId == null) {
-					modelAndView.setViewName("redirect:/module/radiology/radiologyOrder.list");
-				} else {
-					modelAndView.setViewName("redirect:/patientDashboard.form?patientId=" + patientId);
-				}
+				modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
+				        + radiologyOrder.getOrderId());
 			}
 			catch (Exception ex) {
 				request.getSession().setAttribute(WebConstants.OPENMRS_ERROR_ATTR, ex.getMessage());
