@@ -174,7 +174,7 @@
 
 	<c:otherwise>
 		<c:if test="${empty radiologyOrder}">
-			<!--  Show existing RadiologyOrder's and discontinuation Order's -->
+			<!--  Show discontinuation Order's -->
 			<form:form method="post" modelAttribute="order" cssClass="box">
 				<table>
 					<tr>
@@ -236,6 +236,7 @@
 			</form:form>
 		</c:if>
 		<c:if test="${not empty radiologyOrder}">
+			<!--  Show existing RadiologyOrder's -->
 			<%@ include file="portlets/radiologyOrderDetailsPortlet.jsp"%>
 			<c:if test="${radiologyOrder.completed}">
 				<h2>
@@ -275,7 +276,8 @@
 					</c:otherwise>
 				</c:choose>
 			</c:if>
-			<c:if test="${isOrderActive}">
+			<c:if test="${radiologyOrder.discontinuationAllowed}">
+				<!--  Show form to discontinue an active non in progress/completed RadiologyOrder -->
 				<br />
 				<form:form method="post" modelAttribute="discontinuationOrder"
 					cssClass="box">
@@ -319,7 +321,6 @@
 		</c:if>
 	</c:otherwise>
 </c:choose>
-
 
 <div id="moreInfoPopup"></div>
 <%@ include file="/WEB-INF/template/footer.jsp"%>

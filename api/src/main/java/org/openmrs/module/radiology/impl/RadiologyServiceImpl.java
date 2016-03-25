@@ -195,6 +195,14 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("order is not active");
 		}
 		
+		if (radiologyOrderToDiscontinue.isInProgress()) {
+			throw new IllegalArgumentException("radiologyOrder is in progress");
+		}
+		
+		if (radiologyOrderToDiscontinue.isCompleted()) {
+			throw new IllegalArgumentException("radiologyOrder is completed");
+		}
+		
 		if (orderer == null) {
 			throw new IllegalArgumentException("provider is required");
 		}
