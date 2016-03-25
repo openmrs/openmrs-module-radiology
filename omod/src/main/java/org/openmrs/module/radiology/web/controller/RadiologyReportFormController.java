@@ -13,6 +13,7 @@ import org.openmrs.Order;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
+import org.openmrs.module.radiology.dicom.DicomViewer;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.validator.RadiologyReportValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,6 +35,9 @@ public class RadiologyReportFormController {
 	
 	@Autowired
 	private RadiologyService radiologyService;
+	
+	@Autowired
+	private DicomViewer dicomViewer;
 	
 	/**
 	 * Handles GET requests for the radiologyReportForm creating a new radiology report for given
@@ -183,8 +187,10 @@ public class RadiologyReportFormController {
 	 *            view
 	 */
 	private void addObjectsToModelAndView(ModelAndView modelAndView, RadiologyReport radiologyReport) {
-		modelAndView.addObject("order", (Order) radiologyReport.getRadiologyOrder());
-		modelAndView.addObject("radiologyOrder", radiologyReport.getRadiologyOrder());
 		modelAndView.addObject("radiologyReport", radiologyReport);
+		modelAndView.addObject("order", (Order) radiologyReport.getRadiologyOrder());
+		RadiologyOrder radiologyOrder = radiologyReport.getRadiologyOrder();
+		modelAndView.addObject("dicomViewerUrl", dicomViewer.getDicomViewerUrl(radiologyOrder.getStudy()));
+		modelAndView.addObject("radiologyOrder", radiologyOrder);
 	}
 }
