@@ -8,6 +8,41 @@ import org.junit.Test;
 public class StudyTest {
 	
 	/**
+	 * @see Study#isInProgress()
+	 * @verifies return false if performed status is null
+	 */
+	@Test
+	public void isInProgress_shouldReturnFalseIfPerformedStatusIsNull() throws Exception {
+		
+		Study study = new Study();
+		assertFalse(study.isInProgress());
+	}
+	
+	/**
+	 * @see Study#isInProgress()
+	 * @verifies return false if performed status is not in progress
+	 */
+	@Test
+	public void isInProgress_shouldReturnFalseIfPerformedStatusIsNotInProgress() throws Exception {
+		
+		Study study = new Study();
+		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		assertFalse(study.isInProgress());
+	}
+	
+	/**
+	 * @see Study#isInProgress()
+	 * @verifies return true if performed status is in progress
+	 */
+	@Test
+	public void isInProgress_shouldReturnTrueIfPerformedStatusIsInProgress() throws Exception {
+		
+		Study study = new Study();
+		study.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
+		assertTrue(study.isInProgress());
+	}
+	
+	/**
 	 * @see Study#isCompleted()
 	 * @verifies return false if performedStatus is null
 	 */

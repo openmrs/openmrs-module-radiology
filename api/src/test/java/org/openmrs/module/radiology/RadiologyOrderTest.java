@@ -16,6 +16,7 @@ import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.openmrs.Order;
 
 /**
  * Tests {@link RadiologyOrder}
@@ -61,6 +62,92 @@ public class RadiologyOrderTest {
 		radiologyOrder.setStudy(null);
 		
 		assertNotNull(radiologyOrder);
+	}
+	
+	/**
+	 * @see RadiologyOrder#isInProgress()
+	 * @verifies return false if associated study is null
+	 */
+	@Test
+	public void isInProgress_shouldReturnFalseIfAssociatedStudyIsNull() throws Exception {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		radiologyOrder.setStudy(null);
+		
+		assertFalse(radiologyOrder.isInProgress());
+	}
+	
+	/**
+	 * @see RadiologyOrder#isInProgress()
+	 * @verifies return false if associated study is not in progress
+	 */
+	@Test
+	public void isInProgress_shouldReturnFalseIfAssociatedStudyIsNotInProgress() throws Exception {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		Study study = new Study();
+		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		radiologyOrder.setStudy(study);
+		
+		assertFalse(radiologyOrder.isInProgress());
+	}
+	
+	/**
+	 * @see RadiologyOrder#isInProgress()
+	 * @verifies return true if associated study is in progress
+	 */
+	@Test
+	public void isInProgress_shouldReturnTrueIfAssociatedStudyIsInProgress() throws Exception {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		Study study = new Study();
+		study.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
+		radiologyOrder.setStudy(study);
+		
+		assertTrue(radiologyOrder.isInProgress());
+	}
+	
+	/**
+	 * @see RadiologyOrder#isNotInProgress()
+	 * @verifies return true if associated study is null
+	 */
+	@Test
+	public void isNotInProgress_shouldReturnTrueIfAssociatedStudyIsNull() throws Exception {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		radiologyOrder.setStudy(null);
+		
+		assertTrue(radiologyOrder.isNotInProgress());
+	}
+	
+	/**
+	 * @see RadiologyOrder#isNotInProgress()
+	 * @verifies return true if associated study is not in progress
+	 */
+	@Test
+	public void isNotInProgress_shouldReturnTrueIfAssociatedStudyIsNotInProgress() throws Exception {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		Study study = new Study();
+		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		radiologyOrder.setStudy(study);
+		
+		assertTrue(radiologyOrder.isNotInProgress());
+	}
+	
+	/**
+	 * @see RadiologyOrder#isNotInProgress()
+	 * @verifies return false if associated study in progress
+	 */
+	@Test
+	public void isNotInProgress_shouldReturnFalseIfAssociatedStudyInProgress() throws Exception {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		Study study = new Study();
+		study.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
+		radiologyOrder.setStudy(study);
+		
+		assertFalse(radiologyOrder.isNotInProgress());
 	}
 	
 	/**
@@ -143,5 +230,65 @@ public class RadiologyOrderTest {
 		radiologyOrder.setStudy(study);
 		
 		assertFalse(radiologyOrder.isNotCompleted());
+	}
+	
+	/**
+	 * @see RadiologyOrder#isDiscontinuationAllowed()
+	 * @verifies return false if order is not active
+	 */
+	@Test
+	public void isDiscontinuationAllowed_shouldReturnFalseIfOrderIsNotActive() throws Exception {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		Study study = new Study();
+		study.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
+		radiologyOrder.setStudy(study);
+		radiologyOrder.setAction(Order.Action.DISCONTINUE);
+		
+		assertFalse(radiologyOrder.isDiscontinuationAllowed());
+	}
+	
+	/**
+	 * @see RadiologyOrder#isDiscontinuationAllowed()
+	 * @verifies return false if radiology order is in progress
+	 */
+	@Test
+	public void isDiscontinuationAllowed_shouldReturnFalseIfRadiologyOrderIsInProgress() throws Exception {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		Study study = new Study();
+		study.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
+		radiologyOrder.setStudy(study);
+		
+		assertFalse(radiologyOrder.isDiscontinuationAllowed());
+	}
+	
+	/**
+	 * @see RadiologyOrder#isDiscontinuationAllowed()
+	 * @verifies return false if radiology order is completed
+	 */
+	@Test
+	public void isDiscontinuationAllowed_shouldReturnFalseIfRadiologyOrderIsCompleted() throws Exception {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		Study study = new Study();
+		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		radiologyOrder.setStudy(study);
+		
+		assertFalse(radiologyOrder.isDiscontinuationAllowed());
+	}
+	
+	/**
+	 * @see RadiologyOrder#isDiscontinuationAllowed()
+	 * @verifies return true if radiology order is active not in progress and not completed
+	 */
+	@Test
+	public void isDiscontinuationAllowed_shouldReturnTrueIfRadiologyOrderIsActiveNotInProgressAndNotCompleted()
+	        throws Exception {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		radiologyOrder.setStudy(null);
+		
+		assertTrue(radiologyOrder.isDiscontinuationAllowed());
 	}
 }

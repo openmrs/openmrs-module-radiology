@@ -80,11 +80,10 @@ public class RadiologyOrderFormController {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
+			modelAndView.addObject("order", new Order());
+			modelAndView.addObject("radiologyReport", null);
 			final RadiologyOrder radiologyOrder = new RadiologyOrder();
 			radiologyOrder.setStudy(new Study());
-			modelAndView.addObject("order", new Order());
-			modelAndView.addObject("isOrderActive", true);
-			modelAndView.addObject("radiologyReport", null);
 			modelAndView.addObject("radiologyOrder", radiologyOrder);
 		}
 		
@@ -135,7 +134,6 @@ public class RadiologyOrderFormController {
 		
 		if (Context.isAuthenticated()) {
 			modelAndView.addObject("order", order);
-			modelAndView.addObject("isOrderActive", order.isActive());
 			modelAndView.addObject("discontinuationOrder", new Order());
 			
 			if (order instanceof RadiologyOrder) {
@@ -185,7 +183,6 @@ public class RadiologyOrderFormController {
 		} else {
 			new RadiologyOrderValidator().validate(radiologyOrder, radiologyOrderErrors);
 			if (radiologyOrderErrors.hasErrors()) {
-				modelAndView.addObject("isOrderActive", radiologyOrder.isActive());
 				return modelAndView;
 			}
 			
@@ -239,7 +236,6 @@ public class RadiologyOrderFormController {
 			new RadiologyDiscontinuedOrderValidator().validate(discontinuationOrder, radiologyOrderErrors);
 			if (radiologyOrderErrors.hasErrors()) {
 				modelAndView.addObject("order", radiologyOrderToDiscontinue);
-				modelAndView.addObject("isOrderActive", radiologyOrderToDiscontinue.isActive());
 				log.error(radiologyService.getRadiologyOrderByOrderId(radiologyOrderToDiscontinue.getOrderId()));
 				modelAndView.addObject("radiologyOrder", radiologyService
 				        .getRadiologyOrderByOrderId(radiologyOrderToDiscontinue.getOrderId()));
@@ -264,7 +260,6 @@ public class RadiologyOrderFormController {
 		}
 		
 		modelAndView.addObject("order", radiologyOrderToDiscontinue);
-		modelAndView.addObject("isOrderActive", radiologyOrderToDiscontinue.isActive());
 		modelAndView.addObject("radiologyOrder", radiologyService.getRadiologyOrderByOrderId(radiologyOrderToDiscontinue
 		        .getOrderId()));
 		modelAndView.addObject("discontinuationOrder", discontinuationOrder);

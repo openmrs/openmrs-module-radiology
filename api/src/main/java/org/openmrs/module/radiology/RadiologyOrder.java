@@ -39,6 +39,36 @@ public class RadiologyOrder extends TestOrder {
 	}
 	
 	/**
+	 * Returns true if study is in progress and false otherwise.
+	 * 
+	 * @return true if study is in progress and false otherwise
+	 * @should return false if associated study is null
+	 * @should return false if associated study is not in progress
+	 * @should return true if associated study is in progress
+	 */
+	public boolean isInProgress() {
+		
+		if (this.study == null) {
+			return false;
+		} else {
+			return this.study.isInProgress();
+		}
+	}
+	
+	/**
+	 * Returns true if study is not in progress and false otherwise.
+	 * 
+	 * @return true if study is not in progress and false otherwise
+	 * @should return true if associated study is null
+	 * @should return true if associated study is not in progress
+	 * @should return false if associated study in progress
+	 */
+	public boolean isNotInProgress() {
+		
+		return !this.isInProgress();
+	}
+	
+	/**
 	 * Returns true when this RadiologyOrder has a completed Study and false otherwise.
 	 * 
 	 * @return true if order has completed study and false otherwise
@@ -66,5 +96,19 @@ public class RadiologyOrder extends TestOrder {
 	public boolean isNotCompleted() {
 		
 		return !this.isCompleted();
+	}
+	
+	/**
+	 * Returns true when this RadiologyOrder can be discontinued and false otherwise.
+	 * 
+	 * @return true if radiology order can be discontinued and false otherwise
+	 * @should return false if order is not active
+	 * @should return false if radiology order is in progress
+	 * @should return false if radiology order is completed
+	 * @should return true if radiology order is active not in progress and not completed
+	 */
+	public boolean isDiscontinuationAllowed() {
+		
+		return this.isActive() && this.isNotInProgress() && this.isNotCompleted();
 	}
 }

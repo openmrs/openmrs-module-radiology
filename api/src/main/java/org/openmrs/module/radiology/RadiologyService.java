@@ -67,10 +67,12 @@ public interface RadiologyService extends OpenmrsService {
 	 * @throws IllegalArgumentException if radiologyOrder orderId is null
 	 * @throws IllegalArgumentException if radiologyOrder is not active
 	 * @throws IllegalArgumentException if provider is null
-	 * @should create discontinuation order which discontinues given radiology order object
+	 * @should create discontinuation order which discontinues given radiology order that is not in progress or completed
 	 * @should throw illegal argument exception given empty radiology order
 	 * @should throw illegal argument exception given radiology order with orderId null
 	 * @should throw illegal argument exception if radiology order is not active
+	 * @should throw illegal argument exception if radiology order is in progress
+	 * @should throw illegal argument exception if radiology order is completed
 	 * @should throw illegal argument exception given empty provider
 	 */
 	public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrder, Provider orderer, Date discontinueDate,

@@ -270,14 +270,16 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
-	 * @verifies should create discontinuation order which discontinues given radiology order object
+	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder,Provider,Date,String)
+	 * @verifies create discontinuation order which discontinues given radiology order that is not
+	 *           in progress or completed
 	 */
 	@Test
-	public void discontinueRadiologyOrder_shouldCreateDiscontinuationOrderWhichDiscontinuesGivenRadiologyOrderObject()
+	public void discontinueRadiologyOrder_shouldCreateDiscontinuationOrderWhichDiscontinuesGivenRadiologyOrderThatIsNotInProgressOrCompleted()
 	        throws Exception {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		radiologyOrder.getStudy().setPerformedStatus(null);
 		String discontinueReason = "Wrong Procedure";
 		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
 		
@@ -344,6 +346,42 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	}
 	
 	/**
+	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder,Provider,Date,String)
+	 * @verifies throw illegal argument exception if radiology order is completed
+	 */
+	@Test
+	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsCompleted() throws Exception {
+		
+		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		radiologyOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
+		String discontinueReason = "Wrong Procedure";
+		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder is in progress");
+		radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueDate,
+		    discontinueReason);
+	}
+	
+	/**
+	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder,Provider,Date,String)
+	 * @verifies throw illegal argument exception if radiology order is in progress
+	 */
+	@Test
+	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsInProgress() throws Exception {
+		
+		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		radiologyOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		String discontinueReason = "Wrong Procedure";
+		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder is completed");
+		radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueDate,
+		    discontinueReason);
+	}
+	
+	/**
 	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
 	 * @verifies should throw illegal argument exception given empty provider
 	 */
@@ -351,6 +389,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenEmptyProvider() throws Exception {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		radiologyOrder.getStudy().setPerformedStatus(null);
 		String discontinueReason = "Wrong Procedure";
 		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
 		

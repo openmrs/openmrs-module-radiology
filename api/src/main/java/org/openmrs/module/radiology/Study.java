@@ -60,6 +60,18 @@ public class Study {
 	}
 	
 	/**
+	 * Returns true when this Study's performedStatus is in progress and false otherwise.
+	 * 
+	 * @return true on performedStatus in progress and false otherwise
+	 * @should return false if performed status is null
+	 * @should return false if performed status is not in progress
+	 * @should return true if performed status is in progress
+	 */
+	public boolean isInProgress() {
+		return performedStatus == PerformedProcedureStepStatus.IN_PROGRESS;
+	}
+	
+	/**
 	 * Returns true when this Study's performedStatus is completed and false otherwise.
 	 * 
 	 * @return true on performedStatus completed and false otherwise
