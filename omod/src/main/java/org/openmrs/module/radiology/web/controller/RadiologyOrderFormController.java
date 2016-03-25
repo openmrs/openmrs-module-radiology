@@ -48,6 +48,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+import org.openmrs.module.radiology.dicom.DicomViewer;
 
 @Controller
 @RequestMapping(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING)
@@ -64,6 +65,9 @@ public class RadiologyOrderFormController {
 	
 	@Autowired
 	private RadiologyProperties radiologyProperties;
+	
+	@Autowired
+	private DicomViewer dicomViewer;
 	
 	/**
 	 * Handles GET requests for the radiologyOrderForm with new radiology order
@@ -130,6 +134,12 @@ public class RadiologyOrderFormController {
 			modelAndView.addObject("isOrderActive", order.isActive());
 			modelAndView.addObject("radiologyOrder", radiologyOrder);
 			modelAndView.addObject("discontinuationOrder", new Order());
+			
+			Study study = radiologyOrder.getStudy();
+			
+			modelAndView.addObject("studyUID", study.getStudyInstanceUid());
+			modelAndView.addObject("dicomViewerUrl", dicomViewer.getDicomViewerUrl(study));
+			
 			radiologyReportNeedsToBeCreated(modelAndView, order);
 		}
 		

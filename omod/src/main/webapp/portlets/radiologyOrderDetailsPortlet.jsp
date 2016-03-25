@@ -67,6 +67,12 @@
                     ${status.value}
                 </spring:bind></td>
             </tr>
+            <c:if test="${not empty studyUID}">
+                <tr>
+                    <td><spring:message code="radiology.studyResults" /></td>
+                    <td><a href="${dicomViewerUrl}" target="_tab">View Study</a></td>
+                </tr>
+            </c:if>
         </table>
     </form:form>
 </div>
