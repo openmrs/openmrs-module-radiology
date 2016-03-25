@@ -1,18 +1,18 @@
 package org.openmrs.module.radiology.dicom;
 
+import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.notNullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
-import static org.hamcrest.core.IsNull.notNullValue;
-import static org.hamcrest.core.Is.is;
 
-import org.junit.Test;
-import org.junit.Rule;
 import org.junit.Before;
-import org.mockito.Mock;
+import org.junit.Rule;
+import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.RadiologyProperties;
 import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.openmrs.module.radiology.RadiologyProperties;
+import org.openmrs.module.radiology.Study;
 import org.openmrs.test.BaseContextMockTest;
 
 /**
@@ -36,12 +36,14 @@ public class DicomViewerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see DicomViewer#getDicomViewerUrl(Study)
-	 * @verifies return a url to open dicom images of the given study in the configured dicom viewer (no matter if the study is completed or not)
+	 * @verifies return a url to open dicom images of the given study in the configured dicom viewer
+	 *           (no matter if the study is completed or not)
 	 */
 	@Test
 	public void getDicomViewerUrl_shouldReturnAUrlToOpenDicomImagesOfTheGivenStudyInTheConfiguredDicomViewerNoMatterIfTheStudyIsCompletedOrNot() {
 		Study study = getMockStudy();
-		assertThat(dicomviewer.getDicomViewerUrl(study), is(notNullValue()));
+		assertThat(dicomviewer.getDicomViewerUrl(study), is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID="
+		        + study.getStudyInstanceUid()));
 	}
 	
 	Study getMockStudy() {

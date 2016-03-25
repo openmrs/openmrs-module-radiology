@@ -121,7 +121,12 @@ public class RadiologyOrderFormController {
 	 * 
 	 * @param order Order of an existing radiology order which should be put into the model and view
 	 * @return model and view containing radiology order
-	 * @should populate model and view with existing radiology order matching given order id
+	 * @should populate model and view with existing radiology order if given order id matches a
+	 *         radiology order and no dicomViewerUrl if order is not completed
+	 * @should populate model and view with existing radiology order if given order id matches a
+	 *         radiology order and dicomViewerUrl if order completed
+	 * @should populate model and view with existing order if given order id only matches an order
+	 *         and not a radiology order
 	 */
 	@RequestMapping(method = RequestMethod.GET, params = "orderId")
 	protected ModelAndView getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(
@@ -129,16 +134,17 @@ public class RadiologyOrderFormController {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
-			final RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(order.getOrderId());
 			modelAndView.addObject("order", order);
 			modelAndView.addObject("isOrderActive", order.isActive());
-			modelAndView.addObject("radiologyOrder", radiologyOrder);
 			modelAndView.addObject("discontinuationOrder", new Order());
 			
-			Study study = radiologyOrder.getStudy();
-			
-			modelAndView.addObject("studyUID", study.getStudyInstanceUid());
-			modelAndView.addObject("dicomViewerUrl", dicomViewer.getDicomViewerUrl(study));
+			if (order instanceof RadiologyOrder) {
+				final RadiologyOrder radiologyOrder = (RadiologyOrder) order;
+				modelAndView.addObject("radiologyOrder", radiologyOrder);
+				if (radiologyOrder.isCompleted()) {
+					modelAndView.addObject("dicomViewerUrl", dicomViewer.getDicomViewerUrl(radiologyOrder.getStudy()));
+				}
+			}
 			
 			radiologyReportNeedsToBeCreated(modelAndView, order);
 		}

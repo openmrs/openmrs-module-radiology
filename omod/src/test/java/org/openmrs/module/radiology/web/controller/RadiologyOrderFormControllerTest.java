@@ -42,6 +42,7 @@ import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
+import org.openmrs.module.radiology.dicom.DicomViewer;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.module.radiology.test.RadiologyTestData;
@@ -52,8 +53,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
-import org.openmrs.module.radiology.dicom.DicomViewer;
-import org.openmrs.module.radiology.Study;
 
 /**
  * Tests {@link RadiologyOrderFormController}
@@ -170,37 +169,107 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(Integer)
+	 * @see RadiologyOrderFormController#getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(Order)
+	 * @verifies populate model and view with existing radiology order if given order id matches a
+	 *           radiology order and no dicomViewerUrl if order is not completed
 	 */
 	@Test
-	@Verifies(value = "should populate model and view with existing radiology order matching given order id", method = "getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(Integer)")
-	public void getRadiologyOrderFormWithExistingRadiologyOrderByOrderId_shouldPopulateModelAndViewWithExistingRadiologyOrderMatchingGivenOrderId()
+	public void getRadiologyOrderFormWithExistingRadiologyOrderByOrderId_shouldPopulateModelAndViewWithExistingRadiologyOrderIfGivenOrderIdMatchesARadiologyOrderAndNoDicomViewerUrlIfOrderIsNotCompleted()
 	        throws Exception {
 		
 		//given
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		
-		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrder.getOrderId())).thenReturn(mockRadiologyOrder);
-		when(dicomViewer.getDicomViewerUrl(mockRadiologyOrder.getStudy())).thenReturn(
-		    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
+		RadiologyOrder mockRadiologyOrderInProgress = RadiologyTestData.getMockRadiologyOrder1();
+		mockRadiologyOrderInProgress.getStudy().setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
 		
 		ModelAndView modelAndView = radiologyOrderFormController
-		        .getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(mockRadiologyOrder);
+		        .getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(mockRadiologyOrderInProgress);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
 		
-		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
-		RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
-		assertThat(order, is(mockRadiologyOrder));
+		assertThat(modelAndView.getModelMap(), hasKey("order"));
+		RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap().get("order");
+		assertThat(order, is(mockRadiologyOrderInProgress));
 		
-		assertThat(modelAndView.getModelMap(), hasKey("studyUID"));
-		String studyUID = (String) modelAndView.getModelMap().get("studyUID");
-		assertThat(studyUID, is(mockRadiologyOrder.getStudy().getStudyInstanceUid()));
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
+		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
+		assertThat(radiologyOrder, is(mockRadiologyOrderInProgress));
+		
+		assertThat(modelAndView.getModelMap(), not(hasKey("dicomViewerUrl")));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(Order)
+	 * @verifies populate model and view with existing radiology order if given order id matches a
+	 *           radiology order and dicomViewerUrl if order completed
+	 */
+	@Test
+	public void getRadiologyOrderFormWithExistingRadiologyOrderByOrderId_shouldPopulateModelAndViewWithExistingRadiologyOrderIfGivenOrderIdMatchesARadiologyOrderAndDicomViewerUrlIfOrderCompleted()
+	        throws Exception {
+		
+		//given
+		RadiologyOrder mockCompletedRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
+		mockCompletedRadiologyOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		
+		when(dicomViewer.getDicomViewerUrl(mockCompletedRadiologyOrder.getStudy())).thenReturn(
+		    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
+		
+		ModelAndView modelAndView = radiologyOrderFormController
+		        .getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(mockCompletedRadiologyOrder);
+		
+		assertNotNull(modelAndView);
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
+		
+		assertThat(modelAndView.getModelMap(), hasKey("order"));
+		RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap().get("order");
+		assertThat(order, is(mockCompletedRadiologyOrder));
+		
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
+		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
+		assertThat(radiologyOrder, is(mockCompletedRadiologyOrder));
+		
 		assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
 		String dicomViewerUrl = (String) modelAndView.getModelMap().get("dicomViewerUrl");
 		assertThat(dicomViewerUrl,
 		    is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
+	}
+	
+	/**
+	 * @see RadiologyOrderFormController#getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(Order)
+	 * @verifies populate model and view with existing order if given order id only matches an order
+	 *           and not a radiology order
+	 */
+	@Test
+	public void getRadiologyOrderFormWithExistingRadiologyOrderByOrderId_shouldPopulateModelAndViewWithExistingOrderIfGivenOrderIdOnlyMatchesAnOrderAndNotARadiologyOrder()
+	        throws Exception {
+		
+		//given
+		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
+		mockRadiologyOrderToDiscontinue.getStudy().setMwlStatus(MwlStatus.DISCONTINUE_OK);
+		String discontinueReason = "Wrong Procedure";
+		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
+		
+		Order mockDiscontinuationOrder = new Order();
+		mockDiscontinuationOrder.setOrderId(2);
+		mockDiscontinuationOrder.setAction(Order.Action.DISCONTINUE);
+		mockDiscontinuationOrder.setOrderer(mockRadiologyOrderToDiscontinue.getOrderer());
+		mockDiscontinuationOrder.setOrderReasonNonCoded(discontinueReason);
+		mockDiscontinuationOrder.setDateActivated(discontinueDate);
+		mockDiscontinuationOrder.setPreviousOrder(mockRadiologyOrderToDiscontinue);
+		
+		ModelAndView modelAndView = radiologyOrderFormController
+		        .getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(mockDiscontinuationOrder);
+		
+		assertNotNull(modelAndView);
+		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
+		
+		assertThat(modelAndView.getModelMap(), hasKey("order"));
+		Order order = (Order) modelAndView.getModelMap().get("order");
+		assertThat(order, is(mockDiscontinuationOrder));
+		
+		assertThat(modelAndView.getModelMap(), not(hasKey("radiologyOrder")));
+		
+		assertThat(modelAndView.getModelMap(), not(hasKey("dicomViewerUrl")));
 	}
 	
 	/**
