@@ -18,7 +18,6 @@
 					<th><spring:message code="radiology.appoinmentDate" /></th>
 					<th><spring:message code="radiology.modality" /></th>
 					<th><spring:message code="radiology.performedStatus" /></th>
-					<th><spring:message code="radiology.radiologyReportId" /></th>
 					<th><spring:message code="radiology.referringPhysician" /></th>
 					<th><spring:message code="radiology.scheduledStatus" /></th>
 					<th><spring:message code="general.instructions" /></th>
@@ -26,35 +25,30 @@
 				</tr>
 			</thead>
 			<tbody id="matchedOrdersBody">
-				<c:forEach items="${orderList}" var="report">
-					<tr data-child-order_id="${report.radiologyOrder.orderId}"
-						data-child-report_id="${report.id}"
-						data-child-physician="${report.radiologyOrder.orderer.name}"
-						data-child-status="${report.radiologyOrder.study.scheduledStatus}"
-						data-child-instructions="${report.radiologyOrder.instructions}"
-						data-child-mwl="<spring:message code="radiology.${report.radiologyOrder.study.mwlStatus}"/>">
+				<c:forEach items="${orderList}" var="radiologyOrder">
+					<tr data-child-order_id="${radiologyOrder.orderId}"
+						data-child-physician="${radiologyOrder.orderer.name}"
+						data-child-status="${radiologyOrder.study.scheduledStatus}"
+						data-child-instructions="${radiologyOrder.instructions}"
+						data-child-mwl="<spring:message code="radiology.${radiologyOrder.study.mwlStatus}"/>">
 						<td class="details-control"></td>
 						<td><a
-							href="radiologyOrder.form?orderId=${report.radiologyOrder.orderId}">${report.radiologyOrder.orderId}</a></td>
-						<td style="text-align: center">${report.radiologyOrder.patient.patientIdentifier}</td>
-						<td>${report.radiologyOrder.patient.personName}</td>
-						<td>${report.radiologyOrder.urgency}</td>
-						<td name="appointmentDate">${report.radiologyOrder.effectiveStartDate}</td>
-						<td>${report.radiologyOrder.study.modality.fullName}</td>
-						<td>${report.radiologyOrder.study.performedStatus}</td>
-						<td><c:if test="${report.id != '0'}">
-								<a href="/openmrs/module/radiology/radiologyReport.form?radiologyReportId=">${report.id}</a>
-							</c:if></td>
-						<td>${report.radiologyOrder.orderer.name}</td>
-						<td>${report.radiologyOrder.study.scheduledStatus}</td>
+							href="radiologyOrder.form?orderId=${radiologyOrder.orderId}">${radiologyOrder.orderId}</a></td>
+						<td style="text-align: center">${radiologyOrder.patient.patientIdentifier}</td>
+						<td>${radiologyOrder.patient.personName}</td>
+						<td>${radiologyOrder.urgency}</td>
+						<td name="appointmentDate">${radiologyOrder.effectiveStartDate}</td>
+						<td>${radiologyOrder.study.modality.fullName}</td>
+						<td>${radiologyOrder.study.performedStatus}</td>
+						<td>${radiologyOrder.orderer.name}</td>
+						<td>${radiologyOrder.study.scheduledStatus}</td>
 						<td style="max-width: 90px; overflow: hidden;"><a
 							style="cursor: pointer"
 							onclick="$j('<p>'+this.innerHTML+'</p>').dialog({autoOpen:true,modal:true});"
-							title="<spring:message code="general.view"/>">${report.radiologyOrder.instructions}
+							title="<spring:message code="general.view"/>">${radiologyOrder.instructions}
 						</a></td>
-						<td><spring:message
-								code="radiology.${report.radiologyOrder.study.mwlStatus}"
-								text="${report.radiologyOrder.study.mwlStatus}" /></td>
+						<td><spring:message code="radiology.${radiologyOrder.study.mwlStatus}"
+								text="${radiologyOrder.study.mwlStatus}" /></td>
 					</tr>
 				</c:forEach>
 			</tbody>

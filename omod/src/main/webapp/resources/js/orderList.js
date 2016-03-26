@@ -8,17 +8,10 @@ var $j=jQuery.noConflict();
 		find=$j('#findButton');
 		results=$j('#results');
 		clearResults=$j('a#clearResults');
-		sortType = $j('#selectSortType');
 
-		function format(order_id,report_id, physician, status, instructions, mwl) {
-			var link ="";
-			if(report_id!=0){ link = '<a href="/openmrs/module/radiology/radiologyReport.form?radiologyReportId='+report_id+'">'+report_id+'</a>'}
+		function format(order_id, physician, status, instructions, mwl) {
 			// `d` is the original data object for the row
 			return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
-				'<tr>' +
-				'<td><spring:message code="radiology.radiologyReportId"/></td>' +
-				'<td>' + link + '</td>' +
-				'</tr>' +
 				'<tr>' +
 				'<td><spring:message code="radiology.referringPhysician"/></td>' +
 				'<td>' + physician + '</td>' +
@@ -47,11 +40,9 @@ var $j=jQuery.noConflict();
 
 			loading.show();
 			$j('#errorSpan').html('');
-			mySortType = $j('#selectSortType option:selected').val();
 			$j.get('portlets/orderSearch.portlet',
 			{patientQuery:pQuery.val(),startDate:startDate.val(),
-			endDate:endDate.val(), selectSortType: mySortType},
-
+			endDate:endDate.val()},
 			function(data){
 				loading.hide();
 				// crossDate error span rendered/sended from portlet
@@ -104,11 +95,6 @@ var $j=jQuery.noConflict();
 								"targets": [11],
 								"visible": false,
 								"searchable": false
-							},
-							{
-								"targets": [12],
-								"visible": false,
-								"searchable": false
 							}
 						]
 					});
@@ -123,7 +109,7 @@ var $j=jQuery.noConflict();
 						}
 						else {
 							// Open this row
-							row.child(format(tr.data('child-order_id'),tr.data('child-report_id'),tr.data('child-physician'), tr.data('child-status'), tr.data('child-instructions'),tr.data('child-mwl')), 'no-padding').show();
+							row.child(format(tr.data('child-order_id'),tr.data('child-physician'), tr.data('child-status'), tr.data('child-instructions'),tr.data('child-mwl')), 'no-padding').show();
 							tr.addClass('shown');
 						}
 					});
@@ -136,16 +122,18 @@ var $j=jQuery.noConflict();
 			page=0;
 			sendRequest();
 		});
-
-		sortType.change(function () {
-			sendRequest();
-		});
-
+		
 		pQuery.keypress(function(event) {
 		if (event.which == '13'){
 			sendRequest();
 		}
 		});
+		
+		clearResults.click(function(){
+			$j('table#searchForm input:text').val('');
+			$j('table#searchForm input[type="checkbox"]').attr('checked',false);
+			$j('tbody#matchedOrdersBody').html('');
+		});	
 
 		// ************Popups***************
 		$j('#voidReasonPopup').dialog({

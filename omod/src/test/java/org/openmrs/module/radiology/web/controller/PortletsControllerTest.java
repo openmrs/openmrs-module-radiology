@@ -3,6 +3,7 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
@@ -35,8 +36,6 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.report.RadiologyReport;
-import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.springframework.beans.TypeMismatchException;
@@ -50,10 +49,6 @@ public class PortletsControllerTest extends BaseContextMockTest {
 	private List<Study> mockStudies;
 	
 	private List<RadiologyOrder> mockRadiologyOrders;
-	
-	private List<RadiologyOrder> mockRadiologyOrders1;
-	
-	private List<RadiologyReport> mockRadiologyReports;
 	
 	private RadiologyOrder mockRadiologyOrder1;
 	
@@ -79,17 +74,10 @@ public class PortletsControllerTest extends BaseContextMockTest {
 	public void runBeforeAllTests() {
 		
 		mockRadiologyOrders = new ArrayList<RadiologyOrder>();
-		mockRadiologyOrders1 = new ArrayList<RadiologyOrder>();
 		mockRadiologyOrder1 = RadiologyTestData.getMockRadiologyOrder1();
 		mockRadiologyOrder2 = RadiologyTestData.getMockRadiologyOrder2();
-		mockRadiologyOrders1.add(mockRadiologyOrder1);
 		mockRadiologyOrders.add(mockRadiologyOrder1);
 		mockRadiologyOrders.add(mockRadiologyOrder2);
-		
-		mockRadiologyReports = new ArrayList<RadiologyReport>();
-		RadiologyReport radiologyReport = new RadiologyReport(mockRadiologyOrder1);
-		radiologyReport.setId(1);
-		mockRadiologyReports.add(radiologyReport);
 		
 		mockStudies = new ArrayList<Study>();
 		mockStudies.add(RadiologyTestData.getMockStudy1PostSave());
@@ -105,13 +93,9 @@ public class PortletsControllerTest extends BaseContextMockTest {
 		    Arrays.asList(mockRadiologyOrder1));
 		when(radiologyService.getRadiologyOrdersByPatients(Arrays.asList(mockPatient3))).thenReturn(
 		    new ArrayList<RadiologyOrder>());
-		when(radiologyService.getCompletedRadiologyOrdersWithAnActiveRadiologyReport()).thenReturn(mockRadiologyOrders1);
 		when(patientService.getPatients("Johnny")).thenReturn(new ArrayList<Patient>());
 		when(patientService.getPatients("Joh")).thenReturn(Arrays.asList(mockPatient1));
 		when(patientService.getPatients(mockPatient3.getFamilyName())).thenReturn(Arrays.asList(mockPatient3));
-		when(
-		    radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(mockRadiologyOrder1,
-		        RadiologyReportStatus.COMPLETED)).thenReturn(mockRadiologyReports);
 		
 	}
 	
@@ -128,18 +112,13 @@ public class PortletsControllerTest extends BaseContextMockTest {
 		Date startDate = null;
 		Date endDate = null;
 		
-		ModelAndView mav = portletsController.getRadiologyOrdersByPatientQueryAndDateRange(patientQuery, startDate, endDate,
-		    "allOrders");
+		ModelAndView mav = portletsController.getRadiologyOrdersByPatientQueryAndDateRange(patientQuery, startDate, endDate);
 		assertThat(mav, is(notNullValue()));
 		
 		assertThat(mav.getModelMap(), hasKey("orderList"));
-		List<RadiologyReport> orderList = (List<RadiologyReport>) mav.getModelMap().get("orderList");
+		List<RadiologyOrder> orderList = (List<RadiologyOrder>) mav.getModelMap().get("orderList");
 		assertThat(orderList, is(notNullValue()));
-		
-		List<RadiologyOrder> newOrderList = new ArrayList();
-		for (RadiologyReport report : orderList)
-			newOrderList.add(report.getRadiologyOrder());
-		assertThat(newOrderList, is(mockRadiologyOrders));
+		assertThat(orderList, is(mockRadiologyOrders));
 	}
 	
 	/**
@@ -154,8 +133,7 @@ public class PortletsControllerTest extends BaseContextMockTest {
 		Date startDate = new GregorianCalendar(2010, Calendar.OCTOBER, 10).getTime();
 		Date endDate = new GregorianCalendar(2001, Calendar.JANUARY, 01).getTime();
 		
-		ModelAndView mav = portletsController.getRadiologyOrdersByPatientQueryAndDateRange(patientQuery, startDate, endDate,
-		    "allOrders");
+		ModelAndView mav = portletsController.getRadiologyOrdersByPatientQueryAndDateRange(patientQuery, startDate, endDate);
 		assertThat(mav, is(notNullValue()));
 		
 		assertThat(mav.getModelMap(), hasKey("orderList"));
@@ -183,94 +161,13 @@ public class PortletsControllerTest extends BaseContextMockTest {
 		
 		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReadingPhysician());
 		
-		ModelAndView mav = portletsController.getRadiologyOrdersByPatientQueryAndDateRange(patientQuery, startDate, endDate,
-		    "allOrders");
+		ModelAndView mav = portletsController.getRadiologyOrdersByPatientQueryAndDateRange(patientQuery, startDate, endDate);
 		assertThat(mav, is(notNullValue()));
 		
 		assertThat(mav.getModelMap(), hasKey("orderList"));
-		List<RadiologyReport> orderList = (List<RadiologyReport>) mav.getModelMap().get("orderList");
+		List<RadiologyOrder> orderList = (List<RadiologyOrder>) mav.getModelMap().get("orderList");
 		assertThat(orderList, is(notNullValue()));
-		
-		List<RadiologyOrder> newOrderList = new ArrayList();
-		for (RadiologyReport report : orderList)
-			newOrderList.add(report.getRadiologyOrder());
-		
-		assertThat(newOrderList, is(mockRadiologyOrders1));
-	}
-	
-	/**
-	 * @see PortletsController#getOrCreateRadiologyReportByRadiologyOrder(List<RadiologyOrder>)
-	 * @verifies return list of radiologyReport matching a given radiologyOrder list
-	 */
-	@Test
-	public void getOrCreateRadiologyReportByRadiologyOrder_shouldReturnRadiologyReportsForGivenRadiologyOrders()
-	        throws Exception {
-		
-		Method getOrCreateRadiologyReportByRadiologyOrderMethod = portletsController.getClass().getDeclaredMethod(
-		    "getOrCreateRadiologyReportByRadiologyOrder", new Class[] { java.util.List.class });
-		getOrCreateRadiologyReportByRadiologyOrderMethod.setAccessible(true);
-		
-		List<RadiologyReport> radiologyReports = (List<RadiologyReport>) getOrCreateRadiologyReportByRadiologyOrderMethod
-		        .invoke(portletsController, new Object[] { mockRadiologyOrders });
-		
-		assertThat(radiologyReports, is(notNullValue()));
-		assertThat(radiologyReports.get(0).getId(), is(1));
-		assertThat(radiologyReports.get(1).getId(), is(0));
-	}
-	
-	/**
-	 * @see PortletsController#getRadiologyOrdersByPatientQueryAndDateRange(String, Date, Date,
-	 *      String)
-	 * @verifies populate model and view with table of completed orders without a radiologyReport
-	 *           filtered by selectSortType compledteOrdersWithNoReport
-	 */
-	@Test
-	public void getRadiologyOrdersByPatientQueryAndDateRange_shouldPopulateModelAndViewWithTableOfCompletedOrdersWithoutARadiologyReportFilteredBySelectSortTypeCompledteOrdersWithNoReport()
-	        throws Exception {
-		String patientQuery = "";
-		Date startDate = null;
-		Date endDate = null;
-		
-		ModelAndView mav = portletsController.getRadiologyOrdersByPatientQueryAndDateRange(patientQuery, startDate, endDate,
-		    "completedOrdersWithNoReport");
-		assertThat(mav, is(notNullValue()));
-		
-		assertThat(mav.getModelMap(), hasKey("orderList"));
-		List<RadiologyReport> orderList = (List<RadiologyReport>) mav.getModelMap().get("orderList");
-		assertThat(orderList, is(notNullValue()));
-		
-		List<RadiologyOrder> newOrderList = new ArrayList();
-		for (RadiologyReport report : orderList)
-			newOrderList.add(report.getRadiologyOrder());
-		assertThat(newOrderList.get(0), is(mockRadiologyOrder2));
-	}
-	
-	/**
-	 * @see PortletsController#getRadiologyOrdersByPatientQueryAndDateRange(String, Date, Date,
-	 *      String)
-	 * @verifies populate model and view with table of completed orders with an active
-	 *           radiologyReport filtered by selectSortType completedOrdersWithAReport
-	 */
-	@Test
-	public void getRadiologyOrdersByPatientQueryAndDateRange_shouldPopulateModelAndViewWithTableOfCompletedOrdersWithAnActiveRadiologyReportFilteredBySelectSortTypeCompletedOrdersWithAReport()
-	        throws Exception {
-		String patientQuery = "";
-		Date startDate = null;
-		Date endDate = null;
-		
-		ModelAndView mav = portletsController.getRadiologyOrdersByPatientQueryAndDateRange(patientQuery, startDate, endDate,
-		    "completedOrdersWithAReport");
-		assertThat(mav, is(notNullValue()));
-		
-		assertThat(mav.getModelMap(), hasKey("orderList"));
-		List<RadiologyReport> orderList = (List<RadiologyReport>) mav.getModelMap().get("orderList");
-		assertThat(orderList, is(notNullValue()));
-		
-		List<RadiologyOrder> newOrderList = new ArrayList();
-		for (RadiologyReport report : orderList)
-			newOrderList.add(report.getRadiologyOrder());
-		
-		assertThat(newOrderList, is(mockRadiologyOrders1));
+		assertThat(orderList, is(Arrays.asList(mockRadiologyOrder1)));
 	}
 	
 	/**
@@ -299,8 +196,7 @@ public class PortletsControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see PortletsController#filterRadiologyOrdersByDateRange(List<RadiologyOrder>, Date, Date)
-	 * @verifies return list of all orders with start date if start date is null and end date is
-	 *           null
+	 * @verifies return list of all orders with start date if start date is null and end date is null
 	 */
 	@Test
 	public void filterRadiologyOrdersByDateRange_shouldReturnListOfOrdersAssociatedWithGivenDateRangeNull() throws Exception {
@@ -323,8 +219,7 @@ public class PortletsControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see PortletsController#filterRadiologyOrdersByDateRange(List<RadiologyOrder>, Date, Date)
-	 * @verifies return empty list of orders with given end date and start date before any order has
-	 *           started
+	 * @verifies return empty list of orders with given end date and start date before any order has started
 	 */
 	@Test
 	public void filterRadiologyOrdersByDateRange_shouldReturnListOfOrdersAssociatedWithGivenEndDateAndStartDateBeforeAnyOrderHasStarted()
@@ -348,8 +243,7 @@ public class PortletsControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see PortletsController#filterRadiologyOrdersByDateRange(List<RadiologyOrder>, Date, Date)
-	 * @verifies return empty list of orders with given end date and start date after any order has
-	 *           started
+	 * @verifies return empty list of orders with given end date and start date after any order has started
 	 */
 	@Test
 	public void filterRadiologyOrdersByDateRange_shouldReturnListOfOrdersAssociatedWithGivenEndDateAndStartDateAfterAnyOrderHasStarted()

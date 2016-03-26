@@ -12,7 +12,6 @@ package org.openmrs.module.radiology.db.hibernate;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
-import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.db.RadiologyReportDAO;
@@ -99,28 +98,5 @@ public class RadiologyReportDAOImpl implements RadiologyReportDAO {
 		    Restrictions.eq("radiologyOrder", radiologyOrder)).add(
 		    Restrictions.disjunction().add(Restrictions.eq("reportStatus", RadiologyReportStatus.CLAIMED)).add(
 		        Restrictions.eq("reportStatus", RadiologyReportStatus.COMPLETED))).list().get(0);
-	}
-	
-	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getCompletedRadiologyOrdersWithAnActiveRadiologyReport()
-	 */
-	@Override
-	public List<RadiologyOrder> getCompletedRadiologyOrdersWithAnActiveRadiologyReport() {
-		final List<RadiologyOrder> radiologyOrders = sessionFactory.getCurrentSession()
-		        .createCriteria(RadiologyReport.class).add(
-		            Restrictions.disjunction().add(Restrictions.eq("reportStatus", RadiologyReportStatus.CLAIMED)).add(
-		                Restrictions.eq("reportStatus", RadiologyReportStatus.COMPLETED))).setProjection(
-		            Projections.property("radiologyOrder")).list();
-		return radiologyOrders;
-	}
-	
-	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyReports()
-	 */
-	@Override
-	public List<RadiologyReport> getRadiologyReports() {
-		final List<RadiologyReport> radiologyReports = sessionFactory.getCurrentSession().createCriteria(
-		    RadiologyReport.class).list();
-		return radiologyReports;
 	}
 }

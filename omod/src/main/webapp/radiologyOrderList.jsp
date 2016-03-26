@@ -21,10 +21,6 @@
 <openmrs:htmlInclude
 	file="/moduleResources/radiology/css/details-control.dataTables.css" />
 
-<%@ include
-	file="/WEB-INF/view/module/radiology/resources/js/orderList.js"%>
-
-
 <div id="calendar"></div>
 <div id="voidReasonPopup">
 	<label><spring:message code="general.voidReason" />:</label><br /> <input
@@ -62,14 +58,6 @@
 					<input name="startDate" type="text" onclick="showCalendar(this)" /></td>
 				<td><label><spring:message code="radiology.endDate" />:</label>
 					<input name="endDate" type="text" onclick="showCalendar(this)" /></td>
-				<td><select id="selectSortType">
-						<option value="allOrders"><spring:message
-								code="radiology.showAllOrders" /></option>
-						<option value="completedOrdersWithNoReport"><spring:message
-								code="radiology.showOrdersWithoutAReport" /></option>
-						<option value="completedOrdersWithAReport"><spring:message
-								code="radiology.showOrdersWithAReport" /></option>
-				</select></td>
 				<td><input id="findButton" type="button"
 					value="<spring:message code="radiology.find"/>" /></td>
 				<td id="errorSpan"></td>
