@@ -81,8 +81,6 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 7;
 	
-	private static final int TOTAL_NUMBER_OF_RADIOLOGY_REPORTS = 3;
-	
 	private static final int EXISTING_RADIOLOGY_REPORT_ID = 1;
 	
 	private static final int RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT = 2005;
@@ -182,7 +180,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	/**
 	 * Convenience method to get a RadiologyOrder object with all required values filled in but
 	 * which is not yet saved in the database
-	 *
+	 * 
 	 * @return RadiologyOrder object that can be saved to the database
 	 */
 	public RadiologyOrder getUnsavedRadiologyOrder() {
@@ -1315,18 +1313,6 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	}
 	
 	/**
-	 * @verifies return null if the reportStatus is discontinued
-	 * @see RadiologyService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
-	 */
-	@Test
-	public void getActiveRadiologyReportByRadiologyOrder_shouldReturnNullIfTheReportStatusIsDiscontinued() throws Exception {
-		RadiologyReport activeReport = radiologyService.getActiveRadiologyReportByRadiologyOrder(radiologyService
-		        .getRadiologyOrderByOrderId(2008));
-		
-		assertNull(activeReport);
-	}
-	
-	/**
 	 * @verifies throw an IllegalArgumentException if radiologyOrder is null
 	 * @see RadiologyService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
 	 */
@@ -1336,30 +1322,5 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder cannot be null");
 		radiologyService.getActiveRadiologyReportByRadiologyOrder(null);
-	}
-	
-	/**
-	 * @verifies return a list with radiologyOrders which have an active radiologyReport
-	 * @see RadiologyService#getCompletedRadiologyOrdersWithAnActiveRadiologyReport()
-	 */
-	@Test
-	public void getCompletedRadiologyOrdersWithAnActiveRadiologyReport_shouldReturnAListWithRadiologyOrdersWhichHaveAnActiveRadiologyReport()
-	        throws Exception {
-		List<RadiologyOrder> radiologyOrderList = radiologyService.getCompletedRadiologyOrdersWithAnActiveRadiologyReport();
-		
-		assertNotNull(radiologyOrderList);
-		assertThat(radiologyOrderList.size(), is(2));
-	}
-	
-	/**
-	 * @verifies return a list with all radiologyReports
-	 * @see RadiologyService#getRadiologyReports()
-	 */
-	@Test
-	public void getRadiologyReports_shouldReturnAListWithRadiologyReports() throws Exception {
-		List<RadiologyReport> radiologyReportList = radiologyService.getRadiologyReports();
-		
-		assertNotNull(radiologyReportList);
-		assertThat(radiologyReportList.size(), is(TOTAL_NUMBER_OF_RADIOLOGY_REPORTS));
 	}
 }
