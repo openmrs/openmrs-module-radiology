@@ -1,31 +1,18 @@
-<%-- 
-    Document   : RadiologyDashboardTab
-    Created on : Apr 26, 2013, 2:51:31 PM
-    Author     : Akhil
---%>
-
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
-<openmrs:htmlInclude file="/scripts/jquery/jquery.min.js" />
-<openmrs:htmlInclude file="/dwr/engine.js"></openmrs:htmlInclude>
-<openmrs:htmlInclude file="/dwr/util.js"></openmrs:htmlInclude>
-
-<openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
-<openmrs:htmlInclude
-	file="/scripts/jquery/dataTables/css/dataTables.css" />
 <openmrs:htmlInclude
 	file="/scripts/jquery-ui/js/jquery-ui-1.7.2.custom.min.js" />
-<openmrs:htmlInclude
-	file="/scripts/jquery-ui/css/redmond/jquery-ui-1.7.2.custom.css" />
-
 <openmrs:htmlInclude file="/moduleResources/radiology/radiology.css" />
 <openmrs:htmlInclude
 	file="/moduleResources/radiology/js/jquery.dataTables.min.js" />
+
 <%@ include
 	file="/WEB-INF/view/module/radiology/resources/js/orderList.js"%>
 <openmrs:htmlInclude file="/moduleResources/radiology/js/sortNumbers.js" />
-<openmrs:htmlInclude file="/moduleResources/radiology/css/ColVis.css" />
-<openmrs:htmlInclude file="/moduleResources/radiology/js/ColVis.min.js" />
+<openmrs:htmlInclude
+	file="/moduleResources/radiology/css/jquery.dataTables.min.css" />
+<openmrs:htmlInclude
+	file="/moduleResources/radiology/css/details-control.dataTables.css" />
 
 <openmrs:hasPrivilege privilege="Add Orders">
 	<p>
@@ -36,16 +23,14 @@
 </openmrs:hasPrivilege>
 
 <div id="radiologyOrders">
-	<div id="radiologyHeader" class="boxHeader">Patient Radiology
-		Orders</div>
+	<div id="radiologyHeader" class="boxHeader">
+		<spring:message code="radiology.radiologyOrders" />
+	</div>
 	<div id="radiologyTable" class="box">
-		<p></p>
-		<c:if test="${empty orderList}">
-			<p>No Radiology Orders Present.</p>
-		</c:if>
+		<br>
 		<c:if test="${not empty orderList}">
-			<table id="matchedOrders" cellpadding="2" cellspacing="0"
-				width="100%">
+			<table id="matchedOrders" cellspacing="0" width="100%"
+				class="display nowrap">
 				<thead>
 					<tr>
 						<th><spring:message code="general.edit" /></th>
@@ -56,8 +41,6 @@
 						<th><spring:message code="radiology.scheduledStatus" /></th>
 						<th><spring:message code="radiology.performedStatus" /></th>
 						<th><spring:message code="general.instructions" /></th>
-
-						<!--<th><spring:message code="radiology.mwlStatus" /></th>-->
 					</tr>
 				</thead>
 				<tbody id="matchedOrdersBody">
@@ -83,10 +66,13 @@
 				</tbody>
 			</table>
 		</c:if>
-
+		<c:if test="${empty orderList}">
+			<p>
+				<spring:message code="radiology.OrderListEmpty" />
+			</p>
+		</c:if>
 	</div>
 </div>
-<div id="viewRadiologyObservationsPopup"></div>
 
 <script type="text/javascript">
 	var $j = jQuery.noConflict();
@@ -96,83 +82,7 @@
 						$j('table#matchedOrders')
 								.dataTable(
 										{
-											"iDisplayLength" : 20,
-											"aLengthMenu" : [ 20, 50 ],
-											"sPaginationType" : 'full_numbers',
-											"bJQueryUI" : true,
-											"bAutoWidth" : false,
-											"sDom" : '<"H"<"tableHeader verticalCentered"<"left"l><"center"fr><"right colVisDiv"C>>>'
-													+ 't<"F" <"verticalCentered"<"left"i><"right"p>>>',
-											"oColVis" : {
-												"buttonText" : '<spring:message code="radiology.showHideColumns"/>',
-												"aiExclude" : [ 0 ]
-											},
-											"aoColumnDefs" : [ {
-												"sType" : "num-html",
-												"bSortable" : true,
-												"aTargets" : [ 0 ]
-											} ],
-											"fnDrawCallback" : function() {
-
-												$j(
-														'#actionSelect > option[value="-1"]')
-														.hide();
-												$j('#actionSelect')
-														.change(
-																function() {
-																	action = $j(
-																			'#actionSelect')
-																			.attr(
-																					'selectedIndex');
-																	if (action == 1) {
-																		$j(
-																				'#voidReasonPopup')
-																				.dialog(
-																						'open');
-																	}
-																	$j(
-																			'#actionSelect')
-																			.attr(
-																					'selectedIndex',
-																					'0');
-																});
-												$j('div.right.colVisDiv')
-														.click(
-																function() {
-																	style = $j(
-																			'div#footer + div + div')
-																			.attr(
-																					'style');
-																	$j(
-																			'div#footer + div + div')
-																			.attr(
-																					'style',
-																					style
-																							+ ' width:103%;');
-																});
-
-												//********************** DT Events *******************							
-
-												$j('#markAll')
-														.click(
-																function() {
-																	$j(
-																			'td#actionCheckboxes [type="checkbox"]')
-																			.attr(
-																					'checked',
-																					true);
-																});
-
-												$j('#markNone')
-														.click(
-																function() {
-																	$j(
-																			'td#actionCheckboxes [type="checkbox"]')
-																			.attr(
-																					'checked',
-																					false);
-																});
-											},
+											"order" : [ [ 1, 'asc' ] ],
 											"oLanguage" : {
 												"sLengthMenu" : '<spring:message code="radiology.show"/>'
 														+ ' _MENU_ <spring:message code="radiology.entries"/>',
@@ -187,7 +97,12 @@
 													"sLast" : '<spring:message code="radiology.last"/>',
 												},
 												"sProcessing" : '<spring:message code="general.loading"/>'
-											}
+											},
+											"aoColumnDefs" : [ {
+												"sType" : "num-html",
+												"bSortable" : true,
+												"aTargets" : [ 0 ]
+											} ],
 										});
 					});
 </script>

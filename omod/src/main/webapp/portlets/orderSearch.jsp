@@ -65,5 +65,4 @@
 	<p>
 		<spring:message code="radiology.OrderListEmpty" />
 	</p>
-
 </c:if>
