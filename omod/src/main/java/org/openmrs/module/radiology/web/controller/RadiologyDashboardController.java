@@ -27,23 +27,20 @@ public class RadiologyDashboardController {
 	RadiologyService radiologyService;
 	
 	/**
-	 * Get all orders for given patient criteria
+	 * Get all orders for given patient
 	 * 
-	 * @param patient the patient the orders should be returned for
-	 * @return model and view containing table of orders corresponding to given criteria
-	 * @should return model and view populated with all orders given patient
-	 * @should return empty model and view populated no orders given invalid patient
+	 * @param patient the patient the radiology orders should be returned for
+	 * @return model and view containing radiology orders for given patient
+	 * @should return model and view populated with all radiology orders for given patient
+	 * @should return model and view populated with an empty list of radiology orders if given patient is unknown
 	 */
 	@RequestMapping("**/RadiologyDashboardTab.portlet")
-	public ModelAndView ordersTable(@RequestParam(value = "patientId", required = true) Patient patient) {
+	public ModelAndView getRadiologyOrdersForPatient(@RequestParam(value = "patientId", required = true) Patient patient) {
 		
-		ModelAndView mav = new ModelAndView("/module/radiology/portlets/RadiologyDashboardTab");
+		ModelAndView modelAndView = new ModelAndView("/module/radiology/portlets/radiologyDashboardTab");
 		
-		List<RadiologyOrder> matchedOrders = radiologyService.getRadiologyOrdersByPatient(patient);
-		mav.addObject("orderList", matchedOrders);
-		mav.addObject("matchedOrdersSize", matchedOrders.size());
-		
-		return mav;
+		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatient(patient);
+		modelAndView.addObject("radiologyOrders", radiologyOrders);
+		return modelAndView;
 	}
-	
 }

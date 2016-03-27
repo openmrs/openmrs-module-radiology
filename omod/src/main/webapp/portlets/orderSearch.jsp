@@ -3,10 +3,9 @@
 <openmrs:require privilege="View Orders" otherwise="/login.htm"
 	redirect="/module/radiology/radiologyOrderList.jsp" />
 
-
-<c:if test="${not empty orderList}">
+<c:if test="${not empty radiologyOrders}">
 	<c:if test="${empty exceptionText}">
-		<table id="matchedOrders" cellspacing="0" width="100%"
+		<table id="radiologyOrdersTable" cellspacing="0" width="100%"
 			class="display nowrap">
 			<thead>
 				<tr>
@@ -24,8 +23,8 @@
 					<th><spring:message code="radiology.mwlStatus" /></th>
 				</tr>
 			</thead>
-			<tbody id="matchedOrdersBody">
-				<c:forEach items="${orderList}" var="radiologyOrder">
+			<tbody id="radiologyOrdersTableBody">
+				<c:forEach items="${radiologyOrders}" var="radiologyOrder">
 					<tr data-child-order_id="${radiologyOrder.orderId}"
 						data-child-physician="${radiologyOrder.orderer.name}"
 						data-child-status="${radiologyOrder.study.scheduledStatus}"
@@ -37,17 +36,14 @@
 						<td style="text-align: center">${radiologyOrder.patient.patientIdentifier}</td>
 						<td>${radiologyOrder.patient.personName}</td>
 						<td>${radiologyOrder.urgency}</td>
-						<td name="appointmentDate">${radiologyOrder.effectiveStartDate}</td>
+						<td>${radiologyOrder.effectiveStartDate}</td>
 						<td>${radiologyOrder.study.modality.fullName}</td>
 						<td>${radiologyOrder.study.performedStatus}</td>
 						<td>${radiologyOrder.orderer.name}</td>
 						<td>${radiologyOrder.study.scheduledStatus}</td>
-						<td style="max-width: 90px; overflow: hidden;"><a
-							style="cursor: pointer"
-							onclick="$j('<p>'+this.innerHTML+'</p>').dialog({autoOpen:true,modal:true});"
-							title="<spring:message code="general.view"/>">${radiologyOrder.instructions}
-						</a></td>
-						<td><spring:message code="radiology.${radiologyOrder.study.mwlStatus}"
+						<td>${radiologyOrder.instructions}</td>
+						<td><spring:message
+								code="radiology.${radiologyOrder.study.mwlStatus}"
 								text="${radiologyOrder.study.mwlStatus}" /></td>
 					</tr>
 				</c:forEach>
@@ -60,7 +56,7 @@
 			code="${exceptionText}" arguments="${invalidValue}" />
 	</span>
 </c:if>
-<c:if test="${empty orderList}">
+<c:if test="${empty radiologyOrders}">
 	<br />
 	<p>
 		<spring:message code="radiology.OrderListEmpty" />
