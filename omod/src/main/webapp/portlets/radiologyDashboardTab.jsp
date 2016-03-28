@@ -6,8 +6,6 @@
 <openmrs:htmlInclude
 	file="/moduleResources/radiology/js/jquery.dataTables.min.js" />
 
-<%@ include
-	file="/WEB-INF/view/module/radiology/resources/js/orderList.js"%>
 <openmrs:htmlInclude file="/moduleResources/radiology/js/sortNumbers.js" />
 <openmrs:htmlInclude
 	file="/moduleResources/radiology/css/jquery.dataTables.min.css" />
@@ -27,9 +25,9 @@
 		<spring:message code="radiology.radiologyOrders" />
 	</div>
 	<div id="radiologyTable" class="box">
-		<br>
-		<c:if test="${not empty orderList}">
-			<table id="matchedOrders" cellspacing="0" width="100%"
+		<c:if test="${not empty radiologyOrders}">
+			<br>
+			<table id="radiologyOrdersTable" cellspacing="0" width="100%"
 				class="display nowrap">
 				<thead>
 					<tr>
@@ -43,30 +41,25 @@
 						<th><spring:message code="general.instructions" /></th>
 					</tr>
 				</thead>
-				<tbody id="matchedOrdersBody">
-					<c:forEach items="${orderList}" begin="0"
-						end="${matchedOrdersSize}" var="order" varStatus="status">
+				<tbody id="radiologyOrdersTableBody">
+					<c:forEach items="${radiologyOrders}" var="radiologyOrder">
 						<tr>
 							<td style="text-align: center"><a
-								href="module/radiology/radiologyOrder.form?orderId=${order.orderId}">${order.orderId}
+								href="module/radiology/radiologyOrder.form?orderId=${radiologyOrder.orderId}">${radiologyOrder.orderId}
 							</a></td>
-							<td>${order.urgency}</td>
-							<td>${order.orderer.name}</td>
-							<td name="appointmentDate">${order.effectiveStartDate}</td>
-							<td>${order.study.modality.fullName}</td>
-							<td>${order.study.scheduledStatus}</td>
-							<td>${order.study.performedStatus}</td>
-							<td style="max-width: 90px; overflow: hidden;"><a
-								style="cursor: pointer"
-								onclick="$j('<p>'+this.innerHTML+'</p>').dialog({autoOpen:true,modal:true});"
-								title="<spring:message code="general.view"/>">${order.instructions}
-							</a></td>
+							<td>${radiologyOrder.urgency}</td>
+							<td>${radiologyOrder.orderer.name}</td>
+							<td>${radiologyOrder.effectiveStartDate}</td>
+							<td>${radiologyOrder.study.modality.fullName}</td>
+							<td>${radiologyOrder.study.scheduledStatus}</td>
+							<td>${radiologyOrder.study.performedStatus}</td>
+							<td>${radiologyOrder.instructions}</td>
 						</tr>
 					</c:forEach>
 				</tbody>
 			</table>
 		</c:if>
-		<c:if test="${empty orderList}">
+		<c:if test="${empty radiologyOrders}">
 			<p>
 				<spring:message code="radiology.OrderListEmpty" />
 			</p>
@@ -79,7 +72,7 @@
 	$j(document)
 			.ready(
 					function() {
-						$j('table#matchedOrders')
+						$j('table#radiologyOrdersTable')
 								.dataTable(
 										{
 											"order" : [ [ 1, 'asc' ] ],

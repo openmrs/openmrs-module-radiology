@@ -62,9 +62,9 @@ public class PortletsController {
 	 * @param endDate Date until which the radiology orders and studies should be returned for
 	 * @return model and view containing radiology orders and studies corresponding to given
 	 *         criteria
-	 * @should populate model and view with table of orders associated with given empty patient and
+	 * @should populate model and view with radiology orders associated with given empty patient and
 	 *         given date range null
-	 * @should not populate model and view with table of orders if start date is after end date
+	 * @should not populate model and view with radiology orders if start date is after end date
 	 */
 	@RequestMapping(value = "/module/radiology/portlets/orderSearch.portlet")
 	ModelAndView getRadiologyOrdersByPatientQueryAndDateRange(
@@ -75,13 +75,13 @@ public class PortletsController {
 		
 		if (isEndDateBeforeStartDate(startDate, endDate)) {
 			mav.addObject("exceptionText", "radiology.crossDate");
-			mav.addObject("orderList", new ArrayList<RadiologyOrder>());
+			mav.addObject("radiologyOrders", new ArrayList<RadiologyOrder>());
 			return mav;
 		}
 		
-		List<RadiologyOrder> matchedOrders = getRadiologyOrdersForPatientQuery(patientQuery);
-		matchedOrders = filterRadiologyOrdersByDateRange(matchedOrders, startDate, endDate);
-		mav.addObject("orderList", matchedOrders);
+		List<RadiologyOrder> radiologyOrders = getRadiologyOrdersForPatientQuery(patientQuery);
+		radiologyOrders = filterRadiologyOrdersByDateRange(radiologyOrders, startDate, endDate);
+		mav.addObject("radiologyOrders", radiologyOrders);
 		
 		return mav;
 	}

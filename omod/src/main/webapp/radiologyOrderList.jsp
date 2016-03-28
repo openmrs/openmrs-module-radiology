@@ -14,7 +14,7 @@
 	file="/moduleResources/radiology/js/jquery.dataTables.min.js" />
 
 <%@ include
-	file="/WEB-INF/view/module/radiology/resources/js/orderList.js"%>
+	file="/WEB-INF/view/module/radiology/resources/js/radiologyOrderList.js"%>
 <openmrs:htmlInclude file="/moduleResources/radiology/js/sortNumbers.js" />
 <openmrs:htmlInclude
 	file="/moduleResources/radiology/css/jquery.dataTables.min.css" />
@@ -22,12 +22,6 @@
 	file="/moduleResources/radiology/css/details-control.dataTables.css" />
 
 <div id="calendar"></div>
-<div id="voidReasonPopup">
-	<label><spring:message code="general.voidReason" />:</label><br /> <input
-		name="voidReason" type="text" style="width: 20em" /><br /> <input
-		id="voidOrderButton" type="button"
-		value='<spring:message code="general.void"/>' />
-</div>
 
 <h2>
 	<spring:message code="radiology.manageOrders" />
@@ -38,18 +32,18 @@
 <openmrs:hasPrivilege privilege="Add Orders">
 	<a href="radiologyOrder.form"><spring:message
 			code="radiology.addOrder" /></a>
-	<br />
+	<br>
 </openmrs:hasPrivilege>
-<br />
+<br>
 <span class="boxHeader"> <b><spring:message
-			code="radiology.worklist" /></b> <a id="clearResults" href="#"
+			code="radiology.radiologyOrders" /></b> <a id="clearResults" href="#"
 	style="float: right"> <spring:message code="radiology.clearResults" />
 </a>
 </span>
 <div class="box">
 	<table id="searchForm" cellspacing="10">
 		<tr>
-			<form id="orderList">
+			<form id="radiologyOrderListForm">
 				<td><label><spring:message code="radiology.patient" />:</label>
 					<input name="patientQuery" type="text" style="width: 20em"
 					title="<spring:message

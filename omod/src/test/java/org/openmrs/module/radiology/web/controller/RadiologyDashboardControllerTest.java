@@ -1,6 +1,10 @@
 package org.openmrs.module.radiology.web.controller;
 
+import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.hamcrest.collection.IsMapContaining.hasKey;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.when;
 
@@ -12,13 +16,10 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Patient;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
-import org.openmrs.test.Verifies;
 import org.springframework.web.servlet.ModelAndView;
 
 /**
@@ -32,8 +33,6 @@ public class RadiologyDashboardControllerTest extends BaseContextMockTest {
 	
 	private Patient invalidPatient;
 	
-	private List<Study> mockStudies;
-	
 	@Mock
 	private RadiologyService radiologyService;
 	
@@ -42,54 +41,53 @@ public class RadiologyDashboardControllerTest extends BaseContextMockTest {
 	
 	@Before
 	public void runBeforeAllTests() {
+		
 		mockPatient1 = RadiologyTestData.getMockPatient1();
-		invalidPatient = new Patient();
 		mockOrders = new ArrayList<RadiologyOrder>();
 		mockOrders.add(RadiologyTestData.getMockRadiologyOrder1());
-		
-		mockStudies = new ArrayList<Study>();
-		mockStudies.add(RadiologyTestData.getMockStudy1PostSave());
-		
-		ArrayList<RadiologyOrder> emptyOrdersList = new ArrayList<RadiologyOrder>();
-		
-		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
-		when(radiologyService.getStudiesByRadiologyOrders(mockOrders)).thenReturn(mockStudies);
 		when((radiologyService.getRadiologyOrdersByPatient(mockPatient1))).thenReturn(mockOrders);
+		
+		invalidPatient = new Patient();
+		ArrayList<RadiologyOrder> emptyOrdersList = new ArrayList<RadiologyOrder>();
 		when((radiologyService.getRadiologyOrdersByPatient(invalidPatient))).thenReturn(emptyOrdersList);
 	}
 	
 	/**
-	 * @see RadiologyDashboardController#ordersTable(Patient)
+	 * @see RadiologyDashboardController#getRadiologyOrdersForPatient(Patient)
+	 * @verifies return model and view populated with all radiology orders for given patient
 	 */
 	@Test
-	@Verifies(value = "should return model and view populated with all orders given patient", method = "ordersTable(Patient)")
-	public void ordersTable_ShouldReturnModelAndViewPopulatedWithAllOrdersGivenPatient() throws Exception {
+	public void getRadiologyOrdersForPatient_shouldReturnModelAndViewPopulatedWithAllRadiologyOrdersForGivenPatient()
+	        throws Exception {
 		
-		ModelAndView mav = radiologyDashboardController.ordersTable(mockPatient1);
-		assertNotNull(mav);
-		assertTrue(mav.getViewName().equals("/module/radiology/portlets/RadiologyDashboardTab"));
+		ModelAndView modelAndView = radiologyDashboardController.getRadiologyOrdersForPatient(mockPatient1);
 		
-		assertTrue(mav.getModelMap().containsKey("matchedOrdersSize"));
-		Integer ordersize = (Integer) mav.getModelMap().get("matchedOrdersSize");
-		assertNotNull(ordersize);
-		assertTrue(ordersize == 1);
+		assertNotNull(modelAndView);
+		assertTrue(modelAndView.getViewName().equals("/module/radiology/portlets/radiologyDashboardTab"));
+		
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrders"));
+		ArrayList<RadiologyOrder> radiologyOrders = (ArrayList<RadiologyOrder>) modelAndView.getModelMap().get(
+		    "radiologyOrders");
+		assertThat(radiologyOrders, is(mockOrders));
 	}
 	
 	/**
-	 * @see RadiologyDashboardController#ordersTable(Patient)
+	 * @see RadiologyDashboardController#getRadiologyOrdersForPatient(Patient)
+	 * @verifies return model and view populated with an empty list of radiology orders if given
+	 *           patient is unknown
 	 */
 	@Test
-	@Verifies(value = "should return empty model and view populated with no orders given invalid patient", method = "ordersTable(Patient)")
-	public void ordersTable_ShouldReturnEmptyModelAndViewPopulatedWithNoOrdersGivenInvalidPatient() throws Exception {
+	public void getRadiologyOrdersForPatient_shouldReturnModelAndViewPopulatedWithAnEmptyListOfRadiologyOrdersIfGivenPatientIsUnknown()
+	        throws Exception {
 		
-		ModelAndView mav = radiologyDashboardController.ordersTable(invalidPatient);
-		assertNotNull(mav);
-		assertTrue(mav.getViewName().equals("/module/radiology/portlets/RadiologyDashboardTab"));
+		ModelAndView modelAndView = radiologyDashboardController.getRadiologyOrdersForPatient(invalidPatient);
 		
-		assertTrue(mav.getModelMap().containsKey("matchedOrdersSize"));
-		Integer ordersize = (Integer) mav.getModelMap().get("matchedOrdersSize");
-		assertNotNull(ordersize);
-		assertTrue(ordersize == 0);
+		assertNotNull(modelAndView);
+		assertTrue(modelAndView.getViewName().equals("/module/radiology/portlets/radiologyDashboardTab"));
+		
+		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrders"));
+		ArrayList<RadiologyOrder> radiologyOrders = (ArrayList<RadiologyOrder>) modelAndView.getModelMap().get(
+		    "radiologyOrders");
+		assertThat(radiologyOrders, is(empty()));
 	}
-	
 }

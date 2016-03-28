@@ -101,10 +101,10 @@ public class PortletsControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see PortletsController#getRadiologyOrdersByPatientQueryAndDateRange(String, Date, Date)
-	 * @verifies populate model and view with table of orders associated with given date range null
+	 * @verifies populate model and view with radiology orders associated with given date range null
 	 */
 	@Test
-	public void getRadiologyOrdersByPatientQueryAndDateRange_shouldPopulateModelAndViewWithTableOfOrdersAssociatedWithGivenDateRangeNull()
+	public void getRadiologyOrdersByPatientQueryAndDateRange_shouldPopulateModelAndViewWithRadiologyOrdersAssociatedWithGivenDateRangeNull()
 	        throws Exception {
 		
 		//given
@@ -115,18 +115,19 @@ public class PortletsControllerTest extends BaseContextMockTest {
 		ModelAndView mav = portletsController.getRadiologyOrdersByPatientQueryAndDateRange(patientQuery, startDate, endDate);
 		assertThat(mav, is(notNullValue()));
 		
-		assertThat(mav.getModelMap(), hasKey("orderList"));
-		List<RadiologyOrder> orderList = (List<RadiologyOrder>) mav.getModelMap().get("orderList");
-		assertThat(orderList, is(notNullValue()));
-		assertThat(orderList, is(mockRadiologyOrders));
+		assertThat(mav.getModelMap(), hasKey("radiologyOrders"));
+		List<RadiologyOrder> radiologyOrders = (List<RadiologyOrder>) mav.getModelMap().get("radiologyOrders");
+		assertThat(radiologyOrders, is(notNullValue()));
+		assertThat(radiologyOrders, is(mockRadiologyOrders));
 	}
 	
 	/**
 	 * @see PortletsController#getRadiologyOrdersByPatientQueryAndDateRange(String, Date, Date)
-	 * @verifies not populate model and view with table of orders if start date is after end date
+	 * @verifies not populate model and view with radiology orders if start date is after end date
 	 */
 	@Test
-	public void ordersTable_shouldNotPopulateModelAndViewWithTableOfOrdersIfStartDateIsAfterEndDate() throws Exception {
+	public void getRadiologyOrdersByPatientQueryAndDateRange_shouldNotPopulateModelAndViewWithRadiologyOrdersIfStartDateIsAfterEndDate()
+	        throws Exception {
 		
 		//given
 		String patientQuery = "";
@@ -136,10 +137,10 @@ public class PortletsControllerTest extends BaseContextMockTest {
 		ModelAndView mav = portletsController.getRadiologyOrdersByPatientQueryAndDateRange(patientQuery, startDate, endDate);
 		assertThat(mav, is(notNullValue()));
 		
-		assertThat(mav.getModelMap(), hasKey("orderList"));
-		List<RadiologyOrder> orderList = (List<RadiologyOrder>) mav.getModelMap().get("orderList");
-		assertThat(orderList, is(notNullValue()));
-		assertThat(orderList, is(empty()));
+		assertThat(mav.getModelMap(), hasKey("radiologyOrders"));
+		List<RadiologyOrder> radiologyOrders = (List<RadiologyOrder>) mav.getModelMap().get("radiologyOrders");
+		assertThat(radiologyOrders, is(notNullValue()));
+		assertThat(radiologyOrders, is(empty()));
 		
 		assertThat(mav.getModelMap(), hasKey("exceptionText"));
 		String exception = (String) mav.getModelMap().get("exceptionText");
@@ -149,10 +150,11 @@ public class PortletsControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see PortletsController#getRadiologyOrdersByPatientQueryAndDateRange(String, Date, Date)
-	 * @verifies populate model and view with table of orders
+	 * @verifies populate model and view with radiology orders
 	 */
 	@Test
-	public void getRadiologyOrdersByPatientQueryAndDateRange_shouldPopulateModelAndViewWithTableOfOrders() throws Exception {
+	public void getRadiologyOrdersByPatientQueryAndDateRange_shouldPopulateModelAndViewWithRadiologyOrders()
+	        throws Exception {
 		
 		//given
 		String patientQuery = "";
@@ -164,10 +166,10 @@ public class PortletsControllerTest extends BaseContextMockTest {
 		ModelAndView mav = portletsController.getRadiologyOrdersByPatientQueryAndDateRange(patientQuery, startDate, endDate);
 		assertThat(mav, is(notNullValue()));
 		
-		assertThat(mav.getModelMap(), hasKey("orderList"));
-		List<RadiologyOrder> orderList = (List<RadiologyOrder>) mav.getModelMap().get("orderList");
-		assertThat(orderList, is(notNullValue()));
-		assertThat(orderList, is(Arrays.asList(mockRadiologyOrder1)));
+		assertThat(mav.getModelMap(), hasKey("radiologyOrders"));
+		List<RadiologyOrder> radiologyOrders = (List<RadiologyOrder>) mav.getModelMap().get("radiologyOrders");
+		assertThat(radiologyOrders, is(notNullValue()));
+		assertThat(radiologyOrders, is(Arrays.asList(mockRadiologyOrder1)));
 	}
 	
 	/**

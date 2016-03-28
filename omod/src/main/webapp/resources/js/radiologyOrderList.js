@@ -53,7 +53,7 @@ var $j=jQuery.noConflict();
 				else{
 					// load data
 					results.html(data);
-					var oTable = $j('table#matchedOrders').DataTable({
+					var oTable = $j('table#radiologyOrdersTable').DataTable({
 						"order": [[1, 'asc']],
 						"oLanguage": {
 							"sLengthMenu": '<spring:message code="radiology.show"/>' +
@@ -98,7 +98,7 @@ var $j=jQuery.noConflict();
 							}
 						]
 					});
-					$j('#matchedOrders tbody').on('click', 'td.details-control', function () {
+					$j('#radiologyOrdersTable tbody').on('click', 'td.details-control', function () {
 						var tr = $j(this).closest('tr');
 						var row = oTable.row(tr);
 
@@ -131,17 +131,7 @@ var $j=jQuery.noConflict();
 		
 		clearResults.click(function(){
 			$j('table#searchForm input:text').val('');
-			$j('table#searchForm input[type="checkbox"]').attr('checked',false);
-			$j('tbody#matchedOrdersBody').html('');
+			$j('tbody#radiologyOrdersTableBody').html('');
 		});	
-
-		// ************Popups***************
-		$j('#voidReasonPopup').dialog({
-			autoOpen: false,
-			modal: true,
-			position: top,
-			title: '<spring:message code="radiology.voidReason" javaScriptEscape="true"/>',
-			width: '40%'
-		});
 	});
-	</script>
+</script>
