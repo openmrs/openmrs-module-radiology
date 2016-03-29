@@ -26,6 +26,18 @@
                 </spring:bind></td>
 			</tr>
 			<tr>
+				<td><spring:message code="radiology.scheduledDate" /></td>
+				<td><spring:bind path="effectiveStartDate">
+                    ${status.value}
+                </spring:bind></td>
+			</tr>
+			<tr>
+				<td><spring:message code="radiology.stopDate" /></td>
+				<td><spring:bind path="effectiveStopDate">
+                    ${status.value}
+                </spring:bind></td>
+			</tr>
+			<tr>
 				<td><spring:message code="radiology.scheduledStatus" /></td>
 				<td><spring:bind path="study.scheduledStatus">${status.value}</spring:bind></td>
 			</tr>
@@ -43,18 +55,6 @@
 			<tr>
 				<td><spring:message code="general.instructions" /></td>
 				<td><spring:bind path="instructions">
-                    ${status.value}
-                </spring:bind></td>
-			</tr>
-			<tr>
-				<td><spring:message code="radiology.scheduledDate" /></td>
-				<td><spring:bind path="effectiveStartDate">
-                    ${status.value}
-                </spring:bind></td>
-			</tr>
-			<tr>
-				<td><spring:message code="radiology.stopDate" /></td>
-				<td><spring:bind path="effectiveStopDate">
                     ${status.value}
                 </spring:bind></td>
 			</tr>

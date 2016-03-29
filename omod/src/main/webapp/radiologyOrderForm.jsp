@@ -7,6 +7,7 @@
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="localHeader.jsp"%>
 <openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
+<openmrs:htmlInclude file="/scripts/timepicker/timepicker.js" />
 <%@ include
 	file="/WEB-INF/view/module/radiology/resources/js/moreInfo.js"%>
 <script type="text/javascript">
@@ -80,6 +81,16 @@
 							</spring:bind></td>
 					</tr>
 					<tr>
+						<td><spring:message code="radiology.scheduledDate" /></td>
+						<td><spring:bind path="scheduledDate">
+								<input name="${status.expression}" type="text"
+									onclick="showDateTimePicker(this)" value="${status.value}">
+								<c:if test="${status.errorMessage != ''}">
+									<span class="error">${status.errorMessage}</span>
+								</c:if>
+							</spring:bind></td>
+					</tr>
+					<tr>
 						<td><spring:message code="radiology.scheduledStatus" /></td>
 						<td><spring:bind path="study.scheduledStatus">
 								<select name="${status.expression}"
@@ -146,17 +157,6 @@
 							</spring:bind></td>
 					</tr>
 					<tr>
-						<td><spring:message code="radiology.scheduledDate" /></td>
-						<td><spring:bind path="scheduledDate">
-								<openmrs:fieldGen type="java.util.Date"
-									formFieldName="${status.expression}"
-									val="${status.editor.value}" />
-								<c:if test="${status.errorMessage != ''}">
-									<span class="error">${status.errorMessage}</span>
-								</c:if>
-							</spring:bind></td>
-					</tr>
-					<tr>
 						<td><spring:message code="general.dateAutoExpire" /></td>
 						<td><spring:bind path="autoExpireDate">
 								<openmrs:fieldGen type="java.util.Date"
@@ -186,7 +186,8 @@
 		<c:if test="${empty radiologyOrder}">
 			<!--  Show read-only view of discontinuation Order -->
 			<div>
-				<span class="boxHeader"> <b><spring:message code="Order.title" /></b>
+				<span class="boxHeader"> <b><spring:message
+							code="Order.title" /></b>
 				</span>
 				<form:form method="post" modelAttribute="order" cssClass="box">
 					<table>
