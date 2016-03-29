@@ -72,7 +72,8 @@
 								<select name="${status.expression}" id="urgencySelect">
 									<c:forEach var="urgency" items="${urgencies}">
 										<option value="${urgency}"
-											${status.value == urgency ? 'selected="selected"' : ''}>${urgency}</option>
+											${status.value == urgency ? 'selected="selected"' : ''}><spring:message
+												code="radiology.${urgency}" text="${urgency}" /></option>
 									</c:forEach>
 								</select>
 								<c:if test="${status.errorMessage != ''}">
@@ -98,7 +99,9 @@
 									<c:forEach var="scheduledProcedureStepStatus"
 										items="${scheduledProcedureStepStatuses}">
 										<option value="${scheduledProcedureStepStatus.key}"
-											${status.value == scheduledProcedureStepStatus.key ? 'selected="selected"' : ''}>${scheduledProcedureStepStatus.value}</option>
+											${status.value == scheduledProcedureStepStatus.key ? 'selected="selected"' : ''}><spring:message
+												code="radiology.${scheduledProcedureStepStatus.value}"
+												text="${scheduledProcedureStepStatus.value}" /></option>
 									</c:forEach>
 								</select>
 								<c:if test="${status.errorMessage != ''}">

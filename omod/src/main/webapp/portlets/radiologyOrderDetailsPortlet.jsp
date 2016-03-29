@@ -22,8 +22,9 @@
 			<tr>
 				<td><spring:message code="radiology.urgency" /></td>
 				<td><spring:bind path="urgency">
-                    ${status.value}
-                </spring:bind></td>
+						<spring:message code="radiology.${status.value}"
+							text="${status.value}" />
+					</spring:bind></td>
 			</tr>
 			<tr>
 				<td><spring:message code="radiology.scheduledDate" /></td>
@@ -39,12 +40,17 @@
 			</tr>
 			<tr>
 				<td><spring:message code="radiology.scheduledStatus" /></td>
-				<td><spring:bind path="study.scheduledStatus">${status.value}</spring:bind></td>
+				<td><spring:bind path="study.scheduledStatus">
+						<spring:message code="radiology.${status.value}"
+							text="${status.value}" />
+					</spring:bind></td>
 			</tr>
 			<tr>
 				<td><spring:message code="radiology.performedStatus" /></td>
-				<td><spring:bind path="study.performedStatus">${status.value}
-                </spring:bind></td>
+				<td><spring:bind path="study.performedStatus">
+						<spring:message code="radiology.${status.value}"
+							text="${status.value}" />
+					</spring:bind></td>
 			</tr>
 			<tr>
 				<td><spring:message code="radiology.modality" /></td>
