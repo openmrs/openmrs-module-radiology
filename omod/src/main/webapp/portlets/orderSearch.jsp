@@ -35,8 +35,10 @@
 						<td class="details-control"></td>
 						<td><a
 							href="radiologyOrder.form?orderId=${radiologyOrder.orderId}">${radiologyOrder.orderId}</a></td>
-						<td style="text-align: center">${radiologyOrder.patient.patientIdentifier}</td>
-						<td>${radiologyOrder.patient.personName}</td>
+						<td style="text-align: center"><a
+							href="/openmrs/patientDashboard.form?patientId=${radiologyOrder.patient.patientId}">${radiologyOrder.patient.patientIdentifier}</a></td>
+						<td><a
+							href="/openmrs/patientDashboard.form?patientId=${radiologyOrder.patient.patientId}">${radiologyOrder.patient.personName}</a></td>
 						<td><spring:message
 								code="radiology.${radiologyOrder.urgency}"
 								text="${radiologyOrder.urgency}" /></td>
