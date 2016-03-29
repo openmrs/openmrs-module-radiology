@@ -47,12 +47,18 @@
 							<td style="text-align: center"><a
 								href="module/radiology/radiologyOrder.form?orderId=${radiologyOrder.orderId}">${radiologyOrder.orderId}
 							</a></td>
-							<td>${radiologyOrder.urgency}</td>
+							<td><spring:message
+									code="radiology.${radiologyOrder.urgency}"
+									text="${radiologyOrder.urgency}" /></td>
 							<td>${radiologyOrder.orderer.name}</td>
 							<td>${radiologyOrder.effectiveStartDate}</td>
 							<td>${radiologyOrder.study.modality.fullName}</td>
-							<td>${radiologyOrder.study.scheduledStatus}</td>
-							<td>${radiologyOrder.study.performedStatus}</td>
+							<td><spring:message
+									code="radiology.${radiologyOrder.study.scheduledStatus}"
+									text="${radiologyOrder.study.scheduledStatus}" /></td>
+							<td><spring:message
+									code="radiology.${radiologyOrder.study.performedStatus}"
+									text="${radiologyOrder.study.performedStatus}" /></td>
 							<td>${radiologyOrder.instructions}</td>
 						</tr>
 					</c:forEach>

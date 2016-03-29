@@ -27,7 +27,9 @@
 				<c:forEach items="${radiologyOrders}" var="radiologyOrder">
 					<tr data-child-order_id="${radiologyOrder.orderId}"
 						data-child-physician="${radiologyOrder.orderer.name}"
-						data-child-status="${radiologyOrder.study.scheduledStatus}"
+						data-child-status="<spring:message
+								code="radiology.${radiologyOrder.study.scheduledStatus}"
+								text="${radiologyOrder.study.scheduledStatus}" />"
 						data-child-instructions="${radiologyOrder.instructions}"
 						data-child-mwl="<spring:message code="radiology.${radiologyOrder.study.mwlStatus}"/>">
 						<td class="details-control"></td>
@@ -35,12 +37,18 @@
 							href="radiologyOrder.form?orderId=${radiologyOrder.orderId}">${radiologyOrder.orderId}</a></td>
 						<td style="text-align: center">${radiologyOrder.patient.patientIdentifier}</td>
 						<td>${radiologyOrder.patient.personName}</td>
-						<td>${radiologyOrder.urgency}</td>
+						<td><spring:message
+								code="radiology.${radiologyOrder.urgency}"
+								text="${radiologyOrder.urgency}" /></td>
 						<td>${radiologyOrder.effectiveStartDate}</td>
 						<td>${radiologyOrder.study.modality.fullName}</td>
-						<td>${radiologyOrder.study.performedStatus}</td>
+						<td><spring:message
+								code="radiology.${radiologyOrder.study.performedStatus}"
+								text="${radiologyOrder.study.performedStatus}" /></td>
 						<td>${radiologyOrder.orderer.name}</td>
-						<td>${radiologyOrder.study.scheduledStatus}</td>
+						<td><spring:message
+								code="radiology.${radiologyOrder.study.scheduledStatus}"
+								text="${radiologyOrder.study.scheduledStatus}" /></td>
 						<td>${radiologyOrder.instructions}</td>
 						<td><spring:message
 								code="radiology.${radiologyOrder.study.mwlStatus}"
