@@ -98,17 +98,15 @@ var $j=jQuery.noConflict();
 							}
 						]
 					});
-					$j('#radiologyOrdersTable tbody').on('click', 'td.details-control', function () {
-						var tr = $j(this).closest('tr');
-						var row = oTable.row(tr);
+					$j('#radiologyOrdersTableBody').on('click', 'tr', function () {
+						var tr = $j(this);
+						var row = oTable.row(this);
 
 						if (row.child.isShown()) {
-							// This row is already open - close it
 							row.child.hide();
 							tr.removeClass('shown');
 						}
 						else {
-							// Open this row
 							row.child(format(tr.data('child-order_id'),tr.data('child-physician'), tr.data('child-status'), tr.data('child-instructions'),tr.data('child-mwl')), 'no-padding').show();
 							tr.addClass('shown');
 						}
