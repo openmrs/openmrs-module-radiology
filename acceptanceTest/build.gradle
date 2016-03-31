@@ -138,7 +138,6 @@ drivers.each { driver ->
         systemProperty "userName", userName
         systemProperty "userPW", userPW
         systemProperty "geb.build.baseUrl", baseUrl
-        systemProperty "db.driver", "com.mysql.jdbc.Driver"
         systemProperty "db.url", "jdbc:mysql://"+db_host+":"+db_port+"/openmrs"
         systemProperty "db.userid", db_username
         systemProperty "db.password", db_password
@@ -159,10 +158,8 @@ phantomJsTest {
     systemProperty "phantomjs.binary.path", new File(unzipPhantomJs.outputs.files.singleFile, phantomJsFilename).absolutePath
 }
 
-
 test {
     enabled = false
-	
     dependsOn drivers.collect { tasks["${it}Test"] }
 }
 

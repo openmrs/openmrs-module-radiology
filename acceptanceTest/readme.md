@@ -15,6 +15,18 @@ The acceptance tests also require to have the openmrs example data installed: ht
 
 Another requirement is to have a fully set up configured openmrs instance with an configured radiology module.
 
+# Database changes
+Running these tests will perform a clean insert on the following tables in the openmrs database:
+
+- encounter
+- encounter_provider
+- orders
+- test_order
+- radiology_order
+- radiology_study
+- radiology_report
+
+
 # Installation
 Open a new command line in the root folder of the acceptance tests and enter:
 

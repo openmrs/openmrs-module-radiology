@@ -1,0 +1,109 @@
+<dataset>
+  <encounter
+          encounter_id="10"
+          encounter_type="5"
+          patient_id="3"
+          encounter_datetime="2016-03-13 15:10:44"
+          creator="1"
+          date_created="2016-03-13 15:10:44"
+          voided="false"
+          uuid="6607a167-0790-4901-8eec-a51d0c32bbcb"
+  />
+  <encounter
+          encounter_id="11"
+          encounter_type="5"
+          patient_id="3"
+          encounter_datetime="2016-03-13 15:20:10"
+          creator="1"
+          date_created="2016-03-13 15:20:10"
+          voided="false"
+          uuid="b13f382a-1fc6-4e04-b9f5-950abffd0e4d"
+  />
+
+  <encounter_provider
+          encounter_provider_id="10"
+          encounter_id="10"
+          provider_id="2"
+          encounter_role_id="4"
+          creator="1"
+          date_created="2016-03-13 15:10:44"
+          voided="false"
+          uuid="69d1a7bb-ca78-4fce-b526-06517f17e6e0"
+  />
+  <encounter_provider
+          encounter_provider_id="11"
+          encounter_id="11"
+          provider_id="2"
+          encounter_role_id="4"
+          creator="1"
+          date_created="2016-03-13 15:20:10"
+          voided="false"
+          uuid="60df519a-c3cc-45c5-9109-f1e7a4441c69"
+  />
+
+  <orders
+          order_id="10"
+          order_type_id="4"
+          concept_id="377"
+          orderer="2"
+          encounter_id="10"
+          date_activated="2016-03-13 15:10:44"
+          creator="1"
+          date_created="2016-03-13 15:10:44"
+          voided="false"
+          patient_id="3"
+          uuid="97787c99-dbe3-4653-987e-8df79aad8caf"
+          urgency="ON_SCHEDULED_DATE"
+          order_number="ORD-10"
+          order_action="NEW"
+          care_setting="1"
+          scheduled_date="2016-03-13 00:00:00"
+          />
+  <orders
+          order_id="11"
+          order_type_id="4"
+          concept_id="377"
+          orderer="2"
+          encounter_id="11"
+          date_activated="2016-03-13 15:20:10"
+          creator="1"
+          date_created="2016-03-13 15:20:10"
+          voided="false"
+          patient_id="3"
+          uuid="16120934-a4a3-4228-bf0f-491e2c3919cb"
+          urgency="ON_SCHEDULED_DATE"
+          order_number="ORD-11"
+          order_action="NEW"
+          care_setting="1"
+          scheduled_date="2016-03-13 00:00:00"
+  />
+
+  <test_order order_id="10"/>
+  <test_order order_id="11"/>
+
+  <radiology_order order_id="10" />
+  <radiology_order order_id="11" />
+
+  <radiology_study
+          study_id="10"
+          study_instance_uid="1.2.826.0.1.3680043.8.2186.1.10"
+          order_id="10"
+          scheduled_status="READY"
+          performed_status="COMPLETED"
+          modality="XA"
+          mwl_status="SAVE_OK"
+  />
+
+  <radiology_study
+          study_id="11"
+          study_instance_uid="1.2.826.0.1.3680043.8.2186.1.11"
+          order_id="11"
+          scheduled_status="READY"
+          performed_status="IN_PROGRESS"
+          modality="XA"
+          mwl_status="SAVE_OK"
+  />
+
+  <radiology_report /> <!-- This line is needed in order to delete the radiology reports that got created during the acceptance tests. -->
+
+</dataset>
