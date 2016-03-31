@@ -25,6 +25,7 @@ task downloadChromeDriver {
 			driverOsFilenamePart = Os.isArch("amd64") ? "linux64" : "linux32"
 		}
 		FileUtils.copyURLToFile(new URL("http://chromedriver.storage.googleapis.com/${chromeDriverVersion}/chromedriver_${driverOsFilenamePart}.zip"), outputFile)
+
 	}
 }
 

@@ -11,4 +11,15 @@ class LoginPage extends Page{
         usernameBox {$("input", name: "uname")}
         passwordBox {$("input", name: "pw")}
     }
+
+    /**
+     * Performs a login on the openmrs web instance.
+     * @param username The username of the user.
+     * @param password The password of the user.
+     */
+    def performLogin(String username, String password) {
+        usernameBox.value(username)
+        passwordBox.value(password)
+        loginButton.click()
+    }
 }
