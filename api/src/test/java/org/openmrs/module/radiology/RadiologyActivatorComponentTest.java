@@ -75,8 +75,8 @@ public class RadiologyActivatorComponentTest extends BaseModuleContextSensitiveT
 		Field dicomOrderFillerField = RadiologyActivator.class.getDeclaredField("dicomOrderFiller");
 		dicomOrderFillerField.setAccessible(true);
 		String[] dicomOrderFillerArguments = new String[] { "-mwl", radiologyProperties.getMwlDir(), "-mpps",
-		        radiologyProperties.getMppsDir(),
-		        radiologyProperties.getDicomAeTitle() + ":" + radiologyProperties.getPacsDicomMppsPort() };
+				radiologyProperties.getMppsDir(),
+				radiologyProperties.getDicomAeTitle() + ":" + radiologyProperties.getPacsDicomMppsPort() };
 		DcmOF dicomOrderFiller = DcmOF.main(dicomOrderFillerArguments);
 		dicomOrderFillerField.set(radiologyActivator, dicomOrderFiller);
 		

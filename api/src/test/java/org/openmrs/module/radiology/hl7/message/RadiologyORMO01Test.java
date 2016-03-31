@@ -117,7 +117,7 @@ public class RadiologyORMO01Test {
 	public void RadiologyORMO01_shouldCreateNewRadiologyOrmo01ObjectGivenAllParams() throws Exception {
 		
 		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER,
-		        CommonOrderPriority.STAT);
+				CommonOrderPriority.STAT);
 		assertNotNull(radiologyOrderMessage);
 	}
 	
@@ -178,17 +178,17 @@ public class RadiologyORMO01Test {
 	public void createEncodedRadiologyORMO01Message_shouldCreateEncodedHl7Ormo01Message() throws Exception {
 		
 		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER,
-		        CommonOrderPriority.STAT);
+				CommonOrderPriority.STAT);
 		String encodedOrmMessage = radiologyOrderMessage.createEncodedRadiologyORMO01Message();
 		
 		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(
-		    encodedOrmMessage,
-		    endsWith("||ORM^O01||P|2.3.1\r"
-		            + "PID|||100||Doe^John^Francis||19500401000000|M\r"
-		            + "ORC|NW|ORD-20|||||^^^20150204143500^^S\r"
-		            + "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
-		            + "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
+			encodedOrmMessage,
+			endsWith("||ORM^O01||P|2.3.1\r"
+					+ "PID|||100||Doe^John^Francis||19500401000000|M\r"
+					+ "ORC|NW|ORD-20|||||^^^20150204143500^^S\r"
+					+ "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
+					+ "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
 	}
 	
 	/**
@@ -199,21 +199,21 @@ public class RadiologyORMO01Test {
 	public void createRadiologyORMO01Message_shouldCreateOrmo01Message() throws Exception {
 		
 		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER,
-		        CommonOrderPriority.STAT);
+				CommonOrderPriority.STAT);
 		
 		Method createRadiologyORMO01Message = ReflectionUtils.findMethod(RadiologyORMO01.class,
-		    "createRadiologyORMO01Message");
+			"createRadiologyORMO01Message");
 		createRadiologyORMO01Message.setAccessible(true);
 		ORM_O01 ormO01 = (ORM_O01) createRadiologyORMO01Message.invoke(radiologyOrderMessage);
 		String encodedOrmMessage = PipeParser.encode(ormO01, encodingCharacters);
 		
 		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(
-		    encodedOrmMessage,
-		    endsWith("||ORM^O01||P|2.3.1\r"
-		            + "PID|||100||Doe^John^Francis||19500401000000|M\r"
-		            + "ORC|NW|ORD-20|||||^^^20150204143500^^S\r"
-		            + "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
-		            + "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
+			encodedOrmMessage,
+			endsWith("||ORM^O01||P|2.3.1\r"
+					+ "PID|||100||Doe^John^Francis||19500401000000|M\r"
+					+ "ORC|NW|ORD-20|||||^^^20150204143500^^S\r"
+					+ "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
+					+ "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
 	}
 }

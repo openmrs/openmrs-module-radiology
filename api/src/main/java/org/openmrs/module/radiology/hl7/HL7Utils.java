@@ -43,9 +43,13 @@ public class HL7Utils {
 		final XPN result = new XPN(null);
 		
 		if (personName != null) {
-			result.getFamilyLastName().getFamilyName().setValue(personName.getFamilyName());
-			result.getGivenName().setValue(personName.getGivenName());
-			result.getMiddleInitialOrName().setValue(personName.getMiddleName());
+			result.getFamilyLastName()
+					.getFamilyName()
+					.setValue(personName.getFamilyName());
+			result.getGivenName()
+					.setValue(personName.getGivenName());
+			result.getMiddleInitialOrName()
+					.setValue(personName.getMiddleName());
 		}
 		return result;
 	}

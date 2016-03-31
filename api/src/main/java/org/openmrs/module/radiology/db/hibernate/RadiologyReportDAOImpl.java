@@ -43,7 +43,8 @@ public class RadiologyReportDAOImpl implements RadiologyReportDAO {
 	 */
 	@Override
 	public RadiologyReport getRadiologyReportById(Integer radiologyReportId) {
-		return (RadiologyReport) sessionFactory.getCurrentSession().get(RadiologyReport.class, radiologyReportId);
+		return (RadiologyReport) sessionFactory.getCurrentSession()
+				.get(RadiologyReport.class, radiologyReportId);
 	}
 	
 	/**
@@ -51,7 +52,8 @@ public class RadiologyReportDAOImpl implements RadiologyReportDAO {
 	 */
 	@Override
 	public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) {
-		sessionFactory.getCurrentSession().saveOrUpdate(radiologyReport);
+		sessionFactory.getCurrentSession()
+				.saveOrUpdate(radiologyReport);
 		return radiologyReport;
 	}
 	
@@ -61,9 +63,11 @@ public class RadiologyReportDAOImpl implements RadiologyReportDAO {
 	 */
 	@Override
 	public boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder) {
-		final List<RadiologyReport> radiologyReports = sessionFactory.getCurrentSession().createCriteria(
-		    RadiologyReport.class).add(Restrictions.eq("radiologyOrder", radiologyOrder)).add(
-		    Restrictions.eq("reportStatus", RadiologyReportStatus.COMPLETED)).list();
+		final List<RadiologyReport> radiologyReports = sessionFactory.getCurrentSession()
+				.createCriteria(RadiologyReport.class)
+				.add(Restrictions.eq("radiologyOrder", radiologyOrder))
+				.add(Restrictions.eq("reportStatus", RadiologyReportStatus.COMPLETED))
+				.list();
 		return radiologyReports.size() == 1 ? true : false;
 	}
 	
@@ -71,9 +75,11 @@ public class RadiologyReportDAOImpl implements RadiologyReportDAO {
 	 * @see org.openmrs.module.radiology.db.RadiologyReportDAO#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
 	 */
 	public boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder) {
-		final List<RadiologyReport> radiologyReports = sessionFactory.getCurrentSession().createCriteria(
-		    RadiologyReport.class).add(Restrictions.eq("radiologyOrder", radiologyOrder)).add(
-		    Restrictions.eq("reportStatus", RadiologyReportStatus.CLAIMED)).list();
+		final List<RadiologyReport> radiologyReports = sessionFactory.getCurrentSession()
+				.createCriteria(RadiologyReport.class)
+				.add(Restrictions.eq("radiologyOrder", radiologyOrder))
+				.add(Restrictions.eq("reportStatus", RadiologyReportStatus.CLAIMED))
+				.list();
 		return radiologyReports.size() == 1 ? true : false;
 	}
 	
@@ -83,10 +89,12 @@ public class RadiologyReportDAOImpl implements RadiologyReportDAO {
 	 */
 	@Override
 	public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(RadiologyOrder radiologyOrder,
-	        RadiologyReportStatus radiologyReportStatus) {
-		return sessionFactory.getCurrentSession().createCriteria(RadiologyReport.class).add(
-		    Restrictions.eq("radiologyOrder", radiologyOrder)).add(Restrictions.eq("reportStatus", radiologyReportStatus))
-		        .list();
+			RadiologyReportStatus radiologyReportStatus) {
+		return sessionFactory.getCurrentSession()
+				.createCriteria(RadiologyReport.class)
+				.add(Restrictions.eq("radiologyOrder", radiologyOrder))
+				.add(Restrictions.eq("reportStatus", radiologyReportStatus))
+				.list();
 	}
 	
 	/**
@@ -94,9 +102,13 @@ public class RadiologyReportDAOImpl implements RadiologyReportDAO {
 	 */
 	@Override
 	public RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder) {
-		return (RadiologyReport) sessionFactory.getCurrentSession().createCriteria(RadiologyReport.class).add(
-		    Restrictions.eq("radiologyOrder", radiologyOrder)).add(
-		    Restrictions.disjunction().add(Restrictions.eq("reportStatus", RadiologyReportStatus.CLAIMED)).add(
-		        Restrictions.eq("reportStatus", RadiologyReportStatus.COMPLETED))).list().get(0);
+		return (RadiologyReport) sessionFactory.getCurrentSession()
+				.createCriteria(RadiologyReport.class)
+				.add(Restrictions.eq("radiologyOrder", radiologyOrder))
+				.add(Restrictions.disjunction()
+						.add(Restrictions.eq("reportStatus", RadiologyReportStatus.CLAIMED))
+						.add(Restrictions.eq("reportStatus", RadiologyReportStatus.COMPLETED)))
+				.list()
+				.get(0);
 	}
 }

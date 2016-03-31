@@ -284,7 +284,7 @@ public class RadiologyOrderTest {
 	 */
 	@Test
 	public void isDiscontinuationAllowed_shouldReturnTrueIfRadiologyOrderIsActiveNotInProgressAndNotCompleted()
-	        throws Exception {
+			throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
 		radiologyOrder.setStudy(null);

@@ -138,11 +138,11 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		}
 		
 		saveRadiologyOrderEncounterMethod = RadiologyServiceImpl.class.getDeclaredMethod("saveRadiologyOrderEncounter",
-		    new Class[] { org.openmrs.Patient.class, org.openmrs.Provider.class, java.util.Date.class });
+			new Class[] { org.openmrs.Patient.class, org.openmrs.Provider.class, java.util.Date.class });
 		saveRadiologyOrderEncounterMethod.setAccessible(true);
 		
 		saveStudyMethod = RadiologyServiceImpl.class.getDeclaredMethod("saveStudy",
-		    new Class[] { org.openmrs.module.radiology.Study.class });
+			new Class[] { org.openmrs.module.radiology.Study.class });
 		saveStudyMethod.setAccessible(true);
 		
 		executeDataSet(STUDIES_TEST_DATASET);
@@ -160,13 +160,14 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		Date encounterDatetime = new GregorianCalendar(2010, Calendar.OCTOBER, 10).getTime();
 		
 		Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyServiceImpl, new Object[] {
-		        patient, provider, encounterDatetime });
+				patient, provider, encounterDatetime });
 		
 		assertNotNull(encounter);
 		assertThat(encounter.getPatient(), is(patient));
-		assertThat(encounter.getProvidersByRole(radiologyProperties.getOrderingProviderEncounterRole()).size(), is(1));
-		assertThat(encounter.getProvidersByRole(radiologyProperties.getOrderingProviderEncounterRole()).contains(provider),
-		    is(true));
+		assertThat(encounter.getProvidersByRole(radiologyProperties.getOrderingProviderEncounterRole())
+				.size(), is(1));
+		assertThat(encounter.getProvidersByRole(radiologyProperties.getOrderingProviderEncounterRole())
+				.contains(provider), is(true));
 		assertThat(encounter.getEncounterDatetime(), is(encounterDatetime));
 		assertThat(encounter.getEncounterType(), is(radiologyProperties.getRadiologyEncounterType()));
 	}

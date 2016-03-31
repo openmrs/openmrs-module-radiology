@@ -43,7 +43,7 @@ public class DicomWebViewerTest extends BaseContextMockTest {
 	public void getDicomViewerUrl_shouldReturnAUrlToOpenDicomImagesOfTheGivenStudyInTheConfiguredDicomViewer() {
 		Study study = getMockStudy();
 		assertThat(dicomviewer.getDicomViewerUrl(study), is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID="
-		        + study.getStudyInstanceUid()));
+				+ study.getStudyInstanceUid()));
 	}
 	
 	Study getMockStudy() {
@@ -66,8 +66,9 @@ public class DicomWebViewerTest extends BaseContextMockTest {
 		
 		Study study = getMockStudy();
 		
-		assertThat(dicomviewer.getDicomViewerUrl(study), is("http://localhost:8081/oviyam2/viewer.html?studyUID="
-		        + study.getStudyInstanceUid() + "&serverName=oviyamlocal"));
+		assertThat(dicomviewer.getDicomViewerUrl(study),
+			is("http://localhost:8081/oviyam2/viewer.html?studyUID=" + study.getStudyInstanceUid()
+					+ "&serverName=oviyamlocal"));
 	}
 	
 	/**
@@ -87,7 +88,7 @@ public class DicomWebViewerTest extends BaseContextMockTest {
 	 */
 	@Test
 	public void getDicomViewerUrl_shouldThrowAnIllegalArgumentExceptionGivenAStudyWithStudyInstanceUidNull()
-	        throws Exception {
+			throws Exception {
 		Study study = new Study();
 		
 		expectedException.expect(IllegalArgumentException.class);

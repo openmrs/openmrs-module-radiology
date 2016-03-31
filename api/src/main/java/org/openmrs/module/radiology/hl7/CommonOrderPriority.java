@@ -11,15 +11,17 @@ package org.openmrs.module.radiology.hl7;
 
 /**
  * <p>
- * Represents the Priority component (ST) of HL7 Common Order (ORC) Segment's attribute
- * QUANTITY/TIMING (TQ) defined in HL7 version 2.3.1
+ * Represents the Priority component (ST) of HL7 Common Order (ORC) Segment's attribute QUANTITY/TIMING (TQ) defined in HL7
+ * version 2.3.1
  * </p>
  * Note: This enum does not include every priority defined by the HL7 standard. Only the priorities
  * used so far by the radiology module have been implemented here.
  */
 public enum CommonOrderPriority {
-	STAT(0, "S", "With highest priority"), ASAP(1, "A", "Fill after Stat orders"), ROUTINE(2, "R", "Default"), TIMING_CRITICAL(
-	        5, "T", "critical to come as close as possible to the requested time");
+	STAT(0, "S", "With highest priority"),
+	ASAP(1, "A", "Fill after Stat orders"),
+	ROUTINE(2, "R", "Default"),
+	TIMING_CRITICAL(5, "T", "critical to come as close as possible to the requested time");
 	
 	private final int priority;
 	

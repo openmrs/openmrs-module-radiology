@@ -36,16 +36,16 @@ public class DicomUtils {
 	};
 	
 	private static RadiologyProperties radiologyProperties = Context.getRegisteredComponent("radiologyProperties",
-	    RadiologyProperties.class);
+		RadiologyProperties.class);
 	
 	/**
 	 * <p>
-	 * Updates the PerformedStatus of an existing Study in the database to the Performed Procedure
-	 * Step Status of a given DicomObject containing a DICOM N-CREATE/N-SET command
+	 * Updates the PerformedStatus of an existing Study in the database to the Performed Procedure Step Status of a given
+	 * DicomObject containing a DICOM N-CREATE/N-SET command
 	 * </p>
 	 * 
 	 * @param mppsObject the DICOM MPPS object containing a DICOM N-CREATE/N-SET command with DICOM
-	 *            tag Performed Procedure Step Status
+	 *        tag Performed Procedure Step Status
 	 * @should set performed status of an existing study in database to performed procedure step
 	 *         status IN_PROGRESS of given mpps object
 	 * @should set performed status of an existing study in database to performed procedure step
@@ -59,13 +59,12 @@ public class DicomUtils {
 			final String studyInstanceUid = getStudyInstanceUidFromMpps(mppsObject);
 			
 			final String performedProcedureStepStatusString = getPerformedProcedureStepStatus(mppsObject);
-			final PerformedProcedureStepStatus performedProcedureStepStatus = PerformedProcedureStepStatus
-			        .getMatchForDisplayName(performedProcedureStepStatusString);
+			final PerformedProcedureStepStatus performedProcedureStepStatus = PerformedProcedureStepStatus.getMatchForDisplayName(performedProcedureStepStatusString);
 			
 			radiologyService().updateStudyPerformedStatus(studyInstanceUid, performedProcedureStepStatus);
 			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :"
-			        + studyInstanceUid + " to Status : "
-			        + PerformedProcedureStepStatus.getNameOrUnknown(performedProcedureStepStatus));
+					+ studyInstanceUid + " to Status : "
+					+ PerformedProcedureStepStatus.getNameOrUnknown(performedProcedureStepStatus));
 		}
 		catch (NumberFormatException e) {
 			log.error("Number can not be parsed");
@@ -88,8 +87,8 @@ public class DicomUtils {
 	 */
 	public static String getStudyInstanceUidFromMpps(DicomObject mppsObject) {
 		
-		final SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties
-		        .getDicomSpecificCharacterSet());
+		final SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(
+				radiologyProperties.getDicomSpecificCharacterSet());
 		
 		final DicomElement scheduledStepAttributesSequenceElement = mppsObject.get(Tag.ScheduledStepAttributesSequence);
 		if (scheduledStepAttributesSequenceElement == null) {
@@ -119,8 +118,8 @@ public class DicomUtils {
 	 */
 	public static String getPerformedProcedureStepStatus(DicomObject dicomObject) {
 		
-		final SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties
-		        .getDicomSpecificCharacterSet());
+		final SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(
+				radiologyProperties.getDicomSpecificCharacterSet());
 		
 		final DicomElement performedProcedureStepStatusElement = dicomObject.get(Tag.PerformedProcedureStepStatus);
 		if (performedProcedureStepStatusElement == null) {
@@ -128,7 +127,7 @@ public class DicomUtils {
 		}
 		
 		final String performedProcedureStepStatus = performedProcedureStepStatusElement.getValueAsString(
-		    specificCharacterSet, 0);
+			specificCharacterSet, 0);
 		
 		return performedProcedureStepStatus;
 	}
@@ -154,14 +153,15 @@ public class DicomUtils {
 	public static String createHL7Message(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
 		String encodedHL7OrmMessage = null;
 		
-		final MwlStatus mwlstatus = radiologyOrder.getStudy().getMwlStatus();
+		final MwlStatus mwlstatus = radiologyOrder.getStudy()
+				.getMwlStatus();
 		final CommonOrderOrderControl commonOrderOrderControl = getCommonOrderControlFrom(mwlstatus, orderRequest);
 		
 		final CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(radiologyOrder.getUrgency());
 		
 		try {
 			final RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, commonOrderOrderControl,
-			        orderPriority);
+					orderPriority);
 			encodedHL7OrmMessage = radiologyOrderMessage.createEncodedRadiologyORMO01Message();
 			log.info("Created HL7 ORM^O01 message \n" + encodedHL7OrmMessage);
 		}
@@ -242,10 +242,10 @@ public class DicomUtils {
 		return result;
 	}
 	
-	//Send HL7 ORU message to dcm4chee.
+	// Send HL7 ORU message to dcm4chee.
 	public static int sendHL7Worklist(String hl7blob) {
 		final String input[] = { "-c", radiologyProperties.getPacsAddress() + ":" + radiologyProperties.getPacsHL7Port(),
-		        hl7blob };
+				hl7blob };
 		final int result = HL7Snd.main(input);
 		return result;
 	}

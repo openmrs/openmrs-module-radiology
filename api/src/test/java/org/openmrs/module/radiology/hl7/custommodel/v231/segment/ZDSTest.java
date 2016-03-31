@@ -45,13 +45,22 @@ public class ZDSTest {
 		
 		assertNotNull(zds.getStudyInstanceUID());
 		
-		zds.getStudyInstanceUID().getPointer().setValue("1.2.826.0.1.3680043.8.2186.1.1.1");
-		zds.getStudyInstanceUID().getApplicationID().getNamespaceID().setValue("1");
-		zds.getStudyInstanceUID().getTypeOfData().setValue("Application");
-		zds.getStudyInstanceUID().getSubtype().setValue("DICOM");
+		zds.getStudyInstanceUID()
+				.getPointer()
+				.setValue("1.2.826.0.1.3680043.8.2186.1.1.1");
+		zds.getStudyInstanceUID()
+				.getApplicationID()
+				.getNamespaceID()
+				.setValue("1");
+		zds.getStudyInstanceUID()
+				.getTypeOfData()
+				.setValue("Application");
+		zds.getStudyInstanceUID()
+				.getSubtype()
+				.setValue("DICOM");
 		
 		assertThat(PipeParser.encode(zds, encodingCharacters),
-		    is("ZDS|1.2.826.0.1.3680043.8.2186.1.1.1^1^Application^DICOM"));
+			is("ZDS|1.2.826.0.1.3680043.8.2186.1.1.1^1^Application^DICOM"));
 	}
 	
 	/**
@@ -69,8 +78,10 @@ public class ZDSTest {
 		
 		RP studyInstanceUidField = zds.getStudyInstanceUID();
 		
-		studyInstanceUidField.getPointer().setValue("1.2.826.0.1.3680043.8.2186.1.1.1");
-		assertThat(studyInstanceUidField.getPointer().getValue(), is("1.2.826.0.1.3680043.8.2186.1.1.1"));
+		studyInstanceUidField.getPointer()
+				.setValue("1.2.826.0.1.3680043.8.2186.1.1.1");
+		assertThat(studyInstanceUidField.getPointer()
+				.getValue(), is("1.2.826.0.1.3680043.8.2186.1.1.1"));
 	}
 	
 }

@@ -69,9 +69,9 @@ public class RadiologyActivator extends BaseModuleActivator {
 	String[] getDicomOrderFillerArguments() {
 		log.info("Loading dicom order filler arguments");
 		final RadiologyProperties radiologyProperties = Context.getRegisteredComponent("radiologyProperties",
-		    RadiologyProperties.class);
+			RadiologyProperties.class);
 		return new String[] { "-mwl", radiologyProperties.getMwlDir(), "-mpps", radiologyProperties.getMppsDir(),
-		        radiologyProperties.getDicomAeTitle() + ":" + radiologyProperties.getPacsDicomMppsPort() };
+				radiologyProperties.getDicomAeTitle() + ":" + radiologyProperties.getPacsDicomMppsPort() };
 	}
 	
 	/**

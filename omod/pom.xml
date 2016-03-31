@@ -149,8 +149,12 @@
 		</pluginManagement>
 		<plugins>
 			<plugin>
-				<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
-				<artifactId>maven-java-formatter-plugin</artifactId>
+				<groupId>net.revelc.code</groupId>
+				<artifactId>formatter-maven-plugin</artifactId>
+				<version>${formatterPluginVersion}</version>
+				<configuration>
+					<configFile>${eclipseFormatterStyle}</configFile>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>

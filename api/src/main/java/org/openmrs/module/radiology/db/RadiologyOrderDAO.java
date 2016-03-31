@@ -32,7 +32,7 @@ public interface RadiologyOrderDAO {
 	public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient);
 	
 	/**
-	 * @see 
+	 * @see
 	 *      org.openmrs.module.radiology.RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
 	 */
 	public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients);

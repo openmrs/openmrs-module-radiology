@@ -54,10 +54,19 @@ public class RadiologyZDSTest {
 		
 		RadiologyZDS.populateZDSSegment(zds, study);
 		
-		assertThat(zds.getStudyInstanceUID().getPointer().getValue(), is("1.2.826.0.1.3680043.8.2186.1.1.1"));
-		assertNull(zds.getStudyInstanceUID().getApplicationID().getNamespaceID().getValue());
-		assertThat(zds.getStudyInstanceUID().getTypeOfData().getValue(), is("Application"));
-		assertThat(zds.getStudyInstanceUID().getSubtype().getValue(), is("DICOM"));
+		assertThat(zds.getStudyInstanceUID()
+				.getPointer()
+				.getValue(), is("1.2.826.0.1.3680043.8.2186.1.1.1"));
+		assertNull(zds.getStudyInstanceUID()
+				.getApplicationID()
+				.getNamespaceID()
+				.getValue());
+		assertThat(zds.getStudyInstanceUID()
+				.getTypeOfData()
+				.getValue(), is("Application"));
+		assertThat(zds.getStudyInstanceUID()
+				.getSubtype()
+				.getValue(), is("DICOM"));
 		
 		assertThat(PipeParser.encode(zds, encodingCharacters), is("ZDS|1.2.826.0.1.3680043.8.2186.1.1.1^^Application^DICOM"));
 	}
@@ -79,10 +88,19 @@ public class RadiologyZDSTest {
 		
 		RadiologyZDS.populateZDSSegment(zds, study);
 		
-		assertNull(zds.getStudyInstanceUID().getPointer().getValue());
-		assertNull(zds.getStudyInstanceUID().getApplicationID().getNamespaceID().getValue());
-		assertThat(zds.getStudyInstanceUID().getTypeOfData().getValue(), is("Application"));
-		assertThat(zds.getStudyInstanceUID().getSubtype().getValue(), is("DICOM"));
+		assertNull(zds.getStudyInstanceUID()
+				.getPointer()
+				.getValue());
+		assertNull(zds.getStudyInstanceUID()
+				.getApplicationID()
+				.getNamespaceID()
+				.getValue());
+		assertThat(zds.getStudyInstanceUID()
+				.getTypeOfData()
+				.getValue(), is("Application"));
+		assertThat(zds.getStudyInstanceUID()
+				.getSubtype()
+				.getValue(), is("DICOM"));
 	}
 	
 	/**
@@ -103,10 +121,19 @@ public class RadiologyZDSTest {
 		
 		RadiologyZDS.populateZDSSegment(zds, study);
 		
-		assertThat(zds.getStudyInstanceUID().getPointer().getValue(), is(""));
-		assertNull(zds.getStudyInstanceUID().getApplicationID().getNamespaceID().getValue());
-		assertThat(zds.getStudyInstanceUID().getTypeOfData().getValue(), is("Application"));
-		assertThat(zds.getStudyInstanceUID().getSubtype().getValue(), is("DICOM"));
+		assertThat(zds.getStudyInstanceUID()
+				.getPointer()
+				.getValue(), is(""));
+		assertNull(zds.getStudyInstanceUID()
+				.getApplicationID()
+				.getNamespaceID()
+				.getValue());
+		assertThat(zds.getStudyInstanceUID()
+				.getTypeOfData()
+				.getValue(), is("Application"));
+		assertThat(zds.getStudyInstanceUID()
+				.getSubtype()
+				.getValue(), is("DICOM"));
 	}
 	
 	/**

@@ -49,14 +49,14 @@ public class RadiologyReportFormController {
 	 */
 	@RequestMapping(method = RequestMethod.GET, params = "orderId")
 	protected ModelAndView getRadiologyReportFormWithNewRadiologyReport(
-	        @RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder) {
+			@RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
 			
 			RadiologyReport radiologyReport = radiologyService.createAndClaimRadiologyReport(radiologyOrder);
 			modelAndView = new ModelAndView("redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?radiologyReportId="
-			        + radiologyReport.getId());
+					+ radiologyReport.getId());
 			
 			addObjectsToModelAndView(modelAndView, radiologyReport);
 			return modelAndView;
@@ -68,14 +68,14 @@ public class RadiologyReportFormController {
 	 * Handles GET requests for the radiologyReportForm when called for existing radiology reports
 	 * 
 	 * @param radiologyReportId radiology report id of the existing radiology report which should be
-	 *            put into the model and view
+	 *        put into the model and view
 	 * @return model and view containing radiology report for given radiology report id
 	 * @should populate model and view with existing radiology report matching given radiology
 	 *         report id
 	 */
 	@RequestMapping(method = RequestMethod.GET, params = "radiologyReportId")
 	protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(
-	        @RequestParam(value = "radiologyReportId", required = true) Integer radiologyReportId) {
+			@RequestParam(value = "radiologyReportId", required = true) Integer radiologyReportId) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
@@ -123,7 +123,8 @@ public class RadiologyReportFormController {
 		if (Context.isAuthenticated()) {
 			radiologyService.unclaimRadiologyReport(radiologyReport);
 			return new ModelAndView("redirect:" + RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING
-			        + "?orderId=" + radiologyReport.getRadiologyOrder().getOrderId());
+					+ "?orderId=" + radiologyReport.getRadiologyOrder()
+							.getOrderId());
 		}
 		return modelAndView;
 	}
@@ -141,7 +142,7 @@ public class RadiologyReportFormController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, params = "completeRadiologyReport")
 	protected ModelAndView completeRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport,
-	        BindingResult bindingResult) {
+			BindingResult bindingResult) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
@@ -150,7 +151,7 @@ public class RadiologyReportFormController {
 			}
 			
 			final RadiologyReport completedRadiologyReport = radiologyService.completeRadiologyReport(radiologyReport,
-			    radiologyReport.getPrincipalResultsInterpreter());
+				radiologyReport.getPrincipalResultsInterpreter());
 			addObjectsToModelAndView(modelAndView, completedRadiologyReport);
 			return modelAndView;
 		}
@@ -184,7 +185,7 @@ public class RadiologyReportFormController {
 	 *
 	 * @param modelAndView model and view to which objects should be added
 	 * @param radiologyReport radiology report from which objects should be added to the model and
-	 *            view
+	 *        view
 	 */
 	private void addObjectsToModelAndView(ModelAndView modelAndView, RadiologyReport radiologyReport) {
 		modelAndView.addObject("radiologyReport", radiologyReport);

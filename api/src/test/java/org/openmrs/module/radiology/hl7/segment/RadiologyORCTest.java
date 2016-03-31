@@ -63,15 +63,23 @@ public class RadiologyORCTest {
 		radiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		
 		ORM_O01 message = new ORM_O01();
-		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC(),
-		    radiologyOrder, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
+				.getORC(), radiologyOrder, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
 		
-		ORC commonOrderSegment = message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC();
-		assertThat(commonOrderSegment.getOrderControl().getValue(), is("NW"));
-		assertThat(commonOrderSegment.getPlacerOrderNumber().getEntityIdentifier().getValue(), is("ORD-1"));
-		assertThat(commonOrderSegment.getQuantityTiming().getStartDateTime().getTimeOfAnEvent().getValue(),
-		    is("20150204143500"));
-		assertThat(commonOrderSegment.getQuantityTiming().getPriority().getValue(), is("S"));
+		ORC commonOrderSegment = message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
+				.getORC();
+		assertThat(commonOrderSegment.getOrderControl()
+				.getValue(), is("NW"));
+		assertThat(commonOrderSegment.getPlacerOrderNumber()
+				.getEntityIdentifier()
+				.getValue(), is("ORD-1"));
+		assertThat(commonOrderSegment.getQuantityTiming()
+				.getStartDateTime()
+				.getTimeOfAnEvent()
+				.getValue(), is("20150204143500"));
+		assertThat(commonOrderSegment.getQuantityTiming()
+				.getPriority()
+				.getValue(), is("S"));
 		
 		assertThat(PipeParser.encode(commonOrderSegment, encodingCharacters), is("ORC|NW|ORD-1|||||^^^20150204143500^^S"));
 	}
@@ -101,7 +109,7 @@ public class RadiologyORCTest {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("radiologyOrder cannot be null."));
-		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC(), null,
-		    CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
+				.getORC(), null, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
 	}
 }

@@ -44,16 +44,20 @@ public class DicomWebViewer {
 			throw new IllegalArgumentException("studyInstanceUid cannot be null");
 		}
 		
-		final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance().scheme("http").host(
-		    radiologyProperties.getDicomWebViewerAddress()).port(
-		    Integer.valueOf(radiologyProperties.getDicomWebViewerPort())).path(
-		    radiologyProperties.getDicomWebViewerBaseUrl()).queryParam("studyUID", study.getStudyInstanceUid());
+		final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance()
+				.scheme("http")
+				.host(radiologyProperties.getDicomWebViewerAddress())
+				.port(Integer.valueOf(radiologyProperties.getDicomWebViewerPort()))
+				.path(radiologyProperties.getDicomWebViewerBaseUrl())
+				.queryParam("studyUID", study.getStudyInstanceUid());
 		
 		final String serverName = radiologyProperties.getDicomWebViewerLocalServerName();
 		if (StringUtils.isNotBlank(serverName)) {
 			uriComponentsBuilder.queryParam("serverName", serverName);
 		}
 		
-		return uriComponentsBuilder.buildAndExpand().encode().toString();
+		return uriComponentsBuilder.buildAndExpand()
+				.encode()
+				.toString();
 	}
 }

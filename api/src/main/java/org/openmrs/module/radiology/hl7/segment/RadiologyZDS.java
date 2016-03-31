@@ -45,9 +45,15 @@ public class RadiologyZDS {
 			throw new IllegalArgumentException("study cannot be null.");
 		}
 		
-		zds.getStudyInstanceUID().getPointer().setValue(study.getStudyInstanceUid());
-		zds.getStudyInstanceUID().getTypeOfData().setValue("Application");
-		zds.getStudyInstanceUID().getSubtype().setValue("DICOM");
+		zds.getStudyInstanceUID()
+				.getPointer()
+				.setValue(study.getStudyInstanceUid());
+		zds.getStudyInstanceUID()
+				.getTypeOfData()
+				.setValue("Application");
+		zds.getStudyInstanceUID()
+				.getSubtype()
+				.setValue("DICOM");
 		
 		return zds;
 	}
