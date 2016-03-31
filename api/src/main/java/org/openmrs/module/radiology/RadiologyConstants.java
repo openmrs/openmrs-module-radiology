@@ -14,23 +14,25 @@ package org.openmrs.module.radiology;
  */
 public class RadiologyConstants {
 	
-	public static final String GP_APPLICATION_ENTITY_TITLE = "radiology.applicationEntityTitle";
-	
 	public static final String GP_MPPS_DIR = "radiology.mppsDirectory";
 	
 	public static final String GP_MWL_DIR = "radiology.mwlDirectory";
 	
-	public static final String GP_MWL_MPPS_PORT = "radiology.mwlMppsPort";
+	public static final String GP_PACS_ADDRESS = "radiology.pacsAddress";
 	
-	public static final String GP_SERVERS_ADDRESS = "radiology.serversAddress";
+	public static final String GP_PACS_DICOM_MPPS_PORT = "radiology.pacsDicomMppsPort";
 	
-	public static final String GP_APPLICATION_UID = "radiology.applicationUID";
+	public static final String GP_PACS_HL7_PORT = "radiology.pacsHL7Port";
 	
-	public static final String GP_STUDY_UID_SLUG = "radiology.studyUIDSlug";
+	public static final String GP_PACS_DICOM_AE_TITLE = "radiology.pacsDicomAeTitle";
 	
-	public static final String GP_SPECIFIC_CHARCATER_SET = "radiology.specificCharacterSet";
+	public static final String GP_DICOM_AE_TITLE = "radiology.dicomAeTitle";
 	
-	public static final String GP_SERVERS_HL7_PORT = "radiology.serversHL7Port";
+	public static final String GP_DICOM_APPLICATION_UID = "radiology.dicomApplicationUID";
+	
+	public static final String GP_DICOM_STUDY_UID_SLUG = "radiology.dicomStudyUIDSlug";
+	
+	public static final String GP_DICOM_SPECIFIC_CHARCATER_SET = "radiology.dicomSpecificCharacterSet";
 	
 	public static final String GP_DICOM_WEB_VIEWER_ADDRESS = "radiology.dicomWebViewerAddress";
 	

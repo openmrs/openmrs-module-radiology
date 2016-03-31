@@ -89,7 +89,7 @@ public class DicomUtils {
 	public static String getStudyInstanceUidFromMpps(DicomObject mppsObject) {
 		
 		final SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties
-		        .getSpecificCharacterSet());
+		        .getDicomSpecificCharacterSet());
 		
 		final DicomElement scheduledStepAttributesSequenceElement = mppsObject.get(Tag.ScheduledStepAttributesSequence);
 		if (scheduledStepAttributesSequenceElement == null) {
@@ -120,7 +120,7 @@ public class DicomUtils {
 	public static String getPerformedProcedureStepStatus(DicomObject dicomObject) {
 		
 		final SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties
-		        .getSpecificCharacterSet());
+		        .getDicomSpecificCharacterSet());
 		
 		final DicomElement performedProcedureStepStatusElement = dicomObject.get(Tag.PerformedProcedureStepStatus);
 		if (performedProcedureStepStatusElement == null) {
@@ -244,8 +244,8 @@ public class DicomUtils {
 	
 	//Send HL7 ORU message to dcm4chee.
 	public static int sendHL7Worklist(String hl7blob) {
-		final String input[] = { "-c",
-		        radiologyProperties.getServersAddress() + ":" + radiologyProperties.getServersHL7Port(), hl7blob };
+		final String input[] = { "-c", radiologyProperties.getPacsAddress() + ":" + radiologyProperties.getPacsHL7Port(),
+		        hl7blob };
 		final int result = HL7Snd.main(input);
 		return result;
 	}

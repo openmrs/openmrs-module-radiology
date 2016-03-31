@@ -24,16 +24,7 @@ import org.springframework.stereotype.Component;
 public class RadiologyProperties extends ModuleProperties {
 	
 	/**
-	 * Return application entity title
-	 * 
-	 * @return application entity title
-	 */
-	public String getApplicationEntityTitle() {
-		return getGlobalProperty(RadiologyConstants.GP_APPLICATION_ENTITY_TITLE, true);
-	}
-	
-	/**
-	 * Return mpps directory
+	 * Return mpps directory.
 	 * 
 	 * @return mpps directory
 	 */
@@ -42,7 +33,7 @@ public class RadiologyProperties extends ModuleProperties {
 	}
 	
 	/**
-	 * Return mwl directory
+	 * Return mwl directory.
 	 * 
 	 * @return mwl directory
 	 */
@@ -51,51 +42,99 @@ public class RadiologyProperties extends ModuleProperties {
 	}
 	
 	/**
-	 * Return mwl mpps port
+	 * Return PACS address.
 	 * 
-	 * @return mwl mpps port
+	 * @return pacs address
+	 * @throws IllegalStateException if global property for pacs address cannot be found
+	 * @should return pacs address
+	 * @should throw illegal state exception if global property for pacs address cannot be found
 	 */
-	public String getMwlMppsPort() {
-		return getGlobalProperty(RadiologyConstants.GP_MWL_MPPS_PORT, true);
+	public String getPacsAddress() {
+		return getGlobalProperty(RadiologyConstants.GP_PACS_ADDRESS, true);
 	}
 	
 	/**
-	 * Return Server Address
+	 * Return PACS DICOM MPPS port.
 	 * 
-	 * @return server address
-	 * @throws IllegalStateException if global property for server address cannot be found
-	 * @should return server address
-	 * @should throw illegal state exception if global property for server address cannot be found
+	 * @return pacs dicom mpps port
+	 * @throws IllegalStateException if global property for pacs dicom mpps port cannot be found
+	 * @should return pacs dicom mpps port
+	 * @should throw illegal state exception if global property for pacs dicom mpps port cannot be found
 	 */
-	public String getServersAddress() {
-		return getGlobalProperty(RadiologyConstants.GP_SERVERS_ADDRESS, true);
+	public String getPacsDicomMppsPort() {
+		return getGlobalProperty(RadiologyConstants.GP_PACS_DICOM_MPPS_PORT, true);
 	}
 	
 	/**
-	 * Return prefix for dicom objects in the application, Ex: 1.2.826.0.1.3680043.8.2186
+	 * Return PACS HL7 port.
 	 * 
-	 * @return prefix for dicom objects in the application
+	 * @return pacs hl7 port
+	 * @throws IllegalStateException if global property for pacs hl7 port cannot be found
+	 * @should return pacs hl7 port
+	 * @should throw illegal state exception if global property for pacs hl7 port cannot be found
 	 */
-	public String getApplicationUID() {
-		return getGlobalProperty(RadiologyConstants.GP_APPLICATION_UID, true);
+	public String getPacsHL7Port() {
+		return getGlobalProperty(RadiologyConstants.GP_PACS_HL7_PORT, true);
 	}
 	
 	/**
-	 * Return study uid slug
+	 * Return PACS DICOM AE title.
 	 * 
-	 * @return study uid slug
+	 * @return pacs dicom ae title
+	 * @throws IllegalStateException if global property for pacs dicom ae title cannot be found
+	 * @should return pacs dicom ae title
+	 * @should throw illegal state exception if global property for pacs dicom ae title cannot be found
 	 */
-	public String getStudyUIDSlug() {
-		return getGlobalProperty(RadiologyConstants.GP_STUDY_UID_SLUG, true);
+	public String getPacsDicomAeTitle() {
+		return getGlobalProperty(RadiologyConstants.GP_PACS_DICOM_AE_TITLE, true);
 	}
 	
 	/**
-	 * Return specific character set
+	 * Return DICOM AE title.
 	 * 
-	 * @return specific character set
+	 * @return dicom ae title
+	 * @throws IllegalStateException if global property for dicom ae title cannot be found
+	 * @should return dicom ae title
+	 * @should throw illegal state exception if global property for dicom ae title cannot be found
 	 */
-	public String getSpecificCharacterSet() {
-		return getGlobalProperty(RadiologyConstants.GP_SPECIFIC_CHARCATER_SET, true);
+	public String getDicomAeTitle() {
+		return getGlobalProperty(RadiologyConstants.GP_DICOM_AE_TITLE, true);
+	}
+	
+	/**
+	 * Return DICOM Application UID.
+	 * 
+	 * @return dicom application uid
+	 * @throws IllegalStateException if global property for dicom application uid cannot be found
+	 * @should return dicom application uid
+	 * @should throw illegal state exception if global property for dicom application uid cannot be found
+	 */
+	public String getDicomApplicationUID() {
+		return getGlobalProperty(RadiologyConstants.GP_DICOM_APPLICATION_UID, true);
+	}
+	
+	/**
+	 * Return DICOM study uid slug.
+	 * 
+	 * @return dicom study uid slug
+	 * @throws IllegalStateException if global property for dicom study uid slug cannot be found
+	 * @should return dicom study uid slug
+	 * @should throw illegal state exception if global property for dicom study uid slug cannot be found
+	 */
+	public String getDicomStudyUIDSlug() {
+		return getGlobalProperty(RadiologyConstants.GP_DICOM_STUDY_UID_SLUG, true);
+	}
+	
+	/**
+	 * Return DICOM specific character set.
+	 * 
+	 * @return dicom specific character set
+	 * @throws IllegalStateException if global property for dicom specific character set cannot be found
+	 * @should return dicom specific character set
+	 * @should throw illegal state exception if global property for dicom specific character set cannot be found
+	 */
+	public String getDicomSpecificCharacterSet() {
+		return getGlobalProperty(RadiologyConstants.GP_DICOM_SPECIFIC_CHARCATER_SET, true);
 	}
 	
 	/**
@@ -105,17 +144,7 @@ public class RadiologyProperties extends ModuleProperties {
 	 * @should return study prefix consisting of application uid and study uid slug
 	 */
 	public String getStudyPrefix() {
-		return getApplicationUID() + "." + getStudyUIDSlug() + ".";
-	}
-	
-	/**
-	 * Return servers hl7 port
-	 * 
-	 * @return servers hl7 port
-	 * @should return port of the dcm4chee hl7 receiver/sender
-	 */
-	public String getServersHL7Port() {
-		return getGlobalProperty(RadiologyConstants.GP_SERVERS_HL7_PORT, true);
+		return getDicomApplicationUID() + "." + getDicomStudyUIDSlug() + ".";
 	}
 	
 	/**
