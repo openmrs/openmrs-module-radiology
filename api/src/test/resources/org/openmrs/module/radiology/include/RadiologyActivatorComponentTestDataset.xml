@@ -11,8 +11,8 @@
 		property_value="mwl" />
 	<global_property property="radiology.mppsDirectory"
 		property_value="mpps" />
-	<global_property property="radiology.applicationEntityTitle"
+	<global_property property="radiology.dicomAeTitle"
 		property_value="RADIOLOGY_MODULE" />
-			<global_property property="radiology.mwlMppsPort"
+			<global_property property="radiology.pacsDicomMppsPort"
 		property_value="11114" />
 </dataset>

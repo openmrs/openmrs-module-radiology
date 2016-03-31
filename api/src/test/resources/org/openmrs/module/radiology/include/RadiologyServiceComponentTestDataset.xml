@@ -28,8 +28,8 @@
   <order_type order_type_id="5" name="Radiology Order" java_class_name="org.openmrs.module.radiology.RadiologyOrder" description="Order type for radiology exams" creator="1" date_created="2015-09-09" retired="0" uuid="dbdb9a9b-56ea-11e5-a47f-08002719a237"/>
 
   <!-- define metadata for the radiology service -->
-  <global_property property="radiology.applicationUID" property_value="1.2.826.0.1.3680043.8.2186" description="You need a application root UID, this will be the prefix of any module DICOM object, the default value serves for debugging purposes" uuid="5d3962e1-eb27-49de-921b-01213ede5c73"/>
-  <global_property property="radiology.studyUIDSlug" property_value="1" description="Example: applicationUID+studyUIDSlug+orderId could be a study UID. The default value works!. Example values: 1.2, 1.1.1 (No start or end dots)" uuid="2adfb98b-9b2f-41c0-ae5b-22f84eee8dfb"/>
+  <global_property property="radiology.dicomApplicationUID" property_value="1.2.826.0.1.3680043.8.2186" description="You need a application root UID, this will be the prefix of any module DICOM object, the default value serves for debugging purposes" uuid="5d3962e1-eb27-49de-921b-01213ede5c73"/>
+  <global_property property="radiology.dicomStudyUIDSlug" property_value="1" description="Example: applicationUID+studyUIDSlug+orderId could be a study UID. The default value works!. Example values: 1.2, 1.1.1 (No start or end dots)" uuid="2adfb98b-9b2f-41c0-ae5b-22f84eee8dfb"/>
 
   <!-- patient without any orders/radiology studies -->
   <person person_id="70010" gender="F" birthdate="1982-03-14" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>

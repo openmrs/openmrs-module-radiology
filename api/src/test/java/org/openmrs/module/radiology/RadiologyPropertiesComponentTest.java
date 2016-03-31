@@ -56,29 +56,219 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	public ExpectedException expectedException = ExpectedException.none();
 	
 	/**
-	 * @see RadiologyProperties#getServersAddress()
-	 * @verifies return server address
+	 * @see RadiologyProperties#getPacsAddress()
+	 * @verifies return pacs address
 	 */
 	@Test
-	public void getServersAddress_shouldReturnServerAddress() throws Exception {
+	public void getPacsAddress_shouldReturnPacsAddress() throws Exception {
 		
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_SERVERS_ADDRESS, "localhost"));
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_PACS_ADDRESS, "localhost"));
 		
-		assertThat(radiologyProperties.getServersAddress(), is("localhost"));
+		assertThat(radiologyProperties.getPacsAddress(), is("localhost"));
 	}
 	
 	/**
-	 * @see RadiologyProperties#getServersAddress()
-	 * @verifies throw illegal state exception if global property for server address cannot be found
+	 * @see RadiologyProperties#getPacsAddress()
+	 * @verifies throw illegal state exception if global property for pacs address cannot be found
 	 */
 	@Test
-	public void getServersAddress_shouldThrowIllegalStateExceptionIfGlobalPropertyForServerAddressCannotBeFound()
+	public void getPacsAddress_shouldThrowIllegalStateExceptionIfGlobalPropertyForPacsAddressCannotBeFound()
 	        throws Exception {
 		
 		expectedException.expect(IllegalStateException.class);
-		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_SERVERS_ADDRESS);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_PACS_ADDRESS);
 		
-		radiologyProperties.getServersAddress();
+		radiologyProperties.getPacsAddress();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getPacsDicomMppsPort()
+	 * @verifies return pacs dicom mpps port
+	 */
+	@Test
+	public void getPacsDicomMppsPort_shouldReturnPacsDicomMppsPort() throws Exception {
+		
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_PACS_DICOM_MPPS_PORT, "11114"));
+		
+		assertThat(radiologyProperties.getPacsDicomMppsPort(), is("11114"));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getPacsDicomMppsPort()
+	 * @verifies throw illegal state exception if global property for pacs dicom mpps port cannot be
+	 *           found
+	 */
+	@Test
+	public void getPacsDicomMppsPort_shouldThrowIllegalStateExceptionIfGlobalPropertyForPacsDicomMppsPortCannotBeFound()
+	        throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_PACS_DICOM_MPPS_PORT);
+		
+		radiologyProperties.getPacsDicomMppsPort();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getPacsHL7Port()
+	 * @verifies return pacs hl7 port
+	 */
+	@Test
+	public void getPacsHL7Port_shouldReturnPacsHl7Port() throws Exception {
+		
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_PACS_HL7_PORT, "2575"));
+		
+		assertThat(radiologyProperties.getPacsHL7Port(), is("2575"));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getPacsHL7Port()
+	 * @verifies throw illegal state exception if global property for pacs hl7 port cannot be found
+	 */
+	@Test
+	public void getPacsHL7Port_shouldThrowIllegalStateExceptionIfGlobalPropertyForPacsHl7PortCannotBeFound()
+	        throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_PACS_HL7_PORT);
+		
+		radiologyProperties.getPacsHL7Port();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getPacsDicomAeTitle()
+	 * @verifies return pacs dicom ae title
+	 */
+	@Test
+	public void getPacsDicomAeTitle_shouldReturnPacsDicomAeTitle() throws Exception {
+		
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_PACS_DICOM_AE_TITLE, "DCM4CHEE"));
+		
+		assertThat(radiologyProperties.getPacsDicomAeTitle(), is("DCM4CHEE"));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getPacsDicomAeTitle()
+	 * @verifies throw illegal state exception if global property for pacs dicom ae title cannot be
+	 *           found
+	 */
+	@Test
+	public void getPacsDicomAeTitle_shouldThrowIllegalStateExceptionIfGlobalPropertyForPacsDicomAeTitleCannotBeFound()
+	        throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_PACS_DICOM_AE_TITLE);
+		
+		radiologyProperties.getPacsDicomAeTitle();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomAeTitle()
+	 * @verifies return dicom ae title
+	 */
+	@Test
+	public void getDicomAeTitle_shouldReturnDicomAeTitle() throws Exception {
+		
+		administrationService
+		        .saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_AE_TITLE, "RADIOLOGY_MODULE"));
+		
+		assertThat(radiologyProperties.getDicomAeTitle(), is("RADIOLOGY_MODULE"));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomAeTitle()
+	 * @verifies throw illegal state exception if global property for dicom ae title cannot be found
+	 */
+	@Test
+	public void getDicomAeTitle_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomAeTitleCannotBeFound()
+	        throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_AE_TITLE);
+		
+		radiologyProperties.getDicomAeTitle();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomApplicationUID()
+	 * @verifies dicom application uid
+	 */
+	@Test
+	public void getDicomApplicationUID_shouldDicomApplicationUid() throws Exception {
+		
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_APPLICATION_UID,
+		        "1.2.826.0.1.3680043.8.2186"));
+		
+		assertThat(radiologyProperties.getDicomApplicationUID(), is("1.2.826.0.1.3680043.8.2186"));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomApplicationUID()
+	 * @verifies throw illegal state exception if global property for dicom application uid cannot
+	 *           be found
+	 */
+	@Test
+	public void getDicomApplicationUID_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomApplicationUidCannotBeFound()
+	        throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_APPLICATION_UID);
+		
+		radiologyProperties.getDicomApplicationUID();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomStudyUIDSlug()
+	 * @verifies dicom study uid slug
+	 */
+	@Test
+	public void getDicomStudyUIDSlug_shouldDicomStudyUidSlug() throws Exception {
+		
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_STUDY_UID_SLUG, "1"));
+		
+		assertThat(radiologyProperties.getDicomStudyUIDSlug(), is("1"));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomStudyUIDSlug()
+	 * @verifies throw illegal state exception if global property for dicom study uid slug cannot be
+	 *           found
+	 */
+	@Test
+	public void getDicomStudyUIDSlug_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomStudyUidSlugCannotBeFound()
+	        throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_STUDY_UID_SLUG);
+		
+		radiologyProperties.getDicomStudyUIDSlug();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomSpecificCharacterSet()
+	 * @verifies dicom specific character set
+	 */
+	@Test
+	public void getDicomSpecificCharacterSet_shouldDicomSpecificCharacterSet() throws Exception {
+		
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_SPECIFIC_CHARCATER_SET,
+		        "ISO-8859-1"));
+		
+		assertThat(radiologyProperties.getDicomSpecificCharacterSet(), is("ISO-8859-1"));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomSpecificCharacterSet()
+	 * @verifies throw illegal state exception if global property for dicom specific character set
+	 *           cannot be found
+	 */
+	@Test
+	public void getDicomSpecificCharacterSet_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomSpecificCharacterSetCannotBeFound()
+	        throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_SPECIFIC_CHARCATER_SET);
+		
+		radiologyProperties.getDicomSpecificCharacterSet();
 	}
 	
 	/**
@@ -88,22 +278,11 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	@Test
 	public void getStudyPrefix_shouldReturnStudyPrefixConsistingofApplicationUidAndStudyUidSlug() {
 		
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_APPLICATION_UID,
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_APPLICATION_UID,
 		        "1.2.826.0.1.3680043.8.2186"));
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_STUDY_UID_SLUG, "1"));
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_STUDY_UID_SLUG, "1"));
 		
 		assertThat(radiologyProperties.getStudyPrefix(), is("1.2.826.0.1.3680043.8.2186.1."));
-	}
-	
-	/**
-	 * @see RadiologyProperties#getServersHL7Port()
-	 * @verifies return port of the dcm4chee hl7 receiver/sender
-	 */
-	@Test
-	public void getServersHL7Port_shouldReturnPortOfTheDcm4cheeHl7Receiversender() throws Exception {
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_SERVERS_HL7_PORT, "2575"));
-		
-		assertThat(radiologyProperties.getServersHL7Port(), is("2575"));
 	}
 	
 	/**

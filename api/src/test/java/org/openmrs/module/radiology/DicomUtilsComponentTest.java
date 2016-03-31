@@ -95,7 +95,7 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	@Before
 	public void runBeforeEachTest() throws Exception {
 		
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_SPECIFIC_CHARCATER_SET,
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_SPECIFIC_CHARCATER_SET,
 		        DICOM_SPECIFIC_CHARACTER_SET));
 		
 		executeDataSet(STUDIES_TEST_DATASET);
@@ -238,7 +238,8 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	 */
 	DicomObject getDicomNSet(Study study, Order radiologyOrder, String performedProcedureStatus) {
 		
-		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties.getSpecificCharacterSet());
+		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(radiologyProperties
+		        .getDicomSpecificCharacterSet());
 		
 		String performedProcedureStepEndDate = "20150313";
 		String performedProcedureStepEndTime = "133725";

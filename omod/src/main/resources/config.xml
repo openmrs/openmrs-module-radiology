@@ -42,13 +42,6 @@
 
 	<!--Required Global Properties -->
 	<globalProperty>
-		<property>@MODULE_ID@.mwlMppsPort</property>
-		<defaultValue>11114</defaultValue>
-		<description>Port of the DICOM MWL and MPPS server. OpenMRS MPPSSCU
-			Client
-		</description>
-	</globalProperty>
-	<globalProperty>
 		<property>@MODULE_ID@.mwlDirectory</property>
 		<defaultValue>mwl</defaultValue>
 		<description>Directory for mwl entries. Ex: d:/tmp/mwl or /tmp/mwl
@@ -60,27 +53,56 @@
 		<description>Directory for mpps entries</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.serversAddress</property>
+		<property>@MODULE_ID@.pacsAddress</property>
 		<defaultValue>localhost</defaultValue>
-		<description>IP address of the dcm4chee</description>
+		<description>IP address or hostname of the PACS</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.serversHL7Port</property>
-		<defaultValue>2575</defaultValue>
-		<description>Port of the dcm4chee hl7 receiver/sender</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.applicationEntityTitle</property>
-		<defaultValue>RADIOLOGY_MODULE</defaultValue>
-		<description>Title for this application entity.Calling application
-			entity with respect to OpenMRS
+		<property>@MODULE_ID@.pacsDicomMppsPort</property>
+		<defaultValue>11114</defaultValue>
+		<description>DICOM port of the PACS MPPS SCP to receive DICOM MPPS updates
 		</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.calledApplicationEntityTitle</property>
+		<property>@MODULE_ID@.pacsHL7Port</property>
+		<defaultValue>2575</defaultValue>
+		<description>HL7 port of the PACS to send radiology orders to
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.pacsDicomAeTitle</property>
 		<defaultValue>DCM4CHEE</defaultValue>
-		<description>Default application entity for DCM4CHEE. Called
-			Application Entity with respect to OpenMRS
+		<description>DICOM AE title of the PACS
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.dicomAeTitle</property>
+		<defaultValue>RADIOLOGY_MODULE</defaultValue>
+		<description>DICOM AE title of the radiology module
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.dicomApplicationUID</property>
+		<defaultValue>1.2.826.0.1.3680043.8.2186</defaultValue>
+		<description>
+			You need an application root UID, this will be the prefix
+			of any module
+			DICOM object, the default value serves for debugging
+			purposes
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.dicomStudyUIDSlug</property>
+		<defaultValue>1</defaultValue>
+		<description>Example: applicationUID+studyUIDSlug+orderId could be a
+			study UID. Example values: 1.2, 1.1.1 (No
+			start or end dots)
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.dicomSpecificCharacterSet</property>
+		<defaultValue>ISO-8859-1</defaultValue>
+		<description>DICOM working character set
 		</description>
 	</globalProperty>
 	<globalProperty>
@@ -117,30 +139,6 @@
 			(default
 			value: "oviyamlocal"). Leave empty for
 			Weasis.
-		</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.applicationUID</property>
-		<defaultValue>1.2.826.0.1.3680043.8.2186</defaultValue>
-		<description>
-			You need a application root UID, this will be the prefix
-			of any module
-			DICOM object, the default value serves for debugging
-			purposes
-		</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.studyUIDSlug</property>
-		<defaultValue>1</defaultValue>
-		<description>Example: applicationUID+studyUIDSlug+orderId could be a
-			study UID. The default value works!. Example values: 1.2, 1.1.1 (No
-			start or end dots)
-		</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.specificCharacterSet</property>
-		<defaultValue>ISO-8859-1</defaultValue>
-		<description>DICOM working character set
 		</description>
 	</globalProperty>
 	<globalProperty>
