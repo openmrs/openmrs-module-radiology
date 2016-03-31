@@ -9,26 +9,33 @@
  */
 package org.openmrs.module.radiology.dicom;
 
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.Study;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.util.UriComponentsBuilder;
 
 /**
  * A class that will return an URL to open dicom images of a given study in the configured
  * dicomviewer.
  */
 @Component
-public class DicomViewer {
+public class DicomWebViewer {
 	
 	@Autowired
 	private RadiologyProperties radiologyProperties;
 	
 	/**
+	 * Return URL to open DICOM web viewer for given Study.
+	 * 
+	 * @param study Study for which DICOM web viewer URL should be created
+	 * @throws IllegalArgumentException given null
+	 * @throws IllegalArgumentException given a study with studyInstanceUid null
 	 * @should return a url to open dicom images of the given study in the configured dicom viewer
-	 *         (no matter if the study is completed or not)
-	 * @should throw an IllegalArgumentException given a study with studyInstanceUid null
-	 * @should throw an IllegalArgumentException given null
+	 * @should add query param server name to url if local server name is not blank
+	 * @should throw an illegal argument exception given null
+	 * @should throw an illegal argument exception given study with studyInstanceUid null
 	 */
 	public String getDicomViewerUrl(Study study) {
 		if (study == null) {
@@ -36,6 +43,17 @@ public class DicomViewer {
 		} else if (study.getStudyInstanceUid() == null) {
 			throw new IllegalArgumentException("studyInstanceUid cannot be null");
 		}
-		return radiologyProperties.getDicomViewerUrl() + "studyUID=" + study.getStudyInstanceUid();
+		
+		final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance().scheme("http").host(
+		    radiologyProperties.getDicomWebViewerAddress()).port(
+		    Integer.valueOf(radiologyProperties.getDicomWebViewerPort())).path(
+		    radiologyProperties.getDicomWebViewerBaseUrl()).queryParam("studyUID", study.getStudyInstanceUid());
+		
+		final String serverName = radiologyProperties.getDicomWebViewerLocalServerName();
+		if (StringUtils.isNotBlank(serverName)) {
+			uriComponentsBuilder.queryParam("serverName", serverName);
+		}
+		
+		return uriComponentsBuilder.buildAndExpand().encode().toString();
 	}
 }

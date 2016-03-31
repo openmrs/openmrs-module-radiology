@@ -30,13 +30,15 @@ public class RadiologyConstants {
 	
 	public static final String GP_SPECIFIC_CHARCATER_SET = "radiology.specificCharacterSet";
 	
-	public static final String GP_SERVERS_PORT = "radiology.serversPort";
-	
 	public static final String GP_SERVERS_HL7_PORT = "radiology.serversHL7Port";
 	
-	public static final String GP_DICOM_VIEWER_LOCAL_SERVER_NAME = "radiology.dicomViewerLocalServerName";
+	public static final String GP_DICOM_WEB_VIEWER_ADDRESS = "radiology.dicomWebViewerAddress";
 	
-	public static final String GP_DICOM_VIEWER_URL_BASE = "radiology.dicomViewerUrlBase";
+	public static final String GP_DICOM_WEB_VIEWER_PORT = "radiology.dicomWebViewerPort";
+	
+	public static final String GP_DICOM_WEB_VIEWER_BASE_URL = "radiology.dicomWebViewerBaseUrl";
+	
+	public static final String GP_DICOM_WEB_VIEWER_LOCAL_SERVER_NAME = "radiology.dicomWebViewerLocalServerName";
 	
 	public static final String GP_RADIOLOGY_CARE_SETTING = "radiology.radiologyCareSetting";
 	

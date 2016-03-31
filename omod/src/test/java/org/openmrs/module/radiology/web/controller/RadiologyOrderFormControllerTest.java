@@ -42,7 +42,7 @@ import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.dicom.DicomViewer;
+import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.module.radiology.test.RadiologyTestData;
@@ -69,7 +69,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	private RadiologyProperties radiologyProperties;
 	
 	@Mock
-	private DicomViewer dicomViewer;
+	private DicomWebViewer dicomWebViewer;
 	
 	@InjectMocks
 	private RadiologyOrderFormController radiologyOrderFormController = new RadiologyOrderFormController();
@@ -211,7 +211,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		RadiologyOrder mockCompletedRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
 		mockCompletedRadiologyOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		
-		when(dicomViewer.getDicomViewerUrl(mockCompletedRadiologyOrder.getStudy())).thenReturn(
+		when(dicomWebViewer.getDicomViewerUrl(mockCompletedRadiologyOrder.getStudy())).thenReturn(
 		    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
 		
 		ModelAndView modelAndView = radiologyOrderFormController

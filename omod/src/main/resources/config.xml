@@ -65,11 +65,6 @@
 		<description>IP address of the dcm4chee</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.serversPort</property>
-		<defaultValue>8081</defaultValue>
-		<description>Port of the dcm4chee Web</description>
-	</globalProperty>
-	<globalProperty>
 		<property>@MODULE_ID@.serversHL7Port</property>
 		<defaultValue>2575</defaultValue>
 		<description>Port of the dcm4chee hl7 receiver/sender</description>
@@ -89,23 +84,38 @@
 		</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.dicomViewerUrlBase</property>
-		<defaultValue>/weasis-pacs-connector/viewer?</defaultValue>
-		<description>Base URL for DICOM viewer (e.g. Weasis, Oviyam, ...).
-			Default is for Weasis using weasis-pacs-connector (Weasis needs java
-			on client):
-			"/weasis-pacs-connector/viewer?". For
-			Oviyam:
-			"/oviyam2/viewer.html?".
+		<property>@MODULE_ID@.dicomWebViewerAddress</property>
+		<defaultValue>localhost</defaultValue>
+		<description>IP address or hostname of the DICOM web viewer
 		</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.dicomViewerLocalServerName</property>
+		<property>@MODULE_ID@.dicomWebViewerPort</property>
+		<defaultValue>8081</defaultValue>
+		<description>Port of the DICOM web viewer</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.dicomWebViewerBaseUrl</property>
+		<defaultValue>/weasis-pacs-connector/viewer</defaultValue>
+		<description>Base URL of the DICOM web viewer (e.g. Weasis, Oviyam,
+			...). Default is for Weasis using weasis-pacs-connector (Weasis needs
+			java on client):
+			"/weasis-pacs-connector/viewer". For
+			Oviyam:
+			"/oviyam2/viewer.html".
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.dicomWebViewerLocalServerName</property>
 		<defaultValue></defaultValue>
-		<description>Local server name needed for deploying Oviyam (default
-			value: "oviyamlocal"). Must match
-			the local server name created in the
-			Oviyam UI. Leave empty for
+		<description>This value if set, is added as query parameter to the
+			DICOM web
+			viewer URL.
+			'http://{dicomWebViewerAddress}:{dicomWebViewerPort}{dicomWebViewerBaseUrl}?serverName={dicomWebViewerLocalServerName}'
+			When deploying Oviyam set this to the local server name created in
+			Oviyam UI
+			(default
+			value: "oviyamlocal"). Leave empty for
 			Weasis.
 		</description>
 	</globalProperty>
@@ -185,7 +195,8 @@
 	</messages>
 	<!-- /Internationalization -->
 
-	<mappingFiles>RadiologyStudy.hbm.xml RadiologyOrder.hbm.xml RadiologyReport.hbm.xml
+	<mappingFiles>RadiologyStudy.hbm.xml RadiologyOrder.hbm.xml
+		RadiologyReport.hbm.xml
 	</mappingFiles>
 
 	<!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> -->

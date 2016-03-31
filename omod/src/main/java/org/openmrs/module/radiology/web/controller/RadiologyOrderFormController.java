@@ -48,7 +48,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.openmrs.module.radiology.dicom.DicomViewer;
+import org.openmrs.module.radiology.dicom.DicomWebViewer;
 
 @Controller
 @RequestMapping(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING)
@@ -67,7 +67,7 @@ public class RadiologyOrderFormController {
 	private RadiologyProperties radiologyProperties;
 	
 	@Autowired
-	private DicomViewer dicomViewer;
+	private DicomWebViewer dicomWebViewer;
 	
 	/**
 	 * Handles GET requests for the radiologyOrderForm with new radiology order
@@ -140,7 +140,7 @@ public class RadiologyOrderFormController {
 				final RadiologyOrder radiologyOrder = (RadiologyOrder) order;
 				modelAndView.addObject("radiologyOrder", radiologyOrder);
 				if (radiologyOrder.isCompleted()) {
-					modelAndView.addObject("dicomViewerUrl", dicomViewer.getDicomViewerUrl(radiologyOrder.getStudy()));
+					modelAndView.addObject("dicomViewerUrl", dicomWebViewer.getDicomViewerUrl(radiologyOrder.getStudy()));
 				}
 			}
 			
@@ -159,9 +159,12 @@ public class RadiologyOrderFormController {
 	 * @param radiologyOrder radiology order object
 	 * @param radiologyOrderErrors binding result containing order errors for a non valid order
 	 * @return model and view
-	 * @should set http session attribute openmrs message to order saved and redirect to to radiologyOrderForm when save study was successful
-	 * @should set http session attribute openmrs message to order saved and redirect to radiologyOrderForm when save study was successful and given patient id
-	 * @should set http session attribute openmrs message to saved fail worklist and redirect to radiologyOrderForm when save study was not successful and given patient id
+	 * @should set http session attribute openmrs message to order saved and redirect to to
+	 *         radiologyOrderForm when save study was successful
+	 * @should set http session attribute openmrs message to order saved and redirect to
+	 *         radiologyOrderForm when save study was successful and given patient id
+	 * @should set http session attribute openmrs message to saved fail worklist and redirect to
+	 *         radiologyOrderForm when save study was not successful and given patient id
 	 * @should set http session attribute openmrs message to study performed when study performed
 	 *         status is in progress and request was issued by radiology scheduler
 	 * @should not redirect if radiology order is not valid according to order validator
