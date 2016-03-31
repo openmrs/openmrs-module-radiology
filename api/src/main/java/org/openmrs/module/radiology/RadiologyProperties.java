@@ -63,9 +63,12 @@ public class RadiologyProperties extends ModuleProperties {
 	 * Return Server Address
 	 * 
 	 * @return server address
+	 * @throws IllegalStateException if global property for server address cannot be found
+	 * @should return server address
+	 * @should throw illegal state exception if global property for server address cannot be found
 	 */
 	public String getServersAddress() {
-		return "http://" + getGlobalProperty(RadiologyConstants.GP_SERVERS_ADDRESS, true);
+		return getGlobalProperty(RadiologyConstants.GP_SERVERS_ADDRESS, true);
 	}
 	
 	/**
@@ -106,15 +109,6 @@ public class RadiologyProperties extends ModuleProperties {
 	}
 	
 	/**
-	 * Return servers port
-	 * 
-	 * @return servers port
-	 */
-	public String getServersPort() {
-		return getGlobalProperty(RadiologyConstants.GP_SERVERS_PORT, true);
-	}
-	
-	/**
 	 * Return servers hl7 port
 	 * 
 	 * @return servers hl7 port
@@ -125,41 +119,53 @@ public class RadiologyProperties extends ModuleProperties {
 	}
 	
 	/**
-	 * Return server name of local dicom viewer
+	 * Return DICOM web viewer address.
 	 * 
-	 * @return server name of local dicom viewer
-	 * @should return dicom viewer local server name if defined in global properties
-	 * @should return empty string if dicom viewer local server name if not defined in global
-	 *         properties
+	 * @return DICOM web viewer address
+	 * @throws IllegalStateException if global property for dicom web viewer address cannot be found
+	 * @should return dicom web viewer address
+	 * @should throw illegal state exception if global property for dicom web viewer address cannot
+	 *         be found
 	 */
-	public String getDicomViewerLocalServerName() {
-		final String dicomViewerLocalServerName = getGlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME,
-		    false);
-		return dicomViewerLocalServerName == null ? "" : "serverName=" + dicomViewerLocalServerName + "&";
+	public String getDicomWebViewerAddress() {
+		return getGlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_ADDRESS, true);
 	}
 	
 	/**
-	 * Return dicom viewer url base
+	 * Return DICOM web viewer port.
 	 * 
-	 * @return dicom viewer url base
+	 * @return DICOM web viewer port
+	 * @throws IllegalStateException if global property for dicom web viewer port cannot be found
+	 * @should return dicom web viewer port
+	 * @should throw illegal state exception if global property for dicom web viewer port cannot be
+	 *         found
 	 */
-	public String getDicomViewerUrlBase() {
-		return getGlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_URL_BASE, true);
+	public String getDicomWebViewerPort() {
+		return getGlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_PORT, true);
 	}
 	
 	/**
-	 * Return url of dicom viewer
+	 * Return DICOM web viewer base url.
 	 * 
-	 * @return url of dicom viewer as string
-	 * @should return dicom viewer url consisting of server adress and server port and dicom viewer
-	 *         url base and dicom viewer local server name for oviyam
-	 * @should return dicom viewer url consisting of server adress and server port and dicom viewer
-	 *         url base and dicom viewer local server name for weasis
+	 * @return DICOM web viewer base url
+	 * @throws IllegalStateException if global property for dicom web viewer base url cannot be
+	 *             found
+	 * @should return dicom web viewer base url
+	 * @should throw illegal state exception if global property for dicom web viewer base url cannot
+	 *         be found
 	 */
-	public String getDicomViewerUrl() {
-		final String dicomViewerUrl = getServersAddress() + ":" + getServersPort() + getDicomViewerUrlBase()
-		        + getDicomViewerLocalServerName();
-		return dicomViewerUrl;
+	public String getDicomWebViewerBaseUrl() {
+		return getGlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_BASE_URL, true);
+	}
+	
+	/**
+	 * Return DICOM web viewer local server name.
+	 * 
+	 * @return DICOM web viewer local server name
+	 * @should return dicom web viewer local server name
+	 */
+	public String getDicomWebViewerLocalServerName() {
+		return getGlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_LOCAL_SERVER_NAME, false);
 	}
 	
 	/**
@@ -167,7 +173,8 @@ public class RadiologyProperties extends ModuleProperties {
 	 * 
 	 * @return CareSetting for radiology orders
 	 * @should return radiology care setting
-	 * @should throw illegal state exception if global property for radiology care setting cannot be found
+	 * @should throw illegal state exception if global property for radiology care setting cannot be
+	 *         found
 	 * @should throw illegal state exception if radiology care setting cannot be found
 	 */
 	public CareSetting getRadiologyCareSetting() {

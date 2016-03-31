@@ -56,6 +56,32 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	public ExpectedException expectedException = ExpectedException.none();
 	
 	/**
+	 * @see RadiologyProperties#getServersAddress()
+	 * @verifies return server address
+	 */
+	@Test
+	public void getServersAddress_shouldReturnServerAddress() throws Exception {
+		
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_SERVERS_ADDRESS, "localhost"));
+		
+		assertThat(radiologyProperties.getServersAddress(), is("localhost"));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getServersAddress()
+	 * @verifies throw illegal state exception if global property for server address cannot be found
+	 */
+	@Test
+	public void getServersAddress_shouldThrowIllegalStateExceptionIfGlobalPropertyForServerAddressCannotBeFound()
+	        throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_SERVERS_ADDRESS);
+		
+		radiologyProperties.getServersAddress();
+	}
+	
+	/**
 	 * @see RadiologyProperties#getStudyPrefix()
 	 * @verifies return study prefix consisting of application uid and study uid slug
 	 */
@@ -70,19 +96,6 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	}
 	
 	/**
-	 * @see RadiologyProperties#getDicomViewerLocalServerName()
-	 * @verifies return dicom viewer local server name if defined in global properties
-	 */
-	@Test
-	public void getDicomViewerLocalServerName_shouldReturnDicomViewerLocalServerNameIfDefinedInGlobalProperties() {
-		
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME,
-		        "oviyamlocal"));
-		
-		assertThat(radiologyProperties.getDicomViewerLocalServerName(), is("serverName=oviyamlocal&"));
-	}
-	
-	/**
 	 * @see RadiologyProperties#getServersHL7Port()
 	 * @verifies return port of the dcm4chee hl7 receiver/sender
 	 */
@@ -94,51 +107,99 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	}
 	
 	/**
-	 * @see RadiologyProperties#getDicomViewerLocalServerName()
-	 * @verifies return empty string if dicom viewer local server name if not defined in global properties
+	 * @see RadiologyProperties#getDicomWebViewerAddress()
+	 * @verifies return dicom web viewer address
 	 */
 	@Test
-	public void getDicomViewerLocalServerName_shouldReturnEmptyStringIfDicomViewerLocalServerNameIfNotDefinedInGlobalProperties() {
+	public void getDicomWebViewerAddress_shouldReturnDicomWebViewerAddress() throws Exception {
 		
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME,
-		        null));
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_ADDRESS,
+		        "localhost"));
 		
-		assertThat(radiologyProperties.getDicomViewerLocalServerName(), is(""));
+		assertThat(radiologyProperties.getDicomWebViewerAddress(), is("localhost"));
 	}
 	
 	/**
-	 * @see RadiologyProperties#getDicomViewerUrl()
-	 * @verifies return dicom viewer url consisting of server adress and server port and dicom viewer url base and dicom viewer local server name for oviyam
+	 * @see RadiologyProperties#getDicomWebViewerAddress()
+	 * @verifies throw illegal state exception if global property for dicom web viewer address
+	 *           cannot be found
 	 */
 	@Test
-	public void getDicomViewerUrl_shouldReturnDicomViewerUrlConsistingOfServerAdressAndServerPortAndDicomViewerUrlBaseAndDicomViewerLocalServerNameForOviyam() {
+	public void getDicomWebViewerAddress_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomWebViewerAddressCannotBeFound()
+	        throws Exception {
 		
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_SERVERS_ADDRESS, "localhost"));
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_SERVERS_PORT, "8081"));
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_URL_BASE,
-		        "/oviyam2/viewer.html?"));
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME,
-		        "oviyamlocal"));
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_WEB_VIEWER_ADDRESS);
 		
-		assertThat(radiologyProperties.getDicomViewerUrl(),
-		    is("http://localhost:8081/oviyam2/viewer.html?serverName=oviyamlocal&"));
+		radiologyProperties.getDicomWebViewerAddress();
 	}
 	
 	/**
-	 * @see RadiologyProperties#getDicomViewerUrl()
-	 * @verifies return dicom viewer url consisting of server adress and server port and dicom viewer url base and dicom viewer local server name for weasis
+	 * @see RadiologyProperties#getDicomWebViewerPort()
+	 * @verifies return dicom web viewer port
 	 */
 	@Test
-	public void getDicomViewerUrl_shouldReturnDicomViewerUrlConsistingOfServerAdressAndServerPortAndDicomViewerUrlBaseAndDicomViewerLocalServerNameForWeasis() {
+	public void getDicomWebViewerPort_shouldReturnDicomWebViewerPort() throws Exception {
 		
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_SERVERS_ADDRESS, "localhost"));
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_SERVERS_PORT, "8081"));
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_URL_BASE,
-		        "/weasis-pacs-connector/viewer?"));
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_VIEWER_LOCAL_SERVER_NAME,
-		        null));
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_PORT, "8081"));
 		
-		assertThat(radiologyProperties.getDicomViewerUrl(), is("http://localhost:8081/weasis-pacs-connector/viewer?"));
+		assertThat(radiologyProperties.getDicomWebViewerPort(), is("8081"));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomWebViewerPort()
+	 * @verifies throw illegal state exception if global property for dicom web viewer port cannot
+	 *           be found
+	 */
+	@Test
+	public void getDicomWebViewerPort_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomWebViewerPortCannotBeFound()
+	        throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_WEB_VIEWER_PORT);
+		
+		radiologyProperties.getDicomWebViewerPort();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomWebViewerBaseUrl()
+	 * @verifies return dicom web viewer base url
+	 */
+	@Test
+	public void getDicomWebViewerBaseUrl_shouldReturnDicomWebViewerBaseUrl() throws Exception {
+		
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_BASE_URL,
+		        "/weasis-pacs-connector/viewer"));
+		
+		assertThat(radiologyProperties.getDicomWebViewerBaseUrl(), is("/weasis-pacs-connector/viewer"));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomWebViewerBaseUrl()
+	 * @verifies throw illegal state exception if global property for dicom web viewer base url
+	 *           cannot be found
+	 */
+	@Test
+	public void getDicomWebViewerBaseUrl_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomWebViewerBaseUrlCannotBeFound()
+	        throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_WEB_VIEWER_BASE_URL);
+		
+		radiologyProperties.getDicomWebViewerBaseUrl();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomWebViewerLocalServerName()
+	 * @verifies return dicom web viewer local server name
+	 */
+	@Test
+	public void getDicomWebViewerLocalServerName_shouldReturnDicomWebViewerLocalServerName() throws Exception {
+		
+		administrationService.saveGlobalProperty(new GlobalProperty(
+		        RadiologyConstants.GP_DICOM_WEB_VIEWER_LOCAL_SERVER_NAME, "oviyamlocal"));
+		
+		assertThat(radiologyProperties.getDicomWebViewerLocalServerName(), is("oviyamlocal"));
 	}
 	
 	/**
@@ -157,7 +218,8 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	
 	/**
 	 * @see RadiologyProperties#getRadiologyCareSetting()
-	 * @verifies throw illegal state exception if global property for radiology care setting cannot be found
+	 * @verifies throw illegal state exception if global property for radiology care setting cannot
+	 *           be found
 	 */
 	@Test
 	public void getRadiologyCareSetting_shouldThrowIllegalStateExceptionIfGlobalPropertyForRadiologyCareSettingCannotBeFound()

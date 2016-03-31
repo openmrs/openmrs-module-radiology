@@ -244,8 +244,8 @@ public class DicomUtils {
 	
 	//Send HL7 ORU message to dcm4chee.
 	public static int sendHL7Worklist(String hl7blob) {
-		final String serverIP = radiologyProperties.getServersAddress();
-		final String input[] = { "-c", serverIP.substring(7) + ":" + radiologyProperties.getServersHL7Port(), hl7blob };
+		final String input[] = { "-c",
+		        radiologyProperties.getServersAddress() + ":" + radiologyProperties.getServersHL7Port(), hl7blob };
 		final int result = HL7Snd.main(input);
 		return result;
 	}
