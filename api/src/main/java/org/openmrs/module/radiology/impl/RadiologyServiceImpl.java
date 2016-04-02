@@ -103,12 +103,13 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("radiologyOrder.study is required");
 		}
 		
-		if (radiologyOrder.getStudy().getModality() == null) {
+		if (radiologyOrder.getStudy()
+				.getModality() == null) {
 			throw new IllegalArgumentException("radiologyOrder.study.modality is required");
 		}
 		
 		final Encounter encounter = saveRadiologyOrderEncounter(radiologyOrder.getPatient(), radiologyOrder.getOrderer(),
-		    new Date());
+			new Date());
 		encounter.addOrder(radiologyOrder);
 		
 		OrderContext orderContext = new OrderContext();
@@ -181,7 +182,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Transactional
 	@Override
 	public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrderToDiscontinue, Provider orderer,
-	        Date discontinueDate, String nonCodedDiscontinueReason) throws Exception {
+			Date discontinueDate, String nonCodedDiscontinueReason) throws Exception {
 		
 		if (radiologyOrderToDiscontinue == null) {
 			throw new IllegalArgumentException("radiologyOrder is required");
@@ -210,7 +211,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		Encounter encounter = saveRadiologyOrderEncounter(radiologyOrderToDiscontinue.getPatient(), orderer, discontinueDate);
 		
 		return orderService.discontinueOrder(radiologyOrderToDiscontinue, nonCodedDiscontinueReason, discontinueDate,
-		    orderer, encounter);
+			orderer, encounter);
 	}
 	
 	/**
@@ -258,7 +259,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Transactional
 	@Override
 	public Study updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus)
-	        throws IllegalArgumentException {
+			throws IllegalArgumentException {
 		
 		if (studyInstanceUid == null) {
 			throw new IllegalArgumentException("studyInstanceUid is required");
@@ -277,7 +278,8 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	public void sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
 		final int HL7_SEND_SUCCESS = 1;
 		final int HL7_SEND_ERROR = 0;
-		MwlStatus mwlStatus = radiologyOrder.getStudy().getMwlStatus();
+		MwlStatus mwlStatus = radiologyOrder.getStudy()
+				.getMwlStatus();
 		final String hl7blob = DicomUtils.createHL7Message(radiologyOrder, orderRequest);
 		final int status = DicomUtils.sendHL7Worklist(hl7blob);
 		
@@ -331,7 +333,8 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 					break;
 			}
 		}
-		radiologyOrder.getStudy().setMwlStatus(mwlStatus);
+		radiologyOrder.getStudy()
+				.setMwlStatus(mwlStatus);
 		saveStudy(radiologyOrder.getStudy());
 	}
 	
@@ -389,7 +392,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Transactional
 	@Override
 	public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder) throws IllegalArgumentException,
-	        UnsupportedOperationException {
+			UnsupportedOperationException {
 		if (radiologyOrder == null) {
 			throw new IllegalArgumentException("radiologyOrder cannot be null");
 		}
@@ -398,11 +401,11 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		}
 		if (radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyOrder)) {
 			throw new UnsupportedOperationException(
-			        "cannot create radiologyReport for this radiologyOrder because it is already completed");
+					"cannot create radiologyReport for this radiologyOrder because it is already completed");
 		}
 		if (radiologyReportDAO.hasRadiologyOrderClaimedRadiologyReport(radiologyOrder)) {
 			throw new UnsupportedOperationException(
-			        "cannot create radiologyReport for this radiologyOrder because it is already claimed");
+					"cannot create radiologyReport for this radiologyOrder because it is already claimed");
 		}
 		final RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
 		return radiologyReportDAO.saveRadiologyReport(radiologyReport);
@@ -414,7 +417,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Transactional
 	@Override
 	public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
-	        UnsupportedOperationException {
+			UnsupportedOperationException {
 		if (radiologyReport == null) {
 			throw new IllegalArgumentException("radiologyReport cannot be null");
 		}
@@ -436,7 +439,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Transactional
 	@Override
 	public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
-	        UnsupportedOperationException {
+			UnsupportedOperationException {
 		if (radiologyReport == null) {
 			throw new IllegalArgumentException("radiologyReport cannot be null");
 		}
@@ -458,7 +461,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	 */
 	@Override
 	public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter)
-	        throws IllegalArgumentException, UnsupportedOperationException {
+			throws IllegalArgumentException, UnsupportedOperationException {
 		if (radiologyReport == null) {
 			throw new IllegalArgumentException("radiologyReport cannot be null");
 		}
@@ -493,11 +496,10 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	}
 	
 	/**
-	 * @see RadiologyService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder,
-	 *      RadiologyReportStatus)
+	 * @see RadiologyService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder, RadiologyReportStatus)
 	 */
 	public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder radiologyOrder,
-	        RadiologyReportStatus radiologyReportStatus) throws IllegalArgumentException {
+			RadiologyReportStatus radiologyReportStatus) throws IllegalArgumentException {
 		if (radiologyOrder == null) {
 			throw new IllegalArgumentException("radiologyOrder cannot be null");
 		}
@@ -505,9 +507,9 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("radiologyReportStatus cannot be null");
 		}
 		return radiologyReportDAO.getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder,
-		    radiologyReportStatus).size() > 0 ? radiologyReportDAO
-		        .getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder, radiologyReportStatus)
-		        : new ArrayList<RadiologyReport>();
+			radiologyReportStatus)
+				.size() > 0 ? radiologyReportDAO.getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder,
+			radiologyReportStatus) : new ArrayList<RadiologyReport>();
 	}
 	
 	/**

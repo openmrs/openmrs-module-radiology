@@ -178,7 +178,7 @@ public class RadiologyProperties extends ModuleProperties {
 	 * 
 	 * @return DICOM web viewer base url
 	 * @throws IllegalStateException if global property for dicom web viewer base url cannot be
-	 *             found
+	 *         found
 	 * @should return dicom web viewer base url
 	 * @should throw illegal state exception if global property for dicom web viewer base url cannot
 	 *         be found
@@ -211,7 +211,7 @@ public class RadiologyProperties extends ModuleProperties {
 		final CareSetting result = orderService.getCareSettingByUuid(radiologyCareSettingUuid);
 		if (result == null) {
 			throw new IllegalStateException("No existing care setting for uuid: "
-			        + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
+					+ RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
 		}
 		return result;
 	}
@@ -227,7 +227,7 @@ public class RadiologyProperties extends ModuleProperties {
 		final OrderType result = orderService.getOrderTypeByUuid(RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID);
 		if (result == null) {
 			throw new IllegalStateException("OrderType for radiology orders not in database (not found under uuid="
-			        + RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID + ").");
+					+ RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID + ").");
 		}
 		return result;
 	}
@@ -240,11 +240,10 @@ public class RadiologyProperties extends ModuleProperties {
 	 * @should throw illegal state exception for non existing radiology encounter type
 	 */
 	public EncounterType getRadiologyEncounterType() {
-		final EncounterType result = encounterService
-		        .getEncounterTypeByUuid(RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID);
+		final EncounterType result = encounterService.getEncounterTypeByUuid(RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID);
 		if (result == null) {
 			throw new IllegalStateException("EncounterType for radiology orders not in database (not found under uuid="
-			        + RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID + ").");
+					+ RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID + ").");
 		}
 		return result;
 	}
@@ -257,11 +256,10 @@ public class RadiologyProperties extends ModuleProperties {
 	 * @should throw illegal state exception for non existing ordering provider encounter role
 	 */
 	public EncounterRole getOrderingProviderEncounterRole() {
-		final EncounterRole result = encounterService
-		        .getEncounterRoleByUuid(RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID);
+		final EncounterRole result = encounterService.getEncounterRoleByUuid(RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID);
 		if (result == null) {
 			throw new IllegalStateException("EncounterRole for ordering provider not in database (not found under uuid="
-			        + RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID + ").");
+					+ RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID + ").");
 		}
 		return result;
 	}
@@ -286,7 +284,7 @@ public class RadiologyProperties extends ModuleProperties {
 		radiologyConceptClassUuidSetting = radiologyConceptClassUuidSetting.replace(" ", "");
 		if (!radiologyConceptClassUuidSetting.matches("^[0-9a-fA-f,-]+$")) {
 			throw new IllegalStateException(
-			        "Property radiology.radiologyConcepts needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
+					"Property radiology.radiologyConcepts needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
 		}
 		
 		final String[] radiologyConceptClassUuids = radiologyConceptClassUuidSetting.split(",");
@@ -296,7 +294,7 @@ public class RadiologyProperties extends ModuleProperties {
 			ConceptClass fetchedConceptClass = conceptService.getConceptClassByUuid(radiologyConceptClassUuid);
 			if (fetchedConceptClass == null) {
 				throw new IllegalStateException("Property radiology.radiologyConceptClasses contains UUID "
-				        + radiologyConceptClassUuid + " which cannot be found as ConceptClass in the database.");
+						+ radiologyConceptClassUuid + " which cannot be found as ConceptClass in the database.");
 			}
 			result = result + fetchedConceptClass.getName() + ",";
 		}

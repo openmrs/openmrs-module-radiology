@@ -96,9 +96,11 @@
 		</testResources>
 		<plugins>
 			<plugin>
-				<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
-				<artifactId>maven-java-formatter-plugin</artifactId>
+				<groupId>net.revelc.code</groupId>
+				<artifactId>formatter-maven-plugin</artifactId>
+				<version>${formatterPluginVersion}</version>
 				<configuration>
+					<configFile>${eclipseFormatterStyle}</configFile>
 					<excludes>
 						<exclude>**/dcm4che/**</exclude>
 						<exclude>**/dcm4che2/**</exclude>

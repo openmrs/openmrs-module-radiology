@@ -58,16 +58,17 @@ public class RadiologyDashboardControllerTest extends BaseContextMockTest {
 	 */
 	@Test
 	public void getRadiologyOrdersForPatient_shouldReturnModelAndViewPopulatedWithAllRadiologyOrdersForGivenPatient()
-	        throws Exception {
+			throws Exception {
 		
 		ModelAndView modelAndView = radiologyDashboardController.getRadiologyOrdersForPatient(mockPatient1);
 		
 		assertNotNull(modelAndView);
-		assertTrue(modelAndView.getViewName().equals("/module/radiology/portlets/radiologyDashboardTab"));
+		assertTrue(modelAndView.getViewName()
+				.equals("/module/radiology/portlets/radiologyDashboardTab"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrders"));
-		ArrayList<RadiologyOrder> radiologyOrders = (ArrayList<RadiologyOrder>) modelAndView.getModelMap().get(
-		    "radiologyOrders");
+		ArrayList<RadiologyOrder> radiologyOrders = (ArrayList<RadiologyOrder>) modelAndView.getModelMap()
+				.get("radiologyOrders");
 		assertThat(radiologyOrders, is(mockOrders));
 	}
 	
@@ -78,16 +79,17 @@ public class RadiologyDashboardControllerTest extends BaseContextMockTest {
 	 */
 	@Test
 	public void getRadiologyOrdersForPatient_shouldReturnModelAndViewPopulatedWithAnEmptyListOfRadiologyOrdersIfGivenPatientIsUnknown()
-	        throws Exception {
+			throws Exception {
 		
 		ModelAndView modelAndView = radiologyDashboardController.getRadiologyOrdersForPatient(invalidPatient);
 		
 		assertNotNull(modelAndView);
-		assertTrue(modelAndView.getViewName().equals("/module/radiology/portlets/radiologyDashboardTab"));
+		assertTrue(modelAndView.getViewName()
+				.equals("/module/radiology/portlets/radiologyDashboardTab"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrders"));
-		ArrayList<RadiologyOrder> radiologyOrders = (ArrayList<RadiologyOrder>) modelAndView.getModelMap().get(
-		    "radiologyOrders");
+		ArrayList<RadiologyOrder> radiologyOrders = (ArrayList<RadiologyOrder>) modelAndView.getModelMap()
+				.get("radiologyOrders");
 		assertThat(radiologyOrders, is(empty()));
 	}
 }

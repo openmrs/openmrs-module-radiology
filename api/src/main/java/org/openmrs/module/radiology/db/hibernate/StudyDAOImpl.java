@@ -44,7 +44,8 @@ public class StudyDAOImpl implements StudyDAO {
 	 */
 	@Override
 	public Study saveStudy(Study study) {
-		sessionFactory.getCurrentSession().saveOrUpdate(study);
+		sessionFactory.getCurrentSession()
+				.saveOrUpdate(study);
 		return study;
 	}
 	
@@ -53,7 +54,8 @@ public class StudyDAOImpl implements StudyDAO {
 	 */
 	@Override
 	public Study getStudyByStudyId(Integer studyId) {
-		return (Study) sessionFactory.getCurrentSession().get(Study.class, studyId);
+		return (Study) sessionFactory.getCurrentSession()
+				.get(Study.class, studyId);
 	}
 	
 	/**
@@ -62,7 +64,9 @@ public class StudyDAOImpl implements StudyDAO {
 	@Override
 	public Study getStudyByOrderId(Integer orderId) {
 		final String query = "from Study s where s.radiologyOrder.orderId = '" + orderId + "'";
-		return (Study) sessionFactory.getCurrentSession().createQuery(query).uniqueResult();
+		return (Study) sessionFactory.getCurrentSession()
+				.createQuery(query)
+				.uniqueResult();
 	}
 	
 	/**
@@ -70,8 +74,10 @@ public class StudyDAOImpl implements StudyDAO {
 	 */
 	@Override
 	public Study getStudyByStudyInstanceUid(String studyInstanceUid) {
-		return (Study) sessionFactory.getCurrentSession().createCriteria(Study.class).add(
-		    Restrictions.eq("studyInstanceUid", studyInstanceUid)).uniqueResult();
+		return (Study) sessionFactory.getCurrentSession()
+				.createCriteria(Study.class)
+				.add(Restrictions.eq("studyInstanceUid", studyInstanceUid))
+				.uniqueResult();
 	}
 	
 	/**
@@ -83,7 +89,8 @@ public class StudyDAOImpl implements StudyDAO {
 		List<Study> result = new ArrayList<Study>();
 		
 		if (!radiologyOrders.isEmpty()) {
-			Criteria studyCriteria = sessionFactory.getCurrentSession().createCriteria(Study.class);
+			Criteria studyCriteria = sessionFactory.getCurrentSession()
+					.createCriteria(Study.class);
 			addRestrictionOnRadiologyOrders(studyCriteria, radiologyOrders);
 			result = (List<Study>) studyCriteria.list();
 		}

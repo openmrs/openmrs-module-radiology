@@ -41,7 +41,8 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 		new RadiologyOrderValidator().validate(null, errors);
 		
 		Assert.assertTrue(errors.hasErrors());
-		Assert.assertEquals("error.general", ((List<ObjectError>) errors.getAllErrors()).get(0).getCode());
+		Assert.assertEquals("error.general", ((List<ObjectError>) errors.getAllErrors()).get(0)
+				.getCode());
 	}
 	
 	/**
@@ -53,9 +54,12 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
 		radiologyOrder.setVoided(null);
-		radiologyOrder.setConcept(Context.getConceptService().getConcept(88));
-		radiologyOrder.setPatient(Context.getPatientService().getPatient(2));
-		radiologyOrder.setOrderer(Context.getProviderService().getProvider(1));
+		radiologyOrder.setConcept(Context.getConceptService()
+				.getConcept(88));
+		radiologyOrder.setPatient(Context.getPatientService()
+				.getPatient(2));
+		radiologyOrder.setOrderer(Context.getProviderService()
+				.getProvider(1));
 		
 		Errors errors = new BindException(radiologyOrder, "radiologyOrder");
 		new RadiologyOrderValidator().validate(radiologyOrder, errors);
@@ -75,8 +79,10 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 	public void validate_shouldFailValidationIfConceptIsNull() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setPatient(Context.getPatientService().getPatient(2));
-		radiologyOrder.setOrderer(Context.getProviderService().getProvider(1));
+		radiologyOrder.setPatient(Context.getPatientService()
+				.getPatient(2));
+		radiologyOrder.setOrderer(Context.getProviderService()
+				.getProvider(1));
 		
 		Errors errors = new BindException(radiologyOrder, "radiologyOrder");
 		new RadiologyOrderValidator().validate(radiologyOrder, errors);
@@ -95,8 +101,10 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 	public void validate_shouldFailValidationIfPatientIsNull() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setConcept(Context.getConceptService().getConcept(88));
-		radiologyOrder.setOrderer(Context.getProviderService().getProvider(1));
+		radiologyOrder.setConcept(Context.getConceptService()
+				.getConcept(88));
+		radiologyOrder.setOrderer(Context.getProviderService()
+				.getProvider(1));
 		
 		Errors errors = new BindException(radiologyOrder, "radiologyOrder");
 		new RadiologyOrderValidator().validate(radiologyOrder, errors);
@@ -115,8 +123,10 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 	public void validate_shouldFailValidationIfOrdererIsNull() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setConcept(Context.getConceptService().getConcept(88));
-		radiologyOrder.setPatient(Context.getPatientService().getPatient(2));
+		radiologyOrder.setConcept(Context.getConceptService()
+				.getConcept(88));
+		radiologyOrder.setPatient(Context.getPatientService()
+				.getPatient(2));
 		
 		Errors errors = new BindException(radiologyOrder, "radiologyOrder");
 		new RadiologyOrderValidator().validate(radiologyOrder, errors);
@@ -135,8 +145,10 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 	public void validate_shouldFailValidationIfUrgencyIsNull() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setConcept(Context.getConceptService().getConcept(88));
-		radiologyOrder.setPatient(Context.getPatientService().getPatient(2));
+		radiologyOrder.setConcept(Context.getConceptService()
+				.getConcept(88));
+		radiologyOrder.setPatient(Context.getPatientService()
+				.getPatient(2));
 		radiologyOrder.setUrgency(null);
 		
 		Errors errors = new BindException(radiologyOrder, "radiologyOrder");
@@ -153,8 +165,10 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 	public void validate_shouldFailValidationIfActionIsNull() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setConcept(Context.getConceptService().getConcept(88));
-		radiologyOrder.setPatient(Context.getPatientService().getPatient(2));
+		radiologyOrder.setConcept(Context.getConceptService()
+				.getConcept(88));
+		radiologyOrder.setPatient(Context.getPatientService()
+				.getPatient(2));
 		radiologyOrder.setAction(null);
 		
 		Errors errors = new BindException(radiologyOrder, "radiologyOrder");
@@ -171,9 +185,12 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 	public void validate_shouldFailValidationIfDateActivatedAfterDateStopped() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setConcept(Context.getConceptService().getConcept(88));
-		radiologyOrder.setPatient(Context.getPatientService().getPatient(2));
-		radiologyOrder.setOrderer(Context.getProviderService().getProvider(1));
+		radiologyOrder.setConcept(Context.getConceptService()
+				.getConcept(88));
+		radiologyOrder.setPatient(Context.getPatientService()
+				.getPatient(2));
+		radiologyOrder.setOrderer(Context.getProviderService()
+				.getProvider(1));
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1);
 		radiologyOrder.setDateActivated(new Date());
@@ -194,9 +211,12 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 	public void validate_shouldFailValidationIfDateActivatedAfterAutoExpireDate() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setConcept(Context.getConceptService().getConcept(88));
-		radiologyOrder.setPatient(Context.getPatientService().getPatient(2));
-		radiologyOrder.setOrderer(Context.getProviderService().getProvider(1));
+		radiologyOrder.setConcept(Context.getConceptService()
+				.getConcept(88));
+		radiologyOrder.setPatient(Context.getPatientService()
+				.getPatient(2));
+		radiologyOrder.setOrderer(Context.getProviderService()
+				.getProvider(1));
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1);
 		radiologyOrder.setDateActivated(new Date());
@@ -217,9 +237,12 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 	public void validate_shouldFailValidationIfScheduledDateIsNullWhenUrgencyIsON_SCHEDULED_DATE() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setConcept(Context.getConceptService().getConcept(88));
-		radiologyOrder.setPatient(Context.getPatientService().getPatient(2));
-		radiologyOrder.setOrderer(Context.getProviderService().getProvider(1));
+		radiologyOrder.setConcept(Context.getConceptService()
+				.getConcept(88));
+		radiologyOrder.setPatient(Context.getPatientService()
+				.getPatient(2));
+		radiologyOrder.setOrderer(Context.getProviderService()
+				.getProvider(1));
 		
 		radiologyOrder.setUrgency(RadiologyOrder.Urgency.ON_SCHEDULED_DATE);
 		radiologyOrder.setScheduledDate(null);
@@ -242,9 +265,12 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 	public void validate_shouldFailValidationIfScheduledDateIsSetAndUrgencyIsNotSetAsON_SCHEDULED_DATE() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setConcept(Context.getConceptService().getConcept(88));
-		radiologyOrder.setPatient(Context.getPatientService().getPatient(2));
-		radiologyOrder.setOrderer(Context.getProviderService().getProvider(1));
+		radiologyOrder.setConcept(Context.getConceptService()
+				.getConcept(88));
+		radiologyOrder.setPatient(Context.getPatientService()
+				.getPatient(2));
+		radiologyOrder.setOrderer(Context.getProviderService()
+				.getProvider(1));
 		
 		radiologyOrder.setScheduledDate(new Date());
 		radiologyOrder.setUrgency(RadiologyOrder.Urgency.ROUTINE);
@@ -267,9 +293,12 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 	public void validate_shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setConcept(Context.getConceptService().getConcept(88));
-		radiologyOrder.setOrderer(Context.getProviderService().getProvider(1));
-		Patient patient = Context.getPatientService().getPatient(2);
+		radiologyOrder.setConcept(Context.getConceptService()
+				.getConcept(88));
+		radiologyOrder.setOrderer(Context.getProviderService()
+				.getProvider(1));
+		Patient patient = Context.getPatientService()
+				.getPatient(2);
 		radiologyOrder.setPatient(patient);
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1);
@@ -291,11 +320,14 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 	@Verifies(value = "should not allow a future dateActivated", method = "validate(Object, Errors)")
 	public void validate_shouldNotAllowAFutureDateActivated() throws Exception {
 		
-		Patient patient = Context.getPatientService().getPatient(7);
+		Patient patient = Context.getPatientService()
+				.getPatient(7);
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
 		radiologyOrder.setPatient(patient);
-		radiologyOrder.setConcept(Context.getConceptService().getConcept(5497));
-		radiologyOrder.setOrderer(Context.getProviderService().getProvider(1));
+		radiologyOrder.setConcept(Context.getConceptService()
+				.getConcept(5497));
+		radiologyOrder.setOrderer(Context.getProviderService()
+				.getProvider(1));
 		Calendar cal = Calendar.getInstance();
 		cal.add(Calendar.HOUR_OF_DAY, 1);
 		radiologyOrder.setDateActivated(cal.getTime());
@@ -304,6 +336,7 @@ public class RadiologyOrderValidatorComponentTest extends BaseModuleContextSensi
 		new RadiologyOrderValidator().validate(radiologyOrder, errors);
 		
 		Assert.assertTrue(errors.hasFieldErrors("dateActivated"));
-		Assert.assertEquals("Order.error.dateActivatedInFuture", errors.getFieldError("dateActivated").getCode());
+		Assert.assertEquals("Order.error.dateActivatedInFuture", errors.getFieldError("dateActivated")
+				.getCode());
 	}
 }

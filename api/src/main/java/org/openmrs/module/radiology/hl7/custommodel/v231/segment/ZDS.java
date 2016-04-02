@@ -17,9 +17,8 @@ import ca.uhn.hl7v2.parser.ModelClassFactory;
 
 /**
  * <p>
- * Represents a custom HL7 ZDS message segment as defined in IHE Radiology Technical Framework
- * Volume 2 (Rev 13.0). Note that custom segments extend {@link AbstractSegment}. This segment
- * contains following fields:
+ * Represents a custom HL7 ZDS message segment as defined in IHE Radiology Technical Framework Volume 2 (Rev 13.0). Note that
+ * custom segments extend {@link AbstractSegment}. This segment contains following fields:
  * </p>
  * <ul>
  * <li>ZDS-1: Study Instance UID (RP)

@@ -45,8 +45,7 @@ public class RadiologyOrderValidator implements Validator {
 	/**
 	 * Checks the form object for any inconsistencies/errors
 	 * 
-	 * @see org.springframework.validation.Validator#validate(java.lang.Object,
-	 *      org.springframework.validation.Errors)
+	 * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
 	 * @should fail validation if radiologyOrder is null
 	 * @should fail validation if voided is null
 	 * @should fail validation if concept is null
@@ -100,16 +99,16 @@ public class RadiologyOrderValidator implements Validator {
 				errors.rejectValue("autoExpireDate", "Order.error.dateActivatedAfterAutoExpireDate");
 			}
 			final Encounter encounter = order.getEncounter();
-			if (encounter != null && encounter.getEncounterDatetime() != null
-			        && encounter.getEncounterDatetime().after(dateActivated)) {
+			if (encounter != null && encounter.getEncounterDatetime() != null && encounter.getEncounterDatetime()
+					.after(dateActivated)) {
 				errors.rejectValue("dateActivated", "Order.error.dateActivatedAfterEncounterDatetime");
 			}
 		}
 	}
 	
 	private void validateScheduledDate(Order order, Errors errors) {
-		final boolean isUrgencyOnScheduledDate = (order.getUrgency() != null && order.getUrgency().equals(
-		    Order.Urgency.ON_SCHEDULED_DATE));
+		final boolean isUrgencyOnScheduledDate = (order.getUrgency() != null && order.getUrgency()
+				.equals(Order.Urgency.ON_SCHEDULED_DATE));
 		if (order.getScheduledDate() != null && !isUrgencyOnScheduledDate) {
 			errors.rejectValue("urgency", "Order.error.urgencyNotOnScheduledDate");
 		}

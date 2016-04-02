@@ -11,8 +11,8 @@ package org.openmrs.module.radiology;
 
 /**
  * <p>
- * Represents the DICOM Scheduled Procedure Step Status (0040,0020) defined in DICOM PS3.3 2014b
- * C.4.10 Scheduled Procedure Step Module.
+ * Represents the DICOM Scheduled Procedure Step Status (0040,0020) defined in DICOM PS3.3 2014b C.4.10 Scheduled Procedure
+ * Step Module.
  * </p>
  */
 public enum ScheduledProcedureStepStatus {
@@ -23,7 +23,7 @@ public enum ScheduledProcedureStepStatus {
 	 * Get name or UNKNOWN for given Scheduled Procedure Step Status
 	 * 
 	 * @param scheduledProcedureStepStatus ScheduledProcedureStepStatus for which the
-	 *            name is returned
+	 *        name is returned
 	 * @return name of given ScheduledProcedureStepStatus
 	 * @should return name given scheduled procedure step status
 	 * @should return unknown given null

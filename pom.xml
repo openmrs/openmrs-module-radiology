@@ -33,6 +33,8 @@
 		<openMRSVersion>1.11.4</openMRSVersion>
 		<hapiVersion>2.0</hapiVersion>
 		<emr-apiVersion>1.13</emr-apiVersion>
+		<formatterPluginVersion>0.5.2</formatterPluginVersion>
+		<eclipseFormatterStyle>${project.parent.basedir}/tools/formatter/OpenMRSFormatter.xml</eclipseFormatterStyle>
 	</properties>
 
 	<dependencyManagement>
@@ -168,23 +170,16 @@
 					<version>2.4</version>
 				</plugin>
 				<plugin>
-					<groupId>com.googlecode.maven-java-formatter-plugin</groupId>
-					<artifactId>maven-java-formatter-plugin</artifactId>
-					<version>0.3.1</version>
+					<groupId>net.revelc.code</groupId>
+					<artifactId>formatter-maven-plugin</artifactId>
+					<version>${formatterPluginVersion}</version>
 					<configuration>
 						<compilerSource>${javaCompilerVersion}</compilerSource>
 						<compilerCompliance>${javaCompilerVersion}</compilerCompliance>
 						<compilerTargetPlatform>${javaCompilerVersion}</compilerTargetPlatform>
-						<configFile>eclipse/OpenMRSFormatter.xml</configFile>
+						<configFile>${eclipseFormatterStyle}</configFile>
 						<overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
 					</configuration>
-					<dependencies>
-						<dependency>
-							<groupId>org.openmrs.tools</groupId>
-							<artifactId>openmrs-tools</artifactId>
-							<version>${openMRSVersion}</version>
-						</dependency>
-					</dependencies>
 				</plugin>
 				<plugin>
 					<groupId>org.jacoco</groupId>

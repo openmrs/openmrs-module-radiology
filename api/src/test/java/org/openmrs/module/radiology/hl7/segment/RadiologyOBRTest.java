@@ -62,20 +62,27 @@ public class RadiologyOBRTest {
 		
 		ORM_O01 message = new ORM_O01();
 		RadiologyOBR.populateObservationRequest(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), radiologyOrder);
+				.getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
+				.getOBR(), radiologyOrder);
 		
 		OBR observationRequestSegment = message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR();
-		assertThat(observationRequestSegment.getUniversalServiceID().getAlternateText().getValue(),
-		    is("CT ABDOMEN PANCREAS WITH IV CONTRAST"));
-		assertThat(observationRequestSegment.getPlacerField2().getValue(), is("ORD-1"));
-		assertThat(observationRequestSegment.getFillerField1().getValue(), is("1"));
-		assertThat(observationRequestSegment.getDiagnosticServSectID().getValue(), is("CT"));
-		assertThat(observationRequestSegment.getProcedureCode().getText().getValue(),
-		    is("CT ABDOMEN PANCREAS WITH IV CONTRAST"));
+				.getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
+				.getOBR();
+		assertThat(observationRequestSegment.getUniversalServiceID()
+				.getAlternateText()
+				.getValue(), is("CT ABDOMEN PANCREAS WITH IV CONTRAST"));
+		assertThat(observationRequestSegment.getPlacerField2()
+				.getValue(), is("ORD-1"));
+		assertThat(observationRequestSegment.getFillerField1()
+				.getValue(), is("1"));
+		assertThat(observationRequestSegment.getDiagnosticServSectID()
+				.getValue(), is("CT"));
+		assertThat(observationRequestSegment.getProcedureCode()
+				.getText()
+				.getValue(), is("CT ABDOMEN PANCREAS WITH IV CONTRAST"));
 		assertThat(
-		    PipeParser.encode(observationRequestSegment, encodingCharacters),
-		    is("OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-1|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST"));
+			PipeParser.encode(observationRequestSegment, encodingCharacters),
+			is("OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-1|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST"));
 	}
 	
 	/**
@@ -84,7 +91,7 @@ public class RadiologyOBRTest {
 	@Test
 	@Verifies(value = "should throw illegal argument exception given null as observation request segment", method = "populateObservationRequest(OBR, RadiologyOrder)")
 	public void populateObservationRequest_shouldThrowIllegalArgumentExceptionGivenNullAsObservationRequestSegment()
-	        throws HL7Exception {
+			throws HL7Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
 		radiologyOrder.setStudy(new Study());
@@ -100,14 +107,15 @@ public class RadiologyOBRTest {
 	@Test
 	@Verifies(value = "should throw illegal argument exception given null as radiology order", method = "populateObservationRequest(OBR, RadiologyOrder)")
 	public void populateObservationRequest_shouldThrowIllegalArgumentExceptionGivenNullAsRadiologyOrder()
-	        throws HL7Exception {
+			throws HL7Exception {
 		
 		ORM_O01 message = new ORM_O01();
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("radiologyOrder cannot be null."));
 		RadiologyOBR.populateObservationRequest(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), null);
+				.getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
+				.getOBR(), null);
 	}
 	
 	/**
@@ -116,7 +124,7 @@ public class RadiologyOBRTest {
 	@Test
 	@Verifies(value = "should throw illegal argument exception if given radiology orders study is null", method = "populateObservationRequest(OBR, RadiologyOrder)")
 	public void populateObservationRequest_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrdersStudyIsNull()
-	        throws HL7Exception {
+			throws HL7Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
 		ORM_O01 message = new ORM_O01();
@@ -124,6 +132,7 @@ public class RadiologyOBRTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("radiologyOrder.study cannot be null."));
 		RadiologyOBR.populateObservationRequest(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), radiologyOrder);
+				.getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
+				.getOBR(), radiologyOrder);
 	}
 }

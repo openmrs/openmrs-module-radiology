@@ -47,7 +47,7 @@ public class RadiologyPID {
 	 * @should fail given patient with no patient identifier
 	 */
 	public static PID populatePatientIdentifier(PID patientIdentifierSegment, Patient patient) throws DataTypeException,
-	        HL7Exception {
+			HL7Exception {
 		
 		if (patientIdentifierSegment == null) {
 			throw new IllegalArgumentException("patientIdentifierSegment cannot be null.");
@@ -55,19 +55,32 @@ public class RadiologyPID {
 			throw new IllegalArgumentException("patient cannot be null.");
 		}
 		
-		patientIdentifierSegment.getPatientIdentifierList(0).getID()
-		        .setValue(patient.getPatientIdentifier().getIdentifier());
-		patientIdentifierSegment.getDateTimeOfBirth().getTimeOfAnEvent().setValue(
-		    DateTimeUtils.getPlainDateTimeFrom(patient.getBirthdate()));
-		patientIdentifierSegment.getSex().setValue(patient.getGender());
+		patientIdentifierSegment.getPatientIdentifierList(0)
+				.getID()
+				.setValue(patient.getPatientIdentifier()
+						.getIdentifier());
+		patientIdentifierSegment.getDateTimeOfBirth()
+				.getTimeOfAnEvent()
+				.setValue(DateTimeUtils.getPlainDateTimeFrom(patient.getBirthdate()));
+		patientIdentifierSegment.getSex()
+				.setValue(patient.getGender());
 		
 		final PersonName personName = patient.getPersonName();
 		final XPN xpnPatientName = HL7Utils.getExtendedPersonNameFrom(personName);
-		patientIdentifierSegment.getPatientName(0).getFamilyLastName().getFamilyName().setValue(
-		    xpnPatientName.getFamilyLastName().getFamilyName().getValue());
-		patientIdentifierSegment.getPatientName(0).getGivenName().setValue(xpnPatientName.getGivenName().getValue());
-		patientIdentifierSegment.getPatientName(0).getMiddleInitialOrName().setValue(
-		    xpnPatientName.getMiddleInitialOrName().getValue());
+		patientIdentifierSegment.getPatientName(0)
+				.getFamilyLastName()
+				.getFamilyName()
+				.setValue(xpnPatientName.getFamilyLastName()
+						.getFamilyName()
+						.getValue());
+		patientIdentifierSegment.getPatientName(0)
+				.getGivenName()
+				.setValue(xpnPatientName.getGivenName()
+						.getValue());
+		patientIdentifierSegment.getPatientName(0)
+				.getMiddleInitialOrName()
+				.setValue(xpnPatientName.getMiddleInitialOrName()
+						.getValue());
 		
 		return patientIdentifierSegment;
 	}

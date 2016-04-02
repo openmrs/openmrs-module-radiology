@@ -11,16 +11,19 @@ package org.openmrs.module.radiology;
 
 /**
  * <p>
- * Represents a DICOM Modality. Elements are a subset of the defined terms listed in DICOM PS3.3
- * 2014b C.7.3.1.1.1 Modality. Enum name represents the defined terms short form and fullName its
- * long form. Enum name maps to the DICOM value representation CS (Code String) see DICOM PS3.5
- * 2014b - Data Structures and Encoding.
+ * Represents a DICOM Modality. Elements are a subset of the defined terms listed in DICOM PS3.3 2014b C.7.3.1.1.1 Modality.
+ * Enum name represents the defined terms short form and fullName its long form. Enum name maps to the DICOM value
+ * representation CS (Code String) see DICOM PS3.5 2014b - Data Structures and Encoding.
  * </p>
  */
 public enum Modality {
 	
-	CR("Computed Radiography"), MR("Magnetic Resonance"), CT("Computed Tomography"), NM("Nuclear Medicine"), US("Ultrasound"), XA(
-	        "X-Ray Angiography");
+	CR("Computed Radiography"),
+	MR("Magnetic Resonance"),
+	CT("Computed Tomography"),
+	NM("Nuclear Medicine"),
+	US("Ultrasound"),
+	XA("X-Ray Angiography");
 	
 	final private String fullName;
 	

@@ -37,7 +37,7 @@ public class HL7UtilsTest {
 	@Test
 	@Verifies(value = "should return extended person name for given person name with family given and middlename", method = "getExtendedPersonNameFrom(PersonName)")
 	public void getExtendedPersonNameFrom_shouldReturnExtendedPersonNameForGivenPersonNameWithFamilyGivenAndMiddleName()
-	        throws DataTypeException {
+			throws DataTypeException {
 		
 		PersonName personName = new PersonName();
 		personName.setFamilyName("Doe");
@@ -59,7 +59,7 @@ public class HL7UtilsTest {
 	@Test
 	@Verifies(value = "should return extended person name for given person name with familyname", method = "getExtendedPersonNameFrom(PersonName)")
 	public void getExtendedPersonNameFrom_shouldReturnExtendedPersonNameForGivenPersonNameWithFamilyName()
-	        throws DataTypeException {
+			throws DataTypeException {
 		
 		PersonName personName = new PersonName();
 		personName.setFamilyName("Doe");
@@ -79,7 +79,7 @@ public class HL7UtilsTest {
 	@Test
 	@Verifies(value = "should return extended person name for given person name with givenname", method = "getExtendedPersonNameFrom(PersonName)")
 	public void getExtendedPersonNameFrom_shouldReturnExtendedPersonNameForGivenPersonNameWithGivenName()
-	        throws DataTypeException {
+			throws DataTypeException {
 		
 		PersonName personName = new PersonName();
 		personName.setGivenName("John");
@@ -99,7 +99,7 @@ public class HL7UtilsTest {
 	@Test
 	@Verifies(value = "should return extended person name for given person name with middlename", method = "getExtendedPersonNameFrom(PersonName)")
 	public void getExtendedPersonNameFrom_shouldReturnExtendedPersonNameForGivenPersonNameWithMiddleName()
-	        throws DataTypeException {
+			throws DataTypeException {
 		
 		PersonName personName = new PersonName();
 		personName.setMiddleName("Francis");
@@ -119,7 +119,7 @@ public class HL7UtilsTest {
 	@Test
 	@Verifies(value = "should return extended person name for given person name with family and givenname", method = "getExtendedPersonNameFrom(PersonName)")
 	public void getExtendedPersonNameFrom_shouldReturnExtendedPersonNameForGivenPersonNameWithFamilyAndGivenName()
-	        throws DataTypeException {
+			throws DataTypeException {
 		
 		PersonName personName = new PersonName();
 		personName.setFamilyName("Doe");

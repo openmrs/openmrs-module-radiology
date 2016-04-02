@@ -42,7 +42,7 @@ public class RadiologyReportTest {
 	public void setUp() {
 		
 		final OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams",
-		        "org.openmrs.module.radiology.RadiologyOrder");
+				"org.openmrs.module.radiology.RadiologyOrder");
 		final Provider principalResultsInterpreter = new Provider();
 		principalResultsInterpreter.setId(1);
 		principalResultsInterpreter.setName("doctor");

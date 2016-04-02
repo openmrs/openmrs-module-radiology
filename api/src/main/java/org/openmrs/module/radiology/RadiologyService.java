@@ -76,7 +76,7 @@ public interface RadiologyService extends OpenmrsService {
 	 * @should throw illegal argument exception given empty provider
 	 */
 	public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrder, Provider orderer, Date discontinueDate,
-	        String discontinueReason) throws Exception;
+			String discontinueReason) throws Exception;
 	
 	/**
 	 * Get RadiologyOrder by its orderId
@@ -116,8 +116,7 @@ public interface RadiologyService extends OpenmrsService {
 	
 	/**
 	 * <p>
-	 * Update the performedStatus of the <code>Study</code> associated with studyInstanceUid in the
-	 * database
+	 * Update the performedStatus of the <code>Study</code> associated with studyInstanceUid in the database
 	 * </p>
 	 *
 	 * @param studyInstanceUid study instance uid of study whos performedStatus should be updated
@@ -129,7 +128,7 @@ public interface RadiologyService extends OpenmrsService {
 	 * @should throw illegal argument exception if performed status is null
 	 */
 	public Study updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus)
-	        throws IllegalArgumentException;
+			throws IllegalArgumentException;
 	
 	public void sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest);
 	
@@ -196,7 +195,7 @@ public interface RadiologyService extends OpenmrsService {
 	 * @should throw an UnsupportedOperationException if given order has a claimed RadiologyReport
 	 */
 	RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder) throws IllegalArgumentException,
-	        UnsupportedOperationException;
+			UnsupportedOperationException;
 	
 	/**
 	 * Save the given radiologyReport
@@ -214,7 +213,7 @@ public interface RadiologyService extends OpenmrsService {
 	 * @should throw an UnsupportedOperationException if radiologyReport is completed
 	 */
 	RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
-	        UnsupportedOperationException;
+			UnsupportedOperationException;
 	
 	/**
 	 * Unclaims the given radiologyReport and sets the radiologyReportStatus to discontinued
@@ -232,7 +231,7 @@ public interface RadiologyService extends OpenmrsService {
 	 * @should throw an UnsupportedOperationException if radiologyReport is completed
 	 */
 	RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
-	        UnsupportedOperationException;
+			UnsupportedOperationException;
 	
 	/**
 	 * Completes the given radiologyReport and sets the radiologyReportStatus to completed
@@ -256,7 +255,7 @@ public interface RadiologyService extends OpenmrsService {
 	 * @should throw an UnsupportedOperationException if radiologyReport is completed
 	 */
 	RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter)
-	        throws IllegalArgumentException, UnsupportedOperationException;
+			throws IllegalArgumentException, UnsupportedOperationException;
 	
 	/**
 	 * Get a RadiologyReport matching the radiologyReportId
@@ -285,7 +284,7 @@ public interface RadiologyService extends OpenmrsService {
 	 * @should throw an IllegalArgumentException if given reportStatus is null
 	 */
 	List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder radiologyOrder,
-	        RadiologyReportStatus reportStatus) throws IllegalArgumentException;
+			RadiologyReportStatus reportStatus) throws IllegalArgumentException;
 	
 	/**
 	 * Convenience method to check if a RadiologyOrder has a claimed RadiologyReport

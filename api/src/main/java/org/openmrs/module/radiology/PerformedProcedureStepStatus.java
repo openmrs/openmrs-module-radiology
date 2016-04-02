@@ -11,8 +11,8 @@ package org.openmrs.module.radiology;
 
 /**
  * <p>
- * Represents the DICOM Performed Procedure Step Status (0040,0252) defined in DICOM PS3.3 2014b
- * C.4.14 Performed Procedure Step Information.
+ * Represents the DICOM Performed Procedure Step Status (0040,0252) defined in DICOM PS3.3 2014b C.4.14 Performed Procedure
+ * Step Information.
  * </p>
  */
 public enum PerformedProcedureStepStatus {
@@ -23,7 +23,7 @@ public enum PerformedProcedureStepStatus {
 	 * Get name or UNKNOWN for given Performed Procedure Step Status
 	 * 
 	 * @param performedProcedureStepStatus PerformedProcedureStepStatus for which the name is
-	 *            returned
+	 *        returned
 	 * @return name of given PerformedProcedureStepStatus
 	 * @should return name given performed procedure step status
 	 * @should return unknown given null

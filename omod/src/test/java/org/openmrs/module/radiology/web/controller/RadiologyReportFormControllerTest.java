@@ -45,32 +45,35 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		
 		when(radiologyService.createAndClaimRadiologyReport(mockRadiologyOrder)).thenReturn(mockRadiologyReport);
 		when(dicomWebViewer.getDicomViewerUrl(mockRadiologyOrder.getStudy())).thenReturn(
-		    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
+			"http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
 		
-		ModelAndView modelAndView = radiologyReportFormController
-		        .getRadiologyReportFormWithNewRadiologyReport(mockRadiologyOrder);
+		ModelAndView modelAndView = radiologyReportFormController.getRadiologyReportFormWithNewRadiologyReport(mockRadiologyOrder);
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyReport.form?radiologyReportId="
-		        + mockRadiologyReport.getId()));
+				+ mockRadiologyReport.getId()));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
-		Order order = (Order) modelAndView.getModelMap().get("order");
+		Order order = (Order) modelAndView.getModelMap()
+				.get("order");
 		assertNotNull(order);
 		assertThat(order, is((Order) mockRadiologyOrder));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
-		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
+		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
+				.get("radiologyOrder");
 		assertThat(radiologyOrder, is(mockRadiologyOrder));
 		
-		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap().get("radiologyReport");
+		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap()
+				.get("radiologyReport");
 		assertNotNull(radiologyReport);
 		assertThat(radiologyReport, is(mockRadiologyReport));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
-		String dicomViewerUrl = (String) modelAndView.getModelMap().get("dicomViewerUrl");
+		String dicomViewerUrl = (String) modelAndView.getModelMap()
+				.get("dicomViewerUrl");
 		assertThat(dicomViewerUrl,
-		    is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
+			is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
 	}
 	
 	/**
@@ -85,33 +88,37 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
 		
 		when(radiologyService.getRadiologyReportByRadiologyReportId(mockRadiologyReport.getId())).thenReturn(
-		    mockRadiologyReport);
-		when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder().getStudy())).thenReturn(
-		    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
+			mockRadiologyReport);
+		when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
+				.getStudy())).thenReturn(
+			"http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
 		
-		ModelAndView modelAndView = radiologyReportFormController
-		        .getRadiologyReportFormWithExistingRadiologyReport(mockRadiologyReport.getId());
+		ModelAndView modelAndView = radiologyReportFormController.getRadiologyReportFormWithExistingRadiologyReport(mockRadiologyReport.getId());
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyReportForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
-		Order order = (Order) modelAndView.getModelMap().get("order");
+		Order order = (Order) modelAndView.getModelMap()
+				.get("order");
 		assertNotNull(order);
 		assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
-		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
+		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
+				.get("radiologyOrder");
 		assertThat(radiologyOrder, is(mockRadiologyReport.getRadiologyOrder()));
 		
-		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap().get("radiologyReport");
+		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap()
+				.get("radiologyReport");
 		assertNotNull(radiologyReport);
 		assertThat(radiologyReport, is(mockRadiologyReport));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
-		String dicomViewerUrl = (String) modelAndView.getModelMap().get("dicomViewerUrl");
+		String dicomViewerUrl = (String) modelAndView.getModelMap()
+				.get("dicomViewerUrl");
 		assertThat(dicomViewerUrl,
-		    is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
+			is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
 	}
 	
 	/**
@@ -130,15 +137,18 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyReportForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
-		Order order = (Order) modelAndView.getModelMap().get("order");
+		Order order = (Order) modelAndView.getModelMap()
+				.get("order");
 		assertNotNull(order);
 		assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
-		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
+		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
+				.get("radiologyOrder");
 		assertThat(radiologyOrder, is(mockRadiologyReport.getRadiologyOrder()));
 		
-		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap().get("radiologyReport");
+		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap()
+				.get("radiologyReport");
 		assertNotNull(radiologyReport);
 		assertThat(radiologyReport, is(mockRadiologyReport));
 	}
@@ -157,7 +167,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
-		        + mockRadiologyReport.getRadiologyOrder().getOrderId()));
+				+ mockRadiologyReport.getRadiologyOrder()
+						.getOrderId()));
 	}
 	
 	/**
@@ -176,8 +187,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		BindingResult reportErrors = mock(BindingResult.class);
 		
 		when(
-		    radiologyService.completeRadiologyReport(mockRadiologyReport, mockRadiologyReport
-		            .getPrincipalResultsInterpreter())).thenReturn(mockCompletedRadiologyReport);
+			radiologyService.completeRadiologyReport(mockRadiologyReport,
+				mockRadiologyReport.getPrincipalResultsInterpreter())).thenReturn(mockCompletedRadiologyReport);
 		
 		ModelAndView modelAndView = radiologyReportFormController.completeRadiologyReport(mockRadiologyReport, reportErrors);
 		
@@ -185,16 +196,19 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyReportForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
-		Order order = (Order) modelAndView.getModelMap().get("order");
+		Order order = (Order) modelAndView.getModelMap()
+				.get("order");
 		assertNotNull(order);
 		assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
-		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
+		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
+				.get("radiologyOrder");
 		assertNotNull(radiologyOrder);
 		assertThat(radiologyOrder, is(mockRadiologyReport.getRadiologyOrder()));
 		
-		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap().get("radiologyReport");
+		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap()
+				.get("radiologyReport");
 		assertNotNull(radiologyReport);
 		assertThat(radiologyReport, is(mockRadiologyReport));
 	}
@@ -222,16 +236,19 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyReportForm"));
 		
 		assertThat(modelAndView.getModelMap(), hasKey("order"));
-		Order order = (Order) modelAndView.getModelMap().get("order");
+		Order order = (Order) modelAndView.getModelMap()
+				.get("order");
 		assertNotNull(order);
 		
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
-		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap().get("radiologyOrder");
+		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
+				.get("radiologyOrder");
 		assertNotNull(radiologyOrder);
 		
 		assertThat(mockRadiologyReport.getRadiologyOrder(), is(radiologyOrder));
 		assertThat(modelAndView.getModelMap(), hasKey("radiologyReport"));
-		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap().get("radiologyReport");
+		RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap()
+				.get("radiologyReport");
 		assertNotNull(radiologyReport);
 		assertThat(radiologyReport.getReportStatus(), is(RadiologyReportStatus.CLAIMED));
 	}

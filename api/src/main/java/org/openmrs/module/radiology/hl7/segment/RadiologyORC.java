@@ -35,7 +35,7 @@ public class RadiologyORC {
 	 * @param radiologyOrder to map to commonOrderSegment segment
 	 * @param commonOrderOrderControl Order Control element of Common Order (ORC)
 	 * @param commonOrderPriority Priority component of Common Order (ORC) segment attribute
-	 *            Quantity/Timing
+	 *        Quantity/Timing
 	 * @return populated commonOrderSegment segment
 	 * @throws DataTypeException
 	 * @should return populated common order segment given all params
@@ -43,8 +43,8 @@ public class RadiologyORC {
 	 * @should throw illegal argument exception given null as radiology order
 	 */
 	public static ORC populateCommonOrder(ORC commonOrderSegment, RadiologyOrder radiologyOrder,
-	        CommonOrderOrderControl commonOrderOrderControl, CommonOrderPriority commonOrderPriority)
-	        throws DataTypeException {
+			CommonOrderOrderControl commonOrderOrderControl, CommonOrderPriority commonOrderPriority)
+			throws DataTypeException {
 		
 		if (commonOrderSegment == null) {
 			throw new IllegalArgumentException("commonOrderSegment cannot be null.");
@@ -54,12 +54,18 @@ public class RadiologyORC {
 			throw new IllegalArgumentException("radiologyOrder cannot be null.");
 		}
 		
-		commonOrderSegment.getOrderControl().setValue(commonOrderOrderControl.getValue());
-		commonOrderSegment.getPlacerOrderNumber().getEntityIdentifier().setValue(
-		    radiologyOrder.getOrderNumber() == null ? "" : String.valueOf(radiologyOrder.getOrderNumber()));
-		commonOrderSegment.getQuantityTiming().getStartDateTime().getTimeOfAnEvent().setValue(
-		    DateTimeUtils.getPlainDateTimeFrom(radiologyOrder.getEffectiveStartDate()));
-		commonOrderSegment.getQuantityTiming().getPriority().setValue(commonOrderPriority.getValue());
+		commonOrderSegment.getOrderControl()
+				.setValue(commonOrderOrderControl.getValue());
+		commonOrderSegment.getPlacerOrderNumber()
+				.getEntityIdentifier()
+				.setValue(radiologyOrder.getOrderNumber() == null ? "" : String.valueOf(radiologyOrder.getOrderNumber()));
+		commonOrderSegment.getQuantityTiming()
+				.getStartDateTime()
+				.getTimeOfAnEvent()
+				.setValue(DateTimeUtils.getPlainDateTimeFrom(radiologyOrder.getEffectiveStartDate()));
+		commonOrderSegment.getQuantityTiming()
+				.getPriority()
+				.setValue(commonOrderPriority.getValue());
 		
 		return commonOrderSegment;
 	}

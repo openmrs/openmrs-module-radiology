@@ -174,7 +174,8 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		assertNotNull(radiologyOrder);
 		assertNotNull(radiologyOrder.getOrderId());
 		assertNotNull(radiologyOrder.getStudy());
-		assertNotNull(radiologyOrder.getStudy().getStudyId());
+		assertNotNull(radiologyOrder.getStudy()
+				.getStudyId());
 	}
 	
 	/**
@@ -260,7 +261,8 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenStudyModalityIsNull() throws Exception {
 		
 		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
-		radiologyOrder.getStudy().setModality(null);
+		radiologyOrder.getStudy()
+				.setModality(null);
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder.study.modality is required");
@@ -274,15 +276,16 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void discontinueRadiologyOrder_shouldCreateDiscontinuationOrderWhichDiscontinuesGivenRadiologyOrderThatIsNotInProgressOrCompleted()
-	        throws Exception {
+			throws Exception {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
-		radiologyOrder.getStudy().setPerformedStatus(null);
+		radiologyOrder.getStudy()
+				.setPerformedStatus(null);
 		String discontinueReason = "Wrong Procedure";
 		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
 		
 		Order discontinuationOrder = radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(),
-		    discontinueDate, discontinueReason);
+			discontinueDate, discontinueReason);
 		
 		assertNotNull(discontinuationOrder);
 		assertThat(discontinuationOrder.getAction(), is(Order.Action.DISCONTINUE));
@@ -313,7 +316,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenRadiologyOrderWithOrderIdNull()
-	        throws Exception {
+			throws Exception {
 		
 		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
 		String discontinueReason = "Wrong Procedure";
@@ -322,7 +325,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("orderId is null");
 		radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueDate,
-		    discontinueReason);
+			discontinueReason);
 	}
 	
 	/**
@@ -340,7 +343,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("order is not active");
 		radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueDate,
-		    discontinueReason);
+			discontinueReason);
 	}
 	
 	/**
@@ -351,14 +354,15 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsCompleted() throws Exception {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
-		radiologyOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
+		radiologyOrder.getStudy()
+				.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
 		String discontinueReason = "Wrong Procedure";
 		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is in progress");
 		radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueDate,
-		    discontinueReason);
+			discontinueReason);
 	}
 	
 	/**
@@ -369,14 +373,15 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsInProgress() throws Exception {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
-		radiologyOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		radiologyOrder.getStudy()
+				.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		String discontinueReason = "Wrong Procedure";
 		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is completed");
 		radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueDate,
-		    discontinueReason);
+			discontinueReason);
 	}
 	
 	/**
@@ -387,7 +392,8 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenEmptyProvider() throws Exception {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
-		radiologyOrder.getStudy().setPerformedStatus(null);
+		radiologyOrder.getStudy()
+				.setPerformedStatus(null);
 		String discontinueReason = "Wrong Procedure";
 		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
 		
@@ -440,8 +446,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	@Test
 	public void getRadiologyOrdersByPatient_shouldReturnAllRadiologyOrdersAssociatedWithGivenPatient() {
 		
-		Patient patientWithTwoRadiologyOrders = patientService
-		        .getPatient(PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER);
+		Patient patientWithTwoRadiologyOrders = patientService.getPatient(PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER);
 		
 		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatient(patientWithTwoRadiologyOrders);
 		
@@ -487,8 +492,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		patientsWithThreeRadiologyOrders.add(patientWithTwoRadiologyOrders);
 		patientsWithThreeRadiologyOrders.add(patientWithOneRadiologyOrder);
 		
-		List<RadiologyOrder> radiologyOrders = radiologyService
-		        .getRadiologyOrdersByPatients(patientsWithThreeRadiologyOrders);
+		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatients(patientsWithThreeRadiologyOrders);
 		
 		assertThat(radiologyOrders.size(), is(TOTAL_NUMBER_OF_RADIOLOGY_ORDERS));
 	}
@@ -529,7 +533,8 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		Study study = radiologyService.getStudyByStudyId(EXISTING_STUDY_ID);
 		
 		assertNotNull(study);
-		assertThat(study.getRadiologyOrder().getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
+		assertThat(study.getRadiologyOrder()
+				.getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
 	}
 	
 	/**
@@ -554,7 +559,8 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		Study study = radiologyService.getStudyByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
 		
 		assertNotNull(study);
-		assertThat(study.getRadiologyOrder().getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
+		assertThat(study.getRadiologyOrder()
+				.getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
 	}
 	
 	/**
@@ -628,8 +634,10 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		List<Study> studies = radiologyService.getStudiesByRadiologyOrders(radiologyOrders);
 		
 		assertThat(studies.size(), is(radiologyOrders.size()));
-		assertThat(studies.get(0).getRadiologyOrder(), is(radiologyOrders.get(0)));
-		assertThat(studies.get(1).getRadiologyOrder(), is(radiologyOrders.get(1)));
+		assertThat(studies.get(0)
+				.getRadiologyOrder(), is(radiologyOrders.get(0)));
+		assertThat(studies.get(1)
+				.getRadiologyOrder(), is(radiologyOrders.get(1)));
 	}
 	
 	/**
@@ -638,10 +646,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void getStudiesByRadiologyOrders_shouldReturnEmptyListGivenRadiologyOrdersWithoutAssociatedStudies()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyOrder radiologyOrderWithoutStudy = radiologyService
-		        .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
+		RadiologyOrder radiologyOrderWithoutStudy = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
 		List<RadiologyOrder> radiologyOrders = Arrays.asList(radiologyOrderWithoutStudy);
 		
 		List<Study> studies = radiologyService.getStudiesByRadiologyOrders(radiologyOrders);
@@ -683,14 +690,14 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void updateStudyPerformedStatus_shouldUpdatePerformedStatusOfStudyAssociatedWithGivenStudyInstanceUid()
-	        throws Exception {
+			throws Exception {
 		
 		Study existingStudy = radiologyService.getStudyByStudyId(EXISTING_STUDY_ID);
 		PerformedProcedureStepStatus performedStatusPreUpdate = existingStudy.getPerformedStatus();
 		PerformedProcedureStepStatus performedStatusPostUpdate = PerformedProcedureStepStatus.COMPLETED;
 		
 		Study updatedStudy = radiologyService.updateStudyPerformedStatus(existingStudy.getStudyInstanceUid(),
-		    performedStatusPostUpdate);
+			performedStatusPostUpdate);
 		
 		assertNotNull(updatedStudy);
 		assertThat(updatedStudy, is(existingStudy));
@@ -729,10 +736,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void createAndClaimRadiologyReport_shouldCreateARadiologyOrderWithReportStatusClaimedGivenACompletedRadiologyOrder()
-	        throws Exception {
+			throws Exception {
 		
 		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
-		radiologyOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		radiologyOrder.getStudy()
+				.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		RadiologyReport radiologyReport = radiologyService.createAndClaimRadiologyReport(radiologyOrder);
 		assertNotNull(radiologyReport);
 		assertThat(radiologyReport.getReportStatus(), is(RadiologyReportStatus.CLAIMED));
@@ -744,7 +752,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void createAndClaimRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNull()
-	        throws Exception {
+			throws Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder cannot be null");
@@ -757,11 +765,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void createAndClaimRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNotCompleted()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyOrder existingRadiologyOrder = radiologyService
-		        .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT);
-		existingRadiologyOrder.getStudy().setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
+		RadiologyOrder existingRadiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT);
+		existingRadiologyOrder.getStudy()
+				.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder needs to be completed");
 		radiologyService.createAndClaimRadiologyReport(existingRadiologyOrder);
@@ -774,17 +782,14 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void createAndClaimRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfGivenOrderHasACompletedRadiologyReport()
-	        throws Exception {
-		RadiologyOrder existingRadiologyOrder = radiologyService
-		        .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT);
-		RadiologyReport existingRadiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+			throws Exception {
+		RadiologyOrder existingRadiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT);
+		RadiologyReport existingRadiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		existingRadiologyReport.setReportStatus(RadiologyReportStatus.CLAIMED);
 		radiologyService.saveRadiologyReport(existingRadiologyReport);
 		radiologyService.completeRadiologyReport(existingRadiologyReport, providerService.getProvider(1));
 		expectedException.expect(UnsupportedOperationException.class);
-		expectedException
-		        .expectMessage("cannot create radiologyReport for this radiologyOrder because it is already completed");
+		expectedException.expectMessage("cannot create radiologyReport for this radiologyOrder because it is already completed");
 		radiologyService.createAndClaimRadiologyReport(existingRadiologyOrder);
 	}
 	
@@ -794,13 +799,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void createAndClaimRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfGivenOrderHasAClaimedRadiologyReport()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyOrder existingRadiologyOrder = radiologyService
-		        .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT);
+		RadiologyOrder existingRadiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT);
 		expectedException.expect(UnsupportedOperationException.class);
-		expectedException
-		        .expectMessage("cannot create radiologyReport for this radiologyOrder because it is already claimed");
+		expectedException.expectMessage("cannot create radiologyReport for this radiologyOrder because it is already claimed");
 		radiologyService.createAndClaimRadiologyReport(existingRadiologyOrder);
 	}
 	
@@ -811,14 +814,15 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	@Test
 	public void saveRadiologyReport_shouldSaveRadiologyReportInDatabaseAndReturnIt() throws Exception {
 		
-		RadiologyReport existingRadiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport existingRadiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		existingRadiologyReport.setReportStatus(RadiologyReportStatus.CLAIMED);
 		existingRadiologyReport.setReportBody("test - text");
 		
 		assertNotNull(radiologyService.saveRadiologyReport(existingRadiologyReport));
-		assertThat(radiologyService.saveRadiologyReport(existingRadiologyReport).getId(), is(EXISTING_RADIOLOGY_REPORT_ID));
-		assertThat(radiologyService.saveRadiologyReport(existingRadiologyReport).getReportBody(), is("test - text"));
+		assertThat(radiologyService.saveRadiologyReport(existingRadiologyReport)
+				.getId(), is(EXISTING_RADIOLOGY_REPORT_ID));
+		assertThat(radiologyService.saveRadiologyReport(existingRadiologyReport)
+				.getReportBody(), is("test - text"));
 	}
 	
 	/**
@@ -827,10 +831,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void saveRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfRadiologyReportIsCompleted()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyReport radiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport radiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		radiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
 		
 		expectedException.expect(UnsupportedOperationException.class);
@@ -844,10 +847,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void saveRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfRadiologyReportIsDiscontinued()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyReport radiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport radiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		radiologyReport.setReportStatus(RadiologyReportStatus.DISCONTINUED);
 		
 		expectedException.expect(UnsupportedOperationException.class);
@@ -874,8 +876,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	@Test
 	public void saveRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfRadiologyReportStatusIsNull() throws Exception {
 		
-		RadiologyReport existingRadiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport existingRadiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		existingRadiologyReport.setReportStatus(null);
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyReportStatus cannot be null");
@@ -889,8 +890,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	@Test
 	public void unclaimRadiologyReport_shouldSetTheRadiologyReportStatusOfRadiologyReportToDiscontinued() throws Exception {
 		
-		RadiologyReport existingRadiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport existingRadiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		RadiologyReport radiologyReport = radiologyService.unclaimRadiologyReport(existingRadiologyReport);
 		assertNotNull(radiologyReport);
 		assertThat(radiologyReport.getId(), is(EXISTING_RADIOLOGY_REPORT_ID));
@@ -916,8 +916,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	@Test
 	public void unclaimRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfRadiologyReportStatusIsNull() throws Exception {
 		
-		RadiologyReport existingRadiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport existingRadiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		existingRadiologyReport.setReportStatus(null);
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyReportStatus cannot be null");
@@ -930,10 +929,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void unclaimRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfRadiologyReportIsCompleted()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyReport radiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport radiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		radiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
 		
 		expectedException.expect(UnsupportedOperationException.class);
@@ -947,10 +945,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void unclaimRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfRadiologyReportIsDiscontinued()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyReport radiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport radiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		radiologyReport.setReportStatus(RadiologyReportStatus.DISCONTINUED);
 		
 		expectedException.expect(UnsupportedOperationException.class);
@@ -966,11 +963,12 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void completeRadiologyReport_shouldSetTheReportDateOfTheRadiologyReportToTheDayTheRadiologyReportWasCompleted()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyReport radiologyReport = radiologyService.completeRadiologyReport(radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID), radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID).getPrincipalResultsInterpreter());
+		RadiologyReport radiologyReport = radiologyService.completeRadiologyReport(
+			radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID),
+			radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID)
+					.getPrincipalResultsInterpreter());
 		
 		assertNotNull(radiologyReport);
 		assertNotNull(radiologyReport.getReportDate());
@@ -984,9 +982,10 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	@Test
 	public void completeRadiologyReport_shouldSetTheRadiologyReportStatusToComplete() throws Exception {
 		
-		RadiologyReport radiologyReport = radiologyService.completeRadiologyReport(radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID), radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID).getPrincipalResultsInterpreter());
+		RadiologyReport radiologyReport = radiologyService.completeRadiologyReport(
+			radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID),
+			radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID)
+					.getPrincipalResultsInterpreter());
 		
 		assertNotNull(radiologyReport);
 		assertThat(radiologyReport.getReportStatus(), is(RadiologyReportStatus.COMPLETED));
@@ -999,10 +998,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void completeRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfPrincipalResultsInterpreterIsNull()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyReport existingRadiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport existingRadiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyReport cannot be null");
 		radiologyService.completeRadiologyReport(null, existingRadiologyReport.getPrincipalResultsInterpreter());
@@ -1016,8 +1014,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	@Test
 	public void completeRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfRadiologyReportIsNull() throws Exception {
 		
-		RadiologyReport existingRadiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport existingRadiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		existingRadiologyReport.setPrincipalResultsInterpreter(null);
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("principalResultsInterpreter cannot be null");
@@ -1031,10 +1028,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void completeRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfRadiologyReportStatusIsNull()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyReport existingRadiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport existingRadiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		existingRadiologyReport.setReportStatus(null);
 		Provider provider = new Provider();
 		provider.setId(1);
@@ -1051,10 +1047,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void completeRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfRadiologyReportIsCompleted()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyReport radiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport radiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		radiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
 		Provider provider = new Provider();
 		provider.setId(1);
@@ -1072,10 +1067,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void completeRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfRadiologyReportIsDiscontinued()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyReport radiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport radiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		radiologyReport.setReportStatus(RadiologyReportStatus.DISCONTINUED);
 		Provider provider = new Provider();
 		provider.setId(1);
@@ -1092,10 +1086,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void getRadiologyReportByRadiologyReportId_shouldFetchRadiologyReportMatchingGivenRadiologyReportId()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyReport radiologyReport = radiologyService
-		        .getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+		RadiologyReport radiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
 		assertThat(radiologyReport.getId(), is(EXISTING_RADIOLOGY_REPORT_ID));
 	}
 	
@@ -1105,7 +1098,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void getRadiologyReportByRadiologyReportId_shouldThrowIllegalArgumentExceptionIfRadiologyReportIdIsNull()
-	        throws Exception {
+			throws Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyReportId cannot be null");
@@ -1119,11 +1112,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void getRadiologyReportsByRadiologyOrderAndReportStatus_shouldReturnAListOfClaimedRadiologyReportIfRadiologyReportStatusIsClaimed()
-	        throws Exception {
+			throws Exception {
 		
 		List<RadiologyReport> radiologyReports = radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-		    radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT),
-		    RadiologyReportStatus.CLAIMED);
+			radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT),
+			RadiologyReportStatus.CLAIMED);
 		assertNotNull(radiologyReports);
 		assertThat(radiologyReports.size(), is(1));
 		
@@ -1136,11 +1129,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void getRadiologyReportsByRadiologyOrderAndReportStatus_shouldReturnAListOfCompletedRadiologyReportIfReportStatusIsCompleted()
-	        throws Exception {
+			throws Exception {
 		
 		List<RadiologyReport> radiologyReports = radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-		    radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT),
-		    RadiologyReportStatus.COMPLETED);
+			radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT),
+			RadiologyReportStatus.COMPLETED);
 		assertNotNull(radiologyReports);
 		assertThat(radiologyReports.size(), is(1));
 	}
@@ -1152,11 +1145,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void getRadiologyReportsByRadiologyOrderAndReportStatus_shouldReturnAListOfDiscontinuedRadiologyReportIfReportStatusIsClaimed()
-	        throws Exception {
+			throws Exception {
 		
 		List<RadiologyReport> radiologyReports = radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-		    radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT),
-		    RadiologyReportStatus.DISCONTINUED);
+			radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT),
+			RadiologyReportStatus.DISCONTINUED);
 		assertNotNull(radiologyReports);
 		assertThat(radiologyReports.size(), is(1));
 	}
@@ -1168,11 +1161,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void getRadiologyReportsByRadiologyOrderAndReportStatus_shouldReturnNullIfThereAreNoRadiologyReportsForThisRadiologyOrder()
-	        throws Exception {
+			throws Exception {
 		
 		List<RadiologyReport> radiologyReports = radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-		    radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT),
-		    RadiologyReportStatus.CLAIMED);
+			radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT),
+			RadiologyReportStatus.CLAIMED);
 		assertThat(radiologyReports.size(), is(0));
 	}
 	
@@ -1183,7 +1176,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void getRadiologyReportsByRadiologyOrderAndReportStatus_shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNull()
-	        throws Exception {
+			throws Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder cannot be null");
@@ -1197,12 +1190,12 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void getRadiologyReportsByRadiologyOrderAndReportStatus_shouldThrowAnIllegalArgumentExceptionIfGivenReportStatusIsNull()
-	        throws Exception {
+			throws Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyReportStatus cannot be null");
-		radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(radiologyService
-		        .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT), null);
+		radiologyService.getRadiologyReportsByRadiologyOrderAndReportStatus(
+			radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT), null);
 	}
 	
 	/**
@@ -1211,11 +1204,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void hasRadiologyOrderClaimedRadiologyReport_shouldReturnFalseIfTheRadiologyOrderHasNoClaimedRadiologyReport()
-	        throws Exception {
+			throws Exception {
 		
-		boolean hasRadiologyOrderClaimedRadiologyReport = radiologyService
-		        .hasRadiologyOrderClaimedRadiologyReport(radiologyService
-		                .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
+		boolean hasRadiologyOrderClaimedRadiologyReport = radiologyService.hasRadiologyOrderClaimedRadiologyReport(radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
 		assertFalse(hasRadiologyOrderClaimedRadiologyReport);
 	}
 	
@@ -1225,11 +1216,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void hasRadiologyOrderClaimedRadiologyReport_shouldReturnTrueIfTheRadiologyOrderHasAClaimedRadiologyReport()
-	        throws Exception {
+			throws Exception {
 		
-		boolean hasRadiologyOrderClaimedRadiologyReport = radiologyService
-		        .hasRadiologyOrderClaimedRadiologyReport(radiologyService
-		                .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT));
+		boolean hasRadiologyOrderClaimedRadiologyReport = radiologyService.hasRadiologyOrderClaimedRadiologyReport(radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT));
 		assertTrue(hasRadiologyOrderClaimedRadiologyReport);
 	}
 	
@@ -1249,11 +1238,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void hasRadiologyOrderCompletedRadiologyReport_shouldReturnFalseIfTheRadiologyOrderHasNoCompletedRadiologyReport()
-	        throws Exception {
+			throws Exception {
 		
-		boolean hasRadiologyOrderCompletedRadiologyReport = radiologyService
-		        .hasRadiologyOrderCompletedRadiologyReport(radiologyService
-		                .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
+		boolean hasRadiologyOrderCompletedRadiologyReport = radiologyService.hasRadiologyOrderCompletedRadiologyReport(radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
 		assertFalse(hasRadiologyOrderCompletedRadiologyReport);
 	}
 	
@@ -1263,11 +1250,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void hasRadiologyOrderCompletedRadiologyReport_shouldReturnTrueIfTheRadiologyOrderHasACompletedRadiologyReport()
-	        throws Exception {
+			throws Exception {
 		
-		boolean hasRadiologyOrderClaimedRadiologyReport = radiologyService
-		        .hasRadiologyOrderCompletedRadiologyReport(radiologyService
-		                .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
+		boolean hasRadiologyOrderClaimedRadiologyReport = radiologyService.hasRadiologyOrderCompletedRadiologyReport(radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
 		assertTrue(hasRadiologyOrderClaimedRadiologyReport);
 	}
 	
@@ -1277,7 +1262,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void hasRadiologyOrderCompletedRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfRadiologyOrderIsNull()
-	        throws Exception {
+			throws Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder cannot be null");
@@ -1290,10 +1275,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void getActiveRadiologyReportByRadiologyOrder_shouldReturnARadiologyReportIfTheReportStatusIsClaimed()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyReport activeReport = radiologyService.getActiveRadiologyReportByRadiologyOrder(radiologyService
-		        .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT));
+		RadiologyReport activeReport = radiologyService.getActiveRadiologyReportByRadiologyOrder(radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT));
 		
 		assertNotNull(activeReport);
 	}
@@ -1304,10 +1288,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void getActiveRadiologyReportByRadiologyOrder_shouldReturnTrueARadiologyReportIfTheReportStatusIsCompleted()
-	        throws Exception {
+			throws Exception {
 		
-		RadiologyReport activeReport = radiologyService.getActiveRadiologyReportByRadiologyOrder(radiologyService
-		        .getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
+		RadiologyReport activeReport = radiologyService.getActiveRadiologyReportByRadiologyOrder(radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
 		
 		assertNotNull(activeReport);
 	}
@@ -1318,7 +1301,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	 */
 	@Test
 	public void getActiveRadiologyReportByRadiologyOrder_shouldThrowAnIllegalArgumentExceptionIfRadiologyOrderIsNull()
-	        throws Exception {
+			throws Exception {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder cannot be null");
 		radiologyService.getActiveRadiologyReportByRadiologyOrder(null);

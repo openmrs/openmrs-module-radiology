@@ -12,7 +12,8 @@ package org.openmrs.module.radiology;
 
 /**
  * <p>
- * All Privileges used within the radiologymodule are defined as constants here. They are used for the @authorized annotation.
+ * All Privileges used within the radiologymodule are defined as constants here. They are used for the @authorized
+ * annotation.
  * </p>
  */
 public class RadiologyPrivileges {

@@ -44,7 +44,8 @@ public class RadiologyOrderDAOImpl implements RadiologyOrderDAO {
 	 */
 	@Override
 	public RadiologyOrder getRadiologyOrderByOrderId(Integer orderId) {
-		return (RadiologyOrder) sessionFactory.getCurrentSession().get(RadiologyOrder.class, orderId);
+		return (RadiologyOrder) sessionFactory.getCurrentSession()
+				.get(RadiologyOrder.class, orderId);
 	}
 	
 	/**
@@ -67,7 +68,8 @@ public class RadiologyOrderDAOImpl implements RadiologyOrderDAO {
 	 * @return criteria for RadiologyOrder
 	 */
 	private Criteria createRadiologyOrderCriteria() {
-		return sessionFactory.getCurrentSession().createCriteria(RadiologyOrder.class);
+		return sessionFactory.getCurrentSession()
+				.createCriteria(RadiologyOrder.class);
 	}
 	
 	/**
@@ -83,7 +85,7 @@ public class RadiologyOrderDAOImpl implements RadiologyOrderDAO {
 	}
 	
 	/**
-	 * @see 
+	 * @see
 	 *      org.openmrs.module.radiology.RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
 	 */
 	@Override

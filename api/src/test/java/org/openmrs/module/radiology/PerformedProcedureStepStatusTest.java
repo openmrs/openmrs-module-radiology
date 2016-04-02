@@ -24,9 +24,9 @@ public class PerformedProcedureStepStatusTest {
 	@Verifies(value = "should return name given performed procedure step status", method = "getNameOrUnknown(PerformedProcedureStepStatus)")
 	public void getNameOrUnknown_shouldReturnDisplayNameGivenPerformedProcedureStepStatus() {
 		assertThat(PerformedProcedureStepStatus.getNameOrUnknown(PerformedProcedureStepStatus.IN_PROGRESS),
-		    is("IN_PROGRESS"));
+			is("IN_PROGRESS"));
 		assertThat(PerformedProcedureStepStatus.getNameOrUnknown(PerformedProcedureStepStatus.DISCONTINUED),
-		    is("DISCONTINUED"));
+			is("DISCONTINUED"));
 		assertThat(PerformedProcedureStepStatus.getNameOrUnknown(PerformedProcedureStepStatus.COMPLETED), is("COMPLETED"));
 	}
 	
@@ -46,25 +46,25 @@ public class PerformedProcedureStepStatusTest {
 	@Verifies(value = "should return performed procedure step status given display name", method = "getMatchForDisplayName(String)")
 	public void getMatchForDisplayName_shouldReturnPerformedProcedureStepStatusGivenDisplayName() {
 		assertThat(PerformedProcedureStepStatus.getMatchForDisplayName("IN PROGRESS"),
-		    is(PerformedProcedureStepStatus.IN_PROGRESS));
+			is(PerformedProcedureStepStatus.IN_PROGRESS));
 		assertThat(PerformedProcedureStepStatus.getMatchForDisplayName("in progress"),
-		    is(PerformedProcedureStepStatus.IN_PROGRESS));
+			is(PerformedProcedureStepStatus.IN_PROGRESS));
 		assertThat(PerformedProcedureStepStatus.getMatchForDisplayName("In Progress"),
-		    is(PerformedProcedureStepStatus.IN_PROGRESS));
+			is(PerformedProcedureStepStatus.IN_PROGRESS));
 		
 		assertThat(PerformedProcedureStepStatus.getMatchForDisplayName("DISCONTINUED"),
-		    is(PerformedProcedureStepStatus.DISCONTINUED));
+			is(PerformedProcedureStepStatus.DISCONTINUED));
 		assertThat(PerformedProcedureStepStatus.getMatchForDisplayName("discontinued"),
-		    is(PerformedProcedureStepStatus.DISCONTINUED));
+			is(PerformedProcedureStepStatus.DISCONTINUED));
 		assertThat(PerformedProcedureStepStatus.getMatchForDisplayName("Discontinued"),
-		    is(PerformedProcedureStepStatus.DISCONTINUED));
+			is(PerformedProcedureStepStatus.DISCONTINUED));
 		
 		assertThat(PerformedProcedureStepStatus.getMatchForDisplayName("COMPLETED"),
-		    is(PerformedProcedureStepStatus.COMPLETED));
+			is(PerformedProcedureStepStatus.COMPLETED));
 		assertThat(PerformedProcedureStepStatus.getMatchForDisplayName("completed"),
-		    is(PerformedProcedureStepStatus.COMPLETED));
+			is(PerformedProcedureStepStatus.COMPLETED));
 		assertThat(PerformedProcedureStepStatus.getMatchForDisplayName("Completed"),
-		    is(PerformedProcedureStepStatus.COMPLETED));
+			is(PerformedProcedureStepStatus.COMPLETED));
 	}
 	
 	/**

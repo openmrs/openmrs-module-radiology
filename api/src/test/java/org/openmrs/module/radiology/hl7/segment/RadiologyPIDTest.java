@@ -83,10 +83,11 @@ public class RadiologyPIDTest {
 		patient.setBirthdate(cal.getTime());
 		
 		ORM_O01 message = new ORM_O01();
-		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), patient);
+		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), patient);
 		
-		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), encodingCharacters),
-		    is("PID|||100||Doe^John^Francis||19800228222510|M"));
+		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), encodingCharacters), is("PID|||100||Doe^John^Francis||19800228222510|M"));
 	}
 	
 	/**
@@ -98,7 +99,7 @@ public class RadiologyPIDTest {
 	@Test
 	@Verifies(value = "should return populated patient identifier segment for given patient with empty personname", method = "populatePatientIdentifier(PID, Patient)")
 	public void populatePatientIdentifier_shouldReturnPopulatedPatientIdentifierSegmentForGivenPatientWithEmptyPersonName()
-	        throws HL7Exception {
+			throws HL7Exception {
 		
 		Patient patient = new Patient();
 		patient.setPatientId(1);
@@ -130,10 +131,11 @@ public class RadiologyPIDTest {
 		patient.setBirthdate(cal.getTime());
 		
 		ORM_O01 message = new ORM_O01();
-		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), patient);
+		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), patient);
 		
-		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), encodingCharacters),
-		    is("PID|||100||||19800228222510|M"));
+		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), encodingCharacters), is("PID|||100||||19800228222510|M"));
 	}
 	
 	/**
@@ -145,7 +147,7 @@ public class RadiologyPIDTest {
 	@Test
 	@Verifies(value = "should return populated patient identifier segment for given patient with non-set personname", method = "populatePatientIdentifier(PID, Patient)")
 	public void populatePatientIdentifier_shouldReturnPopulatedPatientIdentifierSegmentForGivenPatientWithNonSetPersonName()
-	        throws HL7Exception {
+			throws HL7Exception {
 		
 		Patient patient = new Patient();
 		patient.setPatientId(1);
@@ -172,10 +174,11 @@ public class RadiologyPIDTest {
 		patient.setBirthdate(cal.getTime());
 		
 		ORM_O01 message = new ORM_O01();
-		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), patient);
+		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), patient);
 		
-		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), encodingCharacters),
-		    is("PID|||100||||19800228222510|M"));
+		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), encodingCharacters), is("PID|||100||||19800228222510|M"));
 	}
 	
 	/**
@@ -187,7 +190,7 @@ public class RadiologyPIDTest {
 	@Test
 	@Verifies(value = "should return populated patient identifier segment for given patient with non-set birthdate", method = "populatePatientIdentifier(PID, Patient)")
 	public void populatePatientIdentifier_shouldReturnPopulatedPatientIdentifierSegmentForGivenPatientWithNonSetBirthdate()
-	        throws HL7Exception {
+			throws HL7Exception {
 		
 		Patient patient = new Patient();
 		patient.setPatientId(1);
@@ -215,9 +218,10 @@ public class RadiologyPIDTest {
 		patient.setNames(personNames);
 		
 		ORM_O01 message = new ORM_O01();
-		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), patient);
-		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), encodingCharacters),
-		    is("PID|||100||Doe^John^Francis|||M"));
+		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), patient);
+		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), encodingCharacters), is("PID|||100||Doe^John^Francis|||M"));
 	}
 	
 	/**
@@ -229,7 +233,7 @@ public class RadiologyPIDTest {
 	@Test
 	@Verifies(value = "should return populated patient identifier segment for given patient with non-set gender", method = "populatePatientIdentifier(PID, Patient)")
 	public void populatePatientIdentifier_shouldReturnPopulatedPatientIdentifierSegmentForGivenPatientWithNonSetGender()
-	        throws HL7Exception {
+			throws HL7Exception {
 		
 		Patient patient = new Patient();
 		patient.setPatientId(1);
@@ -262,10 +266,11 @@ public class RadiologyPIDTest {
 		patient.setBirthdate(cal.getTime());
 		
 		ORM_O01 message = new ORM_O01();
-		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), patient);
+		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), patient);
 		
-		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), encodingCharacters),
-		    is("PID|||100||Doe^John^Francis||19800228222510"));
+		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), encodingCharacters), is("PID|||100||Doe^John^Francis||19800228222510"));
 	}
 	
 	/**
@@ -282,7 +287,8 @@ public class RadiologyPIDTest {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("patient cannot be null."));
-		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), null);
+		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), null);
 	}
 	
 	/**
@@ -352,6 +358,7 @@ public class RadiologyPIDTest {
 		ORM_O01 message = new ORM_O01();
 		
 		expectedException.expect(NullPointerException.class);
-		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), patient);
+		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), patient);
 	}
 }

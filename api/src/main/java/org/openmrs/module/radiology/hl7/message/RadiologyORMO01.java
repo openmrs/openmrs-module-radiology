@@ -52,7 +52,7 @@ public class RadiologyORMO01 {
 	 * @param radiologyOrder radiology order
 	 * @param commonOrderOrderControl Order Control Code of Common Order (ORC) segment
 	 * @param commonOrderPriority Priority component of Common Order (ORC) segment attribute
-	 *            Quantity/Timing
+	 *        Quantity/Timing
 	 * @should create new radiology ormo01 object given all params
 	 * @should throw illegal argument exception given null as radiologyOrder
 	 * @should throw illegal argument exception if given radiology orders study is null
@@ -60,7 +60,7 @@ public class RadiologyORMO01 {
 	 * @should throw illegal argument exception given null as orderControlPriority
 	 */
 	public RadiologyORMO01(RadiologyOrder radiologyOrder, CommonOrderOrderControl commonOrderOrderControl,
-	    CommonOrderPriority commonOrderPriority) {
+		CommonOrderPriority commonOrderPriority) {
 		
 		if (radiologyOrder == null) {
 			throw new IllegalArgumentException("radiologyOrder cannot be null.");
@@ -105,16 +105,17 @@ public class RadiologyORMO01 {
 		final ORM_O01 result = new ORM_O01();
 		
 		RadiologyMSH.populateMessageHeader(result.getMSH(), sendingApplication, sendingFacility, new Date(),
-		    orderMessageType, orderMessageTriggerEvent);
+			orderMessageType, orderMessageTriggerEvent);
 		
-		RadiologyPID.populatePatientIdentifier(result.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1().getPID(), radiologyOrder
-		        .getPatient());
+		RadiologyPID.populatePatientIdentifier(result.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
+				.getPID(), radiologyOrder.getPatient());
 		
-		RadiologyORC.populateCommonOrder(result.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG().getORC(),
-		    radiologyOrder, commonOrderControl, commonOrderPriority);
+		RadiologyORC.populateCommonOrder(result.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
+				.getORC(), radiologyOrder, commonOrderControl, commonOrderPriority);
 		
 		RadiologyOBR.populateObservationRequest(result.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-		        .getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE().getOBR(), radiologyOrder);
+				.getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
+				.getOBR(), radiologyOrder);
 		
 		RadiologyZDS.populateZDSSegment(result.getZDS(), radiologyOrder.getStudy());
 		

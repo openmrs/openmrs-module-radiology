@@ -47,22 +47,37 @@ public class RadiologyMSH {
 	 * @should fail given null as message header segment
 	 */
 	public static MSH populateMessageHeader(MSH messageHeaderSegment, String sendingApplication, String sendingFacility,
-	        Date dateTimeOfMessage, String messageType, String messageTriggerEvent) throws DataTypeException {
+			Date dateTimeOfMessage, String messageType, String messageTriggerEvent) throws DataTypeException {
 		
 		if (messageHeaderSegment == null) {
 			throw new IllegalArgumentException("messageHeaderSegment cannot be null.");
 		}
 		
-		messageHeaderSegment.getFieldSeparator().setValue("|");
-		messageHeaderSegment.getEncodingCharacters().setValue("^~\\&");
-		messageHeaderSegment.getSendingApplication().getNamespaceID().setValue(sendingApplication);
-		messageHeaderSegment.getSendingFacility().getNamespaceID().setValue(sendingFacility);
-		messageHeaderSegment.getDateTimeOfMessage().getTimeOfAnEvent().setValue(
-		    DateTimeUtils.getPlainDateTimeFrom(dateTimeOfMessage));
-		messageHeaderSegment.getMessageType().getMessageType().setValue(messageType);
-		messageHeaderSegment.getMessageType().getTriggerEvent().setValue(messageTriggerEvent);
-		messageHeaderSegment.getProcessingID().getProcessingID().setValue("P");
-		messageHeaderSegment.getVersionID().getVersionID().setValue("2.3.1");
+		messageHeaderSegment.getFieldSeparator()
+				.setValue("|");
+		messageHeaderSegment.getEncodingCharacters()
+				.setValue("^~\\&");
+		messageHeaderSegment.getSendingApplication()
+				.getNamespaceID()
+				.setValue(sendingApplication);
+		messageHeaderSegment.getSendingFacility()
+				.getNamespaceID()
+				.setValue(sendingFacility);
+		messageHeaderSegment.getDateTimeOfMessage()
+				.getTimeOfAnEvent()
+				.setValue(DateTimeUtils.getPlainDateTimeFrom(dateTimeOfMessage));
+		messageHeaderSegment.getMessageType()
+				.getMessageType()
+				.setValue(messageType);
+		messageHeaderSegment.getMessageType()
+				.getTriggerEvent()
+				.setValue(messageTriggerEvent);
+		messageHeaderSegment.getProcessingID()
+				.getProcessingID()
+				.setValue("P");
+		messageHeaderSegment.getVersionID()
+				.getVersionID()
+				.setValue("2.3.1");
 		
 		return messageHeaderSegment;
 	}

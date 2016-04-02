@@ -119,10 +119,14 @@ public class Study {
 	public String toString() {
 		final StringBuilder buff = new StringBuilder();
 		
-		final Field[] fields = this.getClass().getDeclaredFields();
+		final Field[] fields = this.getClass()
+				.getDeclaredFields();
 		for (Field field : fields) {
 			try {
-				buff.append(field.getName()).append(": ").append(field.get(this)).append(" ");
+				buff.append(field.getName())
+						.append(": ")
+						.append(field.get(this))
+						.append(" ");
 			}
 			catch (IllegalAccessException ex) {}
 			catch (IllegalArgumentException ex) {}

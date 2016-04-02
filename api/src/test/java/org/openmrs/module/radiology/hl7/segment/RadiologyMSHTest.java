@@ -53,7 +53,7 @@ public class RadiologyMSHTest {
 		
 		RadiologyMSH.populateMessageHeader(message.getMSH(), "OpenMRSRadiology", "OpenMRS", cal.getTime(), "ORM", "O01");
 		assertThat(PipeParser.encode(message, encodingCharacters),
-		    is("MSH|^~\\&|OpenMRSRadiology|OpenMRS|||20130228222510||ORM^O01||P|2.3.1\r"));
+			is("MSH|^~\\&|OpenMRSRadiology|OpenMRS|||20130228222510||ORM^O01||P|2.3.1\r"));
 	}
 	
 	/**
@@ -65,7 +65,7 @@ public class RadiologyMSHTest {
 	@Test
 	@Verifies(value = "should return populated message header segment given empty sending application", method = "populateMessageHeader(MSH, String, Date, String, String)")
 	public void populateMessageHeader_shouldReturnPopulatedMessageHeaderSegmentGivenEmptySendingApplication()
-	        throws HL7Exception {
+			throws HL7Exception {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(2013, Calendar.FEBRUARY, 28);
@@ -77,7 +77,7 @@ public class RadiologyMSHTest {
 		
 		RadiologyMSH.populateMessageHeader(message.getMSH(), "", "OpenMRS", cal.getTime(), "ORM", "O01");
 		assertThat(PipeParser.encode(message, encodingCharacters),
-		    is("MSH|^~\\&||OpenMRS|||20130228222510||ORM^O01||P|2.3.1\r"));
+			is("MSH|^~\\&||OpenMRS|||20130228222510||ORM^O01||P|2.3.1\r"));
 	}
 	
 	/**
@@ -89,7 +89,7 @@ public class RadiologyMSHTest {
 	@Test
 	@Verifies(value = "should return populated message header segment given empty sending facility", method = "populateMessageHeader(MSH, String, Date, String, String)")
 	public void populateMessageHeader_shouldReturnPopulatedMessageHeaderSegmentGivenEmptySendingFacility()
-	        throws HL7Exception {
+			throws HL7Exception {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(2013, Calendar.FEBRUARY, 28);
@@ -101,7 +101,7 @@ public class RadiologyMSHTest {
 		
 		RadiologyMSH.populateMessageHeader(message.getMSH(), "OpenMRSRadiology", "", cal.getTime(), "ORM", "O01");
 		assertThat(PipeParser.encode(message, encodingCharacters),
-		    is("MSH|^~\\&|OpenMRSRadiology||||20130228222510||ORM^O01||P|2.3.1\r"));
+			is("MSH|^~\\&|OpenMRSRadiology||||20130228222510||ORM^O01||P|2.3.1\r"));
 	}
 	
 	/**
@@ -124,7 +124,7 @@ public class RadiologyMSHTest {
 		
 		RadiologyMSH.populateMessageHeader(message.getMSH(), "OpenMRSRadiology", "OpenMRS", cal.getTime(), "", "O01");
 		assertThat(PipeParser.encode(message, encodingCharacters),
-		    is("MSH|^~\\&|OpenMRSRadiology|OpenMRS|||20130228222510||^O01||P|2.3.1\r"));
+			is("MSH|^~\\&|OpenMRSRadiology|OpenMRS|||20130228222510||^O01||P|2.3.1\r"));
 	}
 	
 	/**
@@ -136,7 +136,7 @@ public class RadiologyMSHTest {
 	@Test
 	@Verifies(value = "should return populated message header segment given empty message trigger", method = "populateMessageHeader(MSH, String, Date, String, String)")
 	public void populateMessageHeader_shouldReturnPopulatedMessageHeaderSegmentGivenEmptyMessageTrigger()
-	        throws HL7Exception {
+			throws HL7Exception {
 		
 		Calendar cal = Calendar.getInstance();
 		cal.set(2013, Calendar.FEBRUARY, 28);
@@ -148,7 +148,7 @@ public class RadiologyMSHTest {
 		
 		RadiologyMSH.populateMessageHeader(message.getMSH(), "OpenMRSRadiology", "OpenMRS", cal.getTime(), "ORM", "");
 		assertThat(PipeParser.encode(message, encodingCharacters),
-		    is("MSH|^~\\&|OpenMRSRadiology|OpenMRS|||20130228222510||ORM||P|2.3.1\r"));
+			is("MSH|^~\\&|OpenMRSRadiology|OpenMRS|||20130228222510||ORM||P|2.3.1\r"));
 	}
 	
 	/**
@@ -160,13 +160,13 @@ public class RadiologyMSHTest {
 	@Test
 	@Verifies(value = "should return populated message header segment given null as date time of message", method = "populateMessageHeader(MSH, String, Date, String, String)")
 	public void populateMessageHeader_shouldReturnPopulatedMessageHeaderSegmentGivenNullAsDateTimeOfMessage()
-	        throws HL7Exception {
+			throws HL7Exception {
 		
 		ORM_O01 message = new ORM_O01();
 		
 		RadiologyMSH.populateMessageHeader(message.getMSH(), "OpenMRSRadiology", "OpenMRS", null, "ORM", "O01");
 		assertThat(PipeParser.encode(message, encodingCharacters),
-		    is("MSH|^~\\&|OpenMRSRadiology|OpenMRS|||||ORM^O01||P|2.3.1\r"));
+			is("MSH|^~\\&|OpenMRSRadiology|OpenMRS|||||ORM^O01||P|2.3.1\r"));
 	}
 	
 	/**

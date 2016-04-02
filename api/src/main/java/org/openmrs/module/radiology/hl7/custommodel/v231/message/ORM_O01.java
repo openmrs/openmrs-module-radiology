@@ -17,9 +17,8 @@ import ca.uhn.hl7v2.parser.ModelClassFactory;
 
 /**
  * <p>
- * Represents a custom ORM_O01 message structure including the custom ZDS segment defined by
- * IHE Radiology Technical Framework Volume 2 (Rev 13.0). This structure contains the following
- * elements:
+ * Represents a custom ORM_O01 message structure including the custom ZDS segment defined by IHE Radiology Technical
+ * Framework Volume 2 (Rev 13.0). This structure contains the following elements:
  * </p>
  * <ul>
  * <li>1-4: segments defined by ORM_O01</li>
