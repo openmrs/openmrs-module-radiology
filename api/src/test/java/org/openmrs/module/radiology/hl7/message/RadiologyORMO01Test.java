@@ -116,8 +116,7 @@ public class RadiologyORMO01Test {
 	@Test
 	public void RadiologyORMO01_shouldCreateNewRadiologyOrmo01ObjectGivenAllParams() throws Exception {
 		
-		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER,
-				CommonOrderPriority.STAT);
+		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
 		assertNotNull(radiologyOrderMessage);
 	}
 	
@@ -130,7 +129,7 @@ public class RadiologyORMO01Test {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("radiologyOrder cannot be null."));
-		new RadiologyORMO01(null, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+		new RadiologyORMO01(null, CommonOrderOrderControl.NEW_ORDER);
 	}
 	
 	/**
@@ -143,7 +142,7 @@ public class RadiologyORMO01Test {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("radiologyOrder.study cannot be null."));
-		new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+		new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
 	}
 	
 	/**
@@ -155,19 +154,7 @@ public class RadiologyORMO01Test {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("orderControlCode cannot be null."));
-		new RadiologyORMO01(radiologyOrder, null, CommonOrderPriority.STAT);
-	}
-	
-	/**
-	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,CommonOrderOrderControl,CommonOrderPriority)
-	 * @verifies throw illegal argument exception given null as orderControlPriority
-	 */
-	@Test
-	public void RadiologyORMO01_shouldThrowIllegalArgumentExceptionGivenNullAsOrderControlPriority() throws Exception {
-		
-		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage(is("orderControlPriority cannot be null."));
-		new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER, null);
+		new RadiologyORMO01(radiologyOrder, null);
 	}
 	
 	/**
@@ -177,8 +164,7 @@ public class RadiologyORMO01Test {
 	@Test
 	public void createEncodedRadiologyORMO01Message_shouldCreateEncodedHl7Ormo01Message() throws Exception {
 		
-		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER,
-				CommonOrderPriority.STAT);
+		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
 		String encodedOrmMessage = radiologyOrderMessage.createEncodedRadiologyORMO01Message();
 		
 		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
@@ -186,7 +172,7 @@ public class RadiologyORMO01Test {
 			encodedOrmMessage,
 			endsWith("||ORM^O01||P|2.3.1\r"
 					+ "PID|||100||Doe^John^Francis||19500401000000|M\r"
-					+ "ORC|NW|ORD-20|||||^^^20150204143500^^S\r"
+					+ "ORC|NW|ORD-20|||||^^^20150204143500^^T\r"
 					+ "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
 					+ "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
 	}
@@ -198,8 +184,7 @@ public class RadiologyORMO01Test {
 	@Test
 	public void createRadiologyORMO01Message_shouldCreateOrmo01Message() throws Exception {
 		
-		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER,
-				CommonOrderPriority.STAT);
+		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
 		
 		Method createRadiologyORMO01Message = ReflectionUtils.findMethod(RadiologyORMO01.class,
 			"createRadiologyORMO01Message");
@@ -212,7 +197,7 @@ public class RadiologyORMO01Test {
 			encodedOrmMessage,
 			endsWith("||ORM^O01||P|2.3.1\r"
 					+ "PID|||100||Doe^John^Francis||19500401000000|M\r"
-					+ "ORC|NW|ORD-20|||||^^^20150204143500^^S\r"
+					+ "ORC|NW|ORD-20|||||^^^20150204143500^^T\r"
 					+ "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
 					+ "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
 	}

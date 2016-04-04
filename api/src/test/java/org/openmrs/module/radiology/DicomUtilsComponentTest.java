@@ -44,7 +44,6 @@ import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
-import org.openmrs.module.radiology.hl7.CommonOrderPriority;
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -834,29 +833,6 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 		assertThat(terser.get("/.ZDS-1-2"), is(nullValue()));
 		assertThat(terser.get("/.ZDS-1-3"), is("Application"));
 		assertThat(terser.get("/.ZDS-1-4"), is("DICOM"));
-	}
-	
-	/**
-	 * @see {@link DicomUtils#getCommonOrderPriorityFrom(Order.Urgency)}
-	 * @verifies should return hl7 common order priority given order urgency
-	 */
-	@Test
-	public void getCommonOrderPriorityFrom_shouldReturnHL7CommonOrderPriorityGivenOrderUrgency() {
-		
-		assertThat(DicomUtils.getCommonOrderPriorityFrom(Order.Urgency.STAT), is(CommonOrderPriority.STAT));
-		assertThat(DicomUtils.getCommonOrderPriorityFrom(Order.Urgency.ROUTINE), is(CommonOrderPriority.ROUTINE));
-		assertThat(DicomUtils.getCommonOrderPriorityFrom(Order.Urgency.ON_SCHEDULED_DATE),
-			is(CommonOrderPriority.TIMING_CRITICAL));
-	}
-	
-	/**
-	 * @see {@link DicomUtils#getCommonOrderPriorityFrom(Order.Urgency)}
-	 * @verifies should return default hl7 common order priority given null
-	 */
-	@Test
-	public void getCommonOrderPriorityFrom_shouldReturnDefaultHL7CommonOrderPriorityGivenNull() {
-		
-		assertThat(DicomUtils.getCommonOrderPriorityFrom(null), is(CommonOrderPriority.ROUTINE));
 	}
 	
 	/**

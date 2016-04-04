@@ -15,10 +15,8 @@ import org.dcm4che2.data.DicomElement;
 import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.SpecificCharacterSet;
 import org.dcm4che2.data.Tag;
-import org.openmrs.Order;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
-import org.openmrs.module.radiology.hl7.CommonOrderPriority;
 import org.openmrs.module.radiology.hl7.message.RadiologyORMO01;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -157,11 +155,8 @@ public class DicomUtils {
 				.getMwlStatus();
 		final CommonOrderOrderControl commonOrderOrderControl = getCommonOrderControlFrom(mwlstatus, orderRequest);
 		
-		final CommonOrderPriority orderPriority = getCommonOrderPriorityFrom(radiologyOrder.getUrgency());
-		
 		try {
-			final RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, commonOrderOrderControl,
-					orderPriority);
+			final RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, commonOrderOrderControl);
 			encodedHL7OrmMessage = radiologyOrderMessage.createEncodedRadiologyORMO01Message();
 			log.info("Created HL7 ORM^O01 message \n" + encodedHL7OrmMessage);
 		}
@@ -208,36 +203,6 @@ public class DicomUtils {
 				break;
 			default:
 				break;
-		}
-		return result;
-	}
-	
-	/**
-	 * Get the HL7 Priority component of Quantity/Timing (ORC-7) field included in an HL7 version
-	 * 2.3.1 Common Order segment given the Order Urgency.
-	 * 
-	 * @param urgency order urgency
-	 * @return string representation of hl7 common order priority mapping to order urgency
-	 * @should return hl7 common order priority given order urgency
-	 * @should return default hl7 common order priority given null
-	 */
-	public static CommonOrderPriority getCommonOrderPriorityFrom(Order.Urgency urgency) {
-		CommonOrderPriority result = null;
-		
-		if (urgency == null) {
-			result = CommonOrderPriority.ROUTINE;
-		} else {
-			switch (urgency) {
-				case STAT:
-					result = CommonOrderPriority.STAT;
-					break;
-				case ROUTINE:
-					result = CommonOrderPriority.ROUTINE;
-					break;
-				case ON_SCHEDULED_DATE:
-					result = CommonOrderPriority.TIMING_CRITICAL;
-					break;
-			}
 		}
 		return result;
 	}

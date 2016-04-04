@@ -13,7 +13,6 @@ import java.util.Date;
 
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
-import org.openmrs.module.radiology.hl7.CommonOrderPriority;
 import org.openmrs.module.radiology.hl7.custommodel.v231.message.ORM_O01;
 import org.openmrs.module.radiology.hl7.segment.RadiologyMSH;
 import org.openmrs.module.radiology.hl7.segment.RadiologyOBR;
@@ -44,23 +43,17 @@ public class RadiologyORMO01 {
 	
 	private final CommonOrderOrderControl commonOrderControl;
 	
-	private final CommonOrderPriority commonOrderPriority;
-	
 	/**
 	 * Constructor for <code>RadiologyORMO01</code>
 	 * 
 	 * @param radiologyOrder radiology order
 	 * @param commonOrderOrderControl Order Control Code of Common Order (ORC) segment
-	 * @param commonOrderPriority Priority component of Common Order (ORC) segment attribute
-	 *        Quantity/Timing
 	 * @should create new radiology ormo01 object given all params
 	 * @should throw illegal argument exception given null as radiologyOrder
 	 * @should throw illegal argument exception if given radiology orders study is null
 	 * @should throw illegal argument exception given null as orderControlCode
-	 * @should throw illegal argument exception given null as orderControlPriority
 	 */
-	public RadiologyORMO01(RadiologyOrder radiologyOrder, CommonOrderOrderControl commonOrderOrderControl,
-		CommonOrderPriority commonOrderPriority) {
+	public RadiologyORMO01(RadiologyOrder radiologyOrder, CommonOrderOrderControl commonOrderOrderControl) {
 		
 		if (radiologyOrder == null) {
 			throw new IllegalArgumentException("radiologyOrder cannot be null.");
@@ -72,13 +65,10 @@ public class RadiologyORMO01 {
 		
 		if (commonOrderOrderControl == null) {
 			throw new IllegalArgumentException("orderControlCode cannot be null.");
-		} else if (commonOrderPriority == null) {
-			throw new IllegalArgumentException("orderControlPriority cannot be null.");
 		}
 		
 		this.radiologyOrder = radiologyOrder;
 		this.commonOrderControl = commonOrderOrderControl;
-		this.commonOrderPriority = commonOrderPriority;
 	}
 	
 	/**
@@ -111,7 +101,7 @@ public class RadiologyORMO01 {
 				.getPID(), radiologyOrder.getPatient());
 		
 		RadiologyORC.populateCommonOrder(result.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-				.getORC(), radiologyOrder, commonOrderControl, commonOrderPriority);
+				.getORC(), radiologyOrder, commonOrderControl);
 		
 		RadiologyOBR.populateObservationRequest(result.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
 				.getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()

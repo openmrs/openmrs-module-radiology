@@ -64,7 +64,7 @@ public class RadiologyORCTest {
 		
 		ORM_O01 message = new ORM_O01();
 		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-				.getORC(), radiologyOrder, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+				.getORC(), radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
 		
 		ORC commonOrderSegment = message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
 				.getORC();
@@ -79,9 +79,9 @@ public class RadiologyORCTest {
 				.getValue(), is("20150204143500"));
 		assertThat(commonOrderSegment.getQuantityTiming()
 				.getPriority()
-				.getValue(), is("S"));
+				.getValue(), is(CommonOrderPriority.TIMING_CRITICAL.getValue()));
 		
-		assertThat(PipeParser.encode(commonOrderSegment, encodingCharacters), is("ORC|NW|ORD-1|||||^^^20150204143500^^S"));
+		assertThat(PipeParser.encode(commonOrderSegment, encodingCharacters), is("ORC|NW|ORD-1|||||^^^20150204143500^^T"));
 	}
 	
 	/**
@@ -95,7 +95,7 @@ public class RadiologyORCTest {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("commonOrderSegment cannot be null."));
-		RadiologyORC.populateCommonOrder(null, radiologyOrder, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+		RadiologyORC.populateCommonOrder(null, radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
 	}
 	
 	/**
@@ -110,6 +110,6 @@ public class RadiologyORCTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("radiologyOrder cannot be null."));
 		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-				.getORC(), null, CommonOrderOrderControl.NEW_ORDER, CommonOrderPriority.STAT);
+				.getORC(), null, CommonOrderOrderControl.NEW_ORDER);
 	}
 }
