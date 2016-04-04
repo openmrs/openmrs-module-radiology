@@ -20,11 +20,11 @@ public class RadiologyConstants {
 	
 	public static final String GP_PACS_ADDRESS = "radiology.pacsAddress";
 	
-	public static final String GP_PACS_DICOM_MPPS_PORT = "radiology.pacsDicomMppsPort";
-	
 	public static final String GP_PACS_HL7_PORT = "radiology.pacsHL7Port";
 	
 	public static final String GP_PACS_DICOM_AE_TITLE = "radiology.pacsDicomAeTitle";
+	
+	public static final String GP_DICOM_MPPS_PORT = "radiology.dicomMppsPort";
 	
 	public static final String GP_DICOM_AE_TITLE = "radiology.dicomAeTitle";
 	

@@ -13,6 +13,6 @@
 		property_value="mpps" />
 	<global_property property="radiology.dicomAeTitle"
 		property_value="RADIOLOGY_MODULE" />
-			<global_property property="radiology.pacsDicomMppsPort"
+			<global_property property="radiology.dicomMppsPort"
 		property_value="11114" />
 </dataset>

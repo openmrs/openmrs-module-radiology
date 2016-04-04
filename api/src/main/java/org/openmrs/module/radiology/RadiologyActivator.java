@@ -71,7 +71,7 @@ public class RadiologyActivator extends BaseModuleActivator {
 		final RadiologyProperties radiologyProperties = Context.getRegisteredComponent("radiologyProperties",
 			RadiologyProperties.class);
 		return new String[] { "-mwl", radiologyProperties.getMwlDir(), "-mpps", radiologyProperties.getMppsDir(),
-				radiologyProperties.getDicomAeTitle() + ":" + radiologyProperties.getPacsDicomMppsPort() };
+				radiologyProperties.getDicomAeTitle() + ":" + radiologyProperties.getDicomMppsPort() };
 	}
 	
 	/**
