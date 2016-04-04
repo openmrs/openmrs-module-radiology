@@ -82,33 +82,6 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	}
 	
 	/**
-	 * @see RadiologyProperties#getPacsDicomMppsPort()
-	 * @verifies return pacs dicom mpps port
-	 */
-	@Test
-	public void getPacsDicomMppsPort_shouldReturnPacsDicomMppsPort() throws Exception {
-		
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_PACS_DICOM_MPPS_PORT, "11114"));
-		
-		assertThat(radiologyProperties.getPacsDicomMppsPort(), is("11114"));
-	}
-	
-	/**
-	 * @see RadiologyProperties#getPacsDicomMppsPort()
-	 * @verifies throw illegal state exception if global property for pacs dicom mpps port cannot be
-	 *           found
-	 */
-	@Test
-	public void getPacsDicomMppsPort_shouldThrowIllegalStateExceptionIfGlobalPropertyForPacsDicomMppsPortCannotBeFound()
-			throws Exception {
-		
-		expectedException.expect(IllegalStateException.class);
-		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_PACS_DICOM_MPPS_PORT);
-		
-		radiologyProperties.getPacsDicomMppsPort();
-	}
-	
-	/**
 	 * @see RadiologyProperties#getPacsHL7Port()
 	 * @verifies return pacs hl7 port
 	 */
@@ -159,6 +132,33 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_PACS_DICOM_AE_TITLE);
 		
 		radiologyProperties.getPacsDicomAeTitle();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomMppsPort()
+	 * @verifies return dicom mpps port
+	 */
+	@Test
+	public void getDicomMppsPort_shouldReturnPacsDicomMppsPort() throws Exception {
+		
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_MPPS_PORT, "11114"));
+		
+		assertThat(radiologyProperties.getDicomMppsPort(), is("11114"));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomMppsPort()
+	 * @verifies throw illegal state exception if global property for dicom mpps port cannot be
+	 *           found
+	 */
+	@Test
+	public void getDicomMppsPort_shouldThrowIllegalStateExceptionIfGlobalPropertyForPacsDicomMppsPortCannotBeFound()
+			throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_MPPS_PORT);
+		
+		radiologyProperties.getDicomMppsPort();
 	}
 	
 	/**

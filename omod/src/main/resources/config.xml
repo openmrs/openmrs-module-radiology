@@ -58,12 +58,6 @@
 		<description>IP address or hostname of the PACS</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.pacsDicomMppsPort</property>
-		<defaultValue>11114</defaultValue>
-		<description>DICOM port of the PACS MPPS SCP to receive DICOM MPPS updates
-		</description>
-	</globalProperty>
-	<globalProperty>
 		<property>@MODULE_ID@.pacsHL7Port</property>
 		<defaultValue>2575</defaultValue>
 		<description>HL7 port of the PACS to send radiology orders to
@@ -73,6 +67,13 @@
 		<property>@MODULE_ID@.pacsDicomAeTitle</property>
 		<defaultValue>DCM4CHEE</defaultValue>
 		<description>DICOM AE title of the PACS
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.dicomMppsPort</property>
+		<defaultValue>11114</defaultValue>
+		<description>DICOM port of the radiology module MPPS SCU to receive DICOM MPPS
+			updates
 		</description>
 	</globalProperty>
 	<globalProperty>
