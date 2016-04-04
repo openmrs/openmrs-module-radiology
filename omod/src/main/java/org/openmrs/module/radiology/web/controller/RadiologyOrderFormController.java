@@ -29,13 +29,13 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Modality;
-import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.validator.RadiologyDiscontinuedOrderValidator;
 import org.openmrs.module.radiology.validator.RadiologyOrderValidator;
@@ -48,7 +48,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-import org.openmrs.module.radiology.dicom.DicomWebViewer;
 
 @Controller
 @RequestMapping(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING)
@@ -192,15 +191,12 @@ public class RadiologyOrderFormController {
 			try {
 				radiologyService.placeRadiologyOrder(radiologyOrder);
 				
-				radiologyService.sendModalityWorklist(radiologyOrder, OrderRequest.Save_Order);
-				if (radiologyOrder.getStudy()
-						.getMwlStatus() == MwlStatus.SAVE_ERR || radiologyOrder.getStudy()
-						.getMwlStatus() == MwlStatus.UPDATE_ERR) {
-					request.getSession()
-							.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.savedFailWorklist");
-				} else {
+				if (radiologyService.sendModalityWorklist(radiologyOrder, OrderRequest.Save_Order)) {
 					request.getSession()
 							.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
+				} else {
+					request.getSession()
+							.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.savedFailWorklist");
 				}
 				
 				modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
@@ -250,9 +246,7 @@ public class RadiologyOrderFormController {
 				discontinuationOrder.getOrderer(), discontinuationOrder.getDateActivated(),
 				discontinuationOrder.getOrderReasonNonCoded());
 			
-			radiologyService.sendModalityWorklist(radiologyOrderToDiscontinue, OrderRequest.Discontinue_Order);
-			if (radiologyOrderToDiscontinue.getStudy()
-					.getMwlStatus() == MwlStatus.DISCONTINUE_OK) {
+			if (radiologyService.sendModalityWorklist(radiologyOrderToDiscontinue, OrderRequest.Discontinue_Order)) {
 				request.getSession()
 						.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
 				modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
