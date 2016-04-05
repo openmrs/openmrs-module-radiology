@@ -13,6 +13,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
+import org.openmrs.Order;
 import org.openmrs.PersonName;
 import org.openmrs.test.Verifies;
 
@@ -163,5 +164,47 @@ public class HL7UtilsTest {
 		String extendedPersonName = PipeParser.encode(xpn, encodingCharacters);
 		
 		assertThat(extendedPersonName, is(""));
+	}
+	
+	/**
+	 * @see HL7Utils#convertOrderUrgencyToCommonOrderPriority(Order.Urgency)
+	 * @verifies return routine given null
+	 */
+	@Test
+	public void convertOrderUrgencyToCommonOrderPriority_shouldReturnRoutineGivenNull() throws Exception {
+		
+		assertThat(HL7Utils.convertOrderUrgencyToCommonOrderPriority(null), is(CommonOrderPriority.ROUTINE));
+	}
+	
+	/**
+	 * @see HL7Utils#convertOrderUrgencyToCommonOrderPriority(Order.Urgency)
+	 * @verifies return stat given order urgency stat
+	 */
+	@Test
+	public void convertOrderUrgencyToCommonOrderPriority_shouldReturnStatGivenOrderUrgencyStat() throws Exception {
+		
+		assertThat(HL7Utils.convertOrderUrgencyToCommonOrderPriority(Order.Urgency.STAT), is(CommonOrderPriority.STAT));
+	}
+	
+	/**
+	 * @see HL7Utils#convertOrderUrgencyToCommonOrderPriority(Order.Urgency)
+	 * @verifies return routine given order urgency routine
+	 */
+	@Test
+	public void convertOrderUrgencyToCommonOrderPriority_shouldReturnRoutineGivenOrderUrgencyRoutine() throws Exception {
+		
+		assertThat(HL7Utils.convertOrderUrgencyToCommonOrderPriority(Order.Urgency.ROUTINE), is(CommonOrderPriority.ROUTINE));
+	}
+	
+	/**
+	 * @see HL7Utils#convertOrderUrgencyToCommonOrderPriority(Order.Urgency)
+	 * @verifies return timing critical given order urgency on scheduled date
+	 */
+	@Test
+	public void convertOrderUrgencyToCommonOrderPriority_shouldReturnTimingCriticalGivenOrderUrgencyOnScheduledDate()
+			throws Exception {
+		
+		assertThat(HL7Utils.convertOrderUrgencyToCommonOrderPriority(Order.Urgency.ON_SCHEDULED_DATE),
+			is(CommonOrderPriority.TIMING_CRITICAL));
 	}
 }

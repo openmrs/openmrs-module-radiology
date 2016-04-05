@@ -11,7 +11,7 @@ package org.openmrs.module.radiology.hl7.segment;
 
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
-import org.openmrs.module.radiology.hl7.CommonOrderPriority;
+import org.openmrs.module.radiology.hl7.HL7Utils;
 import org.openmrs.module.radiology.utils.DateTimeUtils;
 
 import ca.uhn.hl7v2.model.DataTypeException;
@@ -34,8 +34,6 @@ public class RadiologyORC {
 	 * @param commonOrderSegment Common Order Segment to populate
 	 * @param radiologyOrder to map to commonOrderSegment segment
 	 * @param commonOrderOrderControl Order Control element of Common Order (ORC)
-	 * @param commonOrderPriority Priority component of Common Order (ORC) segment attribute
-	 *        Quantity/Timing
 	 * @return populated commonOrderSegment segment
 	 * @throws DataTypeException
 	 * @should return populated common order segment given all params
@@ -43,8 +41,7 @@ public class RadiologyORC {
 	 * @should throw illegal argument exception given null as radiology order
 	 */
 	public static ORC populateCommonOrder(ORC commonOrderSegment, RadiologyOrder radiologyOrder,
-			CommonOrderOrderControl commonOrderOrderControl, CommonOrderPriority commonOrderPriority)
-			throws DataTypeException {
+			CommonOrderOrderControl commonOrderOrderControl) throws DataTypeException {
 		
 		if (commonOrderSegment == null) {
 			throw new IllegalArgumentException("commonOrderSegment cannot be null.");
@@ -65,7 +62,8 @@ public class RadiologyORC {
 				.setValue(DateTimeUtils.getPlainDateTimeFrom(radiologyOrder.getEffectiveStartDate()));
 		commonOrderSegment.getQuantityTiming()
 				.getPriority()
-				.setValue(commonOrderPriority.getValue());
+				.setValue(HL7Utils.convertOrderUrgencyToCommonOrderPriority(radiologyOrder.getUrgency())
+						.getValue());
 		
 		return commonOrderSegment;
 	}
