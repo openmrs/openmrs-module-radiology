@@ -29,5 +29,4 @@ public enum MwlStatus {
 	UNDISCONTINUE_ERR,
 	UNVOID_OK,
 	UNVOID_ERR;
-	
 }

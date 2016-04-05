@@ -275,7 +275,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	}
 	
 	@Override
-	public void sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
+	public boolean sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
 		final int HL7_SEND_SUCCESS = 1;
 		final int HL7_SEND_ERROR = 0;
 		MwlStatus mwlStatus = radiologyOrder.getStudy()
@@ -307,7 +307,6 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 				default:
 					break;
 			}
-			
 		} else if (status == HL7_SEND_ERROR) {
 			switch (orderRequest) {
 				case Save_Order:
@@ -333,9 +332,11 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 					break;
 			}
 		}
+		
 		radiologyOrder.getStudy()
 				.setMwlStatus(mwlStatus);
 		saveStudy(radiologyOrder.getStudy());
+		return status == HL7_SEND_SUCCESS ? true : false;
 	}
 	
 	/**
