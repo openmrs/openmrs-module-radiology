@@ -330,15 +330,7 @@
 								</spring:bind></td>
 						</tr>
 						<tr>
-							<td><spring:message code="general.dateDiscontinued" /></td>
-							<td><spring:bind path="dateActivated">
-									<openmrs:fieldGen type="java.util.Date"
-										formFieldName="${status.expression}"
-										val="${status.editor.value}" />
-									<c:if test="${status.errorMessage != ''}">
-										<span class="error">${status.errorMessage}</span>
-									</c:if>
-								</spring:bind></td>
+								<form:hidden path="dateActivated" />
 						</tr>
 						<tr>
 							<td><spring:message code="general.discontinuedReason" /></td>

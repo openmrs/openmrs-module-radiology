@@ -48,6 +48,7 @@
 				<property name="orderService" ref="orderService"></property>
 				<property name="encounterService" ref="encounterService"></property>
 				<property name="radiologyProperties" ref="radiologyProperties"></property>
+				<property name="emrEncounterService" ref="emrEncounterService"></property>
 			</bean>
 		</property>
 		<property name="preInterceptors">

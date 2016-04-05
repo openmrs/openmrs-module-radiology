@@ -14,6 +14,7 @@ import org.openmrs.ConceptClass;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.OrderType;
+import org.openmrs.VisitType;
 import org.openmrs.module.emrapi.utils.ModuleProperties;
 import org.springframework.stereotype.Component;
 
@@ -229,12 +230,7 @@ public class RadiologyProperties extends ModuleProperties {
 	 * @should throw illegal state exception for non existing radiology test order type
 	 */
 	public OrderType getRadiologyTestOrderType() {
-		final OrderType result = orderService.getOrderTypeByUuid(RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID);
-		if (result == null) {
-			throw new IllegalStateException("OrderType for radiology orders not in database (not found under uuid="
-					+ RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID + ").");
-		}
-		return result;
+		return getOrderTypeByGlobalProperty(RadiologyConstants.GP_RADIOLOGY_TEST_ORDER_TYPE);
 	}
 	
 	/**
@@ -244,13 +240,8 @@ public class RadiologyProperties extends ModuleProperties {
 	 * @should return encounter type for radiology orders
 	 * @should throw illegal state exception for non existing radiology encounter type
 	 */
-	public EncounterType getRadiologyEncounterType() {
-		final EncounterType result = encounterService.getEncounterTypeByUuid(RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID);
-		if (result == null) {
-			throw new IllegalStateException("EncounterType for radiology orders not in database (not found under uuid="
-					+ RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID + ").");
-		}
-		return result;
+	public EncounterType getRadiologyOrderEncounterType() {
+		return getEncounterTypeByGlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDER_ENCOUNTER_TYPE);
 	}
 	
 	/**
@@ -260,13 +251,19 @@ public class RadiologyProperties extends ModuleProperties {
 	 * @should return encounter role for ordering provider
 	 * @should throw illegal state exception for non existing ordering provider encounter role
 	 */
-	public EncounterRole getOrderingProviderEncounterRole() {
-		final EncounterRole result = encounterService.getEncounterRoleByUuid(RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID);
-		if (result == null) {
-			throw new IllegalStateException("EncounterRole for ordering provider not in database (not found under uuid="
-					+ RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID + ").");
-		}
-		return result;
+	public EncounterRole getRadiologyOrderingProviderEncounterRole() {
+		return getEncounterRoleByGlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDERING_PROVIDER_ENCOUNTER_ROLE);
+	}
+	
+	/**
+	 * Get VisitType for RadiologyOrder's
+	 * 
+	 * @return visitType for radiology orders
+	 * @should return visit type for radiology orders
+	 * @should throw illegal state exception for non existing radiology visit type
+	 */
+	public VisitType getRadiologyVisitType() {
+		return getVisitTypeByGlobalProperty(RadiologyConstants.GP_RADIOLOGY_VISIT_TYPE);
 	}
 	
 	/**
