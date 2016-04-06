@@ -24,7 +24,6 @@ import org.openmrs.api.OrderContext;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.DicomUtils;
-import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
@@ -35,6 +34,7 @@ import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
 import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
+import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -274,10 +274,48 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		return studyDAO.saveStudy(studyToBeUpdated);
 	}
 	
+	/**
+	 * @see RadiologyService#placeRadiologyOrderInPacs(RadiologyOrder)
+	 */
+	@Transactional
 	@Override
-	public boolean sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
+	public boolean placeRadiologyOrderInPacs(RadiologyOrder radiologyOrder) {
 		
-		final String hl7message = DicomUtils.createHL7Message(radiologyOrder, orderRequest);
+		if (radiologyOrder == null) {
+			throw new IllegalArgumentException("radiologyOrder is required");
+		}
+		
+		if (radiologyOrder.getOrderId() == null) {
+			throw new IllegalArgumentException("radiologyOrder is not persisted");
+		}
+		
+		if (radiologyOrder.getStudy() == null) {
+			throw new IllegalArgumentException("radiologyOrder.study is required");
+		}
+		
+		final String hl7message = DicomUtils.createHL7Message(radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
+		final boolean result = DicomUtils.sendHL7Message(hl7message);
+		
+		updateStudyMwlStatus(radiologyOrder, result);
+		return result;
+	}
+	
+	/**
+	 * @see RadiologyService#discontinueRadiologyOrderInPacs(RadiologyOrder)
+	 */
+	@Transactional
+	@Override
+	public boolean discontinueRadiologyOrderInPacs(RadiologyOrder radiologyOrder) {
+		
+		if (radiologyOrder == null) {
+			throw new IllegalArgumentException("radiologyOrder is required");
+		}
+		
+		if (radiologyOrder.getOrderId() == null) {
+			throw new IllegalArgumentException("radiologyOrder is not persisted");
+		}
+		
+		final String hl7message = DicomUtils.createHL7Message(radiologyOrder, CommonOrderOrderControl.CANCEL_ORDER);
 		final boolean result = DicomUtils.sendHL7Message(hl7message);
 		
 		updateStudyMwlStatus(radiologyOrder, result);

@@ -13,7 +13,6 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.hamcrest.core.StringStartsWith.startsWith;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
@@ -43,7 +42,6 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
-import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -474,18 +472,18 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see DicomUtils#createHL7Message(RadiologyOrder,OrderRequest)
-	 * @verifies return encoded HL7 ORMO01 message string given radiology order and save order request
+	 * @see DicomUtils#createHL7Message(RadiologyOrder,CommonOrderOrderControl)
+	 * @verifies return encoded HL7 ORMO01 message string given radiology order and common order control new order
 	 */
 	@Test
-	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringGivenRadiologyOrderAndSaveOrderRequest()
+	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringGivenRadiologyOrderAndCommonOrderControlNewOrder()
 			throws Exception {
 		
 		RadiologyOrder radiologyOrder = getMockRadiologyOrder();
 		Study study = getMockStudy();
 		radiologyOrder.setStudy(study);
 		
-		String saveOrderHL7String = DicomUtils.createHL7Message(radiologyOrder, DicomUtils.OrderRequest.Save_Order);
+		String saveOrderHL7String = DicomUtils.createHL7Message(radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
 		
 		assertThat(saveOrderHL7String, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(
@@ -593,18 +591,18 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see DicomUtils#createHL7Message(RadiologyOrder,OrderRequest)
-	 * @verifies return encoded HL7 ORMO01 message string given radiology order and discontinue order request
+	 * @see DicomUtils#createHL7Message(RadiologyOrder,CommonOrderOrderControl)
+	 * @verifies return encoded HL7 ORMO01 message string given radiology order and common order control cancel order
 	 */
 	@Test
-	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringGivenRadiologyOrderAndDiscontinueOrderRequest()
+	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringGivenRadiologyOrderAndCommonOrderControlCancelOrder()
 			throws Exception {
 		
 		RadiologyOrder radiologyOrder = getMockRadiologyOrder();
 		Study study = getMockStudy();
 		radiologyOrder.setStudy(study);
 		
-		String saveOrderHL7String = DicomUtils.createHL7Message(radiologyOrder, DicomUtils.OrderRequest.Discontinue_Order);
+		String saveOrderHL7String = DicomUtils.createHL7Message(radiologyOrder, CommonOrderOrderControl.CANCEL_ORDER);
 		
 		assertThat(saveOrderHL7String, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(
@@ -709,37 +707,5 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 		assertThat(terser.get("/.ZDS-1-2"), is(nullValue()));
 		assertThat(terser.get("/.ZDS-1-3"), is("Application"));
 		assertThat(terser.get("/.ZDS-1-4"), is("DICOM"));
-	}
-	
-	/**
-	 * @see DicomUtils#getCommonOrderControlFrom(OrderRequest)
-	 * @verifies return new order given order request save order
-	 */
-	@Test
-	public void getCommonOrderControlFrom_shouldReturnNewOrderGivenOrderRequestSaveOrder() throws Exception {
-		
-		assertThat(DicomUtils.getCommonOrderControlFrom(DicomUtils.OrderRequest.Save_Order),
-			is(CommonOrderOrderControl.NEW_ORDER));
-	}
-	
-	/**
-	 * @see DicomUtils#getCommonOrderControlFrom(OrderRequest)
-	 * @verifies return cancel order given order request discontinue order
-	 */
-	@Test
-	public void getCommonOrderControlFrom_shouldReturnCancelOrderGivenOrderRequestDiscontinueOrder() throws Exception {
-		
-		assertThat(DicomUtils.getCommonOrderControlFrom(DicomUtils.OrderRequest.Discontinue_Order),
-			is(CommonOrderOrderControl.CANCEL_ORDER));
-	}
-	
-	/**
-	 * @see DicomUtils#getCommonOrderControlFrom(OrderRequest)
-	 * @verifies return null given null
-	 */
-	@Test
-	public void getCommonOrderControlFrom_shouldReturnNullGivenNull() throws Exception {
-		
-		assertNull(DicomUtils.getCommonOrderControlFrom(null));
 	}
 }
