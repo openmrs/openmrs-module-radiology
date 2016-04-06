@@ -523,6 +523,73 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	}
 	
 	/**
+	 * @see RadiologyService#placeRadiologyOrderInPacs(RadiologyOrder)
+	 * @verifies throw illegal argument exception given null
+	 */
+	@Test
+	public void placeRadiologyOrderInPacs_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder is required");
+		radiologyService.placeRadiologyOrderInPacs(null);
+	}
+	
+	/**
+	 * @see RadiologyService#placeRadiologyOrderInPacs(RadiologyOrder)
+	 * @verifies throw illegal argument exception given radiology order with orderId null
+	 */
+	@Test
+	public void placeRadiologyOrderInPacs_shouldThrowIllegalArgumentExceptionGivenRadiologyOrderWithOrderIdNull()
+			throws Exception {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder is not persisted");
+		radiologyService.placeRadiologyOrderInPacs(new RadiologyOrder());
+	}
+	
+	/**
+	 * @see RadiologyService#placeRadiologyOrderInPacs(RadiologyOrder)
+	 * @verifies throw illegal argument exception if given radiology order has no study
+	 */
+	@Test
+	public void placeRadiologyOrderInPacs_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderHasNoStudy()
+			throws Exception {
+		
+		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
+		radiologyOrder.setOrderId(1);
+		radiologyOrder.setStudy(null);
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder.study is required");
+		radiologyService.placeRadiologyOrderInPacs(radiologyOrder);
+	}
+	
+	/**
+	 * @see RadiologyService#discontinueRadiologyOrderInPacs(RadiologyOrder)
+	 * @verifies throw illegal argument exception given null
+	 */
+	@Test
+	public void discontinueRadiologyOrderInPacs_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder is required");
+		radiologyService.discontinueRadiologyOrderInPacs(null);
+	}
+	
+	/**
+	 * @see RadiologyService#discontinueRadiologyOrderInPacs(RadiologyOrder)
+	 * @verifies throw illegal argument exception given radiology order with orderId null
+	 */
+	@Test
+	public void discontinueRadiologyOrderInPacs_shouldThrowIllegalArgumentExceptionGivenRadiologyOrderWithOrderIdNull()
+			throws Exception {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage("radiologyOrder is not persisted");
+		radiologyService.discontinueRadiologyOrderInPacs(new RadiologyOrder());
+	}
+	
+	/**
 	 * @see RadiologyService#getStudyByStudyId(Integer)
 	 * @verifies should return study for given study id
 	 */

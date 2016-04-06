@@ -132,28 +132,21 @@ public class DicomUtils {
 		return performedProcedureStepStatus;
 	}
 	
-	public enum OrderRequest {
-		Save_Order,
-		Discontinue_Order;
-	}
-	
 	/**
 	 * Create HL7 ORM^O01 message to create a worklist request. See IHE Radiology Technical
 	 * Framework Volume 2.
 	 * 
 	 * @param radiologyOrder radiology order for which the order message is created
-	 * @param orderRequest OrderRequest specifying the action of the order message
+	 * @param commonOrderControl common order control of the hl7 order message
 	 * @return encoded HL7 ORM^O01 message
-	 * @should return encoded HL7 ORMO01 message string given radiology order and save order request
-	 * @should return encoded HL7 ORMO01 message string given radiology order and discontinue order request
+	 * @should return encoded HL7 ORMO01 message string given radiology order and common order control new order
+	 * @should return encoded HL7 ORMO01 message string given radiology order and common order control cancel order
 	 */
-	public static String createHL7Message(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
+	public static String createHL7Message(RadiologyOrder radiologyOrder, CommonOrderOrderControl commonOrderControl) {
 		String encodedHL7OrmMessage = null;
 		
-		final CommonOrderOrderControl commonOrderOrderControl = getCommonOrderControlFrom(orderRequest);
-		
 		try {
-			final RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, commonOrderOrderControl);
+			final RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, commonOrderControl);
 			encodedHL7OrmMessage = radiologyOrderMessage.createEncodedRadiologyORMO01Message();
 			log.info("Created HL7 ORM^O01 message \n" + encodedHL7OrmMessage);
 		}
@@ -167,35 +160,6 @@ public class DicomUtils {
 		return encodedHL7OrmMessage;
 	}
 	
-	/**
-	 * Get the HL7 Order Control Code component used in an HL7 common order segment (ORC-1 field)
-	 * given the mwlstatus and orderRequest.
-	 * 
-	 * @param orderRequest OrderRequest to be translated into hl7 order control code
-	 * @should return new order given order request save order
-	 * @should return cancel order given order request discontinue order
-	 * @should return null given null
-	 */
-	public static CommonOrderOrderControl getCommonOrderControlFrom(OrderRequest orderRequest) {
-		CommonOrderOrderControl result = null;
-		
-		if (orderRequest == null) {
-			return null;
-		}
-		
-		switch (orderRequest) {
-			case Save_Order:
-				result = CommonOrderOrderControl.NEW_ORDER;
-				break;
-			case Discontinue_Order:
-				result = CommonOrderOrderControl.CANCEL_ORDER;
-				break;
-			default:
-				break;
-		}
-		return result;
-	}
-	
 	// Send HL7 ORU message to dcm4chee.
 	public static boolean sendHL7Message(String hl7message) {
 		final String input[] = { "-c", radiologyProperties.getPacsAddress() + ":" + radiologyProperties.getPacsHL7Port(),
@@ -207,5 +171,4 @@ public class DicomUtils {
 	static RadiologyService radiologyService() {
 		return Context.getService(RadiologyService.class);
 	}
-	
 }

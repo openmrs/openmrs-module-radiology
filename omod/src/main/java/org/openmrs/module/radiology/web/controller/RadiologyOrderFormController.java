@@ -27,7 +27,6 @@ import org.openmrs.Patient;
 import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.DicomUtils.OrderRequest;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
@@ -191,7 +190,7 @@ public class RadiologyOrderFormController {
 			try {
 				radiologyService.placeRadiologyOrder(radiologyOrder);
 				
-				if (radiologyService.sendModalityWorklist(radiologyOrder, OrderRequest.Save_Order)) {
+				if (radiologyService.placeRadiologyOrderInPacs(radiologyOrder)) {
 					request.getSession()
 							.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
 				} else {
@@ -246,7 +245,7 @@ public class RadiologyOrderFormController {
 				discontinuationOrder.getOrderer(), discontinuationOrder.getDateActivated(),
 				discontinuationOrder.getOrderReasonNonCoded());
 			
-			if (radiologyService.sendModalityWorklist(radiologyOrderToDiscontinue, OrderRequest.Discontinue_Order)) {
+			if (radiologyService.discontinueRadiologyOrderInPacs(radiologyOrderToDiscontinue)) {
 				request.getSession()
 						.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
 				modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
