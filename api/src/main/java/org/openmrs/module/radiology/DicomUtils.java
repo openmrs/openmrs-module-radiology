@@ -133,7 +133,8 @@ public class DicomUtils {
 	}
 	
 	public enum OrderRequest {
-		Save_Order, Discontinue_Order;
+		Save_Order,
+		Discontinue_Order;
 	}
 	
 	/**

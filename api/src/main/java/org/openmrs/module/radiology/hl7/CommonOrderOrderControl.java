@@ -17,7 +17,9 @@ package org.openmrs.module.radiology.hl7;
  * used so far by the radiology module have been implemented here.
  */
 public enum CommonOrderOrderControl {
-	NEW_ORDER("NW", "New order"), CANCEL_ORDER("CA", "Cancel order request"), CHANGE_ORDER("XO", "Change order request");
+	NEW_ORDER("NW", "New order"),
+	CANCEL_ORDER("CA", "Cancel order request"),
+	CHANGE_ORDER("XO", "Change order request");
 	
 	private String value;
 	

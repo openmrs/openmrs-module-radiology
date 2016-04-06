@@ -17,5 +17,6 @@ package org.openmrs.module.radiology;
  */
 public enum MwlStatus {
 	
-	IN_SYNC, OUT_OF_SYNC;
+	IN_SYNC,
+	OUT_OF_SYNC;
 }

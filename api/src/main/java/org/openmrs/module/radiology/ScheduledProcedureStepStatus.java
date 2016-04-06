@@ -17,7 +17,11 @@ package org.openmrs.module.radiology;
  */
 public enum ScheduledProcedureStepStatus {
 	
-	SCHEDULED, ARRIVED, READY, STARTED, DEPARTED;
+	SCHEDULED,
+	ARRIVED,
+	READY,
+	STARTED,
+	DEPARTED;
 	
 	/**
 	 * Get name or UNKNOWN for given Scheduled Procedure Step Status
