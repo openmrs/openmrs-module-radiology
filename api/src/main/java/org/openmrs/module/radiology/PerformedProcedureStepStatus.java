@@ -17,7 +17,9 @@ package org.openmrs.module.radiology;
  */
 public enum PerformedProcedureStepStatus {
 	
-	IN_PROGRESS, DISCONTINUED, COMPLETED;
+	IN_PROGRESS,
+	DISCONTINUED,
+	COMPLETED;
 	
 	/**
 	 * Get name or UNKNOWN for given Performed Procedure Step Status
