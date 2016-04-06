@@ -29,7 +29,7 @@ public class Study {
 	
 	private Modality modality;
 	
-	private MwlStatus mwlStatus = MwlStatus.DEFAULT;
+	private MwlStatus mwlStatus = MwlStatus.OUT_OF_SYNC;
 	
 	public Integer getStudyId() {
 		return studyId;

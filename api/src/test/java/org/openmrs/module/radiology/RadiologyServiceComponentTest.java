@@ -200,7 +200,6 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		Study study = new Study();
 		study.setModality(Modality.CT);
-		study.setMwlStatus(MwlStatus.DEFAULT);
 		study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
 		radiologyOrder.setStudy(study);
 		

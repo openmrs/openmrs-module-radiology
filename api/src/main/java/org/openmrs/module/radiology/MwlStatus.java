@@ -11,22 +11,11 @@ package org.openmrs.module.radiology;
 
 /**
  * <p>
- * Represents custom MWL Status Codes, which help determine what sync status of the order is in.
+ * Represents custom Modality Worklist (MWL) Status Codes, which tell if the radiology orders placed/discontinued in the
+ * radiology module are in sync with the DICOM MWL worklist entry of the same order in the PACS.
  * </p>
  */
 public enum MwlStatus {
 	
-	DEFAULT,
-	SAVE_OK,
-	SAVE_ERR,
-	UPDATE_OK,
-	UPDATE_ERR,
-	VOID_OK,
-	VOID_ERR,
-	DISCONTINUE_OK,
-	DISCONTINUE_ERR,
-	UNDISCONTINUE_OK,
-	UNDISCONTINUE_ERR,
-	UNVOID_OK,
-	UNVOID_ERR;
+	IN_SYNC, OUT_OF_SYNC;
 }

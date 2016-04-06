@@ -133,7 +133,7 @@ public class DicomUtils {
 	}
 	
 	public enum OrderRequest {
-		Save_Order, Void_Order, Discontinue_Order, Undiscontinue_Order, Unvoid_Order;
+		Save_Order, Discontinue_Order;
 	}
 	
 	/**
@@ -143,19 +143,13 @@ public class DicomUtils {
 	 * @param radiologyOrder radiology order for which the order message is created
 	 * @param orderRequest OrderRequest specifying the action of the order message
 	 * @return encoded HL7 ORM^O01 message
-	 * @should return encoded HL7 ORMO01 message string with new order control given study with
-	 *         mwlstatus default and save order request
-	 * @should return encoded HL7 ORMO01 message string with cancel order control given study with
-	 *         mwlstatus default and void order request
-	 * @should return encoded HL7 ORMO01 message string with change order control given study with
-	 *         mwlstatus save ok and save order request
+	 * @should return encoded HL7 ORMO01 message string given radiology order and save order request
+	 * @should return encoded HL7 ORMO01 message string given radiology order and discontinue order request
 	 */
 	public static String createHL7Message(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
 		String encodedHL7OrmMessage = null;
 		
-		final MwlStatus mwlstatus = radiologyOrder.getStudy()
-				.getMwlStatus();
-		final CommonOrderOrderControl commonOrderOrderControl = getCommonOrderControlFrom(mwlstatus, orderRequest);
+		final CommonOrderOrderControl commonOrderOrderControl = getCommonOrderControlFrom(orderRequest);
 		
 		try {
 			final RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, commonOrderOrderControl);
@@ -176,32 +170,24 @@ public class DicomUtils {
 	 * Get the HL7 Order Control Code component used in an HL7 common order segment (ORC-1 field)
 	 * given the mwlstatus and orderRequest.
 	 * 
-	 * @param mwlstatus mwlstatus of a study
-	 * @param orderRequest
-	 * @should return hl7 order control given mwlstatus and orderrequest
+	 * @param orderRequest OrderRequest to be translated into hl7 order control code
+	 * @should return new order given order request save order
+	 * @should return cancel order given order request discontinue order
+	 * @should return null given null
 	 */
-	public static CommonOrderOrderControl getCommonOrderControlFrom(MwlStatus mwlstatus, OrderRequest orderRequest) {
+	public static CommonOrderOrderControl getCommonOrderControlFrom(OrderRequest orderRequest) {
 		CommonOrderOrderControl result = null;
+		
+		if (orderRequest == null) {
+			return null;
+		}
 		
 		switch (orderRequest) {
 			case Save_Order:
-				if (mwlstatus == MwlStatus.DEFAULT || mwlstatus == MwlStatus.SAVE_ERR) {
-					result = CommonOrderOrderControl.NEW_ORDER;
-				} else {
-					result = CommonOrderOrderControl.CHANGE_ORDER;
-				}
-				break;
-			case Void_Order:
-				result = CommonOrderOrderControl.CANCEL_ORDER;
-				break;
-			case Unvoid_Order:
 				result = CommonOrderOrderControl.NEW_ORDER;
 				break;
 			case Discontinue_Order:
 				result = CommonOrderOrderControl.CANCEL_ORDER;
-				break;
-			case Undiscontinue_Order:
-				result = CommonOrderOrderControl.NEW_ORDER;
 				break;
 			default:
 				break;
