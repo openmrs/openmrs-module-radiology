@@ -34,6 +34,7 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
@@ -58,6 +59,8 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	
 	private static final int EXISTING_STUDY_ID = 1;
 	
+	private static final int NON_EXISTING_STUDY_ID = 99999;
+	
 	private PatientService patientService = null;
 	
 	private AdministrationService administrationService = null;
@@ -76,11 +79,13 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	
 	private StudyDAO studyDAO = null;
 	
+	private RadiologyReportDAO radiologyReportDAO;
+	
 	private Method saveRadiologyOrderEncounterMethod = null;
 	
 	private Method saveStudyMethod = null;
 	
-	private RadiologyReportDAO radiologyReportDAO;
+	private Method updateStudyMwlStatusMethod;
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
@@ -143,6 +148,10 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		saveStudyMethod = RadiologyServiceImpl.class.getDeclaredMethod("saveStudy",
 			new Class[] { org.openmrs.module.radiology.Study.class });
 		saveStudyMethod.setAccessible(true);
+		
+		updateStudyMwlStatusMethod = RadiologyServiceImpl.class.getDeclaredMethod("updateStudyMwlStatus", new Class[] {
+				RadiologyOrder.class, boolean.class });
+		updateStudyMwlStatusMethod.setAccessible(true);
 		
 		executeDataSet(STUDIES_TEST_DATASET);
 	}
@@ -225,5 +234,53 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		assertThat(updatedStudy, is(existingStudy));
 		assertThat(modalityPreUpdate, is(not(modalityPostUpdate)));
 		assertThat(updatedStudy.getModality(), is(modalityPostUpdate));
+	}
+	
+	/**
+	 * @see RadiologyServiceImpl#updateStudyMwlStatus(RadiologyOrder,boolean)
+	 * @verifies set the study mwlstatus of given radiology order to in sync given is in sync true
+	 */
+	@Test
+	public void updateStudyMwlStatus_shouldSetTheStudyMwlstatusOfGivenRadiologyOrderToInSyncGivenIsInSyncTrue()
+			throws Exception {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		Study study = new Study();
+		study.setStudyId(NON_EXISTING_STUDY_ID);
+		study.setMwlStatus(MwlStatus.OUT_OF_SYNC);
+		radiologyOrder.setStudy(study);
+		updateStudyMwlStatusMethod.invoke(radiologyServiceImpl, new Object[] { radiologyOrder, true });
+		
+		assertThat(radiologyOrder.getStudy()
+				.getMwlStatus(), is(MwlStatus.IN_SYNC));
+		
+		Study updatedStudy = radiologyServiceImpl.getStudyByStudyId(radiologyOrder.getStudy()
+				.getStudyId());
+		assertThat(updatedStudy.getMwlStatus(), is(radiologyOrder.getStudy()
+				.getMwlStatus()));
+	}
+	
+	/**
+	 * @see RadiologyServiceImpl#updateStudyMwlStatus(RadiologyOrder,boolean)
+	 * @verifies set the study mwlstatus of given radiology order to out of sync given is in sync false
+	 */
+	@Test
+	public void updateStudyMwlStatus_shouldSetTheStudyMwlstatusOfGivenRadiologyOrderToOutOfSyncGivenIsInSyncFalse()
+			throws Exception {
+		
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		Study study = new Study();
+		study.setStudyId(NON_EXISTING_STUDY_ID);
+		study.setMwlStatus(MwlStatus.IN_SYNC);
+		radiologyOrder.setStudy(study);
+		updateStudyMwlStatusMethod.invoke(radiologyServiceImpl, new Object[] { radiologyOrder, false });
+		
+		assertThat(radiologyOrder.getStudy()
+				.getMwlStatus(), is(MwlStatus.OUT_OF_SYNC));
+		
+		Study updatedStudy = radiologyServiceImpl.getStudyByStudyId(radiologyOrder.getStudy()
+				.getStudyId());
+		assertThat(updatedStudy.getMwlStatus(), is(radiologyOrder.getStudy()
+				.getMwlStatus()));
 	}
 }

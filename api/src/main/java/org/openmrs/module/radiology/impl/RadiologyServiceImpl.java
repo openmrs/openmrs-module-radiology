@@ -280,8 +280,23 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		final String hl7message = DicomUtils.createHL7Message(radiologyOrder, orderRequest);
 		final boolean result = DicomUtils.sendHL7Message(hl7message);
 		
+		updateStudyMwlStatus(radiologyOrder, result);
+		return result;
+	}
+	
+	/**
+	 * Set MwlStatus of given RadiologyOrder's Study to IN_SYNC and OUT_OF_SYNC
+	 * 
+	 * @param radiologyOrder radiology order whos study mwlstatus is updated
+	 * @param isInSync set the study mwlstatus to in sync if true
+	 * @should set the study mwlstatus of given radiology order to in sync given is in sync true
+	 * @should set the study mwlstatus of given radiology order to out of sync given is in sync false
+	 */
+	@Transactional
+	private void updateStudyMwlStatus(RadiologyOrder radiologyOrder, final boolean isInSync) {
+		
 		final MwlStatus mwlStatus;
-		if (result) {
+		if (isInSync) {
 			mwlStatus = MwlStatus.IN_SYNC;
 		} else {
 			mwlStatus = MwlStatus.OUT_OF_SYNC;
@@ -290,7 +305,6 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		radiologyOrder.getStudy()
 				.setMwlStatus(mwlStatus);
 		saveStudy(radiologyOrder.getStudy());
-		return result;
 	}
 	
 	/**
