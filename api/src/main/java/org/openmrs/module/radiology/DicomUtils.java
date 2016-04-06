@@ -29,6 +29,8 @@ public class DicomUtils {
 	
 	private static final Logger log = Logger.getLogger(DicomUtils.class);
 	
+	private static final int HL7_SEND_SUCCESS = 1;
+	
 	private DicomUtils() {
 		// This class is a utility class which should not be instantiated
 	};
@@ -208,11 +210,11 @@ public class DicomUtils {
 	}
 	
 	// Send HL7 ORU message to dcm4chee.
-	public static int sendHL7Worklist(String hl7blob) {
+	public static boolean sendHL7Message(String hl7message) {
 		final String input[] = { "-c", radiologyProperties.getPacsAddress() + ":" + radiologyProperties.getPacsHL7Port(),
-				hl7blob };
-		final int result = HL7Snd.main(input);
-		return result;
+				hl7message };
+		final int hl7SendStatus = HL7Snd.main(input);
+		return hl7SendStatus == HL7_SEND_SUCCESS ? true : false;
 	}
 	
 	static RadiologyService radiologyService() {
