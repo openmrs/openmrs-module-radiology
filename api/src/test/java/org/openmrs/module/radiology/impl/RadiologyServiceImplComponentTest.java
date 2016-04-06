@@ -34,7 +34,6 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.Modality;
-import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
@@ -204,7 +203,6 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		
 		Study study = new Study();
 		study.setModality(Modality.CT);
-		study.setMwlStatus(MwlStatus.DEFAULT);
 		study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
 		return study;
 	}

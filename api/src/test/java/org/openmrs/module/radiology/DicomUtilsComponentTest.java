@@ -13,6 +13,7 @@ import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.hamcrest.core.StringEndsWith.endsWith;
 import static org.hamcrest.core.StringStartsWith.startsWith;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.io.File;
@@ -473,17 +474,15 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see {@link DicomUtils#createHL7Message(RadiologyOrder, OrderRequest)}
-	 * @verifies should return encoded HL7 ORMO01 message string with new order control given study with mwlstatus default
-	 *           and save order request
+	 * @see DicomUtils#createHL7Message(RadiologyOrder,OrderRequest)
+	 * @verifies return encoded HL7 ORMO01 message string given radiology order and save order request
 	 */
 	@Test
-	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringWithNewOrderControlGivenStudyWithMwlstatusDefaultAndSaveOrderRequest()
+	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringGivenRadiologyOrderAndSaveOrderRequest()
 			throws Exception {
 		
 		RadiologyOrder radiologyOrder = getMockRadiologyOrder();
 		Study study = getMockStudy();
-		study.setMwlStatus(MwlStatus.DEFAULT);
 		radiologyOrder.setStudy(study);
 		
 		String saveOrderHL7String = DicomUtils.createHL7Message(radiologyOrder, DicomUtils.OrderRequest.Save_Order);
@@ -594,20 +593,18 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see {@link DicomUtils#createHL7Message(RadiologyOrder, OrderRequest)}
-	 * @verifies should return encoded HL7 ORMO01 message string with cancel order control given study with mwlstatus default
-	 *           and void order request
+	 * @see DicomUtils#createHL7Message(RadiologyOrder,OrderRequest)
+	 * @verifies return encoded HL7 ORMO01 message string given radiology order and discontinue order request
 	 */
 	@Test
-	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringWithCancelOrderControlGivenStudyWithMwlstatusDefaultAndVoidOrderRequest()
+	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringGivenRadiologyOrderAndDiscontinueOrderRequest()
 			throws Exception {
 		
 		RadiologyOrder radiologyOrder = getMockRadiologyOrder();
 		Study study = getMockStudy();
-		study.setMwlStatus(MwlStatus.DEFAULT);
 		radiologyOrder.setStudy(study);
 		
-		String saveOrderHL7String = DicomUtils.createHL7Message(radiologyOrder, DicomUtils.OrderRequest.Void_Order);
+		String saveOrderHL7String = DicomUtils.createHL7Message(radiologyOrder, DicomUtils.OrderRequest.Discontinue_Order);
 		
 		assertThat(saveOrderHL7String, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(
@@ -715,165 +712,34 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see {@link DicomUtils#createHL7Message(RadiologyOrder, OrderRequest)}
-	 * @verifies should return encoded HL7 ORMO01 message string with change order control given study with mwlstatus save ok
-	 *           and save order request
+	 * @see DicomUtils#getCommonOrderControlFrom(OrderRequest)
+	 * @verifies return new order given order request save order
 	 */
 	@Test
-	public void createHL7Message_shouldReturnEncodedHL7ORMO01MessageStringWithChangeOrderControlGivenStudyWithMwlstatusSaveOkAndSaveOrderRequest()
-			throws Exception {
+	public void getCommonOrderControlFrom_shouldReturnNewOrderGivenOrderRequestSaveOrder() throws Exception {
 		
-		RadiologyOrder radiologyOrder = getMockRadiologyOrder();
-		Study study = getMockStudy();
-		study.setMwlStatus(MwlStatus.SAVE_OK);
-		radiologyOrder.setStudy(study);
-		
-		String saveOrderHL7String = DicomUtils.createHL7Message(radiologyOrder, DicomUtils.OrderRequest.Save_Order);
-		
-		assertThat(saveOrderHL7String, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
-		assertThat(
-			saveOrderHL7String,
-			endsWith("||ORM^O01||P|2.3.1\r"
-					+ "PID|||100||Doe^John^Francis||19500401000000|M\r"
-					+ "ORC|XO|ORD-20|||||^^^20150204143500^^T\r"
-					+ "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
-					+ "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
-		
-		PipeParser hl7PipeParser = new PipeParser();
-		Message saveOrderHL7Message = hl7PipeParser.parse(saveOrderHL7String);
-		ORM_O01 ormMsg = (ORM_O01) saveOrderHL7Message;
-		
-		// MSH segment
-		MSH msh = ormMsg.getMSH();
-		assertThat(msh.getVersionID()
-				.getVersionID()
-				.getValue(), is("2.3.1"));
-		assertThat(msh.getMessageType()
-				.getMessageType()
-				.getValue(), is("ORM"));
-		assertThat(msh.getMessageType()
-				.getTriggerEvent()
-				.getValue(), is("O01"));
-		assertThat(msh.getSendingApplication()
-				.getNamespaceID()
-				.getValue(), is("OpenMRSRadiologyModule"));
-		assertThat(msh.getSendingFacility()
-				.getNamespaceID()
-				.getValue(), is("OpenMRS"));
-		assertThat(msh.getProcessingID()
-				.getProcessingID()
-				.getValue(), is("P"));
-		
-		// PID segment
-		Patient expectedPatient = radiologyOrder.getPatient();
-		PID pid = ormMsg.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
-				.getPID();
-		assertThat(pid.getPatientIdentifierList(0)
-				.getID()
-				.getValue(), is(expectedPatient.getPatientIdentifier()
-				.getIdentifier()));
-		assertThat(pid.getDateTimeOfBirth()
-				.getTimeOfAnEvent()
-				.getValue(), is(new SimpleDateFormat("yyyyMMddHHmmss").format(expectedPatient.getBirthdate())));
-		assertThat(pid.getSex()
-				.getValue(), is(expectedPatient.getGender()));
-		assertThat(pid.getPatientName(0)
-				.getFamilyLastName()
-				.getFamilyName()
-				.getValue(), is(expectedPatient.getPersonName()
-				.getFamilyName()));
-		assertThat(pid.getPatientName(0)
-				.getMiddleInitialOrName()
-				.getValue(), is(expectedPatient.getPersonName()
-				.getMiddleName()));
-		assertThat(pid.getPatientName(0)
-				.getGivenName()
-				.getValue(), is(expectedPatient.getPersonName()
-				.getGivenName()));
-		
-		// ORC segment
-		ORC orc = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-				.getORC();
-		assertThat(orc.getOrderControl()
-				.getValue(), is("XO"));
-		assertThat(orc.getPlacerOrderNumber()
-				.getEntityIdentifier()
-				.getValue(), is(radiologyOrder.getOrderNumber()));
-		assertThat(orc.getOrderStatus()
-				.getValue(), is(nullValue()));
-		assertThat(orc.getQuantityTiming()
-				.getStartDateTime()
-				.getTimeOfAnEvent()
-				.getValue(), is(new SimpleDateFormat("yyyyMMddHHmmss").format(radiologyOrder.getEffectiveStartDate())));
-		assertThat(orc.getQuantityTiming()
-				.getPriority()
-				.getValue(), is("T"));
-		
-		// OBR segment
-		OBR obr = ormMsg.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-				.getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
-				.getOBR();
-		assertThat(obr.getUniversalServiceID()
-				.getAlternateText()
-				.getValue(), is(radiologyOrder.getInstructions()));
-		assertThat(obr.getPlacerField2()
-				.getValue(), is(radiologyOrder.getOrderNumber()));
-		assertThat(obr.getFillerField1()
-				.getValue(), is(String.valueOf(study.getStudyId())));
-		assertThat(obr.getDiagnosticServSectID()
-				.getValue(), is(study.getModality()
-				.name()));
-		assertThat(obr.getProcedureCode()
-				.getText()
-				.getValue(), is(radiologyOrder.getInstructions()));
-		
-		// ZDS Segment
-		Terser terser = new Terser(ormMsg);
-		assertThat(terser.get("/.ZDS-1-1"), is(study.getStudyInstanceUid()));
-		assertThat(terser.get("/.ZDS-1-2"), is(nullValue()));
-		assertThat(terser.get("/.ZDS-1-3"), is("Application"));
-		assertThat(terser.get("/.ZDS-1-4"), is("DICOM"));
+		assertThat(DicomUtils.getCommonOrderControlFrom(DicomUtils.OrderRequest.Save_Order),
+			is(CommonOrderOrderControl.NEW_ORDER));
 	}
 	
 	/**
-	 * @see {@link DicomUtils#getCommonOrderControlFrom(MwlStatus, OrderRequest)}
-	 * @verifies should return hl7 order control given mwlstatus and orderrequest
+	 * @see DicomUtils#getCommonOrderControlFrom(OrderRequest)
+	 * @verifies return cancel order given order request discontinue order
 	 */
 	@Test
-	public void getCommonOrderControlFrom_shouldReturnHL7OrderControlGivenMwlstatusAndOrderRequest() {
+	public void getCommonOrderControlFrom_shouldReturnCancelOrderGivenOrderRequestDiscontinueOrder() throws Exception {
 		
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT, DicomUtils.OrderRequest.Save_Order),
-			is(CommonOrderOrderControl.NEW_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.SAVE_ERR, DicomUtils.OrderRequest.Save_Order),
-			is(CommonOrderOrderControl.NEW_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.SAVE_OK, DicomUtils.OrderRequest.Save_Order),
-			is(CommonOrderOrderControl.CHANGE_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.UPDATE_OK, DicomUtils.OrderRequest.Save_Order),
-			is(CommonOrderOrderControl.CHANGE_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT, DicomUtils.OrderRequest.Void_Order),
+		assertThat(DicomUtils.getCommonOrderControlFrom(DicomUtils.OrderRequest.Discontinue_Order),
 			is(CommonOrderOrderControl.CANCEL_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT, DicomUtils.OrderRequest.Void_Order),
-			is(CommonOrderOrderControl.CANCEL_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.SAVE_OK, DicomUtils.OrderRequest.Void_Order),
-			is(CommonOrderOrderControl.CANCEL_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT, DicomUtils.OrderRequest.Unvoid_Order),
-			is(CommonOrderOrderControl.NEW_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT, DicomUtils.OrderRequest.Unvoid_Order),
-			is(CommonOrderOrderControl.NEW_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.SAVE_OK, DicomUtils.OrderRequest.Unvoid_Order),
-			is(CommonOrderOrderControl.NEW_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT, DicomUtils.OrderRequest.Discontinue_Order),
-			is(CommonOrderOrderControl.CANCEL_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT, DicomUtils.OrderRequest.Discontinue_Order),
-			is(CommonOrderOrderControl.CANCEL_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.SAVE_OK, DicomUtils.OrderRequest.Discontinue_Order),
-			is(CommonOrderOrderControl.CANCEL_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT, DicomUtils.OrderRequest.Undiscontinue_Order),
-			is(CommonOrderOrderControl.NEW_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.DEFAULT, DicomUtils.OrderRequest.Undiscontinue_Order),
-			is(CommonOrderOrderControl.NEW_ORDER));
-		assertThat(DicomUtils.getCommonOrderControlFrom(MwlStatus.SAVE_OK, DicomUtils.OrderRequest.Undiscontinue_Order),
-			is(CommonOrderOrderControl.NEW_ORDER));
 	}
 	
+	/**
+	 * @see DicomUtils#getCommonOrderControlFrom(OrderRequest)
+	 * @verifies return null given null
+	 */
+	@Test
+	public void getCommonOrderControlFrom_shouldReturnNullGivenNull() throws Exception {
+		
+		assertNull(DicomUtils.getCommonOrderControlFrom(null));
+	}
 }

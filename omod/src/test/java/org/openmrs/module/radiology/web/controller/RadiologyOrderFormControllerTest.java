@@ -257,7 +257,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		// given
 		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
 		mockRadiologyOrderToDiscontinue.getStudy()
-				.setMwlStatus(MwlStatus.DISCONTINUE_OK);
+				.setMwlStatus(MwlStatus.IN_SYNC);
 		String discontinueReason = "Wrong Procedure";
 		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
 		
@@ -295,7 +295,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		// given
 		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
 		mockRadiologyOrder.getStudy()
-				.setMwlStatus(MwlStatus.SAVE_OK);
+				.setMwlStatus(MwlStatus.IN_SYNC);
 		
 		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
 		when(radiologyService.sendModalityWorklist(mockRadiologyOrder, OrderRequest.Save_Order)).thenReturn(true);
@@ -328,7 +328,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		// given
 		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
 		mockRadiologyOrder.getStudy()
-				.setMwlStatus(MwlStatus.SAVE_OK);
+				.setMwlStatus(MwlStatus.IN_SYNC);
 		
 		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
 		when(radiologyService.sendModalityWorklist(mockRadiologyOrder, OrderRequest.Save_Order)).thenReturn(true);
@@ -362,7 +362,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		// given
 		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
 		mockRadiologyOrder.getStudy()
-				.setMwlStatus(MwlStatus.SAVE_ERR);
+				.setMwlStatus(MwlStatus.OUT_OF_SYNC);
 		
 		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
 		when(radiologyService.sendModalityWorklist(mockRadiologyOrder, OrderRequest.Save_Order)).thenReturn(false);
@@ -461,7 +461,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		// given
 		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
 		mockRadiologyOrderToDiscontinue.getStudy()
-				.setMwlStatus(MwlStatus.DISCONTINUE_OK);
+				.setMwlStatus(MwlStatus.IN_SYNC);
 		String discontinueReason = "Wrong Procedure";
 		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
 		
@@ -509,7 +509,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		// given
 		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
 		mockRadiologyOrderToDiscontinue.getStudy()
-				.setMwlStatus(MwlStatus.DISCONTINUE_OK);
+				.setMwlStatus(MwlStatus.IN_SYNC);
 		String discontinueReason = "Wrong Procedure";
 		Date discontinueDate = new Date();
 		APIException apiException = new APIException("Discontinue date cannot be in the future");
@@ -567,7 +567,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		// given
 		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
 		mockRadiologyOrderToDiscontinue.getStudy()
-				.setMwlStatus(MwlStatus.DISCONTINUE_ERR);
+				.setMwlStatus(MwlStatus.OUT_OF_SYNC);
 		String discontinueReason = "Wrong Procedure";
 		
 		Order mockDiscontinuationOrder = new Order();
@@ -624,7 +624,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
 		mockRadiologyOrderToDiscontinue.getStudy()
-				.setMwlStatus(MwlStatus.DISCONTINUE_ERR);
+				.setMwlStatus(MwlStatus.OUT_OF_SYNC);
 		String discontinueReason = "Wrong Procedure";
 		
 		Order mockDiscontinuationOrder = new Order();

@@ -276,59 +276,15 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	
 	@Override
 	public boolean sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
-		MwlStatus mwlStatus = radiologyOrder.getStudy()
-				.getMwlStatus();
+		
 		final String hl7message = DicomUtils.createHL7Message(radiologyOrder, orderRequest);
 		final boolean result = DicomUtils.sendHL7Message(hl7message);
 		
+		final MwlStatus mwlStatus;
 		if (result) {
-			switch (orderRequest) {
-				case Save_Order:
-					if (mwlStatus == MwlStatus.DEFAULT || mwlStatus == MwlStatus.SAVE_ERR) {
-						mwlStatus = MwlStatus.SAVE_OK;
-					} else {
-						mwlStatus = MwlStatus.UPDATE_OK;
-					}
-					break;
-				case Void_Order:
-					mwlStatus = MwlStatus.VOID_OK;
-					break;
-				case Unvoid_Order:
-					mwlStatus = MwlStatus.UNVOID_OK;
-					break;
-				case Discontinue_Order:
-					mwlStatus = MwlStatus.DISCONTINUE_OK;
-					break;
-				case Undiscontinue_Order:
-					mwlStatus = MwlStatus.UNDISCONTINUE_OK;
-					break;
-				default:
-					break;
-			}
+			mwlStatus = MwlStatus.IN_SYNC;
 		} else {
-			switch (orderRequest) {
-				case Save_Order:
-					if (mwlStatus == MwlStatus.DEFAULT || mwlStatus == MwlStatus.SAVE_ERR) {
-						mwlStatus = MwlStatus.SAVE_ERR;
-					} else {
-						mwlStatus = MwlStatus.UPDATE_ERR;
-					}
-					break;
-				case Void_Order:
-					mwlStatus = MwlStatus.VOID_ERR;
-					break;
-				case Unvoid_Order:
-					mwlStatus = MwlStatus.UNVOID_ERR;
-					break;
-				case Discontinue_Order:
-					mwlStatus = MwlStatus.DISCONTINUE_ERR;
-					break;
-				case Undiscontinue_Order:
-					mwlStatus = MwlStatus.UNDISCONTINUE_ERR;
-					break;
-				default:
-					break;
-			}
+			mwlStatus = MwlStatus.OUT_OF_SYNC;
 		}
 		
 		radiologyOrder.getStudy()

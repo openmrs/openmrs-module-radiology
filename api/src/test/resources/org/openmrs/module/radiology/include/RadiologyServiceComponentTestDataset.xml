@@ -54,12 +54,12 @@
   <orders order_id="2001" order_number="2001" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2001" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70021" />
   <test_order order_id="2001"/>
   <radiology_order order_id="2001" />
-  <radiology_study study_id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="CT" mwl_status="DEFAULT"/>
+  <radiology_study study_id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="CT" mwl_status="IN_SYNC"/>
 
   <orders order_id="2002" order_number="2002" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2001" urgency="ROUTINE"  orderer="1" concept_id="178" instructions="MR Left Knee" date_activated="2015-02-02 12:26:35.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-02 12:26:35.0" voided="false" patient_id="70021" />
   <test_order order_id="2002"/>
   <radiology_order order_id="2002" />
-  <radiology_study study_id="2" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="MR" mwl_status="DEFAULT"/>
+  <radiology_study study_id="2" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="MR" mwl_status="IN_SYNC"/>
 
   <obs obs_id="20021" person_id="70021" order_id="2002" concept_id="178" obs_datetime="2015-02-06 17:14:00.0" location_id="1" creator="1" date_created="2015-02-06 17:14:35.0" voided="false" uuid="be3a4d7a-f9ab-47bb-aaad-bc0b452fcda4" accession_number="RAD2002"/>
 
@@ -79,27 +79,27 @@
   <orders order_id="2005" order_number="2005" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" />
   <test_order order_id="2005" />
   <radiology_order order_id="2005" />
-  <radiology_study study_id="3" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.3" order_id="2005" scheduled_status="SCHEDULED" performed_status="COMPLETED" modality="CT" mwl_status="DEFAULT" />
+  <radiology_study study_id="3" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.3" order_id="2005" scheduled_status="SCHEDULED" performed_status="COMPLETED" modality="CT" mwl_status="IN_SYNC" />
 
   <!-- radiology order with associated study and with a claimed report -->
   <orders order_id="2006" order_number="2006" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" />
   <test_order order_id="2006" />
   <radiology_order order_id="2006" />
-  <radiology_study study_id="4" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.4" order_id="2006" scheduled_status="SCHEDULED" performed_status="COMPLETED" modality="CT" mwl_status="DEFAULT" />
+  <radiology_study study_id="4" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.4" order_id="2006" scheduled_status="SCHEDULED" performed_status="COMPLETED" modality="CT" mwl_status="IN_SYNC" />
   <radiology_report report_id="1" order_id="2006" report_status="CLAIMED" principal_results_interpreter="1" creator="1" date_created="2015-02-15 13:17:15.0" uuid="e699d90d-e230-4762-8747-d2d0059394b0" />
 
   <!-- radiology order with associated study and a completed report -->
   <orders order_id="2007" order_number="2007" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" />
   <test_order order_id="2007" />
   <radiology_order order_id="2007" />
-  <radiology_study study_id="5" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.5" order_id="2007" scheduled_status="SCHEDULED" performed_status="COMPLETED" modality="CT" mwl_status="DEFAULT" />
+  <radiology_study study_id="5" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.5" order_id="2007" scheduled_status="SCHEDULED" performed_status="COMPLETED" modality="CT" mwl_status="IN_SYNC" />
   <radiology_report report_id="2" order_id="2007" report_status="COMPLETED" principal_results_interpreter="1" creator="1" date_created="2015-02-14 09:25:16.0" uuid="82d3fb80-e403-4b9b-982c-22161ec29810"/>
 
   <!-- radiology order with associated study and with a discontinued report -->
   <orders order_id="2008" order_number="2008" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" />
   <test_order order_id="2008" />
   <radiology_order order_id="2008" />
-  <radiology_study study_id="6" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.6" order_id="2008" scheduled_status="SCHEDULED" performed_status="COMPLETED" modality="CT" mwl_status="DEFAULT" />
+  <radiology_study study_id="6" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.6" order_id="2008" scheduled_status="SCHEDULED" performed_status="COMPLETED" modality="CT" mwl_status="IN_SYNC" />
   <radiology_report report_id="3" order_id="2008" report_status="DISCONTINUED" principal_results_interpreter="1" creator="1" date_created="2015-02-07 18:20:12.0" uuid="7b2b9619-a6b2-4fb7-bf6b-fc7917d6dd59"/>
 
 </dataset>
