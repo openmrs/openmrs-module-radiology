@@ -276,14 +276,12 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	
 	@Override
 	public boolean sendModalityWorklist(RadiologyOrder radiologyOrder, OrderRequest orderRequest) {
-		final int HL7_SEND_SUCCESS = 1;
-		final int HL7_SEND_ERROR = 0;
 		MwlStatus mwlStatus = radiologyOrder.getStudy()
 				.getMwlStatus();
-		final String hl7blob = DicomUtils.createHL7Message(radiologyOrder, orderRequest);
-		final int status = DicomUtils.sendHL7Worklist(hl7blob);
+		final String hl7message = DicomUtils.createHL7Message(radiologyOrder, orderRequest);
+		final boolean result = DicomUtils.sendHL7Message(hl7message);
 		
-		if (status == HL7_SEND_SUCCESS) {
+		if (result) {
 			switch (orderRequest) {
 				case Save_Order:
 					if (mwlStatus == MwlStatus.DEFAULT || mwlStatus == MwlStatus.SAVE_ERR) {
@@ -307,7 +305,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 				default:
 					break;
 			}
-		} else if (status == HL7_SEND_ERROR) {
+		} else {
 			switch (orderRequest) {
 				case Save_Order:
 					if (mwlStatus == MwlStatus.DEFAULT || mwlStatus == MwlStatus.SAVE_ERR) {
@@ -336,7 +334,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		radiologyOrder.getStudy()
 				.setMwlStatus(mwlStatus);
 		saveStudy(radiologyOrder.getStudy());
-		return status == HL7_SEND_SUCCESS ? true : false;
+		return result;
 	}
 	
 	/**
