@@ -16,7 +16,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +34,6 @@ import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.hl7.custommodel.v231.message.ORM_O01;
 import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
-import org.springframework.util.ReflectionUtils;
 
 import ca.uhn.hl7v2.parser.EncodingCharacters;
 import ca.uhn.hl7v2.parser.PipeParser;
@@ -46,6 +44,8 @@ import ca.uhn.hl7v2.parser.PipeParser;
 public class RadiologyORMO01Test {
 	
 	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
+	
+	RadiologyORMO01 radiologyORMO01;
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
@@ -58,6 +58,8 @@ public class RadiologyORMO01Test {
 	
 	@Before
 	public void runBeforeEachTest() throws Exception {
+		
+		radiologyORMO01 = new RadiologyORMO01();
 		
 		patient = new Patient();
 		patient.setPatientId(1);
@@ -109,62 +111,73 @@ public class RadiologyORMO01Test {
 	}
 	
 	/**
-	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,OrderControlElement)
-	 * @verifies create new radiology ormo01 object given all params
+	 * @see RadiologyORMO01#createMessage(RadiologyOrder,OrderControlElement)
+	 * @verifies create new ormo01 object given all params
 	 */
 	@Test
-	public void RadiologyORMO01_shouldCreateNewRadiologyOrmo01ObjectGivenAllParams() throws Exception {
+	public void createMessage_shouldCreateNewOrmo01ObjectGivenAllParams() throws Exception {
 		
-		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, OrderControlElement.NEW_ORDER);
+		ORM_O01 radiologyOrderMessage = radiologyORMO01.createMessage(radiologyOrder, OrderControlElement.NEW_ORDER);
+		
 		assertNotNull(radiologyOrderMessage);
+		
+		String encodedOrmMessage = PipeParser.encode(radiologyOrderMessage, encodingCharacters);
+		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
+		assertThat(
+			encodedOrmMessage,
+			endsWith("||ORM^O01||P|2.3.1\r"
+					+ "PID|||100||Doe^John^Francis||19500401000000|M\r"
+					+ "ORC|NW|ORD-20|||||^^^20150204143500^^T\r"
+					+ "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
+					+ "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
 	}
 	
 	/**
-	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,OrderControlElement)
+	 * @see RadiologyORMO01#createMessage(RadiologyOrder,OrderControlElement)
 	 * @verifies throw illegal argument exception given null as radiologyOrder
 	 */
 	@Test
-	public void RadiologyORMO01_shouldThrowIllegalArgumentExceptionGivenNullAsRadiologyOrder() throws Exception {
+	public void createMessage_shouldThrowIllegalArgumentExceptionGivenNullAsRadiologyOrder() throws Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("radiologyOrder cannot be null."));
-		new RadiologyORMO01(null, OrderControlElement.NEW_ORDER);
+		radiologyORMO01.createMessage(null, OrderControlElement.NEW_ORDER);
 	}
 	
 	/**
-	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,OrderControlElement)
+	 * @see RadiologyORMO01#createMessage(RadiologyOrder,OrderControlElement)
 	 * @verifies throw illegal argument exception if given radiology orders study is null
 	 */
 	@Test
-	public void RadiologyORMO01_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrdersStudyIsNull() throws Exception {
+	public void createMessage_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrdersStudyIsNull() throws Exception {
+		
 		radiologyOrder.setStudy(null);
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("radiologyOrder.study cannot be null."));
-		new RadiologyORMO01(radiologyOrder, OrderControlElement.NEW_ORDER);
+		radiologyORMO01.createMessage(radiologyOrder, OrderControlElement.NEW_ORDER);
 	}
 	
 	/**
-	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,OrderControlElement)
+	 * @see RadiologyORMO01#createMessage(RadiologyOrder,OrderControlElement)
 	 * @verifies throw illegal argument exception given null as orderControlElement
 	 */
 	@Test
-	public void RadiologyORMO01_shouldThrowIllegalArgumentExceptionGivenNullAsOrderControlCode() throws Exception {
+	public void createMessage_shouldThrowIllegalArgumentExceptionGivenNullAsOrderControlElement() throws Exception {
 		
 		expectedException.expect(IllegalArgumentException.class);
-		expectedException.expectMessage(is("orderControlCode cannot be null."));
-		new RadiologyORMO01(radiologyOrder, null);
+		expectedException.expectMessage(is("orderControlElement cannot be null."));
+		radiologyORMO01.createMessage(radiologyOrder, null);
 	}
 	
 	/**
-	 * @see RadiologyORMO01#createEncodedRadiologyORMO01Message()
-	 * @verifies create encoded hl7 ormo01 message
+	 * @see RadiologyORMO01#createEncodedMessage(RadiologyOrder,OrderControlElement)
+	 * @verifies create new encoded ormo01 object given all params
 	 */
 	@Test
-	public void createEncodedRadiologyORMO01Message_shouldCreateEncodedHl7Ormo01Message() throws Exception {
+	public void createEncodedMessage_shouldCreateNewEncodedOrmo01ObjectGivenAllParams() throws Exception {
 		
-		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, OrderControlElement.NEW_ORDER);
-		String encodedOrmMessage = radiologyOrderMessage.createEncodedRadiologyORMO01Message();
+		String encodedOrmMessage = radiologyORMO01.createEncodedMessage(radiologyOrder, OrderControlElement.NEW_ORDER);
 		
 		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(
@@ -177,27 +190,40 @@ public class RadiologyORMO01Test {
 	}
 	
 	/**
-	 * @see RadiologyORMO01#createRadiologyORMO01Message()
-	 * @verifies create ormo01 message
+	 * @see RadiologyORMO01#createEncodedMessage(RadiologyOrder,OrderControlElement)
+	 * @verifies throw illegal argument exception given null as radiologyOrder
 	 */
 	@Test
-	public void createRadiologyORMO01Message_shouldCreateOrmo01Message() throws Exception {
+	public void createEncodedMessage_shouldThrowIllegalArgumentExceptionGivenNullAsRadiologyOrder() throws Exception {
 		
-		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, OrderControlElement.NEW_ORDER);
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage(is("radiologyOrder cannot be null."));
+		radiologyORMO01.createEncodedMessage(null, OrderControlElement.NEW_ORDER);
+	}
+	
+	/**
+	 * @see RadiologyORMO01#createEncodedMessage(RadiologyOrder,OrderControlElement)
+	 * @verifies throw illegal argument exception if given radiology orders study is null
+	 */
+	@Test
+	public void createEncodedMessage_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrdersStudyIsNull() throws Exception {
 		
-		Method createRadiologyORMO01Message = ReflectionUtils.findMethod(RadiologyORMO01.class,
-			"createRadiologyORMO01Message");
-		createRadiologyORMO01Message.setAccessible(true);
-		ORM_O01 ormO01 = (ORM_O01) createRadiologyORMO01Message.invoke(radiologyOrderMessage);
-		String encodedOrmMessage = PipeParser.encode(ormO01, encodingCharacters);
+		radiologyOrder.setStudy(null);
 		
-		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
-		assertThat(
-			encodedOrmMessage,
-			endsWith("||ORM^O01||P|2.3.1\r"
-					+ "PID|||100||Doe^John^Francis||19500401000000|M\r"
-					+ "ORC|NW|ORD-20|||||^^^20150204143500^^T\r"
-					+ "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-20|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
-					+ "ZDS|1.2.826.0.1.3680043.8.2186.1.1^^Application^DICOM\r"));
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage(is("radiologyOrder.study cannot be null."));
+		radiologyORMO01.createEncodedMessage(radiologyOrder, OrderControlElement.NEW_ORDER);
+	}
+	
+	/**
+	 * @see RadiologyORMO01#createEncodedMessage(RadiologyOrder,OrderControlElement)
+	 * @verifies throw illegal argument exception given null as orderControlElement
+	 */
+	@Test
+	public void createEncodedMessage_shouldThrowIllegalArgumentExceptionGivenNullAsOrderControlElement() throws Exception {
+		
+		expectedException.expect(IllegalArgumentException.class);
+		expectedException.expectMessage(is("orderControlElement cannot be null."));
+		radiologyORMO01.createEncodedMessage(radiologyOrder, null);
 	}
 }

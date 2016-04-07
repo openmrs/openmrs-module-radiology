@@ -25,6 +25,8 @@ import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.springframework.transaction.annotation.Transactional;
 
+import ca.uhn.hl7v2.HL7Exception;
+
 @Transactional
 public interface RadiologyService extends OpenmrsService {
 	
@@ -141,6 +143,7 @@ public interface RadiologyService extends OpenmrsService {
 	 *
 	 * @param radiologyOrder radiology order for which hl7 order message is sent to the PACS
 	 * @return true if hl7 order message to create radiology order was successfully sent to PACS and false otherwise
+	 * @throws HL7Exception
 	 * @throws IllegalArgumentException if radiologyOrder is null
 	 * @throws IllegalArgumentException if radiologyOrder orderId is null
 	 * @throws IllegalArgumentException if radiologyOrder.study is null
@@ -150,13 +153,14 @@ public interface RadiologyService extends OpenmrsService {
 	 * @should throw illegal argument exception given radiology order with orderId null
 	 * @should throw illegal argument exception if given radiology order has no study
 	 */
-	public boolean placeRadiologyOrderInPacs(RadiologyOrder radiologyOrder);
+	public boolean placeRadiologyOrderInPacs(RadiologyOrder radiologyOrder) throws HL7Exception;
 	
 	/**
 	 * Discontinue given <code>RadiologyOrder</code> in the PACS by sending an HL7 order message.
 	 *
 	 * @param radiologyOrder radiology order for which hl7 order message is sent to the PACS
 	 * @return true if hl7 order message to discontinue radiology order was successfully sent to PACS and false otherwise
+	 * @throws HL7Exception
 	 * @throws IllegalArgumentException if radiologyOrder is null
 	 * @throws IllegalArgumentException if radiologyOrder orderId is null
 	 * @should send hl7 order message to pacs to discontinue given radiology order and return true on success
@@ -164,7 +168,7 @@ public interface RadiologyService extends OpenmrsService {
 	 * @should throw illegal argument exception given null
 	 * @should throw illegal argument exception given radiology order with orderId null
 	 */
-	public boolean discontinueRadiologyOrderInPacs(RadiologyOrder radiologyOrder);
+	public boolean discontinueRadiologyOrderInPacs(RadiologyOrder radiologyOrder) throws HL7Exception;
 	
 	/**
 	 * Get Study by studyId

@@ -39,21 +39,38 @@ public class RadiologyORMO01 {
 	
 	private static final String orderMessageTriggerEvent = "O01";
 	
-	private final RadiologyOrder radiologyOrder;
-	
-	private final OrderControlElement commonOrderControl;
-	
 	/**
-	 * Constructor for <code>RadiologyORMO01</code>
+	 * Create encoded <code>ORM_O01</code> message (version 2.3.1) from a <code>RadiologyOrder</code> and set the Order
+	 * Control Code
 	 * 
-	 * @param radiologyOrder radiology order
+	 * @return encoded ORM_O01 message created from RadiologyOrder with Order Control Code set
+	 * @throws HL7Exception
+	 * @param radiologyOrder radiology order used to populate ORM_O01 message
 	 * @param orderControlElement Order Control Code of Common Order (ORC) segment
-	 * @should create new radiology ormo01 object given all params
+	 * @should create new encoded ormo01 object given all params
 	 * @should throw illegal argument exception given null as radiologyOrder
 	 * @should throw illegal argument exception if given radiology orders study is null
 	 * @should throw illegal argument exception given null as orderControlElement
 	 */
-	public RadiologyORMO01(RadiologyOrder radiologyOrder, OrderControlElement orderControlElement) {
+	public String createEncodedMessage(RadiologyOrder radiologyOrder, OrderControlElement OrderControlelement)
+			throws HL7Exception {
+		
+		return PipeParser.encode(this.createMessage(radiologyOrder, OrderControlelement), encodingCharacters);
+	}
+	
+	/**
+	 * Create <code>ORM_O01</code> message (version 2.3.1) from a <code>RadiologyOrder</code> and set the Order Control Code
+	 * 
+	 * @return ORM_O01 message created from RadiologyOrder with Order Control Code set
+	 * @throws HL7Exception
+	 * @param radiologyOrder radiology order used to populate ORM_O01 message
+	 * @param orderControlElement Order Control Code of Common Order (ORC) segment
+	 * @should create new ormo01 object given all params
+	 * @should throw illegal argument exception given null as radiologyOrder
+	 * @should throw illegal argument exception if given radiology orders study is null
+	 * @should throw illegal argument exception given null as orderControlElement
+	 */
+	public ORM_O01 createMessage(RadiologyOrder radiologyOrder, OrderControlElement orderControlElement) throws HL7Exception {
 		
 		if (radiologyOrder == null) {
 			throw new IllegalArgumentException("radiologyOrder cannot be null.");
@@ -64,33 +81,8 @@ public class RadiologyORMO01 {
 		}
 		
 		if (orderControlElement == null) {
-			throw new IllegalArgumentException("orderControlCode cannot be null.");
+			throw new IllegalArgumentException("orderControlElement cannot be null.");
 		}
-		
-		this.radiologyOrder = radiologyOrder;
-		this.commonOrderControl = orderControlElement;
-	}
-	
-	/**
-	 * Create an encoded HL7 ORM^O01 message (version 2.3.1) from this <code>RadiologyORMO01</code>
-	 * 
-	 * @return encoded HL7 ORM^O01 message
-	 * @throws HL7Exception
-	 * @should create encoded hl7 ormo01 message
-	 */
-	public String createEncodedRadiologyORMO01Message() throws HL7Exception {
-		
-		return PipeParser.encode(createRadiologyORMO01Message(), encodingCharacters);
-	}
-	
-	/**
-	 * Create <code>ORM_O01</code> message for this <code>RadiologyORMO01</code>
-	 * 
-	 * @return ORM_O01 message
-	 * @throws HL7Exception
-	 * @should create ormo01 message
-	 */
-	private ORM_O01 createRadiologyORMO01Message() throws HL7Exception {
 		
 		final ORM_O01 result = new ORM_O01();
 		
@@ -101,7 +93,7 @@ public class RadiologyORMO01 {
 				.getPID(), radiologyOrder.getPatient());
 		
 		RadiologyORC.populateCommonOrder(result.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-				.getORC(), radiologyOrder, commonOrderControl);
+				.getORC(), radiologyOrder, orderControlElement);
 		
 		RadiologyOBR.populateObservationRequest(result.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
 				.getOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTE()
