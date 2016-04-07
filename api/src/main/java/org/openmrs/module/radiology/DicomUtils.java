@@ -10,7 +10,6 @@
 package org.openmrs.module.radiology;
 
 import org.apache.log4j.Logger;
-import org.dcm4che.tool.hl7snd.HL7Snd;
 import org.dcm4che2.data.DicomElement;
 import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.SpecificCharacterSet;
@@ -24,8 +23,6 @@ import org.openmrs.api.context.Context;
 public class DicomUtils {
 	
 	private static final Logger log = Logger.getLogger(DicomUtils.class);
-	
-	private static final int HL7_SEND_SUCCESS = 1;
 	
 	private DicomUtils() {
 		// This class is a utility class which should not be instantiated
@@ -126,14 +123,6 @@ public class DicomUtils {
 			specificCharacterSet, 0);
 		
 		return performedProcedureStepStatus;
-	}
-	
-	// Send HL7 ORU message to dcm4chee.
-	public static boolean sendHL7Message(String hl7message) {
-		final String input[] = { "-c", radiologyProperties.getPacsAddress() + ":" + radiologyProperties.getPacsHL7Port(),
-				hl7message };
-		final int hl7SendStatus = HL7Snd.main(input);
-		return hl7SendStatus == HL7_SEND_SUCCESS ? true : false;
 	}
 	
 	static RadiologyService radiologyService() {

@@ -27,7 +27,6 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.emrapi.encounter.EmrEncounterService;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
-import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
@@ -38,6 +37,7 @@ import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
 import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
+import org.openmrs.module.radiology.hl7.util.HL7Sender;
 import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
 import org.openmrs.module.radiology.hl7.v231.message.RadiologyORMO01;
 import org.openmrs.module.radiology.report.RadiologyReport;
@@ -321,7 +321,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		
 		final String hl7message = new RadiologyORMO01().createEncodedMessage(radiologyOrder, OrderControlElement.NEW_ORDER);
 		log.info("Created HL7 ORM^O01 message \n" + hl7message);
-		final boolean result = DicomUtils.sendHL7Message(hl7message);
+		final boolean result = HL7Sender.sendHL7Message(hl7message);
 		
 		updateStudyMwlStatus(radiologyOrder, result);
 		return result;
@@ -344,7 +344,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		
 		final String hl7message = new RadiologyORMO01().createEncodedMessage(radiologyOrder, OrderControlElement.NEW_ORDER);
 		log.info("Created HL7 ORM^O01 message \n" + hl7message);
-		final boolean result = DicomUtils.sendHL7Message(hl7message);
+		final boolean result = HL7Sender.sendHL7Message(hl7message);
 		
 		updateStudyMwlStatus(radiologyOrder, result);
 		return result;
