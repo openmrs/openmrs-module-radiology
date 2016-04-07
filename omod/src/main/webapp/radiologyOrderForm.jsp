@@ -182,7 +182,7 @@
 		<!--  Show existing Order/RadiologyOrder -->
 
 		<br>
-		<openmrs:portlet url="personHeader" id="personDashboardHeader"
+		<openmrs:portlet url="patientHeader" id="patientDashboardHeader"
 			patientId="${order.patient.patientId}" />
 		<br>
 
