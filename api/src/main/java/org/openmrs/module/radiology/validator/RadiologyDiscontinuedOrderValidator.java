@@ -35,7 +35,6 @@ public class RadiologyDiscontinuedOrderValidator implements Validator {
 			errors.reject("error.general");
 		} else {
 			ValidationUtils.rejectIfEmpty(errors, "orderer", "error.null");
-			ValidationUtils.rejectIfEmpty(errors, "dateActivated", "error.null");
 			ValidationUtils.rejectIfEmpty(errors, "orderReasonNonCoded", "error.null");
 		}
 	}

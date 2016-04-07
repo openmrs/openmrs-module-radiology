@@ -20,8 +20,6 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.User;
@@ -51,8 +49,6 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING)
 public class RadiologyOrderFormController {
-	
-	private static final Log log = LogFactory.getLog(RadiologyOrderFormController.class);
 	
 	protected static final String RADIOLOGY_ORDER_FORM_REQUEST_MAPPING = "/module/radiology/radiologyOrder.form";
 	
@@ -217,11 +213,9 @@ public class RadiologyOrderFormController {
 	 *
 	 * @param radiologyOrderToDiscontinue order to discontinue
 	 * @param nonCodedDiscontinueReason non coded discontinue reason
-	 * @param discontinueDate discontinue date
 	 * @return model and view populated with discontinuation order
 	 * @throws Exception
 	 * @should discontinue non discontinued order and redirect to discontinuation order
-	 * @should not redirect if discontinuation failed through date in the future
 	 * @should not redirect if discontinuation failed in pacs
 	 */
 	@RequestMapping(method = RequestMethod.POST, params = "discontinueOrder")
@@ -235,15 +229,13 @@ public class RadiologyOrderFormController {
 			new RadiologyDiscontinuedOrderValidator().validate(discontinuationOrder, radiologyOrderErrors);
 			if (radiologyOrderErrors.hasErrors()) {
 				modelAndView.addObject("order", radiologyOrderToDiscontinue);
-				log.error(radiologyService.getRadiologyOrderByOrderId(radiologyOrderToDiscontinue.getOrderId()));
 				modelAndView.addObject("radiologyOrder",
 					radiologyService.getRadiologyOrderByOrderId(radiologyOrderToDiscontinue.getOrderId()));
 				
 				return modelAndView;
 			}
 			discontinuationOrder = radiologyService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
-				discontinuationOrder.getOrderer(), discontinuationOrder.getDateActivated(),
-				discontinuationOrder.getOrderReasonNonCoded());
+				discontinuationOrder.getOrderer(), discontinuationOrder.getOrderReasonNonCoded());
 			
 			if (radiologyService.discontinueRadiologyOrderInPacs(radiologyOrderToDiscontinue)) {
 				request.getSession()

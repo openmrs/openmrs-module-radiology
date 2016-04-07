@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.radiology;
 
-import java.util.Date;
 import java.util.List;
 
 import org.openmrs.Order;
@@ -18,6 +17,7 @@ import org.openmrs.Provider;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.api.OrderService;
+import org.openmrs.module.emrapi.encounter.EmrEncounterService;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
 import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
@@ -36,6 +36,8 @@ public interface RadiologyService extends OpenmrsService {
 	
 	public void setEncounterService(EncounterService encounterService);
 	
+	public void setEmrEncounterService(EmrEncounterService emrEncounterService);
+	
 	void setRadiologyProperties(RadiologyProperties radiologyProperties);
 	
 	public void setRadiologyReportDAO(RadiologyReportDAO radiologyReportDAO);
@@ -50,6 +52,9 @@ public interface RadiologyService extends OpenmrsService {
 	 * @throws IllegalArgumentException if radiologyOrder orderId is not null
 	 * @throws IllegalArgumentException if radiologyOrder.study is null
 	 * @should create new radiology order and study from given radiology order object
+	 * @should create radiology order encounter with orderer and attached to existing active visit if patient has active
+	 *         visit
+	 * @should create radiology order encounter with orderer attached to new active visit if patient without active visit
 	 * @should throw illegal argument exception given null
 	 * @should throw illegal argument exception given existing radiology order
 	 * @should throw illegal argument exception if given radiology order has no study
@@ -67,6 +72,8 @@ public interface RadiologyService extends OpenmrsService {
 	 * @throws IllegalArgumentException if radiologyOrder is not active
 	 * @throws IllegalArgumentException if provider is null
 	 * @should create discontinuation order which discontinues given radiology order that is not in progress or completed
+	 * @should create discontinuation order with encounter attached to existing active visit if patient has active visit
+	 * @should create discontinuation order with encounter attached to new active visit if patient without active visit
 	 * @should throw illegal argument exception given empty radiology order
 	 * @should throw illegal argument exception given radiology order with orderId null
 	 * @should throw illegal argument exception if radiology order is not active
@@ -74,8 +81,8 @@ public interface RadiologyService extends OpenmrsService {
 	 * @should throw illegal argument exception if radiology order is completed
 	 * @should throw illegal argument exception given empty provider
 	 */
-	public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrder, Provider orderer, Date discontinueDate,
-			String discontinueReason) throws Exception;
+	public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrder, Provider orderer, String discontinueReason)
+			throws Exception;
 	
 	/**
 	 * Get RadiologyOrder by its orderId

@@ -23,10 +23,12 @@ import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.GlobalProperty;
 import org.openmrs.OrderType;
+import org.openmrs.VisitType;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
+import org.openmrs.api.VisitService;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -51,6 +53,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	
 	@Autowired
 	private ConceptService conceptService;
+	
+	@Autowired
+	private VisitService visitService;
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
@@ -433,15 +438,20 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	 */
 	@Test
 	public void getRadiologyTestOrderType_shouldReturnOrderTypeForRadiologyTestOrders() {
+		
+		String radiologyTestOrderTypeUuid = "dbdb9a9b-56ea-11e5-a47f-08002719a237";
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_TEST_ORDER_TYPE,
+				radiologyTestOrderTypeUuid));
+		
 		OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams",
 				"org.openmrs.module.radiology.RadiologyOrder");
-		radiologyOrderType.setUuid(RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID);
+		radiologyOrderType.setUuid(radiologyTestOrderTypeUuid);
 		orderService.saveOrderType(radiologyOrderType);
 		
 		assertThat(radiologyProperties.getRadiologyTestOrderType()
 				.getName(), is("Radiology Order"));
 		assertThat(radiologyProperties.getRadiologyTestOrderType()
-				.getUuid(), is(RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID));
+				.getUuid(), is(radiologyTestOrderTypeUuid));
 	}
 	
 	/**
@@ -452,69 +462,114 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	public void getRadiologyTestOrderType_shouldThrowIllegalStateExceptionForNonExistingRadiologyTestOrderType() {
 		
 		expectedException.expect(IllegalStateException.class);
-		expectedException.expectMessage("OrderType for radiology orders not in database (not found under uuid="
-				+ RadiologyConstants.RADIOLOGY_TEST_ORDER_TYPE_UUID + ").");
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_RADIOLOGY_TEST_ORDER_TYPE);
 		
 		radiologyProperties.getRadiologyTestOrderType();
 	}
 	
 	/**
-	 * @see RadiologyProperties#getRadiologyEncounterType()
+	 * @see RadiologyProperties#getRadiologyOrderEncounterType()
 	 * @verifies return encounter type for radiology orders
 	 */
 	@Test
-	public void getRadiologyEncounterType_shouldReturnEncounterTypeForRadiologyOrders() {
+	public void getRadiologyOrderEncounterType_shouldReturnEncounterTypeForRadiologyOrders() {
 		
-		EncounterType encounterType = new EncounterType("Radiology Order", "Ordering radiology exams");
-		encounterType.setUuid(RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID);
+		String radiologyEncounterTypeUuid = "19db8c0d-3520-48f2-babd-77f2d450e5c7";
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDER_ENCOUNTER_TYPE,
+				radiologyEncounterTypeUuid));
+		
+		EncounterType encounterType = new EncounterType("Radiology Order Encounter", "Ordering radiology exams");
+		encounterType.setUuid(radiologyEncounterTypeUuid);
 		encounterService.saveEncounterType(encounterType);
 		
-		assertThat(radiologyProperties.getRadiologyEncounterType()
-				.getUuid(), is(RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID));
+		assertThat(radiologyProperties.getRadiologyOrderEncounterType()
+				.getName(), is("Radiology Order Encounter"));
+		assertThat(radiologyProperties.getRadiologyOrderEncounterType()
+				.getUuid(), is(radiologyEncounterTypeUuid));
 	}
 	
 	/**
-	 * @see RadiologyProperties#getRadiologyEncounterType()
+	 * @see RadiologyProperties#getRadiologyOrderEncounterType()
 	 * @verifies throw illegal state exception for non existing radiology encounter type
 	 */
 	@Test
-	public void getRadiologyEncounterType_shouldThrowIllegalStateExceptionForNonExistingRadiologyEncounterType() {
+	public void getRadiologyOrderEncounterType_shouldThrowIllegalStateExceptionForNonExistingRadiologyEncounterType() {
 		
 		expectedException.expect(IllegalStateException.class);
-		expectedException.expectMessage("EncounterType for radiology orders not in database (not found under uuid="
-				+ RadiologyConstants.RADIOLOGY_ENCOUNTER_TYPE_UUID + ").");
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_RADIOLOGY_ORDER_ENCOUNTER_TYPE);
 		
-		radiologyProperties.getRadiologyEncounterType();
+		radiologyProperties.getRadiologyOrderEncounterType();
 	}
 	
 	/**
-	 * @see RadiologyProperties#getOrderingProviderEncounterRole()
+	 * @see RadiologyProperties#getRadiologyOrderingProviderEncounterRole()
 	 * @verifies return encounter role for ordering provider
 	 */
 	@Test
-	public void getOrderingProviderEncounterRole_shouldReturnEncounterRoleForOrderingProvider() {
+	public void getRadiologyOrderingProviderEncounterRole_shouldReturnEncounterRoleForOrderingProvider() throws Exception {
+		
+		String radiologyOrderingProviderEncounterRoleUuid = "13fc9b4a-49ed-429c-9dde-ca005b387a3d";
+		administrationService.saveGlobalProperty(new GlobalProperty(
+				RadiologyConstants.GP_RADIOLOGY_ORDERING_PROVIDER_ENCOUNTER_ROLE, radiologyOrderingProviderEncounterRoleUuid));
 		
 		EncounterRole encounterRole = new EncounterRole();
-		encounterRole.setName("Ordering Provider");
-		encounterRole.setUuid(RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID);
+		encounterRole.setName("Radiology Ordering Provider Encounter Role");
+		encounterRole.setUuid(radiologyOrderingProviderEncounterRoleUuid);
 		encounterService.saveEncounterRole(encounterRole);
 		
-		assertThat(radiologyProperties.getOrderingProviderEncounterRole()
-				.getUuid(), is(RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID));
+		assertThat(radiologyProperties.getRadiologyOrderingProviderEncounterRole()
+				.getName(), is("Radiology Ordering Provider Encounter Role"));
+		assertThat(radiologyProperties.getRadiologyOrderingProviderEncounterRole()
+				.getUuid(), is(radiologyOrderingProviderEncounterRoleUuid));
 	}
 	
 	/**
-	 * @see RadiologyProperties#getOrderingProviderEncounterRole()
+	 * @see RadiologyProperties#getRadiologyOrderingProviderEncounterRole()
 	 * @verifies throw illegal state exception for non existing ordering provider encounter role
 	 */
 	@Test
-	public void getOrderingProviderEncounterRole_shouldThrowIllegalStateExceptionForNonExistingOrderingProviderEncounterRole() {
+	public void getRadiologyOrderingProviderEncounterRole_shouldThrowIllegalStateExceptionForNonExistingOrderingProviderEncounterRole()
+			throws Exception {
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: "
+				+ RadiologyConstants.GP_RADIOLOGY_ORDERING_PROVIDER_ENCOUNTER_ROLE);
+		
+		radiologyProperties.getRadiologyOrderingProviderEncounterRole();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getRadiologyVisitType()
+	 * @verifies return visit type for radiology orders
+	 */
+	@Test
+	public void getRadiologyVisitType_shouldReturnVisitTypeForRadiologyOrders() throws Exception {
+		
+		String radiologyVisitTypeUuid = "fe898a34-1ade-11e1-9c71-00248140a5eb";
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_VISIT_TYPE,
+				radiologyVisitTypeUuid));
+		
+		VisitType visitType = new VisitType();
+		visitType.setName("Radiology Visit");
+		visitType.setUuid(radiologyVisitTypeUuid);
+		visitService.saveVisitType(visitType);
+		
+		assertThat(radiologyProperties.getRadiologyVisitType()
+				.getName(), is("Radiology Visit"));
+		assertThat(radiologyProperties.getRadiologyVisitType()
+				.getUuid(), is(radiologyVisitTypeUuid));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getRadiologyVisitType()
+	 * @verifies throw illegal state exception for non existing radiology visit type
+	 */
+	@Test
+	public void getRadiologyVisitType_shouldThrowIllegalStateExceptionForNonExistingRadiologyVisitType() throws Exception {
 		
 		expectedException.expect(IllegalStateException.class);
-		expectedException.expectMessage("EncounterRole for ordering provider not in database (not found under uuid="
-				+ RadiologyConstants.ORDERING_PROVIDER_ENCOUNTER_ROLE_UUID + ").");
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_RADIOLOGY_VISIT_TYPE);
 		
-		radiologyProperties.getOrderingProviderEncounterRole();
+		radiologyProperties.getRadiologyVisitType();
 	}
 	
 	/**

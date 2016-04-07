@@ -11,7 +11,9 @@ package org.openmrs.module.radiology.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -23,6 +25,8 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderContext;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.emrapi.encounter.EmrEncounterService;
+import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.radiology.DicomUtils;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
@@ -51,6 +55,8 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	
 	private EncounterService encounterService;
 	
+	private EmrEncounterService emrEncounterService;
+	
 	private RadiologyProperties radiologyProperties;
 	
 	private RadiologyReportDAO radiologyReportDAO;
@@ -73,6 +79,11 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Override
 	public void setEncounterService(EncounterService encounterService) {
 		this.encounterService = encounterService;
+	}
+	
+	@Override
+	public void setEmrEncounterService(EmrEncounterService emrEncounterService) {
+		this.emrEncounterService = emrEncounterService;
 	}
 	
 	@Override
@@ -128,18 +139,30 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	 * @param provider the encounter provider
 	 * @param encounterDateTime the encounter date
 	 * @return radiology order encounter for given parameters
-	 * @should save radiology order encounter for given parameters
+	 * @should create radiology order encounter attached to existing active visit given patient with active visit
+	 * @should create radiology order encounter attached to new active visit given patient without active visit
 	 */
 	@Transactional
 	private Encounter saveRadiologyOrderEncounter(Patient patient, Provider provider, Date encounterDateTime) {
 		
-		final Encounter encounter = new Encounter();
-		encounter.setPatient(patient);
-		encounter.setEncounterType(radiologyProperties.getRadiologyEncounterType());
-		encounter.setProvider(radiologyProperties.getOrderingProviderEncounterRole(), provider);
-		encounter.setEncounterDatetime(encounterDateTime);
+		final EncounterTransaction encounterTransaction = new EncounterTransaction();
+		encounterTransaction.setPatientUuid(patient.getUuid());
+		final EncounterTransaction.Provider encounterProvider = new EncounterTransaction.Provider();
+		encounterProvider.setEncounterRoleUuid(radiologyProperties.getRadiologyOrderingProviderEncounterRole()
+				.getUuid());
+		// sets the provider of the encounterprovider
+		encounterProvider.setUuid(provider.getUuid());
+		final Set<EncounterTransaction.Provider> encounterProviderSet = new HashSet<EncounterTransaction.Provider>();
+		encounterProviderSet.add(encounterProvider);
+		encounterTransaction.setProviders(encounterProviderSet);
+		encounterTransaction.setEncounterDateTime(encounterDateTime);
+		encounterTransaction.setVisitTypeUuid(this.radiologyProperties.getRadiologyVisitType()
+				.getUuid());
+		encounterTransaction.setEncounterTypeUuid(this.radiologyProperties.getRadiologyOrderEncounterType()
+				.getUuid());
 		
-		return encounterService.saveEncounter(encounter);
+		return this.encounterService.getEncounterByUuid(this.emrEncounterService.save(encounterTransaction)
+				.getEncounterUuid());
 	}
 	
 	/**
@@ -177,12 +200,12 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
 	 */
 	@Transactional
 	@Override
 	public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrderToDiscontinue, Provider orderer,
-			Date discontinueDate, String nonCodedDiscontinueReason) throws Exception {
+			String nonCodedDiscontinueReason) throws Exception {
 		
 		if (radiologyOrderToDiscontinue == null) {
 			throw new IllegalArgumentException("radiologyOrder is required");
@@ -208,10 +231,10 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("provider is required");
 		}
 		
-		Encounter encounter = saveRadiologyOrderEncounter(radiologyOrderToDiscontinue.getPatient(), orderer, discontinueDate);
+		final Encounter encounter = this.saveRadiologyOrderEncounter(radiologyOrderToDiscontinue.getPatient(), orderer, null);
 		
-		return orderService.discontinueOrder(radiologyOrderToDiscontinue, nonCodedDiscontinueReason, discontinueDate,
-			orderer, encounter);
+		return this.orderService.discontinueOrder(radiologyOrderToDiscontinue, nonCodedDiscontinueReason, null, orderer,
+			encounter);
 	}
 	
 	/**

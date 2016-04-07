@@ -21,9 +21,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.GregorianCalendar;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -35,7 +33,6 @@ import org.mockito.Mock;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.User;
-import org.openmrs.api.APIException;
 import org.openmrs.api.OrderService;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
@@ -258,14 +255,12 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		mockRadiologyOrderToDiscontinue.getStudy()
 				.setMwlStatus(MwlStatus.IN_SYNC);
 		String discontinueReason = "Wrong Procedure";
-		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
 		
 		Order mockDiscontinuationOrder = new Order();
 		mockDiscontinuationOrder.setOrderId(2);
 		mockDiscontinuationOrder.setAction(Order.Action.DISCONTINUE);
 		mockDiscontinuationOrder.setOrderer(mockRadiologyOrderToDiscontinue.getOrderer());
 		mockDiscontinuationOrder.setOrderReasonNonCoded(discontinueReason);
-		mockDiscontinuationOrder.setDateActivated(discontinueDate);
 		mockDiscontinuationOrder.setPreviousOrder(mockRadiologyOrderToDiscontinue);
 		
 		ModelAndView modelAndView = radiologyOrderFormController.getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(mockDiscontinuationOrder);
@@ -462,14 +457,12 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		mockRadiologyOrderToDiscontinue.getStudy()
 				.setMwlStatus(MwlStatus.IN_SYNC);
 		String discontinueReason = "Wrong Procedure";
-		Date discontinueDate = new GregorianCalendar(2015, Calendar.JANUARY, 01).getTime();
 		
 		Order mockDiscontinuationOrder = new Order();
 		mockDiscontinuationOrder.setOrderId(2);
 		mockDiscontinuationOrder.setAction(Order.Action.DISCONTINUE);
 		mockDiscontinuationOrder.setOrderer(mockRadiologyOrderToDiscontinue.getOrderer());
 		mockDiscontinuationOrder.setOrderReasonNonCoded(discontinueReason);
-		mockDiscontinuationOrder.setDateActivated(discontinueDate);
 		mockDiscontinuationOrder.setPreviousOrder(mockRadiologyOrderToDiscontinue);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
@@ -481,8 +474,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 			mockRadiologyOrderToDiscontinue);
 		when(
 			radiologyService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
-				mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getDateActivated(),
-				mockDiscontinuationOrder.getOrderReasonNonCoded())).thenReturn(mockDiscontinuationOrder);
+				mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getOrderReasonNonCoded())).thenReturn(
+			mockDiscontinuationOrder);
 		when(radiologyService.discontinueRadiologyOrderInPacs(mockRadiologyOrderToDiscontinue)).thenReturn(true);
 		
 		BindingResult orderErrors = mock(BindingResult.class);
@@ -498,69 +491,10 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	/**
 	 * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order,
-	 *      String, Date)
+	 *      String)
 	 */
 	@Test
-	@Verifies(value = "should not redirect if discontinuation failed through date in the future", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String, Date)")
-	public void postDiscontinueRadiologyOrder_shouldNotRedirectIfDiscontinuationFailedThroughDateInTheFuture()
-			throws Exception {
-		// given
-		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
-		mockRadiologyOrderToDiscontinue.getStudy()
-				.setMwlStatus(MwlStatus.IN_SYNC);
-		String discontinueReason = "Wrong Procedure";
-		Date discontinueDate = new Date();
-		APIException apiException = new APIException("Discontinue date cannot be in the future");
-		
-		Order mockDiscontinuationOrder = new Order();
-		mockDiscontinuationOrder.setOrderId(2);
-		mockDiscontinuationOrder.setAction(Order.Action.DISCONTINUE);
-		mockDiscontinuationOrder.setOrderer(mockRadiologyOrderToDiscontinue.getOrderer());
-		mockDiscontinuationOrder.setOrderReasonNonCoded(discontinueReason);
-		mockDiscontinuationOrder.setDateActivated(discontinueDate);
-		mockDiscontinuationOrder.setPreviousOrder(mockRadiologyOrderToDiscontinue);
-		
-		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-		mockRequest.addParameter("discontinueOrder", "discontinueOrder");
-		MockHttpSession mockSession = new MockHttpSession();
-		mockRequest.setSession(mockSession);
-		
-		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrderToDiscontinue.getOrderId())).thenReturn(
-			mockRadiologyOrderToDiscontinue);
-		when(
-			radiologyService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
-				mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getDateActivated(),
-				mockDiscontinuationOrder.getOrderReasonNonCoded())).thenThrow(apiException);
-		
-		BindingResult orderErrors = mock(BindingResult.class);
-		assertThat(mockRadiologyOrderToDiscontinue.getAction(), is(Order.Action.NEW));
-		ModelAndView modelAndView = radiologyOrderFormController.postDiscontinueRadiologyOrder(mockRequest, null,
-			mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder, orderErrors);
-		
-		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
-		
-		assertThat(modelAndView.getModelMap(), hasKey("order"));
-		Order order = (Order) modelAndView.getModelMap()
-				.get("order");
-		assertThat(order, is((Order) mockRadiologyOrderToDiscontinue));
-		
-		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
-		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
-				.get("radiologyOrder");
-		assertThat(radiologyOrder, is(mockRadiologyOrderToDiscontinue));
-		
-		assertNotNull(mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR));
-		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR),
-			is("Discontinue date cannot be in the future"));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order,
-	 *      String, Date)
-	 */
-	@Test
-	@Verifies(value = "should not redirect if discontinuation failed in pacs", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String, Date)")
+	@Verifies(value = "should not redirect if discontinuation failed in pacs", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String)")
 	public void postDiscontinueRadiologyOrder_shouldNotRedirectIfDiscontinuationFailedInPacs() throws Exception {
 		// given
 		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
@@ -584,8 +518,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 			mockRadiologyOrderToDiscontinue);
 		when(
 			radiologyService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
-				mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getDateActivated(),
-				mockDiscontinuationOrder.getOrderReasonNonCoded())).thenReturn(mockDiscontinuationOrder);
+				mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getOrderReasonNonCoded())).thenReturn(
+			mockDiscontinuationOrder);
 		when(radiologyService.discontinueRadiologyOrderInPacs(mockRadiologyOrderToDiscontinue)).thenReturn(false);
 		
 		BindingResult orderErrors = mock(BindingResult.class);
