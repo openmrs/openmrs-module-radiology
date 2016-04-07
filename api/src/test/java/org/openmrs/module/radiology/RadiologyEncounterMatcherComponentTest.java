@@ -33,6 +33,7 @@ public class RadiologyEncounterMatcherComponentTest extends BaseModuleContextSen
 	
 	private static final String VOIDED_ENCOUNTER_UUID = "60db560a-f5a3-11e5-b84b-08002719a237";
 	
+	@Autowired
 	private RadiologyEncounterMatcher radiologyEncounterMatcher;
 	
 	@Autowired
@@ -46,7 +47,6 @@ public class RadiologyEncounterMatcherComponentTest extends BaseModuleContextSen
 	
 	@Before
 	public void runBeforeAllTests() throws Exception {
-		radiologyEncounterMatcher = new RadiologyEncounterMatcher();
 		executeDataSet(STUDIES_TEST_DATASET);
 	}
 	
