@@ -20,6 +20,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Order;
 import org.openmrs.module.radiology.RadiologyOrder;
+import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
 import org.openmrs.module.radiology.hl7.v231.code.PriorityComponent;
 import org.openmrs.test.Verifies;
@@ -27,7 +28,6 @@ import org.openmrs.test.Verifies;
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v231.message.ORM_O01;
 import ca.uhn.hl7v2.model.v231.segment.ORC;
-import ca.uhn.hl7v2.parser.EncodingCharacters;
 import ca.uhn.hl7v2.parser.PipeParser;
 
 /**
@@ -37,8 +37,6 @@ public class RadiologyORCTest {
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
-	
-	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * @see {@link RadiologyORC#populateCommonOrder(ORC, RadiologyOrder, OrderControlElement)}
@@ -81,7 +79,8 @@ public class RadiologyORCTest {
 				.getPriority()
 				.getValue(), is(PriorityComponent.TIMING_CRITICAL.getValue()));
 		
-		assertThat(PipeParser.encode(commonOrderSegment, encodingCharacters), is("ORC|NW|ORD-1|||||^^^20150204143500^^T"));
+		assertThat(PipeParser.encode(commonOrderSegment, HL7Constants.ENCODING_CHARACTERS),
+			is("ORC|NW|ORD-1|||||^^^20150204143500^^T"));
 	}
 	
 	/**

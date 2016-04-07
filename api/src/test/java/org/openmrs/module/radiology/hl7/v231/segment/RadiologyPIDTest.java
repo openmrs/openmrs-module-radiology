@@ -23,12 +23,12 @@ import org.openmrs.Patient;
 import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
+import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.test.Verifies;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v231.message.ORM_O01;
 import ca.uhn.hl7v2.model.v231.segment.PID;
-import ca.uhn.hl7v2.parser.EncodingCharacters;
 import ca.uhn.hl7v2.parser.PipeParser;
 
 /**
@@ -38,8 +38,6 @@ public class RadiologyPIDTest {
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
-	
-	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * Test RadiologyPID.populatePatientIdentifier
@@ -88,7 +86,7 @@ public class RadiologyPIDTest {
 				.getPID(), patient);
 		
 		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
-				.getPID(), encodingCharacters), is("PID|||100||Doe^John^Francis||19800228222510|M"));
+				.getPID(), HL7Constants.ENCODING_CHARACTERS), is("PID|||100||Doe^John^Francis||19800228222510|M"));
 	}
 	
 	/**
@@ -136,7 +134,7 @@ public class RadiologyPIDTest {
 				.getPID(), patient);
 		
 		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
-				.getPID(), encodingCharacters), is("PID|||100||||19800228222510|M"));
+				.getPID(), HL7Constants.ENCODING_CHARACTERS), is("PID|||100||||19800228222510|M"));
 	}
 	
 	/**
@@ -179,7 +177,7 @@ public class RadiologyPIDTest {
 				.getPID(), patient);
 		
 		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
-				.getPID(), encodingCharacters), is("PID|||100||||19800228222510|M"));
+				.getPID(), HL7Constants.ENCODING_CHARACTERS), is("PID|||100||||19800228222510|M"));
 	}
 	
 	/**
@@ -222,7 +220,7 @@ public class RadiologyPIDTest {
 		RadiologyPID.populatePatientIdentifier(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
 				.getPID(), patient);
 		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
-				.getPID(), encodingCharacters), is("PID|||100||Doe^John^Francis|||M"));
+				.getPID(), HL7Constants.ENCODING_CHARACTERS), is("PID|||100||Doe^John^Francis|||M"));
 	}
 	
 	/**
@@ -271,7 +269,7 @@ public class RadiologyPIDTest {
 				.getPID(), patient);
 		
 		assertThat(PipeParser.encode(message.getPIDPD1NTEPV1PV2IN1IN2IN3GT1AL1()
-				.getPID(), encodingCharacters), is("PID|||100||Doe^John^Francis||19800228222510"));
+				.getPID(), HL7Constants.ENCODING_CHARACTERS), is("PID|||100||Doe^John^Francis||19800228222510"));
 	}
 	
 	/**
