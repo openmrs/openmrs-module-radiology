@@ -26,7 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @see org.openmrs.module.radiology.db.RadiologyReportDAO
  * @see org.openmrs.module.radiology.RadiologyService
  */
-public class RadiologyReportDAOImpl implements RadiologyReportDAO {
+public class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	
 	@Autowired
 	private SessionFactory sessionFactory;

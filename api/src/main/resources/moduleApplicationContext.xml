@@ -24,16 +24,16 @@
 			<bean class="org.openmrs.module.radiology.impl.RadiologyServiceImpl">
 				<property name="radiologyOrderDao">
 					<bean
-						class="org.openmrs.module.radiology.db.hibernate.RadiologyOrderDAOImpl">
+						class="org.openmrs.module.radiology.db.hibernate.HibernateRadiologyOrderDAO">
 					</bean>
 				</property>
 				<property name="studyDAO">
-					<bean class="org.openmrs.module.radiology.db.hibernate.StudyDAOImpl">
+					<bean class="org.openmrs.module.radiology.db.hibernate.HibernateStudyDAO">
 					</bean>
 				</property>
 				<property name="radiologyReportDAO">
 					<bean
-						class="org.openmrs.module.radiology.db.hibernate.RadiologyReportDAOImpl">
+						class="org.openmrs.module.radiology.db.hibernate.HibernateRadiologyReportDAO">
 					</bean>
 				</property>
 				<property name="orderService" ref="orderService"></property>
