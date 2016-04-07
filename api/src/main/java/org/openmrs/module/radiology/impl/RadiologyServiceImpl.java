@@ -38,7 +38,7 @@ import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
 import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
-import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
+import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -316,7 +316,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("radiologyOrder.study is required");
 		}
 		
-		final String hl7message = DicomUtils.createHL7Message(radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
+		final String hl7message = DicomUtils.createHL7Message(radiologyOrder, OrderControlElement.NEW_ORDER);
 		final boolean result = DicomUtils.sendHL7Message(hl7message);
 		
 		updateStudyMwlStatus(radiologyOrder, result);
@@ -338,7 +338,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 			throw new IllegalArgumentException("radiologyOrder is not persisted");
 		}
 		
-		final String hl7message = DicomUtils.createHL7Message(radiologyOrder, CommonOrderOrderControl.CANCEL_ORDER);
+		final String hl7message = DicomUtils.createHL7Message(radiologyOrder, OrderControlElement.CANCEL_ORDER);
 		final boolean result = DicomUtils.sendHL7Message(hl7message);
 		
 		updateStudyMwlStatus(radiologyOrder, result);

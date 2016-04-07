@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.hl7.segment;
+package org.openmrs.module.radiology.hl7.v231.segment;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -20,8 +20,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Order;
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
-import org.openmrs.module.radiology.hl7.CommonOrderPriority;
+import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
+import org.openmrs.module.radiology.hl7.v231.code.PriorityComponent;
 import org.openmrs.test.Verifies;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -41,10 +41,10 @@ public class RadiologyORCTest {
 	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
-	 * @see {@link RadiologyORC#populateCommonOrder(ORC, RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORC#populateCommonOrder(ORC, RadiologyOrder, OrderControlElement)}
 	 */
 	@Test
-	@Verifies(value = "should return populated common order segment given all params", method = "populateCommonOrder(ORC, RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should return populated common order segment given all params", method = "populateCommonOrder(ORC, RadiologyOrder, OrderControlElement)")
 	public void populateCommonOrder_shouldReturnPopulatedCommonOrderSegmentGivenAllParams() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
@@ -64,7 +64,7 @@ public class RadiologyORCTest {
 		
 		ORM_O01 message = new ORM_O01();
 		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-				.getORC(), radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
+				.getORC(), radiologyOrder, OrderControlElement.NEW_ORDER);
 		
 		ORC commonOrderSegment = message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
 				.getORC();
@@ -79,30 +79,30 @@ public class RadiologyORCTest {
 				.getValue(), is("20150204143500"));
 		assertThat(commonOrderSegment.getQuantityTiming()
 				.getPriority()
-				.getValue(), is(CommonOrderPriority.TIMING_CRITICAL.getValue()));
+				.getValue(), is(PriorityComponent.TIMING_CRITICAL.getValue()));
 		
 		assertThat(PipeParser.encode(commonOrderSegment, encodingCharacters), is("ORC|NW|ORD-1|||||^^^20150204143500^^T"));
 	}
 	
 	/**
-	 * @see {@link RadiologyORC#populateCommonOrder(ORC, RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORC#populateCommonOrder(ORC, RadiologyOrder, OrderControlElement)}
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception given null as common order segment", method = "populateCommonOrder(ORC, RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should throw illegal argument exception given null as common order segment", method = "populateCommonOrder(ORC, RadiologyOrder, OrderControlElement)")
 	public void populateCommonOrder_shouldThrowIllegalArgumentExceptionGivenNullAsCommonOrderSegment() throws HL7Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("commonOrderSegment cannot be null."));
-		RadiologyORC.populateCommonOrder(null, radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
+		RadiologyORC.populateCommonOrder(null, radiologyOrder, OrderControlElement.NEW_ORDER);
 	}
 	
 	/**
-	 * @see {@link RadiologyORC#populateCommonOrder(ORC, RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)}
+	 * @see {@link RadiologyORC#populateCommonOrder(ORC, RadiologyOrder, OrderControlElement)}
 	 */
 	@Test
-	@Verifies(value = "should throw illegal argument exception given null as radiology order", method = "populateCommonOrder(ORC, RadiologyOrder, CommonOrderOrderControl, CommonOrderPriority)")
+	@Verifies(value = "should throw illegal argument exception given null as radiology order", method = "populateCommonOrder(ORC, RadiologyOrder, OrderControlElement)")
 	public void populateCommonOrder_shouldThrowIllegalArgumentExceptionGivenNullAsRadiologyOrder() throws HL7Exception {
 		
 		ORM_O01 message = new ORM_O01();
@@ -110,6 +110,6 @@ public class RadiologyORCTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("radiologyOrder cannot be null."));
 		RadiologyORC.populateCommonOrder(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
-				.getORC(), null, CommonOrderOrderControl.NEW_ORDER);
+				.getORC(), null, OrderControlElement.NEW_ORDER);
 	}
 }

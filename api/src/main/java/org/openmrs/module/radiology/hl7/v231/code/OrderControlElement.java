@@ -7,16 +7,16 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.hl7;
+package org.openmrs.module.radiology.hl7.v231.code;
 
 /**
  * <p>
- * Represents the Order Control element of HL7 Common Order (ORC) defined in HL7 version 2.3.1
+ * Represents the Order Control (ID) element code used in the HL7 Common Order (ORC) Segment defined in HL7 version 2.3.1
  * </p>
  * Note: This enum does not include every control code defined by the HL7 standard. Only the codes
  * used so far by the radiology module have been implemented here.
  */
-public enum CommonOrderOrderControl {
+public enum OrderControlElement {
 	NEW_ORDER("NW", "New order"),
 	CANCEL_ORDER("CA", "Cancel order request"),
 	CHANGE_ORDER("XO", "Change order request");
@@ -25,7 +25,7 @@ public enum CommonOrderOrderControl {
 	
 	private String description;
 	
-	private CommonOrderOrderControl(String value, String description) {
+	private OrderControlElement(String value, String description) {
 		this.value = value;
 		this.description = description;
 	}

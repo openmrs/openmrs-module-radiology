@@ -42,7 +42,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
-import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
+import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -472,7 +472,7 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see DicomUtils#createHL7Message(RadiologyOrder,CommonOrderOrderControl)
+	 * @see DicomUtils#createHL7Message(RadiologyOrder,OrderControlElement)
 	 * @verifies return encoded HL7 ORMO01 message string given radiology order and common order control new order
 	 */
 	@Test
@@ -483,7 +483,7 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 		Study study = getMockStudy();
 		radiologyOrder.setStudy(study);
 		
-		String saveOrderHL7String = DicomUtils.createHL7Message(radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
+		String saveOrderHL7String = DicomUtils.createHL7Message(radiologyOrder, OrderControlElement.NEW_ORDER);
 		
 		assertThat(saveOrderHL7String, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(
@@ -591,7 +591,7 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	}
 	
 	/**
-	 * @see DicomUtils#createHL7Message(RadiologyOrder,CommonOrderOrderControl)
+	 * @see DicomUtils#createHL7Message(RadiologyOrder,OrderControlElement)
 	 * @verifies return encoded HL7 ORMO01 message string given radiology order and common order control cancel order
 	 */
 	@Test
@@ -602,7 +602,7 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 		Study study = getMockStudy();
 		radiologyOrder.setStudy(study);
 		
-		String saveOrderHL7String = DicomUtils.createHL7Message(radiologyOrder, CommonOrderOrderControl.CANCEL_ORDER);
+		String saveOrderHL7String = DicomUtils.createHL7Message(radiologyOrder, OrderControlElement.CANCEL_ORDER);
 		
 		assertThat(saveOrderHL7String, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(

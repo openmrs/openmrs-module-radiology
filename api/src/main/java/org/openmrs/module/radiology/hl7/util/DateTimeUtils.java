@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.utils;
+package org.openmrs.module.radiology.hl7.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

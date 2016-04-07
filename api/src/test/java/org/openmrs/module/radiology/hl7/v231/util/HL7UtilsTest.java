@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.hl7;
+package org.openmrs.module.radiology.hl7.v231.util;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
@@ -15,6 +15,8 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.openmrs.Order;
 import org.openmrs.PersonName;
+import org.openmrs.module.radiology.hl7.v231.code.PriorityComponent;
+import org.openmrs.module.radiology.hl7.v231.util.HL7Utils;
 import org.openmrs.test.Verifies;
 
 import ca.uhn.hl7v2.model.DataTypeException;
@@ -173,7 +175,7 @@ public class HL7UtilsTest {
 	@Test
 	public void convertOrderUrgencyToCommonOrderPriority_shouldReturnRoutineGivenNull() throws Exception {
 		
-		assertThat(HL7Utils.convertOrderUrgencyToCommonOrderPriority(null), is(CommonOrderPriority.ROUTINE));
+		assertThat(HL7Utils.convertOrderUrgencyToCommonOrderPriority(null), is(PriorityComponent.ROUTINE));
 	}
 	
 	/**
@@ -183,7 +185,7 @@ public class HL7UtilsTest {
 	@Test
 	public void convertOrderUrgencyToCommonOrderPriority_shouldReturnStatGivenOrderUrgencyStat() throws Exception {
 		
-		assertThat(HL7Utils.convertOrderUrgencyToCommonOrderPriority(Order.Urgency.STAT), is(CommonOrderPriority.STAT));
+		assertThat(HL7Utils.convertOrderUrgencyToCommonOrderPriority(Order.Urgency.STAT), is(PriorityComponent.STAT));
 	}
 	
 	/**
@@ -193,7 +195,7 @@ public class HL7UtilsTest {
 	@Test
 	public void convertOrderUrgencyToCommonOrderPriority_shouldReturnRoutineGivenOrderUrgencyRoutine() throws Exception {
 		
-		assertThat(HL7Utils.convertOrderUrgencyToCommonOrderPriority(Order.Urgency.ROUTINE), is(CommonOrderPriority.ROUTINE));
+		assertThat(HL7Utils.convertOrderUrgencyToCommonOrderPriority(Order.Urgency.ROUTINE), is(PriorityComponent.ROUTINE));
 	}
 	
 	/**
@@ -205,6 +207,6 @@ public class HL7UtilsTest {
 			throws Exception {
 		
 		assertThat(HL7Utils.convertOrderUrgencyToCommonOrderPriority(Order.Urgency.ON_SCHEDULED_DATE),
-			is(CommonOrderPriority.TIMING_CRITICAL));
+			is(PriorityComponent.TIMING_CRITICAL));
 	}
 }

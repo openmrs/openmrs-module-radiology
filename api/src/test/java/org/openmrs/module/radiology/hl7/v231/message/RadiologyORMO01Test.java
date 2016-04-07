@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.hl7.message;
+package org.openmrs.module.radiology.hl7.v231.message;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.StringEndsWith.endsWith;
@@ -33,9 +33,8 @@ import org.openmrs.PersonName;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
-import org.openmrs.module.radiology.hl7.CommonOrderPriority;
 import org.openmrs.module.radiology.hl7.custommodel.v231.message.ORM_O01;
+import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
 import org.springframework.util.ReflectionUtils;
 
 import ca.uhn.hl7v2.parser.EncodingCharacters;
@@ -110,18 +109,18 @@ public class RadiologyORMO01Test {
 	}
 	
 	/**
-	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,CommonOrderOrderControl,CommonOrderPriority)
+	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,OrderControlElement)
 	 * @verifies create new radiology ormo01 object given all params
 	 */
 	@Test
 	public void RadiologyORMO01_shouldCreateNewRadiologyOrmo01ObjectGivenAllParams() throws Exception {
 		
-		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
+		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, OrderControlElement.NEW_ORDER);
 		assertNotNull(radiologyOrderMessage);
 	}
 	
 	/**
-	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,CommonOrderOrderControl,CommonOrderPriority)
+	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,OrderControlElement)
 	 * @verifies throw illegal argument exception given null as radiologyOrder
 	 */
 	@Test
@@ -129,11 +128,11 @@ public class RadiologyORMO01Test {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("radiologyOrder cannot be null."));
-		new RadiologyORMO01(null, CommonOrderOrderControl.NEW_ORDER);
+		new RadiologyORMO01(null, OrderControlElement.NEW_ORDER);
 	}
 	
 	/**
-	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,CommonOrderOrderControl,CommonOrderPriority)
+	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,OrderControlElement)
 	 * @verifies throw illegal argument exception if given radiology orders study is null
 	 */
 	@Test
@@ -142,12 +141,12 @@ public class RadiologyORMO01Test {
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("radiologyOrder.study cannot be null."));
-		new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
+		new RadiologyORMO01(radiologyOrder, OrderControlElement.NEW_ORDER);
 	}
 	
 	/**
-	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,CommonOrderOrderControl,CommonOrderPriority)
-	 * @verifies throw illegal argument exception given null as orderControlCode
+	 * @see RadiologyORMO01#RadiologyORMO01(RadiologyOrder,OrderControlElement)
+	 * @verifies throw illegal argument exception given null as orderControlElement
 	 */
 	@Test
 	public void RadiologyORMO01_shouldThrowIllegalArgumentExceptionGivenNullAsOrderControlCode() throws Exception {
@@ -164,7 +163,7 @@ public class RadiologyORMO01Test {
 	@Test
 	public void createEncodedRadiologyORMO01Message_shouldCreateEncodedHl7Ormo01Message() throws Exception {
 		
-		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
+		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, OrderControlElement.NEW_ORDER);
 		String encodedOrmMessage = radiologyOrderMessage.createEncodedRadiologyORMO01Message();
 		
 		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
@@ -184,7 +183,7 @@ public class RadiologyORMO01Test {
 	@Test
 	public void createRadiologyORMO01Message_shouldCreateOrmo01Message() throws Exception {
 		
-		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, CommonOrderOrderControl.NEW_ORDER);
+		RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, OrderControlElement.NEW_ORDER);
 		
 		Method createRadiologyORMO01Message = ReflectionUtils.findMethod(RadiologyORMO01.class,
 			"createRadiologyORMO01Message");
