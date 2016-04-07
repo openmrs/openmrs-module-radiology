@@ -7,10 +7,11 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.hl7;
+package org.openmrs.module.radiology.hl7.v231.util;
 
 import org.openmrs.Order;
 import org.openmrs.PersonName;
+import org.openmrs.module.radiology.hl7.v231.code.PriorityComponent;
 
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v231.datatype.XPN;
@@ -59,31 +60,31 @@ public class HL7Utils {
 	 * Get the HL7 Priority component of Quantity/Timing (ORC-7) field included in an HL7 version
 	 * 2.3.1 Common Order segment from given Order.Urgency.
 	 * 
-	 * @param orderUrgency Order.Urgency to be converted to CommonOrderPriority
-	 * @return CommonOrderPriority for given Order.Urgency
+	 * @param orderUrgency Order.Urgency to be converted to PriorityComponent
+	 * @return PriorityComponent for given Order.Urgency
 	 * @should return routine given null
 	 * @should return stat given order urgency stat
 	 * @should return routine given order urgency routine
 	 * @should return timing critical given order urgency on scheduled date
 	 */
-	public static CommonOrderPriority convertOrderUrgencyToCommonOrderPriority(Order.Urgency orderUrgency) {
-		final CommonOrderPriority result;
+	public static PriorityComponent convertOrderUrgencyToCommonOrderPriority(Order.Urgency orderUrgency) {
+		final PriorityComponent result;
 		
 		if (orderUrgency == null) {
-			result = CommonOrderPriority.ROUTINE;
+			result = PriorityComponent.ROUTINE;
 		} else {
 			switch (orderUrgency) {
 				case STAT:
-					result = CommonOrderPriority.STAT;
+					result = PriorityComponent.STAT;
 					break;
 				case ROUTINE:
-					result = CommonOrderPriority.ROUTINE;
+					result = PriorityComponent.ROUTINE;
 					break;
 				case ON_SCHEDULED_DATE:
-					result = CommonOrderPriority.TIMING_CRITICAL;
+					result = PriorityComponent.TIMING_CRITICAL;
 					break;
 				default:
-					result = CommonOrderPriority.ROUTINE;
+					result = PriorityComponent.ROUTINE;
 					break;
 			}
 		}

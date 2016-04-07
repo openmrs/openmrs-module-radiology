@@ -7,17 +7,17 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.hl7;
+package org.openmrs.module.radiology.hl7.v231.code;
 
 /**
  * <p>
- * Represents the Priority component (ST) of HL7 Common Order (ORC) Segment's attribute QUANTITY/TIMING (TQ) defined in HL7
- * version 2.3.1
+ * Represents the Priority (ST) component code used for example in the HL7 Common Order (ORC) Segment's attribute
+ * QUANTITY/TIMING (TQ) defined in HL7 version 2.3.1
  * </p>
  * Note: This enum does not include every priority defined by the HL7 standard. Only the priorities
  * used so far by the radiology module have been implemented here.
  */
-public enum CommonOrderPriority {
+public enum PriorityComponent {
 	STAT(0, "S", "With highest priority"),
 	ASAP(1, "A", "Fill after Stat orders"),
 	ROUTINE(2, "R", "Default"),
@@ -29,7 +29,7 @@ public enum CommonOrderPriority {
 	
 	private final String description;
 	
-	private CommonOrderPriority(int priority, String value, String description) {
+	private PriorityComponent(int priority, String value, String description) {
 		this.priority = priority;
 		this.value = value;
 		this.description = description;

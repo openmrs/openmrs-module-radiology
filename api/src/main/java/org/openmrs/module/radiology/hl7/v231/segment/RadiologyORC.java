@@ -7,12 +7,12 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.hl7.segment;
+package org.openmrs.module.radiology.hl7.v231.segment;
 
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
-import org.openmrs.module.radiology.hl7.HL7Utils;
-import org.openmrs.module.radiology.utils.DateTimeUtils;
+import org.openmrs.module.radiology.hl7.util.DateTimeUtils;
+import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
+import org.openmrs.module.radiology.hl7.v231.util.HL7Utils;
 
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v231.segment.ORC;
@@ -33,7 +33,7 @@ public class RadiologyORC {
 	 * 
 	 * @param commonOrderSegment Common Order Segment to populate
 	 * @param radiologyOrder to map to commonOrderSegment segment
-	 * @param commonOrderOrderControl Order Control element of Common Order (ORC)
+	 * @param orderControlElement Order Control element of Common Order (ORC)
 	 * @return populated commonOrderSegment segment
 	 * @throws DataTypeException
 	 * @should return populated common order segment given all params
@@ -41,7 +41,7 @@ public class RadiologyORC {
 	 * @should throw illegal argument exception given null as radiology order
 	 */
 	public static ORC populateCommonOrder(ORC commonOrderSegment, RadiologyOrder radiologyOrder,
-			CommonOrderOrderControl commonOrderOrderControl) throws DataTypeException {
+			OrderControlElement orderControlElement) throws DataTypeException {
 		
 		if (commonOrderSegment == null) {
 			throw new IllegalArgumentException("commonOrderSegment cannot be null.");
@@ -52,7 +52,7 @@ public class RadiologyORC {
 		}
 		
 		commonOrderSegment.getOrderControl()
-				.setValue(commonOrderOrderControl.getValue());
+				.setValue(orderControlElement.getValue());
 		commonOrderSegment.getPlacerOrderNumber()
 				.getEntityIdentifier()
 				.setValue(radiologyOrder.getOrderNumber() == null ? "" : String.valueOf(radiologyOrder.getOrderNumber()));

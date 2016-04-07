@@ -7,11 +7,11 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.hl7.segment;
+package org.openmrs.module.radiology.hl7.v231.segment;
 
 import java.util.Date;
 
-import org.openmrs.module.radiology.utils.DateTimeUtils;
+import org.openmrs.module.radiology.hl7.util.DateTimeUtils;
 
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v231.segment.MSH;

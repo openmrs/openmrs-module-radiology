@@ -16,8 +16,8 @@ import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.SpecificCharacterSet;
 import org.dcm4che2.data.Tag;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
-import org.openmrs.module.radiology.hl7.message.RadiologyORMO01;
+import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
+import org.openmrs.module.radiology.hl7.v231.message.RadiologyORMO01;
 
 import ca.uhn.hl7v2.HL7Exception;
 
@@ -137,16 +137,16 @@ public class DicomUtils {
 	 * Framework Volume 2.
 	 * 
 	 * @param radiologyOrder radiology order for which the order message is created
-	 * @param commonOrderControl common order control of the hl7 order message
+	 * @param orderControlElement common order control of the hl7 order message
 	 * @return encoded HL7 ORM^O01 message
 	 * @should return encoded HL7 ORMO01 message string given radiology order and common order control new order
 	 * @should return encoded HL7 ORMO01 message string given radiology order and common order control cancel order
 	 */
-	public static String createHL7Message(RadiologyOrder radiologyOrder, CommonOrderOrderControl commonOrderControl) {
+	public static String createHL7Message(RadiologyOrder radiologyOrder, OrderControlElement orderControlElement) {
 		String encodedHL7OrmMessage = null;
 		
 		try {
-			final RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, commonOrderControl);
+			final RadiologyORMO01 radiologyOrderMessage = new RadiologyORMO01(radiologyOrder, orderControlElement);
 			encodedHL7OrmMessage = radiologyOrderMessage.createEncodedRadiologyORMO01Message();
 			log.info("Created HL7 ORM^O01 message \n" + encodedHL7OrmMessage);
 		}

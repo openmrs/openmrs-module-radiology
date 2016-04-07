@@ -7,18 +7,18 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.hl7.message;
+package org.openmrs.module.radiology.hl7.v231.message;
 
 import java.util.Date;
 
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.hl7.CommonOrderOrderControl;
 import org.openmrs.module.radiology.hl7.custommodel.v231.message.ORM_O01;
-import org.openmrs.module.radiology.hl7.segment.RadiologyMSH;
-import org.openmrs.module.radiology.hl7.segment.RadiologyOBR;
-import org.openmrs.module.radiology.hl7.segment.RadiologyORC;
-import org.openmrs.module.radiology.hl7.segment.RadiologyPID;
-import org.openmrs.module.radiology.hl7.segment.RadiologyZDS;
+import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
+import org.openmrs.module.radiology.hl7.v231.segment.RadiologyMSH;
+import org.openmrs.module.radiology.hl7.v231.segment.RadiologyOBR;
+import org.openmrs.module.radiology.hl7.v231.segment.RadiologyORC;
+import org.openmrs.module.radiology.hl7.v231.segment.RadiologyPID;
+import org.openmrs.module.radiology.hl7.v231.segment.RadiologyZDS;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.parser.EncodingCharacters;
@@ -41,19 +41,19 @@ public class RadiologyORMO01 {
 	
 	private final RadiologyOrder radiologyOrder;
 	
-	private final CommonOrderOrderControl commonOrderControl;
+	private final OrderControlElement commonOrderControl;
 	
 	/**
 	 * Constructor for <code>RadiologyORMO01</code>
 	 * 
 	 * @param radiologyOrder radiology order
-	 * @param commonOrderOrderControl Order Control Code of Common Order (ORC) segment
+	 * @param orderControlElement Order Control Code of Common Order (ORC) segment
 	 * @should create new radiology ormo01 object given all params
 	 * @should throw illegal argument exception given null as radiologyOrder
 	 * @should throw illegal argument exception if given radiology orders study is null
-	 * @should throw illegal argument exception given null as orderControlCode
+	 * @should throw illegal argument exception given null as orderControlElement
 	 */
-	public RadiologyORMO01(RadiologyOrder radiologyOrder, CommonOrderOrderControl commonOrderOrderControl) {
+	public RadiologyORMO01(RadiologyOrder radiologyOrder, OrderControlElement orderControlElement) {
 		
 		if (radiologyOrder == null) {
 			throw new IllegalArgumentException("radiologyOrder cannot be null.");
@@ -63,12 +63,12 @@ public class RadiologyORMO01 {
 			}
 		}
 		
-		if (commonOrderOrderControl == null) {
+		if (orderControlElement == null) {
 			throw new IllegalArgumentException("orderControlCode cannot be null.");
 		}
 		
 		this.radiologyOrder = radiologyOrder;
-		this.commonOrderControl = commonOrderOrderControl;
+		this.commonOrderControl = orderControlElement;
 	}
 	
 	/**
