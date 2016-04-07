@@ -48,8 +48,8 @@ import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
-import org.openmrs.module.radiology.db.hibernate.RadiologyReportDAOImpl;
-import org.openmrs.module.radiology.db.hibernate.StudyDAOImpl;
+import org.openmrs.module.radiology.db.hibernate.HibernateRadiologyReportDAO;
+import org.openmrs.module.radiology.db.hibernate.HibernateStudyDAO;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 /**
@@ -144,15 +144,16 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		}
 		
 		if (studyDAO == null) {
-			StudyDAOImpl studyDAOImpl = new StudyDAOImpl();
-			studyDAOImpl.setSessionFactory(Context.getRegisteredComponent("sessionFactory", SessionFactory.class));
-			studyDAO = studyDAOImpl;
+			HibernateStudyDAO hibernateStudyDAO = new HibernateStudyDAO();
+			hibernateStudyDAO.setSessionFactory(Context.getRegisteredComponent("sessionFactory", SessionFactory.class));
+			studyDAO = hibernateStudyDAO;
 		}
 		
 		if (radiologyReportDAO == null) {
-			RadiologyReportDAOImpl reportDAOImpl = new RadiologyReportDAOImpl();
-			reportDAOImpl.setSessionFactory(Context.getRegisteredComponent("sessionFactory", SessionFactory.class));
-			radiologyReportDAO = reportDAOImpl;
+			HibernateRadiologyReportDAO hibernateRadiologyReportDAO = new HibernateRadiologyReportDAO();
+			hibernateRadiologyReportDAO.setSessionFactory(Context.getRegisteredComponent("sessionFactory",
+				SessionFactory.class));
+			radiologyReportDAO = hibernateRadiologyReportDAO;
 		}
 		
 		if (radiologyServiceImpl == null) {
