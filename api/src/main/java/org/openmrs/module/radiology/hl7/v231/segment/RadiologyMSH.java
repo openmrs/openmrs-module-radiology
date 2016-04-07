@@ -11,6 +11,7 @@ package org.openmrs.module.radiology.hl7.v231.segment;
 
 import java.util.Date;
 
+import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.hl7.util.DateTimeUtils;
 
 import ca.uhn.hl7v2.model.DataTypeException;
@@ -53,10 +54,8 @@ public class RadiologyMSH {
 			throw new IllegalArgumentException("messageHeaderSegment cannot be null.");
 		}
 		
-		messageHeaderSegment.getFieldSeparator()
-				.setValue("|");
 		messageHeaderSegment.getEncodingCharacters()
-				.setValue("^~\\&");
+				.setValue(HL7Constants.ENCODING_CHARACTERS.toString());
 		messageHeaderSegment.getSendingApplication()
 				.getNamespaceID()
 				.setValue(sendingApplication);

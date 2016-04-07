@@ -21,12 +21,12 @@ import org.openmrs.Order;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.test.Verifies;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.model.v231.message.ORM_O01;
 import ca.uhn.hl7v2.model.v231.segment.OBR;
-import ca.uhn.hl7v2.parser.EncodingCharacters;
 import ca.uhn.hl7v2.parser.PipeParser;
 
 /**
@@ -36,8 +36,6 @@ public class RadiologyOBRTest {
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
-	
-	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * @see {@link RadiologyOBR#populateObservationRequest(OBR, RadiologyOrder)}
@@ -81,7 +79,7 @@ public class RadiologyOBRTest {
 				.getText()
 				.getValue(), is("CT ABDOMEN PANCREAS WITH IV CONTRAST"));
 		assertThat(
-			PipeParser.encode(observationRequestSegment, encodingCharacters),
+			PipeParser.encode(observationRequestSegment, HL7Constants.ENCODING_CHARACTERS),
 			is("OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||ORD-1|1||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST"));
 	}
 	

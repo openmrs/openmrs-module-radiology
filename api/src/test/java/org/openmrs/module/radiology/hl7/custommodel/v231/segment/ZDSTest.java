@@ -14,21 +14,21 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
+import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.test.Verifies;
 
 import ca.uhn.hl7v2.HL7Exception;
+import ca.uhn.hl7v2.model.Group;
 import ca.uhn.hl7v2.model.v231.datatype.RP;
 import ca.uhn.hl7v2.model.v231.message.ORM_O01;
 import ca.uhn.hl7v2.parser.DefaultModelClassFactory;
-import ca.uhn.hl7v2.parser.EncodingCharacters;
+import ca.uhn.hl7v2.parser.ModelClassFactory;
 import ca.uhn.hl7v2.parser.PipeParser;
 
 /**
  * Tests {@link ZDS}
  */
 public class ZDSTest {
-	
-	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * Tests ZDS constructor and sets fields
@@ -59,7 +59,7 @@ public class ZDSTest {
 				.getSubtype()
 				.setValue("DICOM");
 		
-		assertThat(PipeParser.encode(zds, encodingCharacters),
+		assertThat(PipeParser.encode(zds, HL7Constants.ENCODING_CHARACTERS),
 			is("ZDS|1.2.826.0.1.3680043.8.2186.1.1.1^1^Application^DICOM"));
 	}
 	

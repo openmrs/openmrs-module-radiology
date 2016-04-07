@@ -13,6 +13,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 import org.junit.Test;
+import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.hl7.custommodel.v231.segment.ZDS;
 import org.openmrs.test.Verifies;
 
@@ -21,15 +22,12 @@ import ca.uhn.hl7v2.model.v231.segment.MSH;
 import ca.uhn.hl7v2.model.v231.segment.OBR;
 import ca.uhn.hl7v2.model.v231.segment.ORC;
 import ca.uhn.hl7v2.model.v231.segment.PID;
-import ca.uhn.hl7v2.parser.EncodingCharacters;
 import ca.uhn.hl7v2.parser.PipeParser;
 
 /**
  * Tests {@link ORM_O01}
  */
 public class ORM_O01Test {
-	
-	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * @see {@link ORM_O01#getZDS()}
@@ -53,7 +51,7 @@ public class ORM_O01Test {
 		zds.getStudyInstanceUID()
 				.getSubtype()
 				.setValue("DICOM");
-		assertThat(PipeParser.encode(ormMessage, encodingCharacters),
+		assertThat(PipeParser.encode(ormMessage, HL7Constants.ENCODING_CHARACTERS),
 			is("ZDS|1.2.826.0.1.3680043.8.2186.1.1.1^1^Application^DICOM\r"));
 	}
 	
@@ -64,7 +62,9 @@ public class ORM_O01Test {
 	@Verifies(value = "should create new ormo01 instance", method = "ORM_O01()")
 	public void ORM_O01_shouldCreateNewORMO01Instance() throws HL7Exception {
 		
-		String expectedEncodedCustomOrmMessage = "MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||20130827154500||ORM^O01||P|2.3.1\r"
+		String expectedEncodedCustomOrmMessage = "MSH|"
+				+ HL7Constants.ENCODING_CHARACTERS
+				+ "|OpenMRSRadiologyModule|OpenMRS|||20130827154500||ORM^O01||P|2.3.1\r"
 				+ "PID|||100-07||Patient^Johnny^D||19651007|M\r"
 				+ "ORC|NW|2|||||^^^20130824170000^^R\r"
 				+ "OBR||||^^^^CT ABDOMEN PANCREAS WITH IV CONTRAST|||||||||||||||2|2||||CT||||||||||||||||||||^CT ABDOMEN PANCREAS WITH IV CONTRAST\r"
@@ -165,7 +165,8 @@ public class ORM_O01Test {
 				.getSubtype()
 				.setValue("DICOM");
 		
-		assertThat(PipeParser.encode(customOrmMessage, encodingCharacters), is(expectedEncodedCustomOrmMessage));
+		assertThat(PipeParser.encode(customOrmMessage, HL7Constants.ENCODING_CHARACTERS),
+			is(expectedEncodedCustomOrmMessage));
 	}
 	
 }

@@ -17,6 +17,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.hl7.custommodel.v231.segment.ZDS;
 import org.openmrs.test.Verifies;
 
@@ -33,8 +34,6 @@ public class RadiologyZDSTest {
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
-	
-	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * Tests the RadiologyZDS.populateZDSSegment with Study containing Study.Uid
@@ -68,7 +67,8 @@ public class RadiologyZDSTest {
 				.getSubtype()
 				.getValue(), is("DICOM"));
 		
-		assertThat(PipeParser.encode(zds, encodingCharacters), is("ZDS|1.2.826.0.1.3680043.8.2186.1.1.1^^Application^DICOM"));
+		assertThat(PipeParser.encode(zds, HL7Constants.ENCODING_CHARACTERS),
+			is("ZDS|1.2.826.0.1.3680043.8.2186.1.1.1^^Application^DICOM"));
 	}
 	
 	/**

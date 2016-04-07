@@ -12,6 +12,7 @@ package org.openmrs.module.radiology.hl7.v231.message;
 import java.util.Date;
 
 import org.openmrs.module.radiology.RadiologyOrder;
+import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.hl7.custommodel.v231.message.ORM_O01;
 import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
 import org.openmrs.module.radiology.hl7.v231.segment.RadiologyMSH;
@@ -28,8 +29,6 @@ import ca.uhn.hl7v2.parser.PipeParser;
  * Translates a <code>RadiologyOrder</code> to an HL7 ORM^O01 message
  */
 public class RadiologyORMO01 {
-	
-	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	private static final String sendingApplication = "OpenMRSRadiologyModule";
 	
@@ -55,7 +54,7 @@ public class RadiologyORMO01 {
 	public String createEncodedMessage(RadiologyOrder radiologyOrder, OrderControlElement OrderControlelement)
 			throws HL7Exception {
 		
-		return PipeParser.encode(this.createMessage(radiologyOrder, OrderControlelement), encodingCharacters);
+		return PipeParser.encode(this.createMessage(radiologyOrder, OrderControlelement), HL7Constants.ENCODING_CHARACTERS);
 	}
 	
 	/**

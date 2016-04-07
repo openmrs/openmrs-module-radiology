@@ -15,21 +15,18 @@ import static org.junit.Assert.assertThat;
 import org.junit.Test;
 import org.openmrs.Order;
 import org.openmrs.PersonName;
+import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.hl7.v231.code.PriorityComponent;
-import org.openmrs.module.radiology.hl7.v231.util.HL7Utils;
 import org.openmrs.test.Verifies;
 
 import ca.uhn.hl7v2.model.DataTypeException;
 import ca.uhn.hl7v2.model.v231.datatype.XPN;
-import ca.uhn.hl7v2.parser.EncodingCharacters;
 import ca.uhn.hl7v2.parser.PipeParser;
 
 /**
  * Tests methods in the {@link HL7Utils}
  */
 public class HL7UtilsTest {
-	
-	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	/**
 	 * Test HL7Utils.getExtendedPersonNameFrom
@@ -48,7 +45,7 @@ public class HL7UtilsTest {
 		personName.setMiddleName("Francis");
 		
 		XPN xpn = HL7Utils.getExtendedPersonNameFrom(personName);
-		String extendedPersonName = PipeParser.encode(xpn, encodingCharacters);
+		String extendedPersonName = PipeParser.encode(xpn, HL7Constants.ENCODING_CHARACTERS);
 		
 		assertThat(extendedPersonName, is("Doe^John^Francis"));
 	}
@@ -68,7 +65,7 @@ public class HL7UtilsTest {
 		personName.setFamilyName("Doe");
 		
 		XPN xpn = HL7Utils.getExtendedPersonNameFrom(personName);
-		String extendedPersonName = PipeParser.encode(xpn, encodingCharacters);
+		String extendedPersonName = PipeParser.encode(xpn, HL7Constants.ENCODING_CHARACTERS);
 		
 		assertThat(extendedPersonName, is("Doe"));
 	}
@@ -88,7 +85,7 @@ public class HL7UtilsTest {
 		personName.setGivenName("John");
 		
 		XPN xpn = HL7Utils.getExtendedPersonNameFrom(personName);
-		String extendedPersonName = PipeParser.encode(xpn, encodingCharacters);
+		String extendedPersonName = PipeParser.encode(xpn, HL7Constants.ENCODING_CHARACTERS);
 		
 		assertThat(extendedPersonName, is("^John"));
 	}
@@ -108,7 +105,7 @@ public class HL7UtilsTest {
 		personName.setMiddleName("Francis");
 		
 		XPN xpn = HL7Utils.getExtendedPersonNameFrom(personName);
-		String extendedPersonName = PipeParser.encode(xpn, encodingCharacters);
+		String extendedPersonName = PipeParser.encode(xpn, HL7Constants.ENCODING_CHARACTERS);
 		
 		assertThat(extendedPersonName, is("^^Francis"));
 	}
@@ -129,7 +126,7 @@ public class HL7UtilsTest {
 		personName.setGivenName("John");
 		
 		XPN xpn = HL7Utils.getExtendedPersonNameFrom(personName);
-		String extendedPersonName = PipeParser.encode(xpn, encodingCharacters);
+		String extendedPersonName = PipeParser.encode(xpn, HL7Constants.ENCODING_CHARACTERS);
 		
 		assertThat(extendedPersonName, is("Doe^John"));
 	}
@@ -147,7 +144,7 @@ public class HL7UtilsTest {
 		PersonName personName = new PersonName();
 		
 		XPN xpn = HL7Utils.getExtendedPersonNameFrom(personName);
-		String extendedPersonName = PipeParser.encode(xpn, encodingCharacters);
+		String extendedPersonName = PipeParser.encode(xpn, HL7Constants.ENCODING_CHARACTERS);
 		
 		assertThat(extendedPersonName, is(""));
 	}
@@ -163,7 +160,7 @@ public class HL7UtilsTest {
 	public void getExtendedPersonNameFrom_shouldReturnEmptyExtendedPersonNameGivenNull() throws DataTypeException {
 		
 		XPN xpn = HL7Utils.getExtendedPersonNameFrom(null);
-		String extendedPersonName = PipeParser.encode(xpn, encodingCharacters);
+		String extendedPersonName = PipeParser.encode(xpn, HL7Constants.ENCODING_CHARACTERS);
 		
 		assertThat(extendedPersonName, is(""));
 	}

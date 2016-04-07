@@ -32,18 +32,16 @@ import org.openmrs.PersonName;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.hl7.custommodel.v231.message.ORM_O01;
 import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
 
-import ca.uhn.hl7v2.parser.EncodingCharacters;
 import ca.uhn.hl7v2.parser.PipeParser;
 
 /**
  * Tests {@link RadiologyORMO01}
  */
 public class RadiologyORMO01Test {
-	
-	private static final EncodingCharacters encodingCharacters = new EncodingCharacters('|', '^', '~', '\\', '&');
 	
 	RadiologyORMO01 radiologyORMO01;
 	
@@ -121,8 +119,9 @@ public class RadiologyORMO01Test {
 		
 		assertNotNull(radiologyOrderMessage);
 		
-		String encodedOrmMessage = PipeParser.encode(radiologyOrderMessage, encodingCharacters);
-		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
+		String encodedOrmMessage = PipeParser.encode(radiologyOrderMessage, HL7Constants.ENCODING_CHARACTERS);
+		assertThat(encodedOrmMessage, startsWith("MSH|" + HL7Constants.ENCODING_CHARACTERS
+				+ "|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(
 			encodedOrmMessage,
 			endsWith("||ORM^O01||P|2.3.1\r"
@@ -179,7 +178,8 @@ public class RadiologyORMO01Test {
 		
 		String encodedOrmMessage = radiologyORMO01.createEncodedMessage(radiologyOrder, OrderControlElement.NEW_ORDER);
 		
-		assertThat(encodedOrmMessage, startsWith("MSH|^~\\&|OpenMRSRadiologyModule|OpenMRS|||"));
+		assertThat(encodedOrmMessage, startsWith("MSH|" + HL7Constants.ENCODING_CHARACTERS
+				+ "|OpenMRSRadiologyModule|OpenMRS|||"));
 		assertThat(
 			encodedOrmMessage,
 			endsWith("||ORM^O01||P|2.3.1\r"
