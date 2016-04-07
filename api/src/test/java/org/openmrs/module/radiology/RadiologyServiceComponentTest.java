@@ -48,11 +48,11 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.VisitService;
-import org.openmrs.api.context.Context;
-import org.openmrs.module.emrapi.encounter.EmrEncounterService;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
  * Tests {@link RadiologyService}
@@ -103,23 +103,30 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	private static final int RADIOLOGY_ORDER_WITH_ENCOUNTER_AND_ACTIVE_VISIT = 2009;
 	
-	private PatientService patientService = null;
+	@Autowired
+	private PatientService patientService;
 	
-	private ConceptService conceptService = null;
+	@Autowired
+	private ConceptService conceptService;
 	
-	private AdministrationService administrationService = null;
+	@Autowired
+	@Qualifier("adminService")
+	private AdministrationService administrationService;
 	
-	private EncounterService encounterService = null;
+	@Autowired
+	private EncounterService encounterService;
 	
-	private ProviderService providerService = null;
+	@Autowired
+	private ProviderService providerService;
 	
-	private OrderService orderService = null;
+	@Autowired
+	private OrderService orderService;
 	
-	private EmrEncounterService emrEncounterService = null;
+	@Autowired
+	private RadiologyService radiologyService;
 	
-	private RadiologyService radiologyService = null;
-	
-	private VisitService visitService = null;
+	@Autowired
+	private VisitService visitService;
 	
 	@Rule
 	public ExpectedException expectedException = ExpectedException.none();
@@ -144,44 +151,6 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	@Before
 	public void runBeforeAllTests() throws Exception {
-		
-		if (patientService == null) {
-			patientService = Context.getPatientService();
-		}
-		
-		if (conceptService == null) {
-			conceptService = Context.getConceptService();
-		}
-		
-		if (administrationService == null) {
-			administrationService = Context.getAdministrationService();
-		}
-		
-		if (encounterService == null) {
-			encounterService = Context.getEncounterService();
-		}
-		
-		if (providerService == null) {
-			providerService = Context.getProviderService();
-		}
-		
-		if (orderService == null) {
-			orderService = Context.getOrderService();
-		}
-		
-		if (emrEncounterService == null) {
-			emrEncounterService = Context.getService(EmrEncounterService.class);
-		}
-		
-		if (visitService == null) {
-			visitService = Context.getVisitService();
-		}
-		
-		if (radiologyService == null) {
-			radiologyService = Context.getService(RadiologyService.class);
-			radiologyService.setEmrEncounterService(emrEncounterService);
-		}
-		
 		executeDataSet(STUDIES_TEST_DATASET);
 	}
 	
