@@ -18,6 +18,7 @@ import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.StudyDAO;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Hibernate specific Study related functions. This class should not be used directly. All calls
@@ -28,6 +29,7 @@ import org.openmrs.module.radiology.db.StudyDAO;
  */
 public class StudyDAOImpl implements StudyDAO {
 	
+	@Autowired
 	private SessionFactory sessionFactory;
 	
 	/**

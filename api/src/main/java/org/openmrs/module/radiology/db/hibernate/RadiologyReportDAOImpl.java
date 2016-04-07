@@ -17,6 +17,7 @@ import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Hibernate specific RadiologyReport related functions. This class should not be used directly. All
@@ -27,13 +28,14 @@ import org.openmrs.module.radiology.report.RadiologyReportStatus;
  */
 public class RadiologyReportDAOImpl implements RadiologyReportDAO {
 	
+	@Autowired
+	private SessionFactory sessionFactory;
+	
 	/**
 	 * Set session factory that allows us to connect to the database that Hibernate knows about.
 	 *
 	 * @param sessionFactory SessionFactory
 	 */
-	private SessionFactory sessionFactory;
-	
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}
