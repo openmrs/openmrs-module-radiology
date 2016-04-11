@@ -51,6 +51,7 @@ import org.openmrs.module.radiology.db.StudyDAO;
 import org.openmrs.module.radiology.db.hibernate.HibernateRadiologyReportDAO;
 import org.openmrs.module.radiology.db.hibernate.HibernateStudyDAO;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Tests {@link RadiologyServiceImpl}
@@ -91,8 +92,10 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	
 	private RadiologyProperties radiologyProperties = null;
 	
-	private StudyDAO studyDAO = null;
+	@Autowired
+	private StudyDAO studyDAO;
 	
+	@Autowired
 	private RadiologyReportDAO radiologyReportDAO;
 	
 	private Method saveRadiologyOrderEncounterMethod = null;
@@ -141,19 +144,6 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		
 		if (radiologyProperties == null) {
 			radiologyProperties = Context.getRegisteredComponent("radiologyProperties", RadiologyProperties.class);
-		}
-		
-		if (studyDAO == null) {
-			HibernateStudyDAO hibernateStudyDAO = new HibernateStudyDAO();
-			hibernateStudyDAO.setSessionFactory(Context.getRegisteredComponent("sessionFactory", SessionFactory.class));
-			studyDAO = hibernateStudyDAO;
-		}
-		
-		if (radiologyReportDAO == null) {
-			HibernateRadiologyReportDAO hibernateRadiologyReportDAO = new HibernateRadiologyReportDAO();
-			hibernateRadiologyReportDAO.setSessionFactory(Context.getRegisteredComponent("sessionFactory",
-				SessionFactory.class));
-			radiologyReportDAO = hibernateRadiologyReportDAO;
 		}
 		
 		if (radiologyServiceImpl == null) {

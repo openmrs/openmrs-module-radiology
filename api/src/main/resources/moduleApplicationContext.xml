@@ -22,20 +22,6 @@
 		</property>
 		<property name="target">
 			<bean class="org.openmrs.module.radiology.impl.RadiologyServiceImpl">
-				<property name="radiologyOrderDao">
-					<bean
-						class="org.openmrs.module.radiology.db.hibernate.HibernateRadiologyOrderDAO">
-					</bean>
-				</property>
-				<property name="studyDAO">
-					<bean class="org.openmrs.module.radiology.db.hibernate.HibernateStudyDAO">
-					</bean>
-				</property>
-				<property name="radiologyReportDAO">
-					<bean
-						class="org.openmrs.module.radiology.db.hibernate.HibernateRadiologyReportDAO">
-					</bean>
-				</property>
 				<property name="orderService" ref="orderService"></property>
 				<property name="encounterService" ref="encounterService"></property>
 				<property name="radiologyProperties" ref="radiologyProperties"></property>

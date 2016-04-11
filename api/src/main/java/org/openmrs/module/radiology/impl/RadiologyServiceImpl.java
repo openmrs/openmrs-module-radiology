@@ -42,6 +42,7 @@ import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
 import org.openmrs.module.radiology.hl7.v231.message.RadiologyORMO01;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -50,8 +51,10 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	
 	private static final Log log = LogFactory.getLog(RadiologyServiceImpl.class);
 	
+	@Autowired
 	private RadiologyOrderDAO radiologyOrderDAO;
 	
+	@Autowired
 	private StudyDAO studyDAO;
 	
 	private OrderService orderService;
@@ -62,6 +65,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	
 	private RadiologyProperties radiologyProperties;
 	
+	@Autowired
 	private RadiologyReportDAO radiologyReportDAO;
 	
 	@Override
