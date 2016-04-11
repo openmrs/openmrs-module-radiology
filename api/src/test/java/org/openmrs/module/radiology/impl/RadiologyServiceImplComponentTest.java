@@ -22,7 +22,6 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import org.hibernate.SessionFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -31,13 +30,11 @@ import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.Visit;
-import org.openmrs.api.AdministrationService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.VisitService;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.emrapi.encounter.EmrEncounterService;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.MwlStatus;
@@ -48,8 +45,6 @@ import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
-import org.openmrs.module.radiology.db.hibernate.HibernateRadiologyReportDAO;
-import org.openmrs.module.radiology.db.hibernate.HibernateStudyDAO;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -72,25 +67,31 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	
 	private static final String RADIOLOGY_ORDER_PROVIDER_UUID = "c2299800-cca9-11e0-9572-0800200c9a66";
 	
-	private PatientService patientService = null;
+	@Autowired
+	private PatientService patientService;
 	
-	private AdministrationService administrationService = null;
+	@Autowired
+	private EncounterService encounterService;
 	
-	private EncounterService encounterService = null;
+	@Autowired
+	private VisitService visitService;
 	
-	private VisitService visitService = null;
+	@Autowired
+	private EmrEncounterService emrEncounterService;
 	
-	private EmrEncounterService emrEncounterService = null;
+	@Autowired
+	private ProviderService providerService;
 	
-	private ProviderService providerService = null;
-	
-	private OrderService orderService = null;
+	@Autowired
+	private OrderService orderService;
 	
 	private RadiologyServiceImpl radiologyServiceImpl = null;
 	
-	private RadiologyService radiologyService = null;
+	@Autowired
+	private RadiologyService radiologyService;
 	
-	private RadiologyProperties radiologyProperties = null;
+	@Autowired
+	private RadiologyProperties radiologyProperties;
 	
 	@Autowired
 	private StudyDAO studyDAO;
@@ -109,42 +110,6 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	
 	@Before
 	public void runBeforeAllTests() throws Exception {
-		
-		if (patientService == null) {
-			patientService = Context.getPatientService();
-		}
-		
-		if (administrationService == null) {
-			administrationService = Context.getAdministrationService();
-		}
-		
-		if (radiologyService == null) {
-			radiologyService = Context.getService(RadiologyService.class);
-		}
-		
-		if (providerService == null) {
-			providerService = Context.getProviderService();
-		}
-		
-		if (orderService == null) {
-			orderService = Context.getOrderService();
-		}
-		
-		if (visitService == null) {
-			visitService = Context.getVisitService();
-		}
-		
-		if (encounterService == null) {
-			encounterService = Context.getEncounterService();
-		}
-		
-		if (emrEncounterService == null) {
-			emrEncounterService = Context.getService(EmrEncounterService.class);
-		}
-		
-		if (radiologyProperties == null) {
-			radiologyProperties = Context.getRegisteredComponent("radiologyProperties", RadiologyProperties.class);
-		}
 		
 		if (radiologyServiceImpl == null) {
 			radiologyServiceImpl = new RadiologyServiceImpl();

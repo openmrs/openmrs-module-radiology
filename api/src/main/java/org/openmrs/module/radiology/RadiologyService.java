@@ -14,13 +14,7 @@ import java.util.List;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
-import org.openmrs.api.EncounterService;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.api.OrderService;
-import org.openmrs.module.emrapi.encounter.EmrEncounterService;
-import org.openmrs.module.radiology.db.RadiologyOrderDAO;
-import org.openmrs.module.radiology.db.RadiologyReportDAO;
-import org.openmrs.module.radiology.db.StudyDAO;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,20 +23,6 @@ import ca.uhn.hl7v2.HL7Exception;
 
 @Transactional
 public interface RadiologyService extends OpenmrsService {
-	
-	public void setRadiologyOrderDao(RadiologyOrderDAO radiologyOrderDao);
-	
-	public void setStudyDAO(StudyDAO studyDAO);
-	
-	public void setOrderService(OrderService orderService);
-	
-	public void setEncounterService(EncounterService encounterService);
-	
-	public void setEmrEncounterService(EmrEncounterService emrEncounterService);
-	
-	void setRadiologyProperties(RadiologyProperties radiologyProperties);
-	
-	public void setRadiologyReportDAO(RadiologyReportDAO radiologyReportDAO);
 	
 	/**
 	 * Save given <code>RadiologyOrder</code> and its <code>RadiologyOrder.study</code> to the
