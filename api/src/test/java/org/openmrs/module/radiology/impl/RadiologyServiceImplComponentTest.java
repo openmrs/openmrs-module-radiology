@@ -15,6 +15,7 @@ import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -113,12 +114,24 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		
 		if (radiologyServiceImpl == null) {
 			radiologyServiceImpl = new RadiologyServiceImpl();
-			radiologyServiceImpl.setOrderService(orderService);
-			radiologyServiceImpl.setEncounterService(encounterService);
-			radiologyServiceImpl.setEmrEncounterService(emrEncounterService);
-			radiologyServiceImpl.setStudyDAO(studyDAO);
-			radiologyServiceImpl.setRadiologyReportDAO(radiologyReportDAO);
-			radiologyServiceImpl.setRadiologyProperties(radiologyProperties);
+			Field orderServiceField = RadiologyServiceImpl.class.getDeclaredField("orderService");
+			orderServiceField.setAccessible(true);
+			orderServiceField.set(radiologyServiceImpl, orderService);
+			Field encounterServiceField = RadiologyServiceImpl.class.getDeclaredField("encounterService");
+			encounterServiceField.setAccessible(true);
+			encounterServiceField.set(radiologyServiceImpl, encounterService);
+			Field emrEncounterServiceField = RadiologyServiceImpl.class.getDeclaredField("emrEncounterService");
+			emrEncounterServiceField.setAccessible(true);
+			emrEncounterServiceField.set(radiologyServiceImpl, emrEncounterService);
+			Field studyDAOField = RadiologyServiceImpl.class.getDeclaredField("studyDAO");
+			studyDAOField.setAccessible(true);
+			studyDAOField.set(radiologyServiceImpl, studyDAO);
+			Field radiologyReportDAOField = RadiologyServiceImpl.class.getDeclaredField("radiologyReportDAO");
+			radiologyReportDAOField.setAccessible(true);
+			radiologyReportDAOField.set(radiologyServiceImpl, radiologyReportDAO);
+			Field radiologyPropertiesField = RadiologyServiceImpl.class.getDeclaredField("radiologyProperties");
+			radiologyPropertiesField.setAccessible(true);
+			radiologyPropertiesField.set(radiologyServiceImpl, radiologyProperties);
 		}
 		
 		saveStudyMethod = RadiologyServiceImpl.class.getDeclaredMethod("saveStudy",
