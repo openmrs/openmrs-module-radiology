@@ -376,7 +376,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		assertNotNull(modelAndView);
 		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
 				+ mockRadiologyOrder.getOrderId()));
-		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("radiology.savedFailWorklist"));
+		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR), is("radiology.savedFailWorklist"));
 	}
 	
 	/**

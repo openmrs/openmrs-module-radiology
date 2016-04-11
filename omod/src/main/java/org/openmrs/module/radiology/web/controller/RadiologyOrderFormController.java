@@ -191,7 +191,7 @@ public class RadiologyOrderFormController {
 							.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
 				} else {
 					request.getSession()
-							.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.savedFailWorklist");
+							.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.savedFailWorklist");
 				}
 				
 				modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
