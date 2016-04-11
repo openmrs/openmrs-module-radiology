@@ -57,48 +57,45 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	@Autowired
 	private StudyDAO studyDAO;
 	
+	@Autowired
 	private OrderService orderService;
 	
+	@Autowired
 	private EncounterService encounterService;
 	
+	@Autowired
 	private EmrEncounterService emrEncounterService;
 	
+	@Autowired
 	private RadiologyProperties radiologyProperties;
 	
 	@Autowired
 	private RadiologyReportDAO radiologyReportDAO;
 	
-	@Override
 	public void setRadiologyOrderDao(RadiologyOrderDAO radiologyOrderDAO) {
 		this.radiologyOrderDAO = radiologyOrderDAO;
 	}
 	
-	@Override
 	public void setStudyDAO(StudyDAO studyDAO) {
 		this.studyDAO = studyDAO;
 	}
 	
-	@Override
 	public void setOrderService(OrderService orderService) {
 		this.orderService = orderService;
 	}
 	
-	@Override
 	public void setEncounterService(EncounterService encounterService) {
 		this.encounterService = encounterService;
 	}
 	
-	@Override
 	public void setEmrEncounterService(EmrEncounterService emrEncounterService) {
 		this.emrEncounterService = emrEncounterService;
 	}
 	
-	@Override
 	public void setRadiologyProperties(RadiologyProperties radiologyProperties) {
 		this.radiologyProperties = radiologyProperties;
 	}
 	
-	@Override
 	public void setRadiologyReportDAO(RadiologyReportDAO radiologyReportDao) {
 		this.radiologyReportDAO = radiologyReportDao;
 	}
