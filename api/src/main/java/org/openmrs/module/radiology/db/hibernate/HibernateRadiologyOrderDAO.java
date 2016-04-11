@@ -19,6 +19,7 @@ import org.openmrs.Patient;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  * Hibernate specific RadiologyOrder related functions. This class should not be used directly. All
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @see org.openmrs.module.radiology.db.RadiologyOrderDAO
  * @see org.openmrs.module.radiology.RadiologyService
  */
+@Repository
 public class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
 	
 	@Autowired

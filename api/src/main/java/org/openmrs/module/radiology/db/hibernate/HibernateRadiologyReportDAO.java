@@ -18,6 +18,7 @@ import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 /**
  * Hibernate specific RadiologyReport related functions. This class should not be used directly. All
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  * @see org.openmrs.module.radiology.db.RadiologyReportDAO
  * @see org.openmrs.module.radiology.RadiologyService
  */
+@Repository
 public class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	
 	@Autowired
