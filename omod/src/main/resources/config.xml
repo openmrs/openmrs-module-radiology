@@ -72,7 +72,8 @@
 	<globalProperty>
 		<property>@MODULE_ID@.dicomMppsPort</property>
 		<defaultValue>11114</defaultValue>
-		<description>DICOM port of the radiology module MPPS SCU to receive DICOM MPPS
+		<description>DICOM port of the radiology module MPPS SCU to receive
+			DICOM MPPS
 			updates
 		</description>
 	</globalProperty>
@@ -83,21 +84,46 @@
 		</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.dicomApplicationUID</property>
-		<defaultValue>1.2.826.0.1.3680043.8.2186</defaultValue>
+		<property>@MODULE_ID@.dicomUIDOrgRoot</property>
+		<defaultValue>999.999.999</defaultValue>
 		<description>
-			You need an application root UID, this will be the prefix
-			of any module
-			DICOM object, the default value serves for debugging
-			purposes
+			DICOM UID component used to describe the org root. It
+			uniquely identifies an organization and thus needs to be changed from
+			the default which is for development purpose only!
+
+			Module generated
+			DICOM UIDs
+			adhere to: [org
+			root].[application].[uid type].[unique].
+			Allowed to
+			contain only
+			numeric values using characters 0-9 separated
+			by '.'
+			without
+			non-significant leading zeroes.
 		</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.dicomStudyUIDSlug</property>
+		<property>@MODULE_ID@.dicomUIDApplication</property>
 		<defaultValue>1</defaultValue>
-		<description>Example: applicationUID+studyUIDSlug+orderId could be a
-			study UID. Example values: 1.2, 1.1.1 (No
-			start or end dots)
+		<description>
+			DICOM UID component used to describe this application.
+			Module generated DICOM UIDs adhere to: [org root].[application].[uid
+			type].[unique]. Allowed to
+			contain only a numeric value using
+			characters 0-9 without non-significant leading
+			zeroes.
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.dicomUIDTypeStudy</property>
+		<defaultValue>1</defaultValue>
+		<description>DICOM UID component used to describe UID type study.
+			Module generated DICOM UIDs adhere to: [org root].[application].[uid
+			type].[unique]. Allowed to
+			contain only a numeric value using
+			characters 0-9 without non-significant leading
+			zeroes.
 		</description>
 	</globalProperty>
 	<globalProperty>
@@ -160,9 +186,11 @@
 		</description>
 	</globalProperty>
 	<globalProperty>
-		<property>@MODULE_ID@.radiologyOrderingProviderEncounterRole</property>
+		<property>@MODULE_ID@.radiologyOrderingProviderEncounterRole
+		</property>
 		<defaultValue>13fc9b4a-49ed-429c-9dde-ca005b387a3d</defaultValue>
-		<description>Radiology Ordering Provider Encounter Role UUID</description>
+		<description>Radiology Ordering Provider Encounter Role UUID
+		</description>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.radiologyTestOrderType</property>
@@ -179,14 +207,18 @@
 		<defaultValue>fe898a34-1ade-11e1-9c71-00248140a5eb</defaultValue>
 		<description>Radiology Visit Type UUID</description>
 	</globalProperty>
-	<!-- we provide the setting for the GP of the emr-api here since it is not provided by them. otherwise users would need to set the GP via the database. remove once emr-api defines this GP in their config.xml -->
-    <globalProperty>
-        <property>emr.encounterMatcher</property>
-        <defaultValue>org.openmrs.module.radiology.RadiologyEncounterMatcher</defaultValue>
-        <description>
-            Class name of a custom encounter matcher (e.g. org.openmrs.module.example.CustomEncounterMatcher)
-        </description>
-    </globalProperty>
+	<!-- we provide the setting for the GP of the emr-api here since it is not 
+		provided by them. otherwise users would need to set the GP via the database. 
+		remove once emr-api defines this GP in their config.xml -->
+	<globalProperty>
+		<property>emr.encounterMatcher</property>
+		<defaultValue>org.openmrs.module.radiology.RadiologyEncounterMatcher
+		</defaultValue>
+		<description>
+			Class name of a custom encounter matcher (e.g.
+			org.openmrs.module.example.CustomEncounterMatcher)
+		</description>
+	</globalProperty>
 
 	<!--Required Global Properties -->
 

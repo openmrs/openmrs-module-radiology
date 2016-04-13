@@ -28,9 +28,11 @@ public class RadiologyConstants {
 	
 	public static final String GP_DICOM_AE_TITLE = "radiology.dicomAeTitle";
 	
-	public static final String GP_DICOM_APPLICATION_UID = "radiology.dicomApplicationUID";
+	public static final String GP_DICOM_UID_ORG_ROOT = "radiology.dicomUIDOrgRoot";
 	
-	public static final String GP_DICOM_STUDY_UID_SLUG = "radiology.dicomStudyUIDSlug";
+	public static final String GP_DICOM_UID_APPLICATION = "radiology.dicomUIDApplication";
+	
+	public static final String GP_DICOM_UID_TYPE_STUDY = "radiology.dicomUIDTypeStudy";
 	
 	public static final String GP_DICOM_SPECIFIC_CHARCATER_SET = "radiology.dicomSpecificCharacterSet";
 	

@@ -104,29 +104,39 @@ public class RadiologyProperties extends ModuleProperties {
 	}
 	
 	/**
-	 * Return DICOM Application UID.
+	 * Return DICOM UID component used to identify the org root.
 	 * 
-	 * @return dicom application uid
-	 * @throws IllegalStateException if global property for dicom application uid cannot be found
-	 * @should return dicom application uid
-	 * @should throw illegal state exception if global property for dicom application uid cannot be
-	 *         found
+	 * @return dicom uid org root
+	 * @throws IllegalStateException if global property for dicom uid org root cannot be found
+	 * @should return dicom uid org root
+	 * @should throw illegal state exception if global property for dicom uid org root cannot be found
 	 */
-	public String getDicomApplicationUID() {
-		return getGlobalProperty(RadiologyConstants.GP_DICOM_APPLICATION_UID, true);
+	public String getDicomUIDOrgRoot() {
+		return getGlobalProperty(RadiologyConstants.GP_DICOM_UID_ORG_ROOT, true);
 	}
 	
 	/**
-	 * Return DICOM study uid slug.
+	 * Return DICOM UID component used to identify this application.
 	 * 
-	 * @return dicom study uid slug
-	 * @throws IllegalStateException if global property for dicom study uid slug cannot be found
-	 * @should return dicom study uid slug
-	 * @should throw illegal state exception if global property for dicom study uid slug cannot be
-	 *         found
+	 * @return dicom uid application
+	 * @throws IllegalStateException if global property for dicom uid application cannot be found
+	 * @should return dicom uid application
+	 * @should throw illegal state exception if global property for dicom uid application cannot be found
 	 */
-	public String getDicomStudyUIDSlug() {
-		return getGlobalProperty(RadiologyConstants.GP_DICOM_STUDY_UID_SLUG, true);
+	public String getDicomUIDApplication() {
+		return getGlobalProperty(RadiologyConstants.GP_DICOM_UID_APPLICATION, true);
+	}
+	
+	/**
+	 * Return DICOM UID component used to identify the UID Type Study.
+	 * 
+	 * @return dicom uid type study
+	 * @throws IllegalStateException if global property for dicom uid type study cannot be found
+	 * @should return dicom uid type study
+	 * @should throw illegal state exception if global property for dicom uid type study cannot be found
+	 */
+	public String getDicomUIDTypeStudy() {
+		return getGlobalProperty(RadiologyConstants.GP_DICOM_UID_TYPE_STUDY, true);
 	}
 	
 	/**
@@ -147,10 +157,10 @@ public class RadiologyProperties extends ModuleProperties {
 	 * Return study prefix Example: 1.2.826.0.1.3680043.8.2186.1. (With last dot)
 	 * 
 	 * @return study prefix
-	 * @should return study prefix consisting of application uid and study uid slug
+	 * @should return study prefix consisting of org root and application uid and study uid slug
 	 */
 	public String getStudyPrefix() {
-		return getDicomApplicationUID() + "." + getDicomStudyUIDSlug() + ".";
+		return this.getDicomUIDOrgRoot() + "." + this.getDicomUIDApplication() + "." + this.getDicomUIDTypeStudy() + ".";
 	}
 	
 	/**
