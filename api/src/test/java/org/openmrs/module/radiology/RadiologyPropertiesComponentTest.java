@@ -193,58 +193,82 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	}
 	
 	/**
-	 * @see RadiologyProperties#getDicomApplicationUID()
-	 * @verifies dicom application uid
+	 * @see RadiologyProperties#getDicomUIDOrgRoot()
+	 * @verifies return dicom uid org root
 	 */
 	@Test
-	public void getDicomApplicationUID_shouldDicomApplicationUid() throws Exception {
+	public void getDicomUIDOrgRoot_shouldReturnDicomUidOrgRoot() throws Exception {
 		
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_APPLICATION_UID,
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_UID_ORG_ROOT,
 				"1.2.826.0.1.3680043.8.2186"));
 		
-		assertThat(radiologyProperties.getDicomApplicationUID(), is("1.2.826.0.1.3680043.8.2186"));
+		assertThat(radiologyProperties.getDicomUIDOrgRoot(), is("1.2.826.0.1.3680043.8.2186"));
 	}
 	
 	/**
-	 * @see RadiologyProperties#getDicomApplicationUID()
-	 * @verifies throw illegal state exception if global property for dicom application uid cannot
-	 *           be found
+	 * @see RadiologyProperties#getDicomUIDOrgRoot()
+	 * @verifies throw illegal state exception if global property for dicom uid org root cannot be found
 	 */
 	@Test
-	public void getDicomApplicationUID_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomApplicationUidCannotBeFound()
+	public void getDicomUIDOrgRoot_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomUidOrgRootCannotBeFound()
 			throws Exception {
 		
 		expectedException.expect(IllegalStateException.class);
-		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_APPLICATION_UID);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_UID_ORG_ROOT);
 		
-		radiologyProperties.getDicomApplicationUID();
+		radiologyProperties.getDicomUIDOrgRoot();
 	}
 	
 	/**
-	 * @see RadiologyProperties#getDicomStudyUIDSlug()
-	 * @verifies dicom study uid slug
+	 * @see RadiologyProperties#getDicomUIDApplication()
+	 * @verifies return dicom uid application
 	 */
 	@Test
-	public void getDicomStudyUIDSlug_shouldDicomStudyUidSlug() throws Exception {
+	public void getDicomUIDApplication_shouldReturnDicomUidApplication() throws Exception {
 		
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_STUDY_UID_SLUG, "1"));
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_UID_APPLICATION, "1"));
 		
-		assertThat(radiologyProperties.getDicomStudyUIDSlug(), is("1"));
+		assertThat(radiologyProperties.getDicomUIDApplication(), is("1"));
 	}
 	
 	/**
-	 * @see RadiologyProperties#getDicomStudyUIDSlug()
-	 * @verifies throw illegal state exception if global property for dicom study uid slug cannot be
-	 *           found
+	 * @see RadiologyProperties#getDicomUIDApplication()
+	 * @verifies throw illegal state exception if global property for dicom uid application cannot be found
 	 */
 	@Test
-	public void getDicomStudyUIDSlug_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomStudyUidSlugCannotBeFound()
+	public void getDicomUIDApplication_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomUidApplicationCannotBeFound()
 			throws Exception {
 		
 		expectedException.expect(IllegalStateException.class);
-		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_STUDY_UID_SLUG);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_UID_APPLICATION);
 		
-		radiologyProperties.getDicomStudyUIDSlug();
+		radiologyProperties.getDicomUIDApplication();
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomUIDTypeStudy()
+	 * @verifies return dicom uid type study
+	 */
+	@Test
+	public void getDicomUIDTypeStudy_shouldReturnDicomUidTypeStudy() throws Exception {
+		
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_UID_TYPE_STUDY, "1"));
+		
+		assertThat(radiologyProperties.getDicomUIDTypeStudy(), is("1"));
+	}
+	
+	/**
+	 * @see RadiologyProperties#getDicomUIDTypeStudy()
+	 * @verifies throw illegal state exception if global property for dicom uid type study cannot be found
+	 */
+	@Test
+	public void getDicomUIDTypeStudy_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomUidTypeStudyCannotBeFound()
+			throws Exception {
+		
+		expectedException.expect(IllegalStateException.class);
+		expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_UID_TYPE_STUDY);
+		
+		radiologyProperties.getDicomUIDTypeStudy();
 	}
 	
 	/**
@@ -277,16 +301,17 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 	
 	/**
 	 * @see RadiologyProperties#getStudyPrefix()
-	 * @verifies return study prefix consisting of application uid and study uid slug
+	 * @verifies return study prefix consisting of org root and application uid and study uid slug
 	 */
 	@Test
 	public void getStudyPrefix_shouldReturnStudyPrefixConsistingofApplicationUidAndStudyUidSlug() {
 		
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_APPLICATION_UID,
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_UID_ORG_ROOT,
 				"1.2.826.0.1.3680043.8.2186"));
-		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_STUDY_UID_SLUG, "1"));
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_UID_APPLICATION, "1"));
+		administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_UID_TYPE_STUDY, "1"));
 		
-		assertThat(radiologyProperties.getStudyPrefix(), is("1.2.826.0.1.3680043.8.2186.1."));
+		assertThat(radiologyProperties.getStudyPrefix(), is("1.2.826.0.1.3680043.8.2186.1.1."));
 	}
 	
 	/**
