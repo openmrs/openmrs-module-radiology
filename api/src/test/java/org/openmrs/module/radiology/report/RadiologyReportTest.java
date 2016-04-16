@@ -13,6 +13,7 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
 import java.util.Calendar;
+import java.util.Date;
 
 import org.junit.Before;
 import org.junit.Rule;
@@ -103,5 +104,18 @@ public class RadiologyReportTest {
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder cannot be null");
 		radiologyReport = new RadiologyReport(null);
+	}
+
+	/**
+	 * @see RadiologyReport#RadiologyReport(RadiologyOrder)
+	 * @verifies completion date is a date and not datetime
+	 */
+	@Test
+	public void RadiologyReport_shouldHaveCompletionDateasADate() {
+
+		radiologyReport = new RadiologyReport(radiologyOrder);
+		Date date = new Date(1793425);
+		radiologyReport.setReportDate(date);
+		assertThat(radiologyReport.getReportDate().toString().contains(":"), is(false));
 	}
 }
