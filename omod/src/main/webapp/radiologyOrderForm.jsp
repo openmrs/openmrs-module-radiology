@@ -254,7 +254,16 @@
 		</c:if>
 		<c:if test="${not empty radiologyOrder}">
 			<!--  Show existing RadiologyOrder -->
-
+			<c:if test="${radiologyOrder.discontinuedRightNow}">
+				<div class="retiredMessage">
+					<div>
+						<spring:message code="radiology.isNotActiveOrder" />
+						<spring:message code="general.dateDiscontinued" />
+						<openmrs:formatDate date="${radiologyOrder.dateStopped}"
+							type="medium" />
+					</div>
+				</div>
+			</c:if>
 			<spring:hasBindErrors name="radiologyOrder">
 				<spring:message code="fix.error" />
 				<br />
@@ -330,7 +339,7 @@
 								</spring:bind></td>
 						</tr>
 						<tr>
-								<form:hidden path="dateActivated" />
+							<form:hidden path="dateActivated" />
 						</tr>
 						<tr>
 							<td><spring:message code="general.discontinuedReason" /></td>
