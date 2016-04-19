@@ -23,12 +23,28 @@ import org.springframework.validation.Validator;
 @Component
 public class RadiologyReportValidator implements Validator {
 	
+	/** Log for this class and subclasses */
 	protected final Log log = LogFactory.getLog(getClass());
 	
+	/**
+	 * Determines if the command object being submitted is a valid type
+	 *
+	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
+	 * @should return true for RadiologyReport objects
+	 * @should return false for other object types
+	 */
 	public boolean supports(Class c) {
 		return RadiologyReport.class.isAssignableFrom(c);
 	}
 	
+	/**
+	 * Checks the form object for any inconsistencies/errors
+	 *
+	 * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
+	 * @should fail validation if radiologyReport is null
+	 * @should fail validation if principalResultsInterpreter is empty or whitespace
+	 * @should pass validation if all fields are correct
+	 */
 	public void validate(Object obj, Errors errors) {
 		RadiologyReport radiologyReport = (RadiologyReport) obj;
 		if (radiologyReport == null) {
