@@ -35,7 +35,8 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.study.RadiologyStudyService;
+import org.openmrs.module.radiology.study.Study;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.springframework.beans.TypeMismatchException;
@@ -60,6 +61,9 @@ public class PortletsControllerTest extends BaseContextMockTest {
 	
 	@Mock
 	private PatientService patientService;
+	
+	@Mock
+	private RadiologyStudyService radiologyStudyService;
 	
 	@Mock
 	private RadiologyService radiologyService;
@@ -87,7 +91,7 @@ public class PortletsControllerTest extends BaseContextMockTest {
 		mockPatient3 = RadiologyTestData.getMockPatient3();
 		
 		when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
-		when(radiologyService.getStudiesByRadiologyOrders(mockRadiologyOrders)).thenReturn(mockStudies);
+		when(radiologyStudyService.getStudiesByRadiologyOrders(mockRadiologyOrders)).thenReturn(mockStudies);
 		when(radiologyService.getRadiologyOrdersByPatients(patientService.getPatients(""))).thenReturn(mockRadiologyOrders);
 		when(radiologyService.getRadiologyOrdersByPatients(Arrays.asList(mockPatient1))).thenReturn(
 			Arrays.asList(mockRadiologyOrder1));

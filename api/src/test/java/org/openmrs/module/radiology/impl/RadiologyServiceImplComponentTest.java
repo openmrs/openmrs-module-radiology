@@ -37,14 +37,11 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.VisitService;
 import org.openmrs.module.emrapi.encounter.EmrEncounterService;
-import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
-import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
-import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.db.StudyDAO;
+import org.openmrs.module.radiology.study.RadiologyStudyService;
+import org.openmrs.module.radiology.study.Study;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -58,10 +55,6 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	private static final int PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER_AND_NO_ACTIVE_VISIT = 70011;
 	
 	private static final int PATIENT_ID_WITH_NO_RADIOLOGY_ORDER_AND_NO_EXISTIG_ENCOUNTER_AND_ACTIVE_VISIT = 70033;
-	
-	private static final int RADIOLOGY_ORDER_ID_WITHOUT_STUDY = 2004;
-	
-	private static final int EXISTING_STUDY_ID = 1;
 	
 	private static final int NON_EXISTING_STUDY_ID = 99999;
 	
@@ -88,17 +81,12 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	private RadiologyServiceImpl radiologyServiceImpl = null;
 	
 	@Autowired
-	private RadiologyService radiologyService;
+	private RadiologyStudyService radiologyStudyService;
 	
 	@Autowired
 	private RadiologyProperties radiologyProperties;
 	
-	@Autowired
-	private StudyDAO studyDAO;
-	
 	private Method saveRadiologyOrderEncounterMethod = null;
-	
-	private Method saveStudyMethod = null;
 	
 	private Method updateStudyMwlStatusMethod;
 	
@@ -110,6 +98,9 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		
 		if (radiologyServiceImpl == null) {
 			radiologyServiceImpl = new RadiologyServiceImpl();
+			Field radiologyStudyServiceField = RadiologyServiceImpl.class.getDeclaredField("radiologyStudyService");
+			radiologyStudyServiceField.setAccessible(true);
+			radiologyStudyServiceField.set(radiologyServiceImpl, radiologyStudyService);
 			Field orderServiceField = RadiologyServiceImpl.class.getDeclaredField("orderService");
 			orderServiceField.setAccessible(true);
 			orderServiceField.set(radiologyServiceImpl, orderService);
@@ -119,17 +110,10 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 			Field emrEncounterServiceField = RadiologyServiceImpl.class.getDeclaredField("emrEncounterService");
 			emrEncounterServiceField.setAccessible(true);
 			emrEncounterServiceField.set(radiologyServiceImpl, emrEncounterService);
-			Field studyDAOField = RadiologyServiceImpl.class.getDeclaredField("studyDAO");
-			studyDAOField.setAccessible(true);
-			studyDAOField.set(radiologyServiceImpl, studyDAO);
 			Field radiologyPropertiesField = RadiologyServiceImpl.class.getDeclaredField("radiologyProperties");
 			radiologyPropertiesField.setAccessible(true);
 			radiologyPropertiesField.set(radiologyServiceImpl, radiologyProperties);
 		}
-		
-		saveStudyMethod = RadiologyServiceImpl.class.getDeclaredMethod("saveStudy",
-			new Class[] { org.openmrs.module.radiology.Study.class });
-		saveStudyMethod.setAccessible(true);
 		
 		updateStudyMwlStatusMethod = RadiologyServiceImpl.class.getDeclaredMethod("updateStudyMwlStatus", new Class[] {
 				RadiologyOrder.class, boolean.class });
@@ -140,62 +124,6 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		saveRadiologyOrderEncounterMethod.setAccessible(true);
 		
 		executeDataSet(STUDIES_TEST_DATASET);
-	}
-	
-	/**
-	 * @see RadiologyServiceImpl#saveStudy(Study)
-	 * @verifies create new study from given study object
-	 */
-	@Test
-	public void saveStudy_shouldCreateNewStudyFromGivenStudyObject() throws Exception {
-		
-		Study radiologyStudy = getUnsavedStudy();
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
-		radiologyOrder.setStudy(radiologyStudy);
-		
-		Study createdStudy = (Study) saveStudyMethod.invoke(radiologyServiceImpl, new Object[] { radiologyStudy });
-		
-		assertNotNull(createdStudy);
-		assertThat(createdStudy, is(radiologyStudy));
-		assertThat(createdStudy.getStudyId(), is(radiologyStudy.getStudyId()));
-		assertNotNull(createdStudy.getStudyInstanceUid());
-		assertThat(createdStudy.getStudyInstanceUid(), is(radiologyProperties.getStudyPrefix() + createdStudy.getStudyId()));
-		assertThat(createdStudy.getModality(), is(radiologyStudy.getModality()));
-		assertThat(createdStudy.getRadiologyOrder(), is(radiologyStudy.getRadiologyOrder()));
-	}
-	
-	/**
-	 * Convenience method to get a Study object with all required values filled (except
-	 * radiologyOrder) in but which is not yet saved in the database
-	 * 
-	 * @return Study object that can be saved to the database
-	 */
-	public Study getUnsavedStudy() {
-		
-		Study study = new Study();
-		study.setModality(Modality.CT);
-		study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
-		return study;
-	}
-	
-	/**
-	 * @see RadiologyServiceImpl#saveStudy(Study)
-	 * @verifies update existing study
-	 */
-	@Test
-	public void saveStudy_shouldUpdateExistingStudy() throws Exception {
-		
-		Study existingStudy = radiologyServiceImpl.getStudyByStudyId(EXISTING_STUDY_ID);
-		Modality modalityPreUpdate = existingStudy.getModality();
-		Modality modalityPostUpdate = Modality.XA;
-		existingStudy.setModality(modalityPostUpdate);
-		
-		Study updatedStudy = (Study) saveStudyMethod.invoke(radiologyServiceImpl, new Object[] { existingStudy });
-		
-		assertNotNull(updatedStudy);
-		assertThat(updatedStudy, is(existingStudy));
-		assertThat(modalityPreUpdate, is(not(modalityPostUpdate)));
-		assertThat(updatedStudy.getModality(), is(modalityPostUpdate));
 	}
 	
 	/**
@@ -216,7 +144,7 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		assertThat(radiologyOrder.getStudy()
 				.getMwlStatus(), is(MwlStatus.IN_SYNC));
 		
-		Study updatedStudy = radiologyServiceImpl.getStudyByStudyId(radiologyOrder.getStudy()
+		Study updatedStudy = radiologyStudyService.getStudyByStudyId(radiologyOrder.getStudy()
 				.getStudyId());
 		assertThat(updatedStudy.getMwlStatus(), is(radiologyOrder.getStudy()
 				.getMwlStatus()));
@@ -240,7 +168,7 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		assertThat(radiologyOrder.getStudy()
 				.getMwlStatus(), is(MwlStatus.OUT_OF_SYNC));
 		
-		Study updatedStudy = radiologyServiceImpl.getStudyByStudyId(radiologyOrder.getStudy()
+		Study updatedStudy = radiologyStudyService.getStudyByStudyId(radiologyOrder.getStudy()
 				.getStudyId());
 		assertThat(updatedStudy.getMwlStatus(), is(radiologyOrder.getStudy()
 				.getMwlStatus()));

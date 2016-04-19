@@ -20,8 +20,8 @@ import org.junit.rules.ExpectedException;
 import org.openmrs.Order;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.hl7.HL7Constants;
+import org.openmrs.module.radiology.study.Study;
 import org.openmrs.test.Verifies;
 
 import ca.uhn.hl7v2.HL7Exception;

@@ -27,17 +27,14 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.emrapi.encounter.EmrEncounterService;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.radiology.MwlStatus;
-import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
-import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
-import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
-import org.openmrs.module.radiology.db.StudyDAO;
 import org.openmrs.module.radiology.hl7.util.HL7Sender;
 import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
 import org.openmrs.module.radiology.hl7.v231.message.RadiologyORMO01;
+import org.openmrs.module.radiology.study.RadiologyStudyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -51,7 +48,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	private RadiologyOrderDAO radiologyOrderDAO;
 	
 	@Autowired
-	private StudyDAO studyDAO;
+	private RadiologyStudyService radiologyStudyService;
 	
 	@Autowired
 	private OrderService orderService;
@@ -97,7 +94,7 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		orderContext.setOrderType(radiologyProperties.getRadiologyTestOrderType());
 		
 		final RadiologyOrder result = (RadiologyOrder) orderService.saveOrder(radiologyOrder, orderContext);
-		saveStudy(result.getStudy());
+		this.radiologyStudyService.saveStudy(result.getStudy());
 		return result;
 	}
 	
@@ -132,40 +129,6 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		
 		return this.encounterService.getEncounterByUuid(this.emrEncounterService.save(encounterTransaction)
 				.getEncounterUuid());
-	}
-	
-	/**
-	 * <p>
-	 * Save the given <code>Study</code> to the database
-	 * </p>
-	 * Additionally, study and study.order information are written into a DICOM xml file.
-	 * 
-	 * @param study study to be created or updated
-	 * @return study who was created or updated
-	 * @should create new study from given study object
-	 * @should update existing study
-	 */
-	@Transactional
-	private Study saveStudy(Study study) {
-		
-		final RadiologyOrder order = study.getRadiologyOrder();
-		
-		if (study.getScheduledStatus() == null && order.getScheduledDate() != null) {
-			study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
-		}
-		
-		try {
-			Study savedStudy = studyDAO.saveStudy(study);
-			final String studyInstanceUid = radiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
-			savedStudy.setStudyInstanceUid(studyInstanceUid);
-			savedStudy = studyDAO.saveStudy(savedStudy);
-			return savedStudy;
-		}
-		catch (Exception e) {
-			log.error(e.getMessage(), e);
-			log.warn("Can not save study in openmrs or dmc4che.");
-		}
-		return null;
 	}
 	
 	/**
@@ -246,27 +209,6 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	}
 	
 	/**
-	 * @see RadiologyService#updateStudyPerformedStatus(String, PerformedProcedureStepStatus)
-	 */
-	@Transactional
-	@Override
-	public Study updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus)
-			throws IllegalArgumentException {
-		
-		if (studyInstanceUid == null) {
-			throw new IllegalArgumentException("studyInstanceUid is required");
-		}
-		
-		if (performedStatus == null) {
-			throw new IllegalArgumentException("performedStatus is required");
-		}
-		
-		final Study studyToBeUpdated = studyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
-		studyToBeUpdated.setPerformedStatus(performedStatus);
-		return studyDAO.saveStudy(studyToBeUpdated);
-	}
-	
-	/**
 	 * @see RadiologyService#placeRadiologyOrderInPacs(RadiologyOrder)
 	 */
 	@Transactional
@@ -336,54 +278,6 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		
 		radiologyOrder.getStudy()
 				.setMwlStatus(mwlStatus);
-		saveStudy(radiologyOrder.getStudy());
-	}
-	
-	/**
-	 * @see RadiologyService#getStudyByStudyId(Integer)
-	 */
-	@Transactional(readOnly = true)
-	@Override
-	public Study getStudyByStudyId(Integer studyId) {
-		return studyDAO.getStudyByStudyId(studyId);
-	}
-	
-	/**
-	 * @see RadiologyService#getStudyByOrderId(Integer)
-	 */
-	@Transactional(readOnly = true)
-	@Override
-	public Study getStudyByOrderId(Integer orderId) {
-		if (orderId == null) {
-			throw new IllegalArgumentException("orderId is required");
-		}
-		
-		return studyDAO.getStudyByOrderId(orderId);
-	}
-	
-	/**
-	 * @see RadiologyService#getStudyByStudyInstanceUid(String)
-	 */
-	@Transactional(readOnly = true)
-	public Study getStudyByStudyInstanceUid(String studyInstanceUid) {
-		if (studyInstanceUid == null) {
-			throw new IllegalArgumentException("studyInstanceUid is required");
-		}
-		
-		return studyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
-	}
-	
-	/**
-	 * @see RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
-	 */
-	@Override
-	@Transactional(readOnly = true)
-	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
-		if (radiologyOrders == null) {
-			throw new IllegalArgumentException("radiologyOrders are required");
-		}
-		
-		final List<Study> result = studyDAO.getStudiesByRadiologyOrders(radiologyOrders);
-		return result;
+		this.radiologyStudyService.saveStudy(radiologyOrder.getStudy());
 	}
 }

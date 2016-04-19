@@ -10,6 +10,7 @@
 package org.openmrs.module.radiology;
 
 import org.openmrs.TestOrder;
+import org.openmrs.module.radiology.study.Study;
 
 /**
  * RadiologyOrder represents a radiology examination
