@@ -12,9 +12,9 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Order;
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.report.RadiologyReport;
+import org.openmrs.module.radiology.report.RadiologyReportService;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
@@ -24,7 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 	
 	@Mock
-	private RadiologyService radiologyService;
+	private RadiologyReportService radiologyReportService;
 	
 	@Mock
 	private DicomWebViewer dicomWebViewer;
@@ -43,7 +43,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
 		RadiologyOrder mockRadiologyOrder = mockRadiologyReport.getRadiologyOrder();
 		
-		when(radiologyService.createAndClaimRadiologyReport(mockRadiologyOrder)).thenReturn(mockRadiologyReport);
+		when(radiologyReportService.createAndClaimRadiologyReport(mockRadiologyOrder)).thenReturn(mockRadiologyReport);
 		when(dicomWebViewer.getDicomViewerUrl(mockRadiologyOrder.getStudy())).thenReturn(
 			"http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
 		
@@ -87,7 +87,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		// given
 		RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
 		
-		when(radiologyService.getRadiologyReportByRadiologyReportId(mockRadiologyReport.getId())).thenReturn(
+		when(radiologyReportService.getRadiologyReportByRadiologyReportId(mockRadiologyReport.getId())).thenReturn(
 			mockRadiologyReport);
 		when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
 				.getStudy())).thenReturn(
@@ -187,7 +187,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		BindingResult reportErrors = mock(BindingResult.class);
 		
 		when(
-			radiologyService.completeRadiologyReport(mockRadiologyReport,
+			radiologyReportService.completeRadiologyReport(mockRadiologyReport,
 				mockRadiologyReport.getPrincipalResultsInterpreter())).thenReturn(mockCompletedRadiologyReport);
 		
 		ModelAndView modelAndView = radiologyReportFormController.completeRadiologyReport(mockRadiologyReport, reportErrors);

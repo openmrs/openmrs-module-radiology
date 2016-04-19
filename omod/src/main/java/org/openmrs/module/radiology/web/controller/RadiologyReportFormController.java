@@ -12,10 +12,10 @@ package org.openmrs.module.radiology.web.controller;
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.report.RadiologyReport;
-import org.openmrs.module.radiology.validator.RadiologyReportValidator;
+import org.openmrs.module.radiology.report.RadiologyReportService;
+import org.openmrs.module.radiology.report.RadiologyReportValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -34,7 +34,7 @@ public class RadiologyReportFormController {
 	private static final String RADIOLOGY_REPORT_FORM_VIEW = "/module/radiology/radiologyReportForm";
 	
 	@Autowired
-	private RadiologyService radiologyService;
+	private RadiologyReportService radiologyReportService;
 	
 	@Autowired
 	private DicomWebViewer dicomWebViewer;
@@ -54,7 +54,7 @@ public class RadiologyReportFormController {
 		
 		if (Context.isAuthenticated()) {
 			
-			RadiologyReport radiologyReport = radiologyService.createAndClaimRadiologyReport(radiologyOrder);
+			RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
 			modelAndView = new ModelAndView("redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?radiologyReportId="
 					+ radiologyReport.getId());
 			
@@ -80,7 +80,7 @@ public class RadiologyReportFormController {
 		
 		if (Context.isAuthenticated()) {
 			
-			RadiologyReport radiologyReport = radiologyService.getRadiologyReportByRadiologyReportId(radiologyReportId);
+			RadiologyReport radiologyReport = radiologyReportService.getRadiologyReportByRadiologyReportId(radiologyReportId);
 			
 			addObjectsToModelAndView(modelAndView, radiologyReport);
 			return modelAndView;
@@ -100,7 +100,7 @@ public class RadiologyReportFormController {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
-			radiologyService.saveRadiologyReport(radiologyReport);
+			radiologyReportService.saveRadiologyReport(radiologyReport);
 			
 			addObjectsToModelAndView(modelAndView, radiologyReport);
 			return modelAndView;
@@ -121,7 +121,7 @@ public class RadiologyReportFormController {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
-			radiologyService.unclaimRadiologyReport(radiologyReport);
+			radiologyReportService.unclaimRadiologyReport(radiologyReport);
 			return new ModelAndView("redirect:" + RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING
 					+ "?orderId=" + radiologyReport.getRadiologyOrder()
 							.getOrderId());
@@ -150,7 +150,7 @@ public class RadiologyReportFormController {
 				return modelAndView;
 			}
 			
-			final RadiologyReport completedRadiologyReport = radiologyService.completeRadiologyReport(radiologyReport,
+			final RadiologyReport completedRadiologyReport = radiologyReportService.completeRadiologyReport(radiologyReport,
 				radiologyReport.getPrincipalResultsInterpreter());
 			addObjectsToModelAndView(modelAndView, completedRadiologyReport);
 			return modelAndView;

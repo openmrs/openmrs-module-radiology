@@ -41,6 +41,7 @@ import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.report.RadiologyReport;
+import org.openmrs.module.radiology.report.RadiologyReportService;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
@@ -61,6 +62,9 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	
 	@Mock
 	private RadiologyService radiologyService;
+	
+	@Mock
+	private RadiologyReportService radiologyReportService;
 	
 	@Mock
 	private RadiologyProperties radiologyProperties;
@@ -615,7 +619,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		completedRadiologyOrderWithClaimedReport.getStudy()
 				.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		
-		when(radiologyService.getActiveRadiologyReportByRadiologyOrder(completedRadiologyOrderWithClaimedReport)).thenReturn(
+		when(radiologyReportService.getActiveRadiologyReportByRadiologyOrder(completedRadiologyOrderWithClaimedReport)).thenReturn(
 			claimedReport);
 		
 		final boolean result = (Boolean) radiologyReportNeedsToBeCreatedMethod.invoke(radiologyOrderFormController,
@@ -645,7 +649,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		completedRadiologyOrderWithCompletedReport.getStudy()
 				.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		
-		when(radiologyService.getActiveRadiologyReportByRadiologyOrder(completedRadiologyOrderWithCompletedReport)).thenReturn(
+		when(radiologyReportService.getActiveRadiologyReportByRadiologyOrder(completedRadiologyOrderWithCompletedReport)).thenReturn(
 			completedReport);
 		
 		final boolean result = (Boolean) radiologyReportNeedsToBeCreatedMethod.invoke(radiologyOrderFormController,
@@ -672,7 +676,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		completedRadiologyOrderWithNoClaimedReport.getStudy()
 				.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		
-		when(radiologyService.getActiveRadiologyReportByRadiologyOrder(completedRadiologyOrderWithNoClaimedReport)).thenReturn(
+		when(radiologyReportService.getActiveRadiologyReportByRadiologyOrder(completedRadiologyOrderWithNoClaimedReport)).thenReturn(
 			null);
 		
 		final boolean result = (Boolean) radiologyReportNeedsToBeCreatedMethod.invoke(radiologyOrderFormController,

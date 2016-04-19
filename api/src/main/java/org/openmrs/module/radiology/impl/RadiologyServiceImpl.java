@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.radiology.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -35,13 +34,10 @@ import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.db.RadiologyOrderDAO;
-import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
 import org.openmrs.module.radiology.hl7.util.HL7Sender;
 import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
 import org.openmrs.module.radiology.hl7.v231.message.RadiologyORMO01;
-import org.openmrs.module.radiology.report.RadiologyReport;
-import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,9 +64,6 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 	
 	@Autowired
 	private RadiologyProperties radiologyProperties;
-	
-	@Autowired
-	private RadiologyReportDAO radiologyReportDAO;
 	
 	/**
 	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
@@ -392,164 +385,5 @@ class RadiologyServiceImpl extends BaseOpenmrsService implements RadiologyServic
 		
 		final List<Study> result = studyDAO.getStudiesByRadiologyOrders(radiologyOrders);
 		return result;
-	}
-	
-	/**
-	 * @see RadiologyService#createAndClaimRadiologyReport(RadiologyOrder)
-	 */
-	@Transactional
-	@Override
-	public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder) throws IllegalArgumentException,
-			UnsupportedOperationException {
-		if (radiologyOrder == null) {
-			throw new IllegalArgumentException("radiologyOrder cannot be null");
-		}
-		if (radiologyOrder.isNotCompleted()) {
-			throw new IllegalArgumentException("radiologyOrder needs to be completed");
-		}
-		if (radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyOrder)) {
-			throw new UnsupportedOperationException(
-					"cannot create radiologyReport for this radiologyOrder because it is already completed");
-		}
-		if (radiologyReportDAO.hasRadiologyOrderClaimedRadiologyReport(radiologyOrder)) {
-			throw new UnsupportedOperationException(
-					"cannot create radiologyReport for this radiologyOrder because it is already claimed");
-		}
-		final RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
-		return radiologyReportDAO.saveRadiologyReport(radiologyReport);
-	}
-	
-	/**
-	 * @see RadiologyService#saveRadiologyReport(RadiologyReport)
-	 */
-	@Transactional
-	@Override
-	public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
-			UnsupportedOperationException {
-		if (radiologyReport == null) {
-			throw new IllegalArgumentException("radiologyReport cannot be null");
-		}
-		if (radiologyReport.getReportStatus() == null) {
-			throw new IllegalArgumentException("radiologyReportStatus cannot be null");
-		}
-		if (radiologyReport.getReportStatus() == RadiologyReportStatus.DISCONTINUED) {
-			throw new UnsupportedOperationException("a discontinued radiologyReport cannot be saved");
-		}
-		if (radiologyReport.getReportStatus() == RadiologyReportStatus.COMPLETED) {
-			throw new UnsupportedOperationException("a completed radiologyReport cannot be saved");
-		}
-		return radiologyReportDAO.saveRadiologyReport(radiologyReport);
-	}
-	
-	/**
-	 * @see RadiologyService#unclaimRadiologyReport(RadiologyReport)
-	 */
-	@Transactional
-	@Override
-	public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
-			UnsupportedOperationException {
-		if (radiologyReport == null) {
-			throw new IllegalArgumentException("radiologyReport cannot be null");
-		}
-		if (radiologyReport.getReportStatus() == null) {
-			throw new IllegalArgumentException("radiologyReportStatus cannot be null");
-		}
-		if (radiologyReport.getReportStatus() == RadiologyReportStatus.DISCONTINUED) {
-			throw new UnsupportedOperationException("a discontinued radiologyReport cannot be unclaimed");
-		}
-		if (radiologyReport.getReportStatus() == RadiologyReportStatus.COMPLETED) {
-			throw new UnsupportedOperationException("a completed radiologyReport cannot be unclaimed");
-		}
-		radiologyReport.setReportStatus(RadiologyReportStatus.DISCONTINUED);
-		return radiologyReportDAO.saveRadiologyReport(radiologyReport);
-	}
-	
-	/**
-	 * @see RadiologyService#completeRadiologyReport(RadiologyReport, Provider)
-	 */
-	@Override
-	public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter)
-			throws IllegalArgumentException, UnsupportedOperationException {
-		if (radiologyReport == null) {
-			throw new IllegalArgumentException("radiologyReport cannot be null");
-		}
-		if (principalResultsInterpreter == null) {
-			throw new IllegalArgumentException("principalResultsInterpreter cannot be null");
-		}
-		if (radiologyReport.getReportStatus() == null) {
-			throw new IllegalArgumentException("radiologyReportStatus cannot be null");
-		}
-		if (radiologyReport.getReportStatus() == RadiologyReportStatus.DISCONTINUED) {
-			throw new UnsupportedOperationException("a discontinued radiologyReport cannot be completed");
-		}
-		if (radiologyReport.getReportStatus() == RadiologyReportStatus.COMPLETED) {
-			throw new UnsupportedOperationException("a completed radiologyReport cannot be completed");
-		}
-		radiologyReport.setReportDate(new Date());
-		radiologyReport.setPrincipalResultsInterpreter(principalResultsInterpreter);
-		radiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
-		return radiologyReportDAO.saveRadiologyReport(radiologyReport);
-	}
-	
-	/**
-	 * @see RadiologyService#getRadiologyReportByRadiologyReportId(Integer)
-	 */
-	@Transactional
-	@Override
-	public RadiologyReport getRadiologyReportByRadiologyReportId(Integer radiologyReportId) throws IllegalArgumentException {
-		if (radiologyReportId == null) {
-			throw new IllegalArgumentException("radiologyReportId cannot be null");
-		}
-		return radiologyReportDAO.getRadiologyReportById(radiologyReportId);
-	}
-	
-	/**
-	 * @see RadiologyService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder, RadiologyReportStatus)
-	 */
-	public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder radiologyOrder,
-			RadiologyReportStatus radiologyReportStatus) throws IllegalArgumentException {
-		if (radiologyOrder == null) {
-			throw new IllegalArgumentException("radiologyOrder cannot be null");
-		}
-		if (radiologyReportStatus == null) {
-			throw new IllegalArgumentException("radiologyReportStatus cannot be null");
-		}
-		return radiologyReportDAO.getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder,
-			radiologyReportStatus)
-				.size() > 0 ? radiologyReportDAO.getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder,
-			radiologyReportStatus) : new ArrayList<RadiologyReport>();
-	}
-	
-	/**
-	 * @see RadiologyService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
-	 */
-	public boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder) {
-		return radiologyOrder == null ? false : radiologyReportDAO.hasRadiologyOrderClaimedRadiologyReport(radiologyOrder);
-	}
-	
-	/**
-	 * @see RadiologyService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
-	 */
-	public boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder) {
-		if (radiologyOrder == null) {
-			throw new IllegalArgumentException("radiologyOrder cannot be null");
-		}
-		return radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyOrder) ? true : false;
-	}
-	
-	/**
-	 * @see RadiologyService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
-	 */
-	public RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder) {
-		if (radiologyOrder == null) {
-			throw new IllegalArgumentException("radiologyOrder cannot be null");
-		}
-		if (hasRadiologyOrderCompletedRadiologyReport(radiologyOrder)) {
-			return radiologyReportDAO.getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
-		}
-		if (hasRadiologyOrderClaimedRadiologyReport(radiologyOrder)) {
-			return radiologyReportDAO.getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
-		}
-		return null;
 	}
 }

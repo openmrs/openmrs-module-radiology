@@ -7,28 +7,25 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.db.hibernate;
+package org.openmrs.module.radiology.report;
 
 import java.util.List;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.db.RadiologyReportDAO;
-import org.openmrs.module.radiology.report.RadiologyReport;
-import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
  * Hibernate specific RadiologyReport related functions. This class should not be used directly. All
- * calls should go through the {@link org.openmrs.module.radiology.RadiologyService} methods.
+ * calls should go through the {@link org.openmrs.module.radiology.report.RadiologyReportService} methods.
  *
- * @see org.openmrs.module.radiology.db.RadiologyReportDAO
- * @see org.openmrs.module.radiology.RadiologyService
+ * @see org.openmrs.module.radiology.report.RadiologyReportDAO
+ * @see org.openmrs.module.radiology.report.RadiologyReportService
  */
 @Repository
-public class HibernateRadiologyReportDAO implements RadiologyReportDAO {
+class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -43,7 +40,7 @@ public class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportByRadiologyReportId(Integer)
 	 */
 	@Override
 	public RadiologyReport getRadiologyReportById(Integer radiologyReportId) {
@@ -52,7 +49,7 @@ public class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#saveRadiologyReport(RadiologyReport)
+	 * @see org.openmrs.module.radiology.report.RadiologyReportService#saveRadiologyReport(RadiologyReport)
 	 */
 	@Override
 	public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) {
@@ -62,7 +59,7 @@ public class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
+	 * @see org.openmrs.module.radiology.report.RadiologyReportService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
 	 *      (RadiologyReport)
 	 */
 	@Override
@@ -76,7 +73,7 @@ public class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.db.RadiologyReportDAO#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
+	 * @see org.openmrs.module.radiology.report.RadiologyReportService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
 	 */
 	public boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder) {
 		final List<RadiologyReport> radiologyReports = sessionFactory.getCurrentSession()
@@ -88,7 +85,7 @@ public class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.db.RadiologyReportDAO#getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(RadiologyOrder,
+	 * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder,
 	 *      RadiologyReportStatus)
 	 */
 	@Override
@@ -102,7 +99,7 @@ public class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
+	 * @see org.openmrs.module.radiology.report.RadiologyReportService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
 	 */
 	@Override
 	public RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder) {

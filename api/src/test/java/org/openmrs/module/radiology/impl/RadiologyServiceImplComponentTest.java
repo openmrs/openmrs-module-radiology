@@ -44,7 +44,6 @@ import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.db.RadiologyReportDAO;
 import org.openmrs.module.radiology.db.StudyDAO;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -97,9 +96,6 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	@Autowired
 	private StudyDAO studyDAO;
 	
-	@Autowired
-	private RadiologyReportDAO radiologyReportDAO;
-	
 	private Method saveRadiologyOrderEncounterMethod = null;
 	
 	private Method saveStudyMethod = null;
@@ -126,9 +122,6 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 			Field studyDAOField = RadiologyServiceImpl.class.getDeclaredField("studyDAO");
 			studyDAOField.setAccessible(true);
 			studyDAOField.set(radiologyServiceImpl, studyDAO);
-			Field radiologyReportDAOField = RadiologyServiceImpl.class.getDeclaredField("radiologyReportDAO");
-			radiologyReportDAOField.setAccessible(true);
-			radiologyReportDAOField.set(radiologyServiceImpl, radiologyReportDAO);
 			Field radiologyPropertiesField = RadiologyServiceImpl.class.getDeclaredField("radiologyProperties");
 			radiologyPropertiesField.setAccessible(true);
 			radiologyPropertiesField.set(radiologyServiceImpl, radiologyProperties);
