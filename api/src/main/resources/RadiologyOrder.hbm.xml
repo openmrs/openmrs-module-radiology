@@ -3,7 +3,7 @@
 
 <hibernate-mapping package="org.openmrs.module.radiology">
 
-	<joined-subclass name="org.openmrs.module.radiology.RadiologyOrder"
+	<joined-subclass name="org.openmrs.module.radiology.order.RadiologyOrder"
 		extends="org.openmrs.TestOrder" table="radiology_order" lazy="false">
 		<key column="order_id" not-null="true" on-delete="cascade" />
 

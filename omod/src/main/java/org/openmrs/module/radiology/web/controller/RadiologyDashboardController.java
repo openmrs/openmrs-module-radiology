@@ -12,8 +12,8 @@ package org.openmrs.module.radiology.web.controller;
 import java.util.List;
 
 import org.openmrs.Patient;
-import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.RadiologyService;
+import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -24,7 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class RadiologyDashboardController {
 	
 	@Autowired
-	RadiologyService radiologyService;
+	RadiologyOrderService radiologyOrderService;
 	
 	/**
 	 * Get all orders for given patient
@@ -39,7 +39,7 @@ public class RadiologyDashboardController {
 		
 		ModelAndView modelAndView = new ModelAndView("/module/radiology/portlets/radiologyDashboardTab");
 		
-		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatient(patient);
+		List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrdersByPatient(patient);
 		modelAndView.addObject("radiologyOrders", radiologyOrders);
 		return modelAndView;
 	}

@@ -33,10 +33,10 @@ import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
-import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
+import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -45,7 +45,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensitiveTest {
 	
-	private static final String STUDIES_TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyStudyServiceComponentTestDataset.xml";
+	private static final String TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyStudyServiceComponentTestDataset.xml";
 	
 	private static final int PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER = 70021;
 	
@@ -67,7 +67,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	private PatientService patientService;
 	
 	@Autowired
-	private RadiologyService radiologyService;
+	private RadiologyOrderService radiologyOrderService;
 	
 	@Autowired
 	private RadiologyStudyService radiologyStudyService;
@@ -98,7 +98,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	
 	@Before
 	public void runBeforeAllTests() throws Exception {
-		executeDataSet(STUDIES_TEST_DATASET);
+		executeDataSet(TEST_DATASET);
 	}
 	
 	/**
@@ -109,7 +109,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	public void saveStudy_shouldCreateNewStudyFromGivenStudyObject() throws Exception {
 		
 		Study radiologyStudy = getUnsavedStudy();
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
+		RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
 		radiologyOrder.setStudy(radiologyStudy);
 		
 		Study createdStudy = radiologyStudyService.saveStudy(radiologyStudy);
@@ -263,7 +263,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	public void getStudiesByRadiologyOrders_shouldFetchAllStudiesForGivenRadiologyOrders() throws Exception {
 		
 		Patient patient = patientService.getPatient(PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER);
-		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatient(patient);
+		List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrdersByPatient(patient);
 		
 		List<Study> studies = radiologyStudyService.getStudiesByRadiologyOrders(radiologyOrders);
 		
@@ -282,7 +282,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	public void getStudiesByRadiologyOrders_shouldReturnEmptyListGivenRadiologyOrdersWithoutAssociatedStudies()
 			throws Exception {
 		
-		RadiologyOrder radiologyOrderWithoutStudy = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
+		RadiologyOrder radiologyOrderWithoutStudy = radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
 		List<RadiologyOrder> radiologyOrders = Arrays.asList(radiologyOrderWithoutStudy);
 		
 		List<Study> studies = radiologyStudyService.getStudiesByRadiologyOrders(radiologyOrders);

@@ -279,4 +279,12 @@
 			<column name="uuid" value="fe898a34-1ade-11e1-9c71-00248140a5eb" />
 		</insert>
 	</changeSet>
+	<changeSet id="radiology-24" author="teleivo">
+		<comment>Change RadiologyOrder's package</comment>
+		<update tableName="order_type">
+			<column name="java_class_name"
+				value="org.openmrs.module.radiology.order.RadiologyOrder" />
+			<where>uuid = 'dbdb9a9b-56ea-11e5-a47f-08002719a237'</where>
+		</update>
+	</changeSet>
 </databaseChangeLog>

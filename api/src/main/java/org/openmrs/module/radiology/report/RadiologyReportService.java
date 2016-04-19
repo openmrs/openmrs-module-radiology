@@ -13,7 +13,7 @@ import java.util.List;
 
 import org.openmrs.Provider;
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.radiology.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional

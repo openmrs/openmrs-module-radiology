@@ -19,10 +19,10 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Order;
-import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
 import org.openmrs.module.radiology.hl7.v231.code.PriorityComponent;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.test.Verifies;
 
 import ca.uhn.hl7v2.HL7Exception;

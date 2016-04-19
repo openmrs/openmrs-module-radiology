@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.validator;
+package org.openmrs.module.radiology.order;
 
 import java.util.Date;
 
@@ -16,7 +16,6 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
 import org.openmrs.Order;
 import org.openmrs.annotation.Handler;
-import org.openmrs.module.radiology.RadiologyOrder;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -75,7 +74,7 @@ public class RadiologyOrderValidator implements Validator {
 			ValidationUtils.rejectIfEmpty(errors, "action", "error.null");
 			// Order.encounter and
 			// Order.orderType
-			// have not null constraint as well, but are set in RadiologyService.saveRadiologyOrder
+			// have not null constraint as well, but are set in RadiologyOrderService.saveRadiologyOrder
 			validateDateActivated(radiologyOrder, errors);
 			validateScheduledDate(radiologyOrder, errors);
 		}

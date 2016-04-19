@@ -37,7 +37,7 @@
   <visit_type visit_type_id="3" name="Radiology Order Visit" description="Visit type for radiology orders" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="fe898a34-1ade-11e1-9c71-00248140a5eb"/>
 
   <!-- radiology order type -->
-  <order_type order_type_id="5" name="Radiology Order" java_class_name="org.openmrs.module.radiology.RadiologyOrder" description="Order type for radiology exams" creator="1" date_created="2015-09-09" retired="0" uuid="dbdb9a9b-56ea-11e5-a47f-08002719a237"/>
+  <order_type order_type_id="5" name="Radiology Order" java_class_name="org.openmrs.module.radiology.order.RadiologyOrder" description="Order type for radiology exams" creator="1" date_created="2015-09-09" retired="0" uuid="dbdb9a9b-56ea-11e5-a47f-08002719a237"/>
 
   <!-- patient, radiology order, radiology study, radiology report data -->
 

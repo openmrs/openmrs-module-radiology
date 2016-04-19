@@ -35,7 +35,7 @@ import org.openmrs.Role;
 import org.openmrs.User;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.study.Study;
 import org.openmrs.util.RoleConstants;
@@ -45,7 +45,7 @@ import org.springframework.mock.web.MockMultipartHttpServletRequest;
 public class RadiologyTestData {
 	
 	static OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams",
-			"org.openmrs.module.radiology.RadiologyOrder");
+			"org.openmrs.module.radiology.order.RadiologyOrder");
 	
 	/**
 	 * Convenience method constructing a study order for the tests

@@ -19,8 +19,8 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Order;
 import org.openmrs.module.radiology.Modality;
-import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.hl7.HL7Constants;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.study.Study;
 import org.openmrs.test.Verifies;
 

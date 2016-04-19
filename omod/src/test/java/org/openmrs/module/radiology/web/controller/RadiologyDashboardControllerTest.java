@@ -16,8 +16,8 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Patient;
-import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.RadiologyService;
+import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.springframework.web.servlet.ModelAndView;
@@ -34,7 +34,7 @@ public class RadiologyDashboardControllerTest extends BaseContextMockTest {
 	private Patient invalidPatient;
 	
 	@Mock
-	private RadiologyService radiologyService;
+	private RadiologyOrderService radiologyOrderService;
 	
 	@InjectMocks
 	private RadiologyDashboardController radiologyDashboardController = new RadiologyDashboardController();
@@ -45,11 +45,11 @@ public class RadiologyDashboardControllerTest extends BaseContextMockTest {
 		mockPatient1 = RadiologyTestData.getMockPatient1();
 		mockOrders = new ArrayList<RadiologyOrder>();
 		mockOrders.add(RadiologyTestData.getMockRadiologyOrder1());
-		when((radiologyService.getRadiologyOrdersByPatient(mockPatient1))).thenReturn(mockOrders);
+		when((radiologyOrderService.getRadiologyOrdersByPatient(mockPatient1))).thenReturn(mockOrders);
 		
 		invalidPatient = new Patient();
 		ArrayList<RadiologyOrder> emptyOrdersList = new ArrayList<RadiologyOrder>();
-		when((radiologyService.getRadiologyOrdersByPatient(invalidPatient))).thenReturn(emptyOrdersList);
+		when((radiologyOrderService.getRadiologyOrdersByPatient(invalidPatient))).thenReturn(emptyOrdersList);
 	}
 	
 	/**

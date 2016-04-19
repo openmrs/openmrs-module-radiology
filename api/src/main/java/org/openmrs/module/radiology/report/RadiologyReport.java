@@ -13,7 +13,7 @@ import java.util.Date;
 
 import org.openmrs.BaseOpenmrsData;
 import org.openmrs.Provider;
-import org.openmrs.module.radiology.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 
 /**
  * RadiologyReport represents a radiology report written by a Provider for a RadiologyOrder once the

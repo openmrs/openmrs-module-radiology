@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology;
+package org.openmrs.module.radiology.order;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openmrs.Order;
+import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.study.Study;
 
 /**

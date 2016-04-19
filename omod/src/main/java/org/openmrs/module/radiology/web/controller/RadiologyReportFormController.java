@@ -11,8 +11,8 @@ package org.openmrs.module.radiology.web.controller;
 
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportService;
 import org.openmrs.module.radiology.report.RadiologyReportValidator;

@@ -7,33 +7,32 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.db;
+package org.openmrs.module.radiology.order;
 
 import java.util.List;
 
 import org.openmrs.Patient;
-import org.openmrs.module.radiology.RadiologyOrder;
 
 /**
  * RadiologyOrder-related database functions
  * 
- * @see org.openmrs.module.radiology.RadiologyService
+ * @see org.openmrs.module.radiology.order.RadiologyOrderService
  */
-public interface RadiologyOrderDAO {
+interface RadiologyOrderDAO {
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrderByOrderId(Integer)
 	 */
 	public RadiologyOrder getRadiologyOrderByOrderId(Integer orderId);
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyOrdersByPatient(Patient)
+	 * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
 	 */
 	public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient);
 	
 	/**
 	 * @see
-	 *      org.openmrs.module.radiology.RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 *      org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
 	 */
 	public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients);
 	

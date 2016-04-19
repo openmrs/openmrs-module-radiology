@@ -23,7 +23,7 @@ import org.openmrs.OrderType;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.study.Study;
 
 /**
@@ -42,7 +42,7 @@ public class RadiologyReportTest {
 	public void setUp() {
 		
 		final OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams",
-				"org.openmrs.module.radiology.RadiologyOrder");
+				"org.openmrs.module.radiology.order.RadiologyOrder");
 		final Provider principalResultsInterpreter = new Provider();
 		principalResultsInterpreter.setId(1);
 		principalResultsInterpreter.setName("doctor");
