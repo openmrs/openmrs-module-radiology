@@ -7,50 +7,48 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.db;
+package org.openmrs.module.radiology.report;
 
 import java.util.List;
 
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.report.RadiologyReport;
-import org.openmrs.module.radiology.report.RadiologyReportStatus;
 
 /**
  * RadiologyReportDAO database functions
  * 
- * @see org.openmrs.module.radiology.RadiologyService
+ * @see org.openmrs.module.radiology.report.RadiologyReportService
  */
-public interface RadiologyReportDAO {
+interface RadiologyReportDAO {
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyReportByRadiologyReportId(Integer)
+	 * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportByRadiologyReportId(Integer)
 	 */
 	RadiologyReport getRadiologyReportById(Integer radiologyReportId);
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#saveRadiologyReport(RadiologyReport)
+	 * @see org.openmrs.module.radiology.report.RadiologyReportService#saveRadiologyReport(RadiologyReport)
 	 */
 	RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport);
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
+	 * @see org.openmrs.module.radiology.report.RadiologyReportService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
 	 */
 	boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder);
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
+	 * @see org.openmrs.module.radiology.report.RadiologyReportService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
 	 */
 	boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder);
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder,
+	 * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder,
 	 *      RadiologyReportStatus)
 	 */
 	List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(RadiologyOrder radiologyOrder,
 			RadiologyReportStatus radiologyReportStatus);
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
+	 * @see org.openmrs.module.radiology.report.RadiologyReportService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
 	 */
 	RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder);
 }

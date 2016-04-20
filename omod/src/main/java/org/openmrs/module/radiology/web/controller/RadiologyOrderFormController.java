@@ -34,6 +34,7 @@ import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.report.RadiologyReport;
+import org.openmrs.module.radiology.report.RadiologyReportService;
 import org.openmrs.module.radiology.validator.RadiologyDiscontinuedOrderValidator;
 import org.openmrs.module.radiology.validator.RadiologyOrderValidator;
 import org.openmrs.web.WebConstants;
@@ -56,6 +57,9 @@ public class RadiologyOrderFormController {
 	
 	@Autowired
 	private RadiologyService radiologyService;
+	
+	@Autowired
+	private RadiologyReportService radiologyReportService;
 	
 	@Autowired
 	private RadiologyProperties radiologyProperties;
@@ -287,7 +291,7 @@ public class RadiologyOrderFormController {
 			return false;
 		}
 		
-		final RadiologyReport radiologyReport = radiologyService.getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
+		final RadiologyReport radiologyReport = radiologyReportService.getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
 		if (radiologyReport == null) {
 			modelAndView.addObject("radiologyReportNeedsToBeCreated", true);
 			return true;
