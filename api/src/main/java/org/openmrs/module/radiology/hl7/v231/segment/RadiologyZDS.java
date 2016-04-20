@@ -9,8 +9,8 @@
  */
 package org.openmrs.module.radiology.hl7.v231.segment;
 
-import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.hl7.custommodel.v231.segment.ZDS;
+import org.openmrs.module.radiology.study.Study;
 
 import ca.uhn.hl7v2.HL7Exception;
 

@@ -31,10 +31,10 @@ import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.hl7.custommodel.v231.message.ORM_O01;
 import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
+import org.openmrs.module.radiology.study.Study;
 
 import ca.uhn.hl7v2.parser.PipeParser;
 

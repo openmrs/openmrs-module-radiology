@@ -16,9 +16,9 @@ import static org.junit.Assert.assertThat;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openmrs.module.radiology.Study;
 import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.hl7.custommodel.v231.segment.ZDS;
+import org.openmrs.module.radiology.study.Study;
 import org.openmrs.test.Verifies;
 
 import ca.uhn.hl7v2.HL7Exception;

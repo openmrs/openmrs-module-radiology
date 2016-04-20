@@ -17,6 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openmrs.Order;
+import org.openmrs.module.radiology.study.Study;
 
 /**
  * Tests {@link RadiologyOrder}

@@ -11,7 +11,7 @@ package org.openmrs.module.radiology.dicom;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.module.radiology.RadiologyProperties;
-import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.study.Study;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;

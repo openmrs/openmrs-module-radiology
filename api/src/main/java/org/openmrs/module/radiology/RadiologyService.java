@@ -101,22 +101,6 @@ public interface RadiologyService extends OpenmrsService {
 	public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients) throws IllegalArgumentException;
 	
 	/**
-	 * <p>
-	 * Update the performedStatus of the <code>Study</code> associated with studyInstanceUid in the database
-	 * </p>
-	 *
-	 * @param studyInstanceUid study instance uid of study whos performedStatus should be updated
-	 * @param performedStatus performed procedure step status to which study should be set to
-	 * @return study whos performedStatus was updated
-	 * @throws IllegalArgumentException if study instance uid is null
-	 * @should update performed status of study associated with given study instance uid
-	 * @should throw illegal argument exception if study instance uid is null
-	 * @should throw illegal argument exception if performed status is null
-	 */
-	public Study updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus)
-			throws IllegalArgumentException;
-	
-	/**
 	 * Save given <code>RadiologyOrder</code> in the PACS by sending an HL7 order message.
 	 *
 	 * @param radiologyOrder radiology order for which hl7 order message is sent to the PACS
@@ -147,50 +131,4 @@ public interface RadiologyService extends OpenmrsService {
 	 * @should throw illegal argument exception given radiology order with orderId null
 	 */
 	public boolean discontinueRadiologyOrderInPacs(RadiologyOrder radiologyOrder) throws HL7Exception;
-	
-	/**
-	 * Get Study by studyId
-	 *
-	 * @param studyId of the study
-	 * @return study associated with studyId
-	 * @should return study for given study id
-	 * @should return null if no match was found
-	 */
-	public Study getStudyByStudyId(Integer studyId);
-	
-	/**
-	 * Get Study by its associated RadiologyOrder's orderId
-	 *
-	 * @param orderId of RadiologyOrder associated with wanted Study
-	 * @return Study associated with RadiologyOrder for which orderId is given
-	 * @throws IllegalArgumentException if order id is null
-	 * @should return study associated with radiology order for which order id is given
-	 * @should return null if no match was found
-	 * @should throw illegal argument exception given null
-	 */
-	public Study getStudyByOrderId(Integer orderId) throws IllegalArgumentException;
-	
-	/**
-	 * Get study by its Study Instance UID
-	 *
-	 * @param studyInstanceUid
-	 * @return study
-	 * @should return study matching study instance uid
-	 * @should return null if no match was found
-	 * @should throw IllegalArgumentException if study instance uid is null
-	 */
-	public Study getStudyByStudyInstanceUid(String studyInstanceUid) throws IllegalArgumentException;
-	
-	/**
-	 * Get all studies corresponding to list of RadiologyOrder's
-	 *
-	 * @param radiologyOrders radiology orders for which studies will be returned
-	 * @return studies corresponding to given radiology orders
-	 * @throws IllegalArgumentException
-	 * @should fetch all studies for given radiology orders
-	 * @should return empty list given radiology orders without associated studies
-	 * @should return empty list given empty radiology order list
-	 * @should throw IllegalArgumentException given null
-	 */
-	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) throws IllegalArgumentException;
 }

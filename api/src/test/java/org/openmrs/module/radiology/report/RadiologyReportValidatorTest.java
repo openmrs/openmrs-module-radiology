@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.openmrs.Provider;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.study.Study;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 

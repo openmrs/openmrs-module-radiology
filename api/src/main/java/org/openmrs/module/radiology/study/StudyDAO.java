@@ -7,42 +7,41 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.db;
+package org.openmrs.module.radiology.study;
 
 import java.util.List;
 
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.Study;
 
 /**
  * Study-related database functions
  * 
- * @see org.openmrs.module.radiology.RadiologyService
+ * @see org.openmrs.module.radiology.study.RadiologyStudyService
  */
-public interface StudyDAO {
+interface StudyDAO {
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#saveStudy(Integer)
+	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#saveStudy(Study)
 	 */
 	public Study saveStudy(Study study);
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getStudyByStudyId(Integer)
+	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyId(Integer)
 	 */
 	public Study getStudyByStudyId(Integer studyId);
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getStudyByOrderId(Integer)
+	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByOrderId(Integer)
 	 */
 	public Study getStudyByOrderId(Integer orderId);
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getStudyByStudyInstanceUid(String)
+	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyInstanceUid(String)
 	 */
 	public Study getStudyByStudyInstanceUid(String studyInstanceUid);
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
+	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
 	 */
 	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
 	

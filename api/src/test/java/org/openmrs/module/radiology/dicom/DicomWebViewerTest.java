@@ -11,7 +11,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.module.radiology.RadiologyProperties;
-import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.study.Study;
 import org.openmrs.test.BaseContextMockTest;
 
 /**

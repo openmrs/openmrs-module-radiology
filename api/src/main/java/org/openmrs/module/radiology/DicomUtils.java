@@ -15,6 +15,7 @@ import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.SpecificCharacterSet;
 import org.dcm4che2.data.Tag;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.study.RadiologyStudyService;
 
 /**
  * DicomUtils is a utility class helping to process DicomObject's like DICOM MPPS messages and
@@ -54,7 +55,7 @@ public class DicomUtils {
 			final String performedProcedureStepStatusString = getPerformedProcedureStepStatus(mppsObject);
 			final PerformedProcedureStepStatus performedProcedureStepStatus = PerformedProcedureStepStatus.getMatchForDisplayName(performedProcedureStepStatusString);
 			
-			radiologyService().updateStudyPerformedStatus(studyInstanceUid, performedProcedureStepStatus);
+			radiologyStudyService().updateStudyPerformedStatus(studyInstanceUid, performedProcedureStepStatus);
 			log.info("Received Update from dcm4chee. Updating Performed Procedure Step Status for study :"
 					+ studyInstanceUid + " to Status : "
 					+ PerformedProcedureStepStatus.getNameOrUnknown(performedProcedureStepStatus));
@@ -125,7 +126,7 @@ public class DicomUtils {
 		return performedProcedureStepStatus;
 	}
 	
-	static RadiologyService radiologyService() {
-		return Context.getService(RadiologyService.class);
+	static RadiologyStudyService radiologyStudyService() {
+		return Context.getService(RadiologyStudyService.class);
 	}
 }

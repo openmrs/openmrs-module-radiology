@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.db.hibernate;
+package org.openmrs.module.radiology.study;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,20 +16,18 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.Study;
-import org.openmrs.module.radiology.db.StudyDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
  * Hibernate specific Study related functions. This class should not be used directly. All calls
- * should go through the {@link org.openmrs.module.radiology.RadiologyService} methods.
+ * should go through the {@link org.openmrs.module.radiology.study.RadiologyStudyService} methods.
  *
- * @see org.openmrs.module.radiology.db.StudyDAO
- * @see org.openmrs.module.radiology.RadiologyService
+ * @see org.openmrs.module.radiology.study.StudyDAO
+ * @see org.openmrs.module.radiology.study.RadiologyStudyService
  */
 @Repository
-public class HibernateStudyDAO implements StudyDAO {
+class HibernateStudyDAO implements StudyDAO {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -44,7 +42,7 @@ public class HibernateStudyDAO implements StudyDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#saveStudy(Integer)
+	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#saveStudy(Study)
 	 */
 	@Override
 	public Study saveStudy(Study study) {
@@ -54,7 +52,7 @@ public class HibernateStudyDAO implements StudyDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getStudyByStudyId(Integer)
+	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyId(Integer)
 	 */
 	@Override
 	public Study getStudyByStudyId(Integer studyId) {
@@ -63,7 +61,7 @@ public class HibernateStudyDAO implements StudyDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getStudyByOrderId(Integer)
+	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByOrderId(Integer)
 	 */
 	@Override
 	public Study getStudyByOrderId(Integer orderId) {
@@ -74,7 +72,7 @@ public class HibernateStudyDAO implements StudyDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getStudyByStudyInstanceUid(String)
+	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyInstanceUid(String)
 	 */
 	@Override
 	public Study getStudyByStudyInstanceUid(String studyInstanceUid) {
@@ -85,8 +83,8 @@ public class HibernateStudyDAO implements StudyDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getStudiesByRadiologyOrders(List
-	 *      <RadiologyOrder>)
+	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudiesByRadiologyOrders(List
+	 *      <RadiologyOrder> radiologyOrders)
 	 */
 	@Override
 	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {

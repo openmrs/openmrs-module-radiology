@@ -24,7 +24,7 @@ import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.Study;
+import org.openmrs.module.radiology.study.Study;
 
 /**
  * Tests {@link RadiologyReport}
