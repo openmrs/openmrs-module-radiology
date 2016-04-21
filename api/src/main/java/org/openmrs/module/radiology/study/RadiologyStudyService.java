@@ -21,20 +21,20 @@ public interface RadiologyStudyService extends OpenmrsService {
 	
 	/**
 	 * <p>
-	 * Save the given <code>Study</code> to the database
+	 * Save the given <code>RadiologyStudy</code> to the database
 	 * </p>
 	 * Additionally, study and study.order information are written into a DICOM xml file.
 	 * 
-	 * @param study study to be created or updated
+	 * @param radiologyStudy study to be created or updated
 	 * @return study who was created or updated
 	 * @should create new study from given study object
 	 * @should update existing study
 	 */
-	public Study saveStudy(Study study);
+	public RadiologyStudy saveStudy(RadiologyStudy radiologyStudy);
 	
 	/**
 	 * <p>
-	 * Update the performedStatus of the <code>Study</code> associated with studyInstanceUid in the database
+	 * Update the performedStatus of the <code>RadiologyStudy</code> associated with studyInstanceUid in the database
 	 * </p>
 	 *
 	 * @param studyInstanceUid study instance uid of study whos performedStatus should be updated
@@ -45,33 +45,33 @@ public interface RadiologyStudyService extends OpenmrsService {
 	 * @should throw illegal argument exception if study instance uid is null
 	 * @should throw illegal argument exception if performed status is null
 	 */
-	public Study updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus)
+	public RadiologyStudy updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus)
 			throws IllegalArgumentException;
 	
 	/**
-	 * Get Study by studyId
+	 * Get RadiologyStudy by studyId
 	 *
 	 * @param studyId of the study
 	 * @return study associated with studyId
 	 * @should return study for given study id
 	 * @should return null if no match was found
 	 */
-	public Study getStudyByStudyId(Integer studyId);
+	public RadiologyStudy getStudyByStudyId(Integer studyId);
 	
 	/**
-	 * Get Study by its associated RadiologyOrder's orderId
+	 * Get RadiologyStudy by its associated RadiologyOrder's orderId
 	 *
-	 * @param orderId of RadiologyOrder associated with wanted Study
-	 * @return Study associated with RadiologyOrder for which orderId is given
+	 * @param orderId of RadiologyOrder associated with wanted RadiologyStudy
+	 * @return RadiologyStudy associated with RadiologyOrder for which orderId is given
 	 * @throws IllegalArgumentException if order id is null
 	 * @should return study associated with radiology order for which order id is given
 	 * @should return null if no match was found
 	 * @should throw illegal argument exception given null
 	 */
-	public Study getStudyByOrderId(Integer orderId) throws IllegalArgumentException;
+	public RadiologyStudy getStudyByOrderId(Integer orderId) throws IllegalArgumentException;
 	
 	/**
-	 * Get study by its Study Instance UID
+	 * Get RadiologyStudy by its Study Instance UID
 	 *
 	 * @param studyInstanceUid
 	 * @return study
@@ -79,7 +79,7 @@ public interface RadiologyStudyService extends OpenmrsService {
 	 * @should return null if no match was found
 	 * @should throw IllegalArgumentException if study instance uid is null
 	 */
-	public Study getStudyByStudyInstanceUid(String studyInstanceUid) throws IllegalArgumentException;
+	public RadiologyStudy getStudyByStudyInstanceUid(String studyInstanceUid) throws IllegalArgumentException;
 	
 	/**
 	 * Get all studies corresponding to list of RadiologyOrder's
@@ -92,5 +92,6 @@ public interface RadiologyStudyService extends OpenmrsService {
 	 * @should return empty list given empty radiology order list
 	 * @should throw IllegalArgumentException given null
 	 */
-	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) throws IllegalArgumentException;
+	public List<RadiologyStudy> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders)
+			throws IllegalArgumentException;
 }

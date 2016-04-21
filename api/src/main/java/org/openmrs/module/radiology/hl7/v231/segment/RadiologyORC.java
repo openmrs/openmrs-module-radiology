@@ -28,7 +28,7 @@ public class RadiologyORC {
 	};
 	
 	/**
-	 * Fill HL7 (version 2.3.1) Common Order Segment (ORC) with data from given OpenMRS Study and
+	 * Fill HL7 (version 2.3.1) Common Order Segment (ORC) with data from given OpenMRS RadiologyStudy and
 	 * Order
 	 * 
 	 * @param commonOrderSegment Common Order Segment to populate

@@ -10,13 +10,13 @@
 package org.openmrs.module.radiology.hl7.v231.segment;
 
 import org.openmrs.module.radiology.hl7.custommodel.v231.segment.ZDS;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 
 import ca.uhn.hl7v2.HL7Exception;
 
 /**
  * RadiologyZDS is a utility class populating an HL7 custom ZDS Segment with an OpenMRS
- * Study
+ * RadiologyStudy
  */
 public class RadiologyZDS {
 	
@@ -25,11 +25,11 @@ public class RadiologyZDS {
 	};
 	
 	/**
-	 * Fill custom HL7 segment (ZDS) with data from given OpenMRS Radiology Study. See HL7 ZDS
+	 * Fill custom HL7 segment (ZDS) with data from given OpenMRS Radiology RadiologyStudy. See HL7 ZDS
 	 * message segment definition in IHE Radiology Technical Framework Volume 2 (Rev 13.0)
 	 * 
 	 * @param zds segment to populate
-	 * @param study to map to the zds segment
+	 * @param radiologyStudy to map to the zds segment
 	 * @return populated zds segment
 	 * @throws HL7Exception
 	 * @should return populated zds segment for given study
@@ -37,17 +37,17 @@ public class RadiologyZDS {
 	 * @should fail given null as zds
 	 * @should fail given null as study
 	 */
-	public static ZDS populateZDSSegment(ZDS zds, Study study) throws HL7Exception {
+	public static ZDS populateZDSSegment(ZDS zds, RadiologyStudy radiologyStudy) throws HL7Exception {
 		
 		if (zds == null) {
 			throw new IllegalArgumentException("zds cannot be null.");
-		} else if (study == null) {
+		} else if (radiologyStudy == null) {
 			throw new IllegalArgumentException("study cannot be null.");
 		}
 		
 		zds.getStudyInstanceUID()
 				.getPointer()
-				.setValue(study.getStudyInstanceUid());
+				.setValue(radiologyStudy.getStudyInstanceUid());
 		zds.getStudyInstanceUID()
 				.getTypeOfData()
 				.setValue("Application");

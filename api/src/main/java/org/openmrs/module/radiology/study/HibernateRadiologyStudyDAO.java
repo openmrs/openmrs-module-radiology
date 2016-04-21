@@ -20,14 +20,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
- * Hibernate specific Study related functions. This class should not be used directly. All calls
+ * Hibernate specific RadiologyStudy related functions. This class should not be used directly. All calls
  * should go through the {@link org.openmrs.module.radiology.study.RadiologyStudyService} methods.
  *
- * @see org.openmrs.module.radiology.study.StudyDAO
+ * @see org.openmrs.module.radiology.study.RadiologyStudyDAO
  * @see org.openmrs.module.radiology.study.RadiologyStudyService
  */
 @Repository
-class HibernateStudyDAO implements StudyDAO {
+class HibernateRadiologyStudyDAO implements RadiologyStudyDAO {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -42,31 +42,31 @@ class HibernateStudyDAO implements StudyDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#saveStudy(Study)
+	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#saveStudy(RadiologyStudy)
 	 */
 	@Override
-	public Study saveStudy(Study study) {
+	public RadiologyStudy saveStudy(RadiologyStudy radiologyStudy) {
 		sessionFactory.getCurrentSession()
-				.saveOrUpdate(study);
-		return study;
+				.saveOrUpdate(radiologyStudy);
+		return radiologyStudy;
 	}
 	
 	/**
 	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyId(Integer)
 	 */
 	@Override
-	public Study getStudyByStudyId(Integer studyId) {
-		return (Study) sessionFactory.getCurrentSession()
-				.get(Study.class, studyId);
+	public RadiologyStudy getStudyByStudyId(Integer studyId) {
+		return (RadiologyStudy) sessionFactory.getCurrentSession()
+				.get(RadiologyStudy.class, studyId);
 	}
 	
 	/**
 	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByOrderId(Integer)
 	 */
 	@Override
-	public Study getStudyByOrderId(Integer orderId) {
-		final String query = "from Study s where s.radiologyOrder.orderId = '" + orderId + "'";
-		return (Study) sessionFactory.getCurrentSession()
+	public RadiologyStudy getStudyByOrderId(Integer orderId) {
+		final String query = "from RadiologyStudy s where s.radiologyOrder.orderId = '" + orderId + "'";
+		return (RadiologyStudy) sessionFactory.getCurrentSession()
 				.createQuery(query)
 				.uniqueResult();
 	}
@@ -75,9 +75,9 @@ class HibernateStudyDAO implements StudyDAO {
 	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyInstanceUid(String)
 	 */
 	@Override
-	public Study getStudyByStudyInstanceUid(String studyInstanceUid) {
-		return (Study) sessionFactory.getCurrentSession()
-				.createCriteria(Study.class)
+	public RadiologyStudy getStudyByStudyInstanceUid(String studyInstanceUid) {
+		return (RadiologyStudy) sessionFactory.getCurrentSession()
+				.createCriteria(RadiologyStudy.class)
 				.add(Restrictions.eq("studyInstanceUid", studyInstanceUid))
 				.uniqueResult();
 	}
@@ -87,14 +87,14 @@ class HibernateStudyDAO implements StudyDAO {
 	 *      <RadiologyOrder> radiologyOrders)
 	 */
 	@Override
-	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
-		List<Study> result = new ArrayList<Study>();
+	public List<RadiologyStudy> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
+		List<RadiologyStudy> result = new ArrayList<RadiologyStudy>();
 		
 		if (!radiologyOrders.isEmpty()) {
 			Criteria studyCriteria = sessionFactory.getCurrentSession()
-					.createCriteria(Study.class);
+					.createCriteria(RadiologyStudy.class);
 			addRestrictionOnRadiologyOrders(studyCriteria, radiologyOrders);
-			result = (List<Study>) studyCriteria.list();
+			result = (List<RadiologyStudy>) studyCriteria.list();
 		}
 		
 		return result;
@@ -112,5 +112,4 @@ class HibernateStudyDAO implements StudyDAO {
 			criteria.add(Restrictions.in("radiologyOrder", radiologyOrders));
 		}
 	}
-	
 }

@@ -37,7 +37,7 @@ import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.report.RadiologyReport;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.openmrs.util.RoleConstants;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.mock.web.MockMultipartHttpServletRequest;
@@ -50,9 +50,9 @@ public class RadiologyTestData {
 	/**
 	 * Convenience method constructing a study order for the tests
 	 */
-	public static Study getMockStudy1PreSave() {
+	public static RadiologyStudy getMockStudy1PreSave() {
 		
-		Study mockStudy = new Study();
+		RadiologyStudy mockStudy = new RadiologyStudy();
 		mockStudy.setModality(Modality.CT);
 		
 		return mockStudy;
@@ -61,9 +61,9 @@ public class RadiologyTestData {
 	/**
 	 * Convenience method constructing a study order for the tests
 	 */
-	public static Study getMockStudy1PostSave() {
+	public static RadiologyStudy getMockStudy1PostSave() {
 		
-		Study mockStudy = getMockStudy1PreSave();
+		RadiologyStudy mockStudy = getMockStudy1PreSave();
 		
 		int studyId = 1;
 		mockStudy.setStudyId(studyId);
@@ -75,9 +75,9 @@ public class RadiologyTestData {
 	/**
 	 * Convenience method constructing a study order for the tests
 	 */
-	public static Study getMockStudy2PreSave() {
+	public static RadiologyStudy getMockStudy2PreSave() {
 		
-		Study mockStudy = new Study();
+		RadiologyStudy mockStudy = new RadiologyStudy();
 		mockStudy.setModality(Modality.CT);
 		
 		return mockStudy;
@@ -86,9 +86,9 @@ public class RadiologyTestData {
 	/**
 	 * Convenience method constructing a study order for the tests
 	 */
-	public static Study getMockStudy2PostSave() {
+	public static RadiologyStudy getMockStudy2PostSave() {
 		
-		Study mockStudy = getMockStudy2PreSave();
+		RadiologyStudy mockStudy = getMockStudy2PreSave();
 		
 		int studyId = 2;
 		mockStudy.setStudyId(studyId);
@@ -178,9 +178,9 @@ public class RadiologyTestData {
 		mockRadiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		mockRadiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		mockRadiologyOrder.setVoided(false);
-		Study study = getMockStudy1PostSave();
-		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-		mockRadiologyOrder.setStudy(study);
+		RadiologyStudy radiologyStudy = getMockStudy1PostSave();
+		radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		mockRadiologyOrder.setStudy(radiologyStudy);
 		
 		return mockRadiologyOrder;
 	}
@@ -200,9 +200,9 @@ public class RadiologyTestData {
 		mockRadiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		mockRadiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITHOUT IV CONTRAST");
 		mockRadiologyOrder.setVoided(false);
-		Study study = getMockStudy2PostSave();
-		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-		mockRadiologyOrder.setStudy(study);
+		RadiologyStudy radiologyStudy = getMockStudy2PostSave();
+		radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		mockRadiologyOrder.setStudy(radiologyStudy);
 		
 		return mockRadiologyOrder;
 	}

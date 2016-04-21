@@ -25,7 +25,7 @@ public class RadiologyOBR {
 	};
 	
 	/**
-	 * Fill HL7 (version 2.3.1) Observation Request Segment (OBR) with data from given OpenMRS Study
+	 * Fill HL7 (version 2.3.1) Observation Request Segment (OBR) with data from given OpenMRS RadiologyStudy
 	 * and Order
 	 * 
 	 * @param observationRequestSegment segment to populate

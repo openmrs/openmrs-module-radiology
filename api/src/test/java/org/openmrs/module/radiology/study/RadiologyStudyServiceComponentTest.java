@@ -102,17 +102,17 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	}
 	
 	/**
-	 * @see RadiologyStudyService#saveStudy(Study)
+	 * @see RadiologyStudyService#saveStudy(RadiologyStudy)
 	 * @verifies create new study from given study object
 	 */
 	@Test
 	public void saveStudy_shouldCreateNewStudyFromGivenStudyObject() throws Exception {
 		
-		Study radiologyStudy = getUnsavedStudy();
+		RadiologyStudy radiologyStudy = getUnsavedStudy();
 		RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
 		radiologyOrder.setStudy(radiologyStudy);
 		
-		Study createdStudy = radiologyStudyService.saveStudy(radiologyStudy);
+		RadiologyStudy createdStudy = radiologyStudyService.saveStudy(radiologyStudy);
 		
 		assertNotNull(createdStudy);
 		assertThat(createdStudy, is(radiologyStudy));
@@ -124,32 +124,32 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	}
 	
 	/**
-	 * Convenience method to get a Study object with all required values filled (except
+	 * Convenience method to get a RadiologyStudy object with all required values filled (except
 	 * radiologyOrder) in but which is not yet saved in the database
 	 * 
-	 * @return Study object that can be saved to the database
+	 * @return RadiologyStudy object that can be saved to the database
 	 */
-	public Study getUnsavedStudy() {
+	public RadiologyStudy getUnsavedStudy() {
 		
-		Study study = new Study();
-		study.setModality(Modality.CT);
-		study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
-		return study;
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setModality(Modality.CT);
+		radiologyStudy.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
+		return radiologyStudy;
 	}
 	
 	/**
-	 * @see RadiologyStudyService#saveStudy(Study)
+	 * @see RadiologyStudyService#saveStudy(RadiologyStudy)
 	 * @verifies update existing study
 	 */
 	@Test
 	public void saveStudy_shouldUpdateExistingStudy() throws Exception {
 		
-		Study existingStudy = radiologyStudyService.getStudyByStudyId(EXISTING_STUDY_ID);
+		RadiologyStudy existingStudy = radiologyStudyService.getStudyByStudyId(EXISTING_STUDY_ID);
 		Modality modalityPreUpdate = existingStudy.getModality();
 		Modality modalityPostUpdate = Modality.XA;
 		existingStudy.setModality(modalityPostUpdate);
 		
-		Study updatedStudy = radiologyStudyService.saveStudy(existingStudy);
+		RadiologyStudy updatedStudy = radiologyStudyService.saveStudy(existingStudy);
 		
 		assertNotNull(updatedStudy);
 		assertThat(updatedStudy, is(existingStudy));
@@ -164,10 +164,10 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	@Test
 	public void getStudyByStudyId_shouldReturnStudyForGivenStudyId() throws Exception {
 		
-		Study study = radiologyStudyService.getStudyByStudyId(EXISTING_STUDY_ID);
+		RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByStudyId(EXISTING_STUDY_ID);
 		
-		assertNotNull(study);
-		assertThat(study.getRadiologyOrder()
+		assertNotNull(radiologyStudy);
+		assertThat(radiologyStudy.getRadiologyOrder()
 				.getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
 	}
 	
@@ -178,9 +178,9 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	@Test
 	public void getStudyByStudyId_shouldReturnNullIfNoMatchIsFound() throws Exception {
 		
-		Study study = radiologyStudyService.getStudyByStudyId(NON_EXISTING_STUDY_ID);
+		RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByStudyId(NON_EXISTING_STUDY_ID);
 		
-		assertNull(study);
+		assertNull(radiologyStudy);
 	}
 	
 	/**
@@ -190,10 +190,10 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	@Test
 	public void getStudyByOrderId_shouldReturnStudyMatching() throws Exception {
 		
-		Study study = radiologyStudyService.getStudyByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
 		
-		assertNotNull(study);
-		assertThat(study.getRadiologyOrder()
+		assertNotNull(radiologyStudy);
+		assertThat(radiologyStudy.getRadiologyOrder()
 				.getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
 	}
 	
@@ -204,9 +204,9 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	@Test
 	public void getStudyByOrderId_shouldReturnNullIfNoMatchIsFound() {
 		
-		Study study = radiologyStudyService.getStudyByOrderId(NON_EXISTING_RADIOLOGY_ORDER_ID);
+		RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByOrderId(NON_EXISTING_RADIOLOGY_ORDER_ID);
 		
-		assertNull(study);
+		assertNull(radiologyStudy);
 	}
 	
 	/**
@@ -227,10 +227,10 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	 */
 	@Test
 	public void getStudyByStudyInstanceUid_shouldReturnStudyMatchingUid() throws Exception {
-		Study study = radiologyStudyService.getStudyByStudyInstanceUid(EXISTING_STUDY_INSTANCE_UID);
+		RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByStudyInstanceUid(EXISTING_STUDY_INSTANCE_UID);
 		
-		assertNotNull(study);
-		assertThat(study.getStudyInstanceUid(), is(EXISTING_STUDY_INSTANCE_UID));
+		assertNotNull(radiologyStudy);
+		assertThat(radiologyStudy.getStudyInstanceUid(), is(EXISTING_STUDY_INSTANCE_UID));
 	}
 	
 	/**
@@ -239,9 +239,9 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	 */
 	@Test
 	public void getStudyByStudyInstanceUid_shouldReturnNullIfNoMatchIsFound() throws Exception {
-		Study study = radiologyStudyService.getStudyByStudyInstanceUid(NON_EXISTING_STUDY_INSTANCE_UID);
+		RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByStudyInstanceUid(NON_EXISTING_STUDY_INSTANCE_UID);
 		
-		assertNull(study);
+		assertNull(radiologyStudy);
 	}
 	
 	/**
@@ -265,12 +265,12 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 		Patient patient = patientService.getPatient(PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER);
 		List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrdersByPatient(patient);
 		
-		List<Study> studies = radiologyStudyService.getStudiesByRadiologyOrders(radiologyOrders);
+		List<RadiologyStudy> radiologyStudies = radiologyStudyService.getStudiesByRadiologyOrders(radiologyOrders);
 		
-		assertThat(studies.size(), is(radiologyOrders.size()));
-		assertThat(studies.get(0)
+		assertThat(radiologyStudies.size(), is(radiologyOrders.size()));
+		assertThat(radiologyStudies.get(0)
 				.getRadiologyOrder(), is(radiologyOrders.get(0)));
-		assertThat(studies.get(1)
+		assertThat(radiologyStudies.get(1)
 				.getRadiologyOrder(), is(radiologyOrders.get(1)));
 	}
 	
@@ -285,10 +285,10 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 		RadiologyOrder radiologyOrderWithoutStudy = radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
 		List<RadiologyOrder> radiologyOrders = Arrays.asList(radiologyOrderWithoutStudy);
 		
-		List<Study> studies = radiologyStudyService.getStudiesByRadiologyOrders(radiologyOrders);
+		List<RadiologyStudy> radiologyStudies = radiologyStudyService.getStudiesByRadiologyOrders(radiologyOrders);
 		
 		assertThat(radiologyOrders.size(), is(1));
-		assertThat(studies.size(), is(0));
+		assertThat(radiologyStudies.size(), is(0));
 	}
 	
 	/**
@@ -300,10 +300,10 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 		
 		List<RadiologyOrder> orders = new ArrayList<RadiologyOrder>();
 		
-		List<Study> studies = radiologyStudyService.getStudiesByRadiologyOrders(orders);
+		List<RadiologyStudy> radiologyStudies = radiologyStudyService.getStudiesByRadiologyOrders(orders);
 		
 		assertThat(orders.size(), is(0));
-		assertThat(studies.size(), is(0));
+		assertThat(radiologyStudies.size(), is(0));
 	}
 	
 	/**
@@ -326,11 +326,11 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	public void updateStudyPerformedStatus_shouldUpdatePerformedStatusOfStudyAssociatedWithGivenStudyInstanceUid()
 			throws Exception {
 		
-		Study existingStudy = radiologyStudyService.getStudyByStudyId(EXISTING_STUDY_ID);
+		RadiologyStudy existingStudy = radiologyStudyService.getStudyByStudyId(EXISTING_STUDY_ID);
 		PerformedProcedureStepStatus performedStatusPreUpdate = existingStudy.getPerformedStatus();
 		PerformedProcedureStepStatus performedStatusPostUpdate = PerformedProcedureStepStatus.COMPLETED;
 		
-		Study updatedStudy = radiologyStudyService.updateStudyPerformedStatus(existingStudy.getStudyInstanceUid(),
+		RadiologyStudy updatedStudy = radiologyStudyService.updateStudyPerformedStatus(existingStudy.getStudyInstanceUid(),
 			performedStatusPostUpdate);
 		
 		assertNotNull(updatedStudy);

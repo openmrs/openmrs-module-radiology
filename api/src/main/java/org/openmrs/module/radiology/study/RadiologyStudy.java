@@ -21,7 +21,7 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
  * A class that supports on openmrs's orders to make the module DICOM compatible, corresponds to the
  * table order_dicom_complment
  */
-public class Study {
+public class RadiologyStudy {
 	
 	private Integer studyId;
 	
@@ -66,7 +66,7 @@ public class Study {
 	}
 	
 	/**
-	 * Returns true when this Study's performedStatus is in progress and false otherwise.
+	 * Returns true when this RadiologyStudy's performedStatus is in progress and false otherwise.
 	 * 
 	 * @return true on performedStatus in progress and false otherwise
 	 * @should return false if performed status is null
@@ -78,7 +78,7 @@ public class Study {
 	}
 	
 	/**
-	 * Returns true when this Study's performedStatus is completed and false otherwise.
+	 * Returns true when this RadiologyStudy's performedStatus is completed and false otherwise.
 	 * 
 	 * @return true on performedStatus completed and false otherwise
 	 * @should return false if performedStatus is null

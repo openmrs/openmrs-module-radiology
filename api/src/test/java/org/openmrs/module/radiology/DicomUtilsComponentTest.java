@@ -42,7 +42,7 @@ import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.study.RadiologyStudyService;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,7 +102,7 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	public void updateStudyPerformedStatusByMpps_shouldSetPerformedStatusOfAnExistingStudyInDatabaseToPerformedProcedureStepStatusIN_PROGRESSOfGivenDicomObject()
 			throws IOException, TransformerConfigurationException, TransformerFactoryConfigurationError, SAXException {
 		
-		Study studyToBeUpdated = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		RadiologyStudy studyToBeUpdated = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
 		Order radiologyOrder = studyToBeUpdated.getRadiologyOrder();
 		DicomObject dicomObjectNCreate = getDicomNCreate(studyToBeUpdated, radiologyOrder);
 		
@@ -119,10 +119,10 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	 * Convenience method to create a DicomObject containing DICOM command N-CREATE
 	 * (PerformedProcedureStepStatus = IN_PROGRESS) for an existing study.
 	 * 
-	 * @param study study for which the DicomObject will be created
+	 * @param radiologyStudy study for which the DicomObject will be created
 	 * @param radiologyOrder order associated with given study
 	 */
-	DicomObject getDicomNCreate(Study study, Order radiologyOrder) {
+	DicomObject getDicomNCreate(RadiologyStudy radiologyStudy, Order radiologyOrder) {
 		
 		String performedProcedureStatus = "IN PROGRESS";
 		String performedProcedureStepStartDate = "20150313";
@@ -135,9 +135,9 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 		String referencedSOPClassUID = "1.2.840.10008.3.1.2.3.1";
 		String referencedSOPInstanceUID = "1.2.840.10008.5.1.4.1.1.9.1.2.1.1.1";
 		
-		String studyID = String.valueOf(study.getStudyId());
-		String studyInstanceUID = study.getStudyInstanceUid();
-		String modality = study.getModality()
+		String studyID = String.valueOf(radiologyStudy.getStudyId());
+		String studyInstanceUID = radiologyStudy.getStudyInstanceUid();
+		String modality = radiologyStudy.getModality()
 				.name();
 		
 		String accessionNumber = radiologyOrder.getAccessionNumber();
@@ -208,7 +208,7 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	public void updateStudyPerformedStatusByMPPS_shouldUpdateThePerformedStatusOfAnExistingStudyInTheDatabaseBasedOnADicomObject()
 			throws IOException, TransformerConfigurationException, TransformerFactoryConfigurationError, SAXException {
 		
-		Study studyToBeUpdated = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		RadiologyStudy studyToBeUpdated = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
 		Order radiologyOrder = studyToBeUpdated.getRadiologyOrder();
 		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, radiologyOrder, "DISCONTINUED");
 		
@@ -225,12 +225,12 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	 * Convenience method to create a DicomObject containing DICOM command N-SET
 	 * (PerformedProcedureStepStatus = DISCONTINUED/COMPLETED) for an existing study.
 	 * 
-	 * @param study study for which the DicomObject will be created
+	 * @param radiologyStudy study for which the DicomObject will be created
 	 * @param radiologyOrder order associated with given study
 	 * @param performedProcedureStatus DICOM Performed Procedure Step Status either DISCONTINUED or
 	 *        COMPLETED
 	 */
-	DicomObject getDicomNSet(Study study, Order radiologyOrder, String performedProcedureStatus) {
+	DicomObject getDicomNSet(RadiologyStudy radiologyStudy, Order radiologyOrder, String performedProcedureStatus) {
 		
 		SpecificCharacterSet specificCharacterSet = new SpecificCharacterSet(
 				radiologyProperties.getDicomSpecificCharacterSet());
@@ -243,7 +243,7 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 		String protocolName = "Thorax";
 		String seriesInstanceUID = "1.2.826.0.1.3680043.2.1545.1.2.1.7.20150313.130225.305.1";
 		
-		DicomObject dicomObject = getDicomNCreate(study, radiologyOrder);
+		DicomObject dicomObject = getDicomNCreate(radiologyStudy, radiologyOrder);
 		dicomObject.putString(Tag.PerformedProcedureStepEndDate, VR.DA, performedProcedureStepEndDate);
 		dicomObject.putString(Tag.PerformedProcedureStepEndTime, VR.TM, performedProcedureStepEndTime);
 		dicomObject.putString(Tag.PerformedProcedureStepStatus, VR.CS, performedProcedureStatus);
@@ -277,7 +277,7 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	public void updateStudyPerformedStatusByMpps_shouldUpdateThePerformedStatusOfAnExistingStudyInTheDatabaseBasedOnADicomObjectCompleted()
 			throws IOException, TransformerConfigurationException, TransformerFactoryConfigurationError, SAXException {
 		
-		Study studyToBeUpdated = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		RadiologyStudy studyToBeUpdated = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
 		Order radiologyOrder = studyToBeUpdated.getRadiologyOrder();
 		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, radiologyOrder, "COMPLETED");
 		
@@ -298,7 +298,7 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	public void updateStudyPerformedStatusByMpps_shouldNotFailIfStudyInstanceUidReferencedInDicomMppsCannotBeFound()
 			throws IOException, TransformerConfigurationException, TransformerFactoryConfigurationError, SAXException {
 		
-		Study studyToBeUpdated = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		RadiologyStudy studyToBeUpdated = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
 		Order radiologyOrder = studyToBeUpdated.getRadiologyOrder();
 		DicomObject dicomObjectNCreate = getDicomNSet(studyToBeUpdated, radiologyOrder, "COMPLETED");
 		dicomObjectNCreate.remove(Tag.ScheduledStepAttributesSequence);
@@ -319,13 +319,13 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	@Test
 	public void getStudyInstanceUidFromMpps_shouldReturnStudyInstanceUidGivenDicomMppsObject() {
 		
-		Study study = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = study.getRadiologyOrder();
-		DicomObject dicomMpps = getDicomNCreate(study, radiologyOrder);
+		RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		Order radiologyOrder = radiologyStudy.getRadiologyOrder();
+		DicomObject dicomMpps = getDicomNCreate(radiologyStudy, radiologyOrder);
 		
 		String studyInstanceUid = DicomUtils.getStudyInstanceUidFromMpps(dicomMpps);
 		
-		assertThat(study.getStudyInstanceUid(), is(studyInstanceUid));
+		assertThat(radiologyStudy.getStudyInstanceUid(), is(studyInstanceUid));
 	}
 	
 	/**
@@ -335,9 +335,9 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	@Test
 	public void getStudyInstanceUidFromMpps_shouldReturnNullGivenDicomMppsObjectWithoutScheduledStepAttributesSequence() {
 		
-		Study study = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = study.getRadiologyOrder();
-		DicomObject dicomMpps = getDicomNCreate(study, radiologyOrder);
+		RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		Order radiologyOrder = radiologyStudy.getRadiologyOrder();
+		DicomObject dicomMpps = getDicomNCreate(radiologyStudy, radiologyOrder);
 		dicomMpps.remove(Tag.ScheduledStepAttributesSequence);
 		
 		String studyInstanceUid = DicomUtils.getStudyInstanceUidFromMpps(dicomMpps);
@@ -353,9 +353,9 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	@Test
 	public void getStudyInstanceUidFromMpps_shouldReturnNullGivenDicomMppsObjectWithScheduledStepAttributesSequenceMissingStudyInstanceUidTag() {
 		
-		Study study = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = study.getRadiologyOrder();
-		DicomObject dicomMpps = getDicomNCreate(study, radiologyOrder);
+		RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		Order radiologyOrder = radiologyStudy.getRadiologyOrder();
+		DicomObject dicomMpps = getDicomNCreate(radiologyStudy, radiologyOrder);
 		
 		dicomMpps.get(Tag.ScheduledStepAttributesSequence)
 				.getDicomObject()
@@ -373,13 +373,13 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	@Test
 	public void getPerformedProcedureStepStatus_shouldReturnPerformedProcedureStepStatusGivenMppsDicomObject() {
 		
-		Study study = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = study.getRadiologyOrder();
-		DicomObject dicomMpps = getDicomNCreate(study, radiologyOrder);
+		RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		Order radiologyOrder = radiologyStudy.getRadiologyOrder();
+		DicomObject dicomMpps = getDicomNCreate(radiologyStudy, radiologyOrder);
 		
 		String performedProcedureStepStatus = DicomUtils.getPerformedProcedureStepStatus(dicomMpps);
 		
-		assertThat(study.getPerformedStatus(), is(PerformedProcedureStepStatus.IN_PROGRESS));
+		assertThat(radiologyStudy.getPerformedStatus(), is(PerformedProcedureStepStatus.IN_PROGRESS));
 		assertThat(performedProcedureStepStatus, is("IN PROGRESS"));
 	}
 	
@@ -390,9 +390,9 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	@Test
 	public void getPerformedProcedureStepStatus_shouldReturnNullGivenDicomObjectWithoutPerformedProcedureStepStatus() {
 		
-		Study study = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
-		Order radiologyOrder = study.getRadiologyOrder();
-		DicomObject dicomMpps = getDicomNCreate(study, radiologyOrder);
+		RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByStudyId(STUDY_ID_OF_EXISTING_STUDY_WITH_ORDER);
+		Order radiologyOrder = radiologyStudy.getRadiologyOrder();
+		DicomObject dicomMpps = getDicomNCreate(radiologyStudy, radiologyOrder);
 		dicomMpps.remove(Tag.PerformedProcedureStepStatus);
 		
 		String performedProcedureStepStatus = DicomUtils.getPerformedProcedureStepStatus(dicomMpps);
@@ -452,8 +452,8 @@ public class DicomUtilsComponentTest extends BaseModuleContextSensitiveTest {
 	/**
 	 * Convenience method to create a mock radiology study
 	 */
-	Study getMockStudy() throws Exception {
-		Study mockStudy = new Study();
+	RadiologyStudy getMockStudy() throws Exception {
+		RadiologyStudy mockStudy = new RadiologyStudy();
 		mockStudy.setStudyId(1);
 		mockStudy.setRadiologyOrder(getMockRadiologyOrder());
 		mockStudy.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
