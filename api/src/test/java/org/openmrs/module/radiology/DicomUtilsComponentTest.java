@@ -40,6 +40,7 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.study.RadiologyStudyService;
 import org.openmrs.module.radiology.study.RadiologyStudy;

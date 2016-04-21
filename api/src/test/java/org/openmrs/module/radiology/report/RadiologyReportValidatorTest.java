@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openmrs.Provider;
-import org.openmrs.module.radiology.PerformedProcedureStepStatus;
+import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.springframework.validation.BindException;

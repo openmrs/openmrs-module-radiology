@@ -12,7 +12,7 @@ package org.openmrs.module.radiology.study;
 import java.util.List;
 
 import org.openmrs.api.OpenmrsService;
-import org.openmrs.module.radiology.PerformedProcedureStepStatus;
+import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.springframework.transaction.annotation.Transactional;
 

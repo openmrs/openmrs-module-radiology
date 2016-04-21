@@ -17,7 +17,7 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 import org.openmrs.Order;
-import org.openmrs.module.radiology.PerformedProcedureStepStatus;
+import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.study.RadiologyStudy;
 
 /**
