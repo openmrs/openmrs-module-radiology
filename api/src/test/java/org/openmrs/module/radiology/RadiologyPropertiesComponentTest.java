@@ -469,7 +469,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
 				radiologyTestOrderTypeUuid));
 		
 		OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams",
-				"org.openmrs.module.radiology.RadiologyOrder");
+				"org.openmrs.module.radiology.order.RadiologyOrder");
 		radiologyOrderType.setUuid(radiologyTestOrderTypeUuid);
 		orderService.saveOrderType(radiologyOrderType);
 		

@@ -14,8 +14,8 @@ import java.lang.reflect.Field;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 
 /**
  * A class that supports on openmrs's orders to make the module DICOM compatible, corresponds to the

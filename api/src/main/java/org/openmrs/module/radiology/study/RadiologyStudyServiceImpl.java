@@ -15,9 +15,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 

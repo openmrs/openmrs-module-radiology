@@ -36,10 +36,10 @@ import org.openmrs.User;
 import org.openmrs.api.OrderService;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
-import org.openmrs.module.radiology.RadiologyService;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
+import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportService;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
@@ -61,7 +61,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	private OrderService orderService;
 	
 	@Mock
-	private RadiologyService radiologyService;
+	private RadiologyOrderService radiologyOrderService;
 	
 	@Mock
 	private RadiologyReportService radiologyReportService;
@@ -295,8 +295,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		mockRadiologyOrder.getStudy()
 				.setMwlStatus(MwlStatus.IN_SYNC);
 		
-		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
-		when(radiologyService.placeRadiologyOrderInPacs(mockRadiologyOrder)).thenReturn(true);
+		when(radiologyOrderService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
+		when(radiologyOrderService.placeRadiologyOrderInPacs(mockRadiologyOrder)).thenReturn(true);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -328,8 +328,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		mockRadiologyOrder.getStudy()
 				.setMwlStatus(MwlStatus.IN_SYNC);
 		
-		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
-		when(radiologyService.placeRadiologyOrderInPacs(mockRadiologyOrder)).thenReturn(true);
+		when(radiologyOrderService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
+		when(radiologyOrderService.placeRadiologyOrderInPacs(mockRadiologyOrder)).thenReturn(true);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -362,8 +362,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		mockRadiologyOrder.getStudy()
 				.setMwlStatus(MwlStatus.OUT_OF_SYNC);
 		
-		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
-		when(radiologyService.placeRadiologyOrderInPacs(mockRadiologyOrder)).thenReturn(false);
+		when(radiologyOrderService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
+		when(radiologyOrderService.placeRadiologyOrderInPacs(mockRadiologyOrder)).thenReturn(false);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -398,7 +398,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		User mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
 		
 		when(userContext.getAuthenticatedUser()).thenReturn(mockRadiologyScheduler);
-		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
+		when(radiologyOrderService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -430,7 +430,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		User mockRadiologyScheduler = RadiologyTestData.getMockRadiologyScheduler();
 		
 		when(userContext.getAuthenticatedUser()).thenReturn(mockRadiologyScheduler);
-		when(radiologyService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
+		when(radiologyOrderService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -474,13 +474,13 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		MockHttpSession mockSession = new MockHttpSession();
 		mockRequest.setSession(mockSession);
 		
-		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrderToDiscontinue.getOrderId())).thenReturn(
+		when(radiologyOrderService.getRadiologyOrderByOrderId(mockRadiologyOrderToDiscontinue.getOrderId())).thenReturn(
 			mockRadiologyOrderToDiscontinue);
 		when(
-			radiologyService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
+			radiologyOrderService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
 				mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getOrderReasonNonCoded())).thenReturn(
 			mockDiscontinuationOrder);
-		when(radiologyService.discontinueRadiologyOrderInPacs(mockRadiologyOrderToDiscontinue)).thenReturn(true);
+		when(radiologyOrderService.discontinueRadiologyOrderInPacs(mockRadiologyOrderToDiscontinue)).thenReturn(true);
 		
 		BindingResult orderErrors = mock(BindingResult.class);
 		assertThat(mockRadiologyOrderToDiscontinue.getAction(), is(Order.Action.NEW));
@@ -518,13 +518,13 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		MockHttpSession mockSession = new MockHttpSession();
 		mockRequest.setSession(mockSession);
 		
-		when(radiologyService.getRadiologyOrderByOrderId(mockRadiologyOrderToDiscontinue.getOrderId())).thenReturn(
+		when(radiologyOrderService.getRadiologyOrderByOrderId(mockRadiologyOrderToDiscontinue.getOrderId())).thenReturn(
 			mockRadiologyOrderToDiscontinue);
 		when(
-			radiologyService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
+			radiologyOrderService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
 				mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getOrderReasonNonCoded())).thenReturn(
 			mockDiscontinuationOrder);
-		when(radiologyService.discontinueRadiologyOrderInPacs(mockRadiologyOrderToDiscontinue)).thenReturn(false);
+		when(radiologyOrderService.discontinueRadiologyOrderInPacs(mockRadiologyOrderToDiscontinue)).thenReturn(false);
 		
 		BindingResult orderErrors = mock(BindingResult.class);
 		ModelAndView modelAndView = radiologyOrderFormController.postDiscontinueRadiologyOrder(mockRequest, null,

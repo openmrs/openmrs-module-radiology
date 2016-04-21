@@ -18,8 +18,8 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
-import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.RadiologyService;
+import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.springframework.beans.TypeMismatchException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -36,7 +36,7 @@ public class PortletsController {
 	private static final Log log = LogFactory.getLog(PortletsController.class);
 	
 	@Autowired
-	private RadiologyService radiologyService;
+	private RadiologyOrderService radiologyOrderService;
 	
 	@Autowired
 	private PatientService patientService;
@@ -175,7 +175,7 @@ public class PortletsController {
 	 */
 	private List<RadiologyOrder> getRadiologyOrdersForPatientQuery(String patientQuery) {
 		List<Patient> patientList = patientService.getPatients(patientQuery);
-		return radiologyService.getRadiologyOrdersByPatients(patientList);
+		return radiologyOrderService.getRadiologyOrdersByPatients(patientList);
 	}
 	
 	/**

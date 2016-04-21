@@ -21,7 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class RadiologyEncounterMatcherComponentTest extends BaseModuleContextSensitiveTest {
 	
-	private static final String STUDIES_TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyServiceComponentTestDataset.xml";
+	private static final String TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyEncounterMatcherComponentTestDataset.xml";
 	
 	private static final int VISIT_ID_WITH_NON_VOIDED_ENCOUNTER = 3003;
 	
@@ -47,7 +47,7 @@ public class RadiologyEncounterMatcherComponentTest extends BaseModuleContextSen
 	
 	@Before
 	public void runBeforeAllTests() throws Exception {
-		executeDataSet(STUDIES_TEST_DATASET);
+		executeDataSet(TEST_DATASET);
 	}
 	
 	/**

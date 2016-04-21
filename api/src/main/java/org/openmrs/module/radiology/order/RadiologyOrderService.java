@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology;
+package org.openmrs.module.radiology.order;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ca.uhn.hl7v2.HL7Exception;
 
 @Transactional
-public interface RadiologyService extends OpenmrsService {
+public interface RadiologyOrderService extends OpenmrsService {
 	
 	/**
 	 * Save given <code>RadiologyOrder</code> and its <code>RadiologyOrder.study</code> to the

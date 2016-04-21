@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.impl;
+package org.openmrs.module.radiology.order;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
@@ -38,7 +38,6 @@ import org.openmrs.api.ProviderService;
 import org.openmrs.api.VisitService;
 import org.openmrs.module.emrapi.encounter.EmrEncounterService;
 import org.openmrs.module.radiology.MwlStatus;
-import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.study.RadiologyStudyService;
 import org.openmrs.module.radiology.study.Study;
@@ -46,11 +45,11 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Tests {@link RadiologyServiceImpl}
+ * Tests {@link RadiologyOrderServiceImpl}
  */
-public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiveTest {
+public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSensitiveTest {
 	
-	private static final String STUDIES_TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyServiceComponentTestDataset.xml";
+	private static final String TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyOrderServiceComponentTestDataset.xml";
 	
 	private static final int PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER_AND_NO_ACTIVE_VISIT = 70011;
 	
@@ -78,7 +77,7 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	@Autowired
 	private OrderService orderService;
 	
-	private RadiologyServiceImpl radiologyServiceImpl = null;
+	private RadiologyOrderServiceImpl radiologyOrderServiceImpl = null;
 	
 	@Autowired
 	private RadiologyStudyService radiologyStudyService;
@@ -96,38 +95,38 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	@Before
 	public void runBeforeAllTests() throws Exception {
 		
-		if (radiologyServiceImpl == null) {
-			radiologyServiceImpl = new RadiologyServiceImpl();
-			Field radiologyStudyServiceField = RadiologyServiceImpl.class.getDeclaredField("radiologyStudyService");
+		if (radiologyOrderServiceImpl == null) {
+			radiologyOrderServiceImpl = new RadiologyOrderServiceImpl();
+			Field radiologyStudyServiceField = RadiologyOrderServiceImpl.class.getDeclaredField("radiologyStudyService");
 			radiologyStudyServiceField.setAccessible(true);
-			radiologyStudyServiceField.set(radiologyServiceImpl, radiologyStudyService);
-			Field orderServiceField = RadiologyServiceImpl.class.getDeclaredField("orderService");
+			radiologyStudyServiceField.set(radiologyOrderServiceImpl, radiologyStudyService);
+			Field orderServiceField = RadiologyOrderServiceImpl.class.getDeclaredField("orderService");
 			orderServiceField.setAccessible(true);
-			orderServiceField.set(radiologyServiceImpl, orderService);
-			Field encounterServiceField = RadiologyServiceImpl.class.getDeclaredField("encounterService");
+			orderServiceField.set(radiologyOrderServiceImpl, orderService);
+			Field encounterServiceField = RadiologyOrderServiceImpl.class.getDeclaredField("encounterService");
 			encounterServiceField.setAccessible(true);
-			encounterServiceField.set(radiologyServiceImpl, encounterService);
-			Field emrEncounterServiceField = RadiologyServiceImpl.class.getDeclaredField("emrEncounterService");
+			encounterServiceField.set(radiologyOrderServiceImpl, encounterService);
+			Field emrEncounterServiceField = RadiologyOrderServiceImpl.class.getDeclaredField("emrEncounterService");
 			emrEncounterServiceField.setAccessible(true);
-			emrEncounterServiceField.set(radiologyServiceImpl, emrEncounterService);
-			Field radiologyPropertiesField = RadiologyServiceImpl.class.getDeclaredField("radiologyProperties");
+			emrEncounterServiceField.set(radiologyOrderServiceImpl, emrEncounterService);
+			Field radiologyPropertiesField = RadiologyOrderServiceImpl.class.getDeclaredField("radiologyProperties");
 			radiologyPropertiesField.setAccessible(true);
-			radiologyPropertiesField.set(radiologyServiceImpl, radiologyProperties);
+			radiologyPropertiesField.set(radiologyOrderServiceImpl, radiologyProperties);
 		}
 		
-		updateStudyMwlStatusMethod = RadiologyServiceImpl.class.getDeclaredMethod("updateStudyMwlStatus", new Class[] {
+		updateStudyMwlStatusMethod = RadiologyOrderServiceImpl.class.getDeclaredMethod("updateStudyMwlStatus", new Class[] {
 				RadiologyOrder.class, boolean.class });
 		updateStudyMwlStatusMethod.setAccessible(true);
 		
-		saveRadiologyOrderEncounterMethod = RadiologyServiceImpl.class.getDeclaredMethod("saveRadiologyOrderEncounter",
+		saveRadiologyOrderEncounterMethod = RadiologyOrderServiceImpl.class.getDeclaredMethod("saveRadiologyOrderEncounter",
 			new Class[] { Patient.class, Provider.class, Date.class });
 		saveRadiologyOrderEncounterMethod.setAccessible(true);
 		
-		executeDataSet(STUDIES_TEST_DATASET);
+		executeDataSet(TEST_DATASET);
 	}
 	
 	/**
-	 * @see RadiologyServiceImpl#updateStudyMwlStatus(RadiologyOrder,boolean)
+	 * @see RadiologyOrderServiceImpl#updateStudyMwlStatus(RadiologyOrder,boolean)
 	 * @verifies set the study mwlstatus of given radiology order to in sync given is in sync true
 	 */
 	@Test
@@ -139,7 +138,7 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		study.setStudyId(NON_EXISTING_STUDY_ID);
 		study.setMwlStatus(MwlStatus.OUT_OF_SYNC);
 		radiologyOrder.setStudy(study);
-		updateStudyMwlStatusMethod.invoke(radiologyServiceImpl, new Object[] { radiologyOrder, true });
+		updateStudyMwlStatusMethod.invoke(radiologyOrderServiceImpl, new Object[] { radiologyOrder, true });
 		
 		assertThat(radiologyOrder.getStudy()
 				.getMwlStatus(), is(MwlStatus.IN_SYNC));
@@ -151,7 +150,7 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	}
 	
 	/**
-	 * @see RadiologyServiceImpl#updateStudyMwlStatus(RadiologyOrder,boolean)
+	 * @see RadiologyOrderServiceImpl#updateStudyMwlStatus(RadiologyOrder,boolean)
 	 * @verifies set the study mwlstatus of given radiology order to out of sync given is in sync false
 	 */
 	@Test
@@ -163,7 +162,7 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		study.setStudyId(NON_EXISTING_STUDY_ID);
 		study.setMwlStatus(MwlStatus.IN_SYNC);
 		radiologyOrder.setStudy(study);
-		updateStudyMwlStatusMethod.invoke(radiologyServiceImpl, new Object[] { radiologyOrder, false });
+		updateStudyMwlStatusMethod.invoke(radiologyOrderServiceImpl, new Object[] { radiologyOrder, false });
 		
 		assertThat(radiologyOrder.getStudy()
 				.getMwlStatus(), is(MwlStatus.OUT_OF_SYNC));
@@ -175,7 +174,7 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	}
 	
 	/**
-	 * @see RadiologyServiceImpl#saveRadiologyOrderEncounter(Patient,Provider,Date)
+	 * @see RadiologyOrderServiceImpl#saveRadiologyOrderEncounter(Patient,Provider,Date)
 	 * @verifies create radiology order encounter attached to existing active visit given patient with active visit
 	 */
 	@Test
@@ -190,7 +189,7 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		assertThat(encounterService.getEncountersByPatient(patient), is(empty()));
 		assertThat(visitService.getActiveVisitsByPatient(patient), is(not(empty())));
 		
-		Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyServiceImpl, new Object[] {
+		Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyOrderServiceImpl, new Object[] {
 				patient, provider, encounterDatetime });
 		
 		assertNotNull(encounter);
@@ -208,7 +207,7 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 	}
 	
 	/**
-	 * @see RadiologyServiceImpl#saveRadiologyOrderEncounter(Patient,Provider,Date)
+	 * @see RadiologyOrderServiceImpl#saveRadiologyOrderEncounter(Patient,Provider,Date)
 	 * @verifies create radiology order encounter attached to new active visit given patient without active visit
 	 */
 	@Test
@@ -222,7 +221,7 @@ public class RadiologyServiceImplComponentTest extends BaseModuleContextSensitiv
 		assertThat(encounterService.getEncountersByPatient(patient), is(empty()));
 		assertThat(visitService.getActiveVisitsByPatient(patient), is(empty()));
 		
-		Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyServiceImpl, new Object[] {
+		Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyOrderServiceImpl, new Object[] {
 				patient, provider, encounterDatetime });
 		
 		assertNotNull(encounter);

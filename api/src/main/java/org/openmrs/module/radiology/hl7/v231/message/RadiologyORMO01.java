@@ -11,7 +11,6 @@ package org.openmrs.module.radiology.hl7.v231.message;
 
 import java.util.Date;
 
-import org.openmrs.module.radiology.RadiologyOrder;
 import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.hl7.custommodel.v231.message.ORM_O01;
 import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
@@ -20,6 +19,7 @@ import org.openmrs.module.radiology.hl7.v231.segment.RadiologyOBR;
 import org.openmrs.module.radiology.hl7.v231.segment.RadiologyORC;
 import org.openmrs.module.radiology.hl7.v231.segment.RadiologyPID;
 import org.openmrs.module.radiology.hl7.v231.segment.RadiologyZDS;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 
 import ca.uhn.hl7v2.HL7Exception;
 import ca.uhn.hl7v2.parser.EncodingCharacters;

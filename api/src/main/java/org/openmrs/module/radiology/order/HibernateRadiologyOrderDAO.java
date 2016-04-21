@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.db.hibernate;
+package org.openmrs.module.radiology.order;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,20 +16,18 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.Patient;
-import org.openmrs.module.radiology.RadiologyOrder;
-import org.openmrs.module.radiology.db.RadiologyOrderDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 /**
  * Hibernate specific RadiologyOrder related functions. This class should not be used directly. All
- * calls should go through the {@link org.openmrs.module.radiology.RadiologyService} methods.
+ * calls should go through the {@link org.openmrs.module.radiology.order.RadiologyOrderService} methods.
  *
- * @see org.openmrs.module.radiology.db.RadiologyOrderDAO
- * @see org.openmrs.module.radiology.RadiologyService
+ * @see org.openmrs.module.radiology.order.RadiologyOrderDAO
+ * @see org.openmrs.module.radiology.order.RadiologyOrderService
  */
 @Repository
-public class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
+class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
 	
 	@Autowired
 	private SessionFactory sessionFactory;
@@ -44,7 +42,7 @@ public class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrderByOrderId(Integer)
 	 */
 	@Override
 	public RadiologyOrder getRadiologyOrderByOrderId(Integer orderId) {
@@ -53,7 +51,7 @@ public class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
 	}
 	
 	/**
-	 * @see org.openmrs.module.radiology.RadiologyService#getRadiologyOrdersByPatient(Patient)
+	 * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
 	 */
 	@Override
 	public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient) {
@@ -90,7 +88,7 @@ public class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
 	
 	/**
 	 * @see
-	 *      org.openmrs.module.radiology.RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 *      org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
 	 */
 	@Override
 	public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients) {

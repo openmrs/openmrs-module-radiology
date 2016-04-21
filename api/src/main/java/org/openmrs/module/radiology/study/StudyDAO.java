@@ -11,7 +11,7 @@ package org.openmrs.module.radiology.study;
 
 import java.util.List;
 
-import org.openmrs.module.radiology.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 
 /**
  * Study-related database functions

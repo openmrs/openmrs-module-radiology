@@ -11,7 +11,7 @@
  *
  * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
  */
-package org.openmrs.module.radiology;
+package org.openmrs.module.radiology.order;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
@@ -45,17 +45,20 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.VisitService;
+import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.PerformedProcedureStepStatus;
+import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.study.Study;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 /**
- * Tests {@link RadiologyService}
+ * Tests {@link RadiologyOrderService}
  */
-public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTest {
+public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensitiveTest {
 	
-	private static final String STUDIES_TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyServiceComponentTestDataset.xml";
+	private static final String TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyOrderServiceComponentTestDataset.xml";
 	
 	private static final int PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER = 70011;
 	
@@ -69,19 +72,9 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	private static final int PATIENT_ID_WITH_NO_RADIOLOGY_ORDER_AND_NO_EXISTIG_ENCOUNTER_AND_ACTIVE_VISIT = 70033;
 	
-	private static final int RADIOLOGY_ORDER_ID_WITHOUT_STUDY = 2004;
-	
 	private static final int EXISTING_RADIOLOGY_ORDER_ID = 2001;
 	
 	private static final int NON_EXISTING_RADIOLOGY_ORDER_ID = 99999;
-	
-	private static final String EXISTING_STUDY_INSTANCE_UID = "1.2.826.0.1.3680043.8.2186.1.1";
-	
-	private static final String NON_EXISTING_STUDY_INSTANCE_UID = "1.2.826.0.1.3680043.8.2186.1.9999";
-	
-	private static final int EXISTING_STUDY_ID = 1;
-	
-	private static final int NON_EXISTING_STUDY_ID = 99999;
 	
 	private static final int CONCEPT_ID_FOR_FRACTURE = 178;
 	
@@ -109,7 +102,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	private OrderService orderService;
 	
 	@Autowired
-	private RadiologyService radiologyService;
+	private RadiologyOrderService radiologyOrderService;
 	
 	@Autowired
 	private VisitService visitService;
@@ -137,11 +130,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	
 	@Before
 	public void runBeforeAllTests() throws Exception {
-		executeDataSet(STUDIES_TEST_DATASET);
+		executeDataSet(TEST_DATASET);
 	}
 	
 	/**
-	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
 	 * @verifies create new radiology order and study from given radiology order object
 	 */
 	@Test
@@ -149,7 +142,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
 		
-		radiologyOrder = radiologyService.placeRadiologyOrder(radiologyOrder);
+		radiologyOrder = radiologyOrderService.placeRadiologyOrder(radiologyOrder);
 		
 		assertNotNull(radiologyOrder);
 		assertNotNull(radiologyOrder.getOrderId());
@@ -188,7 +181,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	}
 	
 	/**
-	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
 	 * @verifies create radiology order encounter with orderer and attached to existing active visit if patient has active
 	 *           visit
 	 */
@@ -206,7 +199,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		assertThat(radiologyOrder.getEncounter(), is(nullValue()));
 		
-		radiologyOrder = radiologyService.placeRadiologyOrder(radiologyOrder);
+		radiologyOrder = radiologyOrderService.placeRadiologyOrder(radiologyOrder);
 		
 		Encounter encounter = radiologyOrder.getEncounter();
 		assertThat(encounter, is(not(nullValue())));
@@ -227,7 +220,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	}
 	
 	/**
-	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
 	 * @verifies create radiology order encounter with orderer attached to new active visit if patient without active visit
 	 */
 	@Test
@@ -239,7 +232,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient()), is(empty()));
 		assertThat(radiologyOrder.getEncounter(), is(nullValue()));
 		
-		radiologyOrder = radiologyService.placeRadiologyOrder(radiologyOrder);
+		radiologyOrder = radiologyOrderService.placeRadiologyOrder(radiologyOrder);
 		
 		Encounter encounter = radiologyOrder.getEncounter();
 		assertThat(encounter, is(not(nullValue())));
@@ -262,7 +255,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	}
 	
 	/**
-	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
 	 * @verifies throw illegal argument exception given null
 	 */
 	@Test
@@ -270,11 +263,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is required");
-		radiologyService.placeRadiologyOrder(null);
+		radiologyOrderService.placeRadiologyOrder(null);
 	}
 	
 	/**
-	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
 	 * @verifies throw illegal argument exception given existing radiology order
 	 */
 	@Test
@@ -282,18 +275,18 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
 		
-		radiologyOrder = radiologyService.placeRadiologyOrder(radiologyOrder);
+		radiologyOrder = radiologyOrderService.placeRadiologyOrder(radiologyOrder);
 		
 		assertNotNull(radiologyOrder);
 		assertNotNull(radiologyOrder.getOrderId());
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("Cannot edit an existing order!");
-		radiologyService.placeRadiologyOrder(radiologyOrder);
+		radiologyOrderService.placeRadiologyOrder(radiologyOrder);
 	}
 	
 	/**
-	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
 	 * @verifies throw illegal argument exception if given radiology order has no study
 	 */
 	@Test
@@ -304,11 +297,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder.study is required");
-		radiologyService.placeRadiologyOrder(radiologyOrder);
+		radiologyOrderService.placeRadiologyOrder(radiologyOrder);
 	}
 	
 	/**
-	 * @see RadiologyService#placeRadiologyOrder(RadiologyOrder)
+	 * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
 	 * @verifies throw illegal argument exception if given study modality is null
 	 */
 	@Test
@@ -320,11 +313,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder.study.modality is required");
-		radiologyService.placeRadiologyOrder(radiologyOrder);
+		radiologyOrderService.placeRadiologyOrder(radiologyOrder);
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
+	 * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
 	 * @verifies create discontinuation order which discontinues given radiology order that is not
 	 *           in progress or completed
 	 */
@@ -332,13 +325,13 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	public void discontinueRadiologyOrder_shouldCreateDiscontinuationOrderWhichDiscontinuesGivenRadiologyOrderThatIsNotInProgressOrCompleted()
 			throws Exception {
 		
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
 		radiologyOrder.getStudy()
 				.setPerformedStatus(null);
 		String discontinueReason = "Wrong Procedure";
 		
-		Order discontinuationOrder = radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(),
-			discontinueReason);
+		Order discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrder,
+			radiologyOrder.getOrderer(), discontinueReason);
 		
 		assertNotNull(discontinuationOrder);
 		assertThat(discontinuationOrder.getAction(), is(Order.Action.DISCONTINUE));
@@ -348,7 +341,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
+	 * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
 	 * @verifies create discontinuation order with encounter attached to existing active visit if patient has active visit
 	 */
 	@Test
@@ -361,7 +354,7 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 				.get(0)
 				.getEncounters(), is(not(empty())));
 		
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_ENCOUNTER_AND_ACTIVE_VISIT);
+		RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_ENCOUNTER_AND_ACTIVE_VISIT);
 		
 		assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
 				.size(), is(1));
@@ -377,8 +370,8 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		assertThat(radiologyOrder.getPatient()
 				.getUuid(), is(not(nullValue())));
-		Order discontinuationOrder = radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(),
-			discontinueReason);
+		Order discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrder,
+			radiologyOrder.getOrderer(), discontinueReason);
 		
 		assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
 				.size(), is(1));
@@ -395,13 +388,13 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
+	 * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
 	 * @verifies create discontinuation order with encounter attached to new active visit if patient without active visit
 	 */
 	@Test
 	public void discontinueRadiologyOrder_shouldCreateDiscontinuationOrderWithEncounterAttachedToNewActiveVisitIfPatientWithoutActiveVisit()
 			throws Exception {
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
 		
 		assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient()), is(empty()));
 		
@@ -409,8 +402,8 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 				.setPerformedStatus(null);
 		String discontinueReason = "Wrong Procedure";
 		
-		Order discontinuationOrder = radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(),
-			discontinueReason);
+		Order discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrder,
+			radiologyOrder.getOrderer(), discontinueReason);
 		
 		assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
 				.size(), is(1));
@@ -424,22 +417,22 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
+	 * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
 	 * @verifies should throw illegal argument exception given empty radiology order
 	 */
 	@Test
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenEmptyRadiologyOrder() throws Exception {
 		
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
 		String discontinueReason = "Wrong Procedure";
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is required");
-		radiologyService.discontinueRadiologyOrder(null, radiologyOrder.getOrderer(), discontinueReason);
+		radiologyOrderService.discontinueRadiologyOrder(null, radiologyOrder.getOrderer(), discontinueReason);
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
+	 * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
 	 * @verifies should throw illegal argument exception given radiology order with orderId null
 	 */
 	@Test
@@ -451,103 +444,103 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("orderId is null");
-		radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueReason);
+		radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueReason);
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
+	 * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
 	 * @verifies should throw illegal argument exception if radiology order is not active
 	 */
 	@Test
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsNotActive() throws Exception {
 		
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
 		radiologyOrder.setAction(Order.Action.DISCONTINUE);
 		String discontinueReason = "Wrong Procedure";
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("order is not active");
-		radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueReason);
+		radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueReason);
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
+	 * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
 	 * @verifies throw illegal argument exception if radiology order is completed
 	 */
 	@Test
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsCompleted() throws Exception {
 		
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
 		radiologyOrder.getStudy()
 				.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
 		String discontinueReason = "Wrong Procedure";
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is in progress");
-		radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueReason);
+		radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueReason);
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
+	 * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
 	 * @verifies throw illegal argument exception if radiology order is in progress
 	 */
 	@Test
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsInProgress() throws Exception {
 		
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
 		radiologyOrder.getStudy()
 				.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		String discontinueReason = "Wrong Procedure";
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is completed");
-		radiologyService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueReason);
+		radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueReason);
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
+	 * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
 	 * @verifies should throw illegal argument exception given empty provider
 	 */
 	@Test
 	public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenEmptyProvider() throws Exception {
 		
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
 		radiologyOrder.getStudy()
 				.setPerformedStatus(null);
 		String discontinueReason = "Wrong Procedure";
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("provider is required");
-		radiologyService.discontinueRadiologyOrder(radiologyOrder, null, discontinueReason);
+		radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, null, discontinueReason);
 	}
 	
 	/**
-	 * @see RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 * @see RadiologyOrderService#getRadiologyOrderByOrderId(Integer)
 	 * @verifies should return radiology order matching order id
 	 */
 	@Test
 	public void getRadiologyOrderByOrderId_shouldReturnRadiologyOrderMatchingOrderId() {
 		
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+		RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
 		
 		assertNotNull(radiologyOrder);
 		assertThat(radiologyOrder.getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
 	}
 	
 	/**
-	 * @see RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 * @see RadiologyOrderService#getRadiologyOrderByOrderId(Integer)
 	 * @verifies should return null if no match was found
 	 */
 	@Test
 	public void getRadiologyOrderByOrderId_shouldReturnNullIfNoMatchIsFound() {
 		
-		RadiologyOrder radiologyOrder = radiologyService.getRadiologyOrderByOrderId(NON_EXISTING_RADIOLOGY_ORDER_ID);
+		RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(NON_EXISTING_RADIOLOGY_ORDER_ID);
 		
 		assertNull(radiologyOrder);
 	}
 	
 	/**
-	 * @see RadiologyService#getRadiologyOrderByOrderId(Integer)
+	 * @see RadiologyOrderService#getRadiologyOrderByOrderId(Integer)
 	 * @verifies should throw illegal argument exception given null
 	 */
 	@Test
@@ -555,11 +548,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("orderId is required");
-		radiologyService.getRadiologyOrderByOrderId(null);
+		radiologyOrderService.getRadiologyOrderByOrderId(null);
 	}
 	
 	/**
-	 * @see RadiologyService#getRadiologyOrdersByPatient(Patient)
+	 * @see RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
 	 * @verifies should return all radiology orders associated with given patient
 	 */
 	@Test
@@ -567,13 +560,13 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		Patient patientWithTwoRadiologyOrders = patientService.getPatient(PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER);
 		
-		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatient(patientWithTwoRadiologyOrders);
+		List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrdersByPatient(patientWithTwoRadiologyOrders);
 		
 		assertThat(radiologyOrders.size(), is(2));
 	}
 	
 	/**
-	 * @see RadiologyService#getRadiologyOrdersByPatient(Patient)
+	 * @see RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
 	 * @verifies should return empty list given patient without associated radiology orders
 	 */
 	@Test
@@ -581,13 +574,13 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		Patient patientWithoutRadiologyOrders = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER);
 		
-		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatient(patientWithoutRadiologyOrders);
+		List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrdersByPatient(patientWithoutRadiologyOrders);
 		
 		assertThat(radiologyOrders.size(), is(0));
 	}
 	
 	/**
-	 * @see RadiologyService#getRadiologyOrdersByPatient(Patient)
+	 * @see RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
 	 * @verifies should throw illegal argument exception given null
 	 */
 	@Test
@@ -595,11 +588,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("patient is required");
-		radiologyService.getRadiologyOrdersByPatient(null);
+		radiologyOrderService.getRadiologyOrdersByPatient(null);
 	}
 	
 	/**
-	 * @see RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 * @see RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
 	 * @verifies should return all radiology orders associated with given patients
 	 */
 	@Test
@@ -619,13 +612,13 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		allPatientsWithRadiologyOrders.add(patientWithFiveRadiologyOrders);
 		allPatientsWithRadiologyOrders.add(patientWithOneRadiologyOrder);
 		
-		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatients(allPatientsWithRadiologyOrders);
+		List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrdersByPatients(allPatientsWithRadiologyOrders);
 		
 		assertThat(radiologyOrders.size(), is(TOTAL_NUMBER_OF_RADIOLOGY_ORDERS));
 	}
 	
 	/**
-	 * @see RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 * @see RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
 	 * @verifies should return all radiology orders given empty patient list
 	 */
 	@Test
@@ -633,13 +626,13 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		List<Patient> emptyPatientList = new ArrayList<Patient>();
 		
-		List<RadiologyOrder> radiologyOrders = radiologyService.getRadiologyOrdersByPatients(emptyPatientList);
+		List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrdersByPatients(emptyPatientList);
 		
 		assertThat(radiologyOrders.size(), is(TOTAL_NUMBER_OF_RADIOLOGY_ORDERS));
 	}
 	
 	/**
-	 * @see RadiologyService#getRadiologyOrdersByPatients(List<Patient>)
+	 * @see RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
 	 * @verifies should throw illegal argument exception given null
 	 */
 	@Test
@@ -647,11 +640,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("patients is required");
-		radiologyService.getRadiologyOrdersByPatients(null);
+		radiologyOrderService.getRadiologyOrdersByPatients(null);
 	}
 	
 	/**
-	 * @see RadiologyService#placeRadiologyOrderInPacs(RadiologyOrder)
+	 * @see RadiologyOrderService#placeRadiologyOrderInPacs(RadiologyOrder)
 	 * @verifies throw illegal argument exception given null
 	 */
 	@Test
@@ -659,11 +652,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is required");
-		radiologyService.placeRadiologyOrderInPacs(null);
+		radiologyOrderService.placeRadiologyOrderInPacs(null);
 	}
 	
 	/**
-	 * @see RadiologyService#placeRadiologyOrderInPacs(RadiologyOrder)
+	 * @see RadiologyOrderService#placeRadiologyOrderInPacs(RadiologyOrder)
 	 * @verifies throw illegal argument exception given radiology order with orderId null
 	 */
 	@Test
@@ -672,11 +665,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is not persisted");
-		radiologyService.placeRadiologyOrderInPacs(new RadiologyOrder());
+		radiologyOrderService.placeRadiologyOrderInPacs(new RadiologyOrder());
 	}
 	
 	/**
-	 * @see RadiologyService#placeRadiologyOrderInPacs(RadiologyOrder)
+	 * @see RadiologyOrderService#placeRadiologyOrderInPacs(RadiologyOrder)
 	 * @verifies throw illegal argument exception if given radiology order has no study
 	 */
 	@Test
@@ -689,11 +682,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder.study is required");
-		radiologyService.placeRadiologyOrderInPacs(radiologyOrder);
+		radiologyOrderService.placeRadiologyOrderInPacs(radiologyOrder);
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrderInPacs(RadiologyOrder)
+	 * @see RadiologyOrderService#discontinueRadiologyOrderInPacs(RadiologyOrder)
 	 * @verifies throw illegal argument exception given null
 	 */
 	@Test
@@ -701,11 +694,11 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is required");
-		radiologyService.discontinueRadiologyOrderInPacs(null);
+		radiologyOrderService.discontinueRadiologyOrderInPacs(null);
 	}
 	
 	/**
-	 * @see RadiologyService#discontinueRadiologyOrderInPacs(RadiologyOrder)
+	 * @see RadiologyOrderService#discontinueRadiologyOrderInPacs(RadiologyOrder)
 	 * @verifies throw illegal argument exception given radiology order with orderId null
 	 */
 	@Test
@@ -714,6 +707,6 @@ public class RadiologyServiceComponentTest extends BaseModuleContextSensitiveTes
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is not persisted");
-		radiologyService.discontinueRadiologyOrderInPacs(new RadiologyOrder());
+		radiologyOrderService.discontinueRadiologyOrderInPacs(new RadiologyOrder());
 	}
 }
