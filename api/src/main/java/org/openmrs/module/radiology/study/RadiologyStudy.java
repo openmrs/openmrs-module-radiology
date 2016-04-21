@@ -12,7 +12,6 @@ package org.openmrs.module.radiology.study;
 import java.lang.reflect.Field;
 
 import org.openmrs.module.radiology.Modality;
-import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
