@@ -256,7 +256,7 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
 	}
 	
 	/**
-	 * Set MwlStatus of given RadiologyOrder's Study to IN_SYNC and OUT_OF_SYNC
+	 * Set MwlStatus of given RadiologyOrder's RadiologyStudy to IN_SYNC and OUT_OF_SYNC
 	 * 
 	 * @param radiologyOrder radiology order whos study mwlstatus is updated
 	 * @param isInSync set the study mwlstatus to in sync if true

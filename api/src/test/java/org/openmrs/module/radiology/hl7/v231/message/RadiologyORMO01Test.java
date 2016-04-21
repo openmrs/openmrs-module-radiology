@@ -34,7 +34,7 @@ import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.hl7.custommodel.v231.message.ORM_O01;
 import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
 import org.openmrs.module.radiology.order.RadiologyOrder;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 
 import ca.uhn.hl7v2.parser.PipeParser;
 
@@ -50,7 +50,7 @@ public class RadiologyORMO01Test {
 	
 	private Patient patient = null;
 	
-	private Study study = null;
+	private RadiologyStudy radiologyStudy = null;
 	
 	private RadiologyOrder radiologyOrder = null;
 	
@@ -101,11 +101,11 @@ public class RadiologyORMO01Test {
 		radiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		radiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		
-		study = new Study();
-		study.setStudyId(1);
-		study.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
-		study.setModality(Modality.CT);
-		radiologyOrder.setStudy(study);
+		radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setStudyId(1);
+		radiologyStudy.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
+		radiologyStudy.setModality(Modality.CT);
+		radiologyOrder.setStudy(radiologyStudy);
 	}
 	
 	/**

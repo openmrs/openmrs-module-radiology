@@ -24,7 +24,7 @@ import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 
 /**
  * Tests {@link RadiologyReport}
@@ -57,11 +57,11 @@ public class RadiologyReportTest {
 		radiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		radiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		radiologyOrder.setVoided(false);
-		Study study = new Study();
-		study.setStudyId(1);
-		study.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
-		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-		radiologyOrder.setStudy(study);
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setStudyId(1);
+		radiologyStudy.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
+		radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		radiologyOrder.setStudy(radiologyStudy);
 		
 		radiologyReport = new RadiologyReport(radiologyOrder);
 	}
@@ -86,7 +86,7 @@ public class RadiologyReportTest {
 	@Test
 	public void RadiologyReport_shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNotCompleted() throws Exception {
 		
-		radiologyOrder.setStudy(new Study());
+		radiologyOrder.setStudy(new RadiologyStudy());
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder is not completed");

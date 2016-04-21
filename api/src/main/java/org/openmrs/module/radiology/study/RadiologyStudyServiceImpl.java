@@ -26,29 +26,29 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
 	private static final Log log = LogFactory.getLog(RadiologyStudyServiceImpl.class);
 	
 	@Autowired
-	private StudyDAO studyDAO;
+	private RadiologyStudyDAO radiologyStudyDAO;
 	
 	@Autowired
 	private RadiologyProperties radiologyProperties;
 	
 	/**
-	 * @see RadiologyStudyService#saveStudy(Study)
+	 * @see RadiologyStudyService#saveStudy(RadiologyStudy)
 	 */
 	@Override
 	@Transactional
-	public Study saveStudy(Study study) {
+	public RadiologyStudy saveStudy(RadiologyStudy radiologyStudy) {
 		
-		final RadiologyOrder order = study.getRadiologyOrder();
+		final RadiologyOrder order = radiologyStudy.getRadiologyOrder();
 		
-		if (study.getScheduledStatus() == null && order.getScheduledDate() != null) {
-			study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
+		if (radiologyStudy.getScheduledStatus() == null && order.getScheduledDate() != null) {
+			radiologyStudy.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
 		}
 		
 		try {
-			Study savedStudy = studyDAO.saveStudy(study);
+			RadiologyStudy savedStudy = radiologyStudyDAO.saveStudy(radiologyStudy);
 			final String studyInstanceUid = radiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
 			savedStudy.setStudyInstanceUid(studyInstanceUid);
-			savedStudy = studyDAO.saveStudy(savedStudy);
+			savedStudy = radiologyStudyDAO.saveStudy(savedStudy);
 			return savedStudy;
 		}
 		catch (Exception e) {
@@ -63,7 +63,7 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
 	 */
 	@Transactional
 	@Override
-	public Study updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus)
+	public RadiologyStudy updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus)
 			throws IllegalArgumentException {
 		
 		if (studyInstanceUid == null) {
@@ -74,9 +74,9 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
 			throw new IllegalArgumentException("performedStatus is required");
 		}
 		
-		final Study studyToBeUpdated = studyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
+		final RadiologyStudy studyToBeUpdated = radiologyStudyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
 		studyToBeUpdated.setPerformedStatus(performedStatus);
-		return studyDAO.saveStudy(studyToBeUpdated);
+		return radiologyStudyDAO.saveStudy(studyToBeUpdated);
 	}
 	
 	/**
@@ -84,8 +84,8 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
 	 */
 	@Transactional(readOnly = true)
 	@Override
-	public Study getStudyByStudyId(Integer studyId) {
-		return studyDAO.getStudyByStudyId(studyId);
+	public RadiologyStudy getStudyByStudyId(Integer studyId) {
+		return radiologyStudyDAO.getStudyByStudyId(studyId);
 	}
 	
 	/**
@@ -93,24 +93,24 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
 	 */
 	@Transactional(readOnly = true)
 	@Override
-	public Study getStudyByOrderId(Integer orderId) {
+	public RadiologyStudy getStudyByOrderId(Integer orderId) {
 		if (orderId == null) {
 			throw new IllegalArgumentException("orderId is required");
 		}
 		
-		return studyDAO.getStudyByOrderId(orderId);
+		return radiologyStudyDAO.getStudyByOrderId(orderId);
 	}
 	
 	/**
 	 * @see RadiologyStudyService#getStudyByStudyInstanceUid(String)
 	 */
 	@Transactional(readOnly = true)
-	public Study getStudyByStudyInstanceUid(String studyInstanceUid) {
+	public RadiologyStudy getStudyByStudyInstanceUid(String studyInstanceUid) {
 		if (studyInstanceUid == null) {
 			throw new IllegalArgumentException("studyInstanceUid is required");
 		}
 		
-		return studyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
+		return radiologyStudyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
 	}
 	
 	/**
@@ -118,12 +118,12 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
 	 */
 	@Override
 	@Transactional(readOnly = true)
-	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
+	public List<RadiologyStudy> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
 		if (radiologyOrders == null) {
 			throw new IllegalArgumentException("radiologyOrders are required");
 		}
 		
-		final List<Study> result = studyDAO.getStudiesByRadiologyOrders(radiologyOrders);
+		final List<RadiologyStudy> result = radiologyStudyDAO.getStudiesByRadiologyOrders(radiologyOrders);
 		return result;
 	}
 }

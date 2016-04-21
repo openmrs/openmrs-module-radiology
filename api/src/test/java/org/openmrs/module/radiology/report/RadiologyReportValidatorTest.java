@@ -18,7 +18,7 @@ import org.junit.Test;
 import org.openmrs.Provider;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
@@ -57,9 +57,9 @@ public class RadiologyReportValidatorTest {
 	public void validate_shouldFailValidationIfPrincipalResultsInterpreterIsEmptyOrWhitespace() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
-		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-		radiologyOrder.setStudy(study);
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		radiologyOrder.setStudy(radiologyStudy);
 		RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
 		radiologyReport.setPrincipalResultsInterpreter(null);
 		
@@ -77,9 +77,9 @@ public class RadiologyReportValidatorTest {
 	public void validate_shouldFailValidationIfRadiologyReportIsNull() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
-		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-		radiologyOrder.setStudy(study);
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		radiologyOrder.setStudy(radiologyStudy);
 		RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
 		
 		Errors errors = new BindException(radiologyReport, "radiologyReport");
@@ -98,9 +98,9 @@ public class RadiologyReportValidatorTest {
 	public void validate_shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
-		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-		radiologyOrder.setStudy(study);
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		radiologyOrder.setStudy(radiologyStudy);
 		RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
 		radiologyReport.setPrincipalResultsInterpreter(new Provider());
 		

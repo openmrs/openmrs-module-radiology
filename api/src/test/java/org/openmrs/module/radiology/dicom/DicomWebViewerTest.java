@@ -11,7 +11,7 @@ import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.module.radiology.RadiologyProperties;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.openmrs.test.BaseContextMockTest;
 
 /**
@@ -36,18 +36,18 @@ public class DicomWebViewerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see DicomWebViewer#getDicomViewerUrl(Study)
+	 * @see DicomWebViewer#getDicomViewerUrl(RadiologyStudy)
 	 * @verifies return a url to open dicom images of the given study in the configured dicom viewer
 	 */
 	@Test
 	public void getDicomViewerUrl_shouldReturnAUrlToOpenDicomImagesOfTheGivenStudyInTheConfiguredDicomViewer() {
-		Study study = getMockStudy();
-		assertThat(dicomviewer.getDicomViewerUrl(study), is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID="
-				+ study.getStudyInstanceUid()));
+		RadiologyStudy radiologyStudy = getMockStudy();
+		assertThat(dicomviewer.getDicomViewerUrl(radiologyStudy),
+			is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=" + radiologyStudy.getStudyInstanceUid()));
 	}
 	
-	Study getMockStudy() {
-		Study mockStudy = new Study();
+	RadiologyStudy getMockStudy() {
+		RadiologyStudy mockStudy = new RadiologyStudy();
 		mockStudy.setStudyId(1);
 		mockStudy.setStudyInstanceUid("1.2.826.0.1.3680043.8.2186.1.1");
 		
@@ -55,7 +55,7 @@ public class DicomWebViewerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see DicomWebViewer#getDicomViewerUrl(Study)
+	 * @see DicomWebViewer#getDicomViewerUrl(RadiologyStudy)
 	 * @verifies add query param server name to url if local server name is not blank
 	 */
 	@Test
@@ -64,15 +64,14 @@ public class DicomWebViewerTest extends BaseContextMockTest {
 		when(radiologyProperties.getDicomWebViewerBaseUrl()).thenReturn("/oviyam2/viewer.html");
 		when(radiologyProperties.getDicomWebViewerLocalServerName()).thenReturn("oviyamlocal");
 		
-		Study study = getMockStudy();
+		RadiologyStudy radiologyStudy = getMockStudy();
 		
-		assertThat(dicomviewer.getDicomViewerUrl(study),
-			is("http://localhost:8081/oviyam2/viewer.html?studyUID=" + study.getStudyInstanceUid()
-					+ "&serverName=oviyamlocal"));
+		assertThat(dicomviewer.getDicomViewerUrl(radiologyStudy), is("http://localhost:8081/oviyam2/viewer.html?studyUID="
+				+ radiologyStudy.getStudyInstanceUid() + "&serverName=oviyamlocal"));
 	}
 	
 	/**
-	 * @see DicomWebViewer#getDicomViewerUrl(Study)
+	 * @see DicomWebViewer#getDicomViewerUrl(RadiologyStudy)
 	 * @verifies throw an illegal argument exception given null
 	 */
 	@Test
@@ -83,16 +82,16 @@ public class DicomWebViewerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see DicomWebViewer#getDicomViewerUrl(Study)
+	 * @see DicomWebViewer#getDicomViewerUrl(RadiologyStudy)
 	 * @verifies throw an illegal argument exception given study with studyInstanceUid null
 	 */
 	@Test
 	public void getDicomViewerUrl_shouldThrowAnIllegalArgumentExceptionGivenAStudyWithStudyInstanceUidNull()
 			throws Exception {
-		Study study = new Study();
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("studyInstanceUid cannot be null"));
-		dicomviewer.getDicomViewerUrl(study);
+		dicomviewer.getDicomViewerUrl(radiologyStudy);
 	}
 }

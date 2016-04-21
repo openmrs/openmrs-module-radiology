@@ -40,7 +40,7 @@ import org.openmrs.module.emrapi.encounter.EmrEncounterService;
 import org.openmrs.module.radiology.MwlStatus;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.study.RadiologyStudyService;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -134,16 +134,16 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
 			throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
-		study.setStudyId(NON_EXISTING_STUDY_ID);
-		study.setMwlStatus(MwlStatus.OUT_OF_SYNC);
-		radiologyOrder.setStudy(study);
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setStudyId(NON_EXISTING_STUDY_ID);
+		radiologyStudy.setMwlStatus(MwlStatus.OUT_OF_SYNC);
+		radiologyOrder.setStudy(radiologyStudy);
 		updateStudyMwlStatusMethod.invoke(radiologyOrderServiceImpl, new Object[] { radiologyOrder, true });
 		
 		assertThat(radiologyOrder.getStudy()
 				.getMwlStatus(), is(MwlStatus.IN_SYNC));
 		
-		Study updatedStudy = radiologyStudyService.getStudyByStudyId(radiologyOrder.getStudy()
+		RadiologyStudy updatedStudy = radiologyStudyService.getStudyByStudyId(radiologyOrder.getStudy()
 				.getStudyId());
 		assertThat(updatedStudy.getMwlStatus(), is(radiologyOrder.getStudy()
 				.getMwlStatus()));
@@ -158,16 +158,16 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
 			throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
-		study.setStudyId(NON_EXISTING_STUDY_ID);
-		study.setMwlStatus(MwlStatus.IN_SYNC);
-		radiologyOrder.setStudy(study);
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setStudyId(NON_EXISTING_STUDY_ID);
+		radiologyStudy.setMwlStatus(MwlStatus.IN_SYNC);
+		radiologyOrder.setStudy(radiologyStudy);
 		updateStudyMwlStatusMethod.invoke(radiologyOrderServiceImpl, new Object[] { radiologyOrder, false });
 		
 		assertThat(radiologyOrder.getStudy()
 				.getMwlStatus(), is(MwlStatus.OUT_OF_SYNC));
 		
-		Study updatedStudy = radiologyStudyService.getStudyByStudyId(radiologyOrder.getStudy()
+		RadiologyStudy updatedStudy = radiologyStudyService.getStudyByStudyId(radiologyOrder.getStudy()
 				.getStudyId());
 		assertThat(updatedStudy.getMwlStatus(), is(radiologyOrder.getStudy()
 				.getMwlStatus()));

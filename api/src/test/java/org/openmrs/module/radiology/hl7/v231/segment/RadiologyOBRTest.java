@@ -21,7 +21,7 @@ import org.openmrs.Order;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.hl7.HL7Constants;
 import org.openmrs.module.radiology.order.RadiologyOrder;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.openmrs.test.Verifies;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -53,10 +53,10 @@ public class RadiologyOBRTest {
 		
 		radiologyOrder.setInstructions("CT ABDOMEN PANCREAS WITH IV CONTRAST");
 		
-		Study study = new Study();
-		study.setStudyId(1);
-		study.setModality(Modality.CT);
-		radiologyOrder.setStudy(study);
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setStudyId(1);
+		radiologyStudy.setModality(Modality.CT);
+		radiologyOrder.setStudy(radiologyStudy);
 		
 		ORM_O01 message = new ORM_O01();
 		RadiologyOBR.populateObservationRequest(message.getORCOBRRQDRQ1ODSODTRXONTEDG1RXRRXCNTEOBXNTECTIBLG()
@@ -92,7 +92,7 @@ public class RadiologyOBRTest {
 			throws HL7Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setStudy(new Study());
+		radiologyOrder.setStudy(new RadiologyStudy());
 		
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage(is("observationRequestSegment cannot be null."));

@@ -36,7 +36,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.radiology.study.RadiologyStudyService;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.springframework.beans.TypeMismatchException;
@@ -47,7 +47,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class PortletsControllerTest extends BaseContextMockTest {
 	
-	private List<Study> mockStudies;
+	private List<RadiologyStudy> mockStudies;
 	
 	private List<RadiologyOrder> mockRadiologyOrders;
 	
@@ -83,7 +83,7 @@ public class PortletsControllerTest extends BaseContextMockTest {
 		mockRadiologyOrders.add(mockRadiologyOrder1);
 		mockRadiologyOrders.add(mockRadiologyOrder2);
 		
-		mockStudies = new ArrayList<Study>();
+		mockStudies = new ArrayList<RadiologyStudy>();
 		mockStudies.add(RadiologyTestData.getMockStudy1PostSave());
 		mockStudies.add(RadiologyTestData.getMockStudy2PostSave());
 		

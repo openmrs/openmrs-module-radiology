@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openmrs.Order;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 
 /**
  * Tests {@link RadiologyOrder}
@@ -26,35 +26,35 @@ import org.openmrs.module.radiology.study.Study;
 public class RadiologyOrderTest {
 	
 	/**
-	 * @see RadiologyOrder#setStudy(Study)
+	 * @see RadiologyOrder#setStudy(RadiologyStudy)
 	 * @verifies set the study attribute to given study
 	 */
 	@Test
 	public void setStudy_shouldSetTheStudyAttributeToGivenStudy() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
+		RadiologyStudy study = new RadiologyStudy();
 		radiologyOrder.setStudy(study);
 		
 		assertThat(radiologyOrder.getStudy(), is(study));
 	}
 	
 	/**
-	 * @see RadiologyOrder#setStudy(Study)
+	 * @see RadiologyOrder#setStudy(RadiologyStudy)
 	 * @verifies set the radiology order of given study to this radiology order
 	 */
 	@Test
 	public void setStudy_shouldSetTheRadiologyOrderOfGivenStudyToThisRadiologyOrder() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
+		RadiologyStudy study = new RadiologyStudy();
 		radiologyOrder.setStudy(study);
 		
 		assertThat(study.getRadiologyOrder(), is(radiologyOrder));
 	}
 	
 	/**
-	 * @see RadiologyOrder#setStudy(Study)
+	 * @see RadiologyOrder#setStudy(RadiologyStudy)
 	 * @verifies not fail given null
 	 */
 	@Test
@@ -87,7 +87,7 @@ public class RadiologyOrderTest {
 	public void isInProgress_shouldReturnFalseIfAssociatedStudyIsNotInProgress() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
+		RadiologyStudy study = new RadiologyStudy();
 		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		radiologyOrder.setStudy(study);
 		
@@ -102,7 +102,7 @@ public class RadiologyOrderTest {
 	public void isInProgress_shouldReturnTrueIfAssociatedStudyIsInProgress() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
+		RadiologyStudy study = new RadiologyStudy();
 		study.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
 		radiologyOrder.setStudy(study);
 		
@@ -130,7 +130,7 @@ public class RadiologyOrderTest {
 	public void isNotInProgress_shouldReturnTrueIfAssociatedStudyIsNotInProgress() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
+		RadiologyStudy study = new RadiologyStudy();
 		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		radiologyOrder.setStudy(study);
 		
@@ -145,7 +145,7 @@ public class RadiologyOrderTest {
 	public void isNotInProgress_shouldReturnFalseIfAssociatedStudyInProgress() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
+		RadiologyStudy study = new RadiologyStudy();
 		study.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
 		radiologyOrder.setStudy(study);
 		
@@ -173,7 +173,7 @@ public class RadiologyOrderTest {
 	public void isCompleted_shouldReturnFalseIfAssociatedStudyIsNotCompleted() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setStudy(new Study());
+		radiologyOrder.setStudy(new RadiologyStudy());
 		
 		assertFalse(radiologyOrder.isCompleted());
 	}
@@ -186,7 +186,7 @@ public class RadiologyOrderTest {
 	public void isCompleted_shouldReturnTrueIfAssociatedStudyIsCompleted() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
+		RadiologyStudy study = new RadiologyStudy();
 		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		radiologyOrder.setStudy(study);
 		
@@ -214,7 +214,7 @@ public class RadiologyOrderTest {
 	public void isNotCompleted_shouldReturnTrueIfAssociatedStudyIsNotCompleted() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setStudy(new Study());
+		radiologyOrder.setStudy(new RadiologyStudy());
 		
 		assertTrue(radiologyOrder.isNotCompleted());
 	}
@@ -227,7 +227,7 @@ public class RadiologyOrderTest {
 	public void isNotCompleted_shouldReturnFalseIfAssociatedStudyIsCompleted() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
+		RadiologyStudy study = new RadiologyStudy();
 		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		radiologyOrder.setStudy(study);
 		
@@ -242,7 +242,7 @@ public class RadiologyOrderTest {
 	public void isDiscontinuationAllowed_shouldReturnFalseIfOrderIsNotActive() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
+		RadiologyStudy study = new RadiologyStudy();
 		study.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
 		radiologyOrder.setStudy(study);
 		radiologyOrder.setAction(Order.Action.DISCONTINUE);
@@ -258,7 +258,7 @@ public class RadiologyOrderTest {
 	public void isDiscontinuationAllowed_shouldReturnFalseIfRadiologyOrderIsInProgress() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
+		RadiologyStudy study = new RadiologyStudy();
 		study.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
 		radiologyOrder.setStudy(study);
 		
@@ -273,7 +273,7 @@ public class RadiologyOrderTest {
 	public void isDiscontinuationAllowed_shouldReturnFalseIfRadiologyOrderIsCompleted() throws Exception {
 		
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		Study study = new Study();
+		RadiologyStudy study = new RadiologyStudy();
 		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
 		radiologyOrder.setStudy(study);
 		

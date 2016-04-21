@@ -34,8 +34,8 @@ public class DicomUtils {
 	
 	/**
 	 * <p>
-	 * Updates the PerformedStatus of an existing Study in the database to the Performed Procedure Step Status of a given
-	 * DicomObject containing a DICOM N-CREATE/N-SET command
+	 * Updates the PerformedStatus of an existing RadiologyStudy in the database to the Performed Procedure Step Status of a
+	 * given DicomObject containing a DICOM N-CREATE/N-SET command
 	 * </p>
 	 * 
 	 * @param mppsObject the DICOM MPPS object containing a DICOM N-CREATE/N-SET command with DICOM

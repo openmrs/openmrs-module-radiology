@@ -11,7 +11,7 @@ package org.openmrs.module.radiology.dicom;
 
 import org.apache.commons.lang3.StringUtils;
 import org.openmrs.module.radiology.RadiologyProperties;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -27,9 +27,9 @@ public class DicomWebViewer {
 	private RadiologyProperties radiologyProperties;
 	
 	/**
-	 * Return URL to open DICOM web viewer for given Study.
+	 * Return URL to open DICOM web viewer for given RadiologyStudy.
 	 * 
-	 * @param study Study for which DICOM web viewer URL should be created
+	 * @param radiologyStudy RadiologyStudy for which DICOM web viewer URL should be created
 	 * @throws IllegalArgumentException given null
 	 * @throws IllegalArgumentException given a study with studyInstanceUid null
 	 * @should return a url to open dicom images of the given study in the configured dicom viewer
@@ -37,10 +37,10 @@ public class DicomWebViewer {
 	 * @should throw an illegal argument exception given null
 	 * @should throw an illegal argument exception given study with studyInstanceUid null
 	 */
-	public String getDicomViewerUrl(Study study) {
-		if (study == null) {
+	public String getDicomViewerUrl(RadiologyStudy radiologyStudy) {
+		if (radiologyStudy == null) {
 			throw new IllegalArgumentException("study cannot be null");
-		} else if (study.getStudyInstanceUid() == null) {
+		} else if (radiologyStudy.getStudyInstanceUid() == null) {
 			throw new IllegalArgumentException("studyInstanceUid cannot be null");
 		}
 		
@@ -49,7 +49,7 @@ public class DicomWebViewer {
 				.host(radiologyProperties.getDicomWebViewerAddress())
 				.port(Integer.valueOf(radiologyProperties.getDicomWebViewerPort()))
 				.path(radiologyProperties.getDicomWebViewerBaseUrl())
-				.queryParam("studyUID", study.getStudyInstanceUid());
+				.queryParam("studyUID", radiologyStudy.getStudyInstanceUid());
 		
 		final String serverName = radiologyProperties.getDicomWebViewerLocalServerName();
 		if (StringUtils.isNotBlank(serverName)) {

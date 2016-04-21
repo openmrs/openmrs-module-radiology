@@ -7,77 +7,77 @@ import org.junit.Test;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 
 /**
- * Tests {@link Study}.
+ * Tests {@link RadiologyStudy}.
  */
-public class StudyTest {
+public class RadiologyStudyTest {
 	
 	/**
-	 * @see Study#isInProgress()
+	 * @see RadiologyStudy#isInProgress()
 	 * @verifies return false if performed status is null
 	 */
 	@Test
 	public void isInProgress_shouldReturnFalseIfPerformedStatusIsNull() throws Exception {
 		
-		Study study = new Study();
-		assertFalse(study.isInProgress());
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		assertFalse(radiologyStudy.isInProgress());
 	}
 	
 	/**
-	 * @see Study#isInProgress()
+	 * @see RadiologyStudy#isInProgress()
 	 * @verifies return false if performed status is not in progress
 	 */
 	@Test
 	public void isInProgress_shouldReturnFalseIfPerformedStatusIsNotInProgress() throws Exception {
 		
-		Study study = new Study();
-		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-		assertFalse(study.isInProgress());
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		assertFalse(radiologyStudy.isInProgress());
 	}
 	
 	/**
-	 * @see Study#isInProgress()
+	 * @see RadiologyStudy#isInProgress()
 	 * @verifies return true if performed status is in progress
 	 */
 	@Test
 	public void isInProgress_shouldReturnTrueIfPerformedStatusIsInProgress() throws Exception {
 		
-		Study study = new Study();
-		study.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
-		assertTrue(study.isInProgress());
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
+		assertTrue(radiologyStudy.isInProgress());
 	}
 	
 	/**
-	 * @see Study#isCompleted()
+	 * @see RadiologyStudy#isCompleted()
 	 * @verifies return false if performedStatus is null
 	 */
 	@Test
 	public void isCompleted_shouldReturnFalseIfPerformedStatusIsNull() throws Exception {
 		
-		Study study = new Study();
-		assertFalse(study.isCompleted());
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		assertFalse(radiologyStudy.isCompleted());
 	}
 	
 	/**
-	 * @see Study#isCompleted()
+	 * @see RadiologyStudy#isCompleted()
 	 * @verifies return false if performedStatus is not completed
 	 */
 	@Test
 	public void isCompleted_shouldReturnFalseIfPerformedStatusIsNotCompleted() throws Exception {
 		
-		Study study = new Study();
-		study.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
-		assertFalse(study.isCompleted());
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
+		assertFalse(radiologyStudy.isCompleted());
 	}
 	
 	/**
-	 * @see Study#isCompleted()
+	 * @see RadiologyStudy#isCompleted()
 	 * @verifies return true if performedStatus is completed
 	 */
 	@Test
 	public void isCompleted_shouldReturnTrueIfPerformedStatusIsCompleted() throws Exception {
 		
-		Study study = new Study();
-		study.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-		assertTrue(study.isCompleted());
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+		assertTrue(radiologyStudy.isCompleted());
 	}
 }

@@ -36,7 +36,7 @@ import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.radiology.order.RadiologyOrderValidator;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportService;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -81,7 +81,7 @@ public class RadiologyOrderFormController {
 			modelAndView.addObject("order", new Order());
 			modelAndView.addObject("radiologyReport", null);
 			final RadiologyOrder radiologyOrder = new RadiologyOrder();
-			radiologyOrder.setStudy(new Study());
+			radiologyOrder.setStudy(new RadiologyStudy());
 			modelAndView.addObject("radiologyOrder", radiologyOrder);
 		}
 		

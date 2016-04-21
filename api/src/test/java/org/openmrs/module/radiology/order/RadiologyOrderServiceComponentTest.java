@@ -48,7 +48,7 @@ import org.openmrs.api.VisitService;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.ScheduledProcedureStepStatus;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -172,10 +172,10 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
 		radiologyOrder.setScheduledDate(calendar.getTime());
 		radiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
 		
-		Study study = new Study();
-		study.setModality(Modality.CT);
-		study.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
-		radiologyOrder.setStudy(study);
+		RadiologyStudy radiologyStudy = new RadiologyStudy();
+		radiologyStudy.setModality(Modality.CT);
+		radiologyStudy.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
+		radiologyOrder.setStudy(radiologyStudy);
 		
 		return radiologyOrder;
 	}

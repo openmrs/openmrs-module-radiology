@@ -10,33 +10,33 @@
 package org.openmrs.module.radiology.order;
 
 import org.openmrs.TestOrder;
-import org.openmrs.module.radiology.study.Study;
+import org.openmrs.module.radiology.study.RadiologyStudy;
 
 /**
  * RadiologyOrder represents a radiology examination
  */
 public class RadiologyOrder extends TestOrder {
 	
-	private Study study;
+	private RadiologyStudy study;
 	
-	public Study getStudy() {
+	public RadiologyStudy getStudy() {
 		return study;
 	}
 	
 	/**
-	 * Set the Order.study to the given Study. Keeps the bi-directional (one-to-one) association
-	 * between RadiologyOrder and Study in sync.
+	 * Set the Order.study to the given RadiologyStudy. Keeps the bi-directional (one-to-one) association
+	 * between RadiologyOrder and RadiologyStudy in sync.
 	 *
 	 * @param study study which should be associated with this radiology order
 	 * @should set the study attribute to given study
 	 * @should set the radiology order of given study to this radiology order
 	 * @should not fail given null
 	 */
-	public void setStudy(Study study) {
-		if (study != null) {
-			study.setRadiologyOrder(this);
+	public void setStudy(RadiologyStudy radiologyStudy) {
+		if (radiologyStudy != null) {
+			radiologyStudy.setRadiologyOrder(this);
 		}
-		this.study = study;
+		this.study = radiologyStudy;
 	}
 	
 	/**
@@ -70,7 +70,7 @@ public class RadiologyOrder extends TestOrder {
 	}
 	
 	/**
-	 * Returns true when this RadiologyOrder has a completed Study and false otherwise.
+	 * Returns true when this RadiologyOrder has a completed RadiologyStudy and false otherwise.
 	 * 
 	 * @return true if order has completed study and false otherwise
 	 * @should return false if associated study is null
@@ -87,7 +87,7 @@ public class RadiologyOrder extends TestOrder {
 	}
 	
 	/**
-	 * Returns true when this RadiologyOrder does not have a completed Study and false otherwise.
+	 * Returns true when this RadiologyOrder does not have a completed RadiologyStudy and false otherwise.
 	 * 
 	 * @return true if order has no completed study and false otherwise
 	 * @should return true if associated study is null

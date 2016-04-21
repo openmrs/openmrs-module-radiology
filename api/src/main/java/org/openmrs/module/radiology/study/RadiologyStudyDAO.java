@@ -14,35 +14,35 @@ import java.util.List;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 
 /**
- * Study-related database functions
+ * RadiologyStudy-related database functions
  * 
  * @see org.openmrs.module.radiology.study.RadiologyStudyService
  */
-interface StudyDAO {
+interface RadiologyStudyDAO {
 	
 	/**
-	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#saveStudy(Study)
+	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#saveStudy(RadiologyStudy)
 	 */
-	public Study saveStudy(Study study);
+	public RadiologyStudy saveStudy(RadiologyStudy radiologyStudy);
 	
 	/**
 	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyId(Integer)
 	 */
-	public Study getStudyByStudyId(Integer studyId);
+	public RadiologyStudy getStudyByStudyId(Integer studyId);
 	
 	/**
 	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByOrderId(Integer)
 	 */
-	public Study getStudyByOrderId(Integer orderId);
+	public RadiologyStudy getStudyByOrderId(Integer orderId);
 	
 	/**
 	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyInstanceUid(String)
 	 */
-	public Study getStudyByStudyInstanceUid(String studyInstanceUid);
+	public RadiologyStudy getStudyByStudyInstanceUid(String studyInstanceUid);
 	
 	/**
 	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
 	 */
-	public List<Study> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
+	public List<RadiologyStudy> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
 	
 }
