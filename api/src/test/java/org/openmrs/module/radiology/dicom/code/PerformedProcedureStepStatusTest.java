@@ -1,8 +1,8 @@
-package org.openmrs.module.radiology;
+package org.openmrs.module.radiology.dicom.code;
 
 import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 import org.junit.Rule;
 import org.junit.Test;
