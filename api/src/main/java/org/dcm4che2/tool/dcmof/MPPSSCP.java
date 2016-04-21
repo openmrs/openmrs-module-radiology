@@ -51,7 +51,7 @@ import org.dcm4che2.net.service.DicomService;
 import org.dcm4che2.net.service.NCreateService;
 import org.dcm4che2.net.service.NSetService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.DicomUtils;
+import org.openmrs.module.radiology.dicom.DicomUtils;
 
 /**
  * @author gunter zeilinger(gunterze@gmail.com)

@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology;
+package org.openmrs.module.radiology.dicom;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
@@ -40,10 +40,13 @@ import org.openmrs.PatientIdentifier;
 import org.openmrs.PatientIdentifierType;
 import org.openmrs.PersonName;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.module.radiology.Modality;
+import org.openmrs.module.radiology.RadiologyConstants;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
-import org.openmrs.module.radiology.study.RadiologyStudyService;
 import org.openmrs.module.radiology.study.RadiologyStudy;
+import org.openmrs.module.radiology.study.RadiologyStudyService;
 import org.openmrs.test.BaseContextSensitiveTest;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;

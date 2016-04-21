@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology;
+package org.openmrs.module.radiology.dicom;
 
 import org.apache.log4j.Logger;
 import org.dcm4che2.data.DicomElement;
@@ -15,6 +15,7 @@ import org.dcm4che2.data.DicomObject;
 import org.dcm4che2.data.SpecificCharacterSet;
 import org.dcm4che2.data.Tag;
 import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.study.RadiologyStudyService;
 
