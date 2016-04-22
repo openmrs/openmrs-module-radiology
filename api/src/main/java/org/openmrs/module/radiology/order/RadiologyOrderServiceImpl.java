@@ -247,7 +247,8 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
 			throw new IllegalArgumentException("radiologyOrder is not persisted");
 		}
 		
-		final String hl7message = new RadiologyORMO01().createEncodedMessage(radiologyOrder, OrderControlElement.NEW_ORDER);
+		final String hl7message = new RadiologyORMO01().createEncodedMessage(radiologyOrder,
+			OrderControlElement.CANCEL_ORDER);
 		log.info("Created HL7 ORM^O01 message \n" + hl7message);
 		final boolean result = HL7Sender.sendHL7Message(hl7message);
 		
