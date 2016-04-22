@@ -166,7 +166,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
 		ModelAndView modelAndView = radiologyReportFormController.unclaimRadiologyReport(mockRadiologyReport);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
+		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrders/"
 				+ mockRadiologyReport.getRadiologyOrder()
 						.getOrderId()));
 	}

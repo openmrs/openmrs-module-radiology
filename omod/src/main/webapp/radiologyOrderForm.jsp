@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <openmrs:require privilege="Edit Orders" otherwise="/login.htm"
-	redirect="/module/radiology/radiologyOrder.form" />
+	redirect="/module/radiology/radiologyOrders" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="localHeader.jsp"%>
@@ -236,7 +236,7 @@
 						<tr>
 							<td><spring:message code="radiology.discontinuedOrder" /></td>
 							<td><spring:bind path="previousOrder">
-									<a href="radiologyOrder.form?orderId=${status.value}">${status.value}</a>
+									<a href="radiologyOrders/${status.value}">${status.value}</a>
 								</spring:bind></td>
 						</tr>
 						<tr>

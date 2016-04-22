@@ -47,9 +47,8 @@ public class RadiologyReportFormController {
 	 * @return model and view containing new radiology report for given radiology order
 	 * @should populate model and view with new radiology report for given radiology order
 	 */
-	@RequestMapping(method = RequestMethod.GET, params = "orderId")
-	protected ModelAndView getRadiologyReportFormWithNewRadiologyReport(
-			@RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder) {
+	@RequestMapping(method = RequestMethod.GET, value = "/{orderId}")
+	protected ModelAndView getRadiologyReportFormWithNewRadiologyReport(RadiologyOrder radiologyOrder) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
@@ -122,8 +121,8 @@ public class RadiologyReportFormController {
 		
 		if (Context.isAuthenticated()) {
 			radiologyReportService.unclaimRadiologyReport(radiologyReport);
-			return new ModelAndView("redirect:" + RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING
-					+ "?orderId=" + radiologyReport.getRadiologyOrder()
+			return new ModelAndView("redirect:" + RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "/"
+					+ radiologyReport.getRadiologyOrder()
 							.getOrderId());
 		}
 		return modelAndView;

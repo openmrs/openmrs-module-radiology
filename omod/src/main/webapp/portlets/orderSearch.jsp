@@ -34,7 +34,7 @@
 						data-child-mwl="<spring:message code="radiology.${radiologyOrder.study.mwlStatus}"/>">
 						<td class="details-control"></td>
 						<td><a
-							href="radiologyOrder.form?orderId=${radiologyOrder.orderId}">${radiologyOrder.orderId}</a></td>
+							href="radiologyOrders/${radiologyOrder.orderId}">${radiologyOrder.orderId}</a></td>
 						<td style="text-align: center"><a
 							href="/openmrs/patientDashboard.form?patientId=${radiologyOrder.patient.patientId}">${radiologyOrder.patient.patientIdentifier}</a></td>
 						<td><a

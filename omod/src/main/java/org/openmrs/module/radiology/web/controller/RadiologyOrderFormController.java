@@ -51,7 +51,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING)
 public class RadiologyOrderFormController {
 	
-	protected static final String RADIOLOGY_ORDER_FORM_REQUEST_MAPPING = "/module/radiology/radiologyOrder.form";
+	protected static final String RADIOLOGY_ORDER_FORM_REQUEST_MAPPING = "/module/radiology/radiologyOrders";
 	
 	static final String RADIOLOGY_ORDER_FORM_VIEW = "/module/radiology/radiologyOrderForm";
 	
@@ -126,9 +126,8 @@ public class RadiologyOrderFormController {
 	 * @should populate model and view with existing order if given order id only matches an order
 	 *         and not a radiology order
 	 */
-	@RequestMapping(method = RequestMethod.GET, params = "orderId")
-	protected ModelAndView getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(
-			@RequestParam(value = "orderId", required = true) Order order) {
+	@RequestMapping(method = RequestMethod.GET, value = "/{orderId}")
+	protected ModelAndView getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(Order order) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
@@ -198,7 +197,7 @@ public class RadiologyOrderFormController {
 							.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.savedFailWorklist");
 				}
 				
-				modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
+				modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "/"
 						+ radiologyOrder.getOrderId());
 			}
 			catch (Exception ex) {
@@ -222,11 +221,10 @@ public class RadiologyOrderFormController {
 	 * @should discontinue non discontinued order and redirect to discontinuation order
 	 * @should not redirect if discontinuation failed in pacs
 	 */
-	@RequestMapping(method = RequestMethod.POST, params = "discontinueOrder")
+	@RequestMapping(method = RequestMethod.POST, params = "discontinueOrder", value = "/{orderId}")
 	protected ModelAndView postDiscontinueRadiologyOrder(HttpServletRequest request, HttpServletResponse response,
-			@RequestParam("orderId") RadiologyOrder radiologyOrderToDiscontinue,
-			@ModelAttribute("discontinuationOrder") Order discontinuationOrder, BindingResult radiologyOrderErrors)
-			throws Exception {
+			RadiologyOrder radiologyOrderToDiscontinue, @ModelAttribute("discontinuationOrder") Order discontinuationOrder,
+			BindingResult radiologyOrderErrors) throws Exception {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
 		
 		try {
@@ -244,7 +242,7 @@ public class RadiologyOrderFormController {
 			if (radiologyOrderService.discontinueRadiologyOrderInPacs(radiologyOrderToDiscontinue)) {
 				request.getSession()
 						.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
-				modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
+				modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "/"
 						+ discontinuationOrder.getOrderId());
 			} else {
 				request.getSession()
