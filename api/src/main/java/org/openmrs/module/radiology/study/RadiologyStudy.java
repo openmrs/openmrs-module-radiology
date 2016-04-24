@@ -88,6 +88,13 @@ public class RadiologyStudy {
 		return performedStatus == PerformedProcedureStepStatus.COMPLETED;
 	}
 	
+	/**
+	 * Returns true when this Study's performedStatus is null and false otherwise.
+	 *
+	 * @return true on performedStatus null and false otherwise
+	 * @should return true if performedStatus is null
+	 * @should return false if performedStatus is not null
+	 */
 	public boolean isScheduleable() {
 		return performedStatus == null;
 	}
@@ -120,6 +127,12 @@ public class RadiologyStudy {
 		this.studyInstanceUid = studyInstanceUid;
 	}
 	
+	/**
+	 * @see Object#toString()
+	 * @return String of Study
+	 * @should return string of study with null for members that are null
+	 * @should return string of study
+	 */
 	@Override
 	public String toString() {
 		final StringBuilder buff = new StringBuilder();
