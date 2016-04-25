@@ -33,8 +33,10 @@ public class RadiologyOrderValidator implements Validator {
 	
 	/**
 	 * Determines if the command object being submitted is a valid type
-	 * 
+	 *
 	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
+	 * @should return true for RadiologyOrder objects
+	 * @should return false for other object types
 	 */
 	@SuppressWarnings("unchecked")
 	public boolean supports(Class c) {
@@ -43,7 +45,7 @@ public class RadiologyOrderValidator implements Validator {
 	
 	/**
 	 * Checks the form object for any inconsistencies/errors
-	 * 
+	 *
 	 * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
 	 * @should fail validation if radiologyOrder is null
 	 * @should fail validation if voided is null
@@ -56,7 +58,6 @@ public class RadiologyOrderValidator implements Validator {
 	 * @should fail validation if dateActivated after autoExpireDate
 	 * @should fail validation if scheduledDate is set and urgency is not set as ON_SCHEDULED_DATE
 	 * @should fail validation if scheduledDate is null when urgency is ON_SCHEDULED_DATE
-	 * @should pass validation if the class of the order is a subclass of orderType.javaClass
 	 * @should pass validation if all fields are correct
 	 * @should not allow a future dateActivated
 	 */
