@@ -12,7 +12,9 @@ package org.openmrs.module.radiology.report;
 import java.util.List;
 
 import org.openmrs.Provider;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.radiology.RadiologyPrivileges;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -35,6 +37,7 @@ public interface RadiologyReportService extends OpenmrsService {
 	 * @should throw an UnsupportedOperationException if given order has a completed RadiologyReport
 	 * @should throw an UnsupportedOperationException if given order has a claimed RadiologyReport
 	 */
+	@Authorized(RadiologyPrivileges.ADD_RADIOLOGY_REPORTS)
 	public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder) throws IllegalArgumentException,
 			UnsupportedOperationException;
 	
@@ -53,6 +56,7 @@ public interface RadiologyReportService extends OpenmrsService {
 	 * @should throw an UnsupportedOperationException if radiologyReport is discontinued
 	 * @should throw an UnsupportedOperationException if radiologyReport is completed
 	 */
+	@Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
 	public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
 			UnsupportedOperationException;
 	
@@ -71,6 +75,7 @@ public interface RadiologyReportService extends OpenmrsService {
 	 * @should throw an UnsupportedOperationException if radiologyReport is discontinued
 	 * @should throw an UnsupportedOperationException if radiologyReport is completed
 	 */
+	@Authorized(RadiologyPrivileges.DELETE_RADIOLOGY_REPORTS)
 	public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
 			UnsupportedOperationException;
 	
@@ -95,6 +100,7 @@ public interface RadiologyReportService extends OpenmrsService {
 	 * @should throw an UnsupportedOperationException if radiologyReport is discontinued
 	 * @should throw an UnsupportedOperationException if radiologyReport is completed
 	 */
+	@Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
 	public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter)
 			throws IllegalArgumentException, UnsupportedOperationException;
 	
@@ -107,6 +113,7 @@ public interface RadiologyReportService extends OpenmrsService {
 	 * @should fetch RadiologyReport matching given radiologyReportId
 	 * @should throw IllegalArgumentException if radiologyReportId is null
 	 */
+	@Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
 	RadiologyReport getRadiologyReportByRadiologyReportId(Integer radiologyReportId) throws IllegalArgumentException;
 	
 	/**
@@ -124,6 +131,7 @@ public interface RadiologyReportService extends OpenmrsService {
 	 * @should throw an IllegalArgumentException if given radiologyOrder is null
 	 * @should throw an IllegalArgumentException if given reportStatus is null
 	 */
+	@Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
 	public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder radiologyOrder,
 			RadiologyReportStatus reportStatus) throws IllegalArgumentException;
 	
@@ -136,6 +144,7 @@ public interface RadiologyReportService extends OpenmrsService {
 	 * @should return false if the RadiologyOrder has no claimed RadiologyReport
 	 * @should return false if the RadiologyOrder is null
 	 */
+	@Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
 	public boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder);
 	
 	/**
@@ -148,6 +157,7 @@ public interface RadiologyReportService extends OpenmrsService {
 	 * @should return false if the RadiologyOrder has no completed RadiologyReport
 	 * @should throw an IllegalArgumentException if radiologyOrder is null
 	 */
+	@Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
 	public boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder);
 	
 	/**
@@ -162,5 +172,6 @@ public interface RadiologyReportService extends OpenmrsService {
 	 * @should return null if
 	 * @should throw an IllegalArgumentException if radiologyOrder is null
 	 */
+	@Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
 	public RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder);
 }

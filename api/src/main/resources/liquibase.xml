@@ -287,4 +287,27 @@
 			<where>uuid = 'dbdb9a9b-56ea-11e5-a47f-08002719a237'</where>
 		</update>
 	</changeSet>
+	<changeSet id="radiology-25" author="bgeVam">
+		<comment>add privileges for radiology reports</comment>
+		<insert tableName="privilege">
+			<column name="privilege" value="Add Radiology Reports" />
+			<column name="description" value="Able to add radiology reports" />
+			<column name="uuid" value="95b926da-9dfc-47dc-9395-24fd452de8f4" />
+		</insert>
+		<insert tableName="privilege">
+			<column name="privilege" value="Delete Radiology Reports" />
+			<column name="description" value="Able to delete radiology reports" />
+			<column name="uuid" value="940548a5-025b-414b-837a-4285f7d29393" />
+		</insert>
+		<insert tableName="privilege">
+			<column name="privilege" value="Edit Radiology Reports" />
+			<column name="description" value="Able to edit radiology reports" />
+			<column name="uuid" value="61b27690-2b9a-4820-8a51-b35241725b51" />
+		</insert>
+		<insert tableName="privilege">
+			<column name="privilege" value="Get Radiology Reports" />
+			<column name="description" value="Able to get radiology reports" />
+			<column name="uuid" value="cb972bb7-a495-4263-88f5-9c54eed383cb" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>

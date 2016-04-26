@@ -1,8 +1,8 @@
 
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
-<openmrs:require privilege="Edit Orders" otherwise="/login.htm"
-	redirect="/module/radiology/radiologyOrder.form" />
+<openmrs:require allPrivileges="Edit Orders,Get Orders,Add Radiology Reports,Delete Radiology Reports,Edit Radiology Reports,Get Radiology Reports,Get Providers,Get Concepts,Get Users"
+	otherwise="/login.htm" redirect="/module/radiology/radiologyOrder.form" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="localHeader.jsp"%>
@@ -281,45 +281,7 @@
 			</div>
 
 			<c:if test="${radiologyOrder.completed}">
-				<br>
-				<div>
-					<span class="boxHeader"> <b><spring:message
-								code="radiology.radiologyReportTitle" /></b>
-					</span>
-					<c:choose>
-						<c:when test="${radiologyReportNeedsToBeCreated}">
-							<form:form method="post" modelAttribute="radiologyOrder"
-								cssClass="box">
-								<tr>
-									<td><spring:bind path="orderId">
-											<a
-												href="/openmrs/module/radiology/radiologyReport.form?orderId=${status.value}">
-												<spring:message code="radiology.radiologyReportClaim" />
-											</a>
-										</spring:bind></td>
-								</tr>
-							</form:form>
-						</c:when>
-						<c:otherwise>
-							<form:form method="post" modelAttribute="radiologyReport"
-								cssClass="box">
-								<tr>
-									<td><a
-										href="/openmrs/module/radiology/radiologyReport.form?radiologyReportId=${radiologyReport.id}">
-											<c:choose>
-												<c:when test="${radiologyReport.reportStatus == 'CLAIMED'}">
-													<spring:message code="radiology.radiologyReportResume" />
-												</c:when>
-												<c:otherwise>
-													<spring:message code="radiology.radiologyReportShow" />
-												</c:otherwise>
-											</c:choose>
-									</a></td>
-								</tr>
-							</form:form>
-						</c:otherwise>
-					</c:choose>
-				</div>
+				<%@ include file="portlets/radiologyReportPortlet.jsp"%>
 			</c:if>
 			<c:if test="${radiologyOrder.discontinuationAllowed}">
 				<!--  Show form to discontinue an active non in progress/completed RadiologyOrder -->

@@ -10,7 +10,6 @@
 package org.openmrs.module.radiology.report.web;
 
 import org.openmrs.Order;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.order.web.RadiologyOrderFormController;
@@ -53,15 +52,11 @@ public class RadiologyReportFormController {
 			@RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
-		if (Context.isAuthenticated()) {
-			
-			RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
-			modelAndView = new ModelAndView("redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?radiologyReportId="
-					+ radiologyReport.getId());
-			
-			addObjectsToModelAndView(modelAndView, radiologyReport);
-			return modelAndView;
-		}
+		RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
+		modelAndView = new ModelAndView("redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?radiologyReportId="
+				+ radiologyReport.getId());
+		
+		addObjectsToModelAndView(modelAndView, radiologyReport);
 		return modelAndView;
 	}
 	
@@ -78,14 +73,9 @@ public class RadiologyReportFormController {
 	protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(
 			@RequestParam(value = "radiologyReportId", required = true) Integer radiologyReportId) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
+		RadiologyReport radiologyReport = radiologyReportService.getRadiologyReportByRadiologyReportId(radiologyReportId);
 		
-		if (Context.isAuthenticated()) {
-			
-			RadiologyReport radiologyReport = radiologyReportService.getRadiologyReportByRadiologyReportId(radiologyReportId);
-			
-			addObjectsToModelAndView(modelAndView, radiologyReport);
-			return modelAndView;
-		}
+		addObjectsToModelAndView(modelAndView, radiologyReport);
 		return modelAndView;
 	}
 	
@@ -99,13 +89,9 @@ public class RadiologyReportFormController {
 	@RequestMapping(method = RequestMethod.POST, params = "saveRadiologyReport")
 	protected ModelAndView saveRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
+		radiologyReportService.saveRadiologyReport(radiologyReport);
 		
-		if (Context.isAuthenticated()) {
-			radiologyReportService.saveRadiologyReport(radiologyReport);
-			
-			addObjectsToModelAndView(modelAndView, radiologyReport);
-			return modelAndView;
-		}
+		addObjectsToModelAndView(modelAndView, radiologyReport);
 		return modelAndView;
 	}
 	
@@ -119,15 +105,10 @@ public class RadiologyReportFormController {
 	 */
 	@RequestMapping(method = RequestMethod.POST, params = "unclaimRadiologyReport")
 	protected ModelAndView unclaimRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
-		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
-		
-		if (Context.isAuthenticated()) {
-			radiologyReportService.unclaimRadiologyReport(radiologyReport);
-			return new ModelAndView("redirect:" + RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING
-					+ "?orderId=" + radiologyReport.getRadiologyOrder()
-							.getOrderId());
-		}
-		return modelAndView;
+		radiologyReportService.unclaimRadiologyReport(radiologyReport);
+		return new ModelAndView("redirect:" + RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING
+				+ "?orderId=" + radiologyReport.getRadiologyOrder()
+						.getOrderId());
 	}
 	
 	/**
@@ -146,16 +127,13 @@ public class RadiologyReportFormController {
 			BindingResult bindingResult) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
-		if (Context.isAuthenticated()) {
-			if (validateForm(modelAndView, radiologyReport, bindingResult)) {
-				return modelAndView;
-			}
-			
-			final RadiologyReport completedRadiologyReport = radiologyReportService.completeRadiologyReport(radiologyReport,
-				radiologyReport.getPrincipalResultsInterpreter());
-			addObjectsToModelAndView(modelAndView, completedRadiologyReport);
+		if (validateForm(modelAndView, radiologyReport, bindingResult)) {
 			return modelAndView;
 		}
+		
+		final RadiologyReport completedRadiologyReport = radiologyReportService.completeRadiologyReport(radiologyReport,
+			radiologyReport.getPrincipalResultsInterpreter());
+		addObjectsToModelAndView(modelAndView, completedRadiologyReport);
 		return modelAndView;
 	}
 	
