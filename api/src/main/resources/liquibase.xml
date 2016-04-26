@@ -310,4 +310,12 @@
 			<column name="uuid" value="cb972bb7-a495-4263-88f5-9c54eed383cb" />
 		</insert>
 	</changeSet>
+	<changeSet id="radiology-26" author="bgeVam">
+		<comment>Add privilege to delete radiology orders</comment>
+		<insert tableName="privilege">
+			<column name="privilege" value="Delete Radiology Orders" />
+			<column name="description" value="Able to delete radiology orders" />
+			<column name="uuid" value="e4583999-4169-4ca0-b0bc-39dcf3721475" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>
