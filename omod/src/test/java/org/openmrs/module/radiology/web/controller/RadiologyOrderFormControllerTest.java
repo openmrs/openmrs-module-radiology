@@ -310,8 +310,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 			mockRadiologyOrder, mockRadiologyOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
-				+ mockRadiologyOrder.getOrderId()));
+		assertThat(modelAndView.getViewName(),
+			is("redirect:/module/radiology/radiologyOrders/" + mockRadiologyOrder.getOrderId()));
 		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Order.saved"));
 	}
 	
@@ -344,8 +344,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 					.getPatientId(), mockRadiologyOrder, mockRadiologyOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
-				+ mockRadiologyOrder.getOrderId()));
+		assertThat(modelAndView.getViewName(),
+			is("redirect:/module/radiology/radiologyOrders/" + mockRadiologyOrder.getOrderId()));
 		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Order.saved"));
 	}
 	
@@ -378,8 +378,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 					.getPatientId(), mockRadiologyOrder, mockRadiologyOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
-				+ mockRadiologyOrder.getOrderId()));
+		assertThat(modelAndView.getViewName(),
+			is("redirect:/module/radiology/radiologyOrders/" + mockRadiologyOrder.getOrderId()));
 		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR), is("radiology.savedFailWorklist"));
 	}
 	
@@ -488,8 +488,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 			mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder, orderErrors);
 		
 		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
-				+ mockDiscontinuationOrder.getOrderId()));
+		assertThat(modelAndView.getViewName(),
+			is("redirect:/module/radiology/radiologyOrders/" + mockDiscontinuationOrder.getOrderId()));
 		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Order.discontinuedSuccessfully"));
 	}
 	

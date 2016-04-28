@@ -45,7 +45,7 @@
 					<c:forEach items="${radiologyOrders}" var="radiologyOrder">
 						<tr>
 							<td style="text-align: center"><a
-								href="module/radiology/radiologyOrder.form?orderId=${radiologyOrder.orderId}">${radiologyOrder.orderId}
+								href="module/radiology/radiologyOrders/${radiologyOrder.orderId}">${radiologyOrder.orderId}
 							</a></td>
 							<td><spring:message
 									code="radiology.${radiologyOrder.urgency}"

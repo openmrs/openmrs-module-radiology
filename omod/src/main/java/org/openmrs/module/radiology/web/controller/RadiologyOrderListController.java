@@ -18,7 +18,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(RadiologyOrderListController.RADIOLOGY_ORDER_LIST_REQUEST_MAPPING)
 public class RadiologyOrderListController {
 	
-	protected static final String RADIOLOGY_ORDER_LIST_REQUEST_MAPPING = "/module/radiology/radiologyOrder.list";
+	protected static final String RADIOLOGY_ORDER_LIST_REQUEST_MAPPING = "/module/radiology/radiologyOrders/search";
 	
 	private static final String RADIOLOGY_ORDER_LIST_VIEW = "/module/radiology/radiologyOrderList";
 	
