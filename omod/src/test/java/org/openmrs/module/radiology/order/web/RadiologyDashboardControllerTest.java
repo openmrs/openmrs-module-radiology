@@ -1,4 +1,4 @@
-package org.openmrs.module.radiology.web.controller;
+package org.openmrs.module.radiology.order.web;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.collection.IsMapContaining.hasKey;

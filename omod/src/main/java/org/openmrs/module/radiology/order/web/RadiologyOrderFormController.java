@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.web.controller;
+package org.openmrs.module.radiology.order.web;
 
 import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
 
@@ -51,7 +51,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING)
 public class RadiologyOrderFormController {
 	
-	protected static final String RADIOLOGY_ORDER_FORM_REQUEST_MAPPING = "/module/radiology/radiologyOrder.form";
+	public static final String RADIOLOGY_ORDER_FORM_REQUEST_MAPPING = "/module/radiology/radiologyOrder.form";
 	
 	static final String RADIOLOGY_ORDER_FORM_VIEW = "/module/radiology/radiologyOrderForm";
 	

@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.web.controller;
+package org.openmrs.module.radiology.order.web;
 
 import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
@@ -35,8 +35,8 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
-import org.openmrs.module.radiology.study.RadiologyStudyService;
 import org.openmrs.module.radiology.study.RadiologyStudy;
+import org.openmrs.module.radiology.study.RadiologyStudyService;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.springframework.beans.TypeMismatchException;

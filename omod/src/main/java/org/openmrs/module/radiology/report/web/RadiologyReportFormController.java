@@ -7,12 +7,13 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.web.controller;
+package org.openmrs.module.radiology.report.web;
 
 import org.openmrs.Order;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.radiology.order.web.RadiologyOrderFormController;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportService;
 import org.openmrs.module.radiology.report.RadiologyReportValidator;
