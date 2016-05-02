@@ -318,4 +318,12 @@
 			<column name="uuid" value="e4583999-4169-4ca0-b0bc-39dcf3721475" />
 		</insert>
 	</changeSet>
+	<changeSet id="radiology-27" author="bgeVam">
+		<comment>add privilege to add radiology orders</comment>
+		<insert tableName="privilege">
+			<column name="privilege" value="Add Radiology Orders" />
+			<column name="description" value="Able to add radiology orders" />
+			<column name="uuid" value="4b805cd7-4665-4a03-8040-429933631927" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>
