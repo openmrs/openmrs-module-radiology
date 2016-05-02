@@ -14,7 +14,9 @@ import java.util.List;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.radiology.RadiologyPrivileges;
 import org.springframework.transaction.annotation.Transactional;
 
 import ca.uhn.hl7v2.HL7Exception;
@@ -61,6 +63,7 @@ public interface RadiologyOrderService extends OpenmrsService {
 	 * @should throw illegal argument exception if radiology order is completed
 	 * @should throw illegal argument exception given empty provider
 	 */
+	@Authorized({ RadiologyPrivileges.DELETE_RADIOLOGY_ORDERS })
 	public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrder, Provider orderer, String discontinueReason)
 			throws Exception;
 	
@@ -130,5 +133,6 @@ public interface RadiologyOrderService extends OpenmrsService {
 	 * @should throw illegal argument exception given null
 	 * @should throw illegal argument exception given radiology order with orderId null
 	 */
+	@Authorized({ RadiologyPrivileges.DELETE_RADIOLOGY_ORDERS })
 	public boolean discontinueRadiologyOrderInPacs(RadiologyOrder radiologyOrder) throws HL7Exception;
 }
