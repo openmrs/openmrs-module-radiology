@@ -78,6 +78,7 @@ public interface RadiologyOrderService extends OpenmrsService {
 	 * @should return null if no match was found
 	 * @should throw illegal argument exception given null
 	 */
+	@Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
 	public RadiologyOrder getRadiologyOrderByOrderId(Integer orderId) throws IllegalArgumentException;
 	
 	/**
@@ -90,6 +91,7 @@ public interface RadiologyOrderService extends OpenmrsService {
 	 * @should return empty list given patient without associated radiology orders
 	 * @should throw illegal argument exception given null
 	 */
+	@Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
 	public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient) throws IllegalArgumentException;
 	
 	/**
@@ -102,6 +104,7 @@ public interface RadiologyOrderService extends OpenmrsService {
 	 * @should return all radiology orders given empty patient list
 	 * @should throw illegal argument exception given null
 	 */
+	@Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
 	public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients) throws IllegalArgumentException;
 	
 	/**
