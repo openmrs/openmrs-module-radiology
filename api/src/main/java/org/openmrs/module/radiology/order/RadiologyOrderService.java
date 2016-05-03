@@ -42,6 +42,7 @@ public interface RadiologyOrderService extends OpenmrsService {
 	 * @should throw illegal argument exception if given radiology order has no study
 	 * @should throw illegal argument exception if given study modality is null
 	 */
+	@Authorized(RadiologyPrivileges.ADD_RADIOLOGY_ORDERS)
 	public RadiologyOrder placeRadiologyOrder(RadiologyOrder radiologyOrder) throws IllegalArgumentException;
 	
 	/**
@@ -118,6 +119,7 @@ public interface RadiologyOrderService extends OpenmrsService {
 	 * @should throw illegal argument exception given radiology order with orderId null
 	 * @should throw illegal argument exception if given radiology order has no study
 	 */
+	@Authorized(RadiologyPrivileges.ADD_RADIOLOGY_ORDERS)
 	public boolean placeRadiologyOrderInPacs(RadiologyOrder radiologyOrder) throws HL7Exception;
 	
 	/**
