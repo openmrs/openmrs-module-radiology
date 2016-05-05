@@ -169,7 +169,7 @@ public interface RadiologyReportService extends OpenmrsService {
 	 * @throws IllegalArgumentException if radiologyOrder is null
 	 * @should return a RadiologyReport if the reportStatus is completed
 	 * @should return a RadiologyReport if the reportStatus is claimed
-	 * @should return null if
+	 * @should return null if the reportStatus is not null, completed, or claimed
 	 * @should throw an IllegalArgumentException if radiologyOrder is null
 	 */
 	@Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)

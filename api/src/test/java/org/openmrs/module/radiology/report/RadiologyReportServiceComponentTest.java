@@ -18,6 +18,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertNull;
 
 import java.util.List;
 import java.util.Properties;
@@ -665,5 +666,15 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("radiologyOrder cannot be null");
 		radiologyReportService.getActiveRadiologyReportByRadiologyOrder(null);
+	}
+	
+	/**
+	 * @verifies return null if the reportStatus is not null, completed, or claimed
+	 * @see RadiologyOrderService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
+	 */
+	@Test
+	public void getActiveRadiologyReportByRadiologyOrder_shouldReturnNullIfTheReportStatusIsNotNullCompletedOrClaimed() {
+		RadiologyReport activeReport = radiologyReportService.getActiveRadiologyReportByRadiologyOrder(radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
+		assertNull(activeReport);
 	}
 }
