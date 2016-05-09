@@ -56,13 +56,12 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient) {
-		List<RadiologyOrder> result = new ArrayList<RadiologyOrder>();
 		
 		Criteria radiologyOrderCriteria = createRadiologyOrderCriteria();
 		addRestrictionOnPatient(radiologyOrderCriteria, patient);
 		
-		result = (List<RadiologyOrder>) radiologyOrderCriteria.list();
-		return result;
+		final List<RadiologyOrder> result = (List<RadiologyOrder>) radiologyOrderCriteria.list();
+		return result == null ? new ArrayList<RadiologyOrder>() : result;
 	}
 	
 	/**
@@ -94,13 +93,12 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients) {
-		List<RadiologyOrder> result = new ArrayList<RadiologyOrder>();
 		
 		final Criteria radiologyOrderCriteria = createRadiologyOrderCriteria();
 		addRestrictionOnPatients(radiologyOrderCriteria, patients);
 		
-		result = (List<RadiologyOrder>) radiologyOrderCriteria.list();
-		return result;
+		final List<RadiologyOrder> result = (List<RadiologyOrder>) radiologyOrderCriteria.list();
+		return result == null ? new ArrayList<RadiologyOrder>() : result;
 	}
 	
 	/**

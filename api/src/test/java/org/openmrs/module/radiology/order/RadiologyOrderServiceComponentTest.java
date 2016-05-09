@@ -23,6 +23,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -641,6 +642,21 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
 		expectedException.expect(IllegalArgumentException.class);
 		expectedException.expectMessage("patients is required");
 		radiologyOrderService.getRadiologyOrdersByPatients(null);
+	}
+	
+	/**
+	 * @see RadiologyOrderService#getRadiologyOrdersByPatients(List)
+	 * @verifies return empty list given patient list without associated radiology orders
+	 */
+	@Test
+	public void getRadiologyOrdersByPatients_shouldReturnEmptyListGivenPatientListWithoutAssociatedRadiologyOrders()
+			throws Exception {
+		
+		Patient patientWithoutRadiologyOrders = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER);
+		
+		List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrdersByPatients(Arrays.asList(patientWithoutRadiologyOrders));
+		
+		assertThat(radiologyOrders.size(), is(0));
 	}
 	
 	/**
