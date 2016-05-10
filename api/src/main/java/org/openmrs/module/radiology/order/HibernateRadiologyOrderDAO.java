@@ -53,6 +53,7 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
 	/**
 	 * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient) {
 		List<RadiologyOrder> result = new ArrayList<RadiologyOrder>();
@@ -90,6 +91,7 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
 	 * @see
 	 *      org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients) {
 		List<RadiologyOrder> result = new ArrayList<RadiologyOrder>();
