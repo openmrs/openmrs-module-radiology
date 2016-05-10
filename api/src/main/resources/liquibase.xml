@@ -334,4 +334,432 @@
 			<column name="uuid" value="7d51dc66-cc5a-43e6-bfdc-a574f7fa00c7" />
 		</insert>
 	</changeSet>
+	<changeSet id="radiology-29" author="bgeVam">
+		<comment>add privileges for referring physician</comment>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Add Encounters" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Add Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Add Radiology Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Add Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Add Visits" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Delete Radiology Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Delete Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Edit Encounters" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Edit Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Edit Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Edit Visits" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Care Settings" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Concepts" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Encounter Roles" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Encounters" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Patients" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Providers" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Radiology Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Users" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Visit Attribute Types" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Visit Types" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Visits" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Patient Dashboard - View Radiology Section" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="View Orders" />
+		</insert>
+	</changeSet>
+	<changeSet id="radiology-30" author="bgeVam">
+		<comment>add privileges for reading physician</comment>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Add Encounters" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Add Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Add Radiology Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Add Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Add Visits" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Delete Radiology Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Delete Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Edit Encounters" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Edit Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Edit Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Edit Visits" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Get Care Settings" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Get Concepts" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Get Encounter Roles" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Get Encounters" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Get Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Get Patients" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Get Providers" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Radiology Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Get Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Get Users" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Get Visit Attribute Types" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Get Visit Types" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Get Visits" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="Patient Dashboard - View Radiology Section" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Reading physician" />
+			<column name="privilege" value="View Orders" />
+		</insert>
+	</changeSet>
+	<changeSet id="radiology-31" author="bgeVam">
+		<comment>add privileges for performing physician</comment>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Add Encounters" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Add Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Add Radiology Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Add Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Add Visits" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Delete Radiology Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Delete Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Edit Encounters" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Edit Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Edit Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Edit Visits" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Get Care Settings" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Get Concepts" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Get Encounter Roles" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Get Encounters" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Get Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Get Patients" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Get Providers" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Radiology Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Get Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Get Users" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Get Visit Attribute Types" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Get Visit Types" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Get Visits" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="Patient Dashboard - View Radiology Section" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Performing physician" />
+			<column name="privilege" value="View Orders" />
+		</insert>
+	</changeSet>
+	<changeSet id="radiology-32" author="bgeVam">
+		<comment>add privileges for scheduler</comment>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Add Encounters" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Add Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Add Radiology Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Add Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Add Visits" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Delete Radiology Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Delete Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Edit Encounters" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Edit Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Edit Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Edit Visits" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Get Care Settings" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Get Concepts" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Get Encounter Roles" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Get Encounters" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Get Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Get Patients" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Get Providers" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Referring physician" />
+			<column name="privilege" value="Get Radiology Orders" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Get Radiology Reports" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Get Users" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Get Visit Attribute Types" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Get Visit Types" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Get Visits" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="Patient Dashboard - View Radiology Section" />
+		</insert>
+		<insert tableName="role_privilege">
+			<column name="role" value="Radiology: Scheduler" />
+			<column name="privilege" value="View Orders" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>
