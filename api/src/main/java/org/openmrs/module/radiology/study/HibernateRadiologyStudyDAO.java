@@ -86,6 +86,7 @@ class HibernateRadiologyStudyDAO implements RadiologyStudyDAO {
 	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudiesByRadiologyOrders(List
 	 *      <RadiologyOrder> radiologyOrders)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<RadiologyStudy> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
 		List<RadiologyStudy> result = new ArrayList<RadiologyStudy>();

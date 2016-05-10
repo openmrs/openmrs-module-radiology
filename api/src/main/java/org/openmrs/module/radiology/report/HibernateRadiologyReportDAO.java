@@ -62,6 +62,7 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	 * @see org.openmrs.module.radiology.report.RadiologyReportService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
 	 *      (RadiologyReport)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder) {
 		final List<RadiologyReport> radiologyReports = sessionFactory.getCurrentSession()
@@ -75,6 +76,7 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	/**
 	 * @see org.openmrs.module.radiology.report.RadiologyReportService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
 	 */
+	@SuppressWarnings("unchecked")
 	public boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder) {
 		final List<RadiologyReport> radiologyReports = sessionFactory.getCurrentSession()
 				.createCriteria(RadiologyReport.class)
@@ -88,6 +90,7 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	 * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder,
 	 *      RadiologyReportStatus)
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
 	public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(RadiologyOrder radiologyOrder,
 			RadiologyReportStatus radiologyReportStatus) {
