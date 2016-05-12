@@ -11,7 +11,7 @@ package org.openmrs.module.radiology.test;
 
 import static org.openmrs.module.radiology.RadiologyRoles.PERFORMING_PHYSICIAN;
 import static org.openmrs.module.radiology.RadiologyRoles.READING_PHYSICIAN;
-import static org.openmrs.module.radiology.RadiologyRoles.REFERRRING_PHYSICIAN;
+import static org.openmrs.module.radiology.RadiologyRoles.REFERRING_PHYSICIAN;
 import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
 
 import java.util.Calendar;
@@ -349,7 +349,7 @@ public class RadiologyTestData {
 	 */
 	public static User getMockRadiologyReferringPhysician() {
 		
-		Role role = new Role(REFERRRING_PHYSICIAN);
+		Role role = new Role(REFERRING_PHYSICIAN);
 		Set<Role> roles = new HashSet<Role>();
 		roles.add(role);
 		

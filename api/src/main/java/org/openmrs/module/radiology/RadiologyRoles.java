@@ -22,6 +22,6 @@ public class RadiologyRoles {
 	
 	public static final String READING_PHYSICIAN = "Radiology: Reading physician";
 	
-	public static final String REFERRRING_PHYSICIAN = "Radiology: Referring physician";
+	public static final String REFERRING_PHYSICIAN = "Radiology: Referring physician";
 	
 }
