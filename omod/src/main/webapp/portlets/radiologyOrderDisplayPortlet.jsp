@@ -8,14 +8,6 @@
 		</div>
 	</div>
 </c:if>
-<spring:hasBindErrors name="radiologyOrder">
-	<spring:message code="fix.error" />
-	<br />
-</spring:hasBindErrors>
-<spring:hasBindErrors name="study">
-	<spring:message code="fix.error" />
-	<br />
-</spring:hasBindErrors>
 
 <div>
 	<span class="boxHeader"> <b><spring:message
