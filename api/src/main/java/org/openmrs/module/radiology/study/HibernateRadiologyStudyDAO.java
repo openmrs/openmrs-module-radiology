@@ -90,15 +90,13 @@ class HibernateRadiologyStudyDAO implements RadiologyStudyDAO {
 	@Override
 	public List<RadiologyStudy> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
 		List<RadiologyStudy> result = new ArrayList<RadiologyStudy>();
-		
 		if (!radiologyOrders.isEmpty()) {
 			Criteria studyCriteria = sessionFactory.getCurrentSession()
 					.createCriteria(RadiologyStudy.class);
 			addRestrictionOnRadiologyOrders(studyCriteria, radiologyOrders);
 			result = (List<RadiologyStudy>) studyCriteria.list();
 		}
-		
-		return result;
+		return result == null ? new ArrayList<RadiologyStudy>() : result;
 	}
 	
 	/**

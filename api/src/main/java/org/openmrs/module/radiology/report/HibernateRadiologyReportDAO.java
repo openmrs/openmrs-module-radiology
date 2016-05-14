@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.radiology.report;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.SessionFactory;
@@ -94,11 +95,13 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 	@Override
 	public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(RadiologyOrder radiologyOrder,
 			RadiologyReportStatus radiologyReportStatus) {
-		return sessionFactory.getCurrentSession()
+		
+		final List<RadiologyReport> result = sessionFactory.getCurrentSession()
 				.createCriteria(RadiologyReport.class)
 				.add(Restrictions.eq("radiologyOrder", radiologyOrder))
 				.add(Restrictions.eq("reportStatus", radiologyReportStatus))
 				.list();
+		return result == null ? new ArrayList<RadiologyReport>() : result;
 	}
 	
 	/**

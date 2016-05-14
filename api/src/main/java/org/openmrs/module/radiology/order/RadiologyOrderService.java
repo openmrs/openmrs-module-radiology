@@ -102,6 +102,7 @@ public interface RadiologyOrderService extends OpenmrsService {
 	 * @throws IllegalArgumentException if patients is null
 	 * @should return all radiology orders associated with given patients
 	 * @should return all radiology orders given empty patient list
+	 * @should return empty list given patient list without associated radiology orders
 	 * @should throw illegal argument exception given null
 	 */
 	@Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
