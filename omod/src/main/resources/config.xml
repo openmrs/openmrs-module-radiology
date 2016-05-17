@@ -37,6 +37,10 @@
 		<class>@MODULE_PACKAGE@.web.extension.html.RadiologyDashboardExt
 		</class>
 	</extension>
+	<extension>
+		<point>org.openmrs.gutter.tools</point>
+		<class>@MODULE_PACKAGE@.web.extension.html.GutterListExt</class>
+	</extension>
 
 	<!-- /Extensions -->
 
