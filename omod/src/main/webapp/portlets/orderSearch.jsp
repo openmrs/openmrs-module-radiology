@@ -43,7 +43,9 @@
 								code="radiology.${radiologyOrder.urgency}"
 								text="${radiologyOrder.urgency}" /></td>
 						<td>${radiologyOrder.effectiveStartDate}</td>
-						<td>${radiologyOrder.study.modality.fullName}</td>
+						<td><spring:message
+						        code="radiology.${radiologyOrder.study.modality}"
+						        text="${radiologyOrder.study.modality}" /></td>
 						<td><spring:message
 								code="radiology.${radiologyOrder.study.performedStatus}"
 								text="${radiologyOrder.study.performedStatus}" /></td>
