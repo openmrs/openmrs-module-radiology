@@ -1,7 +1,7 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <openmrs:require privilege="View Orders" otherwise="/login.htm"
-	redirect="/module/radiology/radiologyOrderList.jsp" />
+	redirect="/module/radiology/radiologyOrder.list" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="./localHeader.jsp"%>
