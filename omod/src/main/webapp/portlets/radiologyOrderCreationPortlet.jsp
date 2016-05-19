@@ -116,7 +116,8 @@
 						<select name="${status.expression}" id="modalitySelect">
 							<c:forEach var="modality" items="${modalities}">
 								<option value="${modality.key}"
-									${status.value == modality.key ? 'selected="selected"' : ''}>${modality.value}</option>
+									${status.value == modality.key ? 'selected="selected"' : ''}><spring:message
+										code="radiology.${modality.key}" text="${modality.value}" /></option>
 							</c:forEach>
 						</select>
 						<c:if test="${status.errorMessage != ''}">

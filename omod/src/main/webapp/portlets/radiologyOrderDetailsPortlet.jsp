@@ -55,8 +55,9 @@
 			<tr>
 				<td><spring:message code="radiology.modality" /></td>
 				<td><spring:bind path="study.modality">
-                    ${status.value}
-                </spring:bind></td>
+						<spring:message code="radiology.${status.value}"
+							text="${status.value}" />
+					</spring:bind></td>
 			</tr>
 			<tr>
 				<td><spring:message code="general.instructions" /></td>
