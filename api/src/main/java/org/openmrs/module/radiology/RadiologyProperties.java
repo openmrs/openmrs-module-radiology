@@ -25,85 +25,6 @@ import org.springframework.stereotype.Component;
 public class RadiologyProperties extends ModuleProperties {
 	
 	/**
-	 * Return mpps directory.
-	 * 
-	 * @return mpps directory
-	 */
-	public String getMppsDir() {
-		return getGlobalProperty(RadiologyConstants.GP_MPPS_DIR, true);
-	}
-	
-	/**
-	 * Return mwl directory.
-	 * 
-	 * @return mwl directory
-	 */
-	public String getMwlDir() {
-		return getGlobalProperty(RadiologyConstants.GP_MWL_DIR, true);
-	}
-	
-	/**
-	 * Return PACS address.
-	 * 
-	 * @return pacs address
-	 * @throws IllegalStateException if global property for pacs address cannot be found
-	 * @should return pacs address
-	 * @should throw illegal state exception if global property for pacs address cannot be found
-	 */
-	public String getPacsAddress() {
-		return getGlobalProperty(RadiologyConstants.GP_PACS_ADDRESS, true);
-	}
-	
-	/**
-	 * Return PACS HL7 port.
-	 * 
-	 * @return pacs hl7 port
-	 * @throws IllegalStateException if global property for pacs hl7 port cannot be found
-	 * @should return pacs hl7 port
-	 * @should throw illegal state exception if global property for pacs hl7 port cannot be found
-	 */
-	public String getPacsHL7Port() {
-		return getGlobalProperty(RadiologyConstants.GP_PACS_HL7_PORT, true);
-	}
-	
-	/**
-	 * Return PACS DICOM AE title.
-	 * 
-	 * @return pacs dicom ae title
-	 * @throws IllegalStateException if global property for pacs dicom ae title cannot be found
-	 * @should return pacs dicom ae title
-	 * @should throw illegal state exception if global property for pacs dicom ae title cannot be
-	 *         found
-	 */
-	public String getPacsDicomAeTitle() {
-		return getGlobalProperty(RadiologyConstants.GP_PACS_DICOM_AE_TITLE, true);
-	}
-	
-	/**
-	 * Return DICOM MPPS port.
-	 * 
-	 * @return dicom mpps port
-	 * @throws IllegalStateException if global property for dicom mpps port cannot be found
-	 * @should return pacs dicom mpps port
-	 * @should throw illegal state exception if global property for dicom mpps port cannot be found
-	 */
-	public String getDicomMppsPort() {
-		return getGlobalProperty(RadiologyConstants.GP_DICOM_MPPS_PORT, true);
-	}
-	
-	/**
-	 * Return DICOM AE title.
-	 * 
-	 * @return dicom ae title
-	 * @throws IllegalStateException if global property for dicom ae title cannot be found
-	 * @should return dicom ae title
-	 * @should throw illegal state exception if global property for dicom ae title cannot be found
-	 */
-	public String getDicomAeTitle() {
-		return getGlobalProperty(RadiologyConstants.GP_DICOM_AE_TITLE, true);
-	}
-	
-	/**
 	 * Return DICOM UID component used to identify the org root.
 	 * 
 	 * @return dicom uid org root
@@ -137,20 +58,6 @@ public class RadiologyProperties extends ModuleProperties {
 	 */
 	public String getDicomUIDTypeStudy() {
 		return getGlobalProperty(RadiologyConstants.GP_DICOM_UID_TYPE_STUDY, true);
-	}
-	
-	/**
-	 * Return DICOM specific character set.
-	 * 
-	 * @return dicom specific character set
-	 * @throws IllegalStateException if global property for dicom specific character set cannot be
-	 *         found
-	 * @should return dicom specific character set
-	 * @should throw illegal state exception if global property for dicom specific character set
-	 *         cannot be found
-	 */
-	public String getDicomSpecificCharacterSet() {
-		return getGlobalProperty(RadiologyConstants.GP_DICOM_SPECIFIC_CHARCATER_SET, true);
 	}
 	
 	/**

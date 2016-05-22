@@ -14,27 +14,11 @@ package org.openmrs.module.radiology;
  */
 public class RadiologyConstants {
 	
-	public static final String GP_MPPS_DIR = "radiology.mppsDirectory";
-	
-	public static final String GP_MWL_DIR = "radiology.mwlDirectory";
-	
-	public static final String GP_PACS_ADDRESS = "radiology.pacsAddress";
-	
-	public static final String GP_PACS_HL7_PORT = "radiology.pacsHL7Port";
-	
-	public static final String GP_PACS_DICOM_AE_TITLE = "radiology.pacsDicomAeTitle";
-	
-	public static final String GP_DICOM_MPPS_PORT = "radiology.dicomMppsPort";
-	
-	public static final String GP_DICOM_AE_TITLE = "radiology.dicomAeTitle";
-	
 	public static final String GP_DICOM_UID_ORG_ROOT = "radiology.dicomUIDOrgRoot";
 	
 	public static final String GP_DICOM_UID_APPLICATION = "radiology.dicomUIDApplication";
 	
 	public static final String GP_DICOM_UID_TYPE_STUDY = "radiology.dicomUIDTypeStudy";
-	
-	public static final String GP_DICOM_SPECIFIC_CHARCATER_SET = "radiology.dicomSpecificCharacterSet";
 	
 	public static final String GP_DICOM_WEB_VIEWER_ADDRESS = "radiology.dicomWebViewerAddress";
 	

@@ -9,7 +9,7 @@ var $j=jQuery.noConflict();
 		results=$j('#results');
 		clearResults=$j('a#clearResults');
 
-		function format(order_id, physician, status, instructions, mwl) {
+		function format(order_id, physician, status, instructions) {
 			// `d` is the original data object for the row
 			return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">' +
 				'<tr>' +
@@ -23,10 +23,6 @@ var $j=jQuery.noConflict();
 				'<tr>' +
 				'<td><spring:message code="general.instructions"/></td>' +
 				'<td>' + instructions + '</td>' +
-				'</tr>' +
-				'<tr>' +
-				'<td><spring:message code="radiology.mwlStatus"/></td>' +
-				'<td>' + mwl + '</td>' +
 				'</tr>' +
 				'</table>';
 		}
@@ -90,11 +86,6 @@ var $j=jQuery.noConflict();
 								"targets": [10],
 								"visible": false,
 								"searchable": false
-							},
-							{
-								"targets": [11],
-								"visible": false,
-								"searchable": false
 							}
 						]
 					});
@@ -107,7 +98,7 @@ var $j=jQuery.noConflict();
 							tr.removeClass('shown');
 						}
 						else {
-							row.child(format(tr.data('child-order_id'),tr.data('child-physician'), tr.data('child-status'), tr.data('child-instructions'),tr.data('child-mwl')), 'no-padding').show();
+							row.child(format(tr.data('child-order_id'),tr.data('child-physician'), tr.data('child-status'), tr.data('child-instructions')), 'no-padding').show();
 							tr.addClass('shown');
 						}
 					});

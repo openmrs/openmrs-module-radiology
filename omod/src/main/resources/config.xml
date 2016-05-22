@@ -46,48 +46,6 @@
 
 	<!--Required Global Properties -->
 	<globalProperty>
-		<property>@MODULE_ID@.mwlDirectory</property>
-		<defaultValue>mwl</defaultValue>
-		<description>Directory for mwl entries. Ex: d:/tmp/mwl or /tmp/mwl
-		</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.mppsDirectory</property>
-		<defaultValue>mpps</defaultValue>
-		<description>Directory for mpps entries</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.pacsAddress</property>
-		<defaultValue>localhost</defaultValue>
-		<description>IP address or hostname of the PACS</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.pacsHL7Port</property>
-		<defaultValue>2575</defaultValue>
-		<description>HL7 port of the PACS to send radiology orders to
-		</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.pacsDicomAeTitle</property>
-		<defaultValue>DCM4CHEE</defaultValue>
-		<description>DICOM AE title of the PACS
-		</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.dicomMppsPort</property>
-		<defaultValue>11114</defaultValue>
-		<description>DICOM port of the radiology module MPPS SCU to receive
-			DICOM MPPS
-			updates
-		</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.dicomAeTitle</property>
-		<defaultValue>RADIOLOGY_MODULE</defaultValue>
-		<description>DICOM AE title of the radiology module
-		</description>
-	</globalProperty>
-	<globalProperty>
 		<property>@MODULE_ID@.dicomUIDOrgRoot</property>
 		<defaultValue>999.999.999</defaultValue>
 		<description>
@@ -128,12 +86,6 @@
 			contain only a numeric value using
 			characters 0-9 without non-significant leading
 			zeroes.
-		</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.dicomSpecificCharacterSet</property>
-		<defaultValue>ISO-8859-1</defaultValue>
-		<description>DICOM working character set
 		</description>
 	</globalProperty>
 	<globalProperty>
@@ -229,10 +181,6 @@
 	<!-- Internationalization -->
 	<!-- All message codes should start with moduleId.* -->
 
-	<messages>
-		<lang>en</lang>
-		<file>hl7messages.properties</file>
-	</messages>
 	<messages>
 		<lang>en</lang>
 		<file>messages.properties</file>

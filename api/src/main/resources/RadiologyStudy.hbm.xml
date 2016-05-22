@@ -32,11 +32,5 @@
 				<param name="enumClassName">org.openmrs.module.radiology.Modality</param>
 			</type>
 		</property>
-		<property name="mwlStatus" column="mwl_status" length="17"
-			not-null="true">
-			<type name="org.openmrs.util.HibernateEnumType">
-				<param name="enumClassName">org.openmrs.module.radiology.study.MwlStatus</param>
-			</type>
-		</property>
 	</class>
 </hibernate-mapping>
