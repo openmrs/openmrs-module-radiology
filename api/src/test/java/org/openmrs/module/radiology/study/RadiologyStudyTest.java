@@ -1,21 +1,21 @@
 package org.openmrs.module.radiology.study;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertThat;
 import static org.hamcrest.CoreMatchers.startsWith;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.util.HashSet;
+import java.util.Set;
 
 import org.junit.Test;
 import org.openmrs.Concept;
 import org.openmrs.Patient;
 import org.openmrs.PersonName;
-import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
-import org.openmrs.module.radiology.Modality;
-
-import java.util.HashSet;
-import java.util.Set;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 
 /**
  * Tests {@link RadiologyStudy}.
@@ -129,7 +129,6 @@ public class RadiologyStudyTest {
 		radiologyStudy.setStudyInstanceUid("Complete");
 		radiologyStudy.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
 		radiologyStudy.setModality(Modality.CR);
-		radiologyStudy.setMwlStatus(MwlStatus.IN_SYNC);
 		RadiologyOrder radiologyOrder = new RadiologyOrder();
 		radiologyOrder.setOrderId(2);
 		
@@ -152,7 +151,7 @@ public class RadiologyStudyTest {
 		
 		assertThat(
 			radiologyStudy.toString(),
-			startsWith("studyId: 2 studyInstanceUid: Complete radiologyOrder: Order. orderId: 2 patient: Patient#1 concept: 2 care setting: null scheduledStatus: SCHEDULED performedStatus: COMPLETED modality: CR mwlStatus: IN_SYNC "));
+			startsWith("studyId: 2 studyInstanceUid: Complete radiologyOrder: Order. orderId: 2 patient: Patient#1 concept: 2 care setting: null scheduledStatus: SCHEDULED performedStatus: COMPLETED modality: CR"));
 	}
 	
 	/**
@@ -168,10 +167,9 @@ public class RadiologyStudyTest {
 		radiologyStudy.setStudyInstanceUid("Complete");
 		radiologyStudy.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
 		radiologyStudy.setModality(Modality.CR);
-		radiologyStudy.setMwlStatus(MwlStatus.IN_SYNC);
 		
 		assertThat(
 			radiologyStudy.toString(),
-			startsWith("studyId: 2 studyInstanceUid: Complete radiologyOrder: null scheduledStatus: SCHEDULED performedStatus: COMPLETED modality: CR mwlStatus: IN_SYNC "));
+			startsWith("studyId: 2 studyInstanceUid: Complete radiologyOrder: null scheduledStatus: SCHEDULED performedStatus: COMPLETED modality: CR"));
 	}
 }

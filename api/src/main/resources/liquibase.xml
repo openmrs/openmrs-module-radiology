@@ -334,4 +334,8 @@
 			<column name="uuid" value="7d51dc66-cc5a-43e6-bfdc-a574f7fa00c7" />
 		</insert>
 	</changeSet>
+	<changeSet id="radiology-29" author="teleivo">
+		<comment>Remove column mwl_status from radiology_study</comment>
+		<dropColumn columnName="mwl_status" tableName="radiology_study" />
+	</changeSet>
 </databaseChangeLog>

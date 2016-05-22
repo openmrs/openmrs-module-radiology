@@ -80,21 +80,6 @@
 				<version>${openMRSVersion}</version>
 			</dependency>
 
-			<!-- Added logging libraries at the parent project level so that its inherited 
-				by child modules. Scope is 'provided' since they come with openmrs.war -->
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-api</artifactId>
-				<version>1.6.1</version>
-				<scope>provided</scope>
-			</dependency>
-			<dependency>
-				<groupId>org.slf4j</groupId>
-				<artifactId>slf4j-log4j12</artifactId>
-				<version>1.6.1</version>
-				<scope>provided</scope>
-			</dependency>
-
 			<dependency>
 				<groupId>ca.uhn.hapi</groupId>
 				<artifactId>hapi-structures-v231</artifactId>
@@ -208,11 +193,6 @@
 			<id>openmrs-repo</id>
 			<name>OpenMRS Nexus Repository</name>
 			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/public</url>
-		</repository>
-		<repository>
-			<id>dcm4che</id>
-			<name>dcm4che Repository</name>
-			<url>http://www.dcm4che.org/maven2</url>
 		</repository>
 	</repositories>
 

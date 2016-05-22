@@ -162,8 +162,6 @@ public class RadiologyOrderFormController {
 	 *         radiologyOrderForm when save study was successful
 	 * @should set http session attribute openmrs message to order saved and redirect to
 	 *         radiologyOrderForm when save study was successful and given patient id
-	 * @should set http session attribute openmrs message to saved fail worklist and redirect to
-	 *         radiologyOrderForm when save study was not successful and given patient id
 	 * @should set http session attribute openmrs message to study performed when study performed
 	 *         status is in progress and request was issued by radiology scheduler
 	 * @should not redirect if radiology order is not valid according to order validator
@@ -190,14 +188,8 @@ public class RadiologyOrderFormController {
 			try {
 				radiologyOrderService.placeRadiologyOrder(radiologyOrder);
 				
-				if (radiologyOrderService.placeRadiologyOrderInPacs(radiologyOrder)) {
-					request.getSession()
-							.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
-				} else {
-					request.getSession()
-							.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.savedFailWorklist");
-				}
-				
+				request.getSession()
+						.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
 				modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
 						+ radiologyOrder.getOrderId());
 			}
@@ -220,7 +212,6 @@ public class RadiologyOrderFormController {
 	 * @return model and view populated with discontinuation order
 	 * @throws Exception
 	 * @should discontinue non discontinued order and redirect to discontinuation order
-	 * @should not redirect if discontinuation failed in pacs
 	 */
 	@RequestMapping(method = RequestMethod.POST, params = "discontinueOrder")
 	protected ModelAndView postDiscontinueRadiologyOrder(HttpServletRequest request, HttpServletResponse response,
@@ -241,15 +232,10 @@ public class RadiologyOrderFormController {
 			discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
 				discontinuationOrder.getOrderer(), discontinuationOrder.getOrderReasonNonCoded());
 			
-			if (radiologyOrderService.discontinueRadiologyOrderInPacs(radiologyOrderToDiscontinue)) {
-				request.getSession()
-						.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
-				modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
-						+ discontinuationOrder.getOrderId());
-			} else {
-				request.getSession()
-						.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.failWorklist");
-			}
+			request.getSession()
+					.setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
+			modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
+					+ discontinuationOrder.getOrderId());
 		}
 		catch (APIException apiException) {
 			request.getSession()

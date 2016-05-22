@@ -34,8 +34,6 @@ public class RadiologyStudy {
 	
 	private Modality modality;
 	
-	private MwlStatus mwlStatus = MwlStatus.OUT_OF_SYNC;
-	
 	public Integer getStudyId() {
 		return studyId;
 	}
@@ -58,10 +56,6 @@ public class RadiologyStudy {
 	
 	public String getStudyInstanceUid() {
 		return studyInstanceUid;
-	}
-	
-	public MwlStatus getMwlStatus() {
-		return mwlStatus;
 	}
 	
 	/**
@@ -97,10 +91,6 @@ public class RadiologyStudy {
 	 */
 	public boolean isScheduleable() {
 		return performedStatus == null;
-	}
-	
-	public void setMwlStatus(MwlStatus mwlStatus) {
-		this.mwlStatus = mwlStatus;
 	}
 	
 	public void setStudyId(Integer studyId) {

@@ -42,7 +42,6 @@ import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportService;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
-import org.openmrs.module.radiology.study.MwlStatus;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.openmrs.test.Verifies;
@@ -256,8 +255,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		// given
 		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
-		mockRadiologyOrderToDiscontinue.getStudy()
-				.setMwlStatus(MwlStatus.IN_SYNC);
 		String discontinueReason = "Wrong Procedure";
 		
 		Order mockDiscontinuationOrder = new Order();
@@ -292,11 +289,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		// given
 		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		mockRadiologyOrder.getStudy()
-				.setMwlStatus(MwlStatus.IN_SYNC);
 		
 		when(radiologyOrderService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
-		when(radiologyOrderService.placeRadiologyOrderInPacs(mockRadiologyOrder)).thenReturn(true);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -325,11 +319,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		
 		// given
 		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		mockRadiologyOrder.getStudy()
-				.setMwlStatus(MwlStatus.IN_SYNC);
 		
 		when(radiologyOrderService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
-		when(radiologyOrderService.placeRadiologyOrderInPacs(mockRadiologyOrder)).thenReturn(true);
 		
 		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
 		mockRequest.addParameter("saveOrder", "saveOrder");
@@ -347,40 +338,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
 				+ mockRadiologyOrder.getOrderId()));
 		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Order.saved"));
-	}
-	
-	/**
-	 * @see RadiologyOrderFormController#postSaveRadiologyOrder(HttpServletRequest, Integer, Order, BindingResult)
-	 */
-	@Test
-	@Verifies(value = "should set http session attribute openmrs message to saved fail worklist and redirect to radiologyOrderForm when save study was not successful and given patient id", method = "postSaveRadiologyOrder(HttpServletRequest, Integer, RadiologyOrder, BindingResult)")
-	public void postSaveRadiologyOrder_shouldSetHttpSessionAttributeOpenmrsMessageToSavedFailWorklistAndRedirectToRadiologyOrderFormWhenSaveStudyWasNotSuccessfulAndGivenPatientId()
-			throws Exception {
-		
-		// given
-		RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
-		mockRadiologyOrder.getStudy()
-				.setMwlStatus(MwlStatus.OUT_OF_SYNC);
-		
-		when(radiologyOrderService.placeRadiologyOrder(mockRadiologyOrder)).thenReturn(mockRadiologyOrder);
-		when(radiologyOrderService.placeRadiologyOrderInPacs(mockRadiologyOrder)).thenReturn(false);
-		
-		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-		mockRequest.addParameter("saveOrder", "saveOrder");
-		MockHttpSession mockSession = new MockHttpSession();
-		mockRequest.setSession(mockSession);
-		
-		BindingResult orderErrors = mock(BindingResult.class);
-		when(orderErrors.hasErrors()).thenReturn(false);
-		
-		ModelAndView modelAndView = radiologyOrderFormController.postSaveRadiologyOrder(mockRequest,
-			mockRadiologyOrder.getPatient()
-					.getPatientId(), mockRadiologyOrder, mockRadiologyOrder, orderErrors);
-		
-		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
-				+ mockRadiologyOrder.getOrderId()));
-		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR), is("radiology.savedFailWorklist"));
 	}
 	
 	/**
@@ -458,8 +415,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 			throws Exception {
 		// given
 		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
-		mockRadiologyOrderToDiscontinue.getStudy()
-				.setMwlStatus(MwlStatus.IN_SYNC);
 		String discontinueReason = "Wrong Procedure";
 		
 		Order mockDiscontinuationOrder = new Order();
@@ -480,7 +435,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 			radiologyOrderService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
 				mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getOrderReasonNonCoded())).thenReturn(
 			mockDiscontinuationOrder);
-		when(radiologyOrderService.discontinueRadiologyOrderInPacs(mockRadiologyOrderToDiscontinue)).thenReturn(true);
 		
 		BindingResult orderErrors = mock(BindingResult.class);
 		assertThat(mockRadiologyOrderToDiscontinue.getAction(), is(Order.Action.NEW));
@@ -494,60 +448,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	}
 	
 	/**
-	 * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order,
-	 *      String)
-	 */
-	@Test
-	@Verifies(value = "should not redirect if discontinuation failed in pacs", method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String)")
-	public void postDiscontinueRadiologyOrder_shouldNotRedirectIfDiscontinuationFailedInPacs() throws Exception {
-		// given
-		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
-		mockRadiologyOrderToDiscontinue.getStudy()
-				.setMwlStatus(MwlStatus.OUT_OF_SYNC);
-		String discontinueReason = "Wrong Procedure";
-		
-		Order mockDiscontinuationOrder = new Order();
-		mockDiscontinuationOrder.setOrderId(2);
-		mockDiscontinuationOrder.setAction(Order.Action.DISCONTINUE);
-		mockDiscontinuationOrder.setOrderer(mockRadiologyOrderToDiscontinue.getOrderer());
-		mockDiscontinuationOrder.setOrderReasonNonCoded(discontinueReason);
-		mockDiscontinuationOrder.setPreviousOrder(mockRadiologyOrderToDiscontinue);
-		
-		MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-		mockRequest.addParameter("discontinueOrder", "discontinueOrder");
-		MockHttpSession mockSession = new MockHttpSession();
-		mockRequest.setSession(mockSession);
-		
-		when(radiologyOrderService.getRadiologyOrderByOrderId(mockRadiologyOrderToDiscontinue.getOrderId())).thenReturn(
-			mockRadiologyOrderToDiscontinue);
-		when(
-			radiologyOrderService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
-				mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getOrderReasonNonCoded())).thenReturn(
-			mockDiscontinuationOrder);
-		when(radiologyOrderService.discontinueRadiologyOrderInPacs(mockRadiologyOrderToDiscontinue)).thenReturn(false);
-		
-		BindingResult orderErrors = mock(BindingResult.class);
-		ModelAndView modelAndView = radiologyOrderFormController.postDiscontinueRadiologyOrder(mockRequest, null,
-			mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder, orderErrors);
-		
-		assertNotNull(modelAndView);
-		assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
-		
-		assertThat(modelAndView.getModelMap(), hasKey("order"));
-		Order order = (Order) modelAndView.getModelMap()
-				.get("order");
-		assertThat(order, is((Order) mockRadiologyOrderToDiscontinue));
-		
-		assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
-		RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
-				.get("radiologyOrder");
-		assertThat(radiologyOrder, is(mockRadiologyOrderToDiscontinue));
-		
-		assertNotNull(mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR));
-		assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR), is("radiology.failWorklist"));
-	}
-	
-	/**
 	 * @see RadiologyOrderFormController#radiologyReportNeedsToBeCreated(ModelAndView,Order)
 	 * @verifies return false if order is not a radiology order
 	 */
@@ -558,8 +458,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 		ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);
 		
 		RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
-		mockRadiologyOrderToDiscontinue.getStudy()
-				.setMwlStatus(MwlStatus.OUT_OF_SYNC);
 		String discontinueReason = "Wrong Procedure";
 		
 		Order mockDiscontinuationOrder = new Order();

@@ -27,15 +27,9 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.emrapi.encounter.EmrEncounterService;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.radiology.RadiologyProperties;
-import org.openmrs.module.radiology.hl7.util.HL7Sender;
-import org.openmrs.module.radiology.hl7.v231.code.OrderControlElement;
-import org.openmrs.module.radiology.hl7.v231.message.RadiologyORMO01;
-import org.openmrs.module.radiology.study.MwlStatus;
 import org.openmrs.module.radiology.study.RadiologyStudyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
-
-import ca.uhn.hl7v2.HL7Exception;
 
 class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyOrderService {
 	
@@ -203,79 +197,5 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
 		}
 		
 		return radiologyOrderDAO.getRadiologyOrdersByPatients(patients);
-	}
-	
-	/**
-	 * @see RadiologyOrderService#placeRadiologyOrderInPacs(RadiologyOrder)
-	 */
-	@Transactional
-	@Override
-	public boolean placeRadiologyOrderInPacs(RadiologyOrder radiologyOrder) throws HL7Exception {
-		
-		if (radiologyOrder == null) {
-			throw new IllegalArgumentException("radiologyOrder is required");
-		}
-		
-		if (radiologyOrder.getOrderId() == null) {
-			throw new IllegalArgumentException("radiologyOrder is not persisted");
-		}
-		
-		if (radiologyOrder.getStudy() == null) {
-			throw new IllegalArgumentException("radiologyOrder.study is required");
-		}
-		
-		final String hl7message = new RadiologyORMO01().createEncodedMessage(radiologyOrder, OrderControlElement.NEW_ORDER);
-		log.info("Created HL7 ORM^O01 message \n" + hl7message);
-		final boolean result = HL7Sender.sendHL7Message(hl7message);
-		
-		updateStudyMwlStatus(radiologyOrder, result);
-		return result;
-	}
-	
-	/**
-	 * @see RadiologyOrderService#discontinueRadiologyOrderInPacs(RadiologyOrder)
-	 */
-	@Transactional
-	@Override
-	public boolean discontinueRadiologyOrderInPacs(RadiologyOrder radiologyOrder) throws HL7Exception {
-		
-		if (radiologyOrder == null) {
-			throw new IllegalArgumentException("radiologyOrder is required");
-		}
-		
-		if (radiologyOrder.getOrderId() == null) {
-			throw new IllegalArgumentException("radiologyOrder is not persisted");
-		}
-		
-		final String hl7message = new RadiologyORMO01().createEncodedMessage(radiologyOrder,
-			OrderControlElement.CANCEL_ORDER);
-		log.info("Created HL7 ORM^O01 message \n" + hl7message);
-		final boolean result = HL7Sender.sendHL7Message(hl7message);
-		
-		updateStudyMwlStatus(radiologyOrder, result);
-		return result;
-	}
-	
-	/**
-	 * Set MwlStatus of given RadiologyOrder's RadiologyStudy to IN_SYNC and OUT_OF_SYNC
-	 * 
-	 * @param radiologyOrder radiology order whos study mwlstatus is updated
-	 * @param isInSync set the study mwlstatus to in sync if true
-	 * @should set the study mwlstatus of given radiology order to in sync given is in sync true
-	 * @should set the study mwlstatus of given radiology order to out of sync given is in sync false
-	 */
-	@Transactional
-	private void updateStudyMwlStatus(RadiologyOrder radiologyOrder, final boolean isInSync) {
-		
-		final MwlStatus mwlStatus;
-		if (isInSync) {
-			mwlStatus = MwlStatus.IN_SYNC;
-		} else {
-			mwlStatus = MwlStatus.OUT_OF_SYNC;
-		}
-		
-		radiologyOrder.getStudy()
-				.setMwlStatus(mwlStatus);
-		this.radiologyStudyService.saveStudy(radiologyOrder.getStudy());
 	}
 }
