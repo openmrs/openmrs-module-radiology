@@ -25,7 +25,7 @@
 		<spring:message code="radiology.radiologyOrders" />
 	</div>
 	<div id="radiologyTable" class="box">
-		<c:if test="${not empty radiologyOrders}">
+		<c:if test="${not empty model.radiologyOrders}">
 			<br>
 			<table id="radiologyOrdersTable" cellspacing="0" width="100%"
 				class="display nowrap">
@@ -42,7 +42,7 @@
 					</tr>
 				</thead>
 				<tbody id="radiologyOrdersTableBody">
-					<c:forEach items="${radiologyOrders}" var="radiologyOrder">
+					<c:forEach items="${model.radiologyOrders}" var="radiologyOrder">
 						<tr>
 							<td style="text-align: center"><a
 								href="module/radiology/radiologyOrder.form?orderId=${radiologyOrder.orderId}">${radiologyOrder.orderId}
@@ -67,7 +67,7 @@
 				</tbody>
 			</table>
 		</c:if>
-		<c:if test="${empty radiologyOrders}">
+		<c:if test="${empty model.radiologyOrders}">
 			<p>
 				<spring:message code="radiology.OrderListEmpty" />
 			</p>

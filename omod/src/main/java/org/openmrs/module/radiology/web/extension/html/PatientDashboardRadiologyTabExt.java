@@ -10,20 +10,20 @@
 package org.openmrs.module.radiology.web.extension.html;
 
 import static org.openmrs.module.radiology.RadiologyPrivileges.VIEW_RADIOLOGY_SECTION;
+import static org.openmrs.module.radiology.order.web.PatientDashboardRadiologyTabPortletController.PATIENT_DASHBOARD_RADIOLOGY_TAB;
 
-import org.openmrs.module.Extension;
 import org.openmrs.module.web.extension.PatientDashboardTabExt;
 
-public class RadiologyDashboardExt extends PatientDashboardTabExt {
+public class PatientDashboardRadiologyTabExt extends PatientDashboardTabExt {
 	
 	@Override
-	public Extension.MEDIA_TYPE getMediaType() {
-		return Extension.MEDIA_TYPE.html;
+	public String getTabName() {
+		return "radiology.home.title";
 	}
 	
 	@Override
-	public String getPortletUrl() {
-		return "RadiologyDashboardTab";
+	public String getTabId() {
+		return "patientDashboardRadiology";
 	}
 	
 	@Override
@@ -32,13 +32,7 @@ public class RadiologyDashboardExt extends PatientDashboardTabExt {
 	}
 	
 	@Override
-	public String getTabId() {
-		return "RadiologyTab";
+	public String getPortletUrl() {
+		return PATIENT_DASHBOARD_RADIOLOGY_TAB;
 	}
-	
-	@Override
-	public String getTabName() {
-		return "Radiology";
-	}
-	
 }
