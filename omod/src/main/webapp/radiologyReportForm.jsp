@@ -1,5 +1,6 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <%@ include
 	file="/WEB-INF/view/module/radiology/resources/js/moreInfo.js"%>
 
@@ -63,7 +64,7 @@
 			<c:if test="${radiologyReport.reportStatus == 'COMPLETED'}">
 				<tr>
 					<td><spring:message code="radiology.radiologyReportDate" /></td>
-					<td>${radiologyReport.reportDate}</td>
+					<td><fmt:formatDate value="${radiologyReport.reportDate}" pattern="yyyy-MM-dd" /></td>
 					<form:hidden path="reportDate" />
 				</tr>
 			</c:if>
