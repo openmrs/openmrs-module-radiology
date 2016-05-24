@@ -104,4 +104,15 @@ public class RadiologyReportTest {
 		expectedException.expectMessage("radiologyOrder cannot be null");
 		radiologyReport = new RadiologyReport(null);
 	}
+	
+	/**
+	 * @see RadiologyReport#setId(Integer)
+	 * @verifies ID of RadiologyReport is correctly set
+	 */
+	@Test
+	public void setID_IDOfRadiologyReportIsCorrectlySet() {
+		RadiologyOrder radiologyOrder = new RadiologyOrder();
+		radiologyOrder.setId(123);
+		assertThat(radiologyOrder.getId(), is(123));
+	}
 }
