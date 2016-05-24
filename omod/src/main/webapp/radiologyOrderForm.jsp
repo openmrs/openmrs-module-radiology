@@ -2,7 +2,7 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <openmrs:require
-	allPrivileges="Add Encounters,Add Orders,Add Radiology Orders,Add Radiology Reports,Add Visits,Delete Radiology Reports,Edit Encounters,Edit Orders,Edit Radiology Reports,Edit Visits,Get Care Settings,Get Concepts,Get Encounter Roles,Get Encounters,Get Orders,Get Patients,Get Providers,Get Radiology Orders,Get Radiology Reports,Get Users,Get Visit Attribute Types,Get Visit Types,Get Visits,View Orders"
+	allPrivileges="Get Care Settings,Get Concepts,Get Encounter Roles,Get Encounters,Get Orders,Get Patients,Get Providers,Get Radiology Orders,Get Users,Get Visit Attribute Types,Get Visit Types,Get Visits,View Orders"
 	otherwise="/login.htm" redirect="/module/radiology/radiologyOrder.form" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
@@ -12,7 +12,20 @@
 	<c:when
 		test="${not empty radiologyOrder && empty radiologyOrder.orderId}">
 		<!--  Create a new RadiologyOrder -->
-		<%@ include file="portlets/radiologyOrderCreationPortlet.jsp"%>
+		<openmrs:hasPrivilege privilege="Add Encounters">
+			<openmrs:hasPrivilege privilege="Add Orders">
+				<openmrs:hasPrivilege privilege="Add Radiology Orders">
+					<openmrs:hasPrivilege privilege="Add Visits">
+						<openmrs:hasPrivilege privilege="Edit Encounters">
+							<openmrs:hasPrivilege privilege="Edit Visits">
+								<%@ include file="portlets/radiologyOrderCreationPortlet.jsp"%>
+							</openmrs:hasPrivilege>
+						</openmrs:hasPrivilege>
+					</openmrs:hasPrivilege>
+				</openmrs:hasPrivilege>
+			</openmrs:hasPrivilege>
+		</openmrs:hasPrivilege>
+
 	</c:when>
 
 	<c:otherwise>
@@ -29,13 +42,24 @@
 				<%@ include file="portlets/radiologyOrderDisplayPortlet.jsp"%>
 				<c:if test="${radiologyOrder.completed}">
 					<!--  Show form for radiology report -->
-					<%@ include file="portlets/radiologyReportPortlet.jsp"%>
+					<openmrs:hasPrivilege privilege="Add Radiology Reports">
+						<openmrs:hasPrivilege privilege="Delete Radiology Reports">
+							<openmrs:hasPrivilege privilege="Edit Radiology Reports">
+								<openmrs:hasPrivilege privilege="Get Radiology Reports">
+									<%@ include file="portlets/radiologyReportPortlet.jsp"%>
+								</openmrs:hasPrivilege>
+							</openmrs:hasPrivilege>
+						</openmrs:hasPrivilege>
+					</openmrs:hasPrivilege>
+
 				</c:if>
 				<c:if test="${radiologyOrder.discontinuationAllowed}">
 					<!--  Show form to discontinue an active non in progress/completed RadiologyOrder -->
 					<openmrs:hasPrivilege privilege="Delete Radiology Orders">
-						<%@ include
-							file="portlets/radiologyOrderDiscontinuationPortlet.jsp"%>
+						<openmrs:hasPrivilege privilege="Edit Orders">
+							<%@ include
+								file="portlets/radiologyOrderDiscontinuationPortlet.jsp"%>
+						</openmrs:hasPrivilege>
 					</openmrs:hasPrivilege>
 				</c:if>
 			</c:when>

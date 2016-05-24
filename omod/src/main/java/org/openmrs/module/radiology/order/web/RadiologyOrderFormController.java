@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.radiology.order.web;
 
+import static org.openmrs.module.radiology.RadiologyPrivileges.ADD_RADIOLOGY_REPORTS;
 import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
 
 import java.util.HashMap;
@@ -143,7 +144,10 @@ public class RadiologyOrderFormController {
 				}
 			}
 			
-			radiologyReportNeedsToBeCreated(modelAndView, order);
+			if (Context.getAuthenticatedUser()
+					.hasPrivilege(ADD_RADIOLOGY_REPORTS)) {
+				radiologyReportNeedsToBeCreated(modelAndView, order);
+			}
 		}
 		
 		return modelAndView;
