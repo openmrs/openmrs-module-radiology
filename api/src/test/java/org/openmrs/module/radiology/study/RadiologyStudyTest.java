@@ -5,17 +5,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
-import java.util.HashSet;
-import java.util.Set;
-
 import org.junit.Test;
-import org.openmrs.Concept;
-import org.openmrs.Patient;
-import org.openmrs.PersonName;
-import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
-import org.openmrs.module.radiology.order.RadiologyOrder;
 
 /**
  * Tests {@link RadiologyStudy}.
@@ -125,33 +116,9 @@ public class RadiologyStudyTest {
 		
 		RadiologyStudy radiologyStudy = new RadiologyStudy();
 		radiologyStudy.setStudyId(2);
-		radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-		radiologyStudy.setStudyInstanceUid("Complete");
-		radiologyStudy.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
-		radiologyStudy.setModality(Modality.CR);
-		RadiologyOrder radiologyOrder = new RadiologyOrder();
-		radiologyOrder.setOrderId(2);
+		radiologyStudy.setStudyInstanceUid("1.2.4.1.2");
 		
-		Patient mockPatient = new Patient();
-		mockPatient.setPatientId(1);
-		Set<PersonName> personNames = new HashSet<PersonName>();
-		PersonName personName = new PersonName();
-		personName.setFamilyName("Doe");
-		personName.setGivenName("John");
-		personName.setMiddleName("Francis");
-		personNames.add(personName);
-		mockPatient.setNames(personNames);
-		radiologyOrder.setPatient(mockPatient);
-		
-		Concept concept = new Concept();
-		concept.setConceptId(2);
-		radiologyOrder.setConcept(concept);
-		
-		radiologyStudy.setRadiologyOrder(radiologyOrder);
-		
-		assertThat(
-			radiologyStudy.toString(),
-			startsWith("studyId: 2 studyInstanceUid: Complete radiologyOrder: Order. orderId: 2 patient: Patient#1 concept: 2 care setting: null scheduledStatus: SCHEDULED performedStatus: COMPLETED modality: CR"));
+		assertThat(radiologyStudy.toString(), startsWith("studyId: 2 studyInstanceUid: 1.2.4.1.2"));
 	}
 	
 	/**
@@ -162,14 +129,7 @@ public class RadiologyStudyTest {
 	public void toString_shouldReturnStringOfStudyWithNullForMembersThatAreNull() throws Exception {
 		
 		RadiologyStudy radiologyStudy = new RadiologyStudy();
-		radiologyStudy.setStudyId(2);
-		radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-		radiologyStudy.setStudyInstanceUid("Complete");
-		radiologyStudy.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
-		radiologyStudy.setModality(Modality.CR);
 		
-		assertThat(
-			radiologyStudy.toString(),
-			startsWith("studyId: 2 studyInstanceUid: Complete radiologyOrder: null scheduledStatus: SCHEDULED performedStatus: COMPLETED modality: CR"));
+		assertThat(radiologyStudy.toString(), startsWith("studyId: null studyInstanceUid: null"));
 	}
 }

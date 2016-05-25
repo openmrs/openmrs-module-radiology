@@ -33,8 +33,8 @@ public class RadiologyDiscontinuedOrderValidator implements Validator {
 	 * @should return true for Order objects and subclasses
 	 * @should return false for other object types
 	 */
-	public boolean supports(Class c) {
-		return Order.class.isAssignableFrom(c);
+	public boolean supports(Class clazz) {
+		return Order.class.isAssignableFrom(clazz);
 	}
 	
 	/**

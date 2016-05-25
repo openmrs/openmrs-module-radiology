@@ -209,8 +209,8 @@ public class RadiologyProperties extends ModuleProperties {
 		final String[] radiologyConceptClassUuids = radiologyConceptClassUuidSetting.split(",");
 		
 		String result = "";
-		for (String radiologyConceptClassUuid : radiologyConceptClassUuids) {
-			ConceptClass fetchedConceptClass = conceptService.getConceptClassByUuid(radiologyConceptClassUuid);
+		for (final String radiologyConceptClassUuid : radiologyConceptClassUuids) {
+			final ConceptClass fetchedConceptClass = conceptService.getConceptClassByUuid(radiologyConceptClassUuid);
 			if (fetchedConceptClass == null) {
 				throw new IllegalStateException("Property radiology.radiologyConceptClasses contains UUID "
 						+ radiologyConceptClassUuid + " which cannot be found as ConceptClass in the database.");

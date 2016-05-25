@@ -40,4 +40,7 @@ public class RadiologyConstants {
 	
 	public static final String GP_RADIOLOGY_VISIT_TYPE = "radiology.radiologyVisitType";
 	
+	private RadiologyConstants() {
+		// Utility class not meant to be instantiated.
+	}
 }

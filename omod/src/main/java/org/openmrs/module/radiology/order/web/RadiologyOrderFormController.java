@@ -23,7 +23,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.openmrs.Order;
 import org.openmrs.Patient;
-import org.openmrs.User;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.Modality;
@@ -76,6 +75,7 @@ public class RadiologyOrderFormController {
 	 */
 	@RequestMapping(method = RequestMethod.GET)
 	protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrder() {
+		
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
 		
 		if (Context.isAuthenticated()) {
@@ -103,7 +103,8 @@ public class RadiologyOrderFormController {
 	@RequestMapping(method = RequestMethod.GET, params = "patientId")
 	protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(
 			@RequestParam(value = "patientId", required = true) Patient patient) {
-		ModelAndView modelAndView = getRadiologyOrderFormWithNewRadiologyOrder();
+		
+		final ModelAndView modelAndView = getRadiologyOrderFormWithNewRadiologyOrder();
 		
 		if (Context.isAuthenticated() && patient != null) {
 			Order order = (Order) modelAndView.getModel()
@@ -175,11 +176,11 @@ public class RadiologyOrderFormController {
 			@RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("order") Order order,
 			@ModelAttribute("radiologyOrder") RadiologyOrder radiologyOrder, BindingResult radiologyOrderErrors)
 			throws Exception {
-		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
 		
-		User authenticatedUser = Context.getAuthenticatedUser();
+		final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
 		
-		if (authenticatedUser.hasRole(SCHEDULER, true) && !radiologyOrder.getStudy()
+		if (Context.getAuthenticatedUser()
+				.hasRole(SCHEDULER, true) && !radiologyOrder.getStudy()
 				.isScheduleable()) {
 			request.getSession()
 					.setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
@@ -297,7 +298,7 @@ public class RadiologyOrderFormController {
 		
 		final Map<String, String> modalities = new HashMap<String, String>();
 		
-		for (Modality modality : Modality.values()) {
+		for (final Modality modality : Modality.values()) {
 			modalities.put(modality.name(), modality.getFullName());
 		}
 		
@@ -309,7 +310,7 @@ public class RadiologyOrderFormController {
 		
 		final List<String> urgencies = new LinkedList<String>();
 		
-		for (Order.Urgency urgency : Order.Urgency.values()) {
+		for (final Order.Urgency urgency : Order.Urgency.values()) {
 			urgencies.add(urgency.name());
 		}
 		
@@ -322,7 +323,7 @@ public class RadiologyOrderFormController {
 		final Map<String, String> scheduledProcedureStepStatuses = new LinkedHashMap<String, String>();
 		scheduledProcedureStepStatuses.put("", "Select");
 		
-		for (ScheduledProcedureStepStatus scheduledProcedureStepStatus : ScheduledProcedureStepStatus.values()) {
+		for (final ScheduledProcedureStepStatus scheduledProcedureStepStatus : ScheduledProcedureStepStatus.values()) {
 			scheduledProcedureStepStatuses.put(scheduledProcedureStepStatus.name(), scheduledProcedureStepStatus.name());
 		}
 		
@@ -335,7 +336,7 @@ public class RadiologyOrderFormController {
 		final Map<String, String> performedStatuses = new HashMap<String, String>();
 		performedStatuses.put("", "Select");
 		
-		for (PerformedProcedureStepStatus performedStatus : PerformedProcedureStepStatus.values()) {
+		for (final PerformedProcedureStepStatus performedStatus : PerformedProcedureStepStatus.values()) {
 			performedStatuses.put(performedStatus.name(), performedStatus.name());
 		}
 		

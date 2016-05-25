@@ -52,7 +52,7 @@ public class RadiologyReportFormController {
 			@RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder) {
 		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
-		RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
+		final RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
 		modelAndView = new ModelAndView("redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?radiologyReportId="
 				+ radiologyReport.getId());
 		
@@ -72,10 +72,12 @@ public class RadiologyReportFormController {
 	@RequestMapping(method = RequestMethod.GET, params = "radiologyReportId")
 	protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(
 			@RequestParam(value = "radiologyReportId", required = true) Integer radiologyReportId) {
-		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
-		RadiologyReport radiologyReport = radiologyReportService.getRadiologyReportByRadiologyReportId(radiologyReportId);
 		
+		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
+		
+		final RadiologyReport radiologyReport = radiologyReportService.getRadiologyReportByRadiologyReportId(radiologyReportId);
 		addObjectsToModelAndView(modelAndView, radiologyReport);
+		
 		return modelAndView;
 	}
 	
@@ -125,7 +127,8 @@ public class RadiologyReportFormController {
 	@RequestMapping(method = RequestMethod.POST, params = "completeRadiologyReport")
 	protected ModelAndView completeRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport,
 			BindingResult bindingResult) {
-		ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
+		
+		final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
 		
 		if (validateForm(modelAndView, radiologyReport, bindingResult)) {
 			return modelAndView;
@@ -167,10 +170,11 @@ public class RadiologyReportFormController {
 	 *        view
 	 */
 	private void addObjectsToModelAndView(ModelAndView modelAndView, RadiologyReport radiologyReport) {
+		
 		modelAndView.addObject("radiologyReport", radiologyReport);
 		modelAndView.addObject("order", (Order) radiologyReport.getRadiologyOrder());
-		RadiologyOrder radiologyOrder = radiologyReport.getRadiologyOrder();
-		modelAndView.addObject("dicomViewerUrl", dicomWebViewer.getDicomViewerUrl(radiologyOrder.getStudy()));
-		modelAndView.addObject("radiologyOrder", radiologyOrder);
+		modelAndView.addObject("dicomViewerUrl", dicomWebViewer.getDicomViewerUrl(radiologyReport.getRadiologyOrder()
+				.getStudy()));
+		modelAndView.addObject("radiologyOrder", radiologyReport.getRadiologyOrder());
 	}
 }

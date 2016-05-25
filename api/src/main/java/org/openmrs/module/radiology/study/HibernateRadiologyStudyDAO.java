@@ -89,14 +89,19 @@ class HibernateRadiologyStudyDAO implements RadiologyStudyDAO {
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<RadiologyStudy> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
-		List<RadiologyStudy> result = new ArrayList<RadiologyStudy>();
+		List<RadiologyStudy> result = null;
 		if (!radiologyOrders.isEmpty()) {
-			Criteria studyCriteria = sessionFactory.getCurrentSession()
+			final Criteria studyCriteria = sessionFactory.getCurrentSession()
 					.createCriteria(RadiologyStudy.class);
 			addRestrictionOnRadiologyOrders(studyCriteria, radiologyOrders);
 			result = (List<RadiologyStudy>) studyCriteria.list();
 		}
-		return result == null ? new ArrayList<RadiologyStudy>() : result;
+		
+		if (result == null) {
+			return new ArrayList<RadiologyStudy>();
+		} else {
+			return result;
+		}
 	}
 	
 	/**
