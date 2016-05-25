@@ -10,6 +10,7 @@
 package org.openmrs.module.radiology.web.extension.html;
 
 import org.openmrs.module.radiology.RadiologyPrivileges;
+import org.openmrs.module.radiology.order.web.RadiologyDashboardFormController;
 import org.openmrs.module.radiology.order.web.RadiologyOrderListController;
 import org.openmrs.module.web.extension.LinkExt;
 
@@ -27,6 +28,6 @@ public class GutterListExt extends LinkExt {
 	
 	@Override
 	public String getUrl() {
-		return RadiologyOrderListController.RADIOLOGY_ORDER_LIST_REQUEST_MAPPING;
+		return RadiologyDashboardFormController.RADIOLOGY_DASHBOARD_FORM_REQUEST_MAPPING;
 	}
 }
