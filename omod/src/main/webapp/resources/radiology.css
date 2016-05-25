@@ -50,7 +50,7 @@ margin:0 1px 0 0;
 #radiologyTabs ul, #radiologyTabs li {
 	display: inline;
 	list-style-type: none;
-	padding: 0px 0px 0px 0px;
+	padding: 0 0 0 0;
 }
 
 #radiologyTabs a:link, #radiologyTabs a:visited {

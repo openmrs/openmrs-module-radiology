@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+
 /**
  * This Source Code Form is subject to the terms of the Mozilla Public License,
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
@@ -40,16 +41,18 @@ public class PatientDashboardRadiologyTabPortletController extends PortletContro
 	private RadiologyOrderService radiologyOrderService;
 	
 	/**
-	 * Convenient method to customize the model that is returned to the view
+	 * Add radiologyOrders to the <code>model</code> for patient contained in the <code>model</code>.
 	 * 
 	 * @param request HttpServletRequest that holds all information about this request
 	 * @param model holds variables that will be used in the jsp view
+	 * @should model is populated with all radiology orders for given patient
+	 * @should model is populated with an empty list of radiology orders if given patient is unknown
 	 */
 	@Override
 	protected void populateModel(HttpServletRequest request, Map<String, Object> model) {
+		
 		Patient patient = (Patient) model.get("patient");
 		List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrdersByPatient(patient);
-		
 		model.put("radiologyOrders", radiologyOrders);
 	}
 }

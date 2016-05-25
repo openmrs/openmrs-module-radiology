@@ -9,12 +9,12 @@
  */
 package org.openmrs.module.radiology.order.web;
 
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
-import static org.mockito.Mockito.verify;
-import static org.hamcrest.core.Is.is;
 import static org.hamcrest.collection.IsEmptyCollection.empty;
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -68,16 +68,15 @@ public class PatientDashboardRadiologyTabPortletControllerTest extends BaseConte
 		invalidPatient = new Patient();
 		ArrayList<RadiologyOrder> emptyOrdersList = new ArrayList<RadiologyOrder>();
 		when((radiologyOrderService.getRadiologyOrdersByPatient(invalidPatient))).thenReturn(emptyOrdersList);
-		
 	}
 	
 	/**
 	 * @see PatientDashboardRadiologyTabPortletController#populateModel(HttpServletRequest, Map)
 	 * @verifies model is populated with all radiology orders for given patient
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
 	public void populateModel_shouldPopulateModelWithAllRadiologyOrdersForGivenPatient() {
+		
 		model.put("patient", mockPatient1);
 		patientDashboardRadiologyTabPortletController.populateModel(request, model);
 		
@@ -89,12 +88,11 @@ public class PatientDashboardRadiologyTabPortletControllerTest extends BaseConte
 	
 	/**
 	 * @see PatientDashboardRadiologyTabPortletController#populateModel(HttpServletRequest, Map)
-	 * @verifies model is populated with an empty list of radiology orders if given
-	 *           patient is unknown
+	 * @verifies model is populated with an empty list of radiology orders if given patient is unknown
 	 */
-	@SuppressWarnings("unchecked")
 	@Test
 	public void populateModel_shouldPopulateModelWithEmptyRadiologyOrderListWhenInvalidPatientIsGiven() {
+		
 		model.put("patient", invalidPatient);
 		patientDashboardRadiologyTabPortletController.populateModel(request, model);
 		
