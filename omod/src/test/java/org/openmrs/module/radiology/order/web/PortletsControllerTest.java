@@ -75,7 +75,7 @@ public class PortletsControllerTest extends BaseContextMockTest {
 	private PortletsController portletsController = new PortletsController();
 	
 	@Before
-	public void runBeforeAllTests() {
+	public void setUp() {
 		
 		mockRadiologyOrders = new ArrayList<RadiologyOrder>();
 		mockRadiologyOrder1 = RadiologyTestData.getMockRadiologyOrder1();

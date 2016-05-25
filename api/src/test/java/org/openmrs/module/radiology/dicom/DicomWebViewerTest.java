@@ -29,7 +29,7 @@ public class DicomWebViewerTest extends BaseContextMockTest {
 	private DicomWebViewer dicomviewer = new DicomWebViewer();
 	
 	@Before
-	public void runBeforeAllTests() {
+	public void setUp() {
 		when(radiologyProperties.getDicomWebViewerAddress()).thenReturn("localhost");
 		when(radiologyProperties.getDicomWebViewerPort()).thenReturn("8081");
 		when(radiologyProperties.getDicomWebViewerBaseUrl()).thenReturn("/weasis-pacs-connector/viewer");
