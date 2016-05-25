@@ -11,7 +11,6 @@ package org.openmrs.module.radiology.web.extension.html;
 
 import org.openmrs.module.radiology.RadiologyPrivileges;
 import org.openmrs.module.radiology.order.web.RadiologyDashboardFormController;
-import org.openmrs.module.radiology.order.web.RadiologyOrderListController;
 import org.openmrs.module.web.extension.LinkExt;
 
 public class GutterListExt extends LinkExt {

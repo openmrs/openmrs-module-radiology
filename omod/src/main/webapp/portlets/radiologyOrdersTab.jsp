@@ -14,12 +14,11 @@
 <openmrs:htmlInclude
 	file="/moduleResources/radiology/css/details-control.dataTables.css" />
 
-<div id="calendar"></div>
-
 <div id="openmrs_msg" name="loading">
 	<spring:message code="general.loading" />
 </div>
 <openmrs:hasPrivilege privilege="Add Radiology Orders">
+<br>
 	<a href="radiologyOrder.form"><spring:message
 			code="radiology.addOrder" /></a>
 	<br>

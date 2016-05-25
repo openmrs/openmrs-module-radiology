@@ -23,7 +23,7 @@ public class PatientDashboardRadiologyTabExt extends PatientDashboardTabExt {
 	
 	@Override
 	public String getTabId() {
-		return "patientDashboardRadiology";
+		return "patientDashboardRadiologyTab";
 	}
 	
 	@Override
