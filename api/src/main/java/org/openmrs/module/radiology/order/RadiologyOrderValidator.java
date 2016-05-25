@@ -38,9 +38,8 @@ public class RadiologyOrderValidator implements Validator {
 	 * @should return true for RadiologyOrder objects
 	 * @should return false for other object types
 	 */
-	@SuppressWarnings("unchecked")
-	public boolean supports(Class c) {
-		return RadiologyOrder.class.isAssignableFrom(c);
+	public boolean supports(Class clazz) {
+		return RadiologyOrder.class.isAssignableFrom(clazz);
 	}
 	
 	/**
@@ -107,8 +106,8 @@ public class RadiologyOrderValidator implements Validator {
 	}
 	
 	private void validateScheduledDate(Order order, Errors errors) {
-		final boolean isUrgencyOnScheduledDate = (order.getUrgency() != null && order.getUrgency()
-				.equals(Order.Urgency.ON_SCHEDULED_DATE));
+		final boolean isUrgencyOnScheduledDate = order.getUrgency() != null && order.getUrgency()
+				.equals(Order.Urgency.ON_SCHEDULED_DATE);
 		if (order.getScheduledDate() != null && !isUrgencyOnScheduledDate) {
 			errors.rejectValue("urgency", "Order.error.urgencyNotOnScheduledDate");
 		}

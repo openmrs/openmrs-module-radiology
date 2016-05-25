@@ -71,7 +71,7 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 				.add(Restrictions.eq("radiologyOrder", radiologyOrder))
 				.add(Restrictions.eq("reportStatus", RadiologyReportStatus.COMPLETED))
 				.list();
-		return radiologyReports.size() == 1 ? true : false;
+		return radiologyReports.size() == 1;
 	}
 	
 	/**
@@ -84,7 +84,7 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
 				.add(Restrictions.eq("radiologyOrder", radiologyOrder))
 				.add(Restrictions.eq("reportStatus", RadiologyReportStatus.CLAIMED))
 				.list();
-		return radiologyReports.size() == 1 ? true : false;
+		return radiologyReports.size() == 1;
 	}
 	
 	/**

@@ -51,8 +51,8 @@ public class PatientDashboardRadiologyTabPortletController extends PortletContro
 	@Override
 	protected void populateModel(HttpServletRequest request, Map<String, Object> model) {
 		
-		Patient patient = (Patient) model.get("patient");
-		List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrdersByPatient(patient);
+		final Patient patient = (Patient) model.get("patient");
+		final List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrdersByPatient(patient);
 		model.put("radiologyOrders", radiologyOrders);
 	}
 }

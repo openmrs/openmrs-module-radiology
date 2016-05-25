@@ -80,7 +80,7 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
 			new Date());
 		encounter.addOrder(radiologyOrder);
 		
-		OrderContext orderContext = new OrderContext();
+		final OrderContext orderContext = new OrderContext();
 		orderContext.setCareSetting(radiologyProperties.getRadiologyCareSetting());
 		orderContext.setOrderType(radiologyProperties.getRadiologyTestOrderType());
 		

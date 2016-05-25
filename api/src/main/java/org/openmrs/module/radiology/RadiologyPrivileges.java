@@ -33,4 +33,8 @@ public class RadiologyPrivileges {
 	public static final String GET_RADIOLOGY_REPORTS = "Get Radiology Reports";
 	
 	public static final String VIEW_RADIOLOGY_SECTION = "Patient Dashboard - View Radiology Section";
+	
+	private RadiologyPrivileges() {
+		// Utility class not meant to be instantiated.
+	}
 }

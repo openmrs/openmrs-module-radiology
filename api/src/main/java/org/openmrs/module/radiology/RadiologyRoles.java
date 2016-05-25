@@ -24,4 +24,7 @@ public class RadiologyRoles {
 	
 	public static final String REFERRING_PHYSICIAN = "Radiology: Referring physician";
 	
+	private RadiologyRoles() {
+		// Utility class not meant to be instantiated.
+	}
 }

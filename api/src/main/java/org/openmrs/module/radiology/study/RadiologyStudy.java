@@ -9,8 +9,6 @@
  */
 package org.openmrs.module.radiology.study;
 
-import java.lang.reflect.Field;
-
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
@@ -125,20 +123,12 @@ public class RadiologyStudy {
 	 */
 	@Override
 	public String toString() {
-		final StringBuilder buff = new StringBuilder();
 		
-		final Field[] fields = this.getClass()
-				.getDeclaredFields();
-		for (Field field : fields) {
-			try {
-				buff.append(field.getName())
-						.append(": ")
-						.append(field.get(this))
-						.append(" ");
-			}
-			catch (IllegalAccessException ex) {}
-			catch (IllegalArgumentException ex) {}
-		}
-		return buff.toString();
+		final StringBuilder result = new StringBuilder();
+		result.append("studyId: ")
+				.append(this.getStudyId())
+				.append(" studyInstanceUid: ")
+				.append(this.getStudyInstanceUid());
+		return result.toString();
 	}
 }

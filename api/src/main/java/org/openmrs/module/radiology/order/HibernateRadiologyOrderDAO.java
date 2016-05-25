@@ -57,7 +57,7 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
 	@Override
 	public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient) {
 		
-		Criteria radiologyOrderCriteria = createRadiologyOrderCriteria();
+		final Criteria radiologyOrderCriteria = createRadiologyOrderCriteria();
 		addRestrictionOnPatient(radiologyOrderCriteria, patient);
 		
 		final List<RadiologyOrder> result = (List<RadiologyOrder>) radiologyOrderCriteria.list();

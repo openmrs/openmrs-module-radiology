@@ -71,7 +71,7 @@ public class PortletsController {
 			@RequestParam(value = "patientQuery", required = false) String patientQuery,
 			@RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = ISO.DATE) Date startDate,
 			@RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = ISO.DATE) Date endDate) {
-		ModelAndView mav = new ModelAndView("module/radiology/portlets/orderSearch");
+		final ModelAndView mav = new ModelAndView("module/radiology/portlets/orderSearch");
 		
 		if (isEndDateBeforeStartDate(startDate, endDate)) {
 			mav.addObject("exceptionText", "radiology.crossDate");
@@ -105,7 +105,7 @@ public class PortletsController {
 	private List<RadiologyOrder> filterRadiologyOrdersByDateRange(List<RadiologyOrder> unfilteredRadiologyOrders,
 			Date startDate, Date endDate) {
 		
-		List<RadiologyOrder> result = new Vector<RadiologyOrder>();
+		final List<RadiologyOrder> result = new Vector<RadiologyOrder>();
 		
 		if (startDate == null && endDate == null) {
 			return unfilteredRadiologyOrders;
@@ -119,7 +119,7 @@ public class PortletsController {
 			}
 			
 		} else if (startDate != null && endDate == null) {
-			for (RadiologyOrder order : unfilteredRadiologyOrders) {
+			for (final RadiologyOrder order : unfilteredRadiologyOrders) {
 				if (order.getEffectiveStartDate() != null && order.getEffectiveStartDate()
 						.compareTo(startDate) >= 0) {
 					result.add(order);
@@ -153,10 +153,8 @@ public class PortletsController {
 	 * @should return false with given end date and end date null
 	 */
 	private boolean isEndDateBeforeStartDate(Date startDate, Date endDate) {
-		if (startDate != null && endDate != null) {
-			if (startDate.after(endDate)) {
-				return true;
-			}
+		if (startDate != null && endDate != null && startDate.after(endDate)) {
+			return true;
 		}
 		return false;
 	}
@@ -174,7 +172,8 @@ public class PortletsController {
 	 * @should return list of all radiology orders for a patient given valid patientQuery
 	 */
 	private List<RadiologyOrder> getRadiologyOrdersForPatientQuery(String patientQuery) {
-		List<Patient> patientList = patientService.getPatients(patientQuery);
+		
+		final List<Patient> patientList = patientService.getPatients(patientQuery);
 		return radiologyOrderService.getRadiologyOrdersByPatients(patientList);
 	}
 	
@@ -188,17 +187,17 @@ public class PortletsController {
 	 * @should should populate model with exception text
 	 */
 	@ExceptionHandler(TypeMismatchException.class)
-	public ModelAndView handleTypeMismatchException(TypeMismatchException ex) {
+	public ModelAndView handleTypeMismatchException(TypeMismatchException typeMismatchException) {
 		
-		log.error(ex.getMessage());
-		ModelAndView mav = new ModelAndView();
+		log.error(typeMismatchException.getMessage());
+		final ModelAndView mav = new ModelAndView();
 		
-		if (ex.getRequiredType()
+		if (typeMismatchException.getRequiredType()
 				.equals(Date.class)) {
-			mav.addObject("invalidValue", ex.getValue());
+			mav.addObject("invalidValue", typeMismatchException.getValue());
 			mav.addObject("exceptionText", "typeMismatch.java.util.Date");
 		} else {
-			mav.addObject("exceptionText", ex.getMessage());
+			mav.addObject("exceptionText", typeMismatchException.getMessage());
 		}
 		
 		return mav;

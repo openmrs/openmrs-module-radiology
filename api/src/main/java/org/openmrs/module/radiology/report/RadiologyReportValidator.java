@@ -32,8 +32,8 @@ public class RadiologyReportValidator implements Validator {
 	 * @should return true for RadiologyReport objects
 	 * @should return false for other object types
 	 */
-	public boolean supports(Class c) {
-		return RadiologyReport.class.isAssignableFrom(c);
+	public boolean supports(Class clazz) {
+		return RadiologyReport.class.isAssignableFrom(clazz);
 	}
 	
 	/**
