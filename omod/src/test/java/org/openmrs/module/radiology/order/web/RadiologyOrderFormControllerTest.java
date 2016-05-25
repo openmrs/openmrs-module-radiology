@@ -77,7 +77,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
 	private Method radiologyReportNeedsToBeCreatedMethod = null;
 	
 	@Before
-	public void runBeforeAllTests() throws Exception {
+	public void setUp() throws Exception {
 		when(radiologyProperties.getRadiologyTestOrderType()).thenReturn(RadiologyTestData.getMockRadiologyOrderType());
 		
 		radiologyReportNeedsToBeCreatedMethod = RadiologyOrderFormController.class.getDeclaredMethod(

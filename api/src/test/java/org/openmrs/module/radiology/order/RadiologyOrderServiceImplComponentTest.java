@@ -87,7 +87,7 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
 	public ExpectedException expectedException = ExpectedException.none();
 	
 	@Before
-	public void runBeforeAllTests() throws Exception {
+	public void setUp() throws Exception {
 		
 		if (radiologyOrderServiceImpl == null) {
 			radiologyOrderServiceImpl = new RadiologyOrderServiceImpl();

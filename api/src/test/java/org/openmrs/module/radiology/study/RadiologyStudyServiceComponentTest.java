@@ -97,7 +97,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
 	}
 	
 	@Before
-	public void runBeforeAllTests() throws Exception {
+	public void setUp() throws Exception {
 		executeDataSet(TEST_DATASET);
 	}
 	

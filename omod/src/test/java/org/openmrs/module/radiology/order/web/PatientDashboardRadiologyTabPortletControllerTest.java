@@ -55,7 +55,7 @@ public class PatientDashboardRadiologyTabPortletControllerTest extends BaseConte
 	private PatientDashboardRadiologyTabPortletController patientDashboardRadiologyTabPortletController = new PatientDashboardRadiologyTabPortletController();
 	
 	@Before
-	public void runBeforeAllTests() {
+	public void setUp() {
 		
 		request = mock(HttpServletRequest.class);
 		model = new HashMap<String, Object>();

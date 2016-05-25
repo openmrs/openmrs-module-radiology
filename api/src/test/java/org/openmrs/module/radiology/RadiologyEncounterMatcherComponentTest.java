@@ -46,7 +46,7 @@ public class RadiologyEncounterMatcherComponentTest extends BaseModuleContextSen
 	public ExpectedException expectedException = ExpectedException.none();
 	
 	@Before
-	public void runBeforeAllTests() throws Exception {
+	public void setUp() throws Exception {
 		executeDataSet(TEST_DATASET);
 	}
 	
