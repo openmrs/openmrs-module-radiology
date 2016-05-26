@@ -47,10 +47,6 @@
 			<artifactId>openmrs-test</artifactId>
 			<type>pom</type>
 		</dependency>
-		<dependency>
-			<groupId>ca.uhn.hapi</groupId>
-			<artifactId>hapi-structures-v231</artifactId>
-		</dependency>
 	</dependencies>
 	<build>
 		<resources>
