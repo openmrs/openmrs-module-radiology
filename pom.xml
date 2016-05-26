@@ -34,7 +34,7 @@
 		<hapiVersion>2.0</hapiVersion>
 		<emr-apiVersion>1.13</emr-apiVersion>
 		<formatterPluginVersion>0.5.2</formatterPluginVersion>
-		<eclipseFormatterStyle>${project.parent.basedir}/tools/formatter/OpenMRSFormatter.xml</eclipseFormatterStyle>
+		<eclipseFormatterStyle>${project.parent.basedir}/tools/formatter/java.xml</eclipseFormatterStyle>
 	</properties>
 
 	<dependencyManagement>
