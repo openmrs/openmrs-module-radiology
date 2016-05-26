@@ -7,6 +7,6 @@
 	<session-factory>
 		<mapping resource="RadiologyOrder.hbm.xml" />
 		<mapping resource="RadiologyStudy.hbm.xml" />
-		<mapping resource="RadiologyReport.hbm.xml"/>
+		<mapping resource="RadiologyReport.hbm.xml" />
 	</session-factory>
 </hibernate-configuration>

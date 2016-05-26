@@ -22,42 +22,42 @@ import org.springframework.web.util.UriComponentsBuilder;
  */
 @Component
 public class DicomWebViewer {
-	
-	@Autowired
-	private RadiologyProperties radiologyProperties;
-	
-	/**
-	 * Return URL to open DICOM web viewer for given RadiologyStudy.
-	 * 
-	 * @param radiologyStudy RadiologyStudy for which DICOM web viewer URL should be created
-	 * @throws IllegalArgumentException given null
-	 * @throws IllegalArgumentException given a study with studyInstanceUid null
-	 * @should return a url to open dicom images of the given study in the configured dicom viewer
-	 * @should add query param server name to url if local server name is not blank
-	 * @should throw an illegal argument exception given null
-	 * @should throw an illegal argument exception given study with studyInstanceUid null
-	 */
-	public String getDicomViewerUrl(RadiologyStudy radiologyStudy) {
-		if (radiologyStudy == null) {
-			throw new IllegalArgumentException("study cannot be null");
-		} else if (radiologyStudy.getStudyInstanceUid() == null) {
-			throw new IllegalArgumentException("studyInstanceUid cannot be null");
-		}
-		
-		final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance()
-				.scheme("http")
-				.host(radiologyProperties.getDicomWebViewerAddress())
-				.port(Integer.valueOf(radiologyProperties.getDicomWebViewerPort()))
-				.path(radiologyProperties.getDicomWebViewerBaseUrl())
-				.queryParam("studyUID", radiologyStudy.getStudyInstanceUid());
-		
-		final String serverName = radiologyProperties.getDicomWebViewerLocalServerName();
-		if (StringUtils.isNotBlank(serverName)) {
-			uriComponentsBuilder.queryParam("serverName", serverName);
-		}
-		
-		return uriComponentsBuilder.buildAndExpand()
-				.encode()
-				.toString();
-	}
+    
+    @Autowired
+    private RadiologyProperties radiologyProperties;
+    
+    /**
+     * Return URL to open DICOM web viewer for given RadiologyStudy.
+     * 
+     * @param radiologyStudy RadiologyStudy for which DICOM web viewer URL should be created
+     * @throws IllegalArgumentException given null
+     * @throws IllegalArgumentException given a study with studyInstanceUid null
+     * @should return a url to open dicom images of the given study in the configured dicom viewer
+     * @should add query param server name to url if local server name is not blank
+     * @should throw an illegal argument exception given null
+     * @should throw an illegal argument exception given study with studyInstanceUid null
+     */
+    public String getDicomViewerUrl(RadiologyStudy radiologyStudy) {
+        if (radiologyStudy == null) {
+            throw new IllegalArgumentException("study cannot be null");
+        } else if (radiologyStudy.getStudyInstanceUid() == null) {
+            throw new IllegalArgumentException("studyInstanceUid cannot be null");
+        }
+        
+        final UriComponentsBuilder uriComponentsBuilder = UriComponentsBuilder.newInstance()
+                .scheme("http")
+                .host(radiologyProperties.getDicomWebViewerAddress())
+                .port(Integer.valueOf(radiologyProperties.getDicomWebViewerPort()))
+                .path(radiologyProperties.getDicomWebViewerBaseUrl())
+                .queryParam("studyUID", radiologyStudy.getStudyInstanceUid());
+        
+        final String serverName = radiologyProperties.getDicomWebViewerLocalServerName();
+        if (StringUtils.isNotBlank(serverName)) {
+            uriComponentsBuilder.queryParam("serverName", serverName);
+        }
+        
+        return uriComponentsBuilder.buildAndExpand()
+                .encode()
+                .toString();
+    }
 }

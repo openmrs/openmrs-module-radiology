@@ -15,24 +15,24 @@ import static org.openmrs.module.radiology.order.web.PatientDashboardRadiologyTa
 import org.openmrs.module.web.extension.PatientDashboardTabExt;
 
 public class PatientDashboardRadiologyTabExt extends PatientDashboardTabExt {
-	
-	@Override
-	public String getTabName() {
-		return "radiology.home.title";
-	}
-	
-	@Override
-	public String getTabId() {
-		return "patientDashboardRadiologyTab";
-	}
-	
-	@Override
-	public String getRequiredPrivilege() {
-		return VIEW_RADIOLOGY_SECTION;
-	}
-	
-	@Override
-	public String getPortletUrl() {
-		return PATIENT_DASHBOARD_RADIOLOGY_TAB;
-	}
+    
+    @Override
+    public String getTabName() {
+        return "radiology.home.title";
+    }
+    
+    @Override
+    public String getTabId() {
+        return "patientDashboardRadiologyTab";
+    }
+    
+    @Override
+    public String getRequiredPrivilege() {
+        return VIEW_RADIOLOGY_SECTION;
+    }
+    
+    @Override
+    public String getPortletUrl() {
+        return PATIENT_DASHBOARD_RADIOLOGY_TAB;
+    }
 }

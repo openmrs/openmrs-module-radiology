@@ -9,20 +9,23 @@
 				code="admin.title.short" /></a></li>
 	<openmrs:hasPrivilege privilege="View Orders">
 		<li
-			<c:if test='<%=request.getRequestURI().contains("radiologyOrderList")%>'>class="active"</c:if>>
+			<c:if test='<%=request.getRequestURI()
+                            .contains("radiologyOrderList")%>'>class="active"</c:if>>
 			<a
 			href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.list">
 				<spring:message code="radiology.manageOrders" />
 		</a>
 		</li>
 		<c:if
-			test='<%=request.getRequestURI().contains("radiologyOrderForm")%>'>
+			test='<%=request.getRequestURI()
+                            .contains("radiologyOrderForm")%>'>
 			<li class="active"><a
 				href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId=${radiologyOrder.orderId}">
 					Radiology Order </a></li>
 		</c:if>
 		<c:if
-			test='<%=request.getRequestURI().contains("radiology/radiologyReport")%>'>
+			test='<%=request.getRequestURI()
+                            .contains("radiology/radiologyReport")%>'>
 			<li><a
 				href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId=${radiologyOrder.orderId}">
 					Radiology Order </a></li>

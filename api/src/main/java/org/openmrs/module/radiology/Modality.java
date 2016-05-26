@@ -17,21 +17,21 @@ package org.openmrs.module.radiology;
  * </p>
  */
 public enum Modality {
-	
-	CR("Computed Radiography"),
-	MR("Magnetic Resonance"),
-	CT("Computed Tomography"),
-	NM("Nuclear Medicine"),
-	US("Ultrasound"),
-	XA("X-Ray Angiography");
-	
-	final private String fullName;
-	
-	Modality(String fullname) {
-		this.fullName = fullname;
-	}
-	
-	public String getFullName() {
-		return this.fullName;
-	}
+    
+    CR("Computed Radiography"),
+    MR("Magnetic Resonance"),
+    CT("Computed Tomography"),
+    NM("Nuclear Medicine"),
+    US("Ultrasound"),
+    XA("X-Ray Angiography");
+    
+    final private String fullName;
+    
+    Modality(String fullname) {
+        this.fullName = fullname;
+    }
+    
+    public String getFullName() {
+        return this.fullName;
+    }
 }

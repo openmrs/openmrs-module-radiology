@@ -34,7 +34,8 @@
 
 	<extension>
 		<point>org.openmrs.patientDashboardTab</point>
-		<class>@MODULE_PACKAGE@.web.extension.html.PatientDashboardRadiologyTabExt</class>
+		<class>@MODULE_PACKAGE@.web.extension.html.PatientDashboardRadiologyTabExt
+		</class>
 	</extension>
 	<extension>
 		<point>org.openmrs.gutter.tools</point>

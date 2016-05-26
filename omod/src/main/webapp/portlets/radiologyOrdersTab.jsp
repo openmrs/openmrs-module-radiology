@@ -18,7 +18,7 @@
 	<spring:message code="general.loading" />
 </div>
 <openmrs:hasPrivilege privilege="Add Radiology Orders">
-<br>
+	<br>
 	<a href="radiologyOrder.form"><spring:message
 			code="radiology.addOrder" /></a>
 	<br>

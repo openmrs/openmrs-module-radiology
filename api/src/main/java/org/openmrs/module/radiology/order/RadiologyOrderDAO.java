@@ -19,21 +19,21 @@ import org.openmrs.Patient;
  * @see org.openmrs.module.radiology.order.RadiologyOrderService
  */
 interface RadiologyOrderDAO {
-	
-	/**
-	 * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrderByOrderId(Integer)
-	 */
-	public RadiologyOrder getRadiologyOrderByOrderId(Integer orderId);
-	
-	/**
-	 * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
-	 */
-	public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient);
-	
-	/**
-	 * @see
-	 *      org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
-	 */
-	public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients);
-	
+    
+    /**
+     * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrderByOrderId(Integer)
+     */
+    public RadiologyOrder getRadiologyOrderByOrderId(Integer orderId);
+    
+    /**
+     * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
+     */
+    public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient);
+    
+    /**
+     * @see
+     *      org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
+     */
+    public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients);
+    
 }

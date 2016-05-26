@@ -17,13 +17,13 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping(RadiologyDashboardFormController.RADIOLOGY_DASHBOARD_FORM_REQUEST_MAPPING)
 public class RadiologyDashboardFormController {
-	
-	public static final String RADIOLOGY_DASHBOARD_FORM_REQUEST_MAPPING = "/module/radiology/radiologyDashboard.form";
-	
-	static final String RADIOLOGY_DASHBOARD_FORM_VIEW = "/module/radiology/radiologyDashboardForm";
-	
-	@RequestMapping(method = RequestMethod.GET)
-	protected ModelAndView get() {
-		return new ModelAndView(RADIOLOGY_DASHBOARD_FORM_VIEW);
-	}
+    
+    public static final String RADIOLOGY_DASHBOARD_FORM_REQUEST_MAPPING = "/module/radiology/radiologyDashboard.form";
+    
+    static final String RADIOLOGY_DASHBOARD_FORM_VIEW = "/module/radiology/radiologyDashboardForm";
+    
+    @RequestMapping(method = RequestMethod.GET)
+    protected ModelAndView get() {
+        return new ModelAndView(RADIOLOGY_DASHBOARD_FORM_VIEW);
+    }
 }

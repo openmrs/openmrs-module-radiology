@@ -19,30 +19,30 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
  * @see org.openmrs.module.radiology.study.RadiologyStudyService
  */
 interface RadiologyStudyDAO {
-	
-	/**
-	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#saveStudy(RadiologyStudy)
-	 */
-	public RadiologyStudy saveStudy(RadiologyStudy radiologyStudy);
-	
-	/**
-	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyId(Integer)
-	 */
-	public RadiologyStudy getStudyByStudyId(Integer studyId);
-	
-	/**
-	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByOrderId(Integer)
-	 */
-	public RadiologyStudy getStudyByOrderId(Integer orderId);
-	
-	/**
-	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyInstanceUid(String)
-	 */
-	public RadiologyStudy getStudyByStudyInstanceUid(String studyInstanceUid);
-	
-	/**
-	 * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
-	 */
-	public List<RadiologyStudy> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
-	
+    
+    /**
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#saveStudy(RadiologyStudy)
+     */
+    public RadiologyStudy saveStudy(RadiologyStudy radiologyStudy);
+    
+    /**
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyId(Integer)
+     */
+    public RadiologyStudy getStudyByStudyId(Integer studyId);
+    
+    /**
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByOrderId(Integer)
+     */
+    public RadiologyStudy getStudyByOrderId(Integer orderId);
+    
+    /**
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyInstanceUid(String)
+     */
+    public RadiologyStudy getStudyByStudyInstanceUid(String studyInstanceUid);
+    
+    /**
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudiesByRadiologyOrders(List<RadiologyOrder>)
+     */
+    public List<RadiologyStudy> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
+    
 }

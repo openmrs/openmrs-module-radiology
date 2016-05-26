@@ -13,16 +13,16 @@ package org.openmrs.module.radiology.report;
  * RadiologyReportStatus represents a status for a radiologyReport
  */
 public enum RadiologyReportStatus {
-	/**
-	 * The report is completed and can be given to a patient.
-	 */
-	COMPLETED,
-	/**
-	 * The report is claimed by a physician and currently being worked on.
-	 */
-	CLAIMED,
-	/**
-	 * The report is discontinued and cannot be given to a patient.
-	 */
-	DISCONTINUED
+    /**
+     * The report is completed and can be given to a patient.
+     */
+    COMPLETED,
+    /**
+     * The report is claimed by a physician and currently being worked on.
+     */
+    CLAIMED,
+    /**
+     * The report is discontinued and cannot be given to a patient.
+     */
+    DISCONTINUED
 }

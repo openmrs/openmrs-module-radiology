@@ -16,25 +16,25 @@ import org.openmrs.module.Extension;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
 
 public class AdminList extends AdministrationSectionExt {
-	
-	@Override
-	public Extension.MEDIA_TYPE getMediaType() {
-		return Extension.MEDIA_TYPE.html;
-	}
-	
-	@Override
-	public String getTitle() {
-		return "radiology.title";
-	}
-	
-	@Override
-	public Map<String, String> getLinks() {
-		
-		final Map<String, String> map = new HashMap<String, String>();
-		
-		map.put("module/radiology/radiologyOrder.list", "radiology.manageOrders");
-		
-		return map;
-	}
-	
+    
+    @Override
+    public Extension.MEDIA_TYPE getMediaType() {
+        return Extension.MEDIA_TYPE.html;
+    }
+    
+    @Override
+    public String getTitle() {
+        return "radiology.title";
+    }
+    
+    @Override
+    public Map<String, String> getLinks() {
+        
+        final Map<String, String> map = new HashMap<String, String>();
+        
+        map.put("module/radiology/radiologyOrder.list", "radiology.manageOrders");
+        
+        return map;
+    }
+    
 }

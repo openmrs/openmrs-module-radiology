@@ -29,4 +29,3 @@
 	<input type="submit" name="discontinueOrder"
 		value='<spring:message code="Order.discontinueOrder"/>' />
 </form:form>
- 

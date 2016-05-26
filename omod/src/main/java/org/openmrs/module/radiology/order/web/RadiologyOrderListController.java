@@ -17,14 +17,14 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 @RequestMapping(RadiologyOrderListController.RADIOLOGY_ORDER_LIST_REQUEST_MAPPING)
 public class RadiologyOrderListController {
-	
-	public static final String RADIOLOGY_ORDER_LIST_REQUEST_MAPPING = "/module/radiology/radiologyOrder.list";
-	
-	private static final String RADIOLOGY_ORDER_LIST_VIEW = "/module/radiology/radiologyOrderList";
-	
-	@RequestMapping(method = RequestMethod.GET)
-	public ModelAndView handleRequest() {
-		final ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_LIST_VIEW);
-		return mav;
-	}
+    
+    public static final String RADIOLOGY_ORDER_LIST_REQUEST_MAPPING = "/module/radiology/radiologyOrder.list";
+    
+    private static final String RADIOLOGY_ORDER_LIST_VIEW = "/module/radiology/radiologyOrderList";
+    
+    @RequestMapping(method = RequestMethod.GET)
+    public ModelAndView handleRequest() {
+        final ModelAndView mav = new ModelAndView(RADIOLOGY_ORDER_LIST_VIEW);
+        return mav;
+    }
 }
