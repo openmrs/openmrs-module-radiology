@@ -31,7 +31,6 @@
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openMRSVersion>1.11.4</openMRSVersion>
-		<hapiVersion>2.0</hapiVersion>
 		<emr-apiVersion>1.13</emr-apiVersion>
 		<formatterPluginVersion>0.5.2</formatterPluginVersion>
 		<eclipseFormatterStyle>${project.parent.basedir}/tools/formatter/java.xml</eclipseFormatterStyle>
@@ -78,18 +77,6 @@
 				<groupId>org.openmrs.tools</groupId>
 				<artifactId>openmrs-tools</artifactId>
 				<version>${openMRSVersion}</version>
-			</dependency>
-
-			<dependency>
-				<groupId>ca.uhn.hapi</groupId>
-				<artifactId>hapi-structures-v231</artifactId>
-				<version>${hapiVersion}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>*</groupId>
-						<artifactId>*</artifactId>
-					</exclusion>
-				</exclusions>
 			</dependency>
 		</dependencies>
 
