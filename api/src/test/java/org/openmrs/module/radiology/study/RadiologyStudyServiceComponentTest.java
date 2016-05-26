@@ -3,13 +3,11 @@
  * Version 1.0 (the "License"); you may not use this file except in
  * compliance with the License. You may obtain a copy of the License at
  * http://license.openmrs.org
- *
  * Software distributed under the License is distributed on an "AS IS"
  * basis, WITHOUT WARRANTY OF ANY KIND, either express or implied. See the
  * License for the specific language governing rights and limitations
  * under the License.
- *
- * Copyright (C) OpenMRS, LLC.  All Rights Reserved.
+ * Copyright (C) OpenMRS, LLC. All Rights Reserved.
  */
 package org.openmrs.module.radiology.study;
 
@@ -45,7 +43,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensitiveTest {
     
-    private static final String TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyStudyServiceComponentTestDataset.xml";
+    private static final String TEST_DATASET =
+            "org/openmrs/module/radiology/include/RadiologyStudyServiceComponentTestDataset.xml";
     
     private static final int PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER = 70021;
     
@@ -282,7 +281,8 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     public void getStudiesByRadiologyOrders_shouldReturnEmptyListGivenRadiologyOrdersWithoutAssociatedStudies()
             throws Exception {
         
-        RadiologyOrder radiologyOrderWithoutStudy = radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
+        RadiologyOrder radiologyOrderWithoutStudy =
+                radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
         List<RadiologyOrder> radiologyOrders = Arrays.asList(radiologyOrderWithoutStudy);
         
         List<RadiologyStudy> radiologyStudies = radiologyStudyService.getStudiesByRadiologyOrders(radiologyOrders);
@@ -330,8 +330,9 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
         PerformedProcedureStepStatus performedStatusPreUpdate = existingStudy.getPerformedStatus();
         PerformedProcedureStepStatus performedStatusPostUpdate = PerformedProcedureStepStatus.COMPLETED;
         
-        RadiologyStudy updatedStudy = radiologyStudyService.updateStudyPerformedStatus(existingStudy.getStudyInstanceUid(),
-            performedStatusPostUpdate);
+        RadiologyStudy updatedStudy =
+                radiologyStudyService.updateStudyPerformedStatus(existingStudy.getStudyInstanceUid(),
+                    performedStatusPostUpdate);
         
         assertNotNull(updatedStudy);
         assertThat(updatedStudy, is(existingStudy));

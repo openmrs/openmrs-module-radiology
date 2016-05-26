@@ -21,7 +21,8 @@ public class PerformedProcedureStepStatusTest {
      * @see PerformedProcedureStepStatus#getNameOrUnknown(PerformedProcedureStepStatus)
      */
     @Test
-    @Verifies(value = "should return name given performed procedure step status", method = "getNameOrUnknown(PerformedProcedureStepStatus)")
+    @Verifies(value = "should return name given performed procedure step status",
+            method = "getNameOrUnknown(PerformedProcedureStepStatus)")
     public void getNameOrUnknown_shouldReturnDisplayNameGivenPerformedProcedureStepStatus() {
         assertThat(PerformedProcedureStepStatus.getNameOrUnknown(PerformedProcedureStepStatus.IN_PROGRESS),
             is("IN_PROGRESS"));
@@ -43,7 +44,8 @@ public class PerformedProcedureStepStatusTest {
      * @see PerformedProcedureStepStatus#getMatchForDisplayName(String)
      */
     @Test
-    @Verifies(value = "should return performed procedure step status given display name", method = "getMatchForDisplayName(String)")
+    @Verifies(value = "should return performed procedure step status given display name",
+            method = "getMatchForDisplayName(String)")
     public void getMatchForDisplayName_shouldReturnPerformedProcedureStepStatusGivenDisplayName() {
         assertThat(PerformedProcedureStepStatus.getMatchForDisplayName("IN PROGRESS"),
             is(PerformedProcedureStepStatus.IN_PROGRESS));

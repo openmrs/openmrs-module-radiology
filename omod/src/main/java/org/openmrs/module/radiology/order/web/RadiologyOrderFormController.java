@@ -3,7 +3,6 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- *
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
@@ -101,8 +100,8 @@ public class RadiologyOrderFormController {
      *         patient is null
      */
     @RequestMapping(method = RequestMethod.GET, params = "patientId")
-    protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(
-            @RequestParam(value = "patientId", required = true) Patient patient) {
+    protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(@RequestParam(value = "patientId",
+            required = true) Patient patient) {
         
         final ModelAndView modelAndView = getRadiologyOrderFormWithNewRadiologyOrder();
         
@@ -129,8 +128,8 @@ public class RadiologyOrderFormController {
      *         and not a radiology order
      */
     @RequestMapping(method = RequestMethod.GET, params = "orderId")
-    protected ModelAndView getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(
-            @RequestParam(value = "orderId", required = true) Order order) {
+    protected ModelAndView getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(@RequestParam(value = "orderId",
+            required = true) Order order) {
         ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
         
         if (Context.isAuthenticated()) {
@@ -172,8 +171,8 @@ public class RadiologyOrderFormController {
      * @should not redirect if radiology order is not valid according to order validator
      */
     @RequestMapping(method = RequestMethod.POST, params = "saveRadiologyOrder")
-    protected ModelAndView postSaveRadiologyOrder(HttpServletRequest request,
-            @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("order") Order order,
+    protected ModelAndView postSaveRadiologyOrder(HttpServletRequest request, @RequestParam(value = "patient_id",
+            required = false) Integer patientId, @ModelAttribute("order") Order order,
             @ModelAttribute("radiologyOrder") RadiologyOrder radiologyOrder, BindingResult radiologyOrderErrors)
             throws Exception {
         
@@ -198,10 +197,9 @@ public class RadiologyOrderFormController {
                 modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
                         + radiologyOrder.getOrderId());
             }
-            catch (Exception ex) {
+            catch (IllegalArgumentException illegalArgumentException) {
                 request.getSession()
-                        .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, ex.getMessage());
-                ex.printStackTrace();
+                        .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, illegalArgumentException.getMessage());
             }
         }
         
@@ -234,8 +232,9 @@ public class RadiologyOrderFormController {
                 
                 return modelAndView;
             }
-            discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
-                discontinuationOrder.getOrderer(), discontinuationOrder.getOrderReasonNonCoded());
+            discontinuationOrder =
+                    radiologyOrderService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
+                        discontinuationOrder.getOrderer(), discontinuationOrder.getOrderReasonNonCoded());
             
             request.getSession()
                     .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
@@ -282,7 +281,8 @@ public class RadiologyOrderFormController {
             return false;
         }
         
-        final RadiologyReport radiologyReport = radiologyReportService.getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
+        final RadiologyReport radiologyReport =
+                radiologyReportService.getActiveRadiologyReportByRadiologyOrder(radiologyOrder);
         if (radiologyReport == null) {
             modelAndView.addObject("radiologyReportNeedsToBeCreated", true);
             return true;

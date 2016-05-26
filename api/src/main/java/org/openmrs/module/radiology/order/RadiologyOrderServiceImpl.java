@@ -3,7 +3,6 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- *
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
@@ -76,8 +75,8 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
             throw new IllegalArgumentException("radiologyOrder.study.modality is required");
         }
         
-        final Encounter encounter = saveRadiologyOrderEncounter(radiologyOrder.getPatient(), radiologyOrder.getOrderer(),
-            new Date());
+        final Encounter encounter =
+                saveRadiologyOrderEncounter(radiologyOrder.getPatient(), radiologyOrder.getOrderer(), new Date());
         encounter.addOrder(radiologyOrder);
         
         final OrderContext orderContext = new OrderContext();
@@ -96,8 +95,10 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
      * @param provider the encounter provider
      * @param encounterDateTime the encounter date
      * @return radiology order encounter for given parameters
-     * @should create radiology order encounter attached to existing active visit given patient with active visit
-     * @should create radiology order encounter attached to new active visit given patient without active visit
+     * @should create radiology order encounter attached to existing active visit given patient with
+     *         active visit
+     * @should create radiology order encounter attached to new active visit given patient without
+     *         active visit
      */
     @Transactional
     private Encounter saveRadiologyOrderEncounter(Patient patient, Provider provider, Date encounterDateTime) {
@@ -154,7 +155,8 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
             throw new IllegalArgumentException("provider is required");
         }
         
-        final Encounter encounter = this.saveRadiologyOrderEncounter(radiologyOrderToDiscontinue.getPatient(), orderer, null);
+        final Encounter encounter =
+                this.saveRadiologyOrderEncounter(radiologyOrderToDiscontinue.getPatient(), orderer, null);
         
         return this.orderService.discontinueOrder(radiologyOrderToDiscontinue, nonCodedDiscontinueReason, null, orderer,
             encounter);
@@ -187,7 +189,7 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     }
     
     /**
-     * @see RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
+     * @see RadiologyOrderService#getRadiologyOrdersByPatients
      */
     @Transactional(readOnly = true)
     @Override

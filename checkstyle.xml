@@ -1,0 +1,141 @@
+<?xml version="1.0"?>
+<!-- This Source Code Form is subject to the terms of the Mozilla Public 
+	License, v. 2.0. If a copy of the MPL was not distributed with this file, 
+	You can obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed 
+	under the terms of the Healthcare Disclaimer located at http://openmrs.org/license. 
+	Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS 
+	graphic logo is a trademark of OpenMRS Inc. -->
+<!DOCTYPE module PUBLIC
+	  "-//Puppy Crawl//DTD Check Configuration 1.2//EN"
+	  "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
+
+<module name="Checker">
+	<property name="charset" value="UTF-8" />
+
+	<!-- Limit checks by their severity (e.g., error or warning) -->
+	<module name="SeverityMatchFilter">
+		<property name="severity" value="error" />
+	</module>
+
+	<!-- -->
+	<!-- FILE CHECKS -->
+	<!-- -->
+
+	<module name="FileLength">
+		<property name="fileExtensions" value="java, xml" />
+		<property name="max" value="2500" />
+	</module>
+	<module name="RegexpSingleline">
+		<property name="format" value="System\.out\.println\(\)" />
+		<property name="message"
+			value="System.out.println() should not be used. Use logging convention instead." />
+	</module>
+	<module name="RegexpSingleline">
+		<property name="id" value="IllegalPrintStackTrace" />
+		<property name="format" value="\.printStackTrace\(\)" />
+		<property name="message"
+			value="ex.PrintStackTrace() should not be used. Use logging convention instead." />
+	</module>
+	<module name="RegexpSingleline">
+		<property name="id" value="InefficientCurrentTime" />
+		<property name="format" value="new Date\(\)\.getTime\(\)" />
+		<property name="message"
+			value="Use System.currentTimeMillis() instead of new Date().getTime()." />
+	</module>
+	<module name="FileTabCharacter">
+		<property name="eachLine" value="true" />
+	</module>
+
+	<!-- -->
+	<!-- MISCELLANEOUS CHECKS -->
+	<!-- -->
+
+	<!-- Ensure translation files contain the same keys -->
+	<module name="Translation">
+		<property name="severity" value="warning" />
+	</module>
+
+	<!-- -->
+	<!-- FILE LEVEL CHECKS -->
+	<!-- -->
+
+	<!-- TreeWalker is used to process individual Java files -->
+	<module name="TreeWalker">
+		<property name="tabWidth" value="4" />
+		<module name="AvoidStarImport" />
+		<module name="RedundantImport" />
+		<module name="IllegalImport" />
+		<module name="PackageName" />
+		<module name="TypeName">
+			<property name="format" value="^[A-Z][a-zA-Z0-9]*$" />
+		</module>
+		<module name="OuterTypeNumber" />
+		<module name="MethodName" />
+		<module name="MethodLength">
+			<property name="max" value="200" />
+		</module>
+		<module name="ParameterName">
+			<property name="format" value="^[a-z]+[a-zA-Z0-9]*$" />
+		</module>
+		<module name="ParameterNumber">
+			<property name="max" value="5" />
+		</module>
+		<module name="IllegalCatch">
+			<property name="illegalClassNames"
+				value=" java.lang.Throwable, java.lang.RuntimeException" />
+		</module>
+		<module name="IllegalThrows" />
+		<module name="IllegalInstantiation">
+			<property name="classes" value="java.lang.Boolean" />
+		</module>
+		<module name="InnerAssignment" />
+		<module name="LineLength">
+			<property name="max" value="125" />
+			<property name="ignorePattern" value="^package.*|^import.*|^/*|^*|^ *\* *[^ ]+$" />
+		</module>
+		<module name="MissingSwitchDefault" />
+		<module name="FallThrough" />
+		<module name="MagicNumber" />
+		<module name="UpperEll" />
+		<module name="EqualsHashCode" />
+		<module name="NestedIfDepth">
+			<property name="max" value="2" />
+		</module>
+		<module name="MissingOverride">
+			<property name="javaFiveCompatibility" value="false" />
+		</module>
+		<module name="StringLiteralEquality" />
+		<module name="NoClone" />
+		<module name="ModifierOrder" />
+		<module name="SimplifyBooleanReturn" />
+		<module name="SimplifyBooleanExpression" />
+		<module name="NeedBraces" />
+		<module name="LeftCurly">
+			<property name="option" value="eol" />
+		</module>
+		<module name="MethodParamPad" />
+		<module name="NoWhitespaceBefore" />
+		<module name="NoWhitespaceAfter">
+			<property name="tokens"
+				value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS" />
+		</module>
+		<module name="GenericWhitespace" />
+		<module name="OperatorWrap" />
+		<module name="TypecastParenPad" />
+		<module name="AtclauseOrder">
+			<property name="tagOrder"
+				value="@param, @return, @throws, @deprecated, @should" />
+			<property name="target"
+				value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF" />
+		</module>
+		<module name="JavadocMethod">
+			<property name="scope" value="public" />
+			<property name="allowMissingParamTags" value="true" />
+			<property name="allowMissingThrowsTags" value="true" />
+			<property name="allowMissingReturnTag" value="true" />
+			<property name="minLineCount" value="2" />
+			<property name="allowedAnnotations" value="Override, Test" />
+			<property name="allowThrowsTagsForSubclasses" value="true" />
+		</module>
+	</module>
+</module>
