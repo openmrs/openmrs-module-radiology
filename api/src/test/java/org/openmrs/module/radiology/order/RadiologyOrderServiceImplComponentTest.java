@@ -3,7 +3,6 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- *
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
@@ -47,7 +46,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSensitiveTest {
     
-    private static final String TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyOrderServiceComponentTestDataset.xml";
+    private static final String TEST_DATASET =
+            "org/openmrs/module/radiology/include/RadiologyOrderServiceComponentTestDataset.xml";
     
     private static final int PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER_AND_NO_ACTIVE_VISIT = 70011;
     
@@ -108,8 +108,9 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
             radiologyPropertiesField.set(radiologyOrderServiceImpl, radiologyProperties);
         }
         
-        saveRadiologyOrderEncounterMethod = RadiologyOrderServiceImpl.class.getDeclaredMethod("saveRadiologyOrderEncounter",
-            new Class[] { Patient.class, Provider.class, Date.class });
+        saveRadiologyOrderEncounterMethod =
+                RadiologyOrderServiceImpl.class.getDeclaredMethod("saveRadiologyOrderEncounter", new Class[] {
+                        Patient.class, Provider.class, Date.class });
         saveRadiologyOrderEncounterMethod.setAccessible(true);
         
         executeDataSet(TEST_DATASET);
@@ -120,10 +121,13 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
      * @verifies create radiology order encounter attached to existing active visit given patient with active visit
      */
     @Test
-    public void saveRadiologyOrderEncounter_shouldCreateRadiologyOrderEncounterAttachedToExistingActiveVisitGivenPatientWithActiveVisit()
-            throws Exception {
+    public
+            void
+            saveRadiologyOrderEncounter_shouldCreateRadiologyOrderEncounterAttachedToExistingActiveVisitGivenPatientWithActiveVisit()
+                    throws Exception {
         // given
-        Patient patient = patientService.getPatient(PATIENT_ID_WITH_NO_RADIOLOGY_ORDER_AND_NO_EXISTIG_ENCOUNTER_AND_ACTIVE_VISIT);
+        Patient patient =
+                patientService.getPatient(PATIENT_ID_WITH_NO_RADIOLOGY_ORDER_AND_NO_EXISTIG_ENCOUNTER_AND_ACTIVE_VISIT);
         Provider provider = providerService.getProviderByUuid(RADIOLOGY_ORDER_PROVIDER_UUID);
         Date encounterDatetime = new GregorianCalendar(2010, Calendar.OCTOBER, 10).getTime();
         
@@ -131,8 +135,9 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
         assertThat(encounterService.getEncountersByPatient(patient), is(empty()));
         assertThat(visitService.getActiveVisitsByPatient(patient), is(not(empty())));
         
-        Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyOrderServiceImpl, new Object[] {
-                patient, provider, encounterDatetime });
+        Encounter encounter =
+                (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyOrderServiceImpl, new Object[] { patient,
+                        provider, encounterDatetime });
         
         assertNotNull(encounter);
         assertThat(encounter.getPatient(), is(patient));
@@ -153,8 +158,10 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
      * @verifies create radiology order encounter attached to new active visit given patient without active visit
      */
     @Test
-    public void saveRadiologyOrderEncounter_shouldCreateRadiologyOrderEncounterAttachedToNewActiveVisitGivenPatientWithoutActiveVisit()
-            throws Exception {
+    public
+            void
+            saveRadiologyOrderEncounter_shouldCreateRadiologyOrderEncounterAttachedToNewActiveVisitGivenPatientWithoutActiveVisit()
+                    throws Exception {
         // given
         Patient patient = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER_AND_NO_ACTIVE_VISIT);
         Provider provider = providerService.getProviderByUuid(RADIOLOGY_ORDER_PROVIDER_UUID);
@@ -163,8 +170,9 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
         assertThat(encounterService.getEncountersByPatient(patient), is(empty()));
         assertThat(visitService.getActiveVisitsByPatient(patient), is(empty()));
         
-        Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyOrderServiceImpl, new Object[] {
-                patient, provider, encounterDatetime });
+        Encounter encounter =
+                (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyOrderServiceImpl, new Object[] { patient,
+                        provider, encounterDatetime });
         
         assertNotNull(encounter);
         assertThat(encounter.getPatient(), is(patient));

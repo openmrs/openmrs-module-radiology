@@ -3,7 +3,6 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- *
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
@@ -53,8 +52,9 @@ public class RadiologyReportFormController {
         ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         
         final RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
-        modelAndView = new ModelAndView("redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?radiologyReportId="
-                + radiologyReport.getId());
+        modelAndView =
+                new ModelAndView("redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?radiologyReportId="
+                        + radiologyReport.getId());
         
         addObjectsToModelAndView(modelAndView, radiologyReport);
         return modelAndView;
@@ -70,12 +70,13 @@ public class RadiologyReportFormController {
      *         report id
      */
     @RequestMapping(method = RequestMethod.GET, params = "radiologyReportId")
-    protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(
-            @RequestParam(value = "radiologyReportId", required = true) Integer radiologyReportId) {
+    protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(@RequestParam(value = "radiologyReportId",
+            required = true) Integer radiologyReportId) {
         
         ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         
-        final RadiologyReport radiologyReport = radiologyReportService.getRadiologyReportByRadiologyReportId(radiologyReportId);
+        final RadiologyReport radiologyReport =
+                radiologyReportService.getRadiologyReportByRadiologyReportId(radiologyReportId);
         addObjectsToModelAndView(modelAndView, radiologyReport);
         
         return modelAndView;
@@ -134,8 +135,9 @@ public class RadiologyReportFormController {
             return modelAndView;
         }
         
-        final RadiologyReport completedRadiologyReport = radiologyReportService.completeRadiologyReport(radiologyReport,
-            radiologyReport.getPrincipalResultsInterpreter());
+        final RadiologyReport completedRadiologyReport =
+                radiologyReportService.completeRadiologyReport(radiologyReport,
+                    radiologyReport.getPrincipalResultsInterpreter());
         addObjectsToModelAndView(modelAndView, completedRadiologyReport);
         return modelAndView;
     }

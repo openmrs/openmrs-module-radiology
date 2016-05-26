@@ -37,7 +37,9 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
      * @see RadiologyReportFormController#getRadiologyReportFormWithNewRadiologyReport(RadiologyOrder)
      */
     @Test
-    public void getRadiologyReportFormWithNewRadiologyReport_shouldPopulateModelAndViewWithNewRadiologyReportForGivenRadiologyOrder() {
+    public
+            void
+            getRadiologyReportFormWithNewRadiologyReport_shouldPopulateModelAndViewWithNewRadiologyReportForGivenRadiologyOrder() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
@@ -47,7 +49,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         when(dicomWebViewer.getDicomViewerUrl(mockRadiologyOrder.getStudy())).thenReturn(
             "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
         
-        ModelAndView modelAndView = radiologyReportFormController.getRadiologyReportFormWithNewRadiologyReport(mockRadiologyOrder);
+        ModelAndView modelAndView =
+                radiologyReportFormController.getRadiologyReportFormWithNewRadiologyReport(mockRadiologyOrder);
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyReport.form?radiologyReportId="
@@ -82,7 +85,9 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
      * @see RadiologyReportFormController#getRadiologyReportFormWithExistingRadiologyReport(Integer)
      */
     @Test
-    public void getRadiologyReportFormWithExistingRadiologyReport_shouldPopulateModelAndViewWithExistingRadiologyReportMatchingGivenRadiologyReportId() {
+    public
+            void
+            getRadiologyReportFormWithExistingRadiologyReport_shouldPopulateModelAndViewWithExistingRadiologyReportMatchingGivenRadiologyReportId() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
@@ -93,7 +98,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .getStudy())).thenReturn(
             "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
         
-        ModelAndView modelAndView = radiologyReportFormController.getRadiologyReportFormWithExistingRadiologyReport(mockRadiologyReport.getId());
+        ModelAndView modelAndView =
+                radiologyReportFormController.getRadiologyReportFormWithExistingRadiologyReport(mockRadiologyReport.getId());
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyReportForm"));
@@ -220,7 +226,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
      *      org.springframework.validation.BindingResult)
      */
     @Test
-    public void completeRadiologyReport_shouldPopulateModelAndViewRadiologyReportFormWithBindingResultErrorsIfProviderIsNull() {
+    public void
+            completeRadiologyReport_shouldPopulateModelAndViewRadiologyReportFormWithBindingResultErrorsIfProviderIsNull() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();

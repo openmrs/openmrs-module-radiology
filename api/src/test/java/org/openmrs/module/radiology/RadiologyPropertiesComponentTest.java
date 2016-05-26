@@ -3,7 +3,6 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- *
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
@@ -173,8 +172,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      *           cannot be found
      */
     @Test
-    public void getDicomWebViewerAddress_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomWebViewerAddressCannotBeFound()
-            throws Exception {
+    public void
+            getDicomWebViewerAddress_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomWebViewerAddressCannotBeFound()
+                    throws Exception {
         
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_WEB_VIEWER_ADDRESS);
@@ -228,8 +228,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      *           cannot be found
      */
     @Test
-    public void getDicomWebViewerBaseUrl_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomWebViewerBaseUrlCannotBeFound()
-            throws Exception {
+    public void
+            getDicomWebViewerBaseUrl_shouldThrowIllegalStateExceptionIfGlobalPropertyForDicomWebViewerBaseUrlCannotBeFound()
+                    throws Exception {
         
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_DICOM_WEB_VIEWER_BASE_URL);
@@ -271,8 +272,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      *           be found
      */
     @Test
-    public void getRadiologyCareSetting_shouldThrowIllegalStateExceptionIfGlobalPropertyForRadiologyCareSettingCannotBeFound()
-            throws Exception {
+    public void
+            getRadiologyCareSetting_shouldThrowIllegalStateExceptionIfGlobalPropertyForRadiologyCareSettingCannotBeFound()
+                    throws Exception {
         
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("Configuration required: " + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
@@ -308,8 +310,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
         administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_TEST_ORDER_TYPE,
                 radiologyTestOrderTypeUuid));
         
-        OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams",
-                "org.openmrs.module.radiology.order.RadiologyOrder");
+        OrderType radiologyOrderType =
+                new OrderType("Radiology Order", "Order type for radiology exams",
+                        "org.openmrs.module.radiology.order.RadiologyOrder");
         radiologyOrderType.setUuid(radiologyTestOrderTypeUuid);
         orderService.saveOrderType(radiologyOrderType);
         
@@ -393,8 +396,10 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      * @verifies throw illegal state exception for non existing ordering provider encounter role
      */
     @Test
-    public void getRadiologyOrderingProviderEncounterRole_shouldThrowIllegalStateExceptionForNonExistingOrderingProviderEncounterRole()
-            throws Exception {
+    public
+            void
+            getRadiologyOrderingProviderEncounterRole_shouldThrowIllegalStateExceptionForNonExistingOrderingProviderEncounterRole()
+                    throws Exception {
         expectedException.expect(IllegalStateException.class);
         expectedException.expectMessage("Configuration required: "
                 + RadiologyConstants.GP_RADIOLOGY_ORDERING_PROVIDER_ENCOUNTER_ROLE);
@@ -443,8 +448,10 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      *           UUIDs in global property radiologyConceptClasses
      */
     @Test
-    public void getRadiologyConceptClassNames_shouldReturnsCommaSeparatedListOfConceptClassNamesConfiguredViaConceptClassUUIDsInGlobalPropertyRadiologyConceptClasses()
-            throws Exception {
+    public
+            void
+            getRadiologyConceptClassNames_shouldReturnsCommaSeparatedListOfConceptClassNamesConfiguredViaConceptClassUUIDsInGlobalPropertyRadiologyConceptClasses()
+                    throws Exception {
         List<ConceptClass> conceptClasses = new LinkedList<ConceptClass>();
         conceptClasses.add(conceptService.getConceptClassByName("Drug"));
         conceptClasses.add(conceptService.getConceptClassByName("Test"));
@@ -469,8 +476,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      * @verifies throw illegal state exception if global property radiologyConceptClasses is null
      */
     @Test
-    public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsNull()
-            throws Exception {
+    public void
+            getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsNull()
+                    throws Exception {
         administrationService.setGlobalProperty("radiology.radiologyConceptClasses", null);
         
         expectedException.expect(IllegalStateException.class);
@@ -485,8 +493,10 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      *           empty String
      */
     @Test
-    public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsAnEmptyString()
-            throws Exception {
+    public
+            void
+            getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsAnEmptyString()
+                    throws Exception {
         administrationService.setGlobalProperty("radiology.radiologyConceptClasses", "");
         
         expectedException.expect(IllegalStateException.class);
@@ -501,8 +511,10 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      *           formatted
      */
     @Test
-    public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsBadlyFormatted()
-            throws Exception {
+    public
+            void
+            getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsBadlyFormatted()
+                    throws Exception {
         administrationService.setGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES,
             "AAAA-bbbbb-1111-2222/AAAA-BBBB-2222-3333");
         
@@ -518,8 +530,10 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      *           UUID not found among ConceptClasses
      */
     @Test
-    public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesContainsAUUIDNotFoundAmongConceptClasses()
-            throws Exception {
+    public
+            void
+            getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesContainsAUUIDNotFoundAmongConceptClasses()
+                    throws Exception {
         
         administrationService.setGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES,
             conceptService.getConceptClassByName("Drug")

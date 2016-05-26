@@ -12,3 +12,8 @@ accordingly.
 However, .java files are automatically formatted according to java.xml when
 compiling the radiology module with maven.
 
+You can run the formatter from the command line with
+```bash
+mvn formatter:format
+```
+

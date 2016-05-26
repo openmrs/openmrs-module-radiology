@@ -3,7 +3,6 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- *
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
@@ -41,8 +40,9 @@ public class RadiologyReportTest {
     @Before
     public void setUp() {
         
-        final OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams",
-                "org.openmrs.module.radiology.order.RadiologyOrder");
+        final OrderType radiologyOrderType =
+                new OrderType("Radiology Order", "Order type for radiology exams",
+                        "org.openmrs.module.radiology.order.RadiologyOrder");
         final Provider principalResultsInterpreter = new Provider();
         principalResultsInterpreter.setId(1);
         principalResultsInterpreter.setName("doctor");

@@ -21,7 +21,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class RadiologyEncounterMatcherComponentTest extends BaseModuleContextSensitiveTest {
     
-    private static final String TEST_DATASET = "org/openmrs/module/radiology/include/RadiologyEncounterMatcherComponentTestDataset.xml";
+    private static final String TEST_DATASET =
+            "org/openmrs/module/radiology/include/RadiologyEncounterMatcherComponentTestDataset.xml";
     
     private static final int VISIT_ID_WITH_NON_VOIDED_ENCOUNTER = 3003;
     
@@ -56,8 +57,10 @@ public class RadiologyEncounterMatcherComponentTest extends BaseModuleContextSen
      *           voided
      */
     @Test
-    public void findEncounter_shouldReturnEncounterIfEncounterUuidGivenByEncounterParametersIsAttachedToGivenVisitAndIsNotVoided()
-            throws Exception {
+    public
+            void
+            findEncounter_shouldReturnEncounterIfEncounterUuidGivenByEncounterParametersIsAttachedToGivenVisitAndIsNotVoided()
+                    throws Exception {
         // given
         EncounterParameters encounterParameters = EncounterParameters.instance()
                 .setEncounterType(radiologyProperties.getRadiologyOrderEncounterType())

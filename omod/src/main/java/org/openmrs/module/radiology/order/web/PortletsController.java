@@ -3,7 +3,6 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
- *
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
@@ -68,9 +67,9 @@ public class PortletsController {
      */
     @RequestMapping(value = "/module/radiology/portlets/orderSearch.portlet")
     ModelAndView getRadiologyOrdersByPatientQueryAndDateRange(
-            @RequestParam(value = "patientQuery", required = false) String patientQuery,
-            @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = ISO.DATE) Date startDate,
-            @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = ISO.DATE) Date endDate) {
+            @RequestParam(value = "patientQuery", required = false) String patientQuery, @RequestParam(value = "startDate",
+                    required = false) @DateTimeFormat(iso = ISO.DATE) Date startDate, @RequestParam(value = "endDate",
+                    required = false) @DateTimeFormat(iso = ISO.DATE) Date endDate) {
         final ModelAndView mav = new ModelAndView("module/radiology/portlets/orderSearch");
         
         if (isEndDateBeforeStartDate(startDate, endDate)) {
@@ -180,7 +179,7 @@ public class PortletsController {
     /**
      * Handle all exceptions of type TypeMismatchException which occur in this class
      * 
-     * @param TypeMismatchException the thrown TypeMismatchException
+     * @param typeMismatchException TypeMismatchException the thrown TypeMismatchException
      * @return model and view with exception information
      * @should populate model with exception text from message properties and invalid value if date
      *         is expected but nut passed

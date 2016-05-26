@@ -20,7 +20,8 @@ public class ScheduledProcedureStepStatusTest {
      * @see ScheduledProcedureStepStatus#getNameOrUnknown(ScheduledProcedureStepStatus)
      */
     @Test
-    @Verifies(value = "should return name given scheduled procedure step status", method = "getNameOrUnknown(ScheduledProcedureStepStatus)")
+    @Verifies(value = "should return name given scheduled procedure step status",
+            method = "getNameOrUnknown(ScheduledProcedureStepStatus)")
     public void getNameOrUnknown_shouldReturnNameGivenScheduledProcedureStepStatus() {
         assertThat(ScheduledProcedureStepStatus.getNameOrUnknown(ScheduledProcedureStepStatus.SCHEDULED), is("SCHEDULED"));
         assertThat(ScheduledProcedureStepStatus.getNameOrUnknown(ScheduledProcedureStepStatus.ARRIVED), is("ARRIVED"));
