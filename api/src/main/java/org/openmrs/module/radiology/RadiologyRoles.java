@@ -15,16 +15,16 @@ package org.openmrs.module.radiology;
  * </p>
  */
 public class RadiologyRoles {
-	
-	public static final String SCHEDULER = "Radiology: Scheduler";
-	
-	public static final String PERFORMING_PHYSICIAN = "Radiology: Performing physician";
-	
-	public static final String READING_PHYSICIAN = "Radiology: Reading physician";
-	
-	public static final String REFERRING_PHYSICIAN = "Radiology: Referring physician";
-	
-	private RadiologyRoles() {
-		// Utility class not meant to be instantiated.
-	}
+    
+    public static final String SCHEDULER = "Radiology: Scheduler";
+    
+    public static final String PERFORMING_PHYSICIAN = "Radiology: Performing physician";
+    
+    public static final String READING_PHYSICIAN = "Radiology: Reading physician";
+    
+    public static final String REFERRING_PHYSICIAN = "Radiology: Referring physician";
+    
+    private RadiologyRoles() {
+        // Utility class not meant to be instantiated.
+    }
 }

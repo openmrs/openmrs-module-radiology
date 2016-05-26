@@ -17,24 +17,24 @@ package org.openmrs.module.radiology;
  * </p>
  */
 public class RadiologyPrivileges {
-	
-	public static final String ADD_RADIOLOGY_ORDERS = "Add Radiology Orders";
-	
-	public static final String ADD_RADIOLOGY_REPORTS = "Add Radiology Reports";
-	
-	public static final String DELETE_RADIOLOGY_ORDERS = "Delete Radiology Orders";
-	
-	public static final String DELETE_RADIOLOGY_REPORTS = "Delete Radiology Reports";
-	
-	public static final String EDIT_RADIOLOGY_REPORTS = "Edit Radiology Reports";
-	
-	public static final String GET_RADIOLOGY_ORDERS = "Get Radiology Orders";
-	
-	public static final String GET_RADIOLOGY_REPORTS = "Get Radiology Reports";
-	
-	public static final String VIEW_RADIOLOGY_SECTION = "Patient Dashboard - View Radiology Section";
-	
-	private RadiologyPrivileges() {
-		// Utility class not meant to be instantiated.
-	}
+    
+    public static final String ADD_RADIOLOGY_ORDERS = "Add Radiology Orders";
+    
+    public static final String ADD_RADIOLOGY_REPORTS = "Add Radiology Reports";
+    
+    public static final String DELETE_RADIOLOGY_ORDERS = "Delete Radiology Orders";
+    
+    public static final String DELETE_RADIOLOGY_REPORTS = "Delete Radiology Reports";
+    
+    public static final String EDIT_RADIOLOGY_REPORTS = "Edit Radiology Reports";
+    
+    public static final String GET_RADIOLOGY_ORDERS = "Get Radiology Orders";
+    
+    public static final String GET_RADIOLOGY_REPORTS = "Get Radiology Reports";
+    
+    public static final String VIEW_RADIOLOGY_SECTION = "Patient Dashboard - View Radiology Section";
+    
+    private RadiologyPrivileges() {
+        // Utility class not meant to be instantiated.
+    }
 }

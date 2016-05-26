@@ -37,68 +37,68 @@ import org.openmrs.test.BaseContextMockTest;
  * Tests {@link PatientDashboardRadiologyTabPortletController}
  */
 public class PatientDashboardRadiologyTabPortletControllerTest extends BaseContextMockTest {
-	
-	private List<RadiologyOrder> mockOrders;
-	
-	private Patient mockPatient1;
-	
-	private Patient invalidPatient;
-	
-	private HttpServletRequest request;
-	
-	private Map<String, Object> model;
-	
-	@Mock
-	private RadiologyOrderService radiologyOrderService;
-	
-	@InjectMocks
-	private PatientDashboardRadiologyTabPortletController patientDashboardRadiologyTabPortletController = new PatientDashboardRadiologyTabPortletController();
-	
-	@Before
-	public void setUp() {
-		
-		request = mock(HttpServletRequest.class);
-		model = new HashMap<String, Object>();
-		
-		mockPatient1 = RadiologyTestData.getMockPatient1();
-		mockOrders = new ArrayList<RadiologyOrder>();
-		mockOrders.add(RadiologyTestData.getMockRadiologyOrder1());
-		when((radiologyOrderService.getRadiologyOrdersByPatient(mockPatient1))).thenReturn(mockOrders);
-		
-		invalidPatient = new Patient();
-		ArrayList<RadiologyOrder> emptyOrdersList = new ArrayList<RadiologyOrder>();
-		when((radiologyOrderService.getRadiologyOrdersByPatient(invalidPatient))).thenReturn(emptyOrdersList);
-	}
-	
-	/**
-	 * @see PatientDashboardRadiologyTabPortletController#populateModel(HttpServletRequest, Map)
-	 * @verifies model is populated with all radiology orders for given patient
-	 */
-	@Test
-	public void populateModel_shouldPopulateModelWithAllRadiologyOrdersForGivenPatient() {
-		
-		model.put("patient", mockPatient1);
-		patientDashboardRadiologyTabPortletController.populateModel(request, model);
-		
-		verify(radiologyOrderService).getRadiologyOrdersByPatient(mockPatient1);
-		
-		List<RadiologyOrder> radiologyOrders = (ArrayList<RadiologyOrder>) model.get("radiologyOrders");
-		assertThat(radiologyOrders, is(mockOrders));
-	}
-	
-	/**
-	 * @see PatientDashboardRadiologyTabPortletController#populateModel(HttpServletRequest, Map)
-	 * @verifies model is populated with an empty list of radiology orders if given patient is unknown
-	 */
-	@Test
-	public void populateModel_shouldPopulateModelWithEmptyRadiologyOrderListWhenInvalidPatientIsGiven() {
-		
-		model.put("patient", invalidPatient);
-		patientDashboardRadiologyTabPortletController.populateModel(request, model);
-		
-		verify(radiologyOrderService).getRadiologyOrdersByPatient(invalidPatient);
-		
-		List<RadiologyOrder> radiologyOrders = (ArrayList<RadiologyOrder>) model.get("radiologyOrders");
-		assertThat(radiologyOrders, is(empty()));
-	}
+    
+    private List<RadiologyOrder> mockOrders;
+    
+    private Patient mockPatient1;
+    
+    private Patient invalidPatient;
+    
+    private HttpServletRequest request;
+    
+    private Map<String, Object> model;
+    
+    @Mock
+    private RadiologyOrderService radiologyOrderService;
+    
+    @InjectMocks
+    private PatientDashboardRadiologyTabPortletController patientDashboardRadiologyTabPortletController = new PatientDashboardRadiologyTabPortletController();
+    
+    @Before
+    public void setUp() {
+        
+        request = mock(HttpServletRequest.class);
+        model = new HashMap<String, Object>();
+        
+        mockPatient1 = RadiologyTestData.getMockPatient1();
+        mockOrders = new ArrayList<RadiologyOrder>();
+        mockOrders.add(RadiologyTestData.getMockRadiologyOrder1());
+        when((radiologyOrderService.getRadiologyOrdersByPatient(mockPatient1))).thenReturn(mockOrders);
+        
+        invalidPatient = new Patient();
+        ArrayList<RadiologyOrder> emptyOrdersList = new ArrayList<RadiologyOrder>();
+        when((radiologyOrderService.getRadiologyOrdersByPatient(invalidPatient))).thenReturn(emptyOrdersList);
+    }
+    
+    /**
+     * @see PatientDashboardRadiologyTabPortletController#populateModel(HttpServletRequest, Map)
+     * @verifies model is populated with all radiology orders for given patient
+     */
+    @Test
+    public void populateModel_shouldPopulateModelWithAllRadiologyOrdersForGivenPatient() {
+        
+        model.put("patient", mockPatient1);
+        patientDashboardRadiologyTabPortletController.populateModel(request, model);
+        
+        verify(radiologyOrderService).getRadiologyOrdersByPatient(mockPatient1);
+        
+        List<RadiologyOrder> radiologyOrders = (ArrayList<RadiologyOrder>) model.get("radiologyOrders");
+        assertThat(radiologyOrders, is(mockOrders));
+    }
+    
+    /**
+     * @see PatientDashboardRadiologyTabPortletController#populateModel(HttpServletRequest, Map)
+     * @verifies model is populated with an empty list of radiology orders if given patient is unknown
+     */
+    @Test
+    public void populateModel_shouldPopulateModelWithEmptyRadiologyOrderListWhenInvalidPatientIsGiven() {
+        
+        model.put("patient", invalidPatient);
+        patientDashboardRadiologyTabPortletController.populateModel(request, model);
+        
+        verify(radiologyOrderService).getRadiologyOrdersByPatient(invalidPatient);
+        
+        List<RadiologyOrder> radiologyOrders = (ArrayList<RadiologyOrder>) model.get("radiologyOrders");
+        assertThat(radiologyOrders, is(empty()));
+    }
 }

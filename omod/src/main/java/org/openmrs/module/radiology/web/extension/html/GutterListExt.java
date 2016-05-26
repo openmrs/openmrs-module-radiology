@@ -14,19 +14,19 @@ import org.openmrs.module.radiology.order.web.RadiologyDashboardFormController;
 import org.openmrs.module.web.extension.LinkExt;
 
 public class GutterListExt extends LinkExt {
-	
-	@Override
-	public String getLabel() {
-		return "radiology.home.title";
-	}
-	
-	@Override
-	public String getRequiredPrivilege() {
-		return RadiologyPrivileges.VIEW_RADIOLOGY_SECTION;
-	}
-	
-	@Override
-	public String getUrl() {
-		return RadiologyDashboardFormController.RADIOLOGY_DASHBOARD_FORM_REQUEST_MAPPING;
-	}
+    
+    @Override
+    public String getLabel() {
+        return "radiology.home.title";
+    }
+    
+    @Override
+    public String getRequiredPrivilege() {
+        return RadiologyPrivileges.VIEW_RADIOLOGY_SECTION;
+    }
+    
+    @Override
+    public String getUrl() {
+        return RadiologyDashboardFormController.RADIOLOGY_DASHBOARD_FORM_REQUEST_MAPPING;
+    }
 }

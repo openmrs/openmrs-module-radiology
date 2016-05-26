@@ -22,37 +22,37 @@ import org.springframework.validation.Validator;
  */
 @Component
 public class RadiologyDiscontinuedOrderValidator implements Validator {
-	
-	/** Log for this class and subclasses */
-	protected final Log log = LogFactory.getLog(getClass());
-	
-	/**
-	 * Determines if the command object being submitted is a valid type
-	 *
-	 * @see org.springframework.validation.Validator#supports(java.lang.Class)
-	 * @should return true for Order objects and subclasses
-	 * @should return false for other object types
-	 */
-	public boolean supports(Class clazz) {
-		return Order.class.isAssignableFrom(clazz);
-	}
-	
-	/**
-	 * Checks the form object for any inconsistencies/errors
-	 *
-	 * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-	 * @should fail validation if order is null
-	 * @should fail validation if orderer is null
-	 * @should fail validation if orderReasonNonCoded is null
-	 * @should pass validation if all fields are correct
-	 */
-	public void validate(Object obj, Errors errors) {
-		final Order order = (Order) obj;
-		if (order == null) {
-			errors.reject("error.general");
-		} else {
-			ValidationUtils.rejectIfEmpty(errors, "orderer", "error.null");
-			ValidationUtils.rejectIfEmpty(errors, "orderReasonNonCoded", "error.null");
-		}
-	}
+    
+    /** Log for this class and subclasses */
+    protected final Log log = LogFactory.getLog(getClass());
+    
+    /**
+     * Determines if the command object being submitted is a valid type
+     *
+     * @see org.springframework.validation.Validator#supports(java.lang.Class)
+     * @should return true for Order objects and subclasses
+     * @should return false for other object types
+     */
+    public boolean supports(Class clazz) {
+        return Order.class.isAssignableFrom(clazz);
+    }
+    
+    /**
+     * Checks the form object for any inconsistencies/errors
+     *
+     * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
+     * @should fail validation if order is null
+     * @should fail validation if orderer is null
+     * @should fail validation if orderReasonNonCoded is null
+     * @should pass validation if all fields are correct
+     */
+    public void validate(Object obj, Errors errors) {
+        final Order order = (Order) obj;
+        if (order == null) {
+            errors.reject("error.general");
+        } else {
+            ValidationUtils.rejectIfEmpty(errors, "orderer", "error.null");
+            ValidationUtils.rejectIfEmpty(errors, "orderReasonNonCoded", "error.null");
+        }
+    }
 }

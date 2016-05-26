@@ -18,26 +18,26 @@ import org.openmrs.module.BaseModuleActivator;
  */
 
 public class RadiologyActivator extends BaseModuleActivator {
-	
-	private static final Log log = LogFactory.getLog(RadiologyActivator.class);
-	
-	@Override
-	public void willStart() {
-		log.info("Trying to start up Radiology Module");
-	}
-	
-	@Override
-	public void started() {
-		log.info("Radiology Module successfully started");
-	}
-	
-	@Override
-	public void willStop() {
-		log.info("Trying to shut down Radiology Module");
-	}
-	
-	@Override
-	public void stopped() {
-		log.info("Radiology Module successfully stopped");
-	}
+    
+    private static final Log log = LogFactory.getLog(RadiologyActivator.class);
+    
+    @Override
+    public void willStart() {
+        log.info("Trying to start up Radiology Module");
+    }
+    
+    @Override
+    public void started() {
+        log.info("Radiology Module successfully started");
+    }
+    
+    @Override
+    public void willStop() {
+        log.info("Trying to shut down Radiology Module");
+    }
+    
+    @Override
+    public void stopped() {
+        log.info("Radiology Module successfully stopped");
+    }
 }

@@ -16,23 +16,23 @@ package org.openmrs.module.radiology.dicom.code;
  * </p>
  */
 public enum ScheduledProcedureStepStatus {
-	
-	SCHEDULED,
-	ARRIVED,
-	READY,
-	STARTED,
-	DEPARTED;
-	
-	/**
-	 * Get name or UNKNOWN for given Scheduled Procedure Step Status
-	 * 
-	 * @param scheduledProcedureStepStatus ScheduledProcedureStepStatus for which the
-	 *        name is returned
-	 * @return name of given ScheduledProcedureStepStatus
-	 * @should return name given scheduled procedure step status
-	 * @should return unknown given null
-	 */
-	public static String getNameOrUnknown(ScheduledProcedureStepStatus scheduledProcedureStepStatus) {
-		return (scheduledProcedureStepStatus == null) ? "UNKNOWN" : scheduledProcedureStepStatus.name();
-	}
+    
+    SCHEDULED,
+    ARRIVED,
+    READY,
+    STARTED,
+    DEPARTED;
+    
+    /**
+     * Get name or UNKNOWN for given Scheduled Procedure Step Status
+     * 
+     * @param scheduledProcedureStepStatus ScheduledProcedureStepStatus for which the
+     *        name is returned
+     * @return name of given ScheduledProcedureStepStatus
+     * @should return name given scheduled procedure step status
+     * @should return unknown given null
+     */
+    public static String getNameOrUnknown(ScheduledProcedureStepStatus scheduledProcedureStepStatus) {
+        return (scheduledProcedureStepStatus == null) ? "UNKNOWN" : scheduledProcedureStepStatus.name();
+    }
 }

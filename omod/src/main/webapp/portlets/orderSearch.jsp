@@ -31,26 +31,27 @@
 								text="${radiologyOrder.study.scheduledStatus}" />"
 						data-child-instructions="${radiologyOrder.instructions}">
 						<td class="details-control"></td>
-					<td><a
-						href="radiologyOrder.form?orderId=${radiologyOrder.orderId}">${radiologyOrder.orderId}</a></td>
-					<td style="text-align: center"><a
-						href="/openmrs/patientDashboard.form?patientId=${radiologyOrder.patient.patientId}">${radiologyOrder.patient.patientIdentifier}</a></td>
-					<td><a
-						href="/openmrs/patientDashboard.form?patientId=${radiologyOrder.patient.patientId}">${radiologyOrder.patient.personName}</a></td>
-					<td><spring:message code="radiology.${radiologyOrder.urgency}"
-							text="${radiologyOrder.urgency}" /></td>
-					<td>${radiologyOrder.effectiveStartDate}</td>
-					<td><spring:message
-							code="radiology.${radiologyOrder.study.modality}"
-							text="${radiologyOrder.study.modality}" /></td>
-					<td><spring:message
-							code="radiology.${radiologyOrder.study.performedStatus}"
-							text="${radiologyOrder.study.performedStatus}" /></td>
-					<td>${radiologyOrder.orderer.name}</td>
-					<td><spring:message
-							code="radiology.${radiologyOrder.study.scheduledStatus}"
-							text="${radiologyOrder.study.scheduledStatus}" /></td>
-					<td>${radiologyOrder.instructions}</td>
+						<td><a
+							href="radiologyOrder.form?orderId=${radiologyOrder.orderId}">${radiologyOrder.orderId}</a></td>
+						<td style="text-align: center"><a
+							href="/openmrs/patientDashboard.form?patientId=${radiologyOrder.patient.patientId}">${radiologyOrder.patient.patientIdentifier}</a></td>
+						<td><a
+							href="/openmrs/patientDashboard.form?patientId=${radiologyOrder.patient.patientId}">${radiologyOrder.patient.personName}</a></td>
+						<td><spring:message
+								code="radiology.${radiologyOrder.urgency}"
+								text="${radiologyOrder.urgency}" /></td>
+						<td>${radiologyOrder.effectiveStartDate}</td>
+						<td><spring:message
+								code="radiology.${radiologyOrder.study.modality}"
+								text="${radiologyOrder.study.modality}" /></td>
+						<td><spring:message
+								code="radiology.${radiologyOrder.study.performedStatus}"
+								text="${radiologyOrder.study.performedStatus}" /></td>
+						<td>${radiologyOrder.orderer.name}</td>
+						<td><spring:message
+								code="radiology.${radiologyOrder.study.scheduledStatus}"
+								text="${radiologyOrder.study.scheduledStatus}" /></td>
+						<td>${radiologyOrder.instructions}</td>
 					</tr>
 				</c:forEach>
 			</tbody>

@@ -8,26 +8,24 @@
 <spring:hasBindErrors name="radiologyReport">
 	<spring:message code="fix.error" />
 </spring:hasBindErrors>
-<openmrs:htmlInclude file="/moduleResources/radiology/js/tinymce/tinymce.min.js" />
+<openmrs:htmlInclude
+	file="/moduleResources/radiology/js/tinymce/tinymce.min.js" />
 <script type="text/javascript">
 	onload = initEverything();
-	function initEverything()
-	{
-		tinymce.init(
-				{
-					selector:'#reportText',
-					setup:function(ed){
-						if(document.getElementById("reportText").getAttribute("disabled")!=null)
-						{
-							ed.settings.readonly=true;
-							ed.settings.toolbar=false;
-							ed.settings.menubar=false;
-						}
-					},
-					menubar: "edit,format",
-					elementpath:false
+	function initEverything() {
+		tinymce.init({
+			selector : '#reportText',
+			setup : function(ed) {
+				if (document.getElementById("reportText").getAttribute(
+						"disabled") != null) {
+					ed.settings.readonly = true;
+					ed.settings.toolbar = false;
+					ed.settings.menubar = false;
 				}
-		);
+			},
+			menubar : "edit,format",
+			elementpath : false
+		});
 	}
 </script>
 <br>

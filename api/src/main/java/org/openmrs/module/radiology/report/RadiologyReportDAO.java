@@ -19,36 +19,36 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
  * @see org.openmrs.module.radiology.report.RadiologyReportService
  */
 interface RadiologyReportDAO {
-	
-	/**
-	 * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportByRadiologyReportId(Integer)
-	 */
-	RadiologyReport getRadiologyReportById(Integer radiologyReportId);
-	
-	/**
-	 * @see org.openmrs.module.radiology.report.RadiologyReportService#saveRadiologyReport(RadiologyReport)
-	 */
-	RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport);
-	
-	/**
-	 * @see org.openmrs.module.radiology.report.RadiologyReportService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
-	 */
-	boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder);
-	
-	/**
-	 * @see org.openmrs.module.radiology.report.RadiologyReportService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
-	 */
-	boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder);
-	
-	/**
-	 * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder,
-	 *      RadiologyReportStatus)
-	 */
-	List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(RadiologyOrder radiologyOrder,
-			RadiologyReportStatus radiologyReportStatus);
-	
-	/**
-	 * @see org.openmrs.module.radiology.report.RadiologyReportService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
-	 */
-	RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder);
+    
+    /**
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportByRadiologyReportId(Integer)
+     */
+    RadiologyReport getRadiologyReportById(Integer radiologyReportId);
+    
+    /**
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#saveRadiologyReport(RadiologyReport)
+     */
+    RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport);
+    
+    /**
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
+     */
+    boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder);
+    
+    /**
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
+     */
+    boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder);
+    
+    /**
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder,
+     *      RadiologyReportStatus)
+     */
+    List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(RadiologyOrder radiologyOrder,
+            RadiologyReportStatus radiologyReportStatus);
+    
+    /**
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
+     */
+    RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder);
 }
