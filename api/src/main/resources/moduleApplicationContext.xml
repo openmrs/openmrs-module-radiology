@@ -32,11 +32,14 @@
 		</property>
 	</bean>
 
+	<!-- IMPORTANT NOTE: be careful when using formatter on this file. Ensure
+		that there are no line breaks/spaces in between the <value> this will prevent
+		spring from adding these services to the serviceContext since the line breaks/spaces
+		will be part of the class name -->
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.radiology.order.RadiologyOrderService
-				</value>
+				<value>org.openmrs.module.radiology.order.RadiologyOrderService</value>
 				<ref local="radiologyOrderService" />
 			</list>
 		</property>
@@ -62,8 +65,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.radiology.study.RadiologyStudyService
-				</value>
+				<value>org.openmrs.module.radiology.study.RadiologyStudyService</value>
 				<ref local="radiologyStudyService" />
 			</list>
 		</property>
@@ -90,8 +92,7 @@
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
-				<value>org.openmrs.module.radiology.report.RadiologyReportService
-				</value>
+				<value>org.openmrs.module.radiology.report.RadiologyReportService</value>
 				<ref local="radiologyReportService" />
 			</list>
 		</property>
