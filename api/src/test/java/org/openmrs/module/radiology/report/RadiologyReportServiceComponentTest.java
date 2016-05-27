@@ -38,6 +38,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class RadiologyReportServiceComponentTest extends BaseModuleContextSensitiveTest {
     
+    
     private static final String TEST_DATASET =
             "org/openmrs/module/radiology/include/RadiologyReportServiceComponentTestDataset.xml";
     
@@ -142,8 +143,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
      *           RadiologyReport
      */
     @Test
-    public
-            void
+    public void
             createAndClaimRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfGivenOrderHasACompletedRadiologyReport()
                     throws Exception {
         RadiologyOrder existingRadiologyOrder =
@@ -154,7 +154,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         radiologyReportService.saveRadiologyReport(existingRadiologyReport);
         radiologyReportService.completeRadiologyReport(existingRadiologyReport, providerService.getProvider(1));
         expectedException.expect(UnsupportedOperationException.class);
-        expectedException.expectMessage("cannot create radiologyReport for this radiologyOrder because it is already completed");
+        expectedException
+                .expectMessage("cannot create radiologyReport for this radiologyOrder because it is already completed");
         radiologyReportService.createAndClaimRadiologyReport(existingRadiologyOrder);
     }
     
@@ -170,7 +171,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         RadiologyOrder existingRadiologyOrder =
                 radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT);
         expectedException.expect(UnsupportedOperationException.class);
-        expectedException.expectMessage("cannot create radiologyReport for this radiologyOrder because it is already claimed");
+        expectedException
+                .expectMessage("cannot create radiologyReport for this radiologyOrder because it is already claimed");
         radiologyReportService.createAndClaimRadiologyReport(existingRadiologyOrder);
     }
     
@@ -188,9 +190,11 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         
         assertNotNull(radiologyReportService.saveRadiologyReport(existingRadiologyReport));
         assertThat(radiologyReportService.saveRadiologyReport(existingRadiologyReport)
-                .getId(), is(EXISTING_RADIOLOGY_REPORT_ID));
+                .getId(),
+            is(EXISTING_RADIOLOGY_REPORT_ID));
         assertThat(radiologyReportService.saveRadiologyReport(existingRadiologyReport)
-                .getReportBody(), is("test - text"));
+                .getReportBody(),
+            is("test - text"));
     }
     
     /**
@@ -286,7 +290,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
      * @see RadiologyOrderService#unclaimRadiologyReport(org.openmrs.module.radiology.report.RadiologyReport)
      */
     @Test
-    public void unclaimRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfRadiologyReportStatusIsNull() throws Exception {
+    public void unclaimRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfRadiologyReportStatusIsNull()
+            throws Exception {
         
         RadiologyReport existingRadiologyReport =
                 radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
@@ -340,11 +345,10 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void completeRadiologyReport_shouldSetTheReportDateOfTheRadiologyReportToTheDayTheRadiologyReportWasCompleted()
             throws Exception {
         
-        RadiologyReport radiologyReport =
-                radiologyReportService.completeRadiologyReport(
-                    radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID),
-                    radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID)
-                            .getPrincipalResultsInterpreter());
+        RadiologyReport radiologyReport = radiologyReportService.completeRadiologyReport(
+            radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID),
+            radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID)
+                    .getPrincipalResultsInterpreter());
         
         assertNotNull(radiologyReport);
         assertNotNull(radiologyReport.getReportDate());
@@ -358,11 +362,10 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     @Test
     public void completeRadiologyReport_shouldSetTheRadiologyReportStatusToComplete() throws Exception {
         
-        RadiologyReport radiologyReport =
-                radiologyReportService.completeRadiologyReport(
-                    radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID),
-                    radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID)
-                            .getPrincipalResultsInterpreter());
+        RadiologyReport radiologyReport = radiologyReportService.completeRadiologyReport(
+            radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID),
+            radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID)
+                    .getPrincipalResultsInterpreter());
         
         assertNotNull(radiologyReport);
         assertThat(radiologyReport.getReportStatus(), is(RadiologyReportStatus.COMPLETED));
@@ -494,15 +497,13 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
      * @verifies return a list of claimed RadiologyReport if radiologyReportStatus is claimed
      */
     @Test
-    public
-            void
+    public void
             getRadiologyReportsByRadiologyOrderAndReportStatus_shouldReturnAListOfClaimedRadiologyReportIfRadiologyReportStatusIsClaimed()
                     throws Exception {
         
-        List<RadiologyReport> radiologyReports =
-                radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-                    radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT),
-                    RadiologyReportStatus.CLAIMED);
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
+            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT),
+            RadiologyReportStatus.CLAIMED);
         assertNotNull(radiologyReports);
         assertThat(radiologyReports.size(), is(1));
         
@@ -514,15 +515,13 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
      * @verifies return a list of completed RadiologyReport if radiologyReportStatus is completed
      */
     @Test
-    public
-            void
+    public void
             getRadiologyReportsByRadiologyOrderAndReportStatus_shouldReturnAListOfCompletedRadiologyReportIfReportStatusIsCompleted()
                     throws Exception {
         
-        List<RadiologyReport> radiologyReports =
-                radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-                    radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT),
-                    RadiologyReportStatus.COMPLETED);
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
+            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT),
+            RadiologyReportStatus.COMPLETED);
         assertNotNull(radiologyReports);
         assertThat(radiologyReports.size(), is(1));
     }
@@ -533,15 +532,13 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
      * @verifies return a list of discontinued RadiologyReport if radiologyReportStatus is claimed
      */
     @Test
-    public
-            void
+    public void
             getRadiologyReportsByRadiologyOrderAndReportStatus_shouldReturnAListOfDiscontinuedRadiologyReportIfReportStatusIsClaimed()
                     throws Exception {
         
-        List<RadiologyReport> radiologyReports =
-                radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-                    radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT),
-                    RadiologyReportStatus.DISCONTINUED);
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
+            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT),
+            RadiologyReportStatus.DISCONTINUED);
         assertNotNull(radiologyReports);
         assertThat(radiologyReports.size(), is(1));
     }
@@ -552,15 +549,13 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
      * @verifies return null if there are no RadiologyReports for this radiologyOrder
      */
     @Test
-    public
-            void
+    public void
             getRadiologyReportsByRadiologyOrderAndReportStatus_shouldReturnNullIfThereAreNoRadiologyReportsForThisRadiologyOrder()
                     throws Exception {
         
-        List<RadiologyReport> radiologyReports =
-                radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-                    radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT),
-                    RadiologyReportStatus.CLAIMED);
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
+            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT),
+            RadiologyReportStatus.CLAIMED);
         assertThat(radiologyReports.size(), is(0));
     }
     
@@ -570,8 +565,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
      * @verifies throw an IllegalArgumentException if given radiologyOrder is null
      */
     @Test
-    public
-            void
+    public void
             getRadiologyReportsByRadiologyOrderAndReportStatus_shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNull()
                     throws Exception {
         
@@ -586,8 +580,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
      * @verifies throw an IllegalArgumentException if given radiologyReportStatus is null
      */
     @Test
-    public
-            void
+    public void
             getRadiologyReportsByRadiologyOrderAndReportStatus_shouldThrowAnIllegalArgumentExceptionIfGivenReportStatusIsNull()
                     throws Exception {
         
@@ -605,8 +598,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void hasRadiologyOrderClaimedRadiologyReport_shouldReturnFalseIfTheRadiologyOrderHasNoClaimedRadiologyReport()
             throws Exception {
         
-        boolean hasRadiologyOrderClaimedRadiologyReport =
-                radiologyReportService.hasRadiologyOrderClaimedRadiologyReport(radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
+        boolean hasRadiologyOrderClaimedRadiologyReport = radiologyReportService.hasRadiologyOrderClaimedRadiologyReport(
+            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
         assertFalse(hasRadiologyOrderClaimedRadiologyReport);
     }
     
@@ -618,8 +611,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void hasRadiologyOrderClaimedRadiologyReport_shouldReturnTrueIfTheRadiologyOrderHasAClaimedRadiologyReport()
             throws Exception {
         
-        boolean hasRadiologyOrderClaimedRadiologyReport =
-                radiologyReportService.hasRadiologyOrderClaimedRadiologyReport(radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT));
+        boolean hasRadiologyOrderClaimedRadiologyReport = radiologyReportService.hasRadiologyOrderClaimedRadiologyReport(
+            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT));
         assertTrue(hasRadiologyOrderClaimedRadiologyReport);
     }
     
@@ -639,12 +632,11 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
      * @verifies return false if the RadiologyOrder has no completed RadiologyReport
      */
     @Test
-    public void
-            hasRadiologyOrderCompletedRadiologyReport_shouldReturnFalseIfTheRadiologyOrderHasNoCompletedRadiologyReport()
-                    throws Exception {
+    public void hasRadiologyOrderCompletedRadiologyReport_shouldReturnFalseIfTheRadiologyOrderHasNoCompletedRadiologyReport()
+            throws Exception {
         
-        boolean hasRadiologyOrderCompletedRadiologyReport =
-                radiologyReportService.hasRadiologyOrderCompletedRadiologyReport(radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
+        boolean hasRadiologyOrderCompletedRadiologyReport = radiologyReportService.hasRadiologyOrderCompletedRadiologyReport(
+            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
         assertFalse(hasRadiologyOrderCompletedRadiologyReport);
     }
     
@@ -656,8 +648,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void hasRadiologyOrderCompletedRadiologyReport_shouldReturnTrueIfTheRadiologyOrderHasACompletedRadiologyReport()
             throws Exception {
         
-        boolean hasRadiologyOrderClaimedRadiologyReport =
-                radiologyReportService.hasRadiologyOrderCompletedRadiologyReport(radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
+        boolean hasRadiologyOrderClaimedRadiologyReport = radiologyReportService.hasRadiologyOrderCompletedRadiologyReport(
+            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
         assertTrue(hasRadiologyOrderClaimedRadiologyReport);
     }
     
@@ -682,8 +674,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void getActiveRadiologyReportByRadiologyOrder_shouldReturnARadiologyReportIfTheReportStatusIsClaimed()
             throws Exception {
         
-        RadiologyReport activeReport =
-                radiologyReportService.getActiveRadiologyReportByRadiologyOrder(radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT));
+        RadiologyReport activeReport = radiologyReportService.getActiveRadiologyReportByRadiologyOrder(
+            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT));
         
         assertNotNull(activeReport);
     }
@@ -696,8 +688,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void getActiveRadiologyReportByRadiologyOrder_shouldReturnTrueARadiologyReportIfTheReportStatusIsCompleted()
             throws Exception {
         
-        RadiologyReport activeReport =
-                radiologyReportService.getActiveRadiologyReportByRadiologyOrder(radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
+        RadiologyReport activeReport = radiologyReportService.getActiveRadiologyReportByRadiologyOrder(
+            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
         
         assertNotNull(activeReport);
     }

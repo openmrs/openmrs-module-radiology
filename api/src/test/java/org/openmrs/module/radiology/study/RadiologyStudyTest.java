@@ -13,6 +13,7 @@ import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
  */
 public class RadiologyStudyTest {
     
+    
     /**
      * @see RadiologyStudy#isInProgress()
      * @verifies return false if performed status is null

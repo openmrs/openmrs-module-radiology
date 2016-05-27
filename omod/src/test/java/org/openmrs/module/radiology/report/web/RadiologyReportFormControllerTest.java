@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 public class RadiologyReportFormControllerTest extends BaseContextMockTest {
     
+    
     @Mock
     private RadiologyReportService radiologyReportService;
     
@@ -37,8 +38,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
      * @see RadiologyReportFormController#getRadiologyReportFormWithNewRadiologyReport(RadiologyOrder)
      */
     @Test
-    public
-            void
+    public void
             getRadiologyReportFormWithNewRadiologyReport_shouldPopulateModelAndViewWithNewRadiologyReportForGivenRadiologyOrder() {
         
         // given
@@ -46,15 +46,15 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         RadiologyOrder mockRadiologyOrder = mockRadiologyReport.getRadiologyOrder();
         
         when(radiologyReportService.createAndClaimRadiologyReport(mockRadiologyOrder)).thenReturn(mockRadiologyReport);
-        when(dicomWebViewer.getDicomViewerUrl(mockRadiologyOrder.getStudy())).thenReturn(
-            "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
+        when(dicomWebViewer.getDicomViewerUrl(mockRadiologyOrder.getStudy()))
+                .thenReturn("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
         
         ModelAndView modelAndView =
                 radiologyReportFormController.getRadiologyReportFormWithNewRadiologyReport(mockRadiologyOrder);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyReport.form?radiologyReportId="
-                + mockRadiologyReport.getId()));
+        assertThat(modelAndView.getViewName(),
+            is("redirect:/module/radiology/radiologyReport.form?radiologyReportId=" + mockRadiologyReport.getId()));
         
         assertThat(modelAndView.getModelMap(), hasKey("order"));
         Order order = (Order) modelAndView.getModelMap()
@@ -85,18 +85,17 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
      * @see RadiologyReportFormController#getRadiologyReportFormWithExistingRadiologyReport(Integer)
      */
     @Test
-    public
-            void
+    public void
             getRadiologyReportFormWithExistingRadiologyReport_shouldPopulateModelAndViewWithExistingRadiologyReportMatchingGivenRadiologyReportId() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
         
-        when(radiologyReportService.getRadiologyReportByRadiologyReportId(mockRadiologyReport.getId())).thenReturn(
-            mockRadiologyReport);
+        when(radiologyReportService.getRadiologyReportByRadiologyReportId(mockRadiologyReport.getId()))
+                .thenReturn(mockRadiologyReport);
         when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
                 .getStudy())).thenReturn(
-            "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
+                    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
         
         ModelAndView modelAndView =
                 radiologyReportFormController.getRadiologyReportFormWithExistingRadiologyReport(mockRadiologyReport.getId());
@@ -172,9 +171,9 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         ModelAndView modelAndView = radiologyReportFormController.unclaimRadiologyReport(mockRadiologyReport);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is("redirect:/module/radiology/radiologyOrder.form?orderId="
-                + mockRadiologyReport.getRadiologyOrder()
-                        .getOrderId()));
+        assertThat(modelAndView.getViewName(),
+            is("redirect:/module/radiology/radiologyOrder.form?orderId=" + mockRadiologyReport.getRadiologyOrder()
+                    .getOrderId()));
     }
     
     /**
@@ -192,9 +191,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         mockCompletedRadiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
         BindingResult reportErrors = mock(BindingResult.class);
         
-        when(
-            radiologyReportService.completeRadiologyReport(mockRadiologyReport,
-                mockRadiologyReport.getPrincipalResultsInterpreter())).thenReturn(mockCompletedRadiologyReport);
+        when(radiologyReportService.completeRadiologyReport(mockRadiologyReport,
+            mockRadiologyReport.getPrincipalResultsInterpreter())).thenReturn(mockCompletedRadiologyReport);
         
         ModelAndView modelAndView = radiologyReportFormController.completeRadiologyReport(mockRadiologyReport, reportErrors);
         

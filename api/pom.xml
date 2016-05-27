@@ -74,7 +74,7 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>net.revelc.code</groupId>
+										<groupId>com.marvinformatics.formatter</groupId>
 										<artifactId>formatter-maven-plugin</artifactId>
 										<versionRange>[0.0,)</versionRange>
 										<goals>
@@ -93,10 +93,12 @@
 		</pluginManagement>
 		<plugins>
 			<plugin>
-				<groupId>net.revelc.code</groupId>
+				<groupId>com.marvinformatics.formatter</groupId>
 				<artifactId>formatter-maven-plugin</artifactId>
 				<configuration>
-					<configFile>${eclipseFormatterStyle}</configFile>
+					<includes>
+						<include>**/*.java</include>
+					</includes>
 				</configuration>
 				<executions>
 					<execution>

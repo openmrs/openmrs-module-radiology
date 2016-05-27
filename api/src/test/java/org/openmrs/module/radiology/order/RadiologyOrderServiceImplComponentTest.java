@@ -46,6 +46,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSensitiveTest {
     
+    
     private static final String TEST_DATASET =
             "org/openmrs/module/radiology/include/RadiologyOrderServiceComponentTestDataset.xml";
     
@@ -108,9 +109,8 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
             radiologyPropertiesField.set(radiologyOrderServiceImpl, radiologyProperties);
         }
         
-        saveRadiologyOrderEncounterMethod =
-                RadiologyOrderServiceImpl.class.getDeclaredMethod("saveRadiologyOrderEncounter", new Class[] {
-                        Patient.class, Provider.class, Date.class });
+        saveRadiologyOrderEncounterMethod = RadiologyOrderServiceImpl.class.getDeclaredMethod("saveRadiologyOrderEncounter",
+            new Class[] { Patient.class, Provider.class, Date.class });
         saveRadiologyOrderEncounterMethod.setAccessible(true);
         
         executeDataSet(TEST_DATASET);
@@ -121,8 +121,7 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
      * @verifies create radiology order encounter attached to existing active visit given patient with active visit
      */
     @Test
-    public
-            void
+    public void
             saveRadiologyOrderEncounter_shouldCreateRadiologyOrderEncounterAttachedToExistingActiveVisitGivenPatientWithActiveVisit()
                     throws Exception {
         // given
@@ -135,19 +134,21 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
         assertThat(encounterService.getEncountersByPatient(patient), is(empty()));
         assertThat(visitService.getActiveVisitsByPatient(patient), is(not(empty())));
         
-        Encounter encounter =
-                (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyOrderServiceImpl, new Object[] { patient,
-                        provider, encounterDatetime });
+        Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyOrderServiceImpl,
+            new Object[] { patient, provider, encounterDatetime });
         
         assertNotNull(encounter);
         assertThat(encounter.getPatient(), is(patient));
         assertThat(encounter.getProvidersByRole(radiologyProperties.getRadiologyOrderingProviderEncounterRole())
-                .size(), is(1));
+                .size(),
+            is(1));
         assertThat(encounter.getProvidersByRole(radiologyProperties.getRadiologyOrderingProviderEncounterRole())
-                .contains(provider), is(true));
+                .contains(provider),
+            is(true));
         assertThat(encounter.getEncounterDatetime(), is(encounterDatetime));
         assertThat(encounter.getVisit()
-                .getVisitType(), is(radiologyProperties.getRadiologyVisitType()));
+                .getVisitType(),
+            is(radiologyProperties.getRadiologyVisitType()));
         assertThat(encounter.getEncounterType(), is(radiologyProperties.getRadiologyOrderEncounterType()));
         assertThat(encounterService.getEncountersByPatient(patient), is(Arrays.asList(encounter)));
         assertThat(visitService.getActiveVisitsByPatient(patient), is(preExistingVisits));
@@ -158,8 +159,7 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
      * @verifies create radiology order encounter attached to new active visit given patient without active visit
      */
     @Test
-    public
-            void
+    public void
             saveRadiologyOrderEncounter_shouldCreateRadiologyOrderEncounterAttachedToNewActiveVisitGivenPatientWithoutActiveVisit()
                     throws Exception {
         // given
@@ -170,19 +170,21 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
         assertThat(encounterService.getEncountersByPatient(patient), is(empty()));
         assertThat(visitService.getActiveVisitsByPatient(patient), is(empty()));
         
-        Encounter encounter =
-                (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyOrderServiceImpl, new Object[] { patient,
-                        provider, encounterDatetime });
+        Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyOrderServiceImpl,
+            new Object[] { patient, provider, encounterDatetime });
         
         assertNotNull(encounter);
         assertThat(encounter.getPatient(), is(patient));
         assertThat(encounter.getProvidersByRole(radiologyProperties.getRadiologyOrderingProviderEncounterRole())
-                .size(), is(1));
+                .size(),
+            is(1));
         assertThat(encounter.getProvidersByRole(radiologyProperties.getRadiologyOrderingProviderEncounterRole())
-                .contains(provider), is(true));
+                .contains(provider),
+            is(true));
         assertThat(encounter.getEncounterDatetime(), is(encounterDatetime));
         assertThat(encounter.getVisit()
-                .getVisitType(), is(radiologyProperties.getRadiologyVisitType()));
+                .getVisitType(),
+            is(radiologyProperties.getRadiologyVisitType()));
         assertThat(encounter.getEncounterType(), is(radiologyProperties.getRadiologyOrderEncounterType()));
         assertThat(encounterService.getEncountersByPatient(patient), is(Arrays.asList(encounter)));
         assertThat(visitService.getVisitsByPatient(patient), is(not(empty())));

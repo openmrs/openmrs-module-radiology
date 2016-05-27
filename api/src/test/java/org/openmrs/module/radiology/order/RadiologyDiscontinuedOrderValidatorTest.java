@@ -25,6 +25,7 @@ import org.springframework.validation.Errors;
  */
 public class RadiologyDiscontinuedOrderValidatorTest {
     
+    
     /**
      * @verifies return false for other object types
      * @see RadiologyDiscontinuedOrderValidator#supports(Class)
@@ -62,7 +63,8 @@ public class RadiologyDiscontinuedOrderValidatorTest {
         
         assertTrue(errors.hasErrors());
         assertThat((errors.getAllErrors()).get(0)
-                .getCode(), is("error.general"));
+                .getCode(),
+            is("error.general"));
     }
     
     /**

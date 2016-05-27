@@ -37,6 +37,7 @@ import org.openmrs.test.BaseContextMockTest;
  */
 public class PatientDashboardRadiologyTabPortletControllerTest extends BaseContextMockTest {
     
+    
     private List<RadiologyOrder> mockOrders;
     
     private Patient mockPatient1;

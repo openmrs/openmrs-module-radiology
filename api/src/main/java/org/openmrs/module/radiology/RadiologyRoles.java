@@ -15,6 +15,7 @@ package org.openmrs.module.radiology;
  */
 public class RadiologyRoles {
     
+    
     public static final String SCHEDULER = "Radiology: Scheduler";
     
     public static final String PERFORMING_PHYSICIAN = "Radiology: Performing physician";

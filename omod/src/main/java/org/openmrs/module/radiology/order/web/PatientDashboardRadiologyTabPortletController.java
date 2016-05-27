@@ -33,6 +33,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("**/patientDashboardRadiologyTab.portlet")
 public class PatientDashboardRadiologyTabPortletController extends PortletController {
     
+    
     public static final String PATIENT_DASHBOARD_RADIOLOGY_TAB = "patientDashboardRadiologyTab.portlet";
     
     @Autowired

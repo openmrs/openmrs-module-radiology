@@ -32,8 +32,9 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<openMRSVersion>1.11.4</openMRSVersion>
 		<emr-apiVersion>1.13</emr-apiVersion>
-		<formatterPluginVersion>0.5.2</formatterPluginVersion>
-		<eclipseFormatterStyle>${project.parent.basedir}/tools/formatter/java.xml</eclipseFormatterStyle>
+		<maven-formatter-plugin-version>1.6.0</maven-formatter-plugin-version>
+		<maven-formatter-plugin-style-java>${project.parent.basedir}/tools/formatter/java.xml</maven-formatter-plugin-style-java>
+		<maven-formatter-plugin-style-javascript>${project.parent.basedir}/tools/formatter/javascript.xml</maven-formatter-plugin-style-javascript>
 	</properties>
 
 	<dependencyManagement>
@@ -142,15 +143,16 @@
 					<version>2.4</version>
 				</plugin>
 				<plugin>
-					<groupId>net.revelc.code</groupId>
+					<groupId>com.marvinformatics.formatter</groupId>
 					<artifactId>formatter-maven-plugin</artifactId>
-					<version>${formatterPluginVersion}</version>
+					<version>${maven-formatter-plugin-version}</version>
 					<configuration>
 						<compilerSource>${javaCompilerVersion}</compilerSource>
 						<compilerCompliance>${javaCompilerVersion}</compilerCompliance>
 						<compilerTargetPlatform>${javaCompilerVersion}</compilerTargetPlatform>
-						<configFile>${eclipseFormatterStyle}</configFile>
 						<overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
+						<configFile>${maven-formatter-plugin-style-java}</configFile>
+						<configJsFile>${maven-formatter-plugin-style-javascript}</configJsFile>
 					</configuration>
 				</plugin>
 				<plugin>

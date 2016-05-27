@@ -117,7 +117,7 @@
 							<pluginExecutions>
 								<pluginExecution>
 									<pluginExecutionFilter>
-										<groupId>net.revelc.code</groupId>
+										<groupId>com.marvinformatics.formatter</groupId>
 										<artifactId>formatter-maven-plugin</artifactId>
 										<versionRange>[0.0,)</versionRange>
 										<goals>
@@ -162,10 +162,22 @@
 		</pluginManagement>
 		<plugins>
 			<plugin>
-				<groupId>net.revelc.code</groupId>
+				<groupId>com.marvinformatics.formatter</groupId>
 				<artifactId>formatter-maven-plugin</artifactId>
 				<configuration>
-					<configFile>${eclipseFormatterStyle}</configFile>
+					<directories>
+						<directory>src/main</directory>
+						<directory>src/test</directory>
+					</directories>
+					<includes>
+						<include>**/*.java</include>
+						<include>**/*.js</include>
+					</includes>
+					<excludes>
+						<exclude>**/datatables/*.*</exclude>
+						<exclude>**/tinymce/*.*</exclude>
+						<exclude>**/tinymce/**/*.*</exclude>
+					</excludes>
 				</configuration>
 				<executions>
 					<execution>

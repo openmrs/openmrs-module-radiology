@@ -19,6 +19,7 @@ import org.openmrs.test.BaseContextMockTest;
  */
 public class DicomWebViewerTest extends BaseContextMockTest {
     
+    
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
     

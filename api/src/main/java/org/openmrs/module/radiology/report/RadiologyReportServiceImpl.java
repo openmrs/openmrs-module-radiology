@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 class RadiologyReportServiceImpl extends BaseOpenmrsService implements RadiologyReportService {
     
+    
     private static final Log log = LogFactory.getLog(RadiologyReportServiceImpl.class);
     
     @Autowired
@@ -24,8 +25,8 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
      */
     @Transactional
     @Override
-    public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder) throws IllegalArgumentException,
-            UnsupportedOperationException {
+    public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder)
+            throws IllegalArgumentException, UnsupportedOperationException {
         
         if (radiologyOrder == null) {
             throw new IllegalArgumentException("radiologyOrder cannot be null");
@@ -50,8 +51,8 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
      */
     @Transactional
     @Override
-    public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
-            UnsupportedOperationException {
+    public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport)
+            throws IllegalArgumentException, UnsupportedOperationException {
         
         if (radiologyReport == null) {
             throw new IllegalArgumentException("radiologyReport cannot be null");
@@ -73,8 +74,8 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
      */
     @Transactional
     @Override
-    public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
-            UnsupportedOperationException {
+    public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport)
+            throws IllegalArgumentException, UnsupportedOperationException {
         
         if (radiologyReport == null) {
             throw new IllegalArgumentException("radiologyReport cannot be null");
@@ -149,8 +150,10 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
             throw new IllegalArgumentException("radiologyReportStatus cannot be null");
         }
         return radiologyReportDAO.getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder, reportStatus)
-                .size() > 0 ? radiologyReportDAO.getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder,
-            reportStatus) : new ArrayList<RadiologyReport>();
+                .size() > 0
+                        ? radiologyReportDAO.getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder,
+                            reportStatus)
+                        : new ArrayList<RadiologyReport>();
     }
     
     /**

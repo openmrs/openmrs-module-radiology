@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface RadiologyReportService extends OpenmrsService {
     
+    
     /**
      * Creates a RadiologyReport and sets the radiologyReportStatus to claimed
      *
@@ -37,8 +38,8 @@ public interface RadiologyReportService extends OpenmrsService {
      * @should throw an UnsupportedOperationException if given order has a claimed RadiologyReport
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_REPORTS)
-    public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder) throws IllegalArgumentException,
-            UnsupportedOperationException;
+    public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder)
+            throws IllegalArgumentException, UnsupportedOperationException;
     
     /**
      * Save the given radiologyReport
@@ -56,8 +57,8 @@ public interface RadiologyReportService extends OpenmrsService {
      * @should throw an UnsupportedOperationException if radiologyReport is completed
      */
     @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
-    public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
-            UnsupportedOperationException;
+    public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport)
+            throws IllegalArgumentException, UnsupportedOperationException;
     
     /**
      * Unclaims the given radiologyReport and sets the radiologyReportStatus to discontinued
@@ -75,8 +76,8 @@ public interface RadiologyReportService extends OpenmrsService {
      * @should throw an UnsupportedOperationException if radiologyReport is completed
      */
     @Authorized(RadiologyPrivileges.DELETE_RADIOLOGY_REPORTS)
-    public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport) throws IllegalArgumentException,
-            UnsupportedOperationException;
+    public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport)
+            throws IllegalArgumentException, UnsupportedOperationException;
     
     /**
      * Completes the given radiologyReport and sets the radiologyReportStatus to completed

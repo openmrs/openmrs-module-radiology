@@ -1,13 +1,9 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
-<%@ include
-	file="/WEB-INF/view/module/radiology/resources/js/moreInfo.js"%>
 
 <%@ include file="localHeader.jsp"%>
 
-<spring:hasBindErrors name="radiologyReport">
-	<spring:message code="fix.error" />
-</spring:hasBindErrors>
+<openmrs:htmlInclude file="/moduleResources/radiology/js/moreInfo.js" />
 <openmrs:htmlInclude
 	file="/moduleResources/radiology/js/tinymce/tinymce.min.js" />
 <script type="text/javascript">
@@ -28,6 +24,10 @@
 		});
 	}
 </script>
+
+<spring:hasBindErrors name="radiologyReport">
+	<spring:message code="fix.error" />
+</spring:hasBindErrors>
 <br>
 <openmrs:portlet url="patientHeader" id="patientDashboardHeader"
 	patientId="${order.patient.patientId}" />

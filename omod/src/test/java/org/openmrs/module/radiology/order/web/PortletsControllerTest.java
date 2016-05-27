@@ -46,6 +46,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 public class PortletsControllerTest extends BaseContextMockTest {
     
+    
     private List<RadiologyStudy> mockStudies;
     
     private List<RadiologyOrder> mockRadiologyOrders;
@@ -91,12 +92,12 @@ public class PortletsControllerTest extends BaseContextMockTest {
         
         when(Context.getAuthenticatedUser()).thenReturn(RadiologyTestData.getMockRadiologyReferringPhysician());
         when(radiologyStudyService.getStudiesByRadiologyOrders(mockRadiologyOrders)).thenReturn(mockStudies);
-        when(radiologyOrderService.getRadiologyOrdersByPatients(patientService.getPatients(""))).thenReturn(
-            mockRadiologyOrders);
-        when(radiologyOrderService.getRadiologyOrdersByPatients(Arrays.asList(mockPatient1))).thenReturn(
-            Arrays.asList(mockRadiologyOrder1));
-        when(radiologyOrderService.getRadiologyOrdersByPatients(Arrays.asList(mockPatient3))).thenReturn(
-            new ArrayList<RadiologyOrder>());
+        when(radiologyOrderService.getRadiologyOrdersByPatients(patientService.getPatients("")))
+                .thenReturn(mockRadiologyOrders);
+        when(radiologyOrderService.getRadiologyOrdersByPatients(Arrays.asList(mockPatient1)))
+                .thenReturn(Arrays.asList(mockRadiologyOrder1));
+        when(radiologyOrderService.getRadiologyOrdersByPatients(Arrays.asList(mockPatient3)))
+                .thenReturn(new ArrayList<RadiologyOrder>());
         when(patientService.getPatients("Johnny")).thenReturn(new ArrayList<Patient>());
         when(patientService.getPatients("Joh")).thenReturn(Arrays.asList(mockPatient1));
         when(patientService.getPatients(mockPatient3.getFamilyName())).thenReturn(Arrays.asList(mockPatient3));
@@ -108,8 +109,7 @@ public class PortletsControllerTest extends BaseContextMockTest {
      * @verifies populate model and view with radiology orders associated with given date range null
      */
     @Test
-    public
-            void
+    public void
             getRadiologyOrdersByPatientQueryAndDateRange_shouldPopulateModelAndViewWithRadiologyOrdersAssociatedWithGivenDateRangeNull()
                     throws Exception {
         
@@ -133,8 +133,7 @@ public class PortletsControllerTest extends BaseContextMockTest {
      * @verifies not populate model and view with radiology orders if start date is after end date
      */
     @Test
-    public
-            void
+    public void
             getRadiologyOrdersByPatientQueryAndDateRange_shouldNotPopulateModelAndViewWithRadiologyOrdersIfStartDateIsAfterEndDate()
                     throws Exception {
         
@@ -196,15 +195,14 @@ public class PortletsControllerTest extends BaseContextMockTest {
         Date startDate = new GregorianCalendar(2000, Calendar.MARCH, 01).getTime();
         Date endDate = new GregorianCalendar(2020, Calendar.MAY, 01).getTime();
         
-        Method filterRadiologyOrdersByDateRangeMethod =
-                portletsController.getClass()
-                        .getDeclaredMethod("filterRadiologyOrdersByDateRange",
-                            new Class[] { java.util.List.class, java.util.Date.class, java.util.Date.class });
+        Method filterRadiologyOrdersByDateRangeMethod = portletsController.getClass()
+                .getDeclaredMethod("filterRadiologyOrdersByDateRange",
+                    new Class[] { java.util.List.class, java.util.Date.class, java.util.Date.class });
         filterRadiologyOrdersByDateRangeMethod.setAccessible(true);
         
         List<RadiologyOrder> filteredRadiologyOrdersByDateRange =
-                (List<RadiologyOrder>) filterRadiologyOrdersByDateRangeMethod.invoke(portletsController, new Object[] {
-                        mockRadiologyOrders, startDate, endDate });
+                (List<RadiologyOrder>) filterRadiologyOrdersByDateRangeMethod.invoke(portletsController,
+                    new Object[] { mockRadiologyOrders, startDate, endDate });
         
         assertThat(filteredRadiologyOrdersByDateRange, is(notNullValue()));
         assertThat(filteredRadiologyOrdersByDateRange, is(mockRadiologyOrders));
@@ -215,21 +213,21 @@ public class PortletsControllerTest extends BaseContextMockTest {
      * @verifies return list of all orders with start date if start date is null and end date is null
      */
     @Test
-    public void filterRadiologyOrdersByDateRange_shouldReturnListOfOrdersAssociatedWithGivenDateRangeNull() throws Exception {
+    public void filterRadiologyOrdersByDateRange_shouldReturnListOfOrdersAssociatedWithGivenDateRangeNull()
+            throws Exception {
         
         // given
         Date startDate = null;
         Date endDate = null;
         
-        Method filterRadiologyOrdersByDateRangeMethod =
-                portletsController.getClass()
-                        .getDeclaredMethod("filterRadiologyOrdersByDateRange",
-                            new Class[] { java.util.List.class, java.util.Date.class, java.util.Date.class });
+        Method filterRadiologyOrdersByDateRangeMethod = portletsController.getClass()
+                .getDeclaredMethod("filterRadiologyOrdersByDateRange",
+                    new Class[] { java.util.List.class, java.util.Date.class, java.util.Date.class });
         filterRadiologyOrdersByDateRangeMethod.setAccessible(true);
         
         List<RadiologyOrder> filteredRadiologyOrdersByDateRange =
-                (List<RadiologyOrder>) filterRadiologyOrdersByDateRangeMethod.invoke(portletsController, new Object[] {
-                        mockRadiologyOrders, startDate, endDate });
+                (List<RadiologyOrder>) filterRadiologyOrdersByDateRangeMethod.invoke(portletsController,
+                    new Object[] { mockRadiologyOrders, startDate, endDate });
         
         assertThat(filteredRadiologyOrdersByDateRange, is(notNullValue()));
         assertThat(filteredRadiologyOrdersByDateRange, is(mockRadiologyOrders));
@@ -240,8 +238,7 @@ public class PortletsControllerTest extends BaseContextMockTest {
      * @verifies return empty list of orders with given end date and start date before any order has started
      */
     @Test
-    public
-            void
+    public void
             filterRadiologyOrdersByDateRange_shouldReturnListOfOrdersAssociatedWithGivenEndDateAndStartDateBeforeAnyOrderHasStarted()
                     throws Exception {
         
@@ -249,15 +246,14 @@ public class PortletsControllerTest extends BaseContextMockTest {
         Date startDate = new GregorianCalendar(2014, Calendar.MARCH, 01).getTime();
         Date endDate = new GregorianCalendar(2014, Calendar.MAY, 01).getTime();
         
-        Method filterRadiologyOrdersByDateRangeMethod =
-                portletsController.getClass()
-                        .getDeclaredMethod("filterRadiologyOrdersByDateRange",
-                            new Class[] { java.util.List.class, java.util.Date.class, java.util.Date.class });
+        Method filterRadiologyOrdersByDateRangeMethod = portletsController.getClass()
+                .getDeclaredMethod("filterRadiologyOrdersByDateRange",
+                    new Class[] { java.util.List.class, java.util.Date.class, java.util.Date.class });
         filterRadiologyOrdersByDateRangeMethod.setAccessible(true);
         
         List<RadiologyOrder> filteredRadiologyOrdersByDateRange =
-                (List<RadiologyOrder>) filterRadiologyOrdersByDateRangeMethod.invoke(portletsController, new Object[] {
-                        mockRadiologyOrders, startDate, endDate });
+                (List<RadiologyOrder>) filterRadiologyOrdersByDateRangeMethod.invoke(portletsController,
+                    new Object[] { mockRadiologyOrders, startDate, endDate });
         
         assertThat(filteredRadiologyOrdersByDateRange, is(notNullValue()));
         assertThat(filteredRadiologyOrdersByDateRange, is(empty()));
@@ -268,8 +264,7 @@ public class PortletsControllerTest extends BaseContextMockTest {
      * @verifies return empty list of orders with given end date and start date after any order has started
      */
     @Test
-    public
-            void
+    public void
             filterRadiologyOrdersByDateRange_shouldReturnListOfOrdersAssociatedWithGivenEndDateAndStartDateAfterAnyOrderHasStarted()
                     throws Exception {
         
@@ -277,15 +272,14 @@ public class PortletsControllerTest extends BaseContextMockTest {
         Date startDate = new GregorianCalendar(2016, Calendar.MARCH, 01).getTime();
         Date endDate = new GregorianCalendar(2016, Calendar.MAY, 01).getTime();
         
-        Method filterRadiologyOrdersByDateRangeMethod =
-                portletsController.getClass()
-                        .getDeclaredMethod("filterRadiologyOrdersByDateRange",
-                            new Class[] { java.util.List.class, java.util.Date.class, java.util.Date.class });
+        Method filterRadiologyOrdersByDateRangeMethod = portletsController.getClass()
+                .getDeclaredMethod("filterRadiologyOrdersByDateRange",
+                    new Class[] { java.util.List.class, java.util.Date.class, java.util.Date.class });
         filterRadiologyOrdersByDateRangeMethod.setAccessible(true);
         
         List<RadiologyOrder> filteredRadiologyOrdersByDateRange =
-                (List<RadiologyOrder>) filterRadiologyOrdersByDateRangeMethod.invoke(portletsController, new Object[] {
-                        mockRadiologyOrders, startDate, endDate });
+                (List<RadiologyOrder>) filterRadiologyOrdersByDateRangeMethod.invoke(portletsController,
+                    new Object[] { mockRadiologyOrders, startDate, endDate });
         
         assertThat(filteredRadiologyOrdersByDateRange, is(notNullValue()));
         assertThat(filteredRadiologyOrdersByDateRange, is(empty()));
@@ -296,8 +290,7 @@ public class PortletsControllerTest extends BaseContextMockTest {
      * @verifies return list of orders started after given start date but given end date null
      */
     @Test
-    public
-            void
+    public void
             filterRadiologyOrdersByDateRange_shouldPopulateModelAndViewWithTableOfOrdersAssociatedWithGivenStartDateButGivenEndDateNull()
                     throws Exception {
         
@@ -305,15 +298,14 @@ public class PortletsControllerTest extends BaseContextMockTest {
         Date startDate = new GregorianCalendar(2015, Calendar.MARCH, 01).getTime();
         Date endDate = null;
         
-        Method filterRadiologyOrdersByDateRangeMethod =
-                portletsController.getClass()
-                        .getDeclaredMethod("filterRadiologyOrdersByDateRange",
-                            new Class[] { java.util.List.class, java.util.Date.class, java.util.Date.class });
+        Method filterRadiologyOrdersByDateRangeMethod = portletsController.getClass()
+                .getDeclaredMethod("filterRadiologyOrdersByDateRange",
+                    new Class[] { java.util.List.class, java.util.Date.class, java.util.Date.class });
         filterRadiologyOrdersByDateRangeMethod.setAccessible(true);
         
         List<RadiologyOrder> filteredRadiologyOrdersByDateRange =
-                (List<RadiologyOrder>) filterRadiologyOrdersByDateRangeMethod.invoke(portletsController, new Object[] {
-                        mockRadiologyOrders, startDate, endDate });
+                (List<RadiologyOrder>) filterRadiologyOrdersByDateRangeMethod.invoke(portletsController,
+                    new Object[] { mockRadiologyOrders, startDate, endDate });
         
         assertThat(filteredRadiologyOrdersByDateRange, is(notNullValue()));
         assertThat(filteredRadiologyOrdersByDateRange, is(Arrays.asList(mockRadiologyOrder2)));
@@ -331,15 +323,14 @@ public class PortletsControllerTest extends BaseContextMockTest {
         Date startDate = null;
         Date endDate = new GregorianCalendar(2015, Calendar.MARCH, 01).getTime();
         
-        Method filterRadiologyOrdersByDateRangeMethod =
-                portletsController.getClass()
-                        .getDeclaredMethod("filterRadiologyOrdersByDateRange",
-                            new Class[] { java.util.List.class, java.util.Date.class, java.util.Date.class });
+        Method filterRadiologyOrdersByDateRangeMethod = portletsController.getClass()
+                .getDeclaredMethod("filterRadiologyOrdersByDateRange",
+                    new Class[] { java.util.List.class, java.util.Date.class, java.util.Date.class });
         filterRadiologyOrdersByDateRangeMethod.setAccessible(true);
         
         List<RadiologyOrder> filteredRadiologyOrdersByDateRange =
-                (List<RadiologyOrder>) filterRadiologyOrdersByDateRangeMethod.invoke(portletsController, new Object[] {
-                        mockRadiologyOrders, startDate, endDate });
+                (List<RadiologyOrder>) filterRadiologyOrdersByDateRangeMethod.invoke(portletsController,
+                    new Object[] { mockRadiologyOrders, startDate, endDate });
         
         assertThat(filteredRadiologyOrdersByDateRange, is(notNullValue()));
         assertThat(filteredRadiologyOrdersByDateRange, is(Arrays.asList(mockRadiologyOrder1)));
@@ -515,9 +506,8 @@ public class PortletsControllerTest extends BaseContextMockTest {
         
         String patientQuery = "";
         
-        List<RadiologyOrder> RadiologyOrdersForPatientQuery =
-                (List<RadiologyOrder>) getRadiologyOrdersForPatientQueryMethod.invoke(portletsController,
-                    new Object[] { patientQuery });
+        List<RadiologyOrder> RadiologyOrdersForPatientQuery = (List<RadiologyOrder>) getRadiologyOrdersForPatientQueryMethod
+                .invoke(portletsController, new Object[] { patientQuery });
         assertThat(RadiologyOrdersForPatientQuery, is(mockRadiologyOrders));
     }
     
@@ -535,9 +525,8 @@ public class PortletsControllerTest extends BaseContextMockTest {
         
         String patientQuery = null;
         
-        List<RadiologyOrder> RadiologyOrdersForPatientQuery =
-                (List<RadiologyOrder>) getRadiologyOrdersForPatientQueryMethod.invoke(portletsController,
-                    new Object[] { patientQuery });
+        List<RadiologyOrder> RadiologyOrdersForPatientQuery = (List<RadiologyOrder>) getRadiologyOrdersForPatientQueryMethod
+                .invoke(portletsController, new Object[] { patientQuery });
         assertThat(RadiologyOrdersForPatientQuery, is(mockRadiologyOrders));
     }
     
@@ -555,9 +544,8 @@ public class PortletsControllerTest extends BaseContextMockTest {
         
         String patientQuery = "Johnny";
         
-        List<RadiologyOrder> RadiologyOrdersForPatientQuery =
-                (List<RadiologyOrder>) getRadiologyOrdersForPatientQueryMethod.invoke(portletsController,
-                    new Object[] { patientQuery });
+        List<RadiologyOrder> RadiologyOrdersForPatientQuery = (List<RadiologyOrder>) getRadiologyOrdersForPatientQueryMethod
+                .invoke(portletsController, new Object[] { patientQuery });
         assertThat(RadiologyOrdersForPatientQuery, is(mockRadiologyOrders));
     }
     
@@ -575,9 +563,8 @@ public class PortletsControllerTest extends BaseContextMockTest {
         String patientQuery = RadiologyTestData.getMockPatient3()
                 .getFamilyName();
         
-        List<RadiologyOrder> RadiologyOrdersForPatientQuery =
-                (List<RadiologyOrder>) getRadiologyOrdersForPatientQueryMethod.invoke(portletsController,
-                    new Object[] { patientQuery });
+        List<RadiologyOrder> RadiologyOrdersForPatientQuery = (List<RadiologyOrder>) getRadiologyOrdersForPatientQueryMethod
+                .invoke(portletsController, new Object[] { patientQuery });
         assertThat(RadiologyOrdersForPatientQuery, is(empty()));
     }
     
@@ -595,9 +582,8 @@ public class PortletsControllerTest extends BaseContextMockTest {
         
         String patientQuery = "Joh";
         
-        List<RadiologyOrder> RadiologyOrdersForPatientQuery =
-                (List<RadiologyOrder>) getRadiologyOrdersForPatientQueryMethod.invoke(portletsController,
-                    new Object[] { patientQuery });
+        List<RadiologyOrder> RadiologyOrdersForPatientQuery = (List<RadiologyOrder>) getRadiologyOrdersForPatientQueryMethod
+                .invoke(portletsController, new Object[] { patientQuery });
         assertThat(RadiologyOrdersForPatientQuery, is(Arrays.asList(mockRadiologyOrder1)));
     }
     

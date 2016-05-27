@@ -30,6 +30,7 @@ import org.openmrs.module.radiology.study.RadiologyStudy;
  */
 public class RadiologyReportTest {
     
+    
     private RadiologyOrder radiologyOrder;
     
     private RadiologyReport radiologyReport;
@@ -40,9 +41,8 @@ public class RadiologyReportTest {
     @Before
     public void setUp() {
         
-        final OrderType radiologyOrderType =
-                new OrderType("Radiology Order", "Order type for radiology exams",
-                        "org.openmrs.module.radiology.order.RadiologyOrder");
+        final OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams",
+                "org.openmrs.module.radiology.order.RadiologyOrder");
         final Provider principalResultsInterpreter = new Provider();
         principalResultsInterpreter.setId(1);
         principalResultsInterpreter.setName("doctor");

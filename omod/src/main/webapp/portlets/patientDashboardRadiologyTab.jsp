@@ -4,7 +4,7 @@
 	file="/scripts/jquery-ui/js/jquery-ui-1.7.2.custom.min.js" />
 <openmrs:htmlInclude file="/moduleResources/radiology/css/radiology.css" />
 <openmrs:htmlInclude
-	file="/moduleResources/radiology/js/jquery.dataTables.min.js" />
+	file="/moduleResources/radiology/js/datatables/jquery.dataTables.min.js" />
 
 <openmrs:htmlInclude file="/moduleResources/radiology/js/sortNumbers.js" />
 <openmrs:htmlInclude
@@ -76,34 +76,34 @@
 </div>
 
 <script type="text/javascript">
-	var $j = jQuery.noConflict();
-	$j(document)
-			.ready(
-					function() {
-						$j('table#radiologyOrdersTable')
-								.dataTable(
-										{
-											"order" : [ [ 1, 'asc' ] ],
-											"oLanguage" : {
-												"sLengthMenu" : '<spring:message code="radiology.show"/>'
-														+ ' _MENU_ <spring:message code="radiology.entries"/>',
-												"sSearch" : '<spring:message code="general.search"/>:',
-												"sInfo" : '<spring:message code="radiology.viewing"/> _START_ '
-														+ '- _END_ '
-														+ '<spring:message code="radiology.of"/> _TOTAL_',
-												"oPaginate" : {
-													"sFirst" : '<spring:message code="radiology.first"/>',
-													"sPrevious" : '<spring:message code="general.previous"/>',
-													"sNext" : '<spring:message code="general.next"/>',
-													"sLast" : '<spring:message code="radiology.last"/>',
-												},
-												"sProcessing" : '<spring:message code="general.loading"/>'
-											},
-											"aoColumnDefs" : [ {
-												"sType" : "num-html",
-												"bSortable" : true,
-												"aTargets" : [ 0 ]
-											} ],
-										});
-					});
+  var $j = jQuery.noConflict();
+  $j(document)
+          .ready(
+                  function() {
+                    $j('table#radiologyOrdersTable')
+                            .dataTable(
+                                    {
+                                      "order": [[1, 'asc']],
+                                      "oLanguage": {
+                                        "sLengthMenu": '<spring:message code="radiology.show"/>'
+                                                + ' _MENU_ <spring:message code="radiology.entries"/>',
+                                        "sSearch": '<spring:message code="general.search"/>:',
+                                        "sInfo": '<spring:message code="radiology.viewing"/> _START_ '
+                                                + '- _END_ '
+                                                + '<spring:message code="radiology.of"/> _TOTAL_',
+                                        "oPaginate": {
+                                          "sFirst": '<spring:message code="radiology.first"/>',
+                                          "sPrevious": '<spring:message code="general.previous"/>',
+                                          "sNext": '<spring:message code="general.next"/>',
+                                          "sLast": '<spring:message code="radiology.last"/>',
+                                        },
+                                        "sProcessing": '<spring:message code="general.loading"/>'
+                                      },
+                                      "aoColumnDefs": [{
+                                        "sType": "num-html",
+                                        "bSortable": true,
+                                        "aTargets": [0]
+                                      }],
+                                    });
+                  });
 </script>

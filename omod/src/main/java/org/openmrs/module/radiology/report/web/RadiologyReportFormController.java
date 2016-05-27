@@ -28,6 +28,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(value = RadiologyReportFormController.RADIOLOGY_REPORT_FORM_REQUEST_MAPPING)
 public class RadiologyReportFormController {
     
+    
     protected static final String RADIOLOGY_REPORT_FORM_REQUEST_MAPPING = "/module/radiology/radiologyReport.form";
     
     private static final String RADIOLOGY_REPORT_FORM_VIEW = "/module/radiology/radiologyReportForm";
@@ -52,9 +53,8 @@ public class RadiologyReportFormController {
         ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         
         final RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
-        modelAndView =
-                new ModelAndView("redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?radiologyReportId="
-                        + radiologyReport.getId());
+        modelAndView = new ModelAndView(
+                "redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?radiologyReportId=" + radiologyReport.getId());
         
         addObjectsToModelAndView(modelAndView, radiologyReport);
         return modelAndView;
@@ -70,8 +70,8 @@ public class RadiologyReportFormController {
      *         report id
      */
     @RequestMapping(method = RequestMethod.GET, params = "radiologyReportId")
-    protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(@RequestParam(value = "radiologyReportId",
-            required = true) Integer radiologyReportId) {
+    protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(
+            @RequestParam(value = "radiologyReportId", required = true) Integer radiologyReportId) {
         
         ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         
@@ -109,8 +109,8 @@ public class RadiologyReportFormController {
     @RequestMapping(method = RequestMethod.POST, params = "unclaimRadiologyReport")
     protected ModelAndView unclaimRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
         radiologyReportService.unclaimRadiologyReport(radiologyReport);
-        return new ModelAndView("redirect:" + RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING
-                + "?orderId=" + radiologyReport.getRadiologyOrder()
+        return new ModelAndView("redirect:" + RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
+                + radiologyReport.getRadiologyOrder()
                         .getOrderId());
     }
     
@@ -135,9 +135,8 @@ public class RadiologyReportFormController {
             return modelAndView;
         }
         
-        final RadiologyReport completedRadiologyReport =
-                radiologyReportService.completeRadiologyReport(radiologyReport,
-                    radiologyReport.getPrincipalResultsInterpreter());
+        final RadiologyReport completedRadiologyReport = radiologyReportService.completeRadiologyReport(radiologyReport,
+            radiologyReport.getPrincipalResultsInterpreter());
         addObjectsToModelAndView(modelAndView, completedRadiologyReport);
         return modelAndView;
     }

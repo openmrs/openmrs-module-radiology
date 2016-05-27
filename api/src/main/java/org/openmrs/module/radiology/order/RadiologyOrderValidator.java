@@ -27,6 +27,7 @@ import org.springframework.validation.Validator;
 @Component
 public class RadiologyOrderValidator implements Validator {
     
+    
     /** Log for this class and subclasses */
     protected final Log log = LogFactory.getLog(getClass());
     

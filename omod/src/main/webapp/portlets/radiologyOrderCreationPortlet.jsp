@@ -1,7 +1,6 @@
 <openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
 <openmrs:htmlInclude file="/scripts/timepicker/timepicker.js" />
-<%@ include
-	file="/WEB-INF/view/module/radiology/resources/js/moreInfo.js"%>
+<openmrs:htmlInclude file="/moduleResources/radiology/js/moreInfo.js" />
 <script type="text/javascript">
 	function onQuestionSelect(concept) {
 		$j("#conceptDescription").show();

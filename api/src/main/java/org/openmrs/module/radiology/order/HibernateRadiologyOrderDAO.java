@@ -28,6 +28,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
     
+    
     @Autowired
     private SessionFactory sessionFactory;
     
