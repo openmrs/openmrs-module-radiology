@@ -24,6 +24,7 @@ import org.openmrs.module.radiology.study.RadiologyStudy;
  */
 public class RadiologyOrderTest {
     
+    
     /**
      * @see RadiologyOrder#setStudy(RadiologyStudy)
      * @verifies set the study attribute to given study

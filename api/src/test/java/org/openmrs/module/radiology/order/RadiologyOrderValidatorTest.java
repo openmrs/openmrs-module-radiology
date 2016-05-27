@@ -29,6 +29,7 @@ import org.springframework.validation.Errors;
  */
 public class RadiologyOrderValidatorTest {
     
+    
     /**
      * helper method to create a valid RadiologyOrder
      * 
@@ -196,7 +197,8 @@ public class RadiologyOrderValidatorTest {
         
         assertTrue(errors.hasErrors());
         assertThat((errors.getAllErrors()).get(0)
-                .getCode(), is("error.general"));
+                .getCode(),
+            is("error.general"));
     }
     
     /**
@@ -296,7 +298,8 @@ public class RadiologyOrderValidatorTest {
         
         assertTrue(errors.hasFieldErrors("dateActivated"));
         assertThat(errors.getFieldError("dateActivated")
-                .getCode(), is("Order.error.dateActivatedInFuture"));
+                .getCode(),
+            is("Order.error.dateActivatedInFuture"));
     }
     
     /**

@@ -43,6 +43,7 @@ import org.springframework.mock.web.MockMultipartHttpServletRequest;
 
 public class RadiologyTestData {
     
+    
     static OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams",
             "org.openmrs.module.radiology.order.RadiologyOrder");
     

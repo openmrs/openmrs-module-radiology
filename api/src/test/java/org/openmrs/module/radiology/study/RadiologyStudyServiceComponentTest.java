@@ -43,6 +43,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensitiveTest {
     
+    
     private static final String TEST_DATASET =
             "org/openmrs/module/radiology/include/RadiologyStudyServiceComponentTestDataset.xml";
     
@@ -167,7 +168,8 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
         
         assertNotNull(radiologyStudy);
         assertThat(radiologyStudy.getRadiologyOrder()
-                .getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
+                .getOrderId(),
+            is(EXISTING_RADIOLOGY_ORDER_ID));
     }
     
     /**
@@ -193,7 +195,8 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
         
         assertNotNull(radiologyStudy);
         assertThat(radiologyStudy.getRadiologyOrder()
-                .getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
+                .getOrderId(),
+            is(EXISTING_RADIOLOGY_ORDER_ID));
     }
     
     /**
@@ -268,9 +271,11 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
         
         assertThat(radiologyStudies.size(), is(radiologyOrders.size()));
         assertThat(radiologyStudies.get(0)
-                .getRadiologyOrder(), is(radiologyOrders.get(0)));
+                .getRadiologyOrder(),
+            is(radiologyOrders.get(0)));
         assertThat(radiologyStudies.get(1)
-                .getRadiologyOrder(), is(radiologyOrders.get(1)));
+                .getRadiologyOrder(),
+            is(radiologyOrders.get(1)));
     }
     
     /**
@@ -330,9 +335,8 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
         PerformedProcedureStepStatus performedStatusPreUpdate = existingStudy.getPerformedStatus();
         PerformedProcedureStepStatus performedStatusPostUpdate = PerformedProcedureStepStatus.COMPLETED;
         
-        RadiologyStudy updatedStudy =
-                radiologyStudyService.updateStudyPerformedStatus(existingStudy.getStudyInstanceUid(),
-                    performedStatusPostUpdate);
+        RadiologyStudy updatedStudy = radiologyStudyService.updateStudyPerformedStatus(existingStudy.getStudyInstanceUid(),
+            performedStatusPostUpdate);
         
         assertNotNull(updatedStudy);
         assertThat(updatedStudy, is(existingStudy));

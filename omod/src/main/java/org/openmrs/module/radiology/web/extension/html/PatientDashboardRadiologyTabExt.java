@@ -15,6 +15,7 @@ import org.openmrs.module.web.extension.PatientDashboardTabExt;
 
 public class PatientDashboardRadiologyTabExt extends PatientDashboardTabExt {
     
+    
     @Override
     public String getTabName() {
         return "radiology.home.title";

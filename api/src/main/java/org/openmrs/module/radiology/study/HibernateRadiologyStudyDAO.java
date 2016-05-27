@@ -28,6 +28,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 class HibernateRadiologyStudyDAO implements RadiologyStudyDAO {
     
+    
     @Autowired
     private SessionFactory sessionFactory;
     

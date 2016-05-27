@@ -26,6 +26,7 @@ import org.springframework.validation.Errors;
  */
 public class RadiologyReportValidatorTest {
     
+    
     /**
      * @verifies return false for other object types
      * @see RadiologyReportValidator#supports(Class)
@@ -86,7 +87,8 @@ public class RadiologyReportValidatorTest {
         
         assertTrue(errors.hasErrors());
         assertThat((errors.getAllErrors()).get(0)
-                .getCode(), is("error.general"));
+                .getCode(),
+            is("error.general"));
     }
     
     /**

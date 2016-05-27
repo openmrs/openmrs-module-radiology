@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface RadiologyOrderService extends OpenmrsService {
     
+    
     /**
      * Save given <code>RadiologyOrder</code> and its <code>RadiologyOrder.study</code> to the
      * database

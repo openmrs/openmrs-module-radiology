@@ -20,6 +20,7 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
  */
 public class RadiologyReport extends BaseOpenmrsData {
     
+    
     private Integer radiologyReportId;
     
     private RadiologyOrder radiologyOrder;

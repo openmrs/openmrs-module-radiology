@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyStudyService {
     
+    
     private static final Log log = LogFactory.getLog(RadiologyStudyServiceImpl.class);
     
     @Autowired

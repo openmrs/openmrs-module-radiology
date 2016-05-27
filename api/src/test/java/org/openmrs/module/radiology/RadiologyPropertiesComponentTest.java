@@ -37,6 +37,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
  */
 public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitiveTest {
     
+    
     @Autowired
     @Qualifier("adminService")
     private AdministrationService administrationService;
@@ -66,8 +67,8 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     @Test
     public void getDicomUIDOrgRoot_shouldReturnDicomUidOrgRoot() throws Exception {
         
-        administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_UID_ORG_ROOT,
-                "1.2.826.0.1.3680043.8.2186"));
+        administrationService.saveGlobalProperty(
+            new GlobalProperty(RadiologyConstants.GP_DICOM_UID_ORG_ROOT, "1.2.826.0.1.3680043.8.2186"));
         
         assertThat(radiologyProperties.getDicomUIDOrgRoot(), is("1.2.826.0.1.3680043.8.2186"));
     }
@@ -145,8 +146,8 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     @Test
     public void getStudyPrefix_shouldReturnStudyPrefixConsistingofApplicationUidAndStudyUidSlug() {
         
-        administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_UID_ORG_ROOT,
-                "1.2.826.0.1.3680043.8.2186"));
+        administrationService.saveGlobalProperty(
+            new GlobalProperty(RadiologyConstants.GP_DICOM_UID_ORG_ROOT, "1.2.826.0.1.3680043.8.2186"));
         administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_UID_APPLICATION, "1"));
         administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_UID_TYPE_STUDY, "1"));
         
@@ -160,8 +161,8 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     @Test
     public void getDicomWebViewerAddress_shouldReturnDicomWebViewerAddress() throws Exception {
         
-        administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_ADDRESS,
-                "localhost"));
+        administrationService
+                .saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_ADDRESS, "localhost"));
         
         assertThat(radiologyProperties.getDicomWebViewerAddress(), is("localhost"));
     }
@@ -216,8 +217,8 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     @Test
     public void getDicomWebViewerBaseUrl_shouldReturnDicomWebViewerBaseUrl() throws Exception {
         
-        administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_BASE_URL,
-                "/weasis-pacs-connector/viewer"));
+        administrationService.saveGlobalProperty(
+            new GlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_BASE_URL, "/weasis-pacs-connector/viewer"));
         
         assertThat(radiologyProperties.getDicomWebViewerBaseUrl(), is("/weasis-pacs-connector/viewer"));
     }
@@ -245,8 +246,8 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     @Test
     public void getDicomWebViewerLocalServerName_shouldReturnDicomWebViewerLocalServerName() throws Exception {
         
-        administrationService.saveGlobalProperty(new GlobalProperty(
-                RadiologyConstants.GP_DICOM_WEB_VIEWER_LOCAL_SERVER_NAME, "oviyamlocal"));
+        administrationService.saveGlobalProperty(
+            new GlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_LOCAL_SERVER_NAME, "oviyamlocal"));
         
         assertThat(radiologyProperties.getDicomWebViewerLocalServerName(), is("oviyamlocal"));
     }
@@ -259,11 +260,12 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     public void getRadiologyCareSetting_shouldReturnRadiologyCareSetting() {
         
         String outpatientCareSettingUuidInOpenMrsCore = "6f0c9a92-6f24-11e3-af88-005056821db0";
-        administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING,
-                outpatientCareSettingUuidInOpenMrsCore));
+        administrationService.saveGlobalProperty(
+            new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING, outpatientCareSettingUuidInOpenMrsCore));
         
         assertThat(radiologyProperties.getRadiologyCareSetting()
-                .getUuid(), is(outpatientCareSettingUuidInOpenMrsCore));
+                .getUuid(),
+            is(outpatientCareSettingUuidInOpenMrsCore));
     }
     
     /**
@@ -290,11 +292,12 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     public void getRadiologyCareSetting_shouldThrowIllegalStateExceptionIfRadiologyCareSettingCannotBeFound() {
         
         String nonExistingCareSettingUuid = "5a1b8b43-6f24-11e3-af99-005056821db0";
-        administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING,
-                nonExistingCareSettingUuid));
+        administrationService.saveGlobalProperty(
+            new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING, nonExistingCareSettingUuid));
         
         expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage("No existing care setting for uuid: " + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
+        expectedException
+                .expectMessage("No existing care setting for uuid: " + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
         
         radiologyProperties.getRadiologyCareSetting();
     }
@@ -307,19 +310,20 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     public void getRadiologyTestOrderType_shouldReturnOrderTypeForRadiologyTestOrders() {
         
         String radiologyTestOrderTypeUuid = "dbdb9a9b-56ea-11e5-a47f-08002719a237";
-        administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_TEST_ORDER_TYPE,
-                radiologyTestOrderTypeUuid));
+        administrationService.saveGlobalProperty(
+            new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_TEST_ORDER_TYPE, radiologyTestOrderTypeUuid));
         
-        OrderType radiologyOrderType =
-                new OrderType("Radiology Order", "Order type for radiology exams",
-                        "org.openmrs.module.radiology.order.RadiologyOrder");
+        OrderType radiologyOrderType = new OrderType("Radiology Order", "Order type for radiology exams",
+                "org.openmrs.module.radiology.order.RadiologyOrder");
         radiologyOrderType.setUuid(radiologyTestOrderTypeUuid);
         orderService.saveOrderType(radiologyOrderType);
         
         assertThat(radiologyProperties.getRadiologyTestOrderType()
-                .getName(), is("Radiology Order"));
+                .getName(),
+            is("Radiology Order"));
         assertThat(radiologyProperties.getRadiologyTestOrderType()
-                .getUuid(), is(radiologyTestOrderTypeUuid));
+                .getUuid(),
+            is(radiologyTestOrderTypeUuid));
     }
     
     /**
@@ -343,17 +347,19 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     public void getRadiologyOrderEncounterType_shouldReturnEncounterTypeForRadiologyOrders() {
         
         String radiologyEncounterTypeUuid = "19db8c0d-3520-48f2-babd-77f2d450e5c7";
-        administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDER_ENCOUNTER_TYPE,
-                radiologyEncounterTypeUuid));
+        administrationService.saveGlobalProperty(
+            new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDER_ENCOUNTER_TYPE, radiologyEncounterTypeUuid));
         
         EncounterType encounterType = new EncounterType("Radiology Order Encounter", "Ordering radiology exams");
         encounterType.setUuid(radiologyEncounterTypeUuid);
         encounterService.saveEncounterType(encounterType);
         
         assertThat(radiologyProperties.getRadiologyOrderEncounterType()
-                .getName(), is("Radiology Order Encounter"));
+                .getName(),
+            is("Radiology Order Encounter"));
         assertThat(radiologyProperties.getRadiologyOrderEncounterType()
-                .getUuid(), is(radiologyEncounterTypeUuid));
+                .getUuid(),
+            is(radiologyEncounterTypeUuid));
     }
     
     /**
@@ -377,8 +383,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     public void getRadiologyOrderingProviderEncounterRole_shouldReturnEncounterRoleForOrderingProvider() throws Exception {
         
         String radiologyOrderingProviderEncounterRoleUuid = "13fc9b4a-49ed-429c-9dde-ca005b387a3d";
-        administrationService.saveGlobalProperty(new GlobalProperty(
-                RadiologyConstants.GP_RADIOLOGY_ORDERING_PROVIDER_ENCOUNTER_ROLE, radiologyOrderingProviderEncounterRoleUuid));
+        administrationService
+                .saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDERING_PROVIDER_ENCOUNTER_ROLE,
+                        radiologyOrderingProviderEncounterRoleUuid));
         
         EncounterRole encounterRole = new EncounterRole();
         encounterRole.setName("Radiology Ordering Provider Encounter Role");
@@ -386,9 +393,11 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
         encounterService.saveEncounterRole(encounterRole);
         
         assertThat(radiologyProperties.getRadiologyOrderingProviderEncounterRole()
-                .getName(), is("Radiology Ordering Provider Encounter Role"));
+                .getName(),
+            is("Radiology Ordering Provider Encounter Role"));
         assertThat(radiologyProperties.getRadiologyOrderingProviderEncounterRole()
-                .getUuid(), is(radiologyOrderingProviderEncounterRoleUuid));
+                .getUuid(),
+            is(radiologyOrderingProviderEncounterRoleUuid));
     }
     
     /**
@@ -396,13 +405,12 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      * @verifies throw illegal state exception for non existing ordering provider encounter role
      */
     @Test
-    public
-            void
+    public void
             getRadiologyOrderingProviderEncounterRole_shouldThrowIllegalStateExceptionForNonExistingOrderingProviderEncounterRole()
                     throws Exception {
         expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage("Configuration required: "
-                + RadiologyConstants.GP_RADIOLOGY_ORDERING_PROVIDER_ENCOUNTER_ROLE);
+        expectedException.expectMessage(
+            "Configuration required: " + RadiologyConstants.GP_RADIOLOGY_ORDERING_PROVIDER_ENCOUNTER_ROLE);
         
         radiologyProperties.getRadiologyOrderingProviderEncounterRole();
     }
@@ -415,8 +423,8 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     public void getRadiologyVisitType_shouldReturnVisitTypeForRadiologyOrders() throws Exception {
         
         String radiologyVisitTypeUuid = "fe898a34-1ade-11e1-9c71-00248140a5eb";
-        administrationService.saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_VISIT_TYPE,
-                radiologyVisitTypeUuid));
+        administrationService
+                .saveGlobalProperty(new GlobalProperty(RadiologyConstants.GP_RADIOLOGY_VISIT_TYPE, radiologyVisitTypeUuid));
         
         VisitType visitType = new VisitType();
         visitType.setName("Radiology Visit");
@@ -424,9 +432,11 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
         visitService.saveVisitType(visitType);
         
         assertThat(radiologyProperties.getRadiologyVisitType()
-                .getName(), is("Radiology Visit"));
+                .getName(),
+            is("Radiology Visit"));
         assertThat(radiologyProperties.getRadiologyVisitType()
-                .getUuid(), is(radiologyVisitTypeUuid));
+                .getUuid(),
+            is(radiologyVisitTypeUuid));
     }
     
     /**
@@ -448,8 +458,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      *           UUIDs in global property radiologyConceptClasses
      */
     @Test
-    public
-            void
+    public void
             getRadiologyConceptClassNames_shouldReturnsCommaSeparatedListOfConceptClassNamesConfiguredViaConceptClassUUIDsInGlobalPropertyRadiologyConceptClasses()
                     throws Exception {
         List<ConceptClass> conceptClasses = new LinkedList<ConceptClass>();
@@ -476,9 +485,8 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      * @verifies throw illegal state exception if global property radiologyConceptClasses is null
      */
     @Test
-    public void
-            getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsNull()
-                    throws Exception {
+    public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsNull()
+            throws Exception {
         administrationService.setGlobalProperty("radiology.radiologyConceptClasses", null);
         
         expectedException.expect(IllegalStateException.class);
@@ -493,8 +501,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      *           empty String
      */
     @Test
-    public
-            void
+    public void
             getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsAnEmptyString()
                     throws Exception {
         administrationService.setGlobalProperty("radiology.radiologyConceptClasses", "");
@@ -511,15 +518,15 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      *           formatted
      */
     @Test
-    public
-            void
+    public void
             getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsBadlyFormatted()
                     throws Exception {
         administrationService.setGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES,
             "AAAA-bbbbb-1111-2222/AAAA-BBBB-2222-3333");
         
         expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage("Property radiology.radiologyConcepts needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
+        expectedException.expectMessage(
+            "Property radiology.radiologyConcepts needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
         
         radiologyProperties.getRadiologyConceptClassNames();
     }
@@ -530,8 +537,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
      *           UUID not found among ConceptClasses
      */
     @Test
-    public
-            void
+    public void
             getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesContainsAUUIDNotFoundAmongConceptClasses()
                     throws Exception {
         

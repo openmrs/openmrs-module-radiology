@@ -23,6 +23,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RadiologyProperties extends ModuleProperties {
     
+    
     /**
      * Return DICOM UID component used to identify the org root.
      * 
@@ -132,8 +133,8 @@ public class RadiologyProperties extends ModuleProperties {
         final String radiologyCareSettingUuid = getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING, true);
         final CareSetting result = orderService.getCareSettingByUuid(radiologyCareSettingUuid);
         if (result == null) {
-            throw new IllegalStateException("No existing care setting for uuid: "
-                    + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
+            throw new IllegalStateException(
+                    "No existing care setting for uuid: " + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
         }
         return result;
     }

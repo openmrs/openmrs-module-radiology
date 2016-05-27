@@ -32,6 +32,7 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 public class PortletsController {
     
+    
     private static final Log log = LogFactory.getLog(PortletsController.class);
     
     @Autowired
@@ -67,9 +68,9 @@ public class PortletsController {
      */
     @RequestMapping(value = "/module/radiology/portlets/orderSearch.portlet")
     ModelAndView getRadiologyOrdersByPatientQueryAndDateRange(
-            @RequestParam(value = "patientQuery", required = false) String patientQuery, @RequestParam(value = "startDate",
-                    required = false) @DateTimeFormat(iso = ISO.DATE) Date startDate, @RequestParam(value = "endDate",
-                    required = false) @DateTimeFormat(iso = ISO.DATE) Date endDate) {
+            @RequestParam(value = "patientQuery", required = false) String patientQuery,
+            @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = ISO.DATE) Date startDate,
+            @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = ISO.DATE) Date endDate) {
         final ModelAndView mav = new ModelAndView("module/radiology/portlets/orderSearch");
         
         if (isEndDateBeforeStartDate(startDate, endDate)) {
@@ -129,8 +130,9 @@ public class PortletsController {
         else {
             for (RadiologyOrder order : unfilteredRadiologyOrders) {
                 if (order.getEffectiveStartDate() != null && order.getEffectiveStartDate()
-                        .compareTo(startDate) >= 0 && order.getEffectiveStartDate()
-                        .compareTo(endDate) <= 0) {
+                        .compareTo(startDate) >= 0
+                        && order.getEffectiveStartDate()
+                                .compareTo(endDate) <= 0) {
                     result.add(order);
                 }
             }

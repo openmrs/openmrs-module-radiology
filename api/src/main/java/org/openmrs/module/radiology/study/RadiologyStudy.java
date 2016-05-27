@@ -19,6 +19,7 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
  */
 public class RadiologyStudy {
     
+    
     private Integer studyId;
     
     private String studyInstanceUid;

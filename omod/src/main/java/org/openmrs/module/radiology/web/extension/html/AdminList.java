@@ -16,6 +16,7 @@ import org.openmrs.module.web.extension.AdministrationSectionExt;
 
 public class AdminList extends AdministrationSectionExt {
     
+    
     @Override
     public Extension.MEDIA_TYPE getMediaType() {
         return Extension.MEDIA_TYPE.html;

@@ -13,6 +13,7 @@ import org.openmrs.test.Verifies;
  */
 public class ScheduledProcedureStepStatusTest {
     
+    
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
     

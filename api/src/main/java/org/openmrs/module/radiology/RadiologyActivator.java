@@ -18,6 +18,7 @@ import org.openmrs.module.BaseModuleActivator;
 
 public class RadiologyActivator extends BaseModuleActivator {
     
+    
     private static final Log log = LogFactory.getLog(RadiologyActivator.class);
     
     @Override

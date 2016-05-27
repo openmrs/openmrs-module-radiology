@@ -13,6 +13,7 @@ package org.openmrs.module.radiology;
  */
 public class RadiologyConstants {
     
+    
     public static final String GP_DICOM_UID_ORG_ROOT = "radiology.dicomUIDOrgRoot";
     
     public static final String GP_DICOM_UID_APPLICATION = "radiology.dicomUIDApplication";

@@ -14,6 +14,7 @@ import org.openmrs.module.web.extension.LinkExt;
 
 public class GutterListExt extends LinkExt {
     
+    
     @Override
     public String getLabel() {
         return "radiology.home.title";

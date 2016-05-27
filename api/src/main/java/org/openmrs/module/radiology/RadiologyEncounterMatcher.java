@@ -20,6 +20,7 @@ import org.springframework.stereotype.Component;
 @Component
 public class RadiologyEncounterMatcher implements BaseEncounterMatcher {
     
+    
     /**
      * Returns existing encounter according to visit and encounter parameters
      * 

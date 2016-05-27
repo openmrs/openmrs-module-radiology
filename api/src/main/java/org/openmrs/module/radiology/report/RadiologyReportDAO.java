@@ -19,6 +19,7 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
  */
 interface RadiologyReportDAO {
     
+    
     /**
      * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportByRadiologyReportId(Integer)
      */

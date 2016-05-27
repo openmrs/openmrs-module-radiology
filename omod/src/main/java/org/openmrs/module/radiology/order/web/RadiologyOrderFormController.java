@@ -50,6 +50,7 @@ import org.springframework.web.servlet.ModelAndView;
 @RequestMapping(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING)
 public class RadiologyOrderFormController {
     
+    
     public static final String RADIOLOGY_ORDER_FORM_REQUEST_MAPPING = "/module/radiology/radiologyOrder.form";
     
     static final String RADIOLOGY_ORDER_FORM_VIEW = "/module/radiology/radiologyOrderForm";
@@ -100,8 +101,8 @@ public class RadiologyOrderFormController {
      *         patient is null
      */
     @RequestMapping(method = RequestMethod.GET, params = "patientId")
-    protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(@RequestParam(value = "patientId",
-            required = true) Patient patient) {
+    protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(
+            @RequestParam(value = "patientId", required = true) Patient patient) {
         
         final ModelAndView modelAndView = getRadiologyOrderFormWithNewRadiologyOrder();
         
@@ -128,8 +129,8 @@ public class RadiologyOrderFormController {
      *         and not a radiology order
      */
     @RequestMapping(method = RequestMethod.GET, params = "orderId")
-    protected ModelAndView getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(@RequestParam(value = "orderId",
-            required = true) Order order) {
+    protected ModelAndView getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(
+            @RequestParam(value = "orderId", required = true) Order order) {
         ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
         
         if (Context.isAuthenticated()) {
@@ -171,16 +172,17 @@ public class RadiologyOrderFormController {
      * @should not redirect if radiology order is not valid according to order validator
      */
     @RequestMapping(method = RequestMethod.POST, params = "saveRadiologyOrder")
-    protected ModelAndView postSaveRadiologyOrder(HttpServletRequest request, @RequestParam(value = "patient_id",
-            required = false) Integer patientId, @ModelAttribute("order") Order order,
+    protected ModelAndView postSaveRadiologyOrder(HttpServletRequest request,
+            @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("order") Order order,
             @ModelAttribute("radiologyOrder") RadiologyOrder radiologyOrder, BindingResult radiologyOrderErrors)
             throws Exception {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
         
         if (Context.getAuthenticatedUser()
-                .hasRole(SCHEDULER, true) && !radiologyOrder.getStudy()
-                .isScheduleable()) {
+                .hasRole(SCHEDULER, true)
+                && !radiologyOrder.getStudy()
+                        .isScheduleable()) {
             request.getSession()
                     .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
         } else {
@@ -194,8 +196,8 @@ public class RadiologyOrderFormController {
                 
                 request.getSession()
                         .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
-                modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
-                        + radiologyOrder.getOrderId());
+                modelAndView.setViewName(
+                    "redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId=" + radiologyOrder.getOrderId());
             }
             catch (IllegalArgumentException illegalArgumentException) {
                 request.getSession()
@@ -232,14 +234,13 @@ public class RadiologyOrderFormController {
                 
                 return modelAndView;
             }
-            discontinuationOrder =
-                    radiologyOrderService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
-                        discontinuationOrder.getOrderer(), discontinuationOrder.getOrderReasonNonCoded());
+            discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
+                discontinuationOrder.getOrderer(), discontinuationOrder.getOrderReasonNonCoded());
             
             request.getSession()
                     .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
-            modelAndView.setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
-                    + discontinuationOrder.getOrderId());
+            modelAndView.setViewName(
+                "redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId=" + discontinuationOrder.getOrderId());
         }
         catch (APIException apiException) {
             request.getSession()

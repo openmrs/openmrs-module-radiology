@@ -16,6 +16,7 @@ import org.openmrs.module.radiology.study.RadiologyStudy;
  */
 public class RadiologyOrder extends TestOrder {
     
+    
     private RadiologyStudy study;
     
     public RadiologyStudy getStudy() {
