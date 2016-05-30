@@ -136,6 +136,19 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     }
     
     /**
+     * @see RadiologyReportService#getRadiologyReportByUuid(String)
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public RadiologyReport getRadiologyReportByUuid(String radiologyReportUuid) throws IllegalArgumentException {
+        
+        if (radiologyReportUuid == null) {
+            throw new IllegalArgumentException("radiologyReportUuid cannot be null");
+        }
+        return radiologyReportDAO.getRadiologyReportByUuid(radiologyReportUuid);
+    }
+    
+    /**
      * @see RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder, RadiologyReportStatus)
      */
     @Transactional(readOnly = true)

@@ -71,14 +71,10 @@ public class RadiologyReportFormController {
      */
     @RequestMapping(method = RequestMethod.GET, params = "radiologyReportId")
     protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(
-            @RequestParam(value = "radiologyReportId", required = true) Integer radiologyReportId) {
+            @RequestParam(value = "radiologyReportId", required = true) RadiologyReport radiologyReport) {
         
         ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
-        
-        final RadiologyReport radiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(radiologyReportId);
         addObjectsToModelAndView(modelAndView, radiologyReport);
-        
         return modelAndView;
     }
     
