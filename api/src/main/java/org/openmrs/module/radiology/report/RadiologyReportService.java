@@ -117,6 +117,19 @@ public interface RadiologyReportService extends OpenmrsService {
     RadiologyReport getRadiologyReportByRadiologyReportId(Integer radiologyReportId) throws IllegalArgumentException;
     
     /**
+     * Get a RadiologyReport matching the radiologyReport uuid
+     *
+     * @param radiologyReportUuid of RadiologyReport
+     * @return RadiologyReport matching given radiologyReportUuid
+     * @throws IllegalArgumentException if radiologyReportUuid is null
+     * @should fetch RadiologyReport matching given radiologyReportUuid
+     * @should throw IllegalArgumentException if radiologyReportUuid is null
+     * @should return null if no radiologyReport found with given uuid
+     */
+    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
+    RadiologyReport getRadiologyReportByRadiologyReportUuid(String radiologyReportUuid) throws IllegalArgumentException;
+    
+    /**
      * Get all RadiologyReports fetched by radiologyOrder and radiologyReportStatus
      *
      * @param radiologyOrder RadiologyOrder for which the RadiologyReport should be fetched

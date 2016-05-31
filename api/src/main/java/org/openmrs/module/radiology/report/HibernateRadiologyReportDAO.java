@@ -50,6 +50,17 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
     }
     
     /**
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportByRadiologyReportUuid(String)
+     */
+    @Override
+    public RadiologyReport getRadiologyReportByUuid(String uuid) {
+        final String query = "from RadiologyReport r where r.uuid = '" + uuid + "'";
+        return (RadiologyReport) sessionFactory.getCurrentSession()
+                .createQuery(query)
+                .uniqueResult();
+    }
+    
+    /**
      * @see org.openmrs.module.radiology.report.RadiologyReportService#saveRadiologyReport(RadiologyReport)
      */
     @Override

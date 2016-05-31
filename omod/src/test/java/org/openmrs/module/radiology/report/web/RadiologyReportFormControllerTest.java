@@ -91,14 +91,12 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
         
-        when(radiologyReportService.getRadiologyReportByRadiologyReportId(mockRadiologyReport.getId()))
-                .thenReturn(mockRadiologyReport);
         when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
                 .getStudy())).thenReturn(
                     "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
         
         ModelAndView modelAndView =
-                radiologyReportFormController.getRadiologyReportFormWithExistingRadiologyReport(mockRadiologyReport.getId());
+                radiologyReportFormController.getRadiologyReportFormWithExistingRadiologyReport(mockRadiologyReport);
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyReportForm"));

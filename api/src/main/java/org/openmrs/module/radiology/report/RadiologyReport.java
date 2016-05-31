@@ -23,6 +23,8 @@ public class RadiologyReport extends BaseOpenmrsData {
     
     private Integer radiologyReportId;
     
+    private String radiologyReportUuid;
+    
     private RadiologyOrder radiologyOrder;
     
     private Date reportDate;
@@ -125,7 +127,7 @@ public class RadiologyReport extends BaseOpenmrsData {
      * 
      * @return radiologyReportId of RadiologyReport
      */
-    private Integer getRadiologyReportId() {
+    public Integer getRadiologyReportId() {
         return this.radiologyReportId;
     }
     
@@ -136,6 +138,24 @@ public class RadiologyReport extends BaseOpenmrsData {
      */
     private void setRadiologyReportId(Integer radiologyReportId) {
         this.radiologyReportId = radiologyReportId;
+    }
+    
+    /**
+     * Get radiologyReportUuid of RadiologyReport.
+     * 
+     * @return radiologyReportUuid of RadiologyReport
+     */
+    public String getRadiologyReportUuid() {
+        return this.radiologyReportUuid;
+    }
+    
+    /**
+     * Set radiologyReportUuid of RadiologyReport.
+     * 
+     * @param radiologyReportUuid Uuid of RadiologyReport
+     */
+    public void setRadiologyReportUuid(String radiologyReportUuid) {
+        this.radiologyReportUuid = radiologyReportUuid;
     }
     
     /**
