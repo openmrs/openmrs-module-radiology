@@ -26,6 +26,11 @@ interface RadiologyReportDAO {
     RadiologyReport getRadiologyReportById(Integer radiologyReportId);
     
     /**
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportByUuid(String)
+     */
+    RadiologyReport getRadiologyReportByUuid(String radiologyReportUuid);
+    
+    /**
      * @see org.openmrs.module.radiology.report.RadiologyReportService#saveRadiologyReport(RadiologyReport)
      */
     RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport);

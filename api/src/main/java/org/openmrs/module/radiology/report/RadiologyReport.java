@@ -125,7 +125,7 @@ public class RadiologyReport extends BaseOpenmrsData {
      * 
      * @return radiologyReportId of RadiologyReport
      */
-    private Integer getRadiologyReportId() {
+    public Integer getRadiologyReportId() {
         return this.radiologyReportId;
     }
     

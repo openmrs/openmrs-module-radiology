@@ -12,6 +12,7 @@
 package org.openmrs.module.radiology.report;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
@@ -45,6 +46,10 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     private static final int EXISTING_RADIOLOGY_ORDER_ID = 2001;
     
     private static final int EXISTING_RADIOLOGY_REPORT_ID = 1;
+    
+    private static final String EXISTING_RADIOLOGY_REPORT_UUID = "e699d90d-e230-4762-8747-d2d0059394b0";
+    
+    private static final String NON_EXISTING_RADIOLOGY_REPORT_UUID = "637d5011-49f5-4ce8-b4ce-47b37ff2cda2";
     
     private static final int RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT = 2005;
     
@@ -489,6 +494,44 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReportId cannot be null");
         radiologyReportService.getRadiologyReportByRadiologyReportId(null);
+    }
+    
+    /**
+    * @see RadiologyReportService#getRadiologyReportByUuid(String)
+    * @verifies fetch RadiologyReport matching given radiologyReportUuid
+    */
+    @Test
+    public void getRadiologyReportByUuid_shouldFetchRadiologyReportMatchingGivenRadiologyReportUuid()
+            throws Exception {
+        
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReportByUuid(EXISTING_RADIOLOGY_REPORT_UUID);
+        assertThat(radiologyReport.getUuid(), is(EXISTING_RADIOLOGY_REPORT_UUID));
+    }
+    
+    /**
+    * @see RadiologyReportService#getRadiologyReportByUuid(String)
+    * @verifies throw IllegalArgumentException if radiologyReportUuid is null
+    */
+    @Test
+    public void getRadiologyReportByUuid_shouldThrowIllegalArgumentExceptionIfRadiologyReportUuidIsNull()
+            throws Exception {
+        
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("radiologyReportUuid cannot be null");
+        radiologyReportService.getRadiologyReportByUuid(null);
+    }
+    
+    /**
+    * @see RadiologyReportService#getRadiologyReportByUuid(String)
+    * @verifies return null if no radiologyReport found with given uuid
+    */
+    @Test
+    public void getRadiologyReportByUuid_shouldReturnNullIfNoRadiologyReportFoundWithGivenUuid()
+            throws Exception {
+        
+        RadiologyReport radiologyReport =
+                radiologyReportService.getRadiologyReportByUuid(NON_EXISTING_RADIOLOGY_REPORT_UUID);
+        assertThat(radiologyReport, is(nullValue()));
     }
     
     /**
