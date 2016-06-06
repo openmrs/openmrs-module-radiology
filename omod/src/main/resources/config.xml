@@ -161,7 +161,28 @@
 		<defaultValue>fe898a34-1ade-11e1-9c71-00248140a5eb</defaultValue>
 		<description>Radiology Visit Type UUID</description>
 	</globalProperty>
-
+	<!-- we provide the setting for the GP of the emr-api here since it is not 
+		provided by them. otherwise users would need to set the GP via the database. 
+		remove once emr-api defines this GP in their config.xml -->
+	<globalProperty>
+		<property>emr.encounterMatcher</property>
+		<defaultValue>org.openmrs.module.radiology.RadiologyEncounterMatcher
+		</defaultValue>
+		<description>
+			Class name of a custom encounter matcher (e.g.
+			org.openmrs.module.example.CustomEncounterMatcher)
+		</description>
+	</globalProperty>
+	<globalProperty>
+		<property>@MODULE_ID@.reportTemplatesHome</property>
+		<defaultValue>reporttemplates</defaultValue>
+		<description>
+			Directory where report templates are stored. Absolute and
+			relative paths are valid.
+			Relative paths are appended to the application data directory; necessary
+			parent directories are created if they do not exist.
+		</description>
+	</globalProperty>
 	<!--Required Global Properties -->
 
 	<!-- Internationalization -->
@@ -178,7 +199,7 @@
 	<!-- /Internationalization -->
 
 	<mappingFiles>RadiologyStudy.hbm.xml RadiologyOrder.hbm.xml
-		RadiologyReport.hbm.xml
+		RadiologyReport.hbm.xml MrrtReportTemplate.hbm.xml
 	</mappingFiles>
 
 	<!-- Accessed through the url /pageContext()/moduleServlet/<moduleId>/<servlet-name> -->

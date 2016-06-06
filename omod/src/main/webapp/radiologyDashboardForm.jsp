@@ -78,6 +78,10 @@
       <li><a id="radiologyReportsTab" href="#" onclick="return changeTab(this);" hidefocus="hidefocus"><openmrs:message
             code="radiology.dashboard.tabs.reports" /></a></li>
     </openmrs:hasPrivilege>
+    <openmrs:hasPrivilege privilege="View Radiology Report Templates">
+      <li><a id="radiologyReportTemplatesTab" href="#" onclick="return changeTab(this);" hidefocus="hidefocus"><openmrs:message
+            code="radiology.dashboard.tabs.reportTemplates" /></a></li>
+    </openmrs:hasPrivilege>
   </ul>
 </div>
 
@@ -93,7 +97,17 @@
     <div id="radiologyReports" style="display: none;">
 
       <openmrs:portlet url="radiologyReportsTab" id="reportsTab" moduleId="radiology" />
+    </div>
+  </openmrs:hasPrivilege>
+  <openmrs:hasPrivilege privilege="View Radiology Report Templates">
+    <div id="radiologyReportTemplates" style="display: none;">
 
+      <openmrs:portlet url="radiologyReportTemplatesTab" id="reportTemplatesTab" moduleId="radiology" />
+   </div>
+  </openmrs:hasPrivilege>
+  <openmrs:hasPrivilege privilege="View Radiology Report Templates">
+    <div id="radiologyReportTemplates" style="display: none;">
+      <openmrs:portlet url="radiologyReportTemplatesTab" id="reportTemplatesTab" moduleId="radiology" />
     </div>
   </openmrs:hasPrivilege>
 </div>

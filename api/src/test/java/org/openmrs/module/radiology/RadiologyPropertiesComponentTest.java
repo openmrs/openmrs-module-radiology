@@ -11,8 +11,10 @@ package org.openmrs.module.radiology;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -22,6 +24,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 import org.openmrs.ConceptClass;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
@@ -64,6 +67,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+    
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
     
     private Method getGlobalPropertyMethod = null;
     
@@ -536,4 +542,19 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
         
         getGlobalPropertyMethod.invoke(radiologyProperties, new Object[] { RadiologyConstants.GP_DICOM_UID_ORG_ROOT, true });
     }
+    
+    /**
+    * @see RadiologyProperties#getReportTemplateHome()
+    * @verifies return directory specified by global property
+    */
+    @Test
+    public void getReportTemplateHome_shouldReturnDirectorySpecifiedByGlobalProperty() throws Exception {
+        temporaryFolder.newFolder("mrrt_templates");
+        administrationService.setGlobalProperty(RadiologyConstants.GP_MRRT_REPORT_TEMPLATE_DIR, "mrrt_templates");
+        File templateHome = radiologyProperties.getReportTemplateHome();
+        assertNotNull(templateHome);
+        assertThat(templateHome.exists(), is(true));
+        assertThat(templateHome.getName(), is("mrrt_templates"));
+    }
+    
 }

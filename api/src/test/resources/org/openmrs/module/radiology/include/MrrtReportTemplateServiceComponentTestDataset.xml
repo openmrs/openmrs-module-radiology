@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+
+-->
+<dataset>
+	<radiology_report_template template_id="1" charset="UTF-8" path="test/test1.html" dcterms_title="title1" dcterms_description="description1" dcterms_language="en" dcterms_identifier="identifier1" creator="1" date_created="2015-02-02 12:26:35.0" uuid="2379d290-96f7-408a-bbae-270387e3b92e"/>
+	<radiology_report_template template_id="2" charset="UTF-8" path="test/test2.html" dcterms_title="title2" dcterms_description="description2" dcterms_language="en" dcterms_identifier="identifier2" creator="1" date_created="2015-02-03 13:17:15.0" uuid="59273e52-33b1-4fcb-8c1f-9b670bb11259"/>
+</dataset>
