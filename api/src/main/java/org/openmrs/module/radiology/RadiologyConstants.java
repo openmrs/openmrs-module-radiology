@@ -40,6 +40,8 @@ public class RadiologyConstants {
     
     public static final String GP_NEXT_ACCESSION_NUMBER_SEED = "radiology.nextAccessionNumberSeed";
     
+    public static final String GP_MRRT_REPORT_TEMPLATE_DIR = "radiology.reportTemplatesHome";
+    
     private RadiologyConstants() {
         // Utility class not meant to be instantiated.
     }

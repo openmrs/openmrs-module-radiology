@@ -11,8 +11,10 @@ package org.openmrs.module.radiology;
 
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
+import java.io.File;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.LinkedList;
@@ -22,6 +24,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.junit.rules.TemporaryFolder;
 import org.openmrs.ConceptClass;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
@@ -34,6 +37,7 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.VisitService;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -64,6 +68,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+    
+    @Rule
+    public TemporaryFolder temporaryFolder = new TemporaryFolder();
     
     private Method getGlobalPropertyMethod = null;
     
@@ -535,5 +542,51 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
         expectedException.expect(InvocationTargetException.class);
         
         getGlobalPropertyMethod.invoke(radiologyProperties, new Object[] { RadiologyConstants.GP_DICOM_UID_ORG_ROOT, true });
+    }
+    
+    /**
+    * @see RadiologyProperties#getReportTemplateHome()
+    * @verifies create a directory under the openmrs application data directory if GP value is relative
+    */
+    @Test
+    public void getReportTemplateHome_shouldCreateADirectoryUnderTheOpenmrsApplicationDataDirectoryIfGPValueIsRelative()
+            throws Exception {
+        File openmrsApplicationDataDirectory = temporaryFolder.newFolder("openmrs_home");
+        OpenmrsUtil.setApplicationDataDirectory(openmrsApplicationDataDirectory.getAbsolutePath());
+        administrationService.setGlobalProperty(RadiologyConstants.GP_MRRT_REPORT_TEMPLATE_DIR, "mrrt_templates");
+        File templateHome = radiologyProperties.getReportTemplateHome();
+        
+        assertNotNull(templateHome);
+        assertThat(templateHome.exists(), is(true));
+        assertThat(templateHome.getParentFile()
+                .getName(),
+            is(openmrsApplicationDataDirectory.getName()));
+    }
+    
+    /**
+    * @see RadiologyProperties#getReportTemplateHome()
+    * @verifies creates a directory at GP value if it is an absolute path
+    */
+    @Test
+    public void getReportTemplateHome_shouldCreatesADirectoryAtGPValueIfItIsAnAbsolutePath() throws Exception {
+        File tempFolder = temporaryFolder.newFolder("/mrrt_templates");
+        administrationService.setGlobalProperty(RadiologyConstants.GP_MRRT_REPORT_TEMPLATE_DIR,
+            tempFolder.getAbsolutePath());
+        File templateHome = radiologyProperties.getReportTemplateHome();
+        assertNotNull(templateHome);
+        assertThat(templateHome.exists(), is(true));
+        assertThat(templateHome.getName(), is(tempFolder.getName()));
+        assertThat(templateHome.isAbsolute(), is(true));
+    }
+    
+    /**
+    * @see RadiologyProperties#getReportTemplateHome()
+    * @verifies throw illegal state exception if global property cannot be found
+    */
+    @Test
+    public void getReportTemplateHome_shouldThrowIllegalStateExceptionIfGlobalPropertyCannotBeFound() throws Exception {
+        expectedException.expect(IllegalStateException.class);
+        ;
+        radiologyProperties.getReportTemplateHome();
     }
 }
