@@ -23,7 +23,6 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -480,27 +479,37 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, Date, String)
-     * @verifies should throw illegal argument exception if radiology order is not active
+     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
+     * @verifies throw illegal argument exception if radiology order is discontinued
      */
     @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsNotActive() throws Exception {
+    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsDiscontinued()
+            throws Exception {
         
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
-        radiologyOrder.setAction(Order.Action.DISCONTINUE);
+        radiologyOrder.getStudy()
+                .setPerformedStatus(null);
         String discontinueReason = "Wrong Procedure";
         
+        Order discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrder,
+            radiologyOrder.getOrderer(), discontinueReason);
+        
+        assertNotNull(discontinuationOrder);
+        assertThat(discontinuationOrder.getAction(), is(Order.Action.DISCONTINUE));
+        
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("order is not active");
-        radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueReason);
+        expectedException.expectMessage("radiologyOrder is already discontinued");
+        radiologyOrderService.discontinueRadiologyOrder((RadiologyOrder) discontinuationOrder.getPreviousOrder(),
+            radiologyOrder.getOrderer(), discontinueReason);
     }
     
     /**
      * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
-     * @verifies throw illegal argument exception if radiology order is completed
+     * @verifies throw illegal argument exception if radiology order is in progress
      */
     @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsCompleted() throws Exception {
+    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsInProgress()
+            throws Exception {
         
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
         radiologyOrder.getStudy()
@@ -514,11 +523,10 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
-     * @verifies throw illegal argument exception if radiology order is in progress
+     * @verifies throw illegal argument exception if radiology order is completed
      */
     @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsInProgress()
-            throws Exception {
+    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfRadiologyOrderIsCompleted() throws Exception {
         
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
         radiologyOrder.getStudy()

@@ -30,8 +30,10 @@
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<openMRSVersion>1.11.4</openMRSVersion>
+		<javaCompilerVersion>1.8</javaCompilerVersion>
+		<openMRSVersion>2.0.0-SNAPSHOT</openMRSVersion>
 		<emr-apiVersion>1.13</emr-apiVersion>
+		<openmrs-legacyui-version>0.3</openmrs-legacyui-version>
 		<maven-formatter-plugin-version>1.6.0</maven-formatter-plugin-version>
 		<maven-formatter-plugin-style-java>${project.parent.basedir}/tools/formatter/java.xml</maven-formatter-plugin-style-java>
 		<maven-formatter-plugin-style-javascript>${project.parent.basedir}/tools/formatter/javascript.xml</maven-formatter-plugin-style-javascript>
@@ -92,32 +94,38 @@
 		</dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
-			<artifactId>emrapi-api-1.11</artifactId>
+			<artifactId>emrapi-api-1.12</artifactId>
 			<version>${emr-apiVersion}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>reporting-api</artifactId>
-			<version>0.9.9</version>
-			<scope>provided</scope>
+			<version>0.10.0</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>calculation-api</artifactId>
 			<version>1.1</version>
-			<scope>provided</scope>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
-			<artifactId>serialization.xstream-api</artifactId>
-			<version>0.2.10</version>
-			<scope>provided</scope>
+			<artifactId>serialization.xstream-api-2.0</artifactId>
+			<version>0.2.11</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
 			<artifactId>providermanagement-api</artifactId>
 			<version>2.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>reportingcompatibility-api</artifactId>
+			<version>2.0.0-SNAPSHOT</version>
 			<scope>provided</scope>
 		</dependency>
 	</dependencies>
@@ -128,8 +136,8 @@
 					<groupId>org.apache.maven.plugins</groupId>
 					<artifactId>maven-compiler-plugin</artifactId>
 					<configuration>
-						<target>1.6</target>
-						<source>1.6</source>
+						<target>${javaCompilerVersion}</target>
+						<source>${javaCompilerVersion}</source>
 					</configuration>
 				</plugin>
 				<plugin>

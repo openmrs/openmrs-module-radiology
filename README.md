@@ -50,7 +50,8 @@ This module is not yet officially released to the [openmrs modules](https://modu
 
 The API and UI are not yet stable and subject to frequent changes.
 
-The module currently only works with OpenMRS Version 1.11.4
+The module depends on [OpenMRS Version 2.0](https://github.com/openmrs/openmrs-core) and
+[OpenMRS Legacy UI](https://github.com/openmrs/openmrs-module-legacyui) which have not yet been officially released.
 
 ## Community
 

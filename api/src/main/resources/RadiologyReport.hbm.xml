@@ -14,9 +14,9 @@
 			unique="true" not-null="true" />
 		<property name="reportStatus" column="report_status"
 			not-null="true">
-			<type name="org.openmrs.util.HibernateEnumType">
-				<param name="enumClassName">org.openmrs.module.radiology.report.RadiologyReportStatus</param>
-				<param name="useNamed">true</param>
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">org.openmrs.module.radiology.report.RadiologyReportStatus</param>
+				<param name="type">12</param>
 			</type>
 		</property>
 		<many-to-one name="principalResultsInterpreter" column="principal_results_interpreter"

@@ -103,13 +103,13 @@ public class RadiologyOrder extends TestOrder {
      * Returns true when this RadiologyOrder can be discontinued and false otherwise.
      * 
      * @return true if radiology order can be discontinued and false otherwise
-     * @should return false if order is not active
+     * @should return false if radiology order is discontinued right now
      * @should return false if radiology order is in progress
      * @should return false if radiology order is completed
-     * @should return true if radiology order is active not in progress and not completed
+     * @should return true if radiology order is not discontinued right now and not in progress and not completed
      */
     public boolean isDiscontinuationAllowed() {
         
-        return this.isActive() && this.isNotInProgress() && this.isNotCompleted();
+        return !this.isDiscontinuedRightNow() && this.isNotInProgress() && this.isNotCompleted();
     }
 }

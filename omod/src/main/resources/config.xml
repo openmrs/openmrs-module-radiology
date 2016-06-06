@@ -17,11 +17,13 @@
 	<activator>${project.parent.groupId}.${project.parent.artifactId}.RadiologyActivator
 	</activator>
 
-	<require_version>1.11.4</require_version>
+	<require_version>2.0.0</require_version>
 	<require_database_version>1.0.0</require_database_version>
 	<!-- Required Modules -->
 	<require_modules>
 		<require_module version="${emr-apiVersion}">org.openmrs.module.emrapi
+		</require_module>
+		<require_module version="${openmrs-legacyui-version}">org.openmrs.module.legacyui
 		</require_module>
 	</require_modules>
 	<!-- / Required Modules -->

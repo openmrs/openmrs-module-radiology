@@ -25,6 +25,13 @@
 		</dependency>
 
 		<dependency>
+			<groupId>org.openmrs.module</groupId>
+			<artifactId>legacyui-omod</artifactId>
+			<version>${openmrs-legacyui-version}</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
 			<groupId>org.openmrs.api</groupId>
 			<artifactId>openmrs-api</artifactId>
 			<type>jar</type>
@@ -53,7 +60,6 @@
 			<artifactId>openmrs-test</artifactId>
 			<type>pom</type>
 		</dependency>
-
 	</dependencies>
 
 	<build>

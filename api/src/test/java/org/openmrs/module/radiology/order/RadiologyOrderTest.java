@@ -14,6 +14,11 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+
 import org.junit.Test;
 import org.openmrs.Order;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
@@ -236,16 +241,29 @@ public class RadiologyOrderTest {
     
     /**
      * @see RadiologyOrder#isDiscontinuationAllowed()
-     * @verifies return false if order is not active
+     * @verifies return false if radiology order is discontinued right now
      */
     @Test
-    public void isDiscontinuationAllowed_shouldReturnFalseIfOrderIsNotActive() throws Exception {
+    public void isDiscontinuationAllowed_shouldReturnFalseIfRadiologyOrderIsDiscontinuedRightNow() throws Exception {
+        
+        // fake a discontinued RadiologyOrder by setting its stoppedDate
+        Field dateStoppedField = Order.class.getDeclaredField("dateStopped");
+        dateStoppedField.setAccessible(true);
         
         RadiologyOrder radiologyOrder = new RadiologyOrder();
-        RadiologyStudy study = new RadiologyStudy();
-        study.setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
-        radiologyOrder.setStudy(study);
-        radiologyOrder.setAction(Order.Action.DISCONTINUE);
+        radiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
+        radiologyOrder.setDateActivated(Date.from(LocalDateTime.now()
+                .minusMonths(3)
+                .atZone(ZoneId.systemDefault())
+                .toInstant()));
+        radiologyOrder.setScheduledDate(Date.from(LocalDateTime.now()
+                .minusMonths(2)
+                .atZone(ZoneId.systemDefault())
+                .toInstant()));
+        dateStoppedField.set(radiologyOrder, Date.from(LocalDateTime.now()
+                .minusMonths(1)
+                .atZone(ZoneId.systemDefault())
+                .toInstant()));
         
         assertFalse(radiologyOrder.isDiscontinuationAllowed());
     }
@@ -282,14 +300,19 @@ public class RadiologyOrderTest {
     
     /**
      * @see RadiologyOrder#isDiscontinuationAllowed()
-     * @verifies return true if radiology order is active not in progress and not completed
+     * @verifies return true if radiology order is not discontinued right now not in progress and not completed
      */
     @Test
-    public void isDiscontinuationAllowed_shouldReturnTrueIfRadiologyOrderIsActiveNotInProgressAndNotCompleted()
-            throws Exception {
+    public void
+            isDiscontinuationAllowed_shouldReturnTrueIfRadiologyOrderIsNotDiscontinuedRightNowAndNotInProgressAndNotCompleted()
+                    throws Exception {
         
         RadiologyOrder radiologyOrder = new RadiologyOrder();
-        radiologyOrder.setStudy(null);
+        radiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
+        radiologyOrder.setScheduledDate(Date.from(LocalDateTime.now()
+                .plusMonths(2)
+                .atZone(ZoneId.systemDefault())
+                .toInstant()));
         
         assertTrue(radiologyOrder.isDiscontinuationAllowed());
     }

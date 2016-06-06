@@ -140,8 +140,8 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
             throw new IllegalArgumentException("orderId is null");
         }
         
-        if (!radiologyOrderToDiscontinue.isActive()) {
-            throw new IllegalArgumentException("order is not active");
+        if (radiologyOrderToDiscontinue.isDiscontinuedRightNow()) {
+            throw new IllegalArgumentException("radiologyOrder is already discontinued");
         }
         
         if (radiologyOrderToDiscontinue.isInProgress()) {

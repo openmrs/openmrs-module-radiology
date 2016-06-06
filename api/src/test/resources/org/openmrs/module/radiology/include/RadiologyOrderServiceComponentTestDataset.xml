@@ -8,7 +8,7 @@
     graphic logo is a trademark of OpenMRS Inc.
 -->
 <dataset>
-  <patient_identifier_type patient_identifier_type_id="1" name="Test Identifier Type" description="Test description" check_digit="false" creator="1" date_created="2015-01-01 00:00:00.0" required="false" retired="false" uuid="0cbecb62-7249-4f91-8edf-d0206ecceb63"/>
+  <patient_identifier_type patient_identifier_type_id="1" name="Test Identifier Type" description="Test description" creator="1" date_created="2015-01-01 00:00:00.0" required="false" retired="false" uuid="0cbecb62-7249-4f91-8edf-d0206ecceb63"/>
 
   <location location_id="1" name="Radiology Department" creator="1" date_created="2015-01-01 00:00:00.0" retired="false" uuid="c36006e5-9fbb-4f20-866b-0ece245615a1"/>
 
