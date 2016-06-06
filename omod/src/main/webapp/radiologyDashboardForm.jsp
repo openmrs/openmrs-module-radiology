@@ -48,6 +48,10 @@
       <li><a id="radiologyReportsTab" href="#radiologyReports"><openmrs:message
             code="radiology.dashboard.tabs.reports" /></a></li>
     </openmrs:hasPrivilege>
+    <openmrs:hasPrivilege privilege="View Radiology Report Templates">
+      <li><a id="radiologyReportTemplatesTab" href="#radiologyReportTemplates"><openmrs:message
+            code="radiology.dashboard.tabs.reportTemplates" /></a></li>
+    </openmrs:hasPrivilege>
   </ul>
   <openmrs:hasPrivilege privilege="View Orders">
     <div id="radiologyOrders">
@@ -57,6 +61,11 @@
   <openmrs:hasPrivilege privilege="Get Radiology Reports">
     <div id="radiologyReports">
       <openmrs:portlet url="radiologyReportsTab" id="reportsTab" moduleId="radiology" />
+    </div>
+  </openmrs:hasPrivilege>
+  <openmrs:hasPrivilege privilege="View Radiology Report Templates">
+    <div id="radiologyReportTemplates">
+      <openmrs:portlet url="radiologyReportTemplatesTab" id="reportTemplatesTab" moduleId="radiology" />
     </div>
   </openmrs:hasPrivilege>
 </div>
