@@ -9,7 +9,6 @@ import org.apache.commons.logging.LogFactory;
 import org.openmrs.Provider;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.order.RadiologyOrder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 class RadiologyReportServiceImpl extends BaseOpenmrsService implements RadiologyReportService {
@@ -17,8 +16,11 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     
     private static final Log log = LogFactory.getLog(RadiologyReportServiceImpl.class);
     
-    @Autowired
     private RadiologyReportDAO radiologyReportDAO;
+    
+    public void setRadiologyReportDAO(RadiologyReportDAO radiologyReportDAO) {
+        this.radiologyReportDAO = radiologyReportDAO;
+    }
     
     /**
      * @see RadiologyReportService#createAndClaimRadiologyReport(RadiologyOrder)

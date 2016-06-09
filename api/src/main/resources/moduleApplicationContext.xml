@@ -22,6 +22,19 @@
 		</property>
 		<property name="target">
 			<bean class="org.openmrs.module.radiology.order.RadiologyOrderServiceImpl">
+				<property name="radiologyOrderDAO">
+					<bean
+						class="org.openmrs.module.radiology.order.HibernateRadiologyOrderDAO">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="radiologyStudyService" ref="radiologyStudyService"></property>
+				<property name="orderService" ref="orderService"></property>
+				<property name="encounterService" ref="encounterService"></property>
+				<property name="emrEncounterService" ref="emrEncounterService"></property>
+				<property name="radiologyProperties" ref="radiologyProperties"></property>
 			</bean>
 		</property>
 		<property name="preInterceptors">
@@ -32,9 +45,9 @@
 		</property>
 	</bean>
 
-	<!-- IMPORTANT NOTE: be careful when using formatter on this file. Ensure
-		that there are no line breaks/spaces in between the <value> this will prevent
-		spring from adding these services to the serviceContext since the line breaks/spaces
+	<!-- IMPORTANT NOTE: be careful when using formatter on this file. Ensure 
+		that there are no line breaks/spaces in between the <value> this will prevent 
+		spring from adding these services to the serviceContext since the line breaks/spaces 
 		will be part of the class name -->
 	<bean parent="serviceContext">
 		<property name="moduleService">
@@ -52,6 +65,15 @@
 		</property>
 		<property name="target">
 			<bean class="org.openmrs.module.radiology.study.RadiologyStudyServiceImpl">
+				<property name="radiologyStudyDAO">
+					<bean
+						class="org.openmrs.module.radiology.study.HibernateRadiologyStudyDAO">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
+					</bean>
+				</property>
+				<property name="radiologyProperties" ref="radiologyProperties"></property>
 			</bean>
 		</property>
 		<property name="preInterceptors">
@@ -79,6 +101,14 @@
 		<property name="target">
 			<bean
 				class="org.openmrs.module.radiology.report.RadiologyReportServiceImpl">
+				<property name="radiologyReportDAO">
+					<bean
+						class="org.openmrs.module.radiology.report.HibernateRadiologyReportDAO">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
+					</bean>
+				</property>
 			</bean>
 		</property>
 		<property name="preInterceptors">

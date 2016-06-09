@@ -15,8 +15,6 @@ import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.radiology.order.RadiologyOrder;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Repository;
 
 /**
  * Hibernate specific RadiologyStudy related functions. This class should not be used directly. All calls
@@ -25,11 +23,9 @@ import org.springframework.stereotype.Repository;
  * @see org.openmrs.module.radiology.study.RadiologyStudyDAO
  * @see org.openmrs.module.radiology.study.RadiologyStudyService
  */
-@Repository
 class HibernateRadiologyStudyDAO implements RadiologyStudyDAO {
     
     
-    @Autowired
     private SessionFactory sessionFactory;
     
     /**
