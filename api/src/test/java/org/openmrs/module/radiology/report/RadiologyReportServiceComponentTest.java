@@ -501,8 +501,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     * @verifies fetch RadiologyReport matching given radiologyReportUuid
     */
     @Test
-    public void getRadiologyReportByUuid_shouldFetchRadiologyReportMatchingGivenRadiologyReportUuid()
-            throws Exception {
+    public void getRadiologyReportByUuid_shouldFetchRadiologyReportMatchingGivenRadiologyReportUuid() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReportByUuid(EXISTING_RADIOLOGY_REPORT_UUID);
         assertThat(radiologyReport.getUuid(), is(EXISTING_RADIOLOGY_REPORT_UUID));
@@ -513,8 +512,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     * @verifies throw IllegalArgumentException if radiologyReportUuid is null
     */
     @Test
-    public void getRadiologyReportByUuid_shouldThrowIllegalArgumentExceptionIfRadiologyReportUuidIsNull()
-            throws Exception {
+    public void getRadiologyReportByUuid_shouldThrowIllegalArgumentExceptionIfRadiologyReportUuidIsNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReportUuid cannot be null");
@@ -526,8 +524,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     * @verifies return null if no radiologyReport found with given uuid
     */
     @Test
-    public void getRadiologyReportByUuid_shouldReturnNullIfNoRadiologyReportFoundWithGivenUuid()
-            throws Exception {
+    public void getRadiologyReportByUuid_shouldReturnNullIfNoRadiologyReportFoundWithGivenUuid() throws Exception {
         
         RadiologyReport radiologyReport =
                 radiologyReportService.getRadiologyReportByUuid(NON_EXISTING_RADIOLOGY_REPORT_UUID);

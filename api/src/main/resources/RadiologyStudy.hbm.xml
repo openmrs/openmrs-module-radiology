@@ -16,20 +16,23 @@
 			unique="true" not-null="true" />
 		<property name="scheduledStatus" column="scheduled_status"
 			length="9">
-			<type name="org.openmrs.util.HibernateEnumType">
-				<param name="enumClassName">org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus</param>
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus</param>
+				<param name="type">12</param>
 			</type>
 		</property>
 		<property name="performedStatus" column="performed_status"
 			length="12">
-			<type name="org.openmrs.util.HibernateEnumType">
-				<param name="enumClassName">org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus</param>
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus</param>
+				<param name="type">12</param>
 			</type>
 		</property>
 		<property name="modality" column="modality" length="16"
 			not-null="true">
-			<type name="org.openmrs.util.HibernateEnumType">
-				<param name="enumClassName">org.openmrs.module.radiology.Modality</param>
+			<type name="org.hibernate.type.EnumType">
+				<param name="enumClass">org.openmrs.module.radiology.Modality</param>
+				<param name="type">12</param>
 			</type>
 		</property>
 	</class>
