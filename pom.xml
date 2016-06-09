@@ -34,6 +34,7 @@
 		<openMRSVersion>2.0.0-SNAPSHOT</openMRSVersion>
 		<emr-apiVersion>1.13</emr-apiVersion>
 		<openmrs-legacyui-version>0.3</openmrs-legacyui-version>
+		<openmrs-webservicesrest-version>2.14</openmrs-webservicesrest-version>
 		<maven-formatter-plugin-version>1.6.0</maven-formatter-plugin-version>
 		<maven-formatter-plugin-style-java>${project.parent.basedir}/tools/formatter/java.xml</maven-formatter-plugin-style-java>
 		<maven-formatter-plugin-style-javascript>${project.parent.basedir}/tools/formatter/javascript.xml</maven-formatter-plugin-style-javascript>

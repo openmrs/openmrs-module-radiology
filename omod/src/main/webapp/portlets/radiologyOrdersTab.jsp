@@ -1,23 +1,122 @@
-<%@ include file="/WEB-INF/template/include.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/template/include.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/template/includeDatatablesWithDefaults.jsp"%>
+<openmrs:htmlInclude file="/moduleResources/radiology/scripts/moment/moment-with-locales.min.js" />
 
-<openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
-<openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui-1.7.2.custom.min.js" />
-<openmrs:htmlInclude file="/moduleResources/radiology/js/datatables/jquery.dataTables.min.js" />
-
-<%-- we cannot replace following script and include combination with openmrs:htmlinclude because we need the jsp compiler to resolve the spring message tags in the radiologyOrderList.js  --%>
 <script type="text/javascript">
-  
-<%@ include file="/WEB-INF/view/module/radiology/resources/js/radiologyOrderList.js" %>
-  
+  // configure current locale as momentjs default, fall back to "en" if locale not found
+  moment.locale([jsLocale, 'en']);
+
+  var $j = jQuery.noConflict();
+  $j(document)
+          .ready(
+                  function() {
+                    var patientUuid = $j('#patientUuid');
+                    var find = $j('#findButton');
+                    var clearResults = $j('a#clearResults');
+
+                    var radiologyOrdersTable = $j('#radiologyOrdersTable')
+                            .DataTable(
+                                    {
+                                      "processing": true,
+                                      "serverSide": true,
+                                      "ajax": {
+                                        headers: {
+                                          Accept: "application/json; charset=utf-8",
+                                          "Content-Type": "text/plain; charset=utf-8",
+                                        },
+                                        cache: true,
+                                        dataType: "json",
+                                        url: "${pageContext.request.contextPath}/ws/rest/v1/radiologyorder/",
+                                        data: function(data) {
+                                          return {
+                                            startIndex: data.start,
+                                            limit: data.length,
+                                            v: "full",
+                                            patient: patientUuid.val(),
+                                          };
+                                        },
+                                        "dataSrc": function(json) {
+                                          var result = [];
+                                          for (var i = 0, ien = json.results.length; i < ien; i++) {
+                                            result[i] = [
+                                                '<a href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId='
+                                                        + json.results[i].uuid
+                                                        + '">'
+                                                        + json.results[i].orderNumber
+                                                        + '</a>',
+                                                json.results[i].patient.display,
+                                                json.results[i].urgency,
+                                                json.results[i].concept.display,
+                                                json.results[i].orderer.display,
+                                                json.results[i].scheduledDate,
+                                                json.results[i].dateActivated, ]
+                                          }
+                                          return result;
+                                        }
+                                      },
+                                      "columns": [
+                                          {
+                                            "name": "orderNumber",
+                                          },
+                                          {
+                                            "name": "patient",
+                                          },
+                                          {
+                                            "name": "urgency",
+                                          },
+                                          {
+                                            "name": "concept",
+                                          },
+                                          {
+                                            "name": "orderer",
+                                          },
+                                          {
+                                            "name": "scheduledDate",
+                                            "render": function(dateTimeObject) {
+                                              var result = "";
+                                              if (dateTimeObject) {
+
+                                                result = moment(dateTimeObject)
+                                                        .format("LLL");
+                                              }
+                                              return result;
+                                            }
+                                          },
+                                          {
+                                            "name": "dateActivated",
+                                            "render": function(dateTimeObject) {
+                                              var result = "";
+                                              if (dateTimeObject) {
+
+                                                result = moment(dateTimeObject)
+                                                        .format("LLL");
+                                              }
+                                              return result;
+                                            }
+                                          }, ],
+                                    });
+
+                    // prevent form submit when user hits enter
+                    $j(window).keydown(function(event) {
+                      if (event.keyCode == 13) {
+                        event.preventDefault();
+                        return false;
+                      }
+                    });
+
+                    find.on('mouseup keyup', function(event) {
+                      if (event.type == 'keyup' && event.keyCode != 13) return;
+                      radiologyOrdersTable.ajax.reload();
+                    });
+
+                    clearResults.on('mouseup keyup', function() {
+                      $j('table#searchForm input:text').val('');
+                      patientUuid.val('');
+                      radiologyOrdersTable.ajax.reload();
+                    });
+                  });
 </script>
 
-<openmrs:htmlInclude file="/moduleResources/radiology/js/sortNumbers.js" />
-<openmrs:htmlInclude file="/moduleResources/radiology/css/jquery.dataTables.min.css" />
-<openmrs:htmlInclude file="/moduleResources/radiology/css/details-control.dataTables.css" />
-
-<div id="openmrs_msg" name="loading">
-  <spring:message code="general.loading" />
-</div>
 <openmrs:hasPrivilege privilege="Add Radiology Orders">
   <br>
   <a href="radiologyOrder.form"><spring:message code="radiology.addOrder" /></a>
@@ -32,20 +131,27 @@
   <table id="searchForm" cellspacing="10">
     <tr>
       <form id="radiologyOrderListForm">
-        <td><label><spring:message code="radiology.patient" />:</label> <input name="patientQuery" type="text"
-          style="width: 20em" title="<spring:message
-						code="radiology.minChars" />" /></td>
-        <td><label><spring:message code="radiology.startDate" />:</label> <input name="startDate" type="text"
-          onclick="showCalendar(this)" /></td>
-        <td><label><spring:message code="radiology.endDate" />:</label> <input name="endDate" type="text"
-          onclick="showCalendar(this)" /></td>
+        <td><label><spring:message code="radiology.patient" /></label> <radiology:patientField formFieldName="patient"
+            formFieldId="patientUuid" /></td>
         <td><input id="findButton" type="button" value="<spring:message code="radiology.find"/>" /></td>
-        <td id="errorSpan"></td>
       </form>
     </tr>
   </table>
   <br>
-  <div id="results"></div>
-
+  <div id="results">
+    <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
+      <thead>
+        <tr>
+          <th><spring:message code="radiology.datatables.column.orderNumber" /></th>
+          <th><spring:message code="radiology.datatables.column.patient" /></th>
+          <th><spring:message code="radiology.datatables.column.priority" /></th>
+          <th><spring:message code="radiology.datatables.column.imagingProcedure" /></th>
+          <th><spring:message code="radiology.datatables.column.referringPhysician" /></th>
+          <th><spring:message code="radiology.datatables.column.scheduledDate" /></th>
+          <th><spring:message code="radiology.datatables.column.dateActivated" /></th>
+        </tr>
+      </thead>
+    </table>
+  </div>
 </div>
 <br />

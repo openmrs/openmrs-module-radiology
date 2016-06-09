@@ -1,6 +1,5 @@
 <openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
 <openmrs:htmlInclude file="/scripts/timepicker/timepicker.js" />
-<openmrs:htmlInclude file="/moduleResources/radiology/js/moreInfo.js" />
 <script type="text/javascript">
   function onQuestionSelect(concept) {
     $j("#conceptDescription").show();
@@ -26,7 +25,6 @@
         <td><spring:message code="Order.patient" /></td>
         <td><spring:bind path="patient">
             <openmrs:fieldGen type="org.openmrs.Patient" formFieldName="${status.expression}" val="${status.editor.value}" />
-            <a style="cursor: pointer;" id="moreInfo"><spring:message code="radiology.moreInfo" /></a>
             <c:if test="${status.errorMessage != ''}">
               <span class="error">${status.errorMessage}</span>
             </c:if>

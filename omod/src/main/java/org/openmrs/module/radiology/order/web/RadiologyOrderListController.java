@@ -20,7 +20,7 @@ public class RadiologyOrderListController {
     
     public static final String RADIOLOGY_ORDER_LIST_REQUEST_MAPPING = "/module/radiology/radiologyOrder.list";
     
-    private static final String RADIOLOGY_ORDER_LIST_VIEW = "/module/radiology/radiologyOrderList";
+    private static final String RADIOLOGY_ORDER_LIST_VIEW = "/module/radiology/orders/radiologyOrderList";
     
     @RequestMapping(method = RequestMethod.GET)
     public ModelAndView handleRequest() {

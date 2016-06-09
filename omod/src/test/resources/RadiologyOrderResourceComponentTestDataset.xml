@@ -1,0 +1,118 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<!--
+    This Source Code Form is subject to the terms of the Mozilla Public License,
+    v. 2.0. If a copy of the MPL was not distributed with this file, You can
+    obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
+    the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+    Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
+    graphic logo is a trademark of OpenMRS Inc.
+-->
+<dataset>
+  <patient_identifier_type patient_identifier_type_id="1" name="Test Identifier Type" description="Test description" creator="1" date_created="2015-01-01 00:00:00.0" required="false" retired="false" uuid="0cbecb62-7249-4f91-8edf-d0206ecceb63"/>
+
+  <location location_id="1" name="Radiology Department" creator="1" date_created="2015-01-01 00:00:00.0" retired="false" uuid="c36006e5-9fbb-4f20-866b-0ece245615a1"/>
+
+  <!-- define the metadata for the Radiology Module -->
+  <global_property property="radiology.dicomUIDOrgRoot" property_value="1.2.826.0.1.3680043.8.2186" description="DICOM UID org root component" uuid="498e94f1-ebea-4bff-bd39-0e4e3168d239"/>
+  <global_property property="radiology.dicomUIDApplication" property_value="1" description="DICOM UID application component" uuid="5d3962e1-eb27-49de-921b-01213ede5c73"/>
+  <global_property property="radiology.dicomUIDTypeStudy" property_value="1" description="DICOM UID type study component" uuid="2adfb98b-9b2f-41c0-ae5b-22f84eee8dfb"/>
+  <global_property property="radiology.radiologyCareSetting" property_value="6f0c9a92-6f24-11e3-af88-005056821db0" uuid="a3209d7c-ae4c-41a4-96de-876facd77226"/> <!--  set to uuid from CareSetting OUTPATIENT in openmrs core -->
+  <global_property property="radiology.radiologyOrderingProviderEncounterRole" property_value="13fc9b4a-49ed-429c-9dde-ca005b387a3d" description="Radiology Ordering Provider Encounter Role UUID"/>
+  <global_property property="radiology.radiologyOrderEncounterType" property_value="19db8c0d-3520-48f2-babd-77f2d450e5c7" description="Radiology Order Encounter Type UUID"/>
+  <global_property property="radiology.radiologyVisitType" property_value="fe898a34-1ade-11e1-9c71-00248140a5eb" description="Radiology Visit Type UUID"/>
+  <global_property property="radiology.radiologyTestOrderType" property_value="dbdb9a9b-56ea-11e5-a47f-08002719a237" description="Radiology Test Order Type UUID"/>
+  <global_property property="emr.encounterMatcher" property_value="org.openmrs.module.radiology.RadiologyEncounterMatcher" description="Radiology Encounter Matcher"/>
+
+  <encounter_type encounter_type_id="1001" name="Radiology Order Encounter Type" description="Ordering radiology exams" creator="1" date_created="2015-09-09 00:00:00.0" retired="false" uuid="19db8c0d-3520-48f2-babd-77f2d450e5c7"/>
+  <encounter_role encounter_role_id="1001" name="Radiology Ordering Provider Encounter Role " description="Provider ordering tests, exams, drugs, ..." creator="1" retired="false" date_created="2015-09-09 14:00:00.0" uuid="13fc9b4a-49ed-429c-9dde-ca005b387a3d" />
+
+    <!-- Provider for Radiology Orders -->
+  <provider provider_id="1" name="Radiology Technician" identifier="1" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="c2299800-cca9-11e0-9572-0800200c9a66" />
+
+  <!-- concept name and concept -->
+  <concept concept_id="178" retired="false" datatype_id="4" class_id="4" is_set="false" creator="1" date_created="2004-01-01 00:00:00" changed_by="1" date_changed="2005-02-16 00:00:00" version="" uuid="1565b6e6-df81-11e4-98ec-08002798a7ad"/>
+  <concept_name concept_id="178" name="FRACTURE" locale="en" creator="1" date_created="2004-01-01 00:00:00" concept_name_id="178" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="15736c16-df81-11e4-98ec-08002798a7ad"/>
+
+  <!-- visit type for radiology module -->
+  <visit_type visit_type_id="3" name="Radiology Order Visit" description="Visit type for radiology orders" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="fe898a34-1ade-11e1-9c71-00248140a5eb"/>
+
+  <!-- radiology order type -->
+  <order_type order_type_id="5" name="Radiology Order" java_class_name="org.openmrs.module.radiology.order.RadiologyOrder" description="Order type for radiology exams" creator="1" date_created="2015-09-09" retired="0" uuid="dbdb9a9b-56ea-11e5-a47f-08002719a237"/>
+
+  <!-- patient, radiology order, radiology study, radiology report data -->
+
+  <!-- patient without any orders/radiology studies -->
+  <person person_id="70010" gender="F" birthdate="1982-03-14" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <person_name person_name_id="2" preferred="true" person_id="70010" given_name="Alberta" family_name="Denada" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="71abaa07-48a7-4104-b458-17233ff4b77c"/>
+  <patient patient_id="70010" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="1" patient_id="70010" identifier="1234" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="1ac98ec8-e9d9-4626-998c-c795c2f0aa9f"/>
+
+  <!-- patient without radiology orders -->
+  <person person_id="70011" gender="F" birthdate="1975-06-07" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="d2c1adbf-d9fa-11e5-90c3-08002719a237" />
+  <person_name person_name_id="2" preferred="true" person_id="70011" given_name="Jane" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="0f1f7d08-076b-4fc6-acac-4bb91515141e"/>
+  <patient patient_id="70011" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="1" patient_id="70011" identifier="1234" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="1ac98ec8-e9d9-4626-998c-c795c2f0aa9f"/>
+
+  <!-- patient with two radiology studies -->
+  <person person_id="70021" uuid="5631b434-78aa-102b-91a0-001e378eb67e" gender="M" birthdate="1950-04-01" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <person_name person_name_id="2" preferred="true" person_id="70021" given_name="John" middle_name="Francis" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="0f1f7d08-076b-4fc6-acac-4bb91515141e"/>
+  <patient patient_id="70021" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="1" patient_id="70021" identifier="4321" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="1ac98ec8-e9d9-4626-998c-c795c2f0aa9f"/>
+  
+  <!-- patient with no radiology order and visits -->
+  <person person_id="70044" gender="M" birthdate="1983-04-13" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid=""/>
+  <person_name person_name_id="3" preferred="true" person_id="70044" given_name="Peter" family_name="Peterson" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="f58d1689-f5ac-11e5-b84b-08002719a237" />
+  <patient patient_id="70044" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="4" patient_id="70044" identifier="1237" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="fd452850-f5ac-11e5-b84b-08002719a237"/>
+  <visit visit_id="3002" patient_id="70044" visit_type_id="3" date_started="2006-01-01 02:00:00.0" creator="1" date_created="2006-01-02 00:00:00.0" voided="0" uuid="5b7ba73f-f5a3-11e5-b84b-08002719a237" />
+  <visit visit_id="3003" patient_id="70044" visit_type_id="3" date_started="2006-01-01 02:00:00.0" creator="1" date_created="2006-01-02 00:00:00.0" voided="0" uuid="c83e8ef9-f5aa-11e5-b84b-08002719a237" />
+
+  <!-- radiology orders with study -->
+  <encounter encounter_id="2001" encounter_type="1001" patient_id="70021" location_id="1" form_id="1" encounter_datetime="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" uuid="6849c394-2c58-49d9-b928-215a75a90959"/>
+  <orders order_id="2001" order_number="2001" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2001" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70021" />
+  <test_order order_id="2001"/>
+  <radiology_order order_id="2001" />
+  <radiology_study study_id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="CT"/>
+
+  <orders order_id="2002" order_number="2002" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2001" urgency="ROUTINE"  orderer="1" concept_id="178" instructions="MR Left Knee" date_activated="2015-02-02 12:26:35.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-02 12:26:35.0" voided="false" patient_id="70021" />
+  <test_order order_id="2002"/>
+  <radiology_order order_id="2002" />
+  <radiology_study study_id="2" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="MR"/>
+
+  <obs obs_id="20021" person_id="70021" order_id="2002" concept_id="178" obs_datetime="2015-02-06 17:14:00.0" location_id="1" creator="1" date_created="2015-02-06 17:14:35.0" voided="false" uuid="be3a4d7a-f9ab-47bb-aaad-bc0b452fcda4" accession_number="RAD2002"/>
+
+  <!-- patient with one radiology order with no associated study -->
+  <encounter encounter_id="2004" encounter_type="1001" patient_id="70022" location_id="1" form_id="1" encounter_datetime="2015-02-03 13:17:15.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" uuid="05715654-a566-4cb3-921f-2f7067eb119f"/>
+  <patient patient_id="70022" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="3" patient_id="70022" identifier="1236" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="4d529220-9864-4a95-a12c-eb2f81833076"/>
+  <person person_id="70022" gender="M" birthdate="1990-04-13" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <person_name person_name_id="3" preferred="true" person_id="70022" given_name="John" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="6753aaa1-545d-44e2-9a9f-6c682f37a134"/>
+
+  <!-- radiology order with no associated study -->
+  <orders order_id="2004" order_number="2004" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" />
+  <test_order order_id="2004"/>
+  <radiology_order order_id="2004" />
+
+  <!-- patient with no radiology order and no existing encounter and active visit -->
+  <person person_id="70033" gender="M" birthdate="1980-04-13" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="c87f8405-e144-11e5-8df2-08002719a237"/>
+  <person_name person_name_id="3" preferred="true" person_id="70033" given_name="Carl" family_name="Carlington" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="763a591a-e142-11e5-8df2-08002719a237" />
+  <patient patient_id="70033" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="4" patient_id="70033" identifier="1237" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="551cffae-e142-11e5-8df2-08002719a237"/>
+  <visit visit_id="3001" patient_id="70033" visit_type_id="3" date_started="2005-01-01 02:00:00.0" creator="1" date_created="2005-01-01 00:00:00.0" voided="0" uuid="4c48b0c0-1ade-11e1-9c71-00248140a5eb" />
+
+  <!-- patient with radiology order and existing encounter and active visit -->
+  <patient patient_id="70055" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="3" patient_id="70055" identifier="1238" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="6f25e831-fc9e-11e5-9e59-08002719a237"/>
+  <person person_id="70055" gender="M" birthdate="1980-04-13" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="72ff0770-fc9e-11e5-9e59-08002719a237" />
+  <person_name person_name_id="3" preferred="true" person_id="70055" given_name="John" family_name="Cena" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="76dbd350-fc9e-11e5-9e59-08002719a237"/>
+	
+  <encounter encounter_id="2009" encounter_type="1001" patient_id="70055" visit_id="3004" location_id="1" form_id="1" encounter_datetime="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" uuid="18208334-fca0-11e5-9e59-08002719a237"/>
+  <orders order_id="2009" order_number="2009" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2009" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70055" uuid="1bae735a-fca0-11e5-9e59-08002719a237" />
+  <test_order order_id="2009"/>
+  <radiology_order order_id="2009" />
+  <visit visit_id="3004" patient_id="70055" visit_type_id="3" date_started="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="0" uuid="30a57ce7-fca0-11e5-9e59-08002719a237" />
+
+  <!-- encounters for patient 70044 intentionally on bottom of file to ensure visits are in database -->
+  <encounter encounter_id="2005" encounter_type="1001" patient_id="70044" visit_id="3002" location_id="1" form_id="1" encounter_datetime="2006-01-01 12:24:10.0" creator="1" date_created="2006-01-01 12:24:10.0" voided="true" uuid="60db560a-f5a3-11e5-b84b-08002719a237"/>
+  <encounter encounter_id="2006" encounter_type="1001" patient_id="70044"  visit_id="3003" location_id="1" form_id="1" encounter_datetime="2006-02-01 12:24:10.0" creator="1" date_created="2006-02-01 12:24:10.0" voided="false" uuid="7f2dad34-f5a5-11e5-b84b-08002719a237"/>
+</dataset>

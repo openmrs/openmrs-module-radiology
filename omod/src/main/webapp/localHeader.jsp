@@ -18,7 +18,7 @@
           Radiology Order </a></li>
     </c:if>
     <c:if test='<%=request.getRequestURI()
-                            .contains("radiology/radiologyReport")%>'>
+                            .contains("radiologyReport")%>'>
       <li><a
         href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId=${radiologyOrder.orderId}">
           Radiology Order </a></li>

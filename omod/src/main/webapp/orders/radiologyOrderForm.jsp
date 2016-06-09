@@ -1,4 +1,3 @@
-
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
 <openmrs:require
@@ -6,7 +5,7 @@
   otherwise="/login.htm" redirect="/module/radiology/radiologyOrder.form" />
 
 <%@ include file="/WEB-INF/template/header.jsp"%>
-<%@ include file="localHeader.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/localHeader.jsp"%>
 
 <c:choose>
   <c:when test="${not empty radiologyOrder && empty radiologyOrder.orderId}">
@@ -17,7 +16,7 @@
           <openmrs:hasPrivilege privilege="Add Visits">
             <openmrs:hasPrivilege privilege="Edit Encounters">
               <openmrs:hasPrivilege privilege="Edit Visits">
-                <%@ include file="portlets/radiologyOrderCreationPortlet.jsp"%>
+                <%@ include file="radiologyOrderCreationPortlet.jsp"%>
               </openmrs:hasPrivilege>
             </openmrs:hasPrivilege>
           </openmrs:hasPrivilege>
@@ -37,14 +36,14 @@
     <c:choose>
       <c:when test="${not empty radiologyOrder}">
         <!--  Show existing RadiologyOrder -->
-        <%@ include file="portlets/radiologyOrderDisplayPortlet.jsp"%>
+        <%@ include file="radiologyOrderDisplayPortlet.jsp"%>
         <c:if test="${radiologyOrder.completed}">
           <!--  Show form for radiology report -->
           <openmrs:hasPrivilege privilege="Add Radiology Reports">
             <openmrs:hasPrivilege privilege="Delete Radiology Reports">
               <openmrs:hasPrivilege privilege="Edit Radiology Reports">
                 <openmrs:hasPrivilege privilege="Get Radiology Reports">
-                  <%@ include file="portlets/radiologyReportPortlet.jsp"%>
+                  <%@ include file="radiologyReportPortlet.jsp"%>
                 </openmrs:hasPrivilege>
               </openmrs:hasPrivilege>
             </openmrs:hasPrivilege>
@@ -55,18 +54,16 @@
           <!--  Show form to discontinue an active non in progress/completed RadiologyOrder -->
           <openmrs:hasPrivilege privilege="Delete Radiology Orders">
             <openmrs:hasPrivilege privilege="Edit Orders">
-              <%@ include file="portlets/radiologyOrderDiscontinuationPortlet.jsp"%>
+              <%@ include file="radiologyOrderDiscontinuationPortlet.jsp"%>
             </openmrs:hasPrivilege>
           </openmrs:hasPrivilege>
         </c:if>
       </c:when>
       <c:otherwise>
         <!--  Show read-only view of discontinuation Order -->
-        <%@ include file="portlets/discontinuationOrderDisplayPortlet.jsp"%>
+        <%@ include file="discontinuationOrderDisplayPortlet.jsp"%>
       </c:otherwise>
     </c:choose>
   </c:otherwise>
 </c:choose>
-
-<div id="moreInfoPopup"></div>
 <%@ include file="/WEB-INF/template/footer.jsp"%>

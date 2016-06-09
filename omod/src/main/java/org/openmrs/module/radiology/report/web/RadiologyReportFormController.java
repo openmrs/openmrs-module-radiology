@@ -31,7 +31,7 @@ public class RadiologyReportFormController {
     
     protected static final String RADIOLOGY_REPORT_FORM_REQUEST_MAPPING = "/module/radiology/radiologyReport.form";
     
-    private static final String RADIOLOGY_REPORT_FORM_VIEW = "/module/radiology/radiologyReportForm";
+    static final String RADIOLOGY_REPORT_FORM_VIEW = "/module/radiology/reports/radiologyReportForm";
     
     @Autowired
     private RadiologyReportService radiologyReportService;

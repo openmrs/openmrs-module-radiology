@@ -5,9 +5,23 @@ is in the process of migration to Mozilla Public License v2 with Health disclaim
 
 In addition, this product includes software developed by:
 
-========================================================================
-New BSD License
-========================================================================
-This software includes software developed by
-Allan Jardine (www.sprymedia.co.uk)
-* dataTables - path: omod/src/main/webapp/resources/js/jquery.dataTables.min.js
+============================
+datatables.net
+============================
+Author  : Allan Jardine (www.sprymedia.co.uk)
+License : New BSD License
+Version : 1.10.11
+
+============================
+moment.js
+============================
+Authors : Tim Wood, Iskren Chernev, Moment.js contributors
+License : MIT
+Version : 2.13.0
+
+============================
+tinymce.com
+============================
+Authors : see https://github.com/tinymce/tinymce
+License : GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999
+Version : 4.3.8
