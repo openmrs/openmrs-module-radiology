@@ -17,7 +17,6 @@ import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyStudyService {
@@ -25,11 +24,17 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
     
     private static final Log log = LogFactory.getLog(RadiologyStudyServiceImpl.class);
     
-    @Autowired
     private RadiologyStudyDAO radiologyStudyDAO;
     
-    @Autowired
     private RadiologyProperties radiologyProperties;
+    
+    public void setRadiologyStudyDAO(RadiologyStudyDAO radiologyStudyDAO) {
+        this.radiologyStudyDAO = radiologyStudyDAO;
+    }
+    
+    public void setRadiologyProperties(RadiologyProperties radiologyProperties) {
+        this.radiologyProperties = radiologyProperties;
+    }
     
     /**
      * @see RadiologyStudyService#saveStudy(RadiologyStudy)

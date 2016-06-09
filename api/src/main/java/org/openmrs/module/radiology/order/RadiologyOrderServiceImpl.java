@@ -27,7 +27,6 @@ import org.openmrs.module.emrapi.encounter.EmrEncounterService;
 import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.study.RadiologyStudyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyOrderService {
@@ -35,23 +34,41 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     
     private static final Log log = LogFactory.getLog(RadiologyOrderServiceImpl.class);
     
-    @Autowired
     private RadiologyOrderDAO radiologyOrderDAO;
     
-    @Autowired
     private RadiologyStudyService radiologyStudyService;
     
-    @Autowired
     private OrderService orderService;
     
-    @Autowired
     private EncounterService encounterService;
     
-    @Autowired
     private EmrEncounterService emrEncounterService;
     
-    @Autowired
     private RadiologyProperties radiologyProperties;
+    
+    public void setRadiologyOrderDAO(RadiologyOrderDAO radiologyOrderDAO) {
+        this.radiologyOrderDAO = radiologyOrderDAO;
+    }
+    
+    public void setRadiologyStudyService(RadiologyStudyService radiologyStudyService) {
+        this.radiologyStudyService = radiologyStudyService;
+    }
+    
+    public void setOrderService(OrderService orderService) {
+        this.orderService = orderService;
+    }
+    
+    public void setEncounterService(EncounterService encounterService) {
+        this.encounterService = encounterService;
+    }
+    
+    public void setEmrEncounterService(EmrEncounterService emrEncounterService) {
+        this.emrEncounterService = emrEncounterService;
+    }
+    
+    public void setRadiologyProperties(RadiologyProperties radiologyProperties) {
+        this.radiologyProperties = radiologyProperties;
+    }
     
     /**
      * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
