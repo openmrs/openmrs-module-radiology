@@ -5,7 +5,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResourceTest;
 
-public class RadiologyOrderResourceTest extends BaseDelegatingResourceTest<RadiologyOrderResource, RadiologyOrder> {
+public class RadiologyOrderResourceComponentTest extends BaseDelegatingResourceTest<RadiologyOrderResource, RadiologyOrder> {
     
     
     protected static final String TEST_DATASET = "RadiologyOrderResourceComponentTestDataset.xml";

@@ -5,7 +5,7 @@ import org.junit.Test;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest;
 
-public class RadiologyOrderControllerTest extends MainResourceControllerTest {
+public class RadiologyOrderControllerComponentTest extends MainResourceControllerTest {
     
     
     protected static final String TEST_DATASET = "RadiologyOrderResourceComponentTestDataset.xml";
