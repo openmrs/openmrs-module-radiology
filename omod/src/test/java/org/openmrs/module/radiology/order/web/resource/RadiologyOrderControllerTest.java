@@ -8,19 +8,25 @@ import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceContr
 public class RadiologyOrderControllerTest extends MainResourceControllerTest {
     
     
-    protected static final String TEST_DATASET = "RadiologyOrderServiceComponentTestDataset.xml";
+    protected static final String TEST_DATASET = "RadiologyOrderResourceComponentTestDataset.xml";
     
     @Before
     public void before() throws Exception {
         executeDataSet(TEST_DATASET);
     }
     
+    /**
+     * @see org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest#getURI()
+     */
     @Override
     public String getURI() {
         
         return "radiologyorder";
     }
     
+    /**
+     * @see org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest#getUuid()
+     */
     @Override
     public String getUuid() {
         

@@ -8,7 +8,7 @@ import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResou
 public class RadiologyOrderResourceTest extends BaseDelegatingResourceTest<RadiologyOrderResource, RadiologyOrder> {
     
     
-    protected static final String TEST_DATASET = "RadiologyOrderServiceComponentTestDataset.xml";
+    protected static final String TEST_DATASET = "RadiologyOrderResourceComponentTestDataset.xml";
     
     @Before
     public void before() throws Exception {
