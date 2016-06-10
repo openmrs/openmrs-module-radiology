@@ -4,6 +4,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
+import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
 import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
@@ -94,6 +95,21 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
         
         return (RadiologyOrder) Context.getOrderService()
                 .getOrderByUuid(uniqueId);
+    }
+    
+    /**
+     * Display string for {@link RadiologyOrder}
+     * 
+     * @param radiologyOrder
+     * @return ConceptName
+     */
+    @PropertyGetter("display")
+    public String getDisplayString(RadiologyOrder radiologyOrder) {
+        if (radiologyOrder.getConcept() == null)
+            return "[No Concept]";
+        return radiologyOrder.getConcept()
+                .getName()
+                .getName();
     }
     
     /**

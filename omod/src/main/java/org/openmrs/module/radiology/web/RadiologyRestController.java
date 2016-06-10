@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public class RadiologyRestController extends MainResourceController {
     
     
-    public static final String RADIOLOGY_REST_NAMESPACE = "/radiologyrest";
+    public static final String RADIOLOGY_REST_NAMESPACE = "/radiology";
     
     /**
      * @see org.openmrs.module.webservices.rest.web.v1_0.controller.BaseRestController#getNamespace()
