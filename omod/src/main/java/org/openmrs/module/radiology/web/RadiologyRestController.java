@@ -6,7 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
- * Controller for Radiology Rest Services
+ * Controller for Radiology Rest Services.
  */
 @Controller
 @RequestMapping("/rest/" + RestConstants.VERSION_1 + RadiologyRestController.RADIOLOGY_REST_NAMESPACE)

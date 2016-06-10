@@ -2,12 +2,12 @@ package org.openmrs.module.radiology.order.web.resource;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.openmrs.module.radiology.web.RadiologyRestController;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
-import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceController;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest;
 
 /**
- * Tests {@link MainResourceController} with respect to {@link RadiologyOrderResource}.
+ * Tests {@link RadiologyRestController} with respect to {@link RadiologyOrderResource}.
  */
 public class RadiologyOrderControllerComponentTest extends MainResourceControllerTest {
     
