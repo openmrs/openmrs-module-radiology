@@ -105,6 +105,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
      */
     @PropertyGetter("display")
     public String getDisplayString(RadiologyOrder radiologyOrder) {
+        
         if (radiologyOrder.getConcept() == null)
             return "[No Concept]";
         return radiologyOrder.getConcept()
