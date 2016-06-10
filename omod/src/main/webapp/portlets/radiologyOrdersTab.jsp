@@ -15,9 +15,6 @@
 <openmrs:htmlInclude file="/moduleResources/radiology/css/jquery.dataTables.min.css" />
 <openmrs:htmlInclude file="/moduleResources/radiology/css/details-control.dataTables.css" />
 
-<div id="openmrs_msg" name="loading">
-  <spring:message code="general.loading" />
-</div>
 <openmrs:hasPrivilege privilege="Add Radiology Orders">
   <br>
   <a href="radiologyOrder.form"><spring:message code="radiology.addOrder" /></a>
@@ -45,7 +42,24 @@
     </tr>
   </table>
   <br>
-  <div id="results"></div>
+  <div id="results">
+    <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
+      <thead>
+        <tr>
+          <th></th>
+          <th><spring:message code="general.edit" /></th>
+          <th><spring:message code="radiology.patientFullName" /></th>
+          <th><spring:message code="radiology.priority" /></th>
+          <th><spring:message code="radiology.appoinmentDate" /></th>
+          <th><spring:message code="radiology.modality" /></th>
+          <th><spring:message code="radiology.performedStatus" /></th>
+          <th><spring:message code="radiology.referringPhysician" /></th>
+          <th><spring:message code="radiology.scheduledStatus" /></th>
+          <th><spring:message code="general.instructions" /></th>
+        </tr>
+      </thead>
+    </table>
+  </div>
 
 </div>
 <br />
