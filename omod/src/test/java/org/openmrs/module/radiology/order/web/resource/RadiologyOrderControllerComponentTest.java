@@ -3,8 +3,12 @@ package org.openmrs.module.radiology.order.web.resource;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
+import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceController;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest;
 
+/**
+ * Tests {@link MainResourceController} with respect to {@link RadiologyOrderResource}.
+ */
 public class RadiologyOrderControllerComponentTest extends MainResourceControllerTest {
     
     
@@ -16,7 +20,7 @@ public class RadiologyOrderControllerComponentTest extends MainResourceControlle
     }
     
     /**
-     * @see org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest#getURI()
+     * @see MainResourceControllerTest#getURI()
      */
     @Override
     public String getURI() {
@@ -25,7 +29,7 @@ public class RadiologyOrderControllerComponentTest extends MainResourceControlle
     }
     
     /**
-     * @see org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest#getUuid()
+     * @see MainResourceControllerTest#getUuid()
      */
     @Override
     public String getUuid() {
@@ -40,7 +44,7 @@ public class RadiologyOrderControllerComponentTest extends MainResourceControlle
     }
     
     /**
-     * @see org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest#shouldGetAll()
+     * @see MainResourceControllerTest#shouldGetAll()
      */
     @Override
     @Test(expected = ResourceDoesNotSupportOperationException.class)

@@ -5,6 +5,9 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResourceTest;
 
+/**
+ * Tests {@link RadiologyOrderResource}.
+ */
 public class RadiologyOrderResourceComponentTest extends BaseDelegatingResourceTest<RadiologyOrderResource, RadiologyOrder> {
     
     
@@ -15,18 +18,27 @@ public class RadiologyOrderResourceComponentTest extends BaseDelegatingResourceT
         executeDataSet(TEST_DATASET);
     }
     
+    /**
+     * @see BaseDelegatingResourceTest#getDisplayProperty()
+     */
     @Override
     public String getDisplayProperty() {
         
         return "FRACTURE";
     }
     
+    /**
+     * @see BaseDelegatingResourceTest#getUuidProperty()
+     */
     @Override
     public String getUuidProperty() {
         
         return "1bae735a-fca0-11e5-9e59-08002719a237";
     }
     
+    /**
+     * @see BaseDelegatingResourceTest#newObject()
+     */
     @Override
     public RadiologyOrder newObject() {
         
