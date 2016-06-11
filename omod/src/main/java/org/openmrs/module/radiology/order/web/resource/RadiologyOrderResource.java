@@ -93,6 +93,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getByUniqueId(java.lang.String)
+     * @should return radiology order given its uuid
      */
     @Override
     public RadiologyOrder getByUniqueId(String uniqueId) {

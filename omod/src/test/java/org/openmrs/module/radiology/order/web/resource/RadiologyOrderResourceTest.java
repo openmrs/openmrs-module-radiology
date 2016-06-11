@@ -3,13 +3,15 @@ package org.openmrs.module.radiology.order.web.resource;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
+import static org.mockito.Mockito.when;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.openmrs.api.AdministrationService;
-import org.openmrs.module.radiology.report.RadiologyReportService;
+import org.openmrs.api.OrderService;
+import org.openmrs.api.context.Context;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.webservices.rest.web.RestUtil;
 import org.openmrs.module.webservices.rest.web.representation.CustomRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
@@ -27,20 +29,26 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * Tests {@link RadiologyOrderResource}.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest(RestUtil.class)
+@PrepareForTest({ Context.class, RestUtil.class })
 public class RadiologyOrderResourceTest {
     
     
-    @Mock
-    private RadiologyReportService radiologyReportService;
+    private static final String RADIOLOGY_ORDER_UUID = "1bae735a-fca0-11e5-9e59-08002719a237";
     
     @Mock
-    private AdministrationService administrationService;
+    OrderService orderService;
     
     @Before
     public void before() throws Exception {
         
         PowerMockito.mockStatic(RestUtil.class);
+        
+        PowerMockito.mockStatic(Context.class);
+        RadiologyOrder radiologyOrder = new RadiologyOrder();
+        radiologyOrder.setUuid(RADIOLOGY_ORDER_UUID);
+        when(Context.getOrderService()).thenReturn(orderService);
+        when(Context.getOrderService()
+                .getOrderByUuid(RADIOLOGY_ORDER_UUID)).thenReturn(radiologyOrder);
     }
     
     /**
@@ -106,5 +114,16 @@ public class RadiologyOrderResourceTest {
         
         RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         assertThat(radiologyOrderResource.getResourceVersion(), is(RestConstants2_0.RESOURCE_VERSION));
+    }
+    
+    /**
+     * @see RadiologyOrderResource#getByUniqueId(String)
+     * @verifies return radiology order given its uuid
+     */
+    @Test
+    public void getByUniqueId_shouldReturnRadiologyOrderGivenItsUuid() throws Exception {
+        
+        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
+        radiologyOrderResource.getByUniqueId(RADIOLOGY_ORDER_UUID);
     }
 }
