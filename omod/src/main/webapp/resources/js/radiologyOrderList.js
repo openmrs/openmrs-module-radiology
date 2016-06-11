@@ -3,11 +3,7 @@ $j(document)
         .ready(
                 function() {
                   pQuery = $j('input[name="patientQuery"]');
-                  loading = $j('div#openmrs_msg[name="loading"]');
-                  startDate = $j('input[name="startDate"]');
-                  endDate = $j('input[name="endDate"]');
                   find = $j('#findButton');
-                  results = $j('#results');
                   clearResults = $j('a#clearResults');
 
                   $j('#errorSpan').html('');
@@ -30,7 +26,6 @@ $j(document)
                                           startIndex: data.start,
                                           limit: data.length,
                                           v: "full",
-                                          q: "JUSTFORNOW",
                                           patient: pQuery.val(),
                                         };
                                       },

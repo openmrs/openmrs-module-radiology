@@ -42,12 +42,9 @@
         <td><label><spring:message code="radiology.patient" />:</label> <input name="patientQuery" type="text"
           style="width: 20em" title="<spring:message
 						code="radiology.minChars" />" /></td>
-        <td><label><spring:message code="radiology.startDate" />:</label> <input name="startDate" type="text"
-          onclick="showCalendar(this)" /></td>
-        <td><label><spring:message code="radiology.endDate" />:</label> <input name="endDate" type="text"
-          onclick="showCalendar(this)" /></td>
+        <td><openmrs:fieldGen type="org.openmrs.Patient" formFieldName="patientQuery"
+            val="" /></td>
         <td><input id="findButton" type="button" value="<spring:message code="radiology.find"/>" /></td>
-        <td id="errorSpan"></td>
       </form>
     </tr>
   </table>
