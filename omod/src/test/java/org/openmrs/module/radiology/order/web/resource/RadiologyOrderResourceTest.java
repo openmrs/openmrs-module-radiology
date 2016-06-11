@@ -5,10 +5,17 @@ import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
+import org.openmrs.Concept;
+import org.openmrs.ConceptName;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
@@ -21,6 +28,7 @@ import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs2_0.RestConstants2_0;
+import org.openmrs.util.LocaleUtility;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
@@ -29,7 +37,7 @@ import org.powermock.modules.junit4.PowerMockRunner;
  * Tests {@link RadiologyOrderResource}.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ Context.class, RestUtil.class })
+@PrepareForTest({ Context.class, RestUtil.class, LocaleUtility.class })
 public class RadiologyOrderResourceTest {
     
     
@@ -38,14 +46,23 @@ public class RadiologyOrderResourceTest {
     @Mock
     OrderService orderService;
     
+    RadiologyOrder radiologyOrder = new RadiologyOrder();
+    
+    Locale localeEn = new Locale("en");
+    
     @Before
     public void before() throws Exception {
         
+        radiologyOrder.setUuid(RADIOLOGY_ORDER_UUID);
+        
         PowerMockito.mockStatic(RestUtil.class);
         
+        PowerMockito.mockStatic(LocaleUtility.class);
+        Set<Locale> locales = new HashSet<Locale>();
+        locales.add(localeEn);
+        when(LocaleUtility.getLocalesInOrder()).thenReturn(locales);
+        
         PowerMockito.mockStatic(Context.class);
-        RadiologyOrder radiologyOrder = new RadiologyOrder();
-        radiologyOrder.setUuid(RADIOLOGY_ORDER_UUID);
         when(Context.getOrderService()).thenReturn(orderService);
         when(Context.getOrderService()
                 .getOrderByUuid(RADIOLOGY_ORDER_UUID)).thenReturn(radiologyOrder);
@@ -125,5 +142,37 @@ public class RadiologyOrderResourceTest {
         
         RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         radiologyOrderResource.getByUniqueId(RADIOLOGY_ORDER_UUID);
+    }
+    
+    /**
+     * @see RadiologyOrderResource#getDisplayString(RadiologyOrder)
+     * @verifies return concept name of given radiologyOrder
+     */
+    @Test
+    public void getDisplayString_shouldReturnConceptNameOfGivenRadiologyOrder() throws Exception {
+        
+        ConceptName conceptName = new ConceptName();
+        conceptName.setName("X-RAY, HEAD");
+        conceptName.setLocale(localeEn);
+        Concept concept = new Concept();
+        concept.addName(conceptName);
+        concept.setPreferredName(conceptName);
+        radiologyOrder.setConcept(concept);
+        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
+        
+        assertThat(radiologyOrderResource.getDisplayString(radiologyOrder), is("X-RAY, HEAD"));
+        
+    }
+    
+    /**
+     * @see RadiologyOrderResource#getDisplayString(RadiologyOrder)
+     * @verifies return no concept string if given radiologyOrders concept is null
+     */
+    @Test
+    public void getDisplayString_shouldReturnNoConceptStringIfGivenRadiologyOrdersConceptIsNull() throws Exception {
+        
+        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
+        
+        assertThat(radiologyOrderResource.getDisplayString(radiologyOrder), is("[No Concept]"));
     }
 }

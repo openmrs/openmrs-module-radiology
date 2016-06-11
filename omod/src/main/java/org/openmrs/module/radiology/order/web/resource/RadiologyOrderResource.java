@@ -105,8 +105,10 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     /**
      * Display string for {@link RadiologyOrder}
      * 
-     * @param radiologyOrder
-     * @return ConceptName
+     * @param radiologyOrder RadiologyOrder of which display string shall be returned
+     * @return ConceptName of given radiologyOrder
+     * @should return concept name of given radiologyOrder
+     * @should return no concept string if given radiologyOrders concept is null
      */
     @PropertyGetter("display")
     public String getDisplayString(RadiologyOrder radiologyOrder) {
