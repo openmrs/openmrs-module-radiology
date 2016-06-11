@@ -14,7 +14,7 @@ public class RadiologyOrderResourceComponentTest extends BaseDelegatingResourceT
     protected static final String TEST_DATASET = "RadiologyOrderResourceComponentTestDataset.xml";
     
     @Before
-    public void before() throws Exception {
+    public void setUp() throws Exception {
         executeDataSet(TEST_DATASET);
     }
     

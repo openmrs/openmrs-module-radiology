@@ -53,7 +53,7 @@ public class RadiologyOrderResourceTest {
     Locale localeEn = new Locale("en");
     
     @Before
-    public void before() throws Exception {
+    public void setUp() throws Exception {
         
         radiologyOrder.setUuid(RADIOLOGY_ORDER_UUID);
         
