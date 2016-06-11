@@ -46,4 +46,54 @@ public class RadiologyOrderResourceComponentTest extends BaseDelegatingResourceT
                 .getOrderByUuid(getUuidProperty());
     }
     
+    /**
+     * @see BaseDelegatingResourceTest#validateDefaultRepresentation()
+     */
+    @Override
+    public void validateDefaultRepresentation() throws Exception {
+        super.validateDefaultRepresentation();
+        assertPropPresent("orderNumber");
+        assertPropPresent("patient");
+        assertPropPresent("concept");
+        assertPropPresent("action");
+        assertPropPresent("careSetting");
+        assertPropPresent("previousOrder");
+        assertPropPresent("dateActivated");
+        assertPropPresent("dateStopped");
+        assertPropPresent("autoExpireDate");
+        assertPropPresent("encounter");
+        assertPropPresent("orderer");
+        assertPropPresent("orderReason");
+        assertPropPresent("orderReasonNonCoded");
+        assertPropPresent("urgency");
+        assertPropPresent("instructions");
+        assertPropPresent("commentToFulfiller");
+        assertPropPresent("display");
+    }
+    
+    /**
+     * @see BaseDelegatingResourceTest#validateFullRepresentation()
+     */
+    @Override
+    public void validateFullRepresentation() throws Exception {
+        super.validateFullRepresentation();
+        assertPropPresent("orderNumber");
+        assertPropPresent("patient");
+        assertPropPresent("concept");
+        assertPropPresent("action");
+        assertPropPresent("careSetting");
+        assertPropPresent("previousOrder");
+        assertPropPresent("dateActivated");
+        assertPropPresent("dateStopped");
+        assertPropPresent("autoExpireDate");
+        assertPropPresent("encounter");
+        assertPropPresent("orderer");
+        assertPropPresent("orderReason");
+        assertPropPresent("orderReasonNonCoded");
+        assertPropPresent("urgency");
+        assertPropPresent("instructions");
+        assertPropPresent("commentToFulfiller");
+        assertPropPresent("display");
+        assertPropPresent("auditInfo");
+    }
 }
