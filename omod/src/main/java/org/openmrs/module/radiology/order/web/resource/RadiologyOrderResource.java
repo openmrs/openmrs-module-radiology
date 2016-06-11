@@ -24,6 +24,9 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource#getRepresentationDescription(org.openmrs.module.webservices.rest.web.representation.Representation)
+     * @should return default representation given instance of defaultrepresentation
+     * @should return full representation given instance of fullrepresentation
+     * @should return null for representation other then default or full
      */
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
@@ -80,6 +83,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getResourceVersion()
+     * @should return supported resource version
      */
     @Override
     public String getResourceVersion() {
