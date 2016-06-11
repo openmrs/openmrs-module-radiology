@@ -122,6 +122,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#newDelegate()
+     * @should throw ResourceDoesNotSupportOperationException
      */
     @Override
     public RadiologyOrder newDelegate() throws ResourceDoesNotSupportOperationException {
@@ -131,6 +132,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceHandler#save(java.lang.Object)
+     * @should throw ResourceDoesNotSupportOperationException
      */
     @Override
     public RadiologyOrder save(RadiologyOrder delegate) throws ResourceDoesNotSupportOperationException {
@@ -141,6 +143,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#delete(java.lang.Object,
      *      java.lang.String, org.openmrs.module.webservices.rest.web.RequestContext)
+     * @should throw ResourceDoesNotSupportOperationException
      */
     @Override
     protected void delete(RadiologyOrder delegate, String reason, RequestContext context)
@@ -152,6 +155,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#purge(java.lang.Object,
      *      org.openmrs.module.webservices.rest.web.RequestContext)
+     * @should throw ResourceDoesNotSupportOperationException
      */
     @Override
     public void purge(RadiologyOrder delegate, RequestContext context) throws ResourceDoesNotSupportOperationException {

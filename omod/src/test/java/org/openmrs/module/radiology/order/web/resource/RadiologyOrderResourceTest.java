@@ -5,7 +5,6 @@ import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Locale;
 import java.util.Set;
@@ -19,6 +18,7 @@ import org.openmrs.ConceptName;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestUtil;
 import org.openmrs.module.webservices.rest.web.representation.CustomRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
@@ -27,6 +27,7 @@ import org.openmrs.module.webservices.rest.web.representation.NamedRepresentatio
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
+import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs2_0.RestConstants2_0;
 import org.openmrs.util.LocaleUtility;
 import org.powermock.api.mockito.PowerMockito;
@@ -174,5 +175,51 @@ public class RadiologyOrderResourceTest {
         RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         
         assertThat(radiologyOrderResource.getDisplayString(radiologyOrder), is("[No Concept]"));
+    }
+    
+    /**
+     * @see RadiologyOrderResource#newDelegate()
+     * @verifies throw ResourceDoesNotSupportOperationException
+     */
+    @Test(expected = ResourceDoesNotSupportOperationException.class)
+    public void newDelegate_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+        
+        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
+        radiologyOrderResource.newDelegate();
+    }
+    
+    /**
+     * @see RadiologyOrderResource#save(RadiologyOrder)
+     * @verifies throw ResourceDoesNotSupportOperationException
+     */
+    @Test(expected = ResourceDoesNotSupportOperationException.class)
+    public void save_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+        
+        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
+        radiologyOrderResource.save(radiologyOrder);
+    }
+    
+    /**
+     * @see RadiologyOrderResource#delete(RadiologyOrder,String,RequestContext)
+     * @verifies throw ResourceDoesNotSupportOperationException
+     */
+    @Test(expected = ResourceDoesNotSupportOperationException.class)
+    public void delete_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+        
+        RequestContext requestContext = new RequestContext();
+        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
+        radiologyOrderResource.delete(radiologyOrder, "wrong order", requestContext);
+    }
+    
+    /**
+     * @see RadiologyOrderResource#purge(RadiologyOrder,RequestContext)
+     * @verifies throw ResourceDoesNotSupportOperationException
+     */
+    @Test(expected = ResourceDoesNotSupportOperationException.class)
+    public void purge_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+        
+        RequestContext requestContext = new RequestContext();
+        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
+        radiologyOrderResource.purge(radiologyOrder, requestContext);
     }
 }
