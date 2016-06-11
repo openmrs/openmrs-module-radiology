@@ -1,5 +1,6 @@
 package org.openmrs.module.radiology.order.web.resource;
 
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.core.Is.is;
 import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
@@ -82,7 +83,39 @@ public class RadiologyOrderResourceTest {
         
         DelegatingResourceDescription resourceDescription =
                 radiologyOrderResource.getRepresentationDescription(defaultRepresentation);
-        
+        assertThat(resourceDescription.getProperties()
+                .keySet(),
+            contains("uuid", "orderNumber", "patient", "concept", "action", "careSetting", "previousOrder", "dateActivated",
+                "dateStopped", "autoExpireDate", "encounter", "orderer", "orderReason", "orderReasonNonCoded", "urgency",
+                "instructions", "commentToFulfiller", "display"));
+        assertThat(resourceDescription.getProperties()
+                .get("patient")
+                .getRep(),
+            is(Representation.REF));
+        assertThat(resourceDescription.getProperties()
+                .get("concept")
+                .getRep(),
+            is(Representation.REF));
+        assertThat(resourceDescription.getProperties()
+                .get("careSetting")
+                .getRep(),
+            is(Representation.REF));
+        assertThat(resourceDescription.getProperties()
+                .get("previousOrder")
+                .getRep(),
+            is(Representation.REF));
+        assertThat(resourceDescription.getProperties()
+                .get("encounter")
+                .getRep(),
+            is(Representation.REF));
+        assertThat(resourceDescription.getProperties()
+                .get("orderer")
+                .getRep(),
+            is(Representation.REF));
+        assertThat(resourceDescription.getProperties()
+                .get("orderReason")
+                .getRep(),
+            is(Representation.REF));
     }
     
     /**
@@ -98,6 +131,39 @@ public class RadiologyOrderResourceTest {
         
         DelegatingResourceDescription resourceDescription =
                 radiologyOrderResource.getRepresentationDescription(fullRepresentation);
+        assertThat(resourceDescription.getProperties()
+                .keySet(),
+            contains("uuid", "orderNumber", "patient", "concept", "action", "careSetting", "previousOrder", "dateActivated",
+                "dateStopped", "autoExpireDate", "encounter", "orderer", "orderReason", "orderReasonNonCoded", "urgency",
+                "instructions", "commentToFulfiller", "display", "auditInfo"));
+        assertThat(resourceDescription.getProperties()
+                .get("patient")
+                .getRep(),
+            is(Representation.REF));
+        assertThat(resourceDescription.getProperties()
+                .get("concept")
+                .getRep(),
+            is(Representation.REF));
+        assertThat(resourceDescription.getProperties()
+                .get("careSetting")
+                .getRep(),
+            is(Representation.DEFAULT));
+        assertThat(resourceDescription.getProperties()
+                .get("previousOrder")
+                .getRep(),
+            is(Representation.REF));
+        assertThat(resourceDescription.getProperties()
+                .get("encounter")
+                .getRep(),
+            is(Representation.REF));
+        assertThat(resourceDescription.getProperties()
+                .get("orderer")
+                .getRep(),
+            is(Representation.REF));
+        assertThat(resourceDescription.getProperties()
+                .get("orderReason")
+                .getRep(),
+            is(Representation.REF));
     }
     
     /**
