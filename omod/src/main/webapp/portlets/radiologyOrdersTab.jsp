@@ -40,9 +40,8 @@
   <table id="searchForm" cellspacing="10">
     <tr>
       <form id="radiologyOrderListForm">
-        <td><label><spring:message code="radiology.patient" />:</label> <input name="patientQuery" type="text"
-          style="width: 20em" title="<spring:message
-						code="radiology.minChars" />" /></td>
+        <td><label><spring:message code="radiology.patient" /></label> <openmrs:fieldGen type="org.openmrs.Patient"
+            formFieldName="patientQuery" url="patientUuid.field" /></td>
         <td><input id="findButton" type="button" value="<spring:message code="radiology.find"/>" /></td>
       </form>
     </tr>
