@@ -2,13 +2,8 @@
 
 <%@ attribute name="formFieldName" required="true" %>
 <%@ attribute name="formFieldId" required="false" %>
-<%@ attribute name="searchLabel" required="false" %> <%-- deprecated --%>
-<%@ attribute name="searchLabelCode" required="false" %> <%-- deprecated --%>
-<%@ attribute name="searchLabelArguments" required="false" %> <%-- deprecated --%>
 <%@ attribute name="initialValue" required="false" %> <%-- This should be a uuid --%>
-<%@ attribute name="linkUrl" required="false" %> <%-- deprecated --%>
 <%@ attribute name="callback" required="false" %> <%-- gets the relType, PatientListItem sent back --%>
-<%@ attribute name="allowSearch" required="false" %> <%-- deprecated --%>
 
 <openmrs:htmlInclude file="/dwr/interface/DWRPatientService.js" />
 <openmrs:htmlInclude file="/scripts/jquery/autocomplete/OpenmrsAutoComplete.js" />
@@ -21,7 +16,7 @@
 
 <script type="text/javascript">
 	
-	$j(document).ready( function() {
+	jQuery(document).ready( function() {
 
 		// set up the autocomplete
 		new AutoComplete("${displayNameInputId}", new CreateCallback().patientCallback(), {
@@ -39,7 +34,7 @@
 		});
 
 		//Clear hidden value on losing focus with no valid entry
-		$j("#${displayNameInputId}").autocomplete().blur(function(event, ui) {
+		jQuery("#${displayNameInputId}").autocomplete().blur(function(event, ui) {
 			if (!event.target.value) {
 				jquerySelectEscaped('${formFieldId}').val('');
 			}
