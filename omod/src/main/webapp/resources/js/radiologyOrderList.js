@@ -94,6 +94,6 @@ $j(document)
 
                   clearResults.on('mouseup keyup', function() {
                     $j('table#searchForm input:text').val('');
-                    $j('tbody#radiologyOrdersTableBody').html('');
+                    radiologyOrdersTable.ajax.reload();
                   });
                 });
