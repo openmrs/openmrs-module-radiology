@@ -4,7 +4,6 @@
 <openmrs:htmlInclude file="/moduleResources/radiology/css/radiology.css" />
 <openmrs:htmlInclude file="/moduleResources/radiology/js/datatables/jquery.dataTables.min.js" />
 
-<openmrs:htmlInclude file="/moduleResources/radiology/js/sortNumbers.js" />
 <openmrs:htmlInclude file="/moduleResources/radiology/css/jquery.dataTables.min.css" />
 <openmrs:htmlInclude file="/moduleResources/radiology/css/details-control.dataTables.css" />
 

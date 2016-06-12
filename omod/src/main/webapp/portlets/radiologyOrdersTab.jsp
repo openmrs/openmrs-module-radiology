@@ -1,5 +1,4 @@
-<%@ include file="/WEB-INF/template/include.jsp"%>
-<%@ taglib prefix="radiology" tagdir="/WEB-INF/tags/module/radiology"%>
+<%@ include file="/WEB-INF/view/module/radiology/include.jsp"%>
 
 <openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui-1.7.2.custom.min.js" />
 <openmrs:htmlInclude file="/moduleResources/radiology/js/datatables/jquery.dataTables.min.js" />
@@ -17,12 +16,7 @@
   });
 </script>
 
-<%-- we cannot replace following script and include combination with openmrs:htmlinclude because we need the jsp compiler to resolve the spring message tags in the radiologyOrderList.js  --%>
-<script type="text/javascript">
-  
-<%@ include file="/WEB-INF/view/module/radiology/resources/js/radiologyOrderList.js" %>
-  
-</script>
+<openmrs:htmlInclude file="/moduleResources/radiology/js/radiologyOrderList.js" % />
 
 <openmrs:htmlInclude file="/moduleResources/radiology/css/jquery.dataTables.min.css" />
 <openmrs:htmlInclude file="/moduleResources/radiology/css/details-control.dataTables.css" />
