@@ -1,4 +1,5 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
+<%@ taglib prefix="radiology" tagdir="/WEB-INF/tags/module/radiology"%>
 
 <openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui-1.7.2.custom.min.js" />
 <openmrs:htmlInclude file="/moduleResources/radiology/js/datatables/jquery.dataTables.min.js" />
@@ -40,8 +41,8 @@
   <table id="searchForm" cellspacing="10">
     <tr>
       <form id="radiologyOrderListForm">
-        <td><label><spring:message code="radiology.patient" /></label> <openmrs:fieldGen type="org.openmrs.Patient"
-            formFieldName="patientQuery" url="patientUuid.field" /></td>
+        <td><label><spring:message code="radiology.patient" /></label> <radiology:fieldGen type="org.openmrs.Patient"
+            formFieldName="patientQuery" val="" /></td>
         <td><input id="findButton" type="button" value="<spring:message code="radiology.find"/>" /></td>
       </form>
     </tr>
