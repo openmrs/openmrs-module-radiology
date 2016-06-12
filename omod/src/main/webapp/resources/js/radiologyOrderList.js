@@ -82,17 +82,17 @@ $j(document)
                                     },
                                   });
 
-                  find.click(function() {
+                  find.on('mouseup keyup', function() {
                     radiologyOrdersTable.ajax.reload();
                   });
 
-                  patientQuery.keyup(function(event) {
+                  patientQuery.on('keyup', function(event) {
                     if (event.which == '13') {
                       radiologyOrdersTable.ajax.reload();
                     }
                   });
 
-                  clearResults.click(function() {
+                  clearResults.on('mouseup keyup', function() {
                     $j('table#searchForm input:text').val('');
                     $j('tbody#radiologyOrdersTableBody').html('');
                   });
