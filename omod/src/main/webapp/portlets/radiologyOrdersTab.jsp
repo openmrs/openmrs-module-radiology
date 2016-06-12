@@ -40,8 +40,6 @@
     <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
       <thead>
         <tr>
-          <th></th>
-          <th><spring:message code="general.edit" /></th>
           <th><spring:message code="radiology.orderNumber" /></th>
           <th><spring:message code="Order.patient" /></th>
           <th><spring:message code="radiology.priority" /></th>

@@ -47,6 +47,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
             description.addProperty("orderReason", Representation.REF);
             description.addProperty("orderReasonNonCoded");
             description.addProperty("urgency");
+            description.addProperty("scheduledDate");
             description.addProperty("instructions");
             description.addProperty("commentToFulfiller");
             description.addProperty("display");
@@ -70,6 +71,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
             description.addProperty("orderReason", Representation.REF);
             description.addProperty("orderReasonNonCoded");
             description.addProperty("urgency");
+            description.addProperty("scheduledDate");
             description.addProperty("instructions");
             description.addProperty("commentToFulfiller");
             description.addProperty("display");

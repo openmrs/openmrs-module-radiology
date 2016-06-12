@@ -87,7 +87,7 @@ public class RadiologyOrderResourceTest {
                 .keySet(),
             contains("uuid", "orderNumber", "patient", "concept", "action", "careSetting", "previousOrder", "dateActivated",
                 "dateStopped", "autoExpireDate", "encounter", "orderer", "orderReason", "orderReasonNonCoded", "urgency",
-                "instructions", "commentToFulfiller", "display"));
+                "scheduledDate", "instructions", "commentToFulfiller", "display"));
         assertThat(resourceDescription.getProperties()
                 .get("patient")
                 .getRep(),
@@ -135,7 +135,7 @@ public class RadiologyOrderResourceTest {
                 .keySet(),
             contains("uuid", "orderNumber", "patient", "concept", "action", "careSetting", "previousOrder", "dateActivated",
                 "dateStopped", "autoExpireDate", "encounter", "orderer", "orderReason", "orderReasonNonCoded", "urgency",
-                "instructions", "commentToFulfiller", "display", "auditInfo"));
+                "scheduledDate", "instructions", "commentToFulfiller", "display", "auditInfo"));
         assertThat(resourceDescription.getProperties()
                 .get("patient")
                 .getRep(),

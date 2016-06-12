@@ -2,11 +2,10 @@ var $j = jQuery.noConflict();
 $j(document)
         .ready(
                 function() {
-                  pQuery = $j('input[name="patientQuery"]');
+                  patientQuery = $j('input[name="patientQuery"]');
                   find = $j('#findButton');
                   clearResults = $j('a#clearResults');
 
-                  $j('#errorSpan').html('');
                   var radiologyOrdersTable = $j('#radiologyOrdersTable')
                           .DataTable(
                                   {
@@ -26,7 +25,7 @@ $j(document)
                                           startIndex: data.start,
                                           limit: data.length,
                                           v: "full",
-                                          patient: pQuery.val(),
+                                          patient: patientQuery.val(),
                                         };
                                       },
                                       "dataSrc": function(json) {
@@ -83,12 +82,11 @@ $j(document)
                                     },
                                   });
 
-                  // ***********Events*************
                   find.click(function() {
                     radiologyOrdersTable.ajax.reload();
                   });
 
-                  pQuery.keypress(function(event) {
+                  patientQuery.keyup(function(event) {
                     if (event.which == '13') {
                       radiologyOrdersTable.ajax.reload();
                     }
