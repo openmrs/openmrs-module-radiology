@@ -41,7 +41,7 @@ $j(document)
                                                       + '</a>',
                                               json.results[i].patient.display,
                                               json.results[i].urgency,
-                                              json.results[i].concept.name.name,
+                                              json.results[i].concept.display,
                                               json.results[i].orderer.display,
                                               json.results[i].scheduledDate,
                                               json.results[i].dateActivated, ]
@@ -49,11 +49,9 @@ $j(document)
                                         return result;
                                       }
                                     },
-                                    "search": false,
-                                    "order": false,
+                                    "searching": false,
+                                    "ordering": false,
                                     "columns": [{
-                                      "name": "expandButton",
-                                    }, {
                                       "name": "orderNumber",
                                     }, {
                                       "name": "patient",
