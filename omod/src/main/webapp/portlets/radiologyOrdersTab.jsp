@@ -1,6 +1,5 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
-<openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
 <openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui-1.7.2.custom.min.js" />
 <openmrs:htmlInclude file="/moduleResources/radiology/js/datatables/jquery.dataTables.min.js" />
 
@@ -11,7 +10,6 @@
   
 </script>
 
-<openmrs:htmlInclude file="/moduleResources/radiology/js/sortNumbers.js" />
 <openmrs:htmlInclude file="/moduleResources/radiology/css/jquery.dataTables.min.css" />
 <openmrs:htmlInclude file="/moduleResources/radiology/css/details-control.dataTables.css" />
 
@@ -32,10 +30,6 @@
         <td><label><spring:message code="radiology.patient" />:</label> <input name="patientQuery" type="text"
           style="width: 20em" title="<spring:message
 						code="radiology.minChars" />" /></td>
-        <td><label><spring:message code="radiology.startDate" />:</label> <input name="startDate" type="text"
-          onclick="showCalendar(this)" /></td>
-        <td><label><spring:message code="radiology.endDate" />:</label> <input name="endDate" type="text"
-          onclick="showCalendar(this)" /></td>
         <td><input id="findButton" type="button" value="<spring:message code="radiology.find"/>" /></td>
         <td id="errorSpan"></td>
       </form>
@@ -48,14 +42,13 @@
         <tr>
           <th></th>
           <th><spring:message code="general.edit" /></th>
-          <th><spring:message code="radiology.patientFullName" /></th>
+          <th><spring:message code="radiology.orderNumber" /></th>
+          <th><spring:message code="Order.patient" /></th>
           <th><spring:message code="radiology.priority" /></th>
-          <th><spring:message code="radiology.appoinmentDate" /></th>
-          <th><spring:message code="radiology.modality" /></th>
-          <th><spring:message code="radiology.performedStatus" /></th>
+          <th><spring:message code="radiology.imagingProcedure" /></th>
           <th><spring:message code="radiology.referringPhysician" /></th>
-          <th><spring:message code="radiology.scheduledStatus" /></th>
-          <th><spring:message code="general.instructions" /></th>
+          <th><spring:message code="radiology.scheduledDate" /></th>
+          <th><spring:message code="radiology.dateActivated" /></th>
         </tr>
       </thead>
     </table>

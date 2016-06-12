@@ -34,7 +34,6 @@ $j(document)
                                         var result = [];
                                         for (var i = 0, ien = json.results.length; i < ien; i++) {
                                           result[i] = [
-                                              "OpenChildRow",
                                               '<a href="http://localhost:8080/openmrs/module/radiology/radiologyOrder.form?orderId='
                                                       + json.results[i].uuid
                                                       + '">'
@@ -42,16 +41,33 @@ $j(document)
                                                       + '</a>',
                                               json.results[i].patient.display,
                                               json.results[i].urgency,
-                                              json.results[i].dateActivated,
-                                              "modality", "pstatus",
+                                              json.results[i].concept.name.name,
                                               json.results[i].orderer.display,
-                                              "sstatus",
-                                              json.results[i].instructions]
+                                              json.results[i].scheduledDate,
+                                              json.results[i].dateActivated, ]
                                         }
                                         return result;
                                       }
                                     },
-                                    "order": [[1, 'asc']],
+                                    "search": false,
+                                    "order": false,
+                                    "columns": [{
+                                      "name": "expandButton",
+                                    }, {
+                                      "name": "orderNumber",
+                                    }, {
+                                      "name": "patient",
+                                    }, {
+                                      "name": "urgency",
+                                    }, {
+                                      "name": "concept",
+                                    }, {
+                                      "name": "orderer",
+                                    }, {
+                                      "name": "scheduledDate",
+                                    }, {
+                                      "name": "dateActivated",
+                                    }, ],
                                     "oLanguage": {
                                       "sLengthMenu": '<spring:message code="radiology.show"/>'
                                               + ' _MENU_ <spring:message code="radiology.entries"/>',
