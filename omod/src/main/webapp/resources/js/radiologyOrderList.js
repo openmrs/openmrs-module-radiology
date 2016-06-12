@@ -65,20 +65,6 @@ $j(document)
                                     }, {
                                       "name": "dateActivated",
                                     }, ],
-                                    "oLanguage": {
-                                      "sLengthMenu": '<spring:message code="radiology.show"/>'
-                                              + ' _MENU_ <spring:message code="radiology.entries"/>',
-                                      "sInfo": '<spring:message code="radiology.viewing"/> _START_ '
-                                              + '- _END_ '
-                                              + '<spring:message code="radiology.of"/> _TOTAL_',
-                                      "oPaginate": {
-                                        "sFirst": '<spring:message code="radiology.first"/>',
-                                        "sPrevious": '<spring:message code="general.previous"/>',
-                                        "sNext": '<spring:message code="general.next"/>',
-                                        "sLast": '<spring:message code="radiology.last"/>',
-                                      },
-                                      "sProcessing": '<spring:message code="general.loading"/>'
-                                    },
                                   });
 
                   // prevent form submit when user hits enter
