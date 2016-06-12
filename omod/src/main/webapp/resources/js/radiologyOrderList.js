@@ -68,7 +68,6 @@ $j(document)
                                     "oLanguage": {
                                       "sLengthMenu": '<spring:message code="radiology.show"/>'
                                               + ' _MENU_ <spring:message code="radiology.entries"/>',
-                                      "sSearch": '<spring:message code="general.search"/>:',
                                       "sInfo": '<spring:message code="radiology.viewing"/> _START_ '
                                               + '- _END_ '
                                               + '<spring:message code="radiology.of"/> _TOTAL_',
