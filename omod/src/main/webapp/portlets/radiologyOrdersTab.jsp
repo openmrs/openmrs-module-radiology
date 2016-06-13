@@ -1,25 +1,5 @@
 <%@ include file="/WEB-INF/view/module/radiology/include.jsp"%>
-
-<openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui-1.7.2.custom.min.js" />
-<openmrs:htmlInclude file="/moduleResources/radiology/js/datatables/jquery.dataTables.min.js" />
-<script type="text/javascript">
-  jQuery.extend(true, jQuery.fn.dataTable.defaults, {
-    "language": {
-      "paginate": {
-        "first": '<spring:message code="radiology.first"/>',
-        "previous": '<spring:message code="general.previous"/>',
-        "next": '<spring:message code="general.next"/>',
-        "last": '<spring:message code="radiology.last"/>',
-      },
-      "processing": '<spring:message code="general.loading"/>'
-    },
-  });
-</script>
-
-<openmrs:htmlInclude file="/moduleResources/radiology/js/radiologyOrderList.js" />
-
-<openmrs:htmlInclude file="/moduleResources/radiology/css/jquery.dataTables.min.css" />
-<openmrs:htmlInclude file="/moduleResources/radiology/css/details-control.dataTables.css" />
+<%@ include file="/WEB-INF/view/module/radiology/includeDatatables.jsp"%>
 
 <openmrs:hasPrivilege privilege="Add Radiology Orders">
   <br>
@@ -35,8 +15,8 @@
   <table id="searchForm" cellspacing="10">
     <tr>
       <form id="radiologyOrderListForm">
-        <td><label><spring:message code="radiology.patient" /></label> <radiology:patientField
-            formFieldName="patientQuery" /></td>
+        <td><label><spring:message code="radiology.patient" /></label> <radiology:patientField formFieldName="patient"
+            formFieldId="patientUuid" /></td>
         <td><input id="findButton" type="button" value="<spring:message code="radiology.find"/>" /></td>
       </form>
     </tr>
@@ -57,6 +37,5 @@
       </thead>
     </table>
   </div>
-
 </div>
 <br />

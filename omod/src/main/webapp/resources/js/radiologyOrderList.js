@@ -2,7 +2,7 @@ var $j = jQuery.noConflict();
 $j(document)
         .ready(
                 function() {
-                  patientQuery = $j('input[name="patientQuery"]');
+                  patientUuid = $j('#patientUuid');
                   find = $j('#findButton');
                   clearResults = $j('a#clearResults');
 
@@ -25,7 +25,7 @@ $j(document)
                                           startIndex: data.start,
                                           limit: data.length,
                                           v: "full",
-                                          patient: patientQuery.val(),
+                                          patient: patientUuid.val(),
                                         };
                                       },
                                       "dataSrc": function(json) {
@@ -81,7 +81,7 @@ $j(document)
                   });
 
                   clearResults.on('mouseup keyup', function() {
-                    $j('table#searchForm input:text').val('');
+                    patientUuid.val('');
                     radiologyOrdersTable.ajax.reload();
                   });
                 });
