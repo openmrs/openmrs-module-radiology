@@ -1,5 +1,5 @@
-<%@ include file="/WEB-INF/view/module/radiology/include.jsp"%>
-<%@ include file="/WEB-INF/view/module/radiology/includeDatatables.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/template/include.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/template/includeDatatables.jsp"%>
 
 <openmrs:hasPrivilege privilege="Add Radiology Orders">
   <br>
