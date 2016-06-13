@@ -1,30 +1,6 @@
 <%@ include file="/WEB-INF/view/module/radiology/template/include.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeDatatables.jsp"%>
 
-<openmrs:hasPrivilege privilege="Add Orders">
-  <p>
-    <a href="module/radiology/radiologyOrder.form?patientId=${patient.patientId}"><spring:message
-        code="radiology.addOrder" /></a> <br />
-  </p>
-</openmrs:hasPrivilege>
-
-<div id="results">
-  <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
-    <thead>
-      <tr>
-        <th><spring:message code="radiology.orderNumber" /></th>
-        <th><spring:message code="Order.patient" /></th>
-        <th><spring:message code="radiology.priority" /></th>
-        <th><spring:message code="radiology.imagingProcedure" /></th>
-        <th><spring:message code="radiology.referringPhysician" /></th>
-        <th><spring:message code="radiology.scheduledDate" /></th>
-        <th><spring:message code="radiology.dateActivated" /></th>
-      </tr>
-    </thead>
-  </table>
-</div>
-<input type="hidden" id="patientUuid" value="${patient.uuid}" />
-
 <script type="text/javascript">
   var $j = jQuery.noConflict();
   $j(document)
@@ -49,7 +25,7 @@
                                             startIndex: data.start,
                                             limit: data.length,
                                             v: "full",
-                                            patient: $("#patientUuid").val(),
+                                            patient: $j("#patientUuid").val(),
                                           };
                                         },
                                         "dataSrc": function(json) {
@@ -92,3 +68,27 @@
                                     });
                   });
 </script>
+
+<openmrs:hasPrivilege privilege="Add Orders">
+  <p>
+    <a href="module/radiology/radiologyOrder.form?patientId=${patient.patientId}"><spring:message
+        code="radiology.addOrder" /></a> <br />
+  </p>
+</openmrs:hasPrivilege>
+
+<div id="results">
+  <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
+    <thead>
+      <tr>
+        <th><spring:message code="radiology.orderNumber" /></th>
+        <th><spring:message code="Order.patient" /></th>
+        <th><spring:message code="radiology.priority" /></th>
+        <th><spring:message code="radiology.imagingProcedure" /></th>
+        <th><spring:message code="radiology.referringPhysician" /></th>
+        <th><spring:message code="radiology.scheduledDate" /></th>
+        <th><spring:message code="radiology.dateActivated" /></th>
+      </tr>
+    </thead>
+  </table>
+</div>
+<input type="hidden" id="patientUuid" value="${patient.uuid}" />
