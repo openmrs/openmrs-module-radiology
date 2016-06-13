@@ -20,7 +20,6 @@
                                         dataType: "json",
                                         url: "http://localhost:8080/openmrs/ws/rest/v1/radiologyorder/",
                                         data: function(data) {
-                                          console.log(data);
                                           return {
                                             startIndex: data.start,
                                             limit: data.length,
@@ -29,7 +28,6 @@
                                           };
                                         },
                                         "dataSrc": function(json) {
-                                          console.log(json);
                                           var result = [];
                                           for (var i = 0, ien = json.results.length; i < ien; i++) {
                                             result[i] = [

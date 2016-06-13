@@ -16,7 +16,7 @@
                         "first": '<spring:message code="radiology.first"/>',
                         "previous": '<spring:message code="general.previous"/>',
                         "next": '<spring:message code="general.next"/>',
-                        "last": '<spring:message code="general.last"/>',
+                        "last": '<spring:message code="radiology.last"/>',
                       },
                     },
                   });
