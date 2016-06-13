@@ -81,6 +81,7 @@ $j(document)
                   });
 
                   clearResults.on('mouseup keyup', function() {
+                    $j('table#searchForm input:text').val('');
                     patientUuid.val('');
                     radiologyOrdersTable.ajax.reload();
                   });
