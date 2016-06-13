@@ -19,6 +19,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
+import org.openmrs.module.webservices.rest.web.RestUtil;
 import org.openmrs.module.webservices.rest.web.api.RestService;
 import org.openmrs.module.webservices.rest.web.resource.api.PageableResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
@@ -32,13 +33,18 @@ import org.springframework.mock.web.MockHttpServletRequest;
  * Tests {@link RadiologyOrderSearchHandler}.
  */
 @RunWith(PowerMockRunner.class)
-@PrepareForTest({ RestService.class, Context.class })
+@PrepareForTest({ RestUtil.class, Context.class })
 public class RadiologyOrderSearchHandlerTest {
     
     
-    private static final String PATIENT_UUID = "1bae735a-fca0-11e5-9e59-08002719a237";
+    private static final String PATIENT_UUID_WITH_ORDERS = "1bae735a-fca0-11e5-9e59-08002719a237";
     
-    private static final String UNKNOWN_PATIENT_UUID = "99999-fca0-11e5-9e59-08002719a237";
+    private static final String PATIENT_UUID_WITHOUT_ORDERS = "88888888-fca0-11e5-9e59-08002719a237";
+    
+    private static final String PATIENT_UUID_UNKNOWN = "99999999-fca0-11e5-9e59-08002719a237";
+    
+    @Mock
+    RestService restService;
     
     @Mock
     PatientService patientService;
@@ -52,7 +58,9 @@ public class RadiologyOrderSearchHandlerTest {
     @InjectMocks
     RadiologyOrderSearchHandler radiologyOrderSearchHandler = new RadiologyOrderSearchHandler();
     
-    Patient patient = new Patient();
+    Patient patientWithOrders = new Patient();
+    
+    Patient patientWithoutOrders = new Patient();
     
     RadiologyOrder radiologyOrder1 = new RadiologyOrder();
     
@@ -61,43 +69,36 @@ public class RadiologyOrderSearchHandlerTest {
     @Before
     public void setUp() throws Exception {
         
-        patient.setUuid(PATIENT_UUID);
-        radiologyOrder1.setPatient(patient);
-        radiologyOrder2.setPatient(patient);
+        patientWithOrders.setUuid(PATIENT_UUID_WITH_ORDERS);
+        radiologyOrder1.setPatient(patientWithOrders);
+        radiologyOrder2.setPatient(patientWithOrders);
         List<RadiologyOrder> radiologyOrders = new ArrayList<RadiologyOrder>();
         radiologyOrders.add(radiologyOrder1);
         radiologyOrders.add(radiologyOrder2);
         
-        when(patientResource.getByUniqueId(PATIENT_UUID)).thenReturn(patient);
-        when(patientResource.getByUniqueId(UNKNOWN_PATIENT_UUID)).thenReturn(null);
+        patientWithoutOrders.setUuid(PATIENT_UUID_WITHOUT_ORDERS);
         
-        when(patientService.getPatientByUuid(PATIENT_UUID)).thenReturn(patient);
-        when(patientService.getPatientByUuid(UNKNOWN_PATIENT_UUID)).thenReturn(null);
-        
-        PowerMockito.mockStatic(RestService.class);
+        PowerMockito.mockStatic(RestUtil.class);
         PowerMockito.mockStatic(Context.class);
         when(Context.getPatientService()).thenReturn(patientService);
+        when(patientResource.getByUniqueId(PATIENT_UUID_WITH_ORDERS)).thenReturn(patientWithOrders);
+        when(patientResource.getByUniqueId(PATIENT_UUID_WITHOUT_ORDERS)).thenReturn(patientWithoutOrders);
+        when(patientResource.getByUniqueId(PATIENT_UUID_UNKNOWN)).thenReturn(null);
+        when(Context.getService(RestService.class)).thenReturn(restService);
+        when(restService.getResourceBySupportedClass(Patient.class)).thenReturn(patientResource);
         
-        when(Context.getService(RestService.class)
-                .getResourceBySupportedClass(Patient.class)).thenReturn(patientResource);
-        
-        when(Context.getPatientService()
-                .getPatientByUuid(PATIENT_UUID)).thenReturn(patient);
-        when(Context.getPatientService()
-                .getPatientByUuid(UNKNOWN_PATIENT_UUID)).thenReturn(null);
-        
-        when(radiologyOrderService.getRadiologyOrdersByPatient(patient)).thenReturn(radiologyOrders);
+        when(radiologyOrderService.getRadiologyOrdersByPatient(patientWithOrders)).thenReturn(radiologyOrders);
     }
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return all radiology orders for given patient
+     * @verifies return all radiology orders for given patientWithOrders
      */
     @Test
     public void search_shouldReturnAllRadiologyOrdersForGivenPatient() throws Exception {
         
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_UUID);
+        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_UUID_WITH_ORDERS);
         RequestContext requestContext = new RequestContext();
         requestContext.setRequest(request);
         
@@ -107,13 +108,13 @@ public class RadiologyOrderSearchHandlerTest {
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return empty search result if patient cannot be found
+     * @verifies return empty search result if patientWithOrders cannot be found
      */
     @Test
     public void search_shouldReturnEmptySearchResultIfPatientCannotBeFound() throws Exception {
         
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, UNKNOWN_PATIENT_UUID);
+        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_UUID_UNKNOWN);
         RequestContext requestContext = new RequestContext();
         requestContext.setRequest(request);
         
@@ -127,7 +128,13 @@ public class RadiologyOrderSearchHandlerTest {
      */
     @Test
     public void search_shouldReturnEmptySearchResultIfPatientHasNoRadiologyOrders() throws Exception {
-        // TODO auto-generated
-        // Assert.fail("Not yet implemented");
+        
+        MockHttpServletRequest request = new MockHttpServletRequest();
+        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_UUID_UNKNOWN);
+        RequestContext requestContext = new RequestContext();
+        requestContext.setRequest(request);
+        
+        PageableResult pageableResult = radiologyOrderSearchHandler.search(requestContext);
+        assertThat(pageableResult, is(instanceOf(EmptySearchResult.class)));
     }
 }
