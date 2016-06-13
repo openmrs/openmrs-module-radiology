@@ -5,8 +5,9 @@
     "language": {
       "zeroRecords": '<spring:message code="general.noresult"/>',
       "processing": '<spring:message code="general.loading"/>',
-      "info": "Showing _START_ to _END_ of _TOTAL_ entries",
-      "infoEmpty": "Showing 0 to 0 of 0 entries",
+      "info": '<spring:message code="radiology.viewing"/> _START_ - _END_ <spring:message code="radiology.of"/> _TOTAL_",
+      "infoEmpty": '<spring:message code="radiology.viewing"/> 0 <spring:message code="radiology.of"/> 0",
+      "lengthMenu": '<spring:message code="radiology.show"/> _MENU_ <spring:message code="radiology.entries"/>',
       "paginate": {
         "first": '<spring:message code="radiology.first"/>',
         "previous": '<spring:message code="general.previous"/>',
@@ -16,7 +17,5 @@
     },
   });
 </script>
-<openmrs:htmlInclude file="/moduleResources/radiology/js/radiologyOrderList.js" />
-
 <openmrs:htmlInclude file="/moduleResources/radiology/css/jquery.dataTables.min.css" />
 <openmrs:htmlInclude file="/moduleResources/radiology/css/details-control.dataTables.css" />

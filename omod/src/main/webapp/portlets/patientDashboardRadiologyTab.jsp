@@ -1,11 +1,5 @@
-<%@ include file="/WEB-INF/template/include.jsp"%>
-
-<openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui-1.7.2.custom.min.js" />
-<openmrs:htmlInclude file="/moduleResources/radiology/css/radiology.css" />
-<openmrs:htmlInclude file="/moduleResources/radiology/js/datatables/jquery.dataTables.min.js" />
-
-<openmrs:htmlInclude file="/moduleResources/radiology/css/jquery.dataTables.min.css" />
-<openmrs:htmlInclude file="/moduleResources/radiology/css/details-control.dataTables.css" />
+<%@ include file="/WEB-INF/view/module/radiology/template/include.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/template/includeDatatables.jsp"%>
 
 <openmrs:hasPrivilege privilege="Add Orders">
   <p>
@@ -14,83 +8,87 @@
   </p>
 </openmrs:hasPrivilege>
 
-<div id="radiologyOrders">
-  <div id="radiologyHeader" class="boxHeader">
-    <spring:message code="radiology.radiologyOrders" />
-  </div>
-  <div id="radiologyTable" class="box">
-    <c:if test="${not empty model.radiologyOrders}">
-      <br>
-      <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
-        <thead>
-          <tr>
-            <th><spring:message code="general.edit" /></th>
-            <th><spring:message code="radiology.priority" /></th>
-            <th><spring:message code="radiology.referringPhysician" /></th>
-            <th><spring:message code="radiology.appoinmentDate" /></th>
-            <th><spring:message code="radiology.modality" /></th>
-            <th><spring:message code="radiology.scheduledStatus" /></th>
-            <th><spring:message code="radiology.performedStatus" /></th>
-            <th><spring:message code="general.instructions" /></th>
-          </tr>
-        </thead>
-        <tbody id="radiologyOrdersTableBody">
-          <c:forEach items="${model.radiologyOrders}" var="radiologyOrder">
-            <tr>
-              <td style="text-align: center"><a
-                href="module/radiology/radiologyOrder.form?orderId=${radiologyOrder.orderId}">${radiologyOrder.orderId} </a></td>
-              <td><spring:message code="radiology.${radiologyOrder.urgency}" text="${radiologyOrder.urgency}" /></td>
-              <td>${radiologyOrder.orderer.name}</td>
-              <td>${radiologyOrder.effectiveStartDate}</td>
-              <td><spring:message code="radiology.${radiologyOrder.study.modality}"
-                  text="${radiologyOrder.study.modality}" /></td>
-              <td><spring:message code="radiology.${radiologyOrder.study.scheduledStatus}"
-                  text="${radiologyOrder.study.scheduledStatus}" /></td>
-              <td><spring:message code="radiology.${radiologyOrder.study.performedStatus}"
-                  text="${radiologyOrder.study.performedStatus}" /></td>
-              <td>${radiologyOrder.instructions}</td>
-            </tr>
-          </c:forEach>
-        </tbody>
-      </table>
-    </c:if>
-    <c:if test="${empty model.radiologyOrders}">
-      <p>
-        <spring:message code="radiology.OrderListEmpty" />
-      </p>
-    </c:if>
-  </div>
+<div id="results">
+  <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
+    <thead>
+      <tr>
+        <th><spring:message code="radiology.orderNumber" /></th>
+        <th><spring:message code="Order.patient" /></th>
+        <th><spring:message code="radiology.priority" /></th>
+        <th><spring:message code="radiology.imagingProcedure" /></th>
+        <th><spring:message code="radiology.referringPhysician" /></th>
+        <th><spring:message code="radiology.scheduledDate" /></th>
+        <th><spring:message code="radiology.dateActivated" /></th>
+      </tr>
+    </thead>
+  </table>
 </div>
+<input type="hidden" id="patientUuid" value="${patient.uuid}" />
 
 <script type="text/javascript">
   var $j = jQuery.noConflict();
   $j(document)
           .ready(
                   function() {
-                    $j('table#radiologyOrdersTable')
-                            .dataTable(
+                    $j('#radiologyOrdersTable')
+                            .DataTable(
                                     {
-                                      "order": [[1, 'asc']],
-                                      "oLanguage": {
-                                        "sLengthMenu": '<spring:message code="radiology.show"/>'
-                                                + ' _MENU_ <spring:message code="radiology.entries"/>',
-                                        "sSearch": '<spring:message code="general.search"/>:',
-                                        "sInfo": '<spring:message code="radiology.viewing"/> _START_ '
-                                                + '- _END_ '
-                                                + '<spring:message code="radiology.of"/> _TOTAL_',
-                                        "oPaginate": {
-                                          "sFirst": '<spring:message code="radiology.first"/>',
-                                          "sPrevious": '<spring:message code="general.previous"/>',
-                                          "sNext": '<spring:message code="general.next"/>',
-                                          "sLast": '<spring:message code="radiology.last"/>',
+                                      "processing": true,
+                                      "serverSide": true,
+                                      "ajax": {
+                                        headers: {
+                                          Accept: "application/json; charset=utf-8",
+                                          "Content-Type": "text/plain; charset=utf-8",
                                         },
-                                        "sProcessing": '<spring:message code="general.loading"/>'
+                                        cache: true,
+                                        dataType: "json",
+                                        url: "http://localhost:8080/openmrs/ws/rest/v1/radiologyorder/",
+                                        data: function(data) {
+                                          console.log(data);
+                                          return {
+                                            startIndex: data.start,
+                                            limit: data.length,
+                                            v: "full",
+                                            patient: $("#patientUuid").val(),
+                                          };
+                                        },
+                                        "dataSrc": function(json) {
+                                          console.log(json);
+                                          var result = [];
+                                          for (var i = 0, ien = json.results.length; i < ien; i++) {
+                                            result[i] = [
+                                                '<a href="http://localhost:8080/openmrs/module/radiology/radiologyOrder.form?orderId='
+                                                        + json.results[i].uuid
+                                                        + '">'
+                                                        + json.results[i].orderNumber
+                                                        + '</a>',
+                                                json.results[i].patient.display,
+                                                json.results[i].urgency,
+                                                json.results[i].concept.display,
+                                                json.results[i].orderer.display,
+                                                json.results[i].scheduledDate,
+                                                json.results[i].dateActivated, ]
+                                          }
+                                          return result;
+                                        }
                                       },
-                                      "aoColumnDefs": [{
-                                        "sType": "num-html",
-                                        "bSortable": true,
-                                        "aTargets": [0]
-                                      }],
+                                      "searching": false,
+                                      "ordering": false,
+                                      "columns": [{
+                                        "name": "orderNumber",
+                                      }, {
+                                        "name": "patient",
+                                      }, {
+                                        "name": "urgency",
+                                      }, {
+                                        "name": "concept",
+                                      }, {
+                                        "name": "orderer",
+                                      }, {
+                                        "name": "scheduledDate",
+                                      }, {
+                                        "name": "dateActivated",
+                                      }, ],
                                     });
                   });
 </script>

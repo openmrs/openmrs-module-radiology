@@ -1,6 +1,8 @@
 <%@ include file="/WEB-INF/view/module/radiology/template/include.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeDatatables.jsp"%>
 
+<openmrs:htmlInclude file="/moduleResources/radiology/js/radiologyOrderList.js" />
+
 <openmrs:hasPrivilege privilege="Add Radiology Orders">
   <br>
   <a href="radiologyOrder.form"><spring:message code="radiology.addOrder" /></a>
