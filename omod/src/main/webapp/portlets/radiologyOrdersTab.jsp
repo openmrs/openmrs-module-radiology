@@ -22,7 +22,7 @@
                                         },
                                         cache: true,
                                         dataType: "json",
-                                        url: "http://localhost:8080/openmrs/ws/rest/v1/radiologyorder/",
+                                        url: "${pageContext.request.contextPath}/ws/rest/v1/radiologyorder/",
                                         data: function(data) {
                                           return {
                                             startIndex: data.start,
@@ -35,7 +35,7 @@
                                           var result = [];
                                           for (var i = 0, ien = json.results.length; i < ien; i++) {
                                             result[i] = [
-                                                '<a href="http://localhost:8080/openmrs/module/radiology/radiologyOrder.form?orderId='
+                                                '<a href="${pageContext.request.contextPath}/radiology/radiologyOrder.form?orderId='
                                                         + json.results[i].uuid
                                                         + '">'
                                                         + json.results[i].orderNumber
