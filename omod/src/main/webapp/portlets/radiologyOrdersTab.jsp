@@ -115,13 +115,13 @@
     <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
       <thead>
         <tr>
-          <th><spring:message code="radiology.orderNumber" /></th>
-          <th><spring:message code="Order.patient" /></th>
-          <th><spring:message code="radiology.priority" /></th>
-          <th><spring:message code="radiology.imagingProcedure" /></th>
-          <th><spring:message code="radiology.referringPhysician" /></th>
-          <th><spring:message code="radiology.scheduledDate" /></th>
-          <th><spring:message code="radiology.dateActivated" /></th>
+          <th><spring:message code="radiology.datatables.column.orderNumber" /></th>
+          <th><spring:message code="radiology.datatables.column.patient" /></th>
+          <th><spring:message code="radiology.datatables.column.priority" /></th>
+          <th><spring:message code="radiology.datatables.column.imagingProcedure" /></th>
+          <th><spring:message code="radiology.datatables.column.referringPhysician" /></th>
+          <th><spring:message code="radiology.datatables.column.scheduledDate" /></th>
+          <th><spring:message code="radiology.datatables.column.dateActivated" /></th>
         </tr>
       </thead>
     </table>

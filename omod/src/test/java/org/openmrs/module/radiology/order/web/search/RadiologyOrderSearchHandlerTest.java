@@ -98,7 +98,7 @@ public class RadiologyOrderSearchHandlerTest {
      * @see RadiologyOrderSearchHandler#search(RequestContext)
      * @verifies return all radiology orders for given patient
      */
-//    @Test
+    //    @Test
     public void search_shouldReturnAllRadiologyOrdersForGivenPatient() throws Exception {
         
         MockHttpServletRequest request = new MockHttpServletRequest();

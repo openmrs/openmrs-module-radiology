@@ -7,16 +7,16 @@
                   jQuery.fn.dataTable.defaults,
                   {
                     "language": {
-                      "zeroRecords": '<spring:message code="general.noresult"/>',
-                      "processing": '<spring:message code="general.loading"/>',
-                      "info": '<spring:message code="radiology.viewing"/> _START_ - _END_ <spring:message code="radiology.of"/> _TOTAL_',
-                      "infoEmpty": '<spring:message code="radiology.viewing"/> 0 <spring:message code="radiology.of"/> 0',
-                      "lengthMenu": '<spring:message code="radiology.show"/> _MENU_ <spring:message code="radiology.entries"/>',
+                      "zeroRecords": '<spring:message code="radiology.datatables.noresult"/>',
+                      "processing": '<spring:message code="radiology.datatables.loading"/>',
+                      "info": '<spring:message code="radiology.datatables.viewing"/> _START_ - _END_ <spring:message code="radiology.datatables.of"/> _TOTAL_',
+                      "infoEmpty": '<spring:message code="radiology.datatables.viewing"/> 0 <spring:message code="radiology.datatables.of"/> 0',
+                      "lengthMenu": '<spring:message code="radiology.datatables.show"/> _MENU_ <spring:message code="radiology.datatables.entries"/>',
                       "paginate": {
-                        "first": '<spring:message code="radiology.first"/>',
-                        "previous": '<spring:message code="general.previous"/>',
-                        "next": '<spring:message code="general.next"/>',
-                        "last": '<spring:message code="radiology.last"/>',
+                        "first": '<spring:message code="radiology.datatables.first"/>',
+                        "previous": '<spring:message code="radiology.datatables.previous"/>',
+                        "next": '<spring:message code="radiology.datatables.next"/>',
+                        "last": '<spring:message code="radiology.datatables.last"/>',
                       },
                     },
                   });
