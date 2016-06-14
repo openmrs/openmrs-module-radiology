@@ -1,11 +1,15 @@
 <openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui-1.7.2.custom.min.js" />
 <openmrs:htmlInclude file="/moduleResources/radiology/js/datatables/jquery.dataTables.min.js" />
+<openmrs:htmlInclude file="/moduleResources/radiology/js/moment.min.js" />
 <script type="text/javascript">
+  jQuery.fn.dataTable.moment('HH:mm MMM D, YY');
   jQuery
           .extend(
                   true,
                   jQuery.fn.dataTable.defaults,
                   {
+                    "pagingType": "simple",
+                    "info": false,
                     "language": {
                       "zeroRecords": '<spring:message code="radiology.datatables.noresult"/>',
                       "processing": '<spring:message code="radiology.datatables.loading"/>',
