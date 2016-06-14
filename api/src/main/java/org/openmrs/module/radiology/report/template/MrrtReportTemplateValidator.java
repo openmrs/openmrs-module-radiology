@@ -8,12 +8,14 @@
  */
 package org.openmrs.module.radiology.report.template;
 
+import org.openmrs.api.APIException;
+
 import java.io.File;
 
 public class MrrtReportTemplateValidator {
     
     
-    public static final void validate(File templateFile) throws MrrtReportTemplateException {
+    public static final void validate(File templateFile) throws APIException {
         // TODO should validate an mrrt template following the MRRT standards
     }
 }

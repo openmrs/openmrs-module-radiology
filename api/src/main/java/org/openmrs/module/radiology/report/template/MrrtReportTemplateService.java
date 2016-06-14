@@ -32,10 +32,21 @@ public interface MrrtReportTemplateService extends OpenmrsService {
     public MrrtReportTemplate getMrrtReportTemplate(Integer id);
     
     /**
+     *  get template by its UUID
+     *
+     *  @param uuid
+     *  @return mrrt template object or null
+     *  @should find object given valid uuid
+     *  @should should return null of no object found with given uuid
+     */
+    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
+    public MrrtReportTemplate getMrrtReportTemplateByUuid(String uuid);
+    
+    /**
      *  saves a new or existing template
-     *  
+     *
      *  @param template the template to save
-     *  @return the saved template 
+     *  @return the saved template
      *  @should save report
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_REPORT_TEMPLATES)
@@ -43,7 +54,7 @@ public interface MrrtReportTemplateService extends OpenmrsService {
     
     /**
      * delete a template from the database
-     * 
+     *
      * @param template the template that is been deleted
      * @should delete report from database
      */

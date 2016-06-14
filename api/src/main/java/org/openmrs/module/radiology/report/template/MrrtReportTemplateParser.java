@@ -62,22 +62,15 @@ public class MrrtReportTemplateParser {
      * 
      * @should throw an mrrt report template exception if file is invalid
      */
-    public static MrrtReportTemplate parse(File templateFile) throws MrrtReportTemplateException, IOException {
+    public static MrrtReportTemplate parse(File templateFile) throws IOException {
         
         MrrtReportTemplateValidator.validate(templateFile);
         
-        if (!templateFile.exists()) {
-            throw new MrrtReportTemplateException("File: " + templateFile.getAbsolutePath() + " does not exists");
-        }
-        if (!templateFile.canRead()) {
-            throw new MrrtReportTemplateException("File: " + templateFile.getAbsolutePath() + " cannot be read");
-        }
-        
-        MrrtReportTemplate mrrtTemplate = new MrrtReportTemplate();
         Document doc = Jsoup.parse(templateFile, CHARSET);
-        initializeTemplate(mrrtTemplate, doc);
+        MrrtReportTemplate result = new MrrtReportTemplate();
+        initializeTemplate(result, doc);
         
-        return mrrtTemplate;
+        return result;
     }
     
     private static final void initializeTemplate(MrrtReportTemplate template, Document doc) {

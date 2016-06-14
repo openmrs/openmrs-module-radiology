@@ -25,7 +25,7 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
     }
     
     /**
-     * @see MrrtReportTemplateService#getMrrtReportTemplate(Integer) 
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplate(Integer)
      */
     @Transactional(readOnly = true)
     @Override
@@ -34,7 +34,16 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
     }
     
     /**
-     * @see MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public MrrtReportTemplate getMrrtReportTemplateByUuid(String uuid) {
+        return mrrtReportTemplateDAO.getMrrtReportTemplateByUuid(uuid);
+    }
+    
+    /**
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
      */
     @Transactional
     @Override
@@ -43,7 +52,7 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
     }
     
     /**
-     * @see MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
      */
     @Transactional
     @Override

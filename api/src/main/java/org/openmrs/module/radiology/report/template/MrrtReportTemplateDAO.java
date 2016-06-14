@@ -11,7 +11,7 @@ package org.openmrs.module.radiology.report.template;
 /**
  * MRRTReportTemplate-related database functions
  * 
- * @see org.openmrs.module.radiology.report.template.MRRTReportTemplateService
+ * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService
  */
 interface MrrtReportTemplateDAO {
     
@@ -22,7 +22,12 @@ interface MrrtReportTemplateDAO {
     public MrrtReportTemplate getMrrtReportTemplate(Integer templateId);
     
     /**
-     * @see org.openmrs.module.radiology.report.template.MRRTReportTemplateService#getSaveMrrtReportTemplate(MrrtReportTemplate)
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
+     */
+    public MrrtReportTemplate getMrrtReportTemplateByUuid(String uuid);
+    
+    /**
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
      */
     public MrrtReportTemplate saveMrrtReportTemplate(MrrtReportTemplate template);
     

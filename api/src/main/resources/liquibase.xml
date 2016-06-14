@@ -360,6 +360,8 @@
 			<column name="template_id" type="int" autoIncrement="true">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
+
+			<column name="uuid" type="char(38)" />
 			<column name="charset" type="varchar(32)"/>
 			<column name="path" type="varchar(128)"/>
 			<column name="dcterms_title" type="varchar(256)"/>

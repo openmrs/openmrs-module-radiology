@@ -15,7 +15,7 @@ import org.hibernate.SessionFactory;
  * calls should go through the {@link org.openmrs.module.radiology.report.template.MrrtReportTemplateService} methods.
  *
  * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateDAO
- * @see org.openmrs.module.radiology.order.template.MrrtReportTemplateService
+ * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService
  */
 class HibernateMrrtReportTemplateDAO implements MrrtReportTemplateDAO {
     
@@ -41,7 +41,18 @@ class HibernateMrrtReportTemplateDAO implements MrrtReportTemplateDAO {
     }
     
     /**
-     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getSaveMrrtReportTemplate(MrrtReportTemplate)
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
+     */
+    @Override
+    public MrrtReportTemplate getMrrtReportTemplateByUuid(String uuid) {
+        return (MrrtReportTemplate) sessionFactory.getCurrentSession()
+                .createQuery("from MrrtReportTemplate m where m.uuid = :uuid")
+                .setString("uuid", uuid)
+                .uniqueResult();
+    }
+    
+    /**
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
      */
     @Override
     public MrrtReportTemplate saveMrrtReportTemplate(MrrtReportTemplate template) {
