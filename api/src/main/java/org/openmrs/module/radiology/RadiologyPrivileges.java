@@ -42,6 +42,8 @@ public class RadiologyPrivileges {
     
     public static final String VIEW_RADIOLOGY_SECTION = "Patient Dashboard - View Radiology Section";
     
+    public static final String VIEW_RADIOLOGY_REPORT_TEMPLATES = "View Radiology Report Templates";
+    
     private RadiologyPrivileges() {
         // Utility class not meant to be instantiated.
     }
