@@ -7,7 +7,7 @@
       <form:form method="post" modelAttribute="radiologyOrder" cssClass="box">
         <tr>
           <td><spring:bind path="orderId">
-              <a href="/openmrs/module/radiology/radiologyReport.form?orderId=${status.value}"> <spring:message
+              <a href="${pageContext.request.contextPath}/radiology/radiologyReport.form?orderId=${status.value}"> <spring:message
                   code="radiology.radiologyReportClaim" />
               </a>
             </spring:bind></td>
@@ -17,7 +17,9 @@
     <c:otherwise>
       <form:form method="post" modelAttribute="radiologyReport" cssClass="box">
         <tr>
-          <td><a href="/openmrs/module/radiology/radiologyReport.form?radiologyReportId=${radiologyReport.id}"> <c:choose>
+          <td><a
+            href="${pageContext.request.contextPath}/radiology/radiologyReport.form?radiologyReportId=${radiologyReport.id}">
+              <c:choose>
                 <c:when test="${radiologyReport.reportStatus == 'CLAIMED'}">
                   <spring:message code="radiology.radiologyReportResume" />
                 </c:when>

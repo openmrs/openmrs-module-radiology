@@ -25,6 +25,8 @@
 		</require_module>
 		<require_module version="${openmrs-legacyui-version}">org.openmrs.module.legacyui
 		</require_module>
+		<require_module version="${openmrs-webservicesrest-version}">org.openmrs.module.webservices.rest
+		</require_module>
 	</require_modules>
 	<!-- / Required Modules -->
 

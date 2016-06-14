@@ -10,6 +10,17 @@
                     var find = $j('#findButton');
                     var clearResults = $j('a#clearResults');
 
+                    $j('#addTemplatePopup').dialog({
+                      autoOpen: false,
+                      modal: true,
+                      title: '<openmrs:message code="radiology.report.templates.AddReportTemplates" javaScriptEscape="true"/>',
+                      width: '90%'
+                    });
+
+                    $j('#addTemplateButton').click(function() {
+                      $j('#addTemplatePopup').dialog('open');
+                    });
+
                     var radiologyOrdersTable = $j('#radiologyOrdersTable')
                             .DataTable(
                                     {
@@ -22,7 +33,7 @@
                                         },
                                         cache: true,
                                         dataType: "json",
-                                        url: "${pageContext.request.contextPath}/ws/rest/v1/radiologyorder/",
+                                        url: "http://localhost:8080/openmrs/ws/rest/v1/radiologyorder/",
                                         data: function(data) {
                                           return {
                                             startIndex: data.start,
@@ -35,7 +46,7 @@
                                           var result = [];
                                           for (var i = 0, ien = json.results.length; i < ien; i++) {
                                             result[i] = [
-                                                '<a href="${pageContext.request.contextPath}/radiology/radiologyOrder.form?orderId='
+                                                '<a href="http://localhost:8080/openmrs/module/radiology/radiologyOrder.form?orderId='
                                                         + json.results[i].uuid
                                                         + '">'
                                                         + json.results[i].orderNumber
@@ -90,38 +101,54 @@
                   });
 </script>
 
-<openmrs:hasPrivilege privilege="Add Radiology Orders">
-  <br>
-  <a href="radiologyOrder.form"><spring:message code="radiology.addOrder" /></a>
-  <br>
-</openmrs:hasPrivilege>
+<br/>
+<div id="buttonPanel">
+  <div style="float:left">
+    <input type="button" id="addTemplateButton" value="<openmrs:message code="radiology.report.templates.AddReportTemplates" javaScriptEscape="true"/>"/>
+    <div id="addTemplatePopup">
+      <b class="boxHeader"><openmrs:message code="radiology.report.templates.importTemplate"/></b>
+      <div class="box">
+        <form id="templateAddForm" action="radiologyDashboard.form" method="post" enctype="multipart/form-data">
+          <input type="file" name="templateFile" size="40"/>
+          <input type="hidden" name="action" value="upload"/>
+          <input type="submit" value='<openmrs:message code="radiology.report.templates.Upload"/>'/>
+        </form>
+      </div>
+      <br/>
+    </div>
+  </div>
+  <div style="clear:both">&nbsp;</div>
+</div>
+
 <br>
-<span class="boxHeader"> <b><spring:message code="radiology.radiologyOrders" /></b> <a id="clearResults" href="#"
+<span class="boxHeader"> <b><spring:message code="radiology.radiologyReportTemplates" /></b> <a id="clearResults" href="#"
   style="float: right"> <spring:message code="radiology.clearResults" />
 </a>
 </span>
 <div class="box">
   <table id="searchForm" cellspacing="10">
     <tr>
-      <form id="radiologyOrderListForm">
-        <td><label><spring:message code="radiology.patient" /></label> <radiology:patientField formFieldName="patient"
-            formFieldId="patientUuid" /></td>
+      <form id="reportTemplateListForm">
+        <td><label><spring:message code="radiology.report.template.title" />:</label> <input name="titleQuery" type="text"
+                                                                                                 style="width: 20em" title="<spring:message
+						code="radiology.minChars" />" /></td>
         <td><input id="findButton" type="button" value="<spring:message code="radiology.find"/>" /></td>
+        <td id="errorSpan"></td>
       </form>
     </tr>
   </table>
   <br>
   <div id="results">
-    <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
+    <table id="radiologyTemplatesTable" cellspacing="0" width="100%" class="display nowrap">
       <thead>
         <tr>
-          <th><spring:message code="radiology.datatables.column.orderNumber" /></th>
-          <th><spring:message code="radiology.datatables.column.patient" /></th>
-          <th><spring:message code="radiology.datatables.column.priority" /></th>
-          <th><spring:message code="radiology.datatables.column.imagingProcedure" /></th>
-          <th><spring:message code="radiology.datatables.column.referringPhysician" /></th>
-          <th><spring:message code="radiology.datatables.column.scheduledDate" /></th>
-          <th><spring:message code="radiology.datatables.column.dateActivated" /></th>
+          <th><spring:message code="radiology.report.template.templateId" /></th>
+          <th><spring:message code="radiology.report.template.title" /></th>
+          <th><spring:message code="radiology.report.template.type" /></th>
+          <th><spring:message code="radiology.report.template.creator" /></th>
+          <th><spring:message code="radiology.report.template.publisher" /></th>
+          <th><spring:message code="radiology.report.template.rights" /></th>
+          <th><spring:message code="radiology.report.template.description" /></th>
         </tr>
       </thead>
     </table>
