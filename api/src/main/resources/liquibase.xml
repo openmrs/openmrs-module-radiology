@@ -379,7 +379,7 @@
 		<insert tableName="privilege">
 			<column name="privilege" value="Add Radiology Report Templates"/>
 			<column name="description" value="Able to add new report templates"/>
-			<column name="uuid" value="dbc5c91c-a7d0-4012-9447-0168e89b2d3f"></column>
+			<column name="uuid" value="dbc5c91c-a7d0-4012-9447-0168e89b2d3f"/>
 		</insert>
 		<insert tableName="privilege">
 			<column name="privilege" value="Edit Radiology Report Templates"/>
@@ -395,6 +395,11 @@
 			<column name="privilege" value="Get Radiology Report Templates"/>
 			<column name="description" value="Able to get report templates"/>
 			<column name="uuid" value="2de0970b-3083-48a1-8312-f16098b2fdc2"/>
+		</insert>
+		<insert tableName="privilege">
+			<column name="privilege" value="View Radiology Report Templates"/>
+			<column name="description" value="should be able to view templates"/>
+			<column name="uuid" value="f4e1983a-f2de-42b3-b6a5-7983112ce5da"/>
 		</insert>
 	</changeSet>
 </databaseChangeLog>
