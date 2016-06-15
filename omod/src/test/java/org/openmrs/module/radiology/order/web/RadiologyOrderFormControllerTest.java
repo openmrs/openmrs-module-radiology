@@ -98,7 +98,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         ModelAndView modelAndView = radiologyOrderFormController.getRadiologyOrderFormWithNewRadiologyOrder();
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
         RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap()
@@ -130,7 +130,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                 radiologyOrderFormController.getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(mockPatient);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
         RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap()
@@ -165,7 +165,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                 radiologyOrderFormController.getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(null);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
         RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap()
@@ -200,7 +200,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                 .getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(mockRadiologyOrderInProgress);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("order"));
         RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap()
@@ -237,7 +237,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                 .getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(mockCompletedRadiologyOrder);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("order"));
         RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap()
@@ -281,7 +281,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                 .getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(mockDiscontinuationOrder);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("order"));
         Order order = (Order) modelAndView.getModelMap()
@@ -395,7 +395,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                     mockRadiologyOrder, mockRadiologyOrder, orderErrors);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
         assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR), is("radiology.studyPerformed"));
     }
     
@@ -429,7 +429,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                     mockRadiologyOrder, mockRadiologyOrder, orderErrors);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is("/module/radiology/radiologyOrderForm"));
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
     }
     
     /**

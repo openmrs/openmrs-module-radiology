@@ -1,10 +1,9 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
 
-<%@ include file="localHeader.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/localHeader.jsp"%>
 
-<openmrs:htmlInclude file="/moduleResources/radiology/js/moreInfo.js" />
-<openmrs:htmlInclude file="/moduleResources/radiology/js/tinymce/tinymce.min.js" />
+<openmrs:htmlInclude file="/moduleResources/radiology/scripts/tinymce/tinymce.min.js" />
 <script type="text/javascript">
   onload = initEverything();
   function initEverything() {
@@ -34,7 +33,7 @@
 <div>
   <span class="boxHeader"> <b><spring:message code="radiology.radiologyOrder" /></b>
   </span>
-  <%@ include file="portlets/radiologyOrderDetailsPortlet.jsp"%>
+  <%@ include file="/WEB-INF/view/module/radiology/orders/radiologyOrderDetailsPortlet.jsp"%>
 </div>
 <br>
 <span class="boxHeader"> <b><spring:message code="radiology.radiologyReportTitle" /></b>

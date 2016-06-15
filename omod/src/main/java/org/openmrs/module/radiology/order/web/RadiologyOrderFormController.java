@@ -53,7 +53,7 @@ public class RadiologyOrderFormController {
     
     public static final String RADIOLOGY_ORDER_FORM_REQUEST_MAPPING = "/module/radiology/radiologyOrder.form";
     
-    static final String RADIOLOGY_ORDER_FORM_VIEW = "/module/radiology/radiologyOrderForm";
+    static final String RADIOLOGY_ORDER_FORM_VIEW = "/module/radiology/orders/radiologyOrderForm";
     
     @Autowired
     private RadiologyOrderService radiologyOrderService;
