@@ -37,7 +37,7 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      *  @param uuid
      *  @return mrrt template object or null
      *  @should find object given valid uuid
-     *  @should should return null of no object found with given uuid
+     *  @should return null if no object found with given uuid
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
     public MrrtReportTemplate getMrrtReportTemplateByUuid(String uuid);

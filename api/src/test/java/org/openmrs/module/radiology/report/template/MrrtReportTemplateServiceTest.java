@@ -13,6 +13,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
+import static org.hamcrest.core.Is.is;
 
 public class MrrtReportTemplateServiceTest extends BaseModuleContextSensitiveTest {
     
@@ -21,6 +22,10 @@ public class MrrtReportTemplateServiceTest extends BaseModuleContextSensitiveTes
             "org/openmrs/module/radiology/include/MrrtReportTemplateServiceTestDataset.xml";
     
     private static final int EXISTING_TEMPLATE_ID = 1;
+    
+    private static final String VALID_UUID = "2379d290-96f7-408a-bbae-270387e3b92e";
+    
+    private static final String INVALID_UUID = "invalid uuid";
     
     @Autowired
     private MrrtReportTemplateService mrrtReportTemplateService;
@@ -77,5 +82,29 @@ public class MrrtReportTemplateServiceTest extends BaseModuleContextSensitiveTes
         Assert.assertNotNull(newTemplate);
         Assert.assertEquals(newTemplate.getDcTermsTitle(), template.getDcTermsTitle());
         Assert.assertEquals(newTemplate.getDcTermsDescription(), template.getDcTermsDescription());
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
+     * @verifies find object given valid uuid
+     */
+    @Test
+    public void getMrrtReportTemplateByUuid_shouldFindObjectGivenValidUuid() {
+        MrrtReportTemplate valid = mrrtReportTemplateService.getMrrtReportTemplateByUuid(VALID_UUID);
+        
+        Assert.assertNotNull(valid);
+        Assert.assertThat(valid.getTemplateId(), is(EXISTING_TEMPLATE_ID));
+        Assert.assertThat(valid.getDcTermsTitle(), is("title1"));
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
+     * @verifies return null if no object found with given uuid
+     */
+    @Test
+    public void getMrrtReportTemplateByUuid_shouldReturnNullIfNoObjectfoundWithGivenUuid() {
+        MrrtReportTemplate missing = mrrtReportTemplateService.getMrrtReportTemplateByUuid(INVALID_UUID);
+        
+        Assert.assertNull(missing);
     }
 }
