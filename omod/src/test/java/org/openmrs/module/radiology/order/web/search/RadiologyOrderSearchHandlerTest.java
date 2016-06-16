@@ -8,8 +8,6 @@ import static org.mockito.Mockito.when;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.criteria.Order;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -20,8 +18,6 @@ import org.openmrs.api.PatientService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
-import org.openmrs.module.webservices.rest.SimpleObject;
-import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestUtil;
 import org.openmrs.module.webservices.rest.web.api.RestService;
@@ -92,23 +88,6 @@ public class RadiologyOrderSearchHandlerTest {
         when(restService.getResourceBySupportedClass(Patient.class)).thenReturn(patientResource);
         
         when(radiologyOrderService.getRadiologyOrdersByPatient(patientWithOrders)).thenReturn(radiologyOrders);
-    }
-    
-    /**
-     * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return all radiology orders for given patient
-     */
-    //    @Test
-    public void search_shouldReturnAllRadiologyOrdersForGivenPatient() throws Exception {
-        
-        MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_UUID_WITH_ORDERS);
-        RequestContext requestContext = new RequestContext();
-        requestContext.setRequest(request);
-        
-        PageableResult pageableResult = radiologyOrderSearchHandler.search(requestContext);
-        SimpleObject simpleObject = pageableResult.toSimpleObject(ConversionUtil.getConverter(Order.class));
-        System.out.println(simpleObject);
     }
     
     /**
