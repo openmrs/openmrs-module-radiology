@@ -3,6 +3,7 @@ package org.openmrs.module.radiology.order.web.search;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 
 import java.util.List;
 
@@ -141,6 +142,7 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
             is(radiologyOrderService.getRadiologyOrdersByPatient(patientService.getPatientByUuid(PATIENT_WITH_ONE_ORDER))
                     .get(0)
                     .getUuid()));
+        assertNull(PropertyUtils.getProperty(resultPatientWithOneOrder, "totalCount"));
         
         MockHttpServletRequest requestPatientWithTwoOrders = request(RequestMethod.GET, getURI());
         requestPatientWithTwoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_WITH_TWO_ORDERS);
@@ -152,5 +154,31 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
         assertThat(Util.getResultsSize(resultPatientWithTwoOrders), is(2));
         hits = (List<Object>) resultPatientWithTwoOrders.get("results");
         assertThat(hits.size(), is(2));
+        assertNull(PropertyUtils.getProperty(resultPatientWithTwoOrders, "totalCount"));
+    }
+    
+    /**
+     * @see RadiologyOrderSearchHandler#search(RequestContext)
+     * @verifies return all radiology orders for given patient and totalCount if requested
+     */
+    @Test
+    public void search_shouldReturnAllRadiologyOrdersForGivenPatientAndTotalCountIfRequested() throws Exception {
+        
+        MockHttpServletRequest requestPatientWithOneOrder = request(RequestMethod.GET, getURI());
+        requestPatientWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_WITH_ONE_ORDER);
+        requestPatientWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_TOTAL_COUNT, "true");
+        SimpleObject resultPatientWithOneOrder = deserialize(handle(requestPatientWithOneOrder));
+        
+        assertNotNull(resultPatientWithOneOrder);
+        assertThat(PropertyUtils.getProperty(resultPatientWithOneOrder, "totalCount"), is(1));
+        
+        MockHttpServletRequest requestPatientWithTwoOrders = request(RequestMethod.GET, getURI());
+        requestPatientWithTwoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_WITH_TWO_ORDERS);
+        requestPatientWithTwoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_TOTAL_COUNT, "true");
+        
+        SimpleObject resultPatientWithTwoOrders = deserialize(handle(requestPatientWithTwoOrders));
+        
+        assertNotNull(resultPatientWithTwoOrders);
+        assertThat(PropertyUtils.getProperty(resultPatientWithTwoOrders, "totalCount"), is(2));
     }
 }

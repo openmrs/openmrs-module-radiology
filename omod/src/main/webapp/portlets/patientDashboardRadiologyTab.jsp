@@ -13,15 +13,7 @@
                     $j('#radiologyOrdersTable')
                             .DataTable(
                                     {
-                                      "pagingType": "simple",
-                                      fnDrawCallback: function() {
-                                        // WORKAROUND needed since paging is not fully implemented yet.
-                                        // datatables "paging" cannot be set to false, because otherwise the AJAX requests are given a limit of -1.
-                                        // therefore "pagingType" is set to "simple" showing only next & previous buttons which we simply hide.
-                                        // delete this hack as soon as paging is well implemented
-                                        $j('.previous, .next').hide();
-                                      },
-                                      "info": false,
+                                      "info": true,
                                       "searching": false,
                                       "ordering": false,
                                       "language": {
@@ -53,50 +45,66 @@
                                             limit: data.length,
                                             v: "full",
                                             patient: $j("#patientUuid").val(),
+                                            totalCount: true,
                                           };
                                         },
-                                        "dataSrc": function(json) {
-                                          var result = [];
-                                          for (var i = 0, ien = json.results.length; i < ien; i++) {
-                                            result[i] = [
-                                                '<a href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId='
-                                                        + json.results[i].uuid
-                                                        + '">'
-                                                        + json.results[i].orderNumber
-                                                        + '</a>',
-                                                json.results[i].patient.display,
-                                                json.results[i].urgency,
-                                                json.results[i].concept.display,
-                                                json.results[i].orderer.display,
-                                                json.results[i].scheduledDate,
-                                                json.results[i].dateActivated, ]
-                                          }
-                                          return result;
+                                        "dataFilter": function(data) {
+                                          var json = $j.parseJSON(data);
+                                          json.recordsTotal = json.totalCount || 0;
+                                          json.recordsFiltered = json.totalCount || 0;
+                                          json.data = json.results;
+                                          return JSON.stringify(json);
                                         }
                                       },
                                       "columns": [
                                           {
                                             "name": "orderNumber",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId='
+                                                      + full.uuid
+                                                      + '">'
+                                                      + full.orderNumber
+                                                      + '</a>';
+                                            }
                                           },
                                           {
                                             "name": "patient",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.patient.display;
+                                            }
                                           },
                                           {
                                             "name": "urgency",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.urgency;
+                                            }
                                           },
                                           {
                                             "name": "concept",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.concept.display;
+                                            }
                                           },
                                           {
                                             "name": "orderer",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.orderer.display;
+                                            }
                                           },
                                           {
                                             "name": "scheduledDate",
-                                            "render": function(dateTimeObject) {
+                                            "render": function(data, type,
+                                                    full, meta) {
                                               var result = "";
-                                              if (dateTimeObject) {
+                                              if (full.scheduledDate) {
 
-                                                result = moment(dateTimeObject)
+                                                result = moment(
+                                                        full.scheduledDate)
                                                         .format("LLL");
                                               }
                                               return result;
@@ -104,11 +112,13 @@
                                           },
                                           {
                                             "name": "dateActivated",
-                                            "render": function(dateTimeObject) {
+                                            "render": function(data, type,
+                                                    full, meta) {
                                               var result = "";
-                                              if (dateTimeObject) {
+                                              if (full.dateActivated) {
 
-                                                result = moment(dateTimeObject)
+                                                result = moment(
+                                                        full.dateActivated)
                                                         .format("LLL");
                                               }
                                               return result;
