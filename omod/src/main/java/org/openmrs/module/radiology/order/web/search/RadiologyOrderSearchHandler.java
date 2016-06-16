@@ -30,11 +30,14 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
     
     public static final String REQUEST_PARAM_PATIENT = "patient";
     
+    public static final String REQUEST_PARAM_TOTAL_COUNT = "totalCount";
+    
     @Autowired
     RadiologyOrderService radiologyOrderService;
     
     SearchQuery searchQuery = new SearchQuery.Builder("Allows you to search for RadiologyOrder's by patient")
             .withRequiredParameters(REQUEST_PARAM_PATIENT)
+            .withOptionalParameters(REQUEST_PARAM_TOTAL_COUNT)
             .build();
     
     private final SearchConfig searchConfig =
@@ -52,6 +55,7 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#getSearchConfig()
      * @should return all radiology orders for given patient
+     * @should return all radiology orders for given patient and totalCount if requested
      * @should return empty search result if patient cannot be found
      * @should return empty search result if patient has no radiology orders
      */

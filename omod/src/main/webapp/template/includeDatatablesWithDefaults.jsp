@@ -8,15 +8,7 @@
                   true,
                   jQuery.fn.dataTable.defaults,
                   {
-                    "pagingType": "simple",
-                    fnDrawCallback: function() {
-                      // WORKAROUND needed since paging is not fully implemented yet.
-                      // datatables "paging" cannot be set to false, because otherwise the AJAX requests are given a limit of -1.
-                      // therefore "pagingType" is set to "simple" showing only next & previous buttons which we simply hide.
-                      // delete this hack as soon as paging is well implemented
-                      jQuery('.previous, .next').hide();
-                    },
-                    "info": false,
+                    "info": true,
                     "searching": false,
                     "ordering": false,
                     "language": {
