@@ -30,7 +30,6 @@
             </c:if>
           </spring:bind></td>
       </tr>
-
       <tr>
         <td><spring:message code="radiology.imagingProcedure" /></td>
         <td><spring:bind path="concept">
@@ -41,6 +40,25 @@
               <span class="error">${status.errorMessage}</span>
             </c:if>
             <div class="description" id="conceptDescription"></div>
+          </spring:bind></td>
+      </tr>
+      <tr>
+        <td><spring:message code="radiology.radiologyOrder.orderReason" /></td>
+        <td><spring:bind path="orderReason">
+            <openmrs_tag:conceptField formFieldName="orderReason" formFieldId="orderReasonId"
+              initialValue="${status.editor.value.conceptId}" />
+            <c:if test="${status.errorMessage != ''}">
+              <span class="error">${status.errorMessage}</span>
+            </c:if>
+          </spring:bind></td>
+      </tr>
+      <tr>
+        <td><spring:message code="radiology.radiologyOrder.orderReasonNonCoded" /></td>
+        <td><spring:bind path="orderReasonNonCoded">
+            <textarea name="${status.expression}">${status.value}</textarea>
+            <c:if test="${status.errorMessage != ''}">
+              <span class="error">${status.errorMessage}</span>
+            </c:if>
           </spring:bind></td>
       </tr>
       <tr>

@@ -10,7 +10,7 @@
   $j(document)
           .ready(
                   function() {
-                    $j('#radiologyOrdersTable')
+                    var radiologyOrdersTable = $j('#radiologyOrdersTable')
                             .DataTable(
                                     {
                                       "info": true,
@@ -57,6 +57,12 @@
                                         }
                                       },
                                       "columns": [
+                                          {
+                                            "className": "details-control",
+                                            "orderable": false,
+                                            "data": null,
+                                            "defaultContent": ""
+                                          },
                                           {
                                             "name": "orderNumber",
                                             "render": function(data, type,
@@ -123,8 +129,93 @@
                                               }
                                               return result;
                                             }
+                                          },
+                                          {
+                                            "name": "orderReason",
+                                            "visible": false,
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              if ((typeof (full.orderReason) !== 'undefined')
+                                                      && (full.orderReason !== null)) {
+                                                return full.orderReason.display;
+                                              } else {
+                                                return "";
+                                              }
+                                            }
+                                          },
+                                          {
+                                            "name": "orderReasonNonCoded",
+                                            "visible": false,
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.orderReasonNonCoded;
+                                            }
+                                          },
+                                          {
+                                            "name": "instructions",
+                                            "visible": false,
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.instructions;
+                                            }
                                           }, ],
                                     });
+
+                    function formatChildRow(data) {
+                      var orderReason = "";
+                      var orderReasonNonCoded = "";
+                      var instructions = "";
+
+                      if ((typeof (data.orderReason) !== 'undefined')
+                              && (data.orderReason !== null)) {
+                        orderReason = data.orderReason.display;
+                      }
+                      if ((typeof (data.orderReasonNonCoded) !== 'undefined')
+                              && (data.orderReasonNonCoded !== null)) {
+                        orderReasonNonCoded = data.orderReasonNonCoded;
+                      }
+                      if ((typeof (data.instructions) !== 'undefined')
+                              && (data.instructions !== null)) {
+                        instructions = data.instructions;
+                      }
+                      return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'
+                              + '<tr>'
+                              + '<td><spring:message code="radiology.datatables.column.orderReason"/>:</td>'
+                              + '<td>'
+                              + orderReason
+                              + '</td>'
+                              + '</tr>'
+                              + '<tr>'
+                              + '<td><spring:message code="radiology.datatables.column.orderReasonNonCoded"/>:</td>'
+                              + '<td>'
+                              + orderReasonNonCoded
+                              + '</td>'
+                              + '</tr>'
+                              + '<tr>'
+                              + '<td><spring:message code="radiology.datatables.column.instructions"/>:</td>'
+                              + '<td>'
+                              + instructions
+                              + '</td>'
+                              + '</tr>'
+                              + '</table>';
+                    }
+
+                    $j('#radiologyOrdersTable tbody').on('click', 'td',
+                            function(e) {
+                              if ($j(e.target).is(':not(td)')) { return; }
+
+                              var tr = $j(this).closest('tr');
+                              var row = radiologyOrdersTable.row(tr);
+
+                              if (row.child.isShown()) {
+                                row.child.hide();
+                                tr.removeClass('shown');
+                              } else {
+                                row.child(formatChildRow(row.data())).show();
+                                tr.addClass('shown');
+                              }
+                            });
+
                   });
 </script>
 
@@ -139,6 +230,7 @@
   <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
     <thead>
       <tr>
+        <th></th>
         <th><spring:message code="radiology.datatables.column.orderNumber" /></th>
         <th><spring:message code="radiology.datatables.column.patient" /></th>
         <th><spring:message code="radiology.datatables.column.priority" /></th>
@@ -146,6 +238,9 @@
         <th><spring:message code="radiology.datatables.column.referringPhysician" /></th>
         <th><spring:message code="radiology.datatables.column.scheduledDate" /></th>
         <th><spring:message code="radiology.datatables.column.dateActivated" /></th>
+        <th><spring:message code="radiology.datatables.column.orderReason" /></th>
+        <th><spring:message code="radiology.datatables.column.orderReasonNonCoded" /></th>
+        <th><spring:message code="radiology.datatables.column.instructions" /></th>
       </tr>
     </thead>
   </table>
