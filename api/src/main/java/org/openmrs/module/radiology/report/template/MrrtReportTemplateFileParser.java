@@ -8,8 +8,7 @@
  */
 package org.openmrs.module.radiology.report.template;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -17,14 +16,16 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.openmrs.api.APIException;
+import org.openmrs.util.OpenmrsUtil;
 
 /**
- * a parser to parse MRRT report templates and  
+ * A parser to parse MRRT report templates and and return an MrrtReportTemplate object.
  */
-public class MrrtReportTemplateParser {
+public class MrrtReportTemplateFileParser {
     
     
-    private static final Log log = LogFactory.getLog(MrrtReportTemplateParser.class);
+    private static final Log log = LogFactory.getLog(MrrtReportTemplateFileParser.class);
     
     private static final String CHARSET = "UTF-8";
     
@@ -48,11 +49,46 @@ public class MrrtReportTemplateParser {
     
     private static final String DCTERMS_CREATOR = "dcterms.creator";
     
+    private File templateFile;
+    
+    public MrrtReportTemplateFileParser() {
+    }
+    
+    public MrrtReportTemplateFileParser(File templateFile) {
+        if (templateFile == null)
+            throw new APIException("File cannot be null: " + templateFile.getName());
+        this.templateFile = templateFile;
+    }
+    
+    public MrrtReportTemplateFileParser(InputStream in) {
+        FileOutputStream os = null;
+        
+        try {
+            templateFile = File.createTempFile("mrrtTemplateFile", ".html");
+            os = new FileOutputStream(templateFile);
+            OpenmrsUtil.copyFile(in, os);
+        }
+        catch (FileNotFoundException e) {
+            throw new APIException("File can not be created");
+        }
+        catch (IOException e) {
+            throw new APIException("File cannot be created");
+        }
+        finally {
+            try {
+                os.close();
+            }
+            catch (Exception e) {}
+            try {
+                in.close();
+            }
+            catch (Exception e) {}
+        }
+    }
+    
     /**
      * parse mrrt template file and return a template object
-     * 
-     * @param templateFile mrrt template file to be parsed
-     * 
+     *
      * @return returns MrrtReportTemplate object
      * @throws IOException 
      * 
@@ -62,7 +98,7 @@ public class MrrtReportTemplateParser {
      * 
      * @should throw an mrrt report template exception if file is invalid
      */
-    public static MrrtReportTemplate parse(File templateFile) throws IOException {
+    public MrrtReportTemplate parse() throws IOException {
         
         MrrtReportTemplateValidator.validate(templateFile);
         

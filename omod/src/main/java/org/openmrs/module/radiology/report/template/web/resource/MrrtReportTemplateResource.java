@@ -30,10 +30,10 @@ import org.springframework.beans.factory.annotation.Autowired;
         supportedOpenmrsVersions = { "2.0.*" })
 public class MrrtReportTemplateResource extends DelegatingCrudResource<MrrtReportTemplate> {
     
-
+    
     @Autowired
     private MrrtReportTemplateService mrrtReportTemplateService;
-
+    
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource#getRepresentationDescription(org.openmrs.module.webservices.rest.web.representation.Representation)
      * @should return default representation given instance of defaultrepresentation
@@ -90,19 +90,19 @@ public class MrrtReportTemplateResource extends DelegatingCrudResource<MrrtRepor
     public MrrtReportTemplate getByUniqueId(String uuid) {
         return mrrtReportTemplateService.getMrrtReportTemplateByUuid(uuid);
     }
-
+    
     /**
      * Display string for {@link MrrtReportTemplate}
      *
      * @param mrrtReportTemplate MrrtReportTemplate of which display string shall be returned
-     * @return templateIdentifer/title of given mrrtReportTemplate
+     * @return templateIdentifier/title of given mrrtReportTemplate
      * @should return templateIdentifier/title of given mrrtReportTemplate
      */
     @PropertyGetter("display")
     public String getDisplayString(MrrtReportTemplate mrrtReportTemplate) {
-       return mrrtReportTemplate.getDcTermsIdentifier() + "/" + mrrtReportTemplate.getDcTermsTitle();
+        return mrrtReportTemplate.getDcTermsIdentifier() + "/" + mrrtReportTemplate.getDcTermsTitle();
     }
-
+    
     @Override
     protected void delete(MrrtReportTemplate mrrtReportTemplate, String s, RequestContext requestContext)
             throws ResourceDoesNotSupportOperationException {
@@ -110,7 +110,8 @@ public class MrrtReportTemplateResource extends DelegatingCrudResource<MrrtRepor
     }
     
     @Override
-    public void purge(MrrtReportTemplate mrrtReportTemplate, RequestContext requestContext) throws ResourceDoesNotSupportOperationException {
+    public void purge(MrrtReportTemplate mrrtReportTemplate, RequestContext requestContext)
+            throws ResourceDoesNotSupportOperationException {
         throw new ResourceDoesNotSupportOperationException();
     }
     

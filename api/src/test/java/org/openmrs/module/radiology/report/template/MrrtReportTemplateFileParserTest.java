@@ -15,9 +15,9 @@ import org.junit.Test;
 import static org.hamcrest.core.Is.is;
 
 /**
- * Unit test for the MrrtReportTemplateParser 
+ * Unit test for the MrrtReportTemplateFileParser
  */
-public class MrrtReportTemplateParserTest {
+public class MrrtReportTemplateFileParserTest {
     
     
     private static final String CHARSET = "UTF-8";
@@ -44,7 +44,7 @@ public class MrrtReportTemplateParserTest {
     private static final String TEST_DCTERMS_CREATOR = "Jacobs JE, et al. ";
     
     /**
-    * @see MrrtReportTemplateParser#parse(File)
+    * @see MrrtReportTemplateFileParser#parse()
     * @verifies return an mrrt template object if file is valid
     */
     @Test
@@ -53,7 +53,7 @@ public class MrrtReportTemplateParserTest {
                 .getResource("TestMrrtReportTemplate.html")
                 .getFile());
         
-        MrrtReportTemplate template = MrrtReportTemplateParser.parse(file);
+        MrrtReportTemplate template = new MrrtReportTemplateFileParser(file).parse();
         
         Assert.assertNotNull(template);
         Assert.assertThat(template.getCharset(), is(CHARSET));

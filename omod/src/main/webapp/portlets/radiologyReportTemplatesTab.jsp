@@ -21,7 +21,7 @@
                       $j('#addTemplatePopup').dialog('open');
                     });
 
-                    var radiologyOrdersTable = $j('#radiologyOrdersTable')
+                    var radiologyTemplatesTable = $j('#radiologyTemplatesTable')
                             .DataTable(
                                     {
                                       "processing": true,

@@ -13,6 +13,11 @@ import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.RadiologyPrivileges;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+
 /**
  * The service for managing MrrtReportTemplates 
  */
@@ -21,10 +26,10 @@ public interface MrrtReportTemplateService extends OpenmrsService {
     
     
     /**
-     * get a template with a given id 
+     * Get an {@code MrrtReportTemplate} with a given id
      * 
-     * @param id the template id
-     * @return template with given id
+     * @param id the {MrrtReportTemplate} id
+     * @return {@code MrrtReportTemplate} with given id
      * 
      * @should get template with given id
      */
@@ -32,20 +37,20 @@ public interface MrrtReportTemplateService extends OpenmrsService {
     public MrrtReportTemplate getMrrtReportTemplate(Integer id);
     
     /**
-     *  get template by its UUID
+     *  Get {@code MrrtReportTemplate} by its UUID.
      *
-     *  @param uuid
-     *  @return mrrt template object or null
-     *  @should find object given valid uuid
-     *  @should return null if no object found with given uuid
+     *  @param uuid UUID of {@code MrrtReportTemplate}
+     *  @return mrrt {@code MrrtReportTemplate} object or null
+     *  @should should find object given valid uuid
+     *  @should should return null if no object found with given uuid
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
     public MrrtReportTemplate getMrrtReportTemplateByUuid(String uuid);
     
     /**
-     *  saves a new or existing template
+     *  Saves a new or existing {@code MrrtReportTemplate}.
      *
-     *  @param template the template to save
+     *  @param template the {@code MrrtReportTemplate} to save
      *  @return the saved template
      *  @should save report
      */
@@ -53,9 +58,9 @@ public interface MrrtReportTemplateService extends OpenmrsService {
     public MrrtReportTemplate saveMrrtReportTemplate(MrrtReportTemplate template);
     
     /**
-     * delete a template from the database
+     * Delete an {@code MrrtReportTemplate} from the database.
      *
-     * @param template the template that is been deleted
+     * @param template the {@code MrrtReportTemplate} that is been deleted
      * @should delete report from database
      */
     @Authorized(RadiologyPrivileges.DELETE_RADIOLOGY_REPORT_TEMPLATES)

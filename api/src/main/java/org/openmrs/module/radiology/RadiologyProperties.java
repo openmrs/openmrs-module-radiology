@@ -14,8 +14,12 @@ import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.OrderType;
 import org.openmrs.VisitType;
+import org.openmrs.api.APIException;
 import org.openmrs.module.emrapi.utils.ModuleProperties;
+import org.openmrs.util.OpenmrsUtil;
 import org.springframework.stereotype.Component;
+
+import java.io.File;
 
 /**
  * Properties, mostly configured via GPs for this module.
@@ -185,5 +189,19 @@ public class RadiologyProperties extends ModuleProperties {
         }
         result = result.substring(0, result.length() - 1);
         return result;
+    }
+    
+    public String getReportTemplateHome() {
+        String openmrsApplicationDataDirectory = OpenmrsUtil.getApplicationDataDirectory();
+        String templatesPath = openmrsApplicationDataDirectory + File.separator + "radiology" + File.separator + "templates";
+        File templatesHomeDir = new File(templatesPath);
+        
+        if (!templatesHomeDir.exists()) {
+            templatesHomeDir.mkdirs();
+        }
+        if (!templatesHomeDir.exists()) {
+            throw new APIException("Could not create folder:" + getReportTemplateHome());
+        }
+        return templatesHomeDir.getAbsolutePath();
     }
 }
