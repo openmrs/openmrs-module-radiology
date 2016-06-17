@@ -181,16 +181,16 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     }
     
     /**
-     * @see RadiologyOrderService#getRadiologyOrderByOrderId(Integer)
+     * @see RadiologyOrderService#getRadiologyOrder(Integer)
      */
     @Transactional(readOnly = true)
     @Override
-    public RadiologyOrder getRadiologyOrderByOrderId(Integer orderId) {
+    public RadiologyOrder getRadiologyOrder(Integer orderId) {
         if (orderId == null) {
             throw new IllegalArgumentException("orderId is required");
         }
         
-        return radiologyOrderDAO.getRadiologyOrderByOrderId(orderId);
+        return radiologyOrderDAO.getRadiologyOrder(orderId);
     }
     
     /**

@@ -53,7 +53,7 @@ public class RadiologyReportEditorComponentTest extends BaseModuleContextSensiti
         RadiologyReportEditor editor = new RadiologyReportEditor();
         editor.setAsText("1");
         assertThat(editor.getValue(), is(notNullValue()));
-        assertThat((RadiologyReport) editor.getValue(), is(radiologyReportService.getRadiologyReportByRadiologyReportId(1)));
+        assertThat((RadiologyReport) editor.getValue(), is(radiologyReportService.getRadiologyReport(1)));
     }
     
     /**

@@ -39,7 +39,7 @@ public class RadiologyReportEditor extends PropertyEditorSupport {
         final RadiologyReportService radiologyReportService = Context.getService(RadiologyReportService.class);
         if (StringUtils.hasText(text)) {
             try {
-                setValue(radiologyReportService.getRadiologyReportByRadiologyReportId(Integer.valueOf(text)));
+                setValue(radiologyReportService.getRadiologyReport(Integer.valueOf(text)));
             }
             catch (Exception ex) {
                 final RadiologyReport radiologyReport = radiologyReportService.getRadiologyReportByUuid(text);

@@ -37,12 +37,12 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
     }
     
     /**
-     * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportByRadiologyReportId(Integer)
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReport(Integer)
      */
     @Override
-    public RadiologyReport getRadiologyReportById(Integer radiologyReportId) {
+    public RadiologyReport getRadiologyReport(Integer reportId) {
         return (RadiologyReport) sessionFactory.getCurrentSession()
-                .get(RadiologyReport.class, radiologyReportId);
+                .get(RadiologyReport.class, reportId);
     }
     
     /**

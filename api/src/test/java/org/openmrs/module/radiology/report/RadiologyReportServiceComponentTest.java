@@ -104,7 +104,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             createAndClaimRadiologyReport_shouldCreateARadiologyOrderWithReportStatusClaimedGivenACompletedRadiologyOrder()
                     throws Exception {
         
-        RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
+        RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
         radiologyOrder.getStudy()
                 .setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
         RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
@@ -134,7 +134,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             throws Exception {
         
         RadiologyOrder existingRadiologyOrder =
-                radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT);
+                radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT);
         existingRadiologyOrder.getStudy()
                 .setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
         expectedException.expect(IllegalArgumentException.class);
@@ -152,9 +152,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             createAndClaimRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfGivenOrderHasACompletedRadiologyReport()
                     throws Exception {
         RadiologyOrder existingRadiologyOrder =
-                radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT);
-        RadiologyReport existingRadiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+                radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT);
+        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         existingRadiologyReport.setReportStatus(RadiologyReportStatus.CLAIMED);
         radiologyReportService.saveRadiologyReport(existingRadiologyReport);
         radiologyReportService.completeRadiologyReport(existingRadiologyReport, providerService.getProvider(1));
@@ -174,7 +173,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                     throws Exception {
         
         RadiologyOrder existingRadiologyOrder =
-                radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT);
+                radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT);
         expectedException.expect(UnsupportedOperationException.class);
         expectedException
                 .expectMessage("cannot create radiologyReport for this radiologyOrder because it is already claimed");
@@ -188,8 +187,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     @Test
     public void saveRadiologyReport_shouldSaveRadiologyReportInDatabaseAndReturnIt() throws Exception {
         
-        RadiologyReport existingRadiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         existingRadiologyReport.setReportStatus(RadiologyReportStatus.CLAIMED);
         existingRadiologyReport.setReportBody("test - text");
         
@@ -210,8 +208,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void saveRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfRadiologyReportIsCompleted()
             throws Exception {
         
-        RadiologyReport radiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         radiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
         
         expectedException.expect(UnsupportedOperationException.class);
@@ -227,8 +224,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void saveRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfRadiologyReportIsDiscontinued()
             throws Exception {
         
-        RadiologyReport radiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         radiologyReport.setReportStatus(RadiologyReportStatus.DISCONTINUED);
         
         expectedException.expect(UnsupportedOperationException.class);
@@ -255,8 +251,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     @Test
     public void saveRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfRadiologyReportStatusIsNull() throws Exception {
         
-        RadiologyReport existingRadiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         existingRadiologyReport.setReportStatus(null);
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReportStatus cannot be null");
@@ -270,8 +265,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     @Test
     public void unclaimRadiologyReport_shouldSetTheRadiologyReportStatusOfRadiologyReportToDiscontinued() throws Exception {
         
-        RadiologyReport existingRadiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         RadiologyReport radiologyReport = radiologyReportService.unclaimRadiologyReport(existingRadiologyReport);
         assertNotNull(radiologyReport);
         assertThat(radiologyReport.getId(), is(EXISTING_RADIOLOGY_REPORT_ID));
@@ -298,8 +292,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void unclaimRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfRadiologyReportStatusIsNull()
             throws Exception {
         
-        RadiologyReport existingRadiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         existingRadiologyReport.setReportStatus(null);
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReportStatus cannot be null");
@@ -314,8 +307,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void unclaimRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfRadiologyReportIsCompleted()
             throws Exception {
         
-        RadiologyReport radiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         radiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
         
         expectedException.expect(UnsupportedOperationException.class);
@@ -331,8 +323,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void unclaimRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfRadiologyReportIsDiscontinued()
             throws Exception {
         
-        RadiologyReport radiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         radiologyReport.setReportStatus(RadiologyReportStatus.DISCONTINUED);
         
         expectedException.expect(UnsupportedOperationException.class);
@@ -351,8 +342,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.completeRadiologyReport(
-            radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID),
-            radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID)
+            radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID),
+            radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID)
                     .getPrincipalResultsInterpreter());
         
         assertNotNull(radiologyReport);
@@ -368,8 +359,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void completeRadiologyReport_shouldSetTheRadiologyReportStatusToComplete() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.completeRadiologyReport(
-            radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID),
-            radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID)
+            radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID),
+            radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID)
                     .getPrincipalResultsInterpreter());
         
         assertNotNull(radiologyReport);
@@ -385,8 +376,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void completeRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfPrincipalResultsInterpreterIsNull()
             throws Exception {
         
-        RadiologyReport existingRadiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReport cannot be null");
         radiologyReportService.completeRadiologyReport(null, existingRadiologyReport.getPrincipalResultsInterpreter());
@@ -400,8 +390,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     @Test
     public void completeRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfRadiologyReportIsNull() throws Exception {
         
-        RadiologyReport existingRadiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         existingRadiologyReport.setPrincipalResultsInterpreter(null);
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("principalResultsInterpreter cannot be null");
@@ -417,8 +406,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void completeRadiologyReport_shouldThrowAnIllegalArgumentExceptionIfRadiologyReportStatusIsNull()
             throws Exception {
         
-        RadiologyReport existingRadiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         existingRadiologyReport.setReportStatus(null);
         Provider provider = new Provider();
         provider.setId(1);
@@ -437,8 +425,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void completeRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfRadiologyReportIsCompleted()
             throws Exception {
         
-        RadiologyReport radiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         radiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
         Provider provider = new Provider();
         provider.setId(1);
@@ -458,8 +445,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void completeRadiologyReport_shouldThrowAnUnsupportedOperationExceptionIfRadiologyReportIsDiscontinued()
             throws Exception {
         
-        RadiologyReport radiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         radiologyReport.setReportStatus(RadiologyReportStatus.DISCONTINUED);
         Provider provider = new Provider();
         provider.setId(1);
@@ -471,29 +457,26 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     }
     
     /**
-     * @see RadiologyOrderService#getRadiologyReportByRadiologyReportId(Integer)
-     * @verifies fetch RadiologyReport matching given radiologyReportId
+     * @see RadiologyOrderService#getRadiologyReport(Integer)
+     * @verifies fetch RadiologyReport matching given reportId
      */
     @Test
-    public void getRadiologyReportByRadiologyReportId_shouldFetchRadiologyReportMatchingGivenRadiologyReportId()
-            throws Exception {
+    public void getRadiologyReport_shouldFetchRadiologyReportMatchingGivenReportId() throws Exception {
         
-        RadiologyReport radiologyReport =
-                radiologyReportService.getRadiologyReportByRadiologyReportId(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         assertThat(radiologyReport.getId(), is(EXISTING_RADIOLOGY_REPORT_ID));
     }
     
     /**
-     * @see RadiologyOrderService#getRadiologyReportByRadiologyReportId(Integer)
-     * @verifies throw IllegalArgumentException if radiologyReportId is null
+     * @see RadiologyOrderService#getRadiologyReport(Integer)
+     * @verifies throw IllegalArgumentException if reportId is null
      */
     @Test
-    public void getRadiologyReportByRadiologyReportId_shouldThrowIllegalArgumentExceptionIfRadiologyReportIdIsNull()
-            throws Exception {
+    public void getRadiologyReport_shouldThrowIllegalArgumentExceptionIfReportIdIsNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyReportId cannot be null");
-        radiologyReportService.getRadiologyReportByRadiologyReportId(null);
+        expectedException.expectMessage("reportId cannot be null");
+        radiologyReportService.getRadiologyReport(null);
     }
     
     /**
@@ -542,7 +525,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                     throws Exception {
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT),
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT),
             RadiologyReportStatus.CLAIMED);
         assertNotNull(radiologyReports);
         assertThat(radiologyReports.size(), is(1));
@@ -560,7 +543,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                     throws Exception {
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT),
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT),
             RadiologyReportStatus.COMPLETED);
         assertNotNull(radiologyReports);
         assertThat(radiologyReports.size(), is(1));
@@ -577,7 +560,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                     throws Exception {
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT),
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT),
             RadiologyReportStatus.DISCONTINUED);
         assertNotNull(radiologyReports);
         assertThat(radiologyReports.size(), is(1));
@@ -594,7 +577,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                     throws Exception {
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT),
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT),
             RadiologyReportStatus.CLAIMED);
         assertThat(radiologyReports.size(), is(0));
     }
@@ -627,7 +610,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReportStatus cannot be null");
         radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT), null);
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT), null);
     }
     
     /**
@@ -639,7 +622,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             throws Exception {
         
         boolean hasRadiologyOrderClaimedRadiologyReport = radiologyReportService.hasRadiologyOrderClaimedRadiologyReport(
-            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
         assertFalse(hasRadiologyOrderClaimedRadiologyReport);
     }
     
@@ -652,7 +635,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             throws Exception {
         
         boolean hasRadiologyOrderClaimedRadiologyReport = radiologyReportService.hasRadiologyOrderClaimedRadiologyReport(
-            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT));
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT));
         assertTrue(hasRadiologyOrderClaimedRadiologyReport);
     }
     
@@ -676,7 +659,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             throws Exception {
         
         boolean hasRadiologyOrderCompletedRadiologyReport = radiologyReportService.hasRadiologyOrderCompletedRadiologyReport(
-            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
         assertFalse(hasRadiologyOrderCompletedRadiologyReport);
     }
     
@@ -689,7 +672,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             throws Exception {
         
         boolean hasRadiologyOrderClaimedRadiologyReport = radiologyReportService.hasRadiologyOrderCompletedRadiologyReport(
-            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
         assertTrue(hasRadiologyOrderClaimedRadiologyReport);
     }
     
@@ -715,7 +698,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             throws Exception {
         
         RadiologyReport activeReport = radiologyReportService.getActiveRadiologyReportByRadiologyOrder(
-            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT));
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT));
         
         assertNotNull(activeReport);
     }
@@ -729,7 +712,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             throws Exception {
         
         RadiologyReport activeReport = radiologyReportService.getActiveRadiologyReportByRadiologyOrder(
-            radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
         
         assertNotNull(activeReport);
     }

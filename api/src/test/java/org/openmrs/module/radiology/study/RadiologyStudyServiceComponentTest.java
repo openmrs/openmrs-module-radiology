@@ -109,7 +109,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     public void saveStudy_shouldCreateNewStudyFromGivenStudyObject() throws Exception {
         
         RadiologyStudy radiologyStudy = getUnsavedStudy();
-        RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
+        RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
         radiologyOrder.setStudy(radiologyStudy);
         
         RadiologyStudy createdStudy = radiologyStudyService.saveStudy(radiologyStudy);
@@ -287,7 +287,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
             throws Exception {
         
         RadiologyOrder radiologyOrderWithoutStudy =
-                radiologyOrderService.getRadiologyOrderByOrderId(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
+                radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
         List<RadiologyOrder> radiologyOrders = Arrays.asList(radiologyOrderWithoutStudy);
         
         List<RadiologyStudy> radiologyStudies = radiologyStudyService.getStudiesByRadiologyOrders(radiologyOrders);

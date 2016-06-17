@@ -21,9 +21,9 @@ interface RadiologyOrderDAO {
     
     
     /**
-     * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrderByOrderId(Integer)
+     * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrder(Integer)
      */
-    public RadiologyOrder getRadiologyOrderByOrderId(Integer orderId);
+    public RadiologyOrder getRadiologyOrder(Integer orderId);
     
     /**
      * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatient(Patient)

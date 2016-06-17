@@ -105,16 +105,16 @@ public interface RadiologyReportService extends OpenmrsService {
             throws IllegalArgumentException, UnsupportedOperationException;
     
     /**
-     * Get a RadiologyReport matching the radiologyReportId
+     * Get the {@code RadiologyReport} by its {@code reportId}.
      *
-     * @param radiologyReportId of RadiologyReport
-     * @return RadiologyReport matching given radiologyReportId
-     * @throws IllegalArgumentException if radiologyReportId is null
-     * @should fetch RadiologyReport matching given radiologyReportId
-     * @should throw IllegalArgumentException if radiologyReportId is null
+     * @param reportId Report Id of wanted RadiologyReport
+     * @return RadiologyReport matching given reportId
+     * @throws IllegalArgumentException if reportId is null
+     * @should fetch RadiologyReport matching given reportId
+     * @should throw IllegalArgumentException if reportId is null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
-    RadiologyReport getRadiologyReportByRadiologyReportId(Integer radiologyReportId) throws IllegalArgumentException;
+    RadiologyReport getRadiologyReport(Integer reportId) throws IllegalArgumentException;
     
     /**
      * Get a RadiologyReport matching the radiologyReport uuid

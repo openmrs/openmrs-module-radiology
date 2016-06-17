@@ -457,7 +457,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         MockHttpSession mockSession = new MockHttpSession();
         mockRequest.setSession(mockSession);
         
-        when(radiologyOrderService.getRadiologyOrderByOrderId(mockRadiologyOrderToDiscontinue.getOrderId()))
+        when(radiologyOrderService.getRadiologyOrder(mockRadiologyOrderToDiscontinue.getOrderId()))
                 .thenReturn(mockRadiologyOrderToDiscontinue);
         when(radiologyOrderService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
             mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getOrderReasonNonCoded()))
