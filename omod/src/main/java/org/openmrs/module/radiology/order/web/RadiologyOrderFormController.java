@@ -230,7 +230,7 @@ public class RadiologyOrderFormController {
             if (radiologyOrderErrors.hasErrors()) {
                 modelAndView.addObject("order", radiologyOrderToDiscontinue);
                 modelAndView.addObject("radiologyOrder",
-                    radiologyOrderService.getRadiologyOrderByOrderId(radiologyOrderToDiscontinue.getOrderId()));
+                    radiologyOrderService.getRadiologyOrder(radiologyOrderToDiscontinue.getOrderId()));
                 
                 return modelAndView;
             }
@@ -249,7 +249,7 @@ public class RadiologyOrderFormController {
         
         modelAndView.addObject("order", radiologyOrderToDiscontinue);
         modelAndView.addObject("radiologyOrder",
-            radiologyOrderService.getRadiologyOrderByOrderId(radiologyOrderToDiscontinue.getOrderId()));
+            radiologyOrderService.getRadiologyOrder(radiologyOrderToDiscontinue.getOrderId()));
         modelAndView.addObject("discontinuationOrder", discontinuationOrder);
         return modelAndView;
     }

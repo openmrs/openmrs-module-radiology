@@ -38,10 +38,10 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
     }
     
     /**
-     * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrderByOrderId(Integer)
+     * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrder(Integer)
      */
     @Override
-    public RadiologyOrder getRadiologyOrderByOrderId(Integer orderId) {
+    public RadiologyOrder getRadiologyOrder(Integer orderId) {
         return (RadiologyOrder) sessionFactory.getCurrentSession()
                 .get(RadiologyOrder.class, orderId);
     }

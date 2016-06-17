@@ -69,7 +69,7 @@ public interface RadiologyOrderService extends OpenmrsService {
             throws Exception;
     
     /**
-     * Get RadiologyOrder by its orderId
+     * Get the {@code RadiologyOrder} by its {@code orderId}.
      *
      * @param orderId of wanted RadiologyOrder
      * @return RadiologyOrder matching given orderId
@@ -79,7 +79,7 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @should throw illegal argument exception given null
      */
     @Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
-    public RadiologyOrder getRadiologyOrderByOrderId(Integer orderId) throws IllegalArgumentException;
+    public RadiologyOrder getRadiologyOrder(Integer orderId) throws IllegalArgumentException;
     
     /**
      * Get RadiologyOrder's by its associated Patient
