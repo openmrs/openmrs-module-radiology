@@ -33,7 +33,7 @@
 <div>
   <span class="boxHeader"> <b><spring:message code="radiology.radiologyOrder" /></b>
   </span>
-  <%@ include file="/WEB-INF/view/module/radiology/orders/radiologyOrderDetailsPortlet.jsp"%>
+  <%@ include file="/WEB-INF/view/module/radiology/orders/radiologyOrderDetailsSegment.jsp"%>
 </div>
 <br>
 <span class="boxHeader"> <b><spring:message code="radiology.radiologyReportTitle" /></b>

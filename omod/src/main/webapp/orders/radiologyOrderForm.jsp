@@ -16,7 +16,7 @@
           <openmrs:hasPrivilege privilege="Add Visits">
             <openmrs:hasPrivilege privilege="Edit Encounters">
               <openmrs:hasPrivilege privilege="Edit Visits">
-                <%@ include file="radiologyOrderCreationPortlet.jsp"%>
+                <%@ include file="radiologyOrderCreationSegment.jsp"%>
               </openmrs:hasPrivilege>
             </openmrs:hasPrivilege>
           </openmrs:hasPrivilege>
@@ -36,14 +36,14 @@
     <c:choose>
       <c:when test="${not empty radiologyOrder}">
         <!--  Show existing RadiologyOrder -->
-        <%@ include file="radiologyOrderDisplayPortlet.jsp"%>
+        <%@ include file="radiologyOrderDisplaySegment.jsp"%>
         <c:if test="${radiologyOrder.completed}">
           <!--  Show form for radiology report -->
           <openmrs:hasPrivilege privilege="Add Radiology Reports">
             <openmrs:hasPrivilege privilege="Delete Radiology Reports">
               <openmrs:hasPrivilege privilege="Edit Radiology Reports">
                 <openmrs:hasPrivilege privilege="Get Radiology Reports">
-                  <%@ include file="radiologyReportPortlet.jsp"%>
+                  <%@ include file="radiologyReportSegment.jsp"%>
                 </openmrs:hasPrivilege>
               </openmrs:hasPrivilege>
             </openmrs:hasPrivilege>
@@ -54,14 +54,14 @@
           <!--  Show form to discontinue an active non in progress/completed RadiologyOrder -->
           <openmrs:hasPrivilege privilege="Delete Radiology Orders">
             <openmrs:hasPrivilege privilege="Edit Orders">
-              <%@ include file="radiologyOrderDiscontinuationPortlet.jsp"%>
+              <%@ include file="radiologyOrderDiscontinuationSegment.jsp"%>
             </openmrs:hasPrivilege>
           </openmrs:hasPrivilege>
         </c:if>
       </c:when>
       <c:otherwise>
         <!--  Show read-only view of discontinuation Order -->
-        <%@ include file="discontinuationOrderDisplayPortlet.jsp"%>
+        <%@ include file="discontinuationOrderDisplaySegment.jsp"%>
       </c:otherwise>
     </c:choose>
   </c:otherwise>
