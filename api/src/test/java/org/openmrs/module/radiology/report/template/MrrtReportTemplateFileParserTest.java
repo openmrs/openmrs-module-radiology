@@ -8,17 +8,23 @@
  */
 package org.openmrs.module.radiology.report.template;
 
-import java.io.File;
-import org.junit.Assert;
-import org.junit.Test;
-
 import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
+import java.io.File;
+
+import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Unit test for the MrrtReportTemplateFileParser
+ * Unit test for the {@code MrrtReportTemplateFileParser}.
  */
 public class MrrtReportTemplateFileParserTest {
     
+    
+    @Autowired
+    private Parser parser;
     
     private static final String CHARSET = "UTF-8";
     
@@ -53,21 +59,21 @@ public class MrrtReportTemplateFileParserTest {
                 .getResource("TestMrrtReportTemplate.html")
                 .getFile());
         
-        MrrtReportTemplate template = new MrrtReportTemplateFileParser(file).parse();
+        MrrtReportTemplate template = parser.parse(file);
         
-        Assert.assertNotNull(template);
-        Assert.assertThat(template.getCharset(), is(CHARSET));
-        Assert.assertThat(template.getPath(), is(file.getAbsolutePath()));
-        Assert.assertThat(template.getDcTermsTitle(), is(TEST_DCTERMS_TITLE));
-        Assert.assertThat(template.getDcTermsDescription(), is(TEST_DCTERMS_DESCRIPTION));
-        Assert.assertThat(template.getDcTermsIdentifier(), is(TEST_DCTERMS_IDENTIFIER));
-        Assert.assertThat(template.getDcTermsLanguage(), is(TEST_DCTERMS_LANGUAGE));
-        Assert.assertThat(template.getDcTermsLanguage(), is(TEST_DCTERMS_LANGUAGE));
-        Assert.assertThat(template.getDcTermsType(), is(TEST_DCTERMS_TYPE));
-        Assert.assertThat(template.getDcTermsPublisher(), is(TEST_DCTERMS_PUBLISHER));
-        Assert.assertThat(template.getDcTermsRights(), is(TEST_DCTERMS_RIGHTS));
-        Assert.assertThat(template.getDcTermsLicense(), is(TEST_DCTERMS_LICENSE));
-        Assert.assertThat(template.getDcTermsDate(), is(TEST_DCTERMS_DATE));
-        Assert.assertThat(template.getDcTermsCreator(), is(TEST_DCTERMS_CREATOR));
+        assertNotNull(template);
+        assertThat(template.getCharset(), is(CHARSET));
+        assertThat(template.getPath(), is(file.getAbsolutePath()));
+        assertThat(template.getDcTermsTitle(), is(TEST_DCTERMS_TITLE));
+        assertThat(template.getDcTermsDescription(), is(TEST_DCTERMS_DESCRIPTION));
+        assertThat(template.getDcTermsIdentifier(), is(TEST_DCTERMS_IDENTIFIER));
+        assertThat(template.getDcTermsLanguage(), is(TEST_DCTERMS_LANGUAGE));
+        assertThat(template.getDcTermsLanguage(), is(TEST_DCTERMS_LANGUAGE));
+        assertThat(template.getDcTermsType(), is(TEST_DCTERMS_TYPE));
+        assertThat(template.getDcTermsPublisher(), is(TEST_DCTERMS_PUBLISHER));
+        assertThat(template.getDcTermsRights(), is(TEST_DCTERMS_RIGHTS));
+        assertThat(template.getDcTermsLicense(), is(TEST_DCTERMS_LICENSE));
+        assertThat(template.getDcTermsDate(), is(TEST_DCTERMS_DATE));
+        assertThat(template.getDcTermsCreator(), is(TEST_DCTERMS_CREATOR));
     }
 }

@@ -8,20 +8,12 @@
  */
 package org.openmrs.module.radiology.report.template;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.util.OpenmrsUtil;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.io.*;
 
 class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtReportTemplateService {
     
     
-    private static final Log log = LogFactory.getLog(MrrtReportTemplateServiceImpl.class);
-
     private MrrtReportTemplateDAO mrrtReportTemplateDAO;
     
     public MrrtReportTemplateDAO getMrrtReportTemplateDAO() {

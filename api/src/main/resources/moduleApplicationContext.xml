@@ -158,7 +158,7 @@
 			<ref bean="transactionAttributeSource" />
 		</property>
 	</bean>
-
+	
 	<bean parent="serviceContext">
 		<property name="moduleService">
 			<list merge="true">
@@ -167,4 +167,6 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="parser" class="org.openmrs.module.radiology.report.template.MrrtReportTemplateFileParser"></bean>
 </beans>

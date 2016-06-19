@@ -8,7 +8,10 @@
  */
 package org.openmrs.module.radiology.report.template;
 
-import java.io.*;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,13 +19,12 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.openmrs.api.APIException;
 import org.openmrs.util.OpenmrsUtil;
 
 /**
  * A parser to parse MRRT report templates and and return an MrrtReportTemplate object.
  */
-public class MrrtReportTemplateFileParser {
+public class MrrtReportTemplateFileParser implements Parser {
     
     
     private static final Log log = LogFactory.getLog(MrrtReportTemplateFileParser.class);
@@ -49,67 +51,76 @@ public class MrrtReportTemplateFileParser {
     
     private static final String DCTERMS_CREATOR = "dcterms.creator";
     
-    private File templateFile;
-    
-    public MrrtReportTemplateFileParser() {
-    }
-    
-    public MrrtReportTemplateFileParser(File templateFile) {
-        if (templateFile == null)
-            throw new APIException("File cannot be null: " + templateFile.getName());
-        this.templateFile = templateFile;
-    }
-    
-    public MrrtReportTemplateFileParser(InputStream in) {
-        FileOutputStream os = null;
-        
-        try {
-            templateFile = File.createTempFile("mrrtTemplateFile", ".html");
-            os = new FileOutputStream(templateFile);
-            OpenmrsUtil.copyFile(in, os);
-        }
-        catch (FileNotFoundException e) {
-            throw new APIException("File can not be created");
-        }
-        catch (IOException e) {
-            throw new APIException("File cannot be created");
-        }
-        finally {
-            try {
-                os.close();
-            }
-            catch (Exception e) {}
-            try {
-                in.close();
-            }
-            catch (Exception e) {}
-        }
-    }
-    
     /**
-     * parse mrrt template file and return a template object
+     * Parse {@code MRRT} file and return an {@code MrrtReportTemplate} object
      *
+     * @param filePath path to template file
+     * 
      * @return returns MrrtReportTemplate object
      * @throws IOException 
      * 
      * @see org.openmrs.module.radiology.report.template.MrrtReportTemplate
      * 
-     * @should return an mrrt template object if file is valid
+     * @should should return an mrrt template object if file is valid
      * 
-     * @should throw an mrrt report template exception if file is invalid
+     * @should should throw an mrrt report template exception if file is invalid
      */
-    public MrrtReportTemplate parse() throws IOException {
+    @Override
+    public MrrtReportTemplate parse(String filePath) throws IOException {
+        File file = new File(filePath);
+        return parse(file);
+    }
+    
+    /**
+    * Parse {@code MRRT} file and return an {@code MrrtReportTemplate} object
+    *
+    * @param file file to be parsed
+    * @return returns MrrtReportTemplate object
+    * @throws IOException 
+    * 
+    * @see org.openmrs.module.radiology.report.template.MrrtReportTemplate
+    * 
+    * @should should return an mrrt template object if file is valid
+    * 
+    * @should should throw an mrrt report template exception if file is invalid
+    */
+    @Override
+    public MrrtReportTemplate parse(File file) throws IOException {
+        MrrtReportTemplateValidator.validate(file);
         
-        MrrtReportTemplateValidator.validate(templateFile);
-        
-        Document doc = Jsoup.parse(templateFile, CHARSET);
+        Document doc = Jsoup.parse(file, CHARSET);
         MrrtReportTemplate result = new MrrtReportTemplate();
         initializeTemplate(result, doc);
         
         return result;
     }
     
-    private static final void initializeTemplate(MrrtReportTemplate template, Document doc) {
+    /**
+    * Parse {@code MRRT} file and return an {@code MrrtReportTemplate} object.
+    *
+    * @param in input stream of template file
+    * @return returns MrrtReportTemplate object
+    * @throws IOException 
+    * 
+    * @see org.openmrs.module.radiology.report.template.MrrtReportTemplate
+    * 
+    * @should should return an mrrt template object if file is valid
+    * 
+    * @should should throw an mrrt report template exception if file is invalid
+    */
+    @Override
+    public MrrtReportTemplate parse(InputStream in) throws IOException {
+        FileOutputStream os = null;
+        File file = null;
+        
+        file = File.createTempFile("mrrtTemplateFile", ".html");
+        os = new FileOutputStream(file);
+        OpenmrsUtil.copyFile(in, os);
+        
+        return parse(file);
+    }
+    
+    private final void initializeTemplate(MrrtReportTemplate template, Document doc) {
         Elements metaTags = doc.getElementsByTag("meta");
         
         template.setPath(doc.baseUri());
