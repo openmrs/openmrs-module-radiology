@@ -16,10 +16,6 @@ public class RadiologyConstants {
     
     public static final String GP_DICOM_UID_ORG_ROOT = "radiology.dicomUIDOrgRoot";
     
-    public static final String GP_DICOM_UID_APPLICATION = "radiology.dicomUIDApplication";
-    
-    public static final String GP_DICOM_UID_TYPE_STUDY = "radiology.dicomUIDTypeStudy";
-    
     public static final String GP_DICOM_WEB_VIEWER_ADDRESS = "radiology.dicomWebViewerAddress";
     
     public static final String GP_DICOM_WEB_VIEWER_PORT = "radiology.dicomWebViewerPort";

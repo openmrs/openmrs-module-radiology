@@ -38,10 +38,10 @@ class HibernateRadiologyStudyDAO implements RadiologyStudyDAO {
     }
     
     /**
-     * @see org.openmrs.module.radiology.study.RadiologyStudyService#saveStudy(RadiologyStudy)
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#saveRadiologyStudy(RadiologyStudy)
      */
     @Override
-    public RadiologyStudy saveStudy(RadiologyStudy radiologyStudy) {
+    public RadiologyStudy saveRadiologyStudy(RadiologyStudy radiologyStudy) {
         sessionFactory.getCurrentSession()
                 .saveOrUpdate(radiologyStudy);
         return radiologyStudy;

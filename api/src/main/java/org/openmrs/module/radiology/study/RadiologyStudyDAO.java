@@ -21,9 +21,9 @@ interface RadiologyStudyDAO {
     
     
     /**
-     * @see org.openmrs.module.radiology.study.RadiologyStudyService#saveStudy(RadiologyStudy)
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#saveRadiologyStudy(RadiologyStudy)
      */
-    public RadiologyStudy saveStudy(RadiologyStudy radiologyStudy);
+    public RadiologyStudy saveRadiologyStudy(RadiologyStudy radiologyStudy);
     
     /**
      * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyId(Integer)

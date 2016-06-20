@@ -20,17 +20,21 @@ public interface RadiologyStudyService extends OpenmrsService {
     
     
     /**
-     * <p>
-     * Save the given <code>RadiologyStudy</code> to the database
-     * </p>
-     * Additionally, study and study.order information are written into a DICOM xml file.
+     * Save a {@code RadiologyStudy} to the database.
      * 
-     * @param radiologyStudy study to be created or updated
-     * @return study who was created or updated
-     * @should create new study from given study object
-     * @should update existing study
+     * @param radiologyStudy RadiologyStudy to be created or updated
+     * @return created or updated radiology study
+     * @throws IllegalArgumentException if global property DICOM UID org root cannot be found
+     * @throws IllegalArgumentException if global property DICOM UID org root is empty
+     * @throws IllegalArgumentException if global property DICOM UID org root is not a valid UID
+     * @throws IllegalArgumentException if global property DICOM UID org root exceeds the maximum length
+     * @should create new radiology study from given radiology study
+     * @should set the study instance uid of given radiology study to a valid dicom uid if null
+     * @should set the study instance uid of given radiology study to a valid dicom uid if only containing whitespaces
+     * @should not set the study instance uid of given radiology study if contains non whitespace characters
+     * @should update existing radiology study
      */
-    public RadiologyStudy saveStudy(RadiologyStudy radiologyStudy);
+    public RadiologyStudy saveRadiologyStudy(RadiologyStudy radiologyStudy);
     
     /**
      * <p>

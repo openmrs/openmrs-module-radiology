@@ -102,7 +102,7 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
         orderContext.setOrderType(radiologyProperties.getRadiologyTestOrderType());
         
         final RadiologyOrder result = (RadiologyOrder) orderService.saveOrder(radiologyOrder, orderContext);
-        this.radiologyStudyService.saveStudy(result.getStudy());
+        this.radiologyStudyService.saveRadiologyStudy(result.getStudy());
         return result;
     }
     

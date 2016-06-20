@@ -74,6 +74,11 @@
 					</bean>
 				</property>
 				<property name="radiologyProperties" ref="radiologyProperties"></property>
+				<property name="dicomUidGenerator">
+					<bean
+						class="org.openmrs.module.radiology.dicom.UuidDicomUidGenerator">
+					</bean>
+				</property>
 			</bean>
 		</property>
 		<property name="preInterceptors">

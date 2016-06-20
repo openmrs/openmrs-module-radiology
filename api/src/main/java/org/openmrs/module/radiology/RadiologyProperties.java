@@ -37,40 +37,6 @@ public class RadiologyProperties extends ModuleProperties {
     }
     
     /**
-     * Return DICOM UID component used to identify this application.
-     * 
-     * @return dicom uid application
-     * @throws IllegalStateException if global property for dicom uid application cannot be found
-     * @should return dicom uid application
-     * @should throw illegal state exception if global property for dicom uid application cannot be found
-     */
-    public String getDicomUIDApplication() {
-        return getGlobalProperty(RadiologyConstants.GP_DICOM_UID_APPLICATION, true);
-    }
-    
-    /**
-     * Return DICOM UID component used to identify the UID Type Study.
-     * 
-     * @return dicom uid type study
-     * @throws IllegalStateException if global property for dicom uid type study cannot be found
-     * @should return dicom uid type study
-     * @should throw illegal state exception if global property for dicom uid type study cannot be found
-     */
-    public String getDicomUIDTypeStudy() {
-        return getGlobalProperty(RadiologyConstants.GP_DICOM_UID_TYPE_STUDY, true);
-    }
-    
-    /**
-     * Return study prefix Example: 1.2.826.0.1.3680043.8.2186.1. (With last dot)
-     * 
-     * @return study prefix
-     * @should return study prefix consisting of org root and application uid and study uid slug
-     */
-    public String getStudyPrefix() {
-        return this.getDicomUIDOrgRoot() + "." + this.getDicomUIDApplication() + "." + this.getDicomUIDTypeStudy() + ".";
-    }
-    
-    /**
      * Return DICOM web viewer address.
      * 
      * @return DICOM web viewer address

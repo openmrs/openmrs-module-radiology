@@ -338,4 +338,20 @@
 		<comment>Remove column mwl_status from radiology_study</comment>
 		<dropColumn columnName="mwl_status" tableName="radiology_study" />
 	</changeSet>
+	<changeSet id="radiology-30" author="teleivo">
+		<comment>Add missing columns to radiology_study since its now a BaseOpenmrsObject</comment>
+		<addColumn tableName="radiology_study">
+			<column name="creator" type="int" defaultValueNumeric="0">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true" />
+			</column>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

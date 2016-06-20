@@ -8,6 +8,7 @@
  */
 package org.openmrs.module.radiology.study;
 
+import org.openmrs.BaseOpenmrsData;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
@@ -17,7 +18,7 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
  * A class that supports on openmrs's orders to make the module DICOM compatible, corresponds to the
  * table order_dicom_complment
  */
-public class RadiologyStudy {
+public class RadiologyStudy extends BaseOpenmrsData {
     
     
     private Integer studyId;
@@ -32,6 +33,21 @@ public class RadiologyStudy {
     
     private Modality modality;
     
+    /**
+     * Get studyId of RadiologyStudy.
+     * 
+     * @return studyId of RadiologyStudy
+     */
+    @Override
+    public Integer getId() {
+        return getStudyId();
+    }
+    
+    /**
+     * Get studyId of RadiologyStudy.
+     * 
+     * @return studyId of RadiologyStudy
+     */
     public Integer getStudyId() {
         return studyId;
     }
@@ -91,6 +107,22 @@ public class RadiologyStudy {
         return performedStatus == null;
     }
     
+    /**
+     * Set studyId of RadiologyStudy.
+     * 
+     * @param studyId of RadiologyStudy
+     */
+    @Override
+    public void setId(Integer studyId) {
+        
+        setStudyId(studyId);
+    }
+    
+    /**
+     * Set studyId of RadiologyStudy.
+     * 
+     * @param studyId of RadiologyStudy
+     */
     public void setStudyId(Integer studyId) {
         this.studyId = studyId;
     }

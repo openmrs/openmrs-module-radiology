@@ -30,7 +30,6 @@ import org.junit.rules.ExpectedException;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.radiology.Modality;
-import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
@@ -39,7 +38,7 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 /**
- * Tests {@link RadiologyStudyService}
+ * Tests {@link RadiologyStudyService}.
  */
 public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensitiveTest {
     
@@ -72,9 +71,6 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     @Autowired
     private RadiologyStudyService radiologyStudyService;
     
-    @Autowired
-    private RadiologyProperties radiologyProperties;
-    
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
     
@@ -102,23 +98,22 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyStudyService#saveStudy(RadiologyStudy)
-     * @verifies create new study from given study object
+     * @see RadiologyStudyService#saveRadiologyStudy(RadiologyStudy)
+     * @verifies create new radiology study from given radiology study
      */
     @Test
-    public void saveStudy_shouldCreateNewStudyFromGivenStudyObject() throws Exception {
+    public void saveRadiologyStudy_shouldCreateNewRadiologyStudyFromGivenRadiologyStudy() throws Exception {
         
         RadiologyStudy radiologyStudy = getUnsavedStudy();
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
         radiologyOrder.setStudy(radiologyStudy);
         
-        RadiologyStudy createdStudy = radiologyStudyService.saveStudy(radiologyStudy);
+        RadiologyStudy createdStudy = radiologyStudyService.saveRadiologyStudy(radiologyStudy);
         
         assertNotNull(createdStudy);
         assertThat(createdStudy, is(radiologyStudy));
         assertThat(createdStudy.getStudyId(), is(radiologyStudy.getStudyId()));
         assertNotNull(createdStudy.getStudyInstanceUid());
-        assertThat(createdStudy.getStudyInstanceUid(), is(radiologyProperties.getStudyPrefix() + createdStudy.getStudyId()));
         assertThat(createdStudy.getModality(), is(radiologyStudy.getModality()));
         assertThat(createdStudy.getRadiologyOrder(), is(radiologyStudy.getRadiologyOrder()));
     }
@@ -138,18 +133,18 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyStudyService#saveStudy(RadiologyStudy)
-     * @verifies update existing study
+     * @see RadiologyStudyService#saveRadiologyStudy(RadiologyStudy)
+     * @verifies update existing radiology study
      */
     @Test
-    public void saveStudy_shouldUpdateExistingStudy() throws Exception {
+    public void saveRadiologyStudy_shouldUpdateExistingRadiologyStudy() throws Exception {
         
         RadiologyStudy existingStudy = radiologyStudyService.getStudyByStudyId(EXISTING_STUDY_ID);
         Modality modalityPreUpdate = existingStudy.getModality();
         Modality modalityPostUpdate = Modality.XA;
         existingStudy.setModality(modalityPostUpdate);
         
-        RadiologyStudy updatedStudy = radiologyStudyService.saveStudy(existingStudy);
+        RadiologyStudy updatedStudy = radiologyStudyService.saveRadiologyStudy(existingStudy);
         
         assertNotNull(updatedStudy);
         assertThat(updatedStudy, is(existingStudy));
