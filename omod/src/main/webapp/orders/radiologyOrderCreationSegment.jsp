@@ -6,13 +6,41 @@
     $j("#conceptDescription").html(concept.description);
   }
 </script>
+<script type="text/javascript">
+  var $j = jQuery.noConflict();
+  $j(document).ready(function() {
+    var scheduledDate = $j("#scheduledDateId");
+    var scheduledDateErrorSpan = $j("#scheduledDateErrorSpan");
+    var urgencySelect = $j("#urgencySelect");
+
+    var showOrHideScheduledDate = function() {
+      if (urgencySelect.val() === "ON_SCHEDULED_DATE") {
+        scheduledDate.show();
+      } else {
+        scheduledDate.hide();
+        scheduledDateErrorSpan.hide();
+        scheduledDate.val("");
+      }
+    }
+
+    showOrHideScheduledDate();
+
+    urgencySelect.on("change", function() {
+      showOrHideScheduledDate();
+    });
+  });
+</script>
 
 <spring:hasBindErrors name="radiologyOrder">
-  <spring:message code="fix.error" />
+  <div class="error">
+    <spring:message code="fix.error" />
+  </div>
   <br />
 </spring:hasBindErrors>
 <spring:hasBindErrors name="study">
-  <spring:message code="fix.error" />
+  <div class="error">
+    <spring:message code="fix.error" />
+  </div>
   <br />
 </spring:hasBindErrors>
 
@@ -70,17 +98,11 @@
                     code="radiology.${urgency}" text="${urgency}" /></option>
               </c:forEach>
             </select>
+          </spring:bind> <spring:bind path="scheduledDate">
+            <input name="${status.expression}" id="${status.expression}Id" type="text" onclick="showDateTimePicker(this)"
+              value="${status.value}">
             <c:if test="${status.errorMessage != ''}">
-              <span class="error">${status.errorMessage}</span>
-            </c:if>
-          </spring:bind></td>
-      </tr>
-      <tr>
-        <td><spring:message code="radiology.scheduledDate" /></td>
-        <td><spring:bind path="scheduledDate">
-            <input name="${status.expression}" type="text" onclick="showDateTimePicker(this)" value="${status.value}">
-            <c:if test="${status.errorMessage != ''}">
-              <span class="error">${status.errorMessage}</span>
+              <span id="scheduledDateErrorSpan" class="error">${status.errorMessage}</span>
             </c:if>
           </spring:bind></td>
       </tr>
