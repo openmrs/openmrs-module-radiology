@@ -10,10 +10,12 @@ package org.openmrs.module.radiology.study;
 
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.RadiologyProperties;
+import org.openmrs.module.radiology.dicom.DicomUidGenerator;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
@@ -28,6 +30,8 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
     
     private RadiologyProperties radiologyProperties;
     
+    private DicomUidGenerator dicomUidGenerator;
+    
     public void setRadiologyStudyDAO(RadiologyStudyDAO radiologyStudyDAO) {
         this.radiologyStudyDAO = radiologyStudyDAO;
     }
@@ -36,12 +40,16 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
         this.radiologyProperties = radiologyProperties;
     }
     
+    public void setDicomUidGenerator(DicomUidGenerator dicomUidGenerator) {
+        this.dicomUidGenerator = dicomUidGenerator;
+    }
+    
     /**
-     * @see RadiologyStudyService#saveStudy(RadiologyStudy)
+     * @see RadiologyStudyService#saveRadiologyStudy(RadiologyStudy)
      */
     @Override
     @Transactional
-    public RadiologyStudy saveStudy(RadiologyStudy radiologyStudy) {
+    public RadiologyStudy saveRadiologyStudy(RadiologyStudy radiologyStudy) {
         
         final RadiologyOrder order = radiologyStudy.getRadiologyOrder();
         
@@ -49,18 +57,29 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
             radiologyStudy.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
         }
         
-        try {
-            RadiologyStudy savedStudy = radiologyStudyDAO.saveStudy(radiologyStudy);
-            final String studyInstanceUid = radiologyProperties.getStudyPrefix() + savedStudy.getStudyId();
-            savedStudy.setStudyInstanceUid(studyInstanceUid);
-            savedStudy = radiologyStudyDAO.saveStudy(savedStudy);
-            return savedStudy;
+        setStudyInstanceUidIfBlank(radiologyStudy);
+        
+        return radiologyStudyDAO.saveRadiologyStudy(radiologyStudy);
+    }
+    
+    /**
+     * Sets {@code studyInstanceUid} of given {@code radiologyStudy} if blank.
+     * 
+     * @param radiologyStudy RadiologyStudy of which studyInstanceUid shall be set
+     * @throws IllegalArgumentException if global property DICOM UID org root cannot be found
+     * @throws IllegalArgumentException if global property DICOM UID org root is empty
+     * @throws IllegalArgumentException if global property DICOM UID org root is not a valid UID
+     * @throws IllegalArgumentException if global property DICOM UID org root exceeds the maximum length
+     * @should set the study instance uid of given radiology study to a valid dicom uid if null
+     * @should set the study instance uid of given radiology study to a valid dicom uid if only containing whitespaces
+     * @should not set the study instance uid of given radiology study if contains non whitespace characters
+     */
+    private void setStudyInstanceUidIfBlank(RadiologyStudy radiologyStudy) {
+        
+        if (StringUtils.isBlank(radiologyStudy.getStudyInstanceUid())) {
+            final String uuid = dicomUidGenerator.getNewDicomUid(radiologyProperties.getDicomUIDOrgRoot());
+            radiologyStudy.setStudyInstanceUid(uuid);
         }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-            log.warn("Can not save study in openmrs or dmc4che.");
-        }
-        return null;
     }
     
     /**
@@ -81,7 +100,7 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
         
         final RadiologyStudy studyToBeUpdated = radiologyStudyDAO.getStudyByStudyInstanceUid(studyInstanceUid);
         studyToBeUpdated.setPerformedStatus(performedStatus);
-        return radiologyStudyDAO.saveStudy(studyToBeUpdated);
+        return radiologyStudyDAO.saveRadiologyStudy(studyToBeUpdated);
     }
     
     /**

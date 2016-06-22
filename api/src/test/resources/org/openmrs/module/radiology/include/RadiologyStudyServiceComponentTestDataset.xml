@@ -13,7 +13,7 @@
   <location location_id="1" name="Radiology Department" creator="1" date_created="2015-01-01 00:00:00.0" retired="false" uuid="c36006e5-9fbb-4f20-866b-0ece245615a1"/>
 
   <!-- define the metadata for the Radiology Module -->
-  <global_property property="radiology.dicomUIDOrgRoot" property_value="1.2.826.0.1.3680043.8.2186" description="DICOM UID org root component" uuid="498e94f1-ebea-4bff-bd39-0e4e3168d239"/>
+  <global_property property="radiology.dicomUIDOrgRoot" property_value="2.25" description="DICOM UID org root component" uuid="498e94f1-ebea-4bff-bd39-0e4e3168d239"/>
   <global_property property="radiology.dicomUIDApplication" property_value="1" description="DICOM UID application component" uuid="5d3962e1-eb27-49de-921b-01213ede5c73"/>
   <global_property property="radiology.dicomUIDTypeStudy" property_value="1" description="DICOM UID type study component" uuid="2adfb98b-9b2f-41c0-ae5b-22f84eee8dfb"/>
   <global_property property="radiology.radiologyCareSetting" property_value="6f0c9a92-6f24-11e3-af88-005056821db0" uuid="a3209d7c-ae4c-41a4-96de-876facd77226"/> <!--  set to uuid from CareSetting OUTPATIENT in openmrs core -->
@@ -72,12 +72,12 @@
   <orders order_id="2001" order_number="2001" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2001" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70021" />
   <test_order order_id="2001"/>
   <radiology_order order_id="2001" />
-  <radiology_study study_id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="CT"/>
+  <radiology_study study_id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="CT" creator="1" date_created="2015-02-02 12:24:10.0" uuid="dde7399b-6092-4a3d-88a2-405b6b4499fc"/>
 
   <orders order_id="2002" order_number="2002" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2001" urgency="ROUTINE"  orderer="1" concept_id="178" instructions="MR Left Knee" date_activated="2015-02-02 12:26:35.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-02 12:26:35.0" voided="false" patient_id="70021" />
   <test_order order_id="2002"/>
   <radiology_order order_id="2002" />
-  <radiology_study study_id="2" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="MR"/>
+  <radiology_study study_id="2" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="MR" creator="1" date_created="2015-02-02 12:26:35.0" uuid="d1307f3e-a02a-4f1d-91cf-f9537c5cc93f"/>
 
   <!-- patient with one radiology order with no associated study -->
   <encounter encounter_id="2004" encounter_type="1001" patient_id="70022" location_id="1" form_id="1" encounter_datetime="2015-02-03 13:17:15.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" uuid="05715654-a566-4cb3-921f-2f7067eb119f"/>

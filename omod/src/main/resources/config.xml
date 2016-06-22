@@ -51,45 +51,25 @@
 	<!--Required Global Properties -->
 	<globalProperty>
 		<property>@MODULE_ID@.dicomUIDOrgRoot</property>
-		<defaultValue>999.999.999</defaultValue>
+		<defaultValue>2.25</defaultValue>
 		<description>
 			DICOM UID component used to describe the org root. It
 			uniquely identifies an organization and thus needs to be changed from
-			the default which is for development purpose only!
+			the default which should be used for development purpose only! Refer
+			to DICOM Standard DICOM PS3.5 Chapter 9 Unique Identifiers.
 
-			Module generated
+			Module
 			DICOM UIDs
-			adhere to: [org
-			root].[application].[uid type].[unique].
+			adhere to: [org root].[unique]
 			Allowed to
-			contain only
-			numeric values using characters 0-9 separated
-			by '.'
+			contain
+			only
+			numeric
+			values using characters 0-9 separated
+			by '.',
 			without
-			non-significant leading zeroes.
-		</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.dicomUIDApplication</property>
-		<defaultValue>1</defaultValue>
-		<description>
-			DICOM UID component used to describe this application.
-			Module generated DICOM UIDs adhere to: [org root].[application].[uid
-			type].[unique]. Allowed to
-			contain only a numeric value using
-			characters 0-9 without non-significant leading
-			zeroes.
-		</description>
-	</globalProperty>
-	<globalProperty>
-		<property>@MODULE_ID@.dicomUIDTypeStudy</property>
-		<defaultValue>1</defaultValue>
-		<description>DICOM UID component used to describe UID type study.
-			Module generated DICOM UIDs adhere to: [org root].[application].[uid
-			type].[unique]. Allowed to
-			contain only a numeric value using
-			characters 0-9 without non-significant leading
-			zeroes.
+			non-significant
+			leading zeroes and without trailing '.'
 		</description>
 	</globalProperty>
 	<globalProperty>
