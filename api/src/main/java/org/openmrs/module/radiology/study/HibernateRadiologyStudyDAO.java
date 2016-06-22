@@ -48,10 +48,10 @@ class HibernateRadiologyStudyDAO implements RadiologyStudyDAO {
     }
     
     /**
-     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyId(Integer)
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getRadiologyStudy(Integer)
      */
     @Override
-    public RadiologyStudy getStudyByStudyId(Integer studyId) {
+    public RadiologyStudy getRadiologyStudy(Integer studyId) {
         return (RadiologyStudy) sessionFactory.getCurrentSession()
                 .get(RadiologyStudy.class, studyId);
     }

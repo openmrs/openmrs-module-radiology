@@ -139,7 +139,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     @Test
     public void saveRadiologyStudy_shouldUpdateExistingRadiologyStudy() throws Exception {
         
-        RadiologyStudy existingStudy = radiologyStudyService.getStudyByStudyId(EXISTING_STUDY_ID);
+        RadiologyStudy existingStudy = radiologyStudyService.getRadiologyStudy(EXISTING_STUDY_ID);
         Modality modalityPreUpdate = existingStudy.getModality();
         Modality modalityPostUpdate = Modality.XA;
         existingStudy.setModality(modalityPostUpdate);
@@ -153,13 +153,13 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyStudyService#getStudyByStudyId(Integer)
-     * @verifies should return study for given study id
+     * @see RadiologyStudyService#getRadiologyStudy(Integer)
+     * @verifies should return radiology study matching given study id
      */
     @Test
-    public void getStudyByStudyId_shouldReturnStudyForGivenStudyId() throws Exception {
+    public void getRadiologyStudy_shouldReturnRadiologyStudyMatchingGivenStudyId() throws Exception {
         
-        RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByStudyId(EXISTING_STUDY_ID);
+        RadiologyStudy radiologyStudy = radiologyStudyService.getRadiologyStudy(EXISTING_STUDY_ID);
         
         assertNotNull(radiologyStudy);
         assertThat(radiologyStudy.getRadiologyOrder()
@@ -168,13 +168,13 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyStudyService#getStudyByStudyId(Integer)
+     * @see RadiologyStudyService#getRadiologyStudy(Integer)
      * @verifies should return null if no match was found
      */
     @Test
-    public void getStudyByStudyId_shouldReturnNullIfNoMatchIsFound() throws Exception {
+    public void getRadiologyStudy_shouldReturnNullIfNoMatchIsFound() throws Exception {
         
-        RadiologyStudy radiologyStudy = radiologyStudyService.getStudyByStudyId(NON_EXISTING_STUDY_ID);
+        RadiologyStudy radiologyStudy = radiologyStudyService.getRadiologyStudy(NON_EXISTING_STUDY_ID);
         
         assertNull(radiologyStudy);
     }
@@ -326,7 +326,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     public void updateStudyPerformedStatus_shouldUpdatePerformedStatusOfStudyAssociatedWithGivenStudyInstanceUid()
             throws Exception {
         
-        RadiologyStudy existingStudy = radiologyStudyService.getStudyByStudyId(EXISTING_STUDY_ID);
+        RadiologyStudy existingStudy = radiologyStudyService.getRadiologyStudy(EXISTING_STUDY_ID);
         PerformedProcedureStepStatus performedStatusPreUpdate = existingStudy.getPerformedStatus();
         PerformedProcedureStepStatus performedStatusPostUpdate = PerformedProcedureStepStatus.COMPLETED;
         
