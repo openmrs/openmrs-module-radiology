@@ -15,8 +15,6 @@ import java.io.InputStream;
 public interface Parser {
     
     
-    public MrrtReportTemplate parse(String filePath) throws IOException;
-    
     public MrrtReportTemplate parse(File file) throws IOException;
     
     public MrrtReportTemplate parse(InputStream in) throws IOException;

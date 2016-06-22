@@ -52,26 +52,6 @@ public class MrrtReportTemplateFileParser implements Parser {
     private static final String DCTERMS_CREATOR = "dcterms.creator";
     
     /**
-     * Parse {@code MRRT} file and return an {@code MrrtReportTemplate} object
-     *
-     * @param filePath path to template file
-     * 
-     * @return returns MrrtReportTemplate object
-     * @throws IOException 
-     * 
-     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplate
-     * 
-     * @should should return an mrrt template object if file is valid
-     * 
-     * @should should throw an mrrt report template exception if file is invalid
-     */
-    @Override
-    public MrrtReportTemplate parse(String filePath) throws IOException {
-        File file = new File(filePath);
-        return parse(file);
-    }
-    
-    /**
     * Parse {@code MRRT} file and return an {@code MrrtReportTemplate} object
     *
     * @param file file to be parsed
