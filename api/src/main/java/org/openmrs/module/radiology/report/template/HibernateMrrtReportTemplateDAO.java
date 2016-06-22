@@ -8,7 +8,12 @@
  */
 package org.openmrs.module.radiology.report.template;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Restrictions;
 
 /**
  * Hibernate specific MrrtReportTemplate related functions. This class should not be used directly. All
@@ -70,4 +75,37 @@ class HibernateMrrtReportTemplateDAO implements MrrtReportTemplateDAO {
                 .delete(template);
     }
     
+    /**
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
+     */
+    @Override
+    public List<MrrtReportTemplate> getMrrtReportTemplateByTitle(String title) {
+        
+        final Criteria criteria = createMrrtReportTemplateCriteria();
+        addRestrictionOnTitle(criteria, title);
+        
+        @SuppressWarnings("unchecked")
+        List<MrrtReportTemplate> result = (List<MrrtReportTemplate>) criteria.list();
+        return result == null ? new ArrayList<MrrtReportTemplate>() : result;
+    }
+    
+    /**
+     * A utility method creating a criteria for MrrtReportTemplate
+     *
+     * @return criteria for MrrtReportTemplate
+     */
+    private Criteria createMrrtReportTemplateCriteria() {
+        return sessionFactory.getCurrentSession()
+                .createCriteria(MrrtReportTemplate.class);
+    }
+    
+    /**
+     * Adds an case-insensitive like restriction for given title on given criteria 
+     *
+     * @param criteria criteria on which case-insensitive restriction is set 
+     * @param title title for which case-insensitive restriction will be set
+     */
+    private void addRestrictionOnTitle(Criteria criteria, String title) {
+        criteria.add(Restrictions.ilike("dcTermsTitle", title + "%"));
+    }
 }

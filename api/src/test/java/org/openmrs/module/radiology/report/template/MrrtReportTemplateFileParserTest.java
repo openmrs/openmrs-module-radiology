@@ -14,8 +14,8 @@ import static org.junit.Assert.assertThat;
 
 import java.io.File;
 
+import org.junit.Before;
 import org.junit.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Unit test for the {@code MrrtReportTemplateFileParser}.
@@ -23,7 +23,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 public class MrrtReportTemplateFileParserTest {
     
     
-    @Autowired
     private Parser parser;
     
     private static final String CHARSET = "UTF-8";
@@ -48,6 +47,11 @@ public class MrrtReportTemplateFileParserTest {
     private static final String TEST_DCTERMS_DATE = "2012-07-19";
     
     private static final String TEST_DCTERMS_CREATOR = "Jacobs JE, et al. ";
+    
+    @Before
+    public void setup() {
+        parser = new MrrtReportTemplateFileParser();
+    }
     
     /**
     * @see MrrtReportTemplateFileParser#parse()

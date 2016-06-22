@@ -8,12 +8,18 @@
  */
 package org.openmrs.module.radiology.report.template;
 
-import org.junit.Assert;
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
-import static org.hamcrest.core.Is.is;
 
 public class MrrtReportTemplateServiceTest extends BaseModuleContextSensitiveTest {
     
@@ -26,6 +32,10 @@ public class MrrtReportTemplateServiceTest extends BaseModuleContextSensitiveTes
     private static final String VALID_UUID = "2379d290-96f7-408a-bbae-270387e3b92e";
     
     private static final String INVALID_UUID = "invalid uuid";
+    
+    private static final String EXISTING_TEMPLATE_TITLE = "title1";
+    
+    private static final String NON_EXISTENT_TEMPLATE_TITLE = "invalid";
     
     @Autowired
     private MrrtReportTemplateService mrrtReportTemplateService;
@@ -43,10 +53,10 @@ public class MrrtReportTemplateServiceTest extends BaseModuleContextSensitiveTes
     public void getMrrtReportTemplate_shouldGetTemplateWithGivenId() throws Exception {
         MrrtReportTemplate existingTemplate = mrrtReportTemplateService.getMrrtReportTemplate(EXISTING_TEMPLATE_ID);
         
-        Assert.assertNotNull(existingTemplate);
-        Assert.assertEquals(existingTemplate.getCharset(), "UTF-8");
-        Assert.assertEquals(existingTemplate.getDcTermsTitle(), "title1");
-        Assert.assertEquals(existingTemplate.getDcTermsLanguage(), "en");
+        assertNotNull(existingTemplate);
+        assertEquals(existingTemplate.getCharset(), "UTF-8");
+        assertEquals(existingTemplate.getDcTermsTitle(), "title1");
+        assertEquals(existingTemplate.getDcTermsLanguage(), "en");
     }
     
     /**
@@ -57,11 +67,11 @@ public class MrrtReportTemplateServiceTest extends BaseModuleContextSensitiveTes
     public void purgeMrrtReportTemplate_shouldDeleteReportFromDatabase() throws Exception {
         MrrtReportTemplate template = mrrtReportTemplateService.getMrrtReportTemplate(EXISTING_TEMPLATE_ID);
         
-        Assert.assertNotNull(template);
+        assertNotNull(template);
         mrrtReportTemplateService.purgeMrrtReportTemplate(template);
         
         MrrtReportTemplate deleted = mrrtReportTemplateService.getMrrtReportTemplate(EXISTING_TEMPLATE_ID);
-        Assert.assertNull(deleted); // should be null since it's been deleted
+        assertNull(deleted); // should be null since it's been deleted
     }
     
     /**
@@ -78,10 +88,10 @@ public class MrrtReportTemplateServiceTest extends BaseModuleContextSensitiveTes
         MrrtReportTemplate saved = mrrtReportTemplateService.saveMrrtReportTemplate(template);
         MrrtReportTemplate newTemplate = mrrtReportTemplateService.getMrrtReportTemplate(saved.getTemplateId());
         
-        Assert.assertNotNull(saved);
-        Assert.assertNotNull(newTemplate);
-        Assert.assertEquals(newTemplate.getDcTermsTitle(), template.getDcTermsTitle());
-        Assert.assertEquals(newTemplate.getDcTermsDescription(), template.getDcTermsDescription());
+        assertNotNull(saved);
+        assertNotNull(newTemplate);
+        assertEquals(newTemplate.getDcTermsTitle(), template.getDcTermsTitle());
+        assertEquals(newTemplate.getDcTermsDescription(), template.getDcTermsDescription());
     }
     
     /**
@@ -92,9 +102,9 @@ public class MrrtReportTemplateServiceTest extends BaseModuleContextSensitiveTes
     public void getMrrtReportTemplateByUuid_shouldFindObjectGivenValidUuid() {
         MrrtReportTemplate valid = mrrtReportTemplateService.getMrrtReportTemplateByUuid(VALID_UUID);
         
-        Assert.assertNotNull(valid);
-        Assert.assertThat(valid.getTemplateId(), is(EXISTING_TEMPLATE_ID));
-        Assert.assertThat(valid.getDcTermsTitle(), is("title1"));
+        assertNotNull(valid);
+        assertThat(valid.getTemplateId(), is(EXISTING_TEMPLATE_ID));
+        assertThat(valid.getDcTermsTitle(), is("title1"));
     }
     
     /**
@@ -105,6 +115,31 @@ public class MrrtReportTemplateServiceTest extends BaseModuleContextSensitiveTes
     public void getMrrtReportTemplateByUuid_shouldReturnNullIfNoObjectfoundWithGivenUuid() {
         MrrtReportTemplate missing = mrrtReportTemplateService.getMrrtReportTemplateByUuid(INVALID_UUID);
         
-        Assert.assertNull(missing);
+        assertNull(missing);
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
+     * @verifies should get list of templates that match given title
+     */
+    @Test
+    public void getMrrtReportTemplateByTitle_shouldShouldGetListOfTemplatesThatMatchGivenTitle() throws Exception {
+        List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplateByTitle(EXISTING_TEMPLATE_TITLE);
+        
+        assertNotNull(templates);
+        assertEquals(1, templates.size());
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
+     * @verifies should return empty list of no match is found
+     */
+    @Test
+    public void getMrrtReportTemplateByTitle_shouldShouldReturnEmptyListOfNoMatchIsFound() throws Exception {
+        List<MrrtReportTemplate> templates =
+                mrrtReportTemplateService.getMrrtReportTemplateByTitle(NON_EXISTENT_TEMPLATE_TITLE);
+        
+        assertNotNull(templates);
+        assertEquals(0, templates.size());
     }
 }

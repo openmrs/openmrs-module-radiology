@@ -8,6 +8,8 @@
  */
 package org.openmrs.module.radiology.report.template;
 
+import java.util.List;
+
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,5 +60,13 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
     @Override
     public void purgeMrrtReportTemplate(MrrtReportTemplate template) {
         mrrtReportTemplateDAO.purgeMrrtReportTemplate(template);
+    }
+    
+    /**
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
+     */
+    @Override
+    public List<MrrtReportTemplate> getMrrtReportTemplateByTitle(String title) {
+        return mrrtReportTemplateDAO.getMrrtReportTemplateByTitle(title);
     }
 }

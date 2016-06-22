@@ -8,6 +8,8 @@
  */
 package org.openmrs.module.radiology.report.template;
 
+import java.util.List;
+
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.RadiologyPrivileges;
@@ -41,6 +43,17 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
     public MrrtReportTemplate getMrrtReportTemplateByUuid(String uuid);
+    
+    /**
+     * Get list of {@code MrrtReportTemplate} objects matching a particular title.
+     * 
+     * @param title title of {@code MrrtReportTemplate}
+     * @return list of {@code MrrtReportTemplate} objects matching title
+     * @should should get list of templates that match given title
+     * @should should return empty list of no match is found
+     */
+    @Authorized
+    public List<MrrtReportTemplate> getMrrtReportTemplateByTitle(String title);
     
     /**
      *  Saves a new or existing {@code MrrtReportTemplate}.
