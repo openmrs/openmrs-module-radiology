@@ -50,10 +50,9 @@ class HibernateMrrtReportTemplateDAO implements MrrtReportTemplateDAO {
      */
     @Override
     public MrrtReportTemplate getMrrtReportTemplateByUuid(String uuid) {
-        return (MrrtReportTemplate) sessionFactory.getCurrentSession()
-                .createQuery("from MrrtReportTemplate m where m.uuid = :uuid")
-                .setString("uuid", uuid)
-                .uniqueResult();
+        final Criteria criteria = createMrrtReportTemplateCriteria();
+        addRestrictionOnUuid(criteria, uuid);
+        return (MrrtReportTemplate) criteria.uniqueResult();
     }
     
     /**
@@ -107,5 +106,9 @@ class HibernateMrrtReportTemplateDAO implements MrrtReportTemplateDAO {
      */
     private void addRestrictionOnTitle(Criteria criteria, String title) {
         criteria.add(Restrictions.ilike("dcTermsTitle", title + "%"));
+    }
+    
+    private void addRestrictionOnUuid(Criteria criteria, String uuid) {
+        criteria.add(Restrictions.eq("uuid", uuid));
     }
 }
