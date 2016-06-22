@@ -53,14 +53,14 @@ public interface RadiologyStudyService extends OpenmrsService {
             throws IllegalArgumentException;
     
     /**
-     * Get RadiologyStudy by studyId
+     * Get the {@code RadiologyStudy} by its {@code studyId}.
      *
-     * @param studyId of the study
-     * @return study associated with studyId
-     * @should return study for given study id
+     * @param studyId Study Id of the wanted study
+     * @return RadiologyStudy matching given studyId
+     * @should return radiology study matching given study id
      * @should return null if no match was found
      */
-    public RadiologyStudy getStudyByStudyId(Integer studyId);
+    public RadiologyStudy getRadiologyStudy(Integer studyId);
     
     /**
      * Get RadiologyStudy by its associated RadiologyOrder's orderId

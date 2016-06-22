@@ -104,12 +104,13 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
     }
     
     /**
-     * @see RadiologyStudyService#getStudyByStudyId(Integer)
+     * @see RadiologyStudyService#getRadiologyStudy(Integer)
      */
     @Transactional(readOnly = true)
     @Override
-    public RadiologyStudy getStudyByStudyId(Integer studyId) {
-        return radiologyStudyDAO.getStudyByStudyId(studyId);
+    public RadiologyStudy getRadiologyStudy(Integer studyId) {
+        
+        return radiologyStudyDAO.getRadiologyStudy(studyId);
     }
     
     /**
