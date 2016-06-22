@@ -16,9 +16,9 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.openmrs.Concept;
 import org.openmrs.ConceptName;
-import org.openmrs.api.OrderService;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestUtil;
 import org.openmrs.module.webservices.rest.web.representation.CustomRepresentation;
@@ -46,7 +46,9 @@ public class RadiologyOrderResourceTest {
     private static final String RADIOLOGY_ORDER_UUID = "1bae735a-fca0-11e5-9e59-08002719a237";
     
     @Mock
-    OrderService orderService;
+    RadiologyOrderService radiologyOrderService;
+    
+    RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
     
     RadiologyOrder radiologyOrder = new RadiologyOrder();
     
@@ -65,9 +67,8 @@ public class RadiologyOrderResourceTest {
         when(LocaleUtility.getLocalesInOrder()).thenReturn(locales);
         
         PowerMockito.mockStatic(Context.class);
-        when(Context.getOrderService()).thenReturn(orderService);
-        when(Context.getOrderService()
-                .getOrderByUuid(RADIOLOGY_ORDER_UUID)).thenReturn(radiologyOrder);
+        when(Context.getService(RadiologyOrderService.class)).thenReturn(radiologyOrderService);
+        when(radiologyOrderService.getRadiologyOrderByUuid(RADIOLOGY_ORDER_UUID)).thenReturn(radiologyOrder);
     }
     
     /**
@@ -79,7 +80,6 @@ public class RadiologyOrderResourceTest {
             throws Exception {
         
         DefaultRepresentation defaultRepresentation = new DefaultRepresentation();
-        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         
         DelegatingResourceDescription resourceDescription =
                 radiologyOrderResource.getRepresentationDescription(defaultRepresentation);
@@ -127,7 +127,6 @@ public class RadiologyOrderResourceTest {
             throws Exception {
         
         FullRepresentation fullRepresentation = new FullRepresentation();
-        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         
         DelegatingResourceDescription resourceDescription =
                 radiologyOrderResource.getRepresentationDescription(fullRepresentation);
@@ -174,7 +173,6 @@ public class RadiologyOrderResourceTest {
     public void getRepresentationDescription_shouldReturnNullForRepresentationOtherThenDefaultOrFull() throws Exception {
         
         CustomRepresentation customRepresentation = new CustomRepresentation("some");
-        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         
         assertThat(radiologyOrderResource.getRepresentationDescription(customRepresentation), is(nullValue()));
         
@@ -196,7 +194,6 @@ public class RadiologyOrderResourceTest {
     @Test
     public void getResourceVersion_shouldReturnSupportedResourceVersion() throws Exception {
         
-        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         assertThat(radiologyOrderResource.getResourceVersion(), is(RestConstants2_0.RESOURCE_VERSION));
     }
     
@@ -207,7 +204,6 @@ public class RadiologyOrderResourceTest {
     @Test
     public void getByUniqueId_shouldReturnRadiologyOrderGivenItsUuid() throws Exception {
         
-        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         radiologyOrderResource.getByUniqueId(RADIOLOGY_ORDER_UUID);
     }
     
@@ -225,7 +221,6 @@ public class RadiologyOrderResourceTest {
         concept.addName(conceptName);
         concept.setPreferredName(conceptName);
         radiologyOrder.setConcept(concept);
-        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         
         assertThat(radiologyOrderResource.getDisplayString(radiologyOrder), is("X-RAY, HEAD"));
         
@@ -238,8 +233,6 @@ public class RadiologyOrderResourceTest {
     @Test
     public void getDisplayString_shouldReturnNoConceptStringIfGivenRadiologyOrdersConceptIsNull() throws Exception {
         
-        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
-        
         assertThat(radiologyOrderResource.getDisplayString(radiologyOrder), is("[No Concept]"));
     }
     
@@ -250,7 +243,6 @@ public class RadiologyOrderResourceTest {
     @Test(expected = ResourceDoesNotSupportOperationException.class)
     public void newDelegate_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
         
-        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         radiologyOrderResource.newDelegate();
     }
     
@@ -261,7 +253,6 @@ public class RadiologyOrderResourceTest {
     @Test(expected = ResourceDoesNotSupportOperationException.class)
     public void save_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
         
-        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         radiologyOrderResource.save(radiologyOrder);
     }
     
@@ -273,7 +264,6 @@ public class RadiologyOrderResourceTest {
     public void delete_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
         
         RequestContext requestContext = new RequestContext();
-        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         radiologyOrderResource.delete(radiologyOrder, "wrong order", requestContext);
     }
     
@@ -285,7 +275,6 @@ public class RadiologyOrderResourceTest {
     public void purge_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
         
         RequestContext requestContext = new RequestContext();
-        RadiologyOrderResource radiologyOrderResource = new RadiologyOrderResource();
         radiologyOrderResource.purge(radiologyOrder, requestContext);
     }
 }

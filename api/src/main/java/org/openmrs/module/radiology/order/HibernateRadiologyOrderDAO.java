@@ -47,6 +47,18 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
     }
     
     /**
+     * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrderByUuid(String)
+     */
+    @Override
+    public RadiologyOrder getRadiologyOrderByUuid(String uuid) {
+        
+        return (RadiologyOrder) sessionFactory.getCurrentSession()
+                .createCriteria(RadiologyOrder.class)
+                .add(Restrictions.eq("uuid", uuid))
+                .uniqueResult();
+    }
+    
+    /**
      * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
      */
     @SuppressWarnings("unchecked")

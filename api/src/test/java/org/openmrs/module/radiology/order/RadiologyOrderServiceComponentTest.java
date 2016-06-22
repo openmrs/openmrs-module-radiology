@@ -74,7 +74,11 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     private static final int EXISTING_RADIOLOGY_ORDER_ID = 2001;
     
+    private static final String EXISTING_RADIOLOGY_ORDER_UUID = "44f24d7e-ebbd-4500-bfba-1db19561ca04";
+    
     private static final int NON_EXISTING_RADIOLOGY_ORDER_ID = 99999;
+    
+    private static final String NON_EXISTING_RADIOLOGY_ORDER_UUID = "99999999-ebbd-4500-bfba-1db19561ca04";
     
     private static final int CONCEPT_ID_FOR_FRACTURE = 178;
     
@@ -560,7 +564,7 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
      * @verifies should return radiology order matching order id
      */
     @Test
-    public void getRadiology_shouldReturnRadiologyOrderMatchingOrderId() {
+    public void getRadiologyOrder_shouldReturnRadiologyOrderMatchingOrderId() {
         
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
         
@@ -573,7 +577,7 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
      * @verifies should return null if no match was found
      */
     @Test
-    public void getRadiology_shouldReturnNullIfNoMatchIsFound() {
+    public void getRadiologyOrder_shouldReturnNullIfNoMatchIsFound() {
         
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(NON_EXISTING_RADIOLOGY_ORDER_ID);
         
@@ -585,11 +589,44 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
      * @verifies should throw illegal argument exception given null
      */
     @Test
-    public void getRadiology_shouldThrowIllegalArgumentExceptionGivenNull() {
+    public void getRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenNull() {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("orderId is required");
         radiologyOrderService.getRadiologyOrder(null);
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyOrderByUuid(String)
+     * @verifies return radiology order matching given uuid
+     */
+    @Test
+    public void getRadiologyOrderByUuid_shouldReturnRadiologyOrderMatchingGivenUuid() throws Exception {
+        
+        RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByUuid(EXISTING_RADIOLOGY_ORDER_UUID);
+        
+        assertNotNull(radiologyOrder);
+        assertThat(radiologyOrder.getUuid(), is(EXISTING_RADIOLOGY_ORDER_UUID));
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyOrderByUuid(String)
+     * @verifies return null if given null
+     */
+    @Test
+    public void getRadiologyOrderByUuid_shouldReturnNullIfGivenNull() throws Exception {
+        
+        assertNull(radiologyOrderService.getRadiologyOrderByUuid(null));
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyOrderByUuid(String)
+     * @verifies return null if no radiology order found with given uuid
+     */
+    @Test
+    public void getRadiologyOrderByUuid_shouldReturnNullIfNoRadiologyOrderFoundWithGivenUuid() throws Exception {
+        
+        assertNull(radiologyOrderService.getRadiologyOrderByUuid(NON_EXISTING_RADIOLOGY_ORDER_UUID));
     }
     
     /**
