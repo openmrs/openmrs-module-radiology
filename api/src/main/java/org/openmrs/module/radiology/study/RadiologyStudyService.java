@@ -46,8 +46,8 @@ public interface RadiologyStudyService extends OpenmrsService {
     /**
      * Updates a {@code RadiologyStudy's} performed status in the database.
      *
-     * @param studyInstanceUid the study instance uid of the study whos performed status shall be updated
-     * @param performedStatus the performed procedure step status to which the study shall be set to
+     * @param studyInstanceUid the study instance uid of the study whos performed status should be updated
+     * @param performedStatus the performed procedure step status to which the study should be set to
      * @return the radiology study whos performed status was updated
      * @throws IllegalArgumentException if studyInstanceUid is null
      * @throws IllegalArgumentException if performedStatus is null
@@ -76,7 +76,7 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @return the radiology study matching given uuid
      * @throws IllegalArgumentException if given null
      * @should return radiology study matching given uuid
-     * @should return null if no radiology study found with given uuid
+     * @should return null if no match was found
      * @should throw illegal argument exception if given null
      */
     public RadiologyStudy getRadiologyStudyByUuid(String uuid);

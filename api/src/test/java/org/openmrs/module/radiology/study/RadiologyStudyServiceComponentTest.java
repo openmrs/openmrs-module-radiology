@@ -233,7 +233,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
      * @verifies return null if no match was found
      */
     @Test
-    public void getRadiologyStudy_shouldReturnNullIfNoMatchIsFound() throws Exception {
+    public void getRadiologyStudy_shouldReturnNullIfNoMatchWasFound() throws Exception {
         
         assertNull(radiologyStudyService.getRadiologyStudy(NON_EXISTING_STUDY_ID));
     }
@@ -265,10 +265,10 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyStudyService#getRadiologyStudyByUuid(String)
-     * @verifies return null if no radiology study found with given uuid
+     * @verifies return null if no match was found
      */
     @Test
-    public void getRadiologyStudyByUuid_shouldReturnNullIfNoRadiologyStudyFoundWithGivenUuid() throws Exception {
+    public void getRadiologyStudyByUuid_shouldReturnNullIfNoMatchWasFound() throws Exception {
         
         assertNull(radiologyStudyService.getRadiologyStudyByUuid(NON_EXISTING_STUDY_UUID));
     }
