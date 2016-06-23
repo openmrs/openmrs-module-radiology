@@ -57,6 +57,18 @@ class HibernateRadiologyStudyDAO implements RadiologyStudyDAO {
     }
     
     /**
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getRadiologyStudyByUuid(String)
+     */
+    @Override
+    public RadiologyStudy getRadiologyStudyByUuid(String uuid) {
+        
+        return (RadiologyStudy) sessionFactory.getCurrentSession()
+                .createCriteria(RadiologyStudy.class)
+                .add(Restrictions.eq("uuid", uuid))
+                .uniqueResult();
+    }
+    
+    /**
      * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByOrderId(Integer)
      */
     @Override

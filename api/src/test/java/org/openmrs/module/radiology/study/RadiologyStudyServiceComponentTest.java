@@ -54,6 +54,10 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     private static final int NON_EXISTING_RADIOLOGY_ORDER_ID = 99999;
     
+    private static final String EXISTING_STUDY_UUID = "dde7399b-6092-4a3d-88a2-405b6b4499fc";
+    
+    private static final String NON_EXISTING_STUDY_UUID = "99999999-6092-4a3d-88a2-405b6b4499fc";
+    
     private static final String EXISTING_STUDY_INSTANCE_UID = "1.2.826.0.1.3680043.8.2186.1.1";
     
     private static final String NON_EXISTING_STUDY_INSTANCE_UID = "1.2.826.0.1.3680043.8.2186.1.9999";
@@ -177,6 +181,39 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
         RadiologyStudy radiologyStudy = radiologyStudyService.getRadiologyStudy(NON_EXISTING_STUDY_ID);
         
         assertNull(radiologyStudy);
+    }
+    
+    /**
+     * @see RadiologyStudyService#getRadiologyStudyByUuid(String)
+     * @verifies return radiology study matching given uuid
+     */
+    @Test
+    public void getRadiologyStudyByUuid_shouldReturnRadiologyStudyMatchingGivenUuid() throws Exception {
+        
+        RadiologyStudy radiologyStudy = radiologyStudyService.getRadiologyStudyByUuid(EXISTING_STUDY_UUID);
+        
+        assertNotNull(radiologyStudy);
+        assertThat(radiologyStudy.getUuid(), is(EXISTING_STUDY_UUID));
+    }
+    
+    /**
+     * @see RadiologyStudyService#getRadiologyStudyByUuid(String)
+     * @verifies return null if given null
+     */
+    @Test
+    public void getRadiologyStudyByUuid_shouldReturnNullIfGivenNull() throws Exception {
+        
+        assertNull(radiologyStudyService.getRadiologyStudyByUuid(null));
+    }
+    
+    /**
+     * @see RadiologyStudyService#getRadiologyStudyByUuid(String)
+     * @verifies return null if no radiology study found with given uuid
+     */
+    @Test
+    public void getRadiologyStudyByUuid_shouldReturnNullIfNoRadiologyStudyFoundWithGivenUuid() throws Exception {
+        
+        assertNull(radiologyStudyService.getRadiologyStudyByUuid(NON_EXISTING_STUDY_UUID));
     }
     
     /**
