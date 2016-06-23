@@ -91,7 +91,7 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @should return null if no radiology order found with given uuid
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_ORDERS)
-    RadiologyOrder getRadiologyOrderByUuid(String uuid);
+    public RadiologyOrder getRadiologyOrderByUuid(String uuid);
     
     /**
      * Get RadiologyOrder's by its associated Patient
