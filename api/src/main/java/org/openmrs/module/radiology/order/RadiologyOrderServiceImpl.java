@@ -76,21 +76,22 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     @Transactional
     @Override
     public RadiologyOrder placeRadiologyOrder(RadiologyOrder radiologyOrder) {
+        
         if (radiologyOrder == null) {
-            throw new IllegalArgumentException("radiologyOrder is required");
+            throw new IllegalArgumentException("radiologyOrder cannot be null");
         }
         
         if (radiologyOrder.getOrderId() != null) {
-            throw new IllegalArgumentException("Cannot edit an existing order!");
+            throw new IllegalArgumentException("Cannot edit an existing RadiologyOrder");
         }
         
         if (radiologyOrder.getStudy() == null) {
-            throw new IllegalArgumentException("radiologyOrder.study is required");
+            throw new IllegalArgumentException("radiologyOrder.study cannot be null");
         }
         
         if (radiologyOrder.getStudy()
                 .getModality() == null) {
-            throw new IllegalArgumentException("radiologyOrder.study.modality is required");
+            throw new IllegalArgumentException("radiologyOrder.study.modality cannot be null");
         }
         
         final Encounter encounter =
@@ -142,6 +143,7 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     }
     
     /**
+     * @throws Exception
      * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
      */
     @Transactional
@@ -150,11 +152,11 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
             String nonCodedDiscontinueReason) throws Exception {
         
         if (radiologyOrderToDiscontinue == null) {
-            throw new IllegalArgumentException("radiologyOrder is required");
+            throw new IllegalArgumentException("radiologyOrder cannot be null");
         }
         
         if (radiologyOrderToDiscontinue.getOrderId() == null) {
-            throw new IllegalArgumentException("orderId is null");
+            throw new IllegalArgumentException("can only discontinue existing RadiologyOrder. orderId is null");
         }
         
         if (radiologyOrderToDiscontinue.isDiscontinuedRightNow()) {
@@ -170,7 +172,7 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
         }
         
         if (orderer == null) {
-            throw new IllegalArgumentException("provider is required");
+            throw new IllegalArgumentException("provider cannot be null");
         }
         
         final Encounter encounter =
@@ -186,8 +188,9 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     @Transactional(readOnly = true)
     @Override
     public RadiologyOrder getRadiologyOrder(Integer orderId) {
+        
         if (orderId == null) {
-            throw new IllegalArgumentException("orderId is required");
+            throw new IllegalArgumentException("orderId cannot be null");
         }
         
         return radiologyOrderDAO.getRadiologyOrder(orderId);
@@ -200,6 +203,10 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     @Override
     public RadiologyOrder getRadiologyOrderByUuid(String uuid) {
         
+        if (uuid == null) {
+            throw new IllegalArgumentException("uuid cannot be null");
+        }
+        
         return radiologyOrderDAO.getRadiologyOrderByUuid(uuid);
     }
     
@@ -209,8 +216,9 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     @Transactional(readOnly = true)
     @Override
     public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient) {
+        
         if (patient == null) {
-            throw new IllegalArgumentException("patient is required");
+            throw new IllegalArgumentException("patient cannot be null");
         }
         
         return radiologyOrderDAO.getRadiologyOrdersByPatient(patient);
@@ -222,8 +230,9 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     @Transactional(readOnly = true)
     @Override
     public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients) {
+        
         if (patients == null) {
-            throw new IllegalArgumentException("patients is required");
+            throw new IllegalArgumentException("patients cannot be null");
         }
         
         return radiologyOrderDAO.getRadiologyOrdersByPatients(patients);

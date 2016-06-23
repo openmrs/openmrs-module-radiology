@@ -18,19 +18,25 @@ import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.RadiologyPrivileges;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service layer for {@code RadiologyOrder}.
+ * 
+ * @see org.openmrs.module.radiology.order.RadiologyOrder
+ */
 @Transactional
 public interface RadiologyOrderService extends OpenmrsService {
     
     
     /**
-     * Save given <code>RadiologyOrder</code> and its <code>RadiologyOrder.study</code> to the
-     * database
+     * Saves a new {@code RadiologyOrder} and its {@code RadiologyStudy} to the
+     * database.
      *
-     * @param radiologyOrder radiology order to be created
-     * @return RadiologyOrder who was created
+     * @param radiologyOrder the radiology order to be created
+     * @return the created radiology order
      * @throws IllegalArgumentException if radiologyOrder is null
-     * @throws IllegalArgumentException if radiologyOrder orderId is not null
+     * @throws IllegalArgumentException if radiologyOrder.orderId is not null
      * @throws IllegalArgumentException if radiologyOrder.study is null
+     * @throws IllegalArgumentException if radiologyOrder.study.modality is null
      * @should create new radiology order and study from given radiology order object
      * @should create radiology order encounter with orderer and attached to existing active visit if patient has active
      *         visit
@@ -41,28 +47,29 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @should throw illegal argument exception if given study modality is null
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_ORDERS)
-    public RadiologyOrder placeRadiologyOrder(RadiologyOrder radiologyOrder) throws IllegalArgumentException;
+    public RadiologyOrder placeRadiologyOrder(RadiologyOrder radiologyOrder);
     
     /**
-     * Discontinue given <code>RadiologyOrder</code>
+     * Discontinues an existing {@code RadiologyOrder}.
      *
-     * @param radiologyOrder radiology order to be discontinued
-     * @return Order who was created to discontinue RadiologyOrder
+     * @param radiologyOrder the radiology order to be discontinued
+     * @return the discontinuation order
+     * @throws Exception
      * @throws IllegalArgumentException if radiologyOrder is null
      * @throws IllegalArgumentException if radiologyOrder orderId is null
-     * @throws IllegalArgumentException if provider is null
      * @throws IllegalArgumentException if radiology order is discontinued
      * @throws IllegalArgumentException if radiology order is in progress
      * @throws IllegalArgumentException if radiology order is completed
+     * @throws IllegalArgumentException if provider is null
      * @should create discontinuation order which discontinues given radiology order that is not in progress or completed
      * @should create discontinuation order with encounter attached to existing active visit if patient has active visit
      * @should create discontinuation order with encounter attached to new active visit if patient without active visit
-     * @should throw illegal argument exception given empty radiology order
-     * @should throw illegal argument exception given radiology order with orderId null
-     * @should throw illegal argument exception if radiology order is discontinued
-     * @should throw illegal argument exception if radiology order is in progress
-     * @should throw illegal argument exception if radiology order is completed
-     * @should throw illegal argument exception given empty provider
+     * @should throw illegal argument exception if given radiology order is null
+     * @should throw illegal argument exception if given radiology order with orderId null
+     * @should throw illegal argument exception if given radiology order is discontinued
+     * @should throw illegal argument exception if given radiology order is in progress
+     * @should throw illegal argument exception if given radiology order is completed
+     * @should throw illegal argument exception if given provider is null
      */
     @Authorized({ RadiologyPrivileges.DELETE_RADIOLOGY_ORDERS })
     public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrder, Provider orderer, String discontinueReason)
@@ -71,52 +78,53 @@ public interface RadiologyOrderService extends OpenmrsService {
     /**
      * Get the {@code RadiologyOrder} by its {@code orderId}.
      *
-     * @param orderId of wanted RadiologyOrder
-     * @return RadiologyOrder matching given orderId
-     * @throws IllegalArgumentException if order id is null
-     * @should return radiology order matching order id
+     * @param orderId the order id of wanted radiology order
+     * @return the radiology order matching given order id
+     * @throws IllegalArgumentException if given null
+     * @should return radiology order matching given order id
      * @should return null if no match was found
-     * @should throw illegal argument exception given null
+     * @should throw illegal argument exception if given null
      */
     @Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
-    public RadiologyOrder getRadiologyOrder(Integer orderId) throws IllegalArgumentException;
+    public RadiologyOrder getRadiologyOrder(Integer orderId);
     
     /**
      * Get the {@code RadiologyOrder} by its {@code UUID}.
      *
-     * @param uuid UUID of RadiologyOrder
-     * @return RadiologyOrder matching given uuid
+     * @param uuid the uuid of the radiology order
+     * @return the radiology order matching given uuid
+     * @throws IllegalArgumentException if given null
      * @should return radiology order matching given uuid
-     * @should return null if given null
-     * @should return null if no radiology order found with given uuid
+     * @should return null if no match was found
+     * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_ORDERS)
     public RadiologyOrder getRadiologyOrderByUuid(String uuid);
     
     /**
-     * Get RadiologyOrder's by its associated Patient
-     *
-     * @param patient patient of wanted RadiologyOrders
-     * @return RadiologyOrders associated with given patient
-     * @throws IllegalArgumentException if patient is null
+     * Get the {@code RadiologyOrder's} associated with a {@code Patient}.
+     * 
+     * @param patient the patient for which radiology orders shall be returned
+     * @return the radiology orders associated with given patient
+     * @throws IllegalArgumentException if given null
      * @should return all radiology orders associated with given patient
      * @should return empty list given patient without associated radiology orders
-     * @should throw illegal argument exception given null
+     * @should throw illegal argument exception if given null
      */
     @Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
-    public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient) throws IllegalArgumentException;
+    public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient);
     
     /**
-     * Get RadiologyOrder's by its associated Patients
+     * Get the {@code RadiologyOrder's} associated with a list of {@code Patient's}.
      *
-     * @param patients list of patients for which RadiologyOrders are queried
-     * @return RadiologyOrders associated with given patients
-     * @throws IllegalArgumentException if patients is null
+     * @param patients the list of patients for which radiology orders shall be returned
+     * @return the radiology orders associated with given patients
+     * @throws IllegalArgumentException if given null
      * @should return all radiology orders associated with given patients
      * @should return all radiology orders given empty patient list
      * @should return empty list given patient list without associated radiology orders
-     * @should throw illegal argument exception given null
+     * @should throw illegal argument exception if given null
      */
     @Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
-    public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients) throws IllegalArgumentException;
+    public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients);
 }
