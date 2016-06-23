@@ -31,6 +31,11 @@ interface RadiologyStudyDAO {
     public RadiologyStudy getRadiologyStudy(Integer studyId);
     
     /**
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getRadiologyStudyByUuid(String)
+     */
+    public RadiologyStudy getRadiologyStudyByUuid(String uuid);
+    
+    /**
      * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByOrderId(Integer)
      */
     public RadiologyStudy getStudyByOrderId(Integer orderId);

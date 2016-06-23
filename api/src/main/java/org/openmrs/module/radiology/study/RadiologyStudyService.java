@@ -63,6 +63,17 @@ public interface RadiologyStudyService extends OpenmrsService {
     public RadiologyStudy getRadiologyStudy(Integer studyId);
     
     /**
+     * Get the {@code RadiologyStudy} by its {@code UUID}.
+     *
+     * @param uuid UUID of RadiologyStudy
+     * @return RadiologyStudy matching given uuid
+     * @should return radiology study matching given uuid
+     * @should return null if given null
+     * @should return null if no radiology study found with given uuid
+     */
+    public RadiologyStudy getRadiologyStudyByUuid(String uuid);
+    
+    /**
      * Get RadiologyStudy by its associated RadiologyOrder's orderId
      *
      * @param orderId of RadiologyOrder associated with wanted RadiologyStudy
