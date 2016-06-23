@@ -1,9 +1,10 @@
 package org.openmrs.module.radiology.order.web.resource;
 
 import org.junit.Before;
-import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResourceTest;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Tests {@link RadiologyOrderResource}.
@@ -12,6 +13,9 @@ public class RadiologyOrderResourceComponentTest extends BaseDelegatingResourceT
     
     
     protected static final String TEST_DATASET = "RadiologyOrderResourceComponentTestDataset.xml";
+    
+    @Autowired
+    RadiologyOrderService radiologyOrderService;
     
     @Before
     public void setUp() throws Exception {
@@ -42,8 +46,7 @@ public class RadiologyOrderResourceComponentTest extends BaseDelegatingResourceT
     @Override
     public RadiologyOrder newObject() {
         
-        return (RadiologyOrder) Context.getOrderService()
-                .getOrderByUuid(getUuidProperty());
+        return radiologyOrderService.getRadiologyOrderByUuid(getUuidProperty());
     }
     
     /**

@@ -2,6 +2,7 @@ package org.openmrs.module.radiology.order.web.resource;
 
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.annotation.PropertyGetter;
@@ -100,8 +101,8 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     @Override
     public RadiologyOrder getByUniqueId(String uniqueId) {
         
-        return (RadiologyOrder) Context.getOrderService()
-                .getOrderByUuid(uniqueId);
+        return Context.getService(RadiologyOrderService.class)
+                .getRadiologyOrderByUuid(uniqueId);
     }
     
     /**

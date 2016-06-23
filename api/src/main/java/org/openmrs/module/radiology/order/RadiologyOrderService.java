@@ -52,8 +52,8 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @throws IllegalArgumentException if radiologyOrder orderId is null
      * @throws IllegalArgumentException if provider is null
      * @throws IllegalArgumentException if radiology order is discontinued
-     * @throws IllegalArgumentException  if radiology order is in progress
-     * @throws IllegalArgumentException  if radiology order is completed
+     * @throws IllegalArgumentException if radiology order is in progress
+     * @throws IllegalArgumentException if radiology order is completed
      * @should create discontinuation order which discontinues given radiology order that is not in progress or completed
      * @should create discontinuation order with encounter attached to existing active visit if patient has active visit
      * @should create discontinuation order with encounter attached to new active visit if patient without active visit
@@ -80,6 +80,18 @@ public interface RadiologyOrderService extends OpenmrsService {
      */
     @Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
     public RadiologyOrder getRadiologyOrder(Integer orderId) throws IllegalArgumentException;
+    
+    /**
+     * Get the {@code RadiologyOrder} by its {@code UUID}.
+     *
+     * @param uuid UUID of RadiologyOrder
+     * @return RadiologyOrder matching given uuid
+     * @should return radiology order matching given uuid
+     * @should return null if given null
+     * @should return null if no radiology order found with given uuid
+     */
+    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_ORDERS)
+    RadiologyOrder getRadiologyOrderByUuid(String uuid);
     
     /**
      * Get RadiologyOrder's by its associated Patient

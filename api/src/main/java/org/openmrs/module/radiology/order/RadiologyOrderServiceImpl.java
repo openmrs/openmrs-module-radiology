@@ -194,6 +194,16 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     }
     
     /**
+     * @see RadiologyOrderService#getRadiologyOrderByUuid(String)
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public RadiologyOrder getRadiologyOrderByUuid(String uuid) {
+        
+        return radiologyOrderDAO.getRadiologyOrderByUuid(uuid);
+    }
+    
+    /**
      * @see RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
      */
     @Transactional(readOnly = true)

@@ -26,6 +26,11 @@ interface RadiologyOrderDAO {
     public RadiologyOrder getRadiologyOrder(Integer orderId);
     
     /**
+     * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrderByUuid(String)
+     */
+    public RadiologyOrder getRadiologyOrderByUuid(String uuid);
+    
+    /**
      * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
      */
     public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient);
