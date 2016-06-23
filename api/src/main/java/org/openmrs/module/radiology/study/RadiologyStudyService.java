@@ -15,6 +15,9 @@ import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service layer for {@link org.openmrs.module.radiology.study.RadiologyStudy}.
+ */
 @Transactional
 public interface RadiologyStudyService extends OpenmrsService {
     
@@ -22,8 +25,9 @@ public interface RadiologyStudyService extends OpenmrsService {
     /**
      * Save a {@code RadiologyStudy} to the database.
      * 
-     * @param radiologyStudy RadiologyStudy to be created or updated
-     * @return created or updated radiology study
+     * @param radiologyStudy the radiology study to be created or updated
+     * @return the created or updated radiology study
+     * @throws IllegalArgumentException if given null
      * @throws IllegalArgumentException if global property DICOM UID org root cannot be found
      * @throws IllegalArgumentException if global property DICOM UID org root is empty
      * @throws IllegalArgumentException if global property DICOM UID org root is not a valid UID
@@ -33,80 +37,82 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @should set the study instance uid of given radiology study to a valid dicom uid if only containing whitespaces
      * @should not set the study instance uid of given radiology study if contains non whitespace characters
      * @should update existing radiology study
+     * @should throw illegal argument exception if given null
      */
     public RadiologyStudy saveRadiologyStudy(RadiologyStudy radiologyStudy);
     
     /**
-     * <p>
-     * Update the performedStatus of the <code>RadiologyStudy</code> associated with studyInstanceUid in the database
-     * </p>
+     * Update {@code RadiologyStudy's} performed status in the database.
      *
-     * @param studyInstanceUid study instance uid of study whos performedStatus should be updated
-     * @param performedStatus performed procedure step status to which study should be set to
-     * @return study whos performedStatus was updated
-     * @throws IllegalArgumentException if study instance uid is null
-     * @should update performed status of study associated with given study instance uid
+     * @param studyInstanceUid the study instance uid of the study whos performed status shall be updated
+     * @param performedStatus the performed procedure step status to which the study shall be set to
+     * @return the radiology study whos performed status was updated
+     * @throws IllegalArgumentException if studyInstanceUid is null
+     * @throws IllegalArgumentException if performedStatus is null
+     * @should update performed status of radiology study associated with given study instance uid
      * @should throw illegal argument exception if study instance uid is null
      * @should throw illegal argument exception if performed status is null
      */
-    public RadiologyStudy updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus)
-            throws IllegalArgumentException;
+    public RadiologyStudy updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus);
     
     /**
      * Get the {@code RadiologyStudy} by its {@code studyId}.
      *
-     * @param studyId Study Id of the wanted study
-     * @return RadiologyStudy matching given studyId
+     * @param studyId the study id of the wanted study
+     * @return the radiology study matching given study id
+     * @throws IllegalArgumentException if given null
      * @should return radiology study matching given study id
      * @should return null if no match was found
+     * @should throw illegal argument exception if given null
      */
     public RadiologyStudy getRadiologyStudy(Integer studyId);
     
     /**
      * Get the {@code RadiologyStudy} by its {@code UUID}.
      *
-     * @param uuid UUID of RadiologyStudy
-     * @return RadiologyStudy matching given uuid
+     * @param uuid the uuid of the radiology study
+     * @return the radiology study matching given uuid
+     * @throws IllegalArgumentException if given null
      * @should return radiology study matching given uuid
-     * @should return null if given null
      * @should return null if no radiology study found with given uuid
+     * @should throw illegal argument exception if given null
      */
     public RadiologyStudy getRadiologyStudyByUuid(String uuid);
     
     /**
-     * Get RadiologyStudy by its associated RadiologyOrder's orderId
+     * Get the {@code RadiologyStudy} by its associated {@code RadiologyOrder's} {@code orderId}.
      *
-     * @param orderId of RadiologyOrder associated with wanted RadiologyStudy
-     * @return RadiologyStudy associated with RadiologyOrder for which orderId is given
-     * @throws IllegalArgumentException if order id is null
-     * @should return study associated with radiology order for which order id is given
+     * @param orderId the order id of the wanted radiology studies associated radiology order
+     * @return the radiology study associated with a radiology order matching given order id
+     * @throws IllegalArgumentException if given null
+     * @should return radiology study associated with radiology order for which order id is given
      * @should return null if no match was found
+     * @should throw illegal argument exception if given null
+     */
+    public RadiologyStudy getRadiologyStudyByOrderId(Integer orderId);
+    
+    /**
+     * Get the {@code RadiologyStudy} by its Study Instance UID.
+     *
+     * @param studyInstanceUid the study instance uid of wanted radiology study
+     * @return the radiology study exactly matching given study instance uid
+     * @throws IllegalArgumentException if given null
+     * @should return radiology study exactly matching given study instance uid
+     * @should return null if no match was found
+     * @should throw illegal argument exception if given null
+     */
+    public RadiologyStudy getRadiologyStudyByStudyInstanceUid(String studyInstanceUid);
+    
+    /**
+     * Get the {@code RadiologyStudy's} associated with a list of {@code RadiologyOrder's}.
+     *
+     * @param radiologyOrders the radiology orders for which radiology studies will be returned
+     * @return the radiology studies associated with given radiology orders
+     * @throws IllegalArgumentException given null
+     * @should return all radiology studies associated with given radiology orders
+     * @should return empty list given radiology orders without associated radiology studies
+     * @should return empty list given empty radiology order list
      * @should throw illegal argument exception given null
      */
-    public RadiologyStudy getStudyByOrderId(Integer orderId) throws IllegalArgumentException;
-    
-    /**
-     * Get RadiologyStudy by its Study Instance UID
-     *
-     * @param studyInstanceUid
-     * @return study
-     * @should return study matching study instance uid
-     * @should return null if no match was found
-     * @should throw IllegalArgumentException if study instance uid is null
-     */
-    public RadiologyStudy getStudyByStudyInstanceUid(String studyInstanceUid) throws IllegalArgumentException;
-    
-    /**
-     * Get all studies corresponding to list of RadiologyOrder's
-     *
-     * @param radiologyOrders radiology orders for which studies will be returned
-     * @return studies corresponding to given radiology orders
-     * @throws IllegalArgumentException
-     * @should fetch all studies for given radiology orders
-     * @should return empty list given radiology orders without associated studies
-     * @should return empty list given empty radiology order list
-     * @should throw IllegalArgumentException given null
-     */
-    public List<RadiologyStudy> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders)
-            throws IllegalArgumentException;
+    public List<RadiologyStudy> getRadiologyStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
 }
