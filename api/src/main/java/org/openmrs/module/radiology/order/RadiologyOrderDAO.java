@@ -13,9 +13,10 @@ import java.util.List;
 import org.openmrs.Patient;
 
 /**
- * RadiologyOrder-related database functions
+ * {@code RadiologyOrder} related database methods.
  * 
  * @see org.openmrs.module.radiology.order.RadiologyOrderService
+ * @see org.openmrs.module.radiology.order.RadiologyOrder
  */
 interface RadiologyOrderDAO {
     

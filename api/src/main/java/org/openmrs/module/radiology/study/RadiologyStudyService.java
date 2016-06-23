@@ -16,14 +16,16 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Service layer for {@link org.openmrs.module.radiology.study.RadiologyStudy}.
+ * Service layer for {@code RadiologyStudy}.
+ * 
+ * @see org.openmrs.module.radiology.study.RadiologyStudy
  */
 @Transactional
 public interface RadiologyStudyService extends OpenmrsService {
     
     
     /**
-     * Save a {@code RadiologyStudy} to the database.
+     * Saves a {@code RadiologyStudy} to the database.
      * 
      * @param radiologyStudy the radiology study to be created or updated
      * @return the created or updated radiology study
@@ -42,7 +44,7 @@ public interface RadiologyStudyService extends OpenmrsService {
     public RadiologyStudy saveRadiologyStudy(RadiologyStudy radiologyStudy);
     
     /**
-     * Update {@code RadiologyStudy's} performed status in the database.
+     * Updates a {@code RadiologyStudy's} performed status in the database.
      *
      * @param studyInstanceUid the study instance uid of the study whos performed status shall be updated
      * @param performedStatus the performed procedure step status to which the study shall be set to
