@@ -8,6 +8,7 @@
  */
 package org.openmrs.module.radiology.report.template.web.resource;
 
+import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplate;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -17,22 +18,18 @@ import org.openmrs.module.webservices.rest.web.annotation.Resource;
 import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
-import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource;
+import org.openmrs.module.webservices.rest.web.resource.impl.DataDelegatingCrudResource;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs2_0.RestConstants2_0;
-import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  *
  */
 @Resource(name = RestConstants.VERSION_1 + "/mrrtreporttemplate", supportedClass = MrrtReportTemplate.class,
         supportedOpenmrsVersions = { "2.0.*" })
-public class MrrtReportTemplateResource extends DelegatingCrudResource<MrrtReportTemplate> {
+public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtReportTemplate> {
     
-    
-    @Autowired
-    private MrrtReportTemplateService mrrtReportTemplateService;
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource#getRepresentationDescription(org.openmrs.module.webservices.rest.web.representation.Representation)
@@ -54,6 +51,7 @@ public class MrrtReportTemplateResource extends DelegatingCrudResource<MrrtRepor
             description.addProperty("dctermsPublisher");
             description.addProperty("dctermsCreator");
             description.addProperty("dctermsRights");
+            description.addProperty("display");
             description.addSelfLink();
             description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
         }
@@ -61,7 +59,6 @@ public class MrrtReportTemplateResource extends DelegatingCrudResource<MrrtRepor
             DelegatingResourceDescription description = new DelegatingResourceDescription();
             
             description.addProperty("uuid");
-            description.addProperty("display");
             description.addProperty("charset");
             description.addProperty("path");
             description.addProperty("templateId");
@@ -75,6 +72,7 @@ public class MrrtReportTemplateResource extends DelegatingCrudResource<MrrtRepor
             description.addProperty("dctermsRights");
             description.addProperty("dctermsLicense");
             description.addProperty("dctermsDate");
+            description.addProperty("display");
             description.addSelfLink();
             return description;
         } else {
@@ -88,7 +86,8 @@ public class MrrtReportTemplateResource extends DelegatingCrudResource<MrrtRepor
      */
     @Override
     public MrrtReportTemplate getByUniqueId(String uuid) {
-        return mrrtReportTemplateService.getMrrtReportTemplateByUuid(uuid);
+        return Context.getService(MrrtReportTemplateService.class)
+                .getMrrtReportTemplateByUuid(uuid);
     }
     
     /**
