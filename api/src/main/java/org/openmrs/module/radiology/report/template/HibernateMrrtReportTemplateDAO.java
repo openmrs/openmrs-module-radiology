@@ -108,6 +108,12 @@ class HibernateMrrtReportTemplateDAO implements MrrtReportTemplateDAO {
         criteria.add(Restrictions.ilike("dcTermsTitle", title + "%"));
     }
     
+    /**
+     * Adds equals restriction for given uuid on criteria.
+     * 
+     * @param criteria criteria on which equals restriction is set
+     * @param uuid uuid for which equals restriction will be set
+     */
     private void addRestrictionOnUuid(Criteria criteria, String uuid) {
         criteria.add(Restrictions.eq("uuid", uuid));
     }

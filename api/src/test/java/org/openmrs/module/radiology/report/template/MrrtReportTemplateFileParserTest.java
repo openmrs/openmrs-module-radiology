@@ -23,7 +23,7 @@ import org.junit.Test;
 public class MrrtReportTemplateFileParserTest {
     
     
-    private Parser parser;
+    private MrrtReportTemplateFileParser parser;
     
     private static final String CHARSET = "UTF-8";
     
@@ -50,7 +50,7 @@ public class MrrtReportTemplateFileParserTest {
     
     @Before
     public void setup() {
-        parser = new MrrtReportTemplateFileParser();
+        parser = new DefaultMrrtReportTemplateFileParser();
     }
     
     /**
