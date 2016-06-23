@@ -8,13 +8,15 @@
  */
 package org.openmrs.module.radiology.report.template;
 
-import org.openmrs.BaseOpenmrsObject;
+import org.openmrs.BaseOpenmrsData;
 
 /**
  * IHE Management of Radiology Report Templates (MRRT)
  */
-public class MrrtReportTemplate extends BaseOpenmrsObject {
+public class MrrtReportTemplate extends BaseOpenmrsData {
     
+    
+    private static final long serialVersionUID = 4135353950631883493L;
     
     private Integer templateId;
     

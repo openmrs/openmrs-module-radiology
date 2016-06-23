@@ -21,11 +21,11 @@ import org.junit.Test;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
-public class MrrtReportTemplateServiceTest extends BaseModuleContextSensitiveTest {
+public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSensitiveTest {
     
     
     private static final String TEST_DATASET =
-            "org/openmrs/module/radiology/include/MrrtReportTemplateServiceTestDataset.xml";
+            "org/openmrs/module/radiology/include/MrrtReportTemplateServiceComponentTestDataset.xml";
     
     private static final int EXISTING_TEMPLATE_ID = 1;
     
