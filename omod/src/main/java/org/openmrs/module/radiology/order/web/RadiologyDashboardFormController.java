@@ -16,8 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplate;
+import org.openmrs.module.radiology.report.template.MrrtReportTemplateFileParser;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
-import org.openmrs.module.radiology.report.template.Parser;
 import org.openmrs.web.WebUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -36,7 +36,7 @@ public class RadiologyDashboardFormController {
     private RadiologyProperties radiologyProperties;
     
     @Autowired
-    private Parser parser;
+    private MrrtReportTemplateFileParser parser;
     
     public static final String RADIOLOGY_DASHBOARD_FORM_REQUEST_MAPPING = "/module/radiology/radiologyDashboard.form";
     
@@ -52,17 +52,17 @@ public class RadiologyDashboardFormController {
     
     @RequestMapping(method = RequestMethod.POST)
     protected ModelAndView upload(HttpServletRequest request) throws IOException {
-        MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
-        MultipartFile templateFile = multipartHttpServletRequest.getFile("templateFile");
+        final MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+        final MultipartFile templateFile = multipartHttpServletRequest.getFile("templateFile");
         
-        MrrtReportTemplate template = parser.parse(templateFile.getInputStream());
+        final MrrtReportTemplate template = parser.parse(templateFile.getInputStream());
         
         if (template == null) {
             throw new APIException("Template file could not be parsed");
         }
         mrrtReportTemplateService.saveMrrtReportTemplate(template);
-        String templatesHome = radiologyProperties.getReportTemplateHome();
-        File destinationFile =
+        final String templatesHome = radiologyProperties.getReportTemplateHome();
+        final File destinationFile =
                 new File(templatesHome + File.separator + WebUtil.stripFilename(templateFile.getOriginalFilename()));
         templateFile.transferTo(destinationFile);
         

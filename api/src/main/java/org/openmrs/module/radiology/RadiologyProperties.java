@@ -192,9 +192,10 @@ public class RadiologyProperties extends ModuleProperties {
     }
     
     public String getReportTemplateHome() {
-        String openmrsApplicationDataDirectory = OpenmrsUtil.getApplicationDataDirectory();
-        String templatesPath = openmrsApplicationDataDirectory + File.separator + "radiology" + File.separator + "templates";
-        File templatesHomeDir = new File(templatesPath);
+        final String openmrsApplicationDataDirectory = OpenmrsUtil.getApplicationDataDirectory();
+        final String templatesPath =
+                openmrsApplicationDataDirectory + File.separator + "radiology" + File.separator + "templates";
+        final File templatesHomeDir = new File(templatesPath);
         
         if (!templatesHomeDir.exists()) {
             templatesHomeDir.mkdirs();

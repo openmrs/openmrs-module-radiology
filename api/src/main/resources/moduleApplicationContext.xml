@@ -168,5 +168,5 @@
 		</property>
 	</bean>
 	
-	<bean id="parser" class="org.openmrs.module.radiology.report.template.MrrtReportTemplateFileParser"></bean>
+	<bean id="parser" class="org.openmrs.module.radiology.report.template.DefaultMrrtReportTemplateFileParser"></bean>
 </beans>
