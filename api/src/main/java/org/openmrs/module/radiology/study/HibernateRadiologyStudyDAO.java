@@ -69,10 +69,10 @@ class HibernateRadiologyStudyDAO implements RadiologyStudyDAO {
     }
     
     /**
-     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByOrderId(Integer)
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getRadiologyStudyByOrderId(Integer)
      */
     @Override
-    public RadiologyStudy getStudyByOrderId(Integer orderId) {
+    public RadiologyStudy getRadiologyStudyByOrderId(Integer orderId) {
         final String query = "from RadiologyStudy s where s.radiologyOrder.orderId = '" + orderId + "'";
         return (RadiologyStudy) sessionFactory.getCurrentSession()
                 .createQuery(query)
@@ -80,10 +80,10 @@ class HibernateRadiologyStudyDAO implements RadiologyStudyDAO {
     }
     
     /**
-     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyInstanceUid(String)
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getRadiologyStudyByStudyInstanceUid(String)
      */
     @Override
-    public RadiologyStudy getStudyByStudyInstanceUid(String studyInstanceUid) {
+    public RadiologyStudy getRadiologyStudyByStudyInstanceUid(String studyInstanceUid) {
         return (RadiologyStudy) sessionFactory.getCurrentSession()
                 .createCriteria(RadiologyStudy.class)
                 .add(Restrictions.eq("studyInstanceUid", studyInstanceUid))
@@ -91,11 +91,11 @@ class HibernateRadiologyStudyDAO implements RadiologyStudyDAO {
     }
     
     /**
-     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudiesByRadiologyOrders
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getRadiologyStudiesByRadiologyOrders
      */
     @SuppressWarnings("unchecked")
     @Override
-    public List<RadiologyStudy> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
+    public List<RadiologyStudy> getRadiologyStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
         List<RadiologyStudy> result = null;
         if (!radiologyOrders.isEmpty()) {
             final Criteria studyCriteria = sessionFactory.getCurrentSession()

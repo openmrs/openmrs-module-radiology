@@ -36,18 +36,18 @@ interface RadiologyStudyDAO {
     public RadiologyStudy getRadiologyStudyByUuid(String uuid);
     
     /**
-     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByOrderId(Integer)
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getRadiologyStudyByOrderId(Integer)
      */
-    public RadiologyStudy getStudyByOrderId(Integer orderId);
+    public RadiologyStudy getRadiologyStudyByOrderId(Integer orderId);
     
     /**
-     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudyByStudyInstanceUid(String)
+     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getRadiologyStudyByStudyInstanceUid(String)
      */
-    public RadiologyStudy getStudyByStudyInstanceUid(String studyInstanceUid);
+    public RadiologyStudy getRadiologyStudyByStudyInstanceUid(String studyInstanceUid);
     
     /**
      * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudiesByRadiologyOrders
      */
-    public List<RadiologyStudy> getStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
+    public List<RadiologyStudy> getRadiologyStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
     
 }
