@@ -178,7 +178,10 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     @Override
     public boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder) {
         
-        return radiologyOrder == null ? false : radiologyReportDAO.hasRadiologyOrderClaimedRadiologyReport(radiologyOrder);
+        if (radiologyOrder == null) {
+            throw new IllegalArgumentException("radiologyOrder cannot be null");
+        }
+        return radiologyReportDAO.hasRadiologyOrderClaimedRadiologyReport(radiologyOrder);
     }
     
     /**

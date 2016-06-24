@@ -17,158 +17,160 @@ import org.openmrs.module.radiology.RadiologyPrivileges;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Service layer for {@code RadiologyReport}.
+ * 
+ * @see org.openmrs.module.radiology.report.RadiologyReport
+ */
 @Transactional
 public interface RadiologyReportService extends OpenmrsService {
     
     
     /**
-     * Creates a RadiologyReport and sets the radiologyReportStatus to claimed
+     * Saves a {@code RadiologyReport} to the database and sets its status to claimed.
      *
-     * @param radiologyOrder RadiologyOrder
-     * @return a new claimed RadiologyReport
-     * @throws IllegalArgumentException if given RadiologyOrder is null
-     * @throws IllegalArgumentException if Study of given radiologyReport is null
-     * @throws IllegalArgumentException if Study of given RadiologyOrder is not completed
-     * @throws UnsupportedOperationException if given order has a completed RadiologyReport
-     * @throws UnsupportedOperationException if given order has a claimed RadiologyReport
+     * @param radiologyOrder the radiology order for which a radiology report will be created and claimed
+     * @return the created and claimed radiology report
+     * @throws IllegalArgumentException if given null
+     * @throws IllegalArgumentException if Study of given radiologyOrder is null
+     * @throws IllegalArgumentException if Study of given radiologyOrder is not completed
+     * @throws UnsupportedOperationException if given radiologyOrder has a completed RadiologyReport
+     * @throws UnsupportedOperationException if given radiologyOrder has a claimed RadiologyReport
      * @should create a radiology order with report status claimed given a completed radiology order
-     * @should throw an illegal argument exception if given radiology order is null
-     * @should throw an illegal argument exception if given radiology order is not completed
-     * @should throw an UnsupportedOperationException if given order has a completed RadiologyReport
-     * @should throw an UnsupportedOperationException if given order has a claimed RadiologyReport
+     * @should throw illegal argument exception if given null
+     * @should throw illegal argument exception if given radiology order is not completed
+     * @should throw unsupported operation exception if given order has a completed radiology report
+     * @should throw unsupported operation exception if given order has a claimed radiology report
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_REPORTS)
-    public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder)
-            throws IllegalArgumentException, UnsupportedOperationException;
+    public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder);
     
     /**
-     * Save the given radiologyReport
+     * Saves a {@code RadiologyReport} to the database.
      *
-     * @param radiologyReport RadiologyReport to be saved
-     * @return the saved radiologyReport
-     * @throws IllegalArgumentException if radiologyReport is null
+     * @param radiologyReport the radiology report to be saved
+     * @return the saved radiology report
+     * @throws IllegalArgumentException if given null
      * @throws IllegalArgumentException if radiologyReportStatus is null
      * @throws UnsupportedOperationException if radiologyReport is discontinued
      * @throws UnsupportedOperationException if radiologyReport is completed
-     * @should save radiologyReport in database and return it
-     * @should throw an IllegalArgumentException if radiologyReport is null
-     * @should throw an IllegalArgumentException if radiologyReportStatus is null
-     * @should throw an UnsupportedOperationException if radiologyReport is discontinued
-     * @should throw an UnsupportedOperationException if radiologyReport is completed
+     * @should save radiology report to the database and return it
+     * @should throw illegal argument exception if given null
+     * @should throw illegal argument exception if radiology report status is null
+     * @should throw unsupported operation exception if radiology report is completed
+     * @should throw unsupported operation exception if radiology report is discontinued
      */
     @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
-    public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport)
-            throws IllegalArgumentException, UnsupportedOperationException;
+    public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport);
     
     /**
-     * Unclaims the given radiologyReport and sets the radiologyReportStatus to discontinued
+     * Unclaims a {@code RadiologyReport} and and sets its status to discontinued.
      *
-     * @param radiologyReport RadiologyReport to be unclaimed
-     * @return the discontinued RadiologyReport
-     * @throws IllegalArgumentException if radiologyReport is null
+     * @param radiologyReport the radiology report to be unclaimed
+     * @return the discontinued radiology report
+     * @throws IllegalArgumentException if given null
      * @throws IllegalArgumentException if radiologyReportStatus is null
      * @throws UnsupportedOperationException if radiologyReport is discontinued
      * @throws UnsupportedOperationException if radiologyReport is completed
-     * @should set the radiologyReportStatus of radiologyReport to discontinued
-     * @should throw an IllegalArgumentException if radiologyReport is null
-     * @should throw an IllegalArgumentException if radiologyReportStatus is null
-     * @should throw an UnsupportedOperationException if radiologyReport is discontinued
-     * @should throw an UnsupportedOperationException if radiologyReport is completed
+     * @should set the radiology report status to discontinued
+     * @should throw illegal argument exception if given null
+     * @should throw illegal argument exception if radiology report status is null
+     * @should throw unsupported operation exception if radiology report is completed
+     * @should throw unsupported operation exception if radiology report is discontinued
      */
     @Authorized(RadiologyPrivileges.DELETE_RADIOLOGY_REPORTS)
-    public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport)
-            throws IllegalArgumentException, UnsupportedOperationException;
+    public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport);
     
     /**
-     * Completes the given radiologyReport and sets the radiologyReportStatus to completed
+     * Completes a {@code radiologyReport} and and sets its status to completed.
      *
-     * @param radiologyReport RadiologyReport to be completed
-     * @param principalResultsInterpreter which the RadiologyReport should be set to
-     * @return completed RadiologyReport matching given radiologyReport with
+     * @param radiologyReport the radiology report to be completed
+     * @param principalResultsInterpreter the provider which completed the radiology report
+     * @return the completed radiology report
      *         principalResultsInterpreter
      * @throws IllegalArgumentException if radiologyReport is null
      * @throws IllegalArgumentException if principalResultsInterpreter is null
      * @throws IllegalArgumentException if radiologyReportStatus is null
      * @throws UnsupportedOperationException if radiologyReport is discontinued
      * @throws UnsupportedOperationException if radiologyReport is completed
-     * @should set the reportDate of the radiologyReport to the day the RadiologyReport was
-     *         completed
-     * @should set the radiologyReportStatus to complete
-     * @should throw an IllegalArgumentException if principalResultsInterpreter is null
-     * @should throw an IllegalArgumentException if radiologyReport is null
-     * @should throw an IllegalArgumentException if radiologyReportStatus is null
-     * @should throw an UnsupportedOperationException if radiologyReport is discontinued
-     * @should throw an UnsupportedOperationException if radiologyReport is completed
+     * @should set the report date of the radiology report to the day the radiology report was completed
+     * @should set the radiology report status to complete
+     * @should throw illegal argument exception if principal results interpreter is null
+     * @should throw illegal argument exception if radiology report is null
+     * @should throw illegal argument exception if radiology report status is null
+     * @should throw unsupported operation exception if radiology report is completed
+     * @should throw unsupported operation exception if radiology report is discontinued
      */
     @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
-    public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter)
-            throws IllegalArgumentException, UnsupportedOperationException;
+    public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter);
     
     /**
      * Get the {@code RadiologyReport} by its {@code reportId}.
      *
-     * @param reportId Report Id of wanted RadiologyReport
-     * @return RadiologyReport matching given reportId
-     * @throws IllegalArgumentException if reportId is null
-     * @should fetch RadiologyReport matching given reportId
-     * @should throw IllegalArgumentException if reportId is null
+     * @param reportId the report id of the wanted radiology report
+     * @return the radiology report matching given report id
+     * @throws IllegalArgumentException if given null
+     * @should return radiology report matching given report id
+     * @should return null if no match was found
+     * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
-    RadiologyReport getRadiologyReport(Integer reportId) throws IllegalArgumentException;
+    public RadiologyReport getRadiologyReport(Integer reportId);
     
     /**
-     * Get a RadiologyReport matching the radiologyReport uuid
+     * Get the {@code RadiologyReport} by its {@code UUID}.
      *
-     * @param radiologyReportUuid UUID of RadiologyReport
-     * @return RadiologyReport matching given radiologyReportUuid
-     * @throws IllegalArgumentException if radiologyReportUuid is null
-     * @should fetch RadiologyReport matching given radiologyReportUuid
-     * @should throw IllegalArgumentException if radiologyReportUuid is null
-     * @should return null if no radiologyReport found with given uuid
+     * @param uuid the uuid of the radiology report
+     * @return the radiology report matching given uuid
+     * @throws IllegalArgumentException if given null
+     * @should return radiology report matching given uuid
+     * @should return null if no match was found
+     * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
-    RadiologyReport getRadiologyReportByUuid(String radiologyReportUuid) throws IllegalArgumentException;
+    public RadiologyReport getRadiologyReportByUuid(String uuid);
     
     /**
-     * Get all RadiologyReports fetched by radiologyOrder and radiologyReportStatus
+     * Get the {@code RadiologyReport's} associated with a {@code RadiologyOrder} and a specific status.
      *
-     * @param radiologyOrder RadiologyOrder for which the RadiologyReport should be fetched
-     * @param reportStatus RadiologyReportStatus the RadiologyReport should have
-     * @return List with RadiologyReport filtered by radiologyOrder and reportStatus
+     * @param radiologyOrder the radiology order for which the radiology reports should be returned
+     * @param reportStatus the status the radiology report should have
+     * @return the radiology reports associated with given radiology order and matching given report status
      * @throws IllegalArgumentException if given radiologyOrder is null
      * @throws IllegalArgumentException if given reportStatus is null
-     * @should return a list of completed RadiologyReport if reportStatus is completed
-     * @should return a list of claimed RadiologyReport if reportStatus is claimed
-     * @should return a list of discontinued RadiologyReport if reportStatus is discontinued
-     * @should return an empty list if there are no RadiologyReports for this radiologyOrder
-     * @should throw an IllegalArgumentException if given radiologyOrder is null
-     * @should throw an IllegalArgumentException if given reportStatus is null
+     * @should return list of claimed radiology reports if report status is claimed
+     * @should return list of completed radiology reports if report status is completed
+     * @should return list of discontinued radiology reports if report status is discontinued
+     * @should return empty list given radiology order without associated radiology reports
+     * @should throw illegal argument exception if given radiology order is null
+     * @should throw illegal argument exception if given report status is null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
     public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder radiologyOrder,
-            RadiologyReportStatus reportStatus) throws IllegalArgumentException;
+            RadiologyReportStatus reportStatus);
     
     /**
-     * Convenience method to check if a RadiologyOrder has a claimed RadiologyReport
+     * Check if a {@code RadiologyOrder} has a claimed {@code RadiologyReport}.
      *
-     * @param radiologyOrder RadiologyOrder the radiologyOrder which should be checked
-     * @return true if RadiologyOrder has a claimed RadiologyReport, otherwise false and also if RadiologyOrder is null
-     * @should return true if the RadiologyOrder has a claimed RadiologyReport
-     * @should return false if the RadiologyOrder has no claimed RadiologyReport
-     * @should return false if the RadiologyOrder is null
+     * @param radiologyOrder the radiology order which should be checked for a claimed report
+     * @return true if the radiology order has a claimed report and false otherwise
+     * @throws IllegalArgumentException if given null
+     * @should return true if given radiology order has a claimed radiology report
+     * @should return false if given radiology order has no claimed radiology report
+     * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
     public boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder);
     
     /**
-     * Convenience method to check if a RadiologyOrder has a completed RadiologyReport
+     * Check if a {@code RadiologyOrder} has a completed {@code RadiologyReport}.
      *
-     * @param radiologyOrder RadiologyOrder the radiologyOrder which should be checked
-     * @return true if RadiologyOrder has a completed RadiologyReport, otherwise false
-     * @throws IllegalArgumentException if radiologyOrder is null
-     * @should return true if the RadiologyOrder has a completed RadiologyReport
-     * @should return false if the RadiologyOrder has no completed RadiologyReport
-     * @should throw an IllegalArgumentException if radiologyOrder is null
+     * @param radiologyOrder the radiology order which should be checked for a completed report
+     * @return true if the radiology order has a completed report and false otherwise
+     * @throws IllegalArgumentException if given null
+     * @should return true if given radiology order has a completed radiology report
+     * @should return false if given radiology order has no completed radiology report
+     * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
     public boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder);
@@ -179,11 +181,11 @@ public interface RadiologyReportService extends OpenmrsService {
      * @param radiologyOrder RadiologyOrder the radiologyOrder which should be checked
      * @return RadiologyReport filtered by radiologyOrder and radiologyReportStatus not equal to
      *         discontinued
-     * @throws IllegalArgumentException if radiologyOrder is null
-     * @should return a RadiologyReport if the reportStatus is completed
-     * @should return a RadiologyReport if the reportStatus is claimed
-     * @should return null if
-     * @should throw an IllegalArgumentException if radiologyOrder is null
+     * @throws IllegalArgumentException if given null
+     * @should return a radiology report if given radiology order is associated with a report with status claimed
+     * @should return a radiology report if given radiology order is associated with a report with status completed
+     * @should return null if given radiology order is only associated with a report with status discontinued
+     * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
     public RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder);

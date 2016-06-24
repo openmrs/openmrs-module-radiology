@@ -104,7 +104,7 @@ public interface RadiologyOrderService extends OpenmrsService {
     /**
      * Get the {@code RadiologyOrder's} associated with a {@code Patient}.
      * 
-     * @param patient the patient for which radiology orders shall be returned
+     * @param patient the patient for which radiology orders should be returned
      * @return the radiology orders associated with given patient
      * @throws IllegalArgumentException if given null
      * @should return all radiology orders associated with given patient
@@ -117,7 +117,7 @@ public interface RadiologyOrderService extends OpenmrsService {
     /**
      * Get the {@code RadiologyOrder's} associated with a list of {@code Patient's}.
      *
-     * @param patients the list of patients for which radiology orders shall be returned
+     * @param patients the list of patients for which radiology orders should be returned
      * @return the radiology orders associated with given patients
      * @throws IllegalArgumentException if given null
      * @should return all radiology orders associated with given patients
