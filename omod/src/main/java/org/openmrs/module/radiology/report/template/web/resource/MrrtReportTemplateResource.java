@@ -54,8 +54,8 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
             description.addProperty("display");
             description.addSelfLink();
             description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
-        }
-        if (rep instanceof FullRepresentation) {
+            return description;
+        } else if (rep instanceof FullRepresentation) {
             DelegatingResourceDescription description = new DelegatingResourceDescription();
             
             description.addProperty("uuid");
@@ -99,7 +99,7 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
      */
     @PropertyGetter("display")
     public String getDisplayString(MrrtReportTemplate mrrtReportTemplate) {
-        return mrrtReportTemplate.getDcTermsIdentifier() + "/" + mrrtReportTemplate.getDcTermsTitle();
+        return mrrtReportTemplate.getDcTermsIdentifier();
     }
     
     @Override
