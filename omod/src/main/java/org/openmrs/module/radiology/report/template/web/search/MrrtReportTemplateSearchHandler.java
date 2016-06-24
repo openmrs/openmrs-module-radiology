@@ -23,10 +23,12 @@ import org.openmrs.module.webservices.rest.web.resource.impl.EmptySearchResult;
 import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * Find MrrtReportTemplate's that match the specified search phrase.
  */
+@Component
 public class MrrtReportTemplateSearchHandler implements SearchHandler {
     
     

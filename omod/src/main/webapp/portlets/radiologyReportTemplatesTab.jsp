@@ -1,25 +1,14 @@
 <%@ include file="/WEB-INF/view/module/radiology/template/include.jsp"%>
-<%@ include file="/WEB-INF/view/module/radiology/template/includeDatatables.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/template/includeDatatablesWithDefaults.jsp"%>
 
 <script type="text/javascript">
   var $j = jQuery.noConflict();
   $j(document)
           .ready(
                   function() {
-                    var patientUuid = $j('#patientUuid');
+                    var templateTitle = $j('#templateTitle');
                     var find = $j('#findButton');
                     var clearResults = $j('a#clearResults');
-
-                    $j('#addTemplatePopup').dialog({
-                      autoOpen: false,
-                      modal: true,
-                      title: '<openmrs:message code="radiology.report.templates.AddReportTemplates" javaScriptEscape="true"/>',
-                      width: '90%'
-                    });
-
-                    $j('#addTemplateButton').click(function() {
-                      $j('#addTemplatePopup').dialog('open');
-                    });
 
                     var radiologyTemplatesTable = $j('#radiologyTemplatesTable')
                             .DataTable(
@@ -33,51 +22,74 @@
                                         },
                                         cache: true,
                                         dataType: "json",
-                                        url: "http://localhost:8080/openmrs/ws/rest/v1/radiologyorder/",
+                                        url: "${pageContext.request.contextPath}/ws/rest/v1/mrrtreporttemplate/",
                                         data: function(data) {
                                           return {
                                             startIndex: data.start,
                                             limit: data.length,
                                             v: "full",
-                                            patient: patientUuid.val(),
+                                            title: templateTitle.val(),
+                                            totalCount: true,
                                           };
                                         },
-                                        "dataSrc": function(json) {
-                                          var result = [];
-                                          for (var i = 0, ien = json.results.length; i < ien; i++) {
-                                            result[i] = [
-                                                '<a href="http://localhost:8080/openmrs/module/radiology/radiologyOrder.form?orderId='
-                                                        + json.results[i].uuid
-                                                        + '">'
-                                                        + json.results[i].orderNumber
-                                                        + '</a>',
-                                                json.results[i].patient.display,
-                                                json.results[i].urgency,
-                                                json.results[i].concept.display,
-                                                json.results[i].orderer.display,
-                                                json.results[i].scheduledDate,
-                                                json.results[i].dateActivated, ]
-                                          }
-                                          return result;
+                                        "dataFilter": function(data) {
+                                          var json = $j.parseJSON(data);
+                                          json.recordsTotal = json.totalCount || 0;
+                                          json.recordsFiltered = json.totalCount || 0;
+                                          json.data = json.results;
+                                          return JSON.stringify(json);
                                         }
                                       },
-                                      "searching": false,
-                                      "ordering": false,
-                                      "columns": [{
-                                        "name": "orderNumber",
-                                      }, {
-                                        "name": "patient",
-                                      }, {
-                                        "name": "urgency",
-                                      }, {
-                                        "name": "concept",
-                                      }, {
-                                        "name": "orderer",
-                                      }, {
-                                        "name": "scheduledDate",
-                                      }, {
-                                        "name": "dateActivated",
-                                      }, ],
+                                      "columns": [
+                                          {
+                                            "name": "templateId",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.templateId;
+                                            }
+                                          },
+                                          {
+                                            "name": "dcTermsTitle",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.dcTermsTitle;
+                                            }
+                                          },
+                                          {
+                                            "name": "dcTermsType",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.dcTermsType;
+                                            }
+                                          },
+                                          {
+                                            "name": "dcTermsCreator",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.dcTermsCreator;
+                                            }
+                                          },
+                                          {
+                                            "name": "dcTermsPublisher",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.dcTermsPublisher;
+                                            }
+                                          },
+                                          {
+                                            "name": "dcTermsRights",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.dcTermsRights;
+                                            }
+                                          },
+                                          {
+                                            "name": "dcTermsDescription",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.dcTermsDescription;
+                                            }
+                                          }, ],
                                     });
 
                     // prevent form submit when user hits enter
@@ -90,47 +102,60 @@
 
                     find.on('mouseup keyup', function(event) {
                       if (event.type == 'keyup' && event.keyCode != 13) return;
-                      radiologyOrdersTable.ajax.reload();
+                      radiologyTemplatesTable.ajax.reload();
                     });
 
                     clearResults.on('mouseup keyup', function() {
                       $j('table#searchForm input:text').val('');
-                      patientUuid.val('');
-                      radiologyOrdersTable.ajax.reload();
+                      templateTitle.val('');
+                      radiologyTemplatesTable.ajax.reload();
+                    });
+
+                    $j('#addTemplatePopup')
+                            .dialog(
+                                    {
+                                      autoOpen: false,
+                                      modal: true,
+                                      title: '<openmrs:message code="radiology.report.templates.AddReportTemplates" javaScriptEscape="true"/>',
+                                      width: '90%'
+                                    });
+
+                    $j('#addTemplateButton').click(function() {
+                      $j('#addTemplatePopup').dialog('open');
                     });
                   });
 </script>
 
-<br/>
+<br />
 <div id="buttonPanel">
-  <div style="float:left">
-    <input type="button" id="addTemplateButton" value="<openmrs:message code="radiology.report.templates.AddReportTemplates" javaScriptEscape="true"/>"/>
+  <div style="float: left">
+    <input type="button" id="addTemplateButton"
+      value="<openmrs:message code="radiology.report.templates.AddReportTemplates" javaScriptEscape="true"/>" />
     <div id="addTemplatePopup">
-      <b class="boxHeader"><openmrs:message code="radiology.report.templates.importTemplate"/></b>
+      <b class="boxHeader"><openmrs:message code="radiology.report.templates.importTemplate" /></b>
       <div class="box">
         <form id="templateAddForm" action="radiologyDashboard.form" method="post" enctype="multipart/form-data">
-          <input type="file" name="templateFile" size="40"/>
-          <input type="hidden" name="action" value="upload"/>
-          <input type="submit" value='<openmrs:message code="radiology.report.templates.Upload"/>'/>
+          <input type="file" name="templateFile" size="40" /> <input type="hidden" name="action" value="upload" /> <input
+            type="submit" value='<openmrs:message code="radiology.report.templates.Upload"/>' />
         </form>
       </div>
-      <br/>
+      <br />
     </div>
   </div>
-  <div style="clear:both">&nbsp;</div>
+  <div style="clear: both">&nbsp;</div>
 </div>
 
 <br>
-<span class="boxHeader"> <b><spring:message code="radiology.radiologyReportTemplates" /></b> <a id="clearResults" href="#"
-  style="float: right"> <spring:message code="radiology.clearResults" />
+<span class="boxHeader"> <b><spring:message code="radiology.radiologyReportTemplates" /></b> <a id="clearResults"
+  href="#" style="float: right"> <spring:message code="radiology.clearResults" />
 </a>
 </span>
 <div class="box">
   <table id="searchForm" cellspacing="10">
     <tr>
       <form id="reportTemplateListForm">
-        <td><label><spring:message code="radiology.report.template.title" />:</label> <input name="titleQuery" type="text"
-                                                                                                 style="width: 20em" title="<spring:message
+        <td><label><spring:message code="radiology.report.template.title" />:</label> <input id="templateTitle"
+          name="titleQuery" type="text" style="width: 20em" title="<spring:message
 						code="radiology.minChars" />" /></td>
         <td><input id="findButton" type="button" value="<spring:message code="radiology.find"/>" /></td>
         <td id="errorSpan"></td>
