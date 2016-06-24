@@ -17,7 +17,7 @@ public class GutterListExt extends LinkExt {
     
     @Override
     public String getLabel() {
-        return "radiology.home.title";
+        return "radiology.gutterlist.title";
     }
     
     @Override

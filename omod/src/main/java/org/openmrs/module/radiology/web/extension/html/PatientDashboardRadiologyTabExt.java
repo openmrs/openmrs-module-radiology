@@ -18,7 +18,7 @@ public class PatientDashboardRadiologyTabExt extends PatientDashboardTabExt {
     
     @Override
     public String getTabName() {
-        return "radiology.home.title";
+        return "radiology.patientDashboardForm.tabs.radiology";
     }
     
     @Override
