@@ -39,6 +39,9 @@ public class RadiologyReportFormController {
     @Autowired
     private DicomWebViewer dicomWebViewer;
     
+    @Autowired
+    private RadiologyReportValidator radiologyReportValidator;
+    
     /**
      * Handles GET requests for the radiologyReportForm creating a new radiology report for given
      * radiology order
@@ -87,7 +90,8 @@ public class RadiologyReportFormController {
      */
     @RequestMapping(method = RequestMethod.POST, params = "saveRadiologyReport")
     protected ModelAndView saveRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
-        ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
+        
+        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         radiologyReportService.saveRadiologyReport(radiologyReport);
         
         addObjectsToModelAndView(modelAndView, radiologyReport);
@@ -104,6 +108,7 @@ public class RadiologyReportFormController {
      */
     @RequestMapping(method = RequestMethod.POST, params = "unclaimRadiologyReport")
     protected ModelAndView unclaimRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
+        
         radiologyReportService.unclaimRadiologyReport(radiologyReport);
         return new ModelAndView("redirect:" + RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
                 + radiologyReport.getRadiologyOrder()
@@ -127,7 +132,9 @@ public class RadiologyReportFormController {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         
-        if (validateForm(modelAndView, radiologyReport, bindingResult)) {
+        radiologyReportValidator.validate(radiologyReport, bindingResult);
+        if (bindingResult.hasErrors()) {
+            addObjectsToModelAndView(modelAndView, radiologyReport);
             return modelAndView;
         }
         
@@ -135,27 +142,6 @@ public class RadiologyReportFormController {
             radiologyReport.getPrincipalResultsInterpreter());
         addObjectsToModelAndView(modelAndView, completedRadiologyReport);
         return modelAndView;
-    }
-    
-    /**
-     * Convenience method to check, if RadiologyReportForm has BindingErrors (e.g. Provider is not
-     * set)
-     *
-     * @param radiologyReport radiology report to be validated
-     * @param bindingResult BindingResult
-     * @param modelAndView model and view where radiology report is added
-     * @return true, if RadiologyReportFrom has errors (e.g. Provider is missing), false if
-     *         RadiologyReportForm has no errors
-     */
-    private boolean validateForm(ModelAndView modelAndView, RadiologyReport radiologyReport, BindingResult bindingResult) {
-        if (radiologyReport.getPrincipalResultsInterpreter() == null) {
-            new RadiologyReportValidator().validate(radiologyReport, bindingResult);
-        }
-        if (bindingResult.hasErrors()) {
-            addObjectsToModelAndView(modelAndView, radiologyReport);
-            return true;
-        }
-        return false;
     }
     
     /**

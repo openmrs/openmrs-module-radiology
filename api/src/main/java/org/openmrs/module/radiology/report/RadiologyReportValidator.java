@@ -16,22 +16,22 @@ import org.springframework.validation.ValidationUtils;
 import org.springframework.validation.Validator;
 
 /**
- * Validates the {@link RadiologyReport} class.
+ * Validates {@link RadiologyReport}.
  */
 @Component
 public class RadiologyReportValidator implements Validator {
     
     
-    /** Log for this class and subclasses */
-    protected final Log log = LogFactory.getLog(getClass());
+    protected final Log log = LogFactory.getLog(RadiologyReportValidator.class);
     
     /**
      * Determines if the command object being submitted is a valid type
      *
      * @see org.springframework.validation.Validator#supports(java.lang.Class)
-     * @should return true for RadiologyReport objects
+     * @should return true for radiology report objects
      * @should return false for other object types
      */
+    @Override
     public boolean supports(Class clazz) {
         return RadiologyReport.class.isAssignableFrom(clazz);
     }
@@ -39,18 +39,21 @@ public class RadiologyReportValidator implements Validator {
     /**
      * Checks the form object for any inconsistencies/errors
      *
-     * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-     * @should fail validation if radiologyReport is null
-     * @should fail validation if principalResultsInterpreter is empty or whitespace
+     * @see org.springframework.validation.Validator#validate(Object, Errors)
+     * @should fail validation if radiology report is null
+     * @should fail validation if principal results interpreter is null or empty or whitespaces only
+     * @should fail validation if report body is null or empty or whitespaces only
      * @should pass validation if all fields are correct
      */
+    @Override
     public void validate(Object obj, Errors errors) {
         RadiologyReport radiologyReport = (RadiologyReport) obj;
         if (radiologyReport == null) {
             errors.reject("error.general");
         } else {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "principalResultsInterpreter", "error.null",
-                "Provider can not be null");
+                "Provider cannot be null");
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "reportBody", "error.null", "Diagnosis cannot be null");
         }
     }
 }
