@@ -7,6 +7,10 @@
 <openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui-1.7.2.custom.min.js" />
 <openmrs:htmlInclude file="/moduleResources/radiology/css/radiology.css" />
 
+<h2>
+  <spring:message code="radiology.dashboard.title" />
+</h2>
+
 <script type="text/javascript">
   var timeOut = null;
 
@@ -69,7 +73,7 @@
   <ul>
     <openmrs:hasPrivilege privilege="View Orders">
       <li><a id="radiologyOrdersTab" href="#" onclick="return changeTab(this);" hidefocus="hidefocus"><openmrs:message
-            code="radiology.radiologyTabs.orders" /></a></li>
+            code="radiology.dashboard.tabs.orders" /></a></li>
     </openmrs:hasPrivilege>
   </ul>
 </div>

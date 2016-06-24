@@ -75,13 +75,6 @@
                                             }
                                           },
                                           {
-                                            "name": "patient",
-                                            "render": function(data, type,
-                                                    full, meta) {
-                                              return full.patient.display;
-                                            }
-                                          },
-                                          {
                                             "name": "urgency",
                                             "render": function(data, type,
                                                     full, meta) {
@@ -225,24 +218,27 @@
         code="radiology.addOrder" /></a> <br />
   </p>
 </openmrs:hasPrivilege>
-
-<div id="results">
-  <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
-    <thead>
-      <tr>
-        <th></th>
-        <th><spring:message code="radiology.datatables.column.orderNumber" /></th>
-        <th><spring:message code="radiology.datatables.column.patient" /></th>
-        <th><spring:message code="radiology.datatables.column.priority" /></th>
-        <th><spring:message code="radiology.datatables.column.imagingProcedure" /></th>
-        <th><spring:message code="radiology.datatables.column.referringPhysician" /></th>
-        <th><spring:message code="radiology.datatables.column.scheduledDate" /></th>
-        <th><spring:message code="radiology.datatables.column.dateActivated" /></th>
-        <th><spring:message code="radiology.datatables.column.orderReason" /></th>
-        <th><spring:message code="radiology.datatables.column.orderReasonNonCoded" /></th>
-        <th><spring:message code="radiology.datatables.column.instructions" /></th>
-      </tr>
-    </thead>
-  </table>
+<span class="boxHeader"> <b><spring:message code="radiology.radiologyOrders" /></b>
+</span>
+<div class="box">
+  <br>
+  <div id="results">
+    <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
+      <thead>
+        <tr>
+          <th></th>
+          <th><spring:message code="radiology.datatables.column.orderNumber" /></th>
+          <th><spring:message code="radiology.datatables.column.priority" /></th>
+          <th><spring:message code="radiology.datatables.column.imagingProcedure" /></th>
+          <th><spring:message code="radiology.datatables.column.referringPhysician" /></th>
+          <th><spring:message code="radiology.datatables.column.scheduledDate" /></th>
+          <th><spring:message code="radiology.datatables.column.dateActivated" /></th>
+          <th><spring:message code="radiology.datatables.column.orderReason" /></th>
+          <th><spring:message code="radiology.datatables.column.orderReasonNonCoded" /></th>
+          <th><spring:message code="radiology.datatables.column.instructions" /></th>
+        </tr>
+      </thead>
+    </table>
+  </div>
 </div>
 <input type="hidden" id="patientUuid" value="${patient.uuid}" />
