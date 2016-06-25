@@ -361,18 +361,6 @@
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 
-			<column name="uuid" type="char(38)">
-				<constraints nullable="false" unique="true" />
-			</column>
-			<column name="creator" type="int" defaultValueNumeric="0">
-				<constraints nullable="false" />
-			</column>
-			<column name="date_created" type="datetime">
-				<constraints nullable="false" />
-			</column>
-			<column name="changed_by" type="int" />
-			<column name="date_changed" type="datetime" />
-			
 			<column name="charset" type="varchar(32)"/>
 			<column name="path" type="varchar(128)"/>
 			<column name="dcterms_title" type="varchar(256)"/>
@@ -385,6 +373,17 @@
 			<column name="dcterms_license" type="varchar(128)"/>
 			<column name="dcterms_date" type="varchar(32)"/>
 			<column name="dcterms_creator" type="varchar(128)"/> 
+			<column name="creator" type="int" defaultValueNumeric="0">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true" />
+			</column>
 		</createTable>
 	</changeSet>
 	<changeSet id="radiology-32" author="ivange94">

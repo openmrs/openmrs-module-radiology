@@ -10,14 +10,6 @@
 			</generator>
 		</id>
 
-		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
-		<many-to-one name="creator" class="org.openmrs.User"
-			not-null="true" />
-		<property name="dateCreated" type="java.util.Date" column="date_created"
-			not-null="true" />
-		<many-to-one name="changedBy" column="changed_by" class="org.openmrs.User" />
-		<property name="dateChanged" type="java.util.Date" column="date_changed" />
-		
 		<property name="charset" type="java.lang.String"/>
 		<property name="path" type="java.lang.String"/>
 		<property name="dcTermsTitle" column="dcterms_title" type="java.lang.String" />
@@ -30,5 +22,12 @@
 		<property name="dcTermsLicense" column="dcterms_license" type="java.lang.String"/>
 		<property name="dcTermsDate" column="dcterms_date" type="java.lang.String"/>
 		<property name="dcTermsCreator" column="dcterms_creator" type="java.lang.String"/>
+		<many-to-one name="creator" class="org.openmrs.User"
+			not-null="true" />
+		<property name="dateCreated" type="java.util.Date" column="date_created"
+			not-null="true" />
+		<many-to-one name="changedBy" column="changed_by" class="org.openmrs.User" />
+		<property name="dateChanged" type="java.util.Date" column="date_changed" />
+		<property name="uuid" type="java.lang.String" column="uuid" length="38" unique="true" />
 	</class>
 </hibernate-mapping>
