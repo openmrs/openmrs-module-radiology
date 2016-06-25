@@ -60,10 +60,12 @@ public class RadiologyDashboardFormController {
         if (template == null) {
             throw new APIException("Template file could not be parsed");
         }
-        mrrtReportTemplateService.saveMrrtReportTemplate(template);
+        
         final String templatesHome = radiologyProperties.getReportTemplateHome();
         final File destinationFile =
                 new File(templatesHome + File.separator + WebUtil.stripFilename(templateFile.getOriginalFilename()));
+        template.setPath(destinationFile.getAbsolutePath());
+        mrrtReportTemplateService.saveMrrtReportTemplate(template);
         templateFile.transferTo(destinationFile);
         
         return new ModelAndView(RADIOLOGY_DASHBOARD_FORM_VIEW);

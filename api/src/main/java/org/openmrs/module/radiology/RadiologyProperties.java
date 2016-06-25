@@ -8,18 +8,18 @@
  */
 package org.openmrs.module.radiology;
 
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.openmrs.CareSetting;
 import org.openmrs.ConceptClass;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.OrderType;
 import org.openmrs.VisitType;
-import org.openmrs.api.APIException;
 import org.openmrs.module.emrapi.utils.ModuleProperties;
 import org.openmrs.util.OpenmrsUtil;
 import org.springframework.stereotype.Component;
-
-import java.io.File;
 
 /**
  * Properties, mostly configured via GPs for this module.
@@ -192,17 +192,18 @@ public class RadiologyProperties extends ModuleProperties {
     }
     
     public String getReportTemplateHome() {
-        final String openmrsApplicationDataDirectory = OpenmrsUtil.getApplicationDataDirectory();
-        final String templatesPath =
-                openmrsApplicationDataDirectory + File.separator + "radiology" + File.separator + "templates";
-        final File templatesHomeDir = new File(templatesPath);
         
-        if (!templatesHomeDir.exists()) {
-            templatesHomeDir.mkdirs();
+        Path templatesPath = Paths.get(getGlobalProperty(RadiologyConstants.GP_MRRT_REPORT_TEMPLATE_DIR, true));
+        
+        if (!templatesPath.isAbsolute()) {
+            templatesPath = Paths.get(OpenmrsUtil.getApplicationDataDirectory(), templatesPath.toString());
         }
-        if (!templatesHomeDir.exists()) {
-            throw new APIException("Could not create folder:" + getReportTemplateHome());
+        if (!templatesPath.toFile()
+                .exists()) {
+            templatesPath.toFile()
+                    .mkdirs();
         }
-        return templatesHomeDir.getAbsolutePath();
+        
+        return templatesPath.toString();
     }
 }
