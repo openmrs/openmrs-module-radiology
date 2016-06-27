@@ -262,6 +262,7 @@
 				<configuration>
 					<includes>
 						<include>org/openmrs/module/radiology/web/**</include>
+						<include>org/openmrs/module/radiology/**/web/**</include>
 					</includes>
 				</configuration>
 			</plugin>
