@@ -16,6 +16,7 @@
     var showOrHideScheduledDate = function() {
       if (urgencySelect.val() === "ON_SCHEDULED_DATE") {
         scheduledDate.show();
+        scheduledDate.click();
       } else {
         scheduledDate.hide();
         scheduledDateErrorSpan.hide();
@@ -99,8 +100,8 @@
               </c:forEach>
             </select>
           </spring:bind> <spring:bind path="scheduledDate">
-            <input name="${status.expression}" id="${status.expression}Id" type="text" onclick="showDateTimePicker(this)"
-              value="${status.value}">
+            <input name="${status.expression}" id="${status.expression}Id" type="text" style="display: none;"
+              onclick="showDateTimePicker(this)" value="${status.value}">
             <c:if test="${status.errorMessage != ''}">
               <span id="scheduledDateErrorSpan" class="error">${status.errorMessage}</span>
             </c:if>
