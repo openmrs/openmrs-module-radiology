@@ -15,9 +15,13 @@
       </tr>
       <tr>
         <td><spring:message code="radiology.radiologyOrder.orderReason" /></td>
-        <td><spring:bind path="concept.name.name">
-                    ${status.value}
-                </spring:bind></td>
+        <td><spring:bind path="orderReason">
+            <c:if test="${not empty status.value}">
+              <spring:bind path="${status.expression}.name.name">
+                                ${status.value}
+                        </spring:bind>
+            </c:if>
+          </spring:bind></td>
       </tr>
       <tr>
         <td><spring:message code="radiology.radiologyOrder.orderReasonNonCoded" /></td>
