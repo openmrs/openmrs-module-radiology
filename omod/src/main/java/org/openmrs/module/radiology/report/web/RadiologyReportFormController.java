@@ -46,37 +46,31 @@ public class RadiologyReportFormController {
      * Handles GET requests for the radiologyReportForm creating a new radiology report for given
      * radiology order
      * 
-     * @param radiologyOrder radiology order for which a radiology report will be created
-     * @return model and view containing new radiology report for given radiology order
+     * @param radiologyOrder the radiology order for which a radiology report will be created
+     * @return the model and view containing new radiology report for given radiology order
      * @should populate model and view with new radiology report for given radiology order
      */
     @RequestMapping(method = RequestMethod.GET, params = "orderId")
     protected ModelAndView getRadiologyReportFormWithNewRadiologyReport(
             @RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder) {
-        ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         
         final RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
-        modelAndView = new ModelAndView(
+        return new ModelAndView(
                 "redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?radiologyReportId=" + radiologyReport.getId());
-        
-        addObjectsToModelAndView(modelAndView, radiologyReport);
-        return modelAndView;
     }
     
     /**
      * Handles GET requests for the radiologyReportForm when called for existing radiology reports
      * 
-     * @param radiologyReportId radiology report id of the existing radiology report which should be
-     *        put into the model and view
-     * @return model and view containing radiology report for given radiology report id
-     * @should populate model and view with existing radiology report matching given radiology
-     *         report id
+     * @param radiologyReportId the radiology report which is requested
+     * @return the model and view containing radiology report for given radiology report id
+     * @should populate model and view with given radiology report
      */
     @RequestMapping(method = RequestMethod.GET, params = "radiologyReportId")
     protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(
             @RequestParam(value = "radiologyReportId", required = true) RadiologyReport radiologyReport) {
         
-        ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
+        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         addObjectsToModelAndView(modelAndView, radiologyReport);
         return modelAndView;
     }
@@ -85,11 +79,11 @@ public class RadiologyReportFormController {
      * Handles POST request for the RadiologyReportForm to save a RadiologyReport
      *
      * @param radiologyReport radiology report to be saved
-     * @return ModelAndView containing saved radiology report
+     * @return the model and view containing saved radiology report
      * @should save given radiology report and populate model and view with it
      */
     @RequestMapping(method = RequestMethod.POST, params = "saveRadiologyReport")
-    protected ModelAndView saveRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
+    protected ModelAndView saveRadiologyReport(@ModelAttribute RadiologyReport radiologyReport) {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         radiologyReportService.saveRadiologyReport(radiologyReport);
@@ -101,13 +95,13 @@ public class RadiologyReportFormController {
     /**
      * Handles POST request for the RadiologyReportForm to unclaim given RadiologyReport
      *
-     * @param radiologyReport radiology report to be unclaimed
-     * @return ModelAndView with redirect to order form if unclaim was successful, otherwise stay on
+     * @param radiologyReport the radiology report to be unclaimed
+     * @return the model and view with redirect to order form if unclaim was successful, otherwise stay on
      *         report form
      * @should redirect to radiology order form if unclaim was successful
      */
     @RequestMapping(method = RequestMethod.POST, params = "unclaimRadiologyReport")
-    protected ModelAndView unclaimRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport) {
+    protected ModelAndView unclaimRadiologyReport(@ModelAttribute RadiologyReport radiologyReport) {
         
         radiologyReportService.unclaimRadiologyReport(radiologyReport);
         return new ModelAndView("redirect:" + RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
@@ -118,16 +112,15 @@ public class RadiologyReportFormController {
     /**
      * Handles POST request for the RadiologyReportForm to complete given RadiologyReport
      *
-     * @param radiologyReport radiology report to be completed
-     * @param bindingResult BindingResult
-     * @return ModelAndView RadiologyOrderForm if complete was successful, otherwise the
-     *         ModelAndView with BindingResult errors
-     * @should complete given radiology report and populate model and view with it
-     * @should populate model and view radiology report form with BindingResult errors if provider
-     *         is null
+     * @param radiologyReport the radiology report to be completed
+     * @param bindingResult the binding result for the radiology report
+     * @return the model and view for the order form if complete was successful, otherwise the
+     *         model and view contains binding result errors
+     * @should complete given radiology report if it is valid
+     * @should not complete given radiology report if it is not valid
      */
     @RequestMapping(method = RequestMethod.POST, params = "completeRadiologyReport")
-    protected ModelAndView completeRadiologyReport(@ModelAttribute("radiologyReport") RadiologyReport radiologyReport,
+    protected ModelAndView completeRadiologyReport(@ModelAttribute RadiologyReport radiologyReport,
             BindingResult bindingResult) {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
