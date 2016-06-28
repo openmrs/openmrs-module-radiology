@@ -5,29 +5,25 @@
 
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/tinymce/tinymce.min.js" />
 <script type="text/javascript">
-  onload = initEverything();
-  function initEverything() {
-    tinymce
-            .init({
-              selector: '#reportText',
-              setup: function(ed) {
-                if (document.getElementById("reportText").getAttribute(
-                        "disabled") != null) {
-                  ed.settings.readonly = true;
-                  ed.settings.toolbar = false;
-                  ed.settings.menubar = false;
-                }
-              },
-              menubar: "edit,format",
-              elementpath: false
-            });
-  }
+  var $j = jQuery.noConflict();
+  $j(document).ready(function() {
+    var reportBody = $j("#reportBodyId");
+
+    tinymce.init({
+      selector: '#reportBodyId',
+      setup: function(editor) {
+        if (reportBody.attr("disabled") != null) {
+          editor.settings.readonly = true;
+          editor.settings.toolbar = false;
+          editor.settings.menubar = false;
+        }
+      },
+      menubar: "edit,format",
+      elementpath: false,
+    });
+  });
 </script>
 
-<spring:hasBindErrors name="radiologyReport">
-  <spring:message code="fix.error" />
-</spring:hasBindErrors>
-<br>
 <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${order.patient.patientId}" />
 <br>
 <div>
@@ -36,6 +32,12 @@
   <%@ include file="/WEB-INF/view/module/radiology/orders/radiologyOrderDetailsSegment.jsp"%>
 </div>
 <br>
+<spring:hasBindErrors name="radiologyReport">
+  <div class="error">
+    <spring:message code="fix.error" />
+  </div>
+  <br>
+</spring:hasBindErrors>
 <span class="boxHeader"> <b><spring:message code="radiology.radiologyReportTitle" /></b>
 </span>
 <form:form modelAttribute="radiologyReport" method="post">
@@ -65,10 +67,17 @@
         <td><spring:message code="radiology.radiologyReportDiagnosis" /></td>
         <td><c:choose>
             <c:when test="${radiologyReport.reportStatus == 'COMPLETED'}">
-              <form:textarea id="reportText" path="reportBody" disabled="true"></form:textarea>
+              <spring:bind path="reportBody">
+                <textarea id="${status.expression}Id" name="${status.expression}" disabled="true">${status.value}</textarea>
+              </spring:bind>
             </c:when>
             <c:otherwise>
-              <form:textarea id="reportText" path="reportBody"></form:textarea>
+              <spring:bind path="reportBody">
+                <textarea id="${status.expression}Id" name="${status.expression}">${status.value}</textarea>
+                <c:if test="${status.errorMessage != ''}">
+                  <span class="error">${status.errorMessage}</span>
+                </c:if>
+              </spring:bind>
             </c:otherwise>
           </c:choose></td>
       </tr>

@@ -16,6 +16,7 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportService;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
+import org.openmrs.module.radiology.report.RadiologyReportValidator;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
 import org.springframework.validation.BindingResult;
@@ -29,6 +30,9 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
     
     @Mock
     private DicomWebViewer dicomWebViewer;
+    
+    @Mock
+    private RadiologyReportValidator radiologyReportValidator;
     
     @InjectMocks
     private RadiologyReportFormController radiologyReportFormController = new RadiologyReportFormController();

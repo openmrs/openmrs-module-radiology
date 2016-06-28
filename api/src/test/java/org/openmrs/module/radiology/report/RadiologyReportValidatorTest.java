@@ -13,6 +13,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Provider;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
@@ -27,9 +28,27 @@ import org.springframework.validation.Errors;
 public class RadiologyReportValidatorTest {
     
     
+    RadiologyOrder radiologyOrder;
+    
+    RadiologyStudy radiologyStudy;
+    
+    RadiologyReport radiologyReport;
+    
+    @Before
+    public void setUp() {
+        
+        radiologyOrder = new RadiologyOrder();
+        radiologyStudy = new RadiologyStudy();
+        radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
+        radiologyOrder.setStudy(radiologyStudy);
+        radiologyReport = new RadiologyReport(radiologyOrder);
+        radiologyReport.setPrincipalResultsInterpreter(new Provider());
+        radiologyReport.setReportBody("Found a broken bone.");
+    }
+    
     /**
-     * @verifies return false for other object types
      * @see RadiologyReportValidator#supports(Class)
+     * @verifies return false for other object types
      */
     @Test
     public void supports_shouldReturnFalseForOtherObjectTypes() throws Exception {
@@ -39,8 +58,8 @@ public class RadiologyReportValidatorTest {
     }
     
     /**
-     * @verifies return true for RadiologyReport objects
      * @see RadiologyReportValidator#supports(Class)
+     * @verifies return true for radiology report objects
      */
     @Test
     public void supports_shouldReturnTrueForRadiologyReportObjects() throws Exception {
@@ -50,60 +69,102 @@ public class RadiologyReportValidatorTest {
     }
     
     /**
-     * @verifies fail validation if principalResultsInterpreter is empty or whitespace
      * @see RadiologyReportValidator#validate(Object, Errors)
-     */
-    @Test
-    public void validate_shouldFailValidationIfPrincipalResultsInterpreterIsEmptyOrWhitespace() throws Exception {
-        
-        RadiologyOrder radiologyOrder = new RadiologyOrder();
-        RadiologyStudy radiologyStudy = new RadiologyStudy();
-        radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-        radiologyOrder.setStudy(radiologyStudy);
-        RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
-        radiologyReport.setPrincipalResultsInterpreter(null);
-        
-        Errors errors = new BindException(radiologyReport, "radiologyReport");
-        new RadiologyReportValidator().validate(radiologyReport, errors);
-        
-        assertTrue(errors.hasFieldErrors("principalResultsInterpreter"));
-    }
-    
-    /**
-     * @verifies fail validation if radiologyReport is null
-     * @see RadiologyReportValidator#validate(Object, Errors)
+     * @verifies fail validation if radiology report is null
      */
     @Test
     public void validate_shouldFailValidationIfRadiologyReportIsNull() throws Exception {
-        
-        RadiologyOrder radiologyOrder = new RadiologyOrder();
-        RadiologyStudy radiologyStudy = new RadiologyStudy();
-        radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-        radiologyOrder.setStudy(radiologyStudy);
-        RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
         
         Errors errors = new BindException(radiologyReport, "radiologyReport");
         new RadiologyReportValidator().validate(null, errors);
         
         assertTrue(errors.hasErrors());
+        assertThat(errors.getAllErrors()
+                .size(),
+            is(1));
         assertThat((errors.getAllErrors()).get(0)
                 .getCode(),
             is("error.general"));
     }
     
     /**
-     * @verifies pass validation if all fields are correct
      * @see RadiologyReportValidator#validate(Object, Errors)
+     * @verifies fail validation if principal results interpreter is null or empty or whitespaces only
+     */
+    @Test
+    public void validate_shouldFailValidationIfPrincipalResultsInterpreterIsNullOrEmptyOrWhitespacesOnly() throws Exception {
+        
+        radiologyReport.setPrincipalResultsInterpreter(null);
+        
+        Errors errors = new BindException(radiologyReport, "radiologyReport");
+        new RadiologyReportValidator().validate(radiologyReport, errors);
+        
+        assertTrue(errors.hasErrors());
+        assertThat(errors.getAllErrors()
+                .size(),
+            is(1));
+        assertThat((errors.getAllErrors()).get(0)
+                .getCode(),
+            is("error.null"));
+        assertTrue(errors.hasFieldErrors("principalResultsInterpreter"));
+    }
+    
+    /**
+     * @see RadiologyReportValidator#validate(Object,Errors)
+     * @verifies fail validation if report body is null or empty or whitespaces only
+     */
+    @Test
+    public void validate_shouldFailValidationIfReportBodyIsNullOrEmptyOrWhitespacesOnly() throws Exception {
+        
+        radiologyReport.setReportBody(null);
+        
+        Errors errors = new BindException(radiologyReport, "radiologyReport");
+        new RadiologyReportValidator().validate(radiologyReport, errors);
+        
+        assertTrue(errors.hasErrors());
+        assertThat(errors.getAllErrors()
+                .size(),
+            is(1));
+        assertThat((errors.getAllErrors()).get(0)
+                .getCode(),
+            is("error.null"));
+        assertTrue(errors.hasFieldErrors("reportBody"));
+        
+        radiologyReport.setReportBody("");
+        
+        errors = new BindException(radiologyReport, "radiologyReport");
+        new RadiologyReportValidator().validate(radiologyReport, errors);
+        
+        assertTrue(errors.hasErrors());
+        assertThat(errors.getAllErrors()
+                .size(),
+            is(1));
+        assertThat((errors.getAllErrors()).get(0)
+                .getCode(),
+            is("error.null"));
+        assertTrue(errors.hasFieldErrors("reportBody"));
+        
+        radiologyReport.setReportBody("  ");
+        
+        errors = new BindException(radiologyReport, "radiologyReport");
+        new RadiologyReportValidator().validate(radiologyReport, errors);
+        
+        assertTrue(errors.hasErrors());
+        assertThat(errors.getAllErrors()
+                .size(),
+            is(1));
+        assertThat((errors.getAllErrors()).get(0)
+                .getCode(),
+            is("error.null"));
+        assertTrue(errors.hasFieldErrors("reportBody"));
+    }
+    
+    /**
+     * @see RadiologyReportValidator#validate(Object, Errors)
+     * @verifies pass validation if all fields are correct
      */
     @Test
     public void validate_shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
-        
-        RadiologyOrder radiologyOrder = new RadiologyOrder();
-        RadiologyStudy radiologyStudy = new RadiologyStudy();
-        radiologyStudy.setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-        radiologyOrder.setStudy(radiologyStudy);
-        RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
-        radiologyReport.setPrincipalResultsInterpreter(new Provider());
         
         Errors errors = new BindException(radiologyReport, "radiologyReport");
         new RadiologyReportValidator().validate(radiologyReport, errors);
