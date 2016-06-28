@@ -19,6 +19,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.validation.Valid;
 
 import org.openmrs.Order;
 import org.openmrs.Patient;
@@ -29,7 +30,6 @@ import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
-import org.openmrs.module.radiology.order.RadiologyDiscontinuedOrderValidator;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.radiology.order.RadiologyOrderValidator;
@@ -40,6 +40,8 @@ import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -66,6 +68,14 @@ public class RadiologyOrderFormController {
     
     @Autowired
     private DicomWebViewer dicomWebViewer;
+    
+    @Autowired
+    private DiscontinuationOrderRequestValidator discontinuationOrderRequestValidator;
+    
+    @InitBinder("discontinuationOrderRequest")
+    protected void initBinderDiscontinuationOrderRequest(WebDataBinder webDataBinder) {
+        webDataBinder.setValidator(discontinuationOrderRequestValidator);
+    }
     
     /**
      * Handles GET requests for the radiologyOrderForm with new radiology order
@@ -135,7 +145,7 @@ public class RadiologyOrderFormController {
         
         if (Context.isAuthenticated()) {
             modelAndView.addObject("order", order);
-            modelAndView.addObject("discontinuationOrder", new Order());
+            modelAndView.addObject("discontinuationOrderRequest", new DiscontinuationOrderRequest());
             
             if (order instanceof RadiologyOrder) {
                 final RadiologyOrder radiologyOrder = (RadiologyOrder) order;
@@ -209,33 +219,33 @@ public class RadiologyOrderFormController {
     }
     
     /**
-     * Handles POST requests for the radiologyOrderForm with request parameter attribute
-     * discontinueOrder
-     *
-     * @param radiologyOrderToDiscontinue order to discontinue
-     * @param nonCodedDiscontinueReason non coded discontinue reason
-     * @return model and view populated with discontinuation order
+     * Handles POST requests to discontinue a {@code RadiologyOrder}.
+     * 
+     * @param radiologyOrderToDiscontinue the radiology order to discontinue
+     * @param discontinuationOrderRequest the discontinuation order request containing provider and reason
+     * @return the model and view populated with discontinuation order
      * @throws Exception
-     * @should discontinue non discontinued order and redirect to discontinuation order
+     * @should discontinue non discontinued radiology order and redirect to discontinuation order
+     * @should not discontinue given radiology order and not redirect if discontinuation order request is not valid
      */
     @RequestMapping(method = RequestMethod.POST, params = "discontinueOrder")
     protected ModelAndView postDiscontinueRadiologyOrder(HttpServletRequest request, HttpServletResponse response,
             @RequestParam("orderId") RadiologyOrder radiologyOrderToDiscontinue,
-            @ModelAttribute("discontinuationOrder") Order discontinuationOrder, BindingResult radiologyOrderErrors)
-            throws Exception {
-        ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
+            @Valid @ModelAttribute("discontinuationOrderRequest") DiscontinuationOrderRequest discontinuationOrderRequest,
+            BindingResult resultDiscontinuationOrderRequest) throws Exception {
+        
+        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
         
         try {
-            new RadiologyDiscontinuedOrderValidator().validate(discontinuationOrder, radiologyOrderErrors);
-            if (radiologyOrderErrors.hasErrors()) {
+            if (resultDiscontinuationOrderRequest.hasErrors()) {
                 modelAndView.addObject("order", radiologyOrderToDiscontinue);
                 modelAndView.addObject("radiologyOrder",
                     radiologyOrderService.getRadiologyOrder(radiologyOrderToDiscontinue.getOrderId()));
                 
                 return modelAndView;
             }
-            discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
-                discontinuationOrder.getOrderer(), discontinuationOrder.getOrderReasonNonCoded());
+            Order discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
+                discontinuationOrderRequest.getOrderer(), discontinuationOrderRequest.getReasonNonCoded());
             
             request.getSession()
                     .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
@@ -250,7 +260,6 @@ public class RadiologyOrderFormController {
         modelAndView.addObject("order", radiologyOrderToDiscontinue);
         modelAndView.addObject("radiologyOrder",
             radiologyOrderService.getRadiologyOrder(radiologyOrderToDiscontinue.getOrderId()));
-        modelAndView.addObject("discontinuationOrder", discontinuationOrder);
         return modelAndView;
     }
     

@@ -71,6 +71,9 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
     @Mock
     private DicomWebViewer dicomWebViewer;
     
+    @Mock
+    DiscontinuationOrderRequestValidator discontinuationOrderRequestValidator;
+    
     @InjectMocks
     private RadiologyOrderFormController radiologyOrderFormController = new RadiologyOrderFormController();
     
@@ -433,23 +436,26 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
     }
     
     /**
-     * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order,
-     *      String, Date)
+     * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest,HttpServletResponse,RadiologyOrder,DiscontinuationOrderRequest,BindingResult)
+     * @verifies discontinue non discontinued radiology order and redirect to discontinuation order
      */
     @Test
-    @Verifies(value = "should discontinue non discontinued order and redirect to discontinuation order",
-            method = "postDiscontinueRadiologyOrder(HttpServletRequest, HttpServletResponse, Order, String, Date)")
-    public void postDiscontinueRadiologyOrder_shouldDiscontinueNonDiscontinuedOrderAndRedirectToDiscontinuationOrder()
-            throws Exception {
+    public void
+            postDiscontinueRadiologyOrder_shouldDiscontinueNonDiscontinuedRadiologyOrderAndRedirectToDiscontinuationOrder()
+                    throws Exception {
+        
         // given
         RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
-        String discontinueReason = "Wrong Procedure";
+        
+        DiscontinuationOrderRequest discontinuationOrderRequest = new DiscontinuationOrderRequest();
+        discontinuationOrderRequest.setOrderer(mockRadiologyOrderToDiscontinue.getOrderer());
+        discontinuationOrderRequest.setReasonNonCoded("Wrong Procedure");
         
         Order mockDiscontinuationOrder = new Order();
         mockDiscontinuationOrder.setOrderId(2);
         mockDiscontinuationOrder.setAction(Order.Action.DISCONTINUE);
-        mockDiscontinuationOrder.setOrderer(mockRadiologyOrderToDiscontinue.getOrderer());
-        mockDiscontinuationOrder.setOrderReasonNonCoded(discontinueReason);
+        mockDiscontinuationOrder.setOrderer(discontinuationOrderRequest.getOrderer());
+        mockDiscontinuationOrder.setOrderReasonNonCoded(discontinuationOrderRequest.getReasonNonCoded());
         mockDiscontinuationOrder.setPreviousOrder(mockRadiologyOrderToDiscontinue);
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
@@ -463,15 +469,70 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
             mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getOrderReasonNonCoded()))
                     .thenReturn(mockDiscontinuationOrder);
         
-        BindingResult orderErrors = mock(BindingResult.class);
+        BindingResult resultDiscontinueOrderRequest = mock(BindingResult.class);
         assertThat(mockRadiologyOrderToDiscontinue.getAction(), is(Order.Action.NEW));
         ModelAndView modelAndView = radiologyOrderFormController.postDiscontinueRadiologyOrder(mockRequest, null,
-            mockRadiologyOrderToDiscontinue, mockDiscontinuationOrder, orderErrors);
+            mockRadiologyOrderToDiscontinue, discontinuationOrderRequest, resultDiscontinueOrderRequest);
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is("redirect:/module/radiology/radiologyOrder.form?orderId=" + mockDiscontinuationOrder.getOrderId()));
         assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Order.discontinuedSuccessfully"));
+    }
+    
+    /**
+     * @see RadiologyOrderFormController#postDiscontinueRadiologyOrder(HttpServletRequest,HttpServletResponse,RadiologyOrder,DiscontinuationOrderRequest,BindingResult)
+     * @verifies not discontinue given radiology order and not redirect if discontinuation order request is not valid
+     */
+    @Test
+    public void
+            postDiscontinueRadiologyOrder_shouldNotDiscontinueGivenRadiologyOrderAndNotRedirectIfDiscontinuationOrderRequestIsNotValid()
+                    throws Exception {
+        
+        // given
+        RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
+        
+        DiscontinuationOrderRequest discontinuationOrderRequest = new DiscontinuationOrderRequest();
+        discontinuationOrderRequest.setOrderer(mockRadiologyOrderToDiscontinue.getOrderer());
+        discontinuationOrderRequest.setReasonNonCoded("");
+        
+        Order mockDiscontinuationOrder = new Order();
+        mockDiscontinuationOrder.setOrderId(2);
+        mockDiscontinuationOrder.setAction(Order.Action.DISCONTINUE);
+        mockDiscontinuationOrder.setOrderer(discontinuationOrderRequest.getOrderer());
+        mockDiscontinuationOrder.setOrderReasonNonCoded(discontinuationOrderRequest.getReasonNonCoded());
+        mockDiscontinuationOrder.setPreviousOrder(mockRadiologyOrderToDiscontinue);
+        
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("discontinueOrder", "discontinueOrder");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
+        when(radiologyOrderService.getRadiologyOrder(mockRadiologyOrderToDiscontinue.getOrderId()))
+                .thenReturn(mockRadiologyOrderToDiscontinue);
+        when(radiologyOrderService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
+            mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getOrderReasonNonCoded()))
+                    .thenReturn(mockDiscontinuationOrder);
+        
+        BindingResult resultDiscontinueOrderRequest = mock(BindingResult.class);
+        when(resultDiscontinueOrderRequest.hasErrors()).thenReturn(true);
+        
+        assertThat(mockRadiologyOrderToDiscontinue.getAction(), is(Order.Action.NEW));
+        ModelAndView modelAndView = radiologyOrderFormController.postDiscontinueRadiologyOrder(mockRequest, null,
+            mockRadiologyOrderToDiscontinue, discontinuationOrderRequest, resultDiscontinueOrderRequest);
+        
+        assertNotNull(modelAndView);
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("order"));
+        Order order = (Order) modelAndView.getModelMap()
+                .get("order");
+        assertThat(order, is(mockRadiologyOrderToDiscontinue));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
+        RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
+                .get("radiologyOrder");
+        assertThat(radiologyOrder, is(mockRadiologyOrderToDiscontinue));
     }
     
     /**
