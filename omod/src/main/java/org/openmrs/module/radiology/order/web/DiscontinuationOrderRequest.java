@@ -1,7 +1,5 @@
 package org.openmrs.module.radiology.order.web;
 
-import javax.validation.constraints.NotNull;
-
 import org.openmrs.Provider;
 
 /**
@@ -13,13 +11,11 @@ final class DiscontinuationOrderRequest {
     /**
      * Provider ordering discontinuation of an {@code Order}.
      */
-    @NotNull
     Provider orderer;
     
     /**
      * Non coded reason why an {@code Order} should be discontinued.
      */
-    @NotNull
     String reasonNonCoded;
     
     public Provider getOrderer() {
