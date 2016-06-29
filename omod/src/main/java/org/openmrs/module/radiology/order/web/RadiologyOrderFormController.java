@@ -9,7 +9,6 @@
 package org.openmrs.module.radiology.order.web;
 
 import static org.openmrs.module.radiology.RadiologyPrivileges.ADD_RADIOLOGY_REPORTS;
-import static org.openmrs.module.radiology.RadiologyRoles.SCHEDULER;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.openmrs.Order;
@@ -48,6 +46,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * Controller for the form handling entry, display, discontinuation of {@code RadiologyOrder's}.
+ */
 @Controller
 @RequestMapping(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING)
 public class RadiologyOrderFormController {
@@ -70,6 +71,9 @@ public class RadiologyOrderFormController {
     private DicomWebViewer dicomWebViewer;
     
     @Autowired
+    private RadiologyOrderValidator radiologyOrderValidator;
+    
+    @Autowired
     private DiscontinuationOrderRequestValidator discontinuationOrderRequestValidator;
     
     @InitBinder("discontinuationOrderRequest")
@@ -78,7 +82,7 @@ public class RadiologyOrderFormController {
     }
     
     /**
-     * Handles GET requests for the radiologyOrderForm with new radiology order
+     * Handles requests for a new {@code RadiologyOrder}.
      * 
      * @return model and view containing new radiology order
      * @should populate model and view with new radiology order
@@ -87,151 +91,121 @@ public class RadiologyOrderFormController {
     protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrder() {
         
         ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
-        
-        if (Context.isAuthenticated()) {
-            modelAndView.addObject("order", new Order());
-            modelAndView.addObject("radiologyReport", null);
-            final RadiologyOrder radiologyOrder = new RadiologyOrder();
-            radiologyOrder.setStudy(new RadiologyStudy());
-            modelAndView.addObject("radiologyOrder", radiologyOrder);
-        }
-        
+        modelAndView.addObject("order", new Order());
+        modelAndView.addObject("radiologyReport", null);
+        final RadiologyOrder radiologyOrder = new RadiologyOrder();
+        radiologyOrder.setStudy(new RadiologyStudy());
+        modelAndView.addObject("radiologyOrder", radiologyOrder);
         return modelAndView;
     }
     
     /**
-     * Handles GET requests for the radiologyOrderForm with new radiology order with prefilled
-     * patient
+     * Handles requests for a new {@code RadiologyOrder} for a specific patient.
      * 
-     * @param patient existing patient which should be associated with a new radiology order
+     * @param patient the existing patient which should be associated with a new radiology order
      *        returned in the model and view
      * @return model and view containing new radiology order
      * @should populate model and view with new radiology order prefilled with given patient
-     * @should populate model and view with new radiology order without prefilled patient if given
-     *         patient is null
      */
     @RequestMapping(method = RequestMethod.GET, params = "patientId")
-    protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(
-            @RequestParam(value = "patientId", required = true) Patient patient) {
+    protected ModelAndView
+            getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(@RequestParam("patientId") Patient patient) {
         
         final ModelAndView modelAndView = getRadiologyOrderFormWithNewRadiologyOrder();
-        
-        if (Context.isAuthenticated() && patient != null) {
-            Order order = (Order) modelAndView.getModel()
-                    .get("radiologyOrder");
-            order.setPatient(patient);
-            modelAndView.addObject("patientId", patient.getPatientId());
-        }
-        
+        Order order = (Order) modelAndView.getModel()
+                .get("radiologyOrder");
+        order.setPatient(patient);
+        modelAndView.addObject("patientId", patient.getPatientId());
         return modelAndView;
     }
     
     /**
-     * Handles GET requests for the radiologyOrderForm with existing radiology order
+     * Handles requests for getting existing {@code RadiologyOrder's}.
      * 
-     * @param order Order of an existing radiology order which should be put into the model and view
+     * @param order the order of an existing radiology order which should be returned
      * @return model and view containing radiology order
      * @should populate model and view with existing radiology order if given order id matches a
-     *         radiology order and no dicomViewerUrl if order is not completed
+     *         radiology order and no dicom viewer url if order is not completed
      * @should populate model and view with existing radiology order if given order id matches a
-     *         radiology order and dicomViewerUrl if order completed
+     *         radiology order and dicom viewer url if order completed
      * @should populate model and view with existing order if given order id only matches an order
      *         and not a radiology order
      */
     @RequestMapping(method = RequestMethod.GET, params = "orderId")
-    protected ModelAndView getRadiologyOrderFormWithExistingRadiologyOrderByOrderId(
-            @RequestParam(value = "orderId", required = true) Order order) {
-        ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
+    protected ModelAndView getRadiologyOrderFormWithExistingRadiologyOrder(@RequestParam("orderId") Order order) {
         
-        if (Context.isAuthenticated()) {
-            modelAndView.addObject("order", order);
-            modelAndView.addObject("discontinuationOrderRequest", new DiscontinuationOrderRequest());
-            
-            if (order instanceof RadiologyOrder) {
-                final RadiologyOrder radiologyOrder = (RadiologyOrder) order;
-                modelAndView.addObject("radiologyOrder", radiologyOrder);
-                if (radiologyOrder.isCompleted()) {
-                    modelAndView.addObject("dicomViewerUrl", dicomWebViewer.getDicomViewerUrl(radiologyOrder.getStudy()));
-                }
+        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
+        modelAndView.addObject("order", order);
+        modelAndView.addObject("discontinuationOrderRequest", new DiscontinuationOrderRequest());
+        
+        if (order instanceof RadiologyOrder) {
+            final RadiologyOrder radiologyOrder = (RadiologyOrder) order;
+            modelAndView.addObject("radiologyOrder", radiologyOrder);
+            if (radiologyOrder.isCompleted()) {
+                modelAndView.addObject("dicomViewerUrl", dicomWebViewer.getDicomViewerUrl(radiologyOrder.getStudy()));
             }
-            
-            if (Context.getAuthenticatedUser()
-                    .hasPrivilege(ADD_RADIOLOGY_REPORTS)) {
-                radiologyReportNeedsToBeCreated(modelAndView, order);
-            }
+        }
+        
+        if (Context.getAuthenticatedUser()
+                .hasPrivilege(ADD_RADIOLOGY_REPORTS)) {
+            radiologyReportNeedsToBeCreated(modelAndView, order);
         }
         
         return modelAndView;
     }
     
     /**
-     * Handles POST requests for the radiologyOrderForm with request parameter attribute
-     * saveRadiologyOrder
+     * Handles requests for saving a new {@code RadiologyOrder}.
      *
-     * @param patientId patient id of an existing patient which is used to redirect to the patient
-     *        dashboard
-     * @param radiologyOrder radiology order object
-     * @param radiologyOrderErrors binding result containing order errors for a non valid order
-     * @return model and view
-     * @should set http session attribute openmrs message to order saved and redirect to to
-     *         radiologyOrderForm when save study was successful
-     * @should set http session attribute openmrs message to order saved and redirect to
-     *         radiologyOrderForm when save study was successful and given patient id
-     * @should set http session attribute openmrs message to study performed when study performed
-     *         status is in progress and request was issued by radiology scheduler
-     * @should not redirect if radiology order is not valid according to order validator
+     * @param request the http servlet request issued to save the radiology order
+     * @param radiologyOrder the radiology order to be saved
+     * @param resultRadiologyOrder the binding result for given radiology order
+     * @return the model and view for the radiology order form containing binding result errors if given radiology order is
+     *         not valid
+     * @should save given radiology order if valid and set http session attribute openmrs message to order saved and redirect
+     *         to the new radiology order
+     * @should not save given radiology order if it is not valid and not redirect
      */
     @RequestMapping(method = RequestMethod.POST, params = "saveRadiologyOrder")
-    protected ModelAndView postSaveRadiologyOrder(HttpServletRequest request,
-            @RequestParam(value = "patient_id", required = false) Integer patientId, @ModelAttribute("order") Order order,
-            @ModelAttribute("radiologyOrder") RadiologyOrder radiologyOrder, BindingResult radiologyOrderErrors)
-            throws Exception {
+    protected ModelAndView saveRadiologyOrder(HttpServletRequest request, @ModelAttribute RadiologyOrder radiologyOrder,
+            BindingResult resultRadiologyOrder) {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
         
-        if (Context.getAuthenticatedUser()
-                .hasRole(SCHEDULER, true)
-                && !radiologyOrder.getStudy()
-                        .isScheduleable()) {
-            request.getSession()
-                    .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.studyPerformed");
-        } else {
-            new RadiologyOrderValidator().validate(radiologyOrder, radiologyOrderErrors);
-            if (radiologyOrderErrors.hasErrors()) {
-                return modelAndView;
-            }
-            
-            try {
-                radiologyOrderService.placeRadiologyOrder(radiologyOrder);
-                
-                request.getSession()
-                        .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
-                modelAndView.setViewName(
-                    "redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId=" + radiologyOrder.getOrderId());
-            }
-            catch (IllegalArgumentException illegalArgumentException) {
-                request.getSession()
-                        .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, illegalArgumentException.getMessage());
-            }
+        radiologyOrderValidator.validate(radiologyOrder, resultRadiologyOrder);
+        if (resultRadiologyOrder.hasErrors()) {
+            modelAndView.addObject("order", (Order) radiologyOrder);
+            modelAndView.addObject("radiologyOrder", radiologyOrder);
+            return modelAndView;
         }
         
+        radiologyOrderService.placeRadiologyOrder(radiologyOrder);
+        
+        request.getSession()
+                .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
+        modelAndView
+                .setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId=" + radiologyOrder.getOrderId());
         return modelAndView;
     }
     
     /**
-     * Handles POST requests to discontinue a {@code RadiologyOrder}.
+     * Handles requests to discontinue a {@code RadiologyOrder}.
      * 
+     * @param request the http servlet request issued to discontinue the radiology order
      * @param radiologyOrderToDiscontinue the radiology order to discontinue
      * @param discontinuationOrderRequest the discontinuation order request containing provider and reason
+     * @param resultDiscontinuationOrderRequest the binding result for given discontinuation order request
      * @return the model and view populated with discontinuation order
      * @throws Exception
      * @should discontinue non discontinued radiology order and redirect to discontinuation order
      * @should not discontinue given radiology order and not redirect if discontinuation order request is not valid
+     * @should not redirect and set session attribute with openmrs error if api exception is thrown by discontinue radiology
+     *         order
      */
     @RequestMapping(method = RequestMethod.POST, params = "discontinueOrder")
-    protected ModelAndView postDiscontinueRadiologyOrder(HttpServletRequest request, HttpServletResponse response,
+    protected ModelAndView discontinueRadiologyOrder(HttpServletRequest request,
             @RequestParam("orderId") RadiologyOrder radiologyOrderToDiscontinue,
-            @Valid @ModelAttribute("discontinuationOrderRequest") DiscontinuationOrderRequest discontinuationOrderRequest,
+            @Valid @ModelAttribute DiscontinuationOrderRequest discontinuationOrderRequest,
             BindingResult resultDiscontinuationOrderRequest) throws Exception {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
@@ -241,7 +215,6 @@ public class RadiologyOrderFormController {
                 modelAndView.addObject("order", radiologyOrderToDiscontinue);
                 modelAndView.addObject("radiologyOrder",
                     radiologyOrderService.getRadiologyOrder(radiologyOrderToDiscontinue.getOrderId()));
-                
                 return modelAndView;
             }
             Order discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
@@ -264,12 +237,11 @@ public class RadiologyOrderFormController {
     }
     
     /**
-     * Convenient method to check if a radiologyReport needs to be created. Adds true to the
-     * modelAndView, if a RadiologyReport needs to be created, otherwise false.
+     * Convenient method to check if a {@code RadiologyReport} needs to be created for a {@code RadiologyOrder}.
      *
-     * @param modelAndView ModelAndView of the RadiologyOrderForm
-     * @param order Order which should be verified if a RadiologyReport needs to be created
-     * @return true if a RadiologyReport needs to be created, false otherwise
+     * @param modelAndView the model and view to which an object indicating if a report needs to be created is added
+     * @param order the order to be checked for the need of a radiology report
+     * @return true if a radiology report needs to be created and false otherwise
      * @should return false if order is not a radiology order
      * @should return false if radiology order is not completed
      * @should return false if radiology order is completed but has a claimed report
