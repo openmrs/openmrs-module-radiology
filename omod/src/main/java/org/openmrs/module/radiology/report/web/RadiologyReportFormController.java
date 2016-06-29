@@ -8,6 +8,8 @@
  */
 package org.openmrs.module.radiology.report.web;
 
+import javax.validation.Valid;
+
 import org.openmrs.Order;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.order.RadiologyOrder;
@@ -18,12 +20,17 @@ import org.openmrs.module.radiology.report.RadiologyReportValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * Controller for the form handling entry, display, saving, unclaiming of {@code RadiologyReport's}.
+ */
 @Controller
 @RequestMapping(value = RadiologyReportFormController.RADIOLOGY_REPORT_FORM_REQUEST_MAPPING)
 public class RadiologyReportFormController {
@@ -42,17 +49,21 @@ public class RadiologyReportFormController {
     @Autowired
     private RadiologyReportValidator radiologyReportValidator;
     
+    @InitBinder("radiologyReport")
+    protected void initBinderRadiologyReport(WebDataBinder webDataBinder) {
+        webDataBinder.setValidator(radiologyReportValidator);
+    }
+    
     /**
-     * Handles GET requests for the radiologyReportForm creating a new radiology report for given
-     * radiology order
+     * Handles requests for creating a new {@code RadiologyReport} for a specific {@code RadiologyOrder}.
      * 
      * @param radiologyOrder the radiology order for which a radiology report will be created
      * @return the model and view containing new radiology report for given radiology order
      * @should populate model and view with new radiology report for given radiology order
      */
     @RequestMapping(method = RequestMethod.GET, params = "orderId")
-    protected ModelAndView getRadiologyReportFormWithNewRadiologyReport(
-            @RequestParam(value = "orderId", required = true) RadiologyOrder radiologyOrder) {
+    protected ModelAndView
+            getRadiologyReportFormWithNewRadiologyReport(@RequestParam("orderId") RadiologyOrder radiologyOrder) {
         
         final RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
         return new ModelAndView(
@@ -60,7 +71,7 @@ public class RadiologyReportFormController {
     }
     
     /**
-     * Handles GET requests for the radiologyReportForm when called for existing radiology reports
+     * Handles requests for getting existing {@code RadiologyReport's}.
      * 
      * @param radiologyReportId the radiology report which is requested
      * @return the model and view containing radiology report for given radiology report id
@@ -68,7 +79,7 @@ public class RadiologyReportFormController {
      */
     @RequestMapping(method = RequestMethod.GET, params = "radiologyReportId")
     protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(
-            @RequestParam(value = "radiologyReportId", required = true) RadiologyReport radiologyReport) {
+            @RequestParam("radiologyReportId") RadiologyReport radiologyReport) {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         addObjectsToModelAndView(modelAndView, radiologyReport);
@@ -76,7 +87,7 @@ public class RadiologyReportFormController {
     }
     
     /**
-     * Handles POST request for the RadiologyReportForm to save a RadiologyReport
+     * Handles requests for saving a {@code RadiologyReport} as draft.
      *
      * @param radiologyReport radiology report to be saved
      * @return the model and view containing saved radiology report
@@ -93,7 +104,7 @@ public class RadiologyReportFormController {
     }
     
     /**
-     * Handles POST request for the RadiologyReportForm to unclaim given RadiologyReport
+     * Handles requests for unclaiming a {@code RadiologyReport}.
      *
      * @param radiologyReport the radiology report to be unclaimed
      * @return the model and view with redirect to order form if unclaim was successful, otherwise stay on
@@ -110,7 +121,7 @@ public class RadiologyReportFormController {
     }
     
     /**
-     * Handles POST request for the RadiologyReportForm to complete given RadiologyReport
+     * Handles requests for completing a {@code RadiologyReport}.
      *
      * @param radiologyReport the radiology report to be completed
      * @param bindingResult the binding result for the radiology report
@@ -120,12 +131,11 @@ public class RadiologyReportFormController {
      * @should not complete given radiology report if it is not valid
      */
     @RequestMapping(method = RequestMethod.POST, params = "completeRadiologyReport")
-    protected ModelAndView completeRadiologyReport(@ModelAttribute RadiologyReport radiologyReport,
+    protected ModelAndView completeRadiologyReport(@Valid @ModelAttribute RadiologyReport radiologyReport,
             BindingResult bindingResult) {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         
-        radiologyReportValidator.validate(radiologyReport, bindingResult);
         if (bindingResult.hasErrors()) {
             addObjectsToModelAndView(modelAndView, radiologyReport);
             return modelAndView;
