@@ -115,21 +115,23 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     }
     
     /**
-     * Display string for {@link RadiologyOrder}
+     * Get the display string for a {@link RadiologyOrder}.
      * 
-     * @param radiologyOrder RadiologyOrder of which display string shall be returned
-     * @return ConceptName of given radiologyOrder
-     * @should return concept name of given radiologyOrder
+     * @param radiologyOrder the radiology order of which the display string shall be returned
+     * @return the accession number and the concept name of given radiology order
+     * @should return accession number and concept name of given radiology order
      * @should return no concept string if given radiologyOrders concept is null
      */
     @PropertyGetter("display")
     public String getDisplayString(RadiologyOrder radiologyOrder) {
         
-        if (radiologyOrder.getConcept() == null)
-            return "[No Concept]";
-        return radiologyOrder.getConcept()
-                .getName()
-                .getName();
+        if (radiologyOrder.getConcept() == null) {
+            return radiologyOrder.getAccessionNumber() + " - " + "[No Concept]";
+        } else {
+            return radiologyOrder.getAccessionNumber() + " - " + radiologyOrder.getConcept()
+                    .getName()
+                    .getName();
+        }
     }
     
     /**

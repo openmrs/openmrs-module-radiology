@@ -23,6 +23,11 @@ interface RadiologyOrderDAO {
     
     
     /**
+     * @see org.openmrs.module.radiology.order.RadiologyOrderService#getNextAccessionNumberSeedSequenceValue()
+     */
+    public Long getNextAccessionNumberSeedSequenceValue();
+    
+    /**
      * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrder(Integer)
      */
     public RadiologyOrder getRadiologyOrder(Integer orderId);

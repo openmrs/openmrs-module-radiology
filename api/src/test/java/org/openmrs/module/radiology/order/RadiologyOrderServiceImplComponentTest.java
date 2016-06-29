@@ -15,7 +15,6 @@ import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -23,6 +22,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
+import org.hibernate.SessionFactory;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -65,6 +65,11 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
     @Autowired
     private OrderService orderService;
     
+    @Autowired
+    private SessionFactory sessionFactory;
+    
+    private HibernateRadiologyOrderDAO radiologyOrderDAO = new HibernateRadiologyOrderDAO();
+    
     private RadiologyOrderServiceImpl radiologyOrderServiceImpl = null;
     
     @Autowired
@@ -83,18 +88,12 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
         
         if (radiologyOrderServiceImpl == null) {
             radiologyOrderServiceImpl = new RadiologyOrderServiceImpl();
-            Field radiologyStudyServiceField = RadiologyOrderServiceImpl.class.getDeclaredField("radiologyStudyService");
-            radiologyStudyServiceField.setAccessible(true);
-            radiologyStudyServiceField.set(radiologyOrderServiceImpl, radiologyStudyService);
-            Field orderServiceField = RadiologyOrderServiceImpl.class.getDeclaredField("orderService");
-            orderServiceField.setAccessible(true);
-            orderServiceField.set(radiologyOrderServiceImpl, orderService);
-            Field encounterServiceField = RadiologyOrderServiceImpl.class.getDeclaredField("encounterService");
-            encounterServiceField.setAccessible(true);
-            encounterServiceField.set(radiologyOrderServiceImpl, encounterService);
-            Field radiologyPropertiesField = RadiologyOrderServiceImpl.class.getDeclaredField("radiologyProperties");
-            radiologyPropertiesField.setAccessible(true);
-            radiologyPropertiesField.set(radiologyOrderServiceImpl, radiologyProperties);
+            radiologyOrderDAO.setSessionFactory(sessionFactory);
+            radiologyOrderServiceImpl.setRadiologyOrderDAO(radiologyOrderDAO);
+            radiologyOrderServiceImpl.setRadiologyStudyService(radiologyStudyService);
+            radiologyOrderServiceImpl.setOrderService(orderService);
+            radiologyOrderServiceImpl.setEncounterService(encounterService);
+            radiologyOrderServiceImpl.setRadiologyProperties(radiologyProperties);
         }
         
         saveRadiologyOrderEncounterMethod = RadiologyOrderServiceImpl.class.getDeclaredMethod("saveRadiologyOrderEncounter",
@@ -105,9 +104,9 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see RadiologyOrderServiceImpl#saveRadiologyOrderEncounter(Patient,Provider,Date)
-    * @verifies create radiology order encounter
-    */
+     * @see RadiologyOrderServiceImpl#saveRadiologyOrderEncounter(Patient,Provider,Date)
+     * @verifies create radiology order encounter
+     */
     @Test
     public void saveRadiologyOrderEncounter_shouldCreateRadiologyOrderEncounter() throws Exception {
         // given

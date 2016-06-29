@@ -67,6 +67,7 @@ public class RadiologyOrderResourceTest {
     public void setUp() throws Exception {
         
         radiologyOrder.setUuid(RADIOLOGY_ORDER_UUID);
+        radiologyOrder.setAccessionNumber("1");
         
         PowerMockito.mockStatic(RestUtil.class);
         
@@ -218,10 +219,10 @@ public class RadiologyOrderResourceTest {
     
     /**
      * @see RadiologyOrderResource#getDisplayString(RadiologyOrder)
-     * @verifies return concept name of given radiologyOrder
+     * @verifies return accession number and concept name of given radiology order
      */
     @Test
-    public void getDisplayString_shouldReturnConceptNameOfGivenRadiologyOrder() throws Exception {
+    public void getDisplayString_shouldReturnAccessionNumberAndConceptNameOfGivenRadiologyOrder() throws Exception {
         
         ConceptName conceptName = new ConceptName();
         conceptName.setName("X-RAY, HEAD");
@@ -231,8 +232,7 @@ public class RadiologyOrderResourceTest {
         concept.setPreferredName(conceptName);
         radiologyOrder.setConcept(concept);
         
-        assertThat(radiologyOrderResource.getDisplayString(radiologyOrder), is("X-RAY, HEAD"));
-        
+        assertThat(radiologyOrderResource.getDisplayString(radiologyOrder), is("1 - X-RAY, HEAD"));
     }
     
     /**
@@ -242,7 +242,7 @@ public class RadiologyOrderResourceTest {
     @Test
     public void getDisplayString_shouldReturnNoConceptStringIfGivenRadiologyOrdersConceptIsNull() throws Exception {
         
-        assertThat(radiologyOrderResource.getDisplayString(radiologyOrder), is("[No Concept]"));
+        assertThat(radiologyOrderResource.getDisplayString(radiologyOrder), is("1 - [No Concept]"));
     }
     
     /**

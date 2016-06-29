@@ -21,10 +21,14 @@ import static org.junit.Assert.assertThat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.hibernate.cfg.Environment;
+import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -39,6 +43,7 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
@@ -122,7 +127,21 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     @Before
     public void setUp() throws Exception {
+        // We need to commit the global property nextAccessionNumberSeed otherwise it will not be visible in the
+        // HibernateRadiologyOrderDAO since the RadiologyOrderServiceImpl.getNextAccessionNumberSeedSequenceValue() opens a
+        // new transaction.
+        if (!Context.isSessionOpen()) {
+            Context.openSession();
+        }
         executeDataSet(TEST_DATASET);
+        getConnection().commit();
+        Context.clearSession();
+    }
+    
+    @After
+    public void tearDown() throws Exception {
+        // We need to delete all data we committed otherwise this will influence other test classes and break isolation.
+        this.deleteAllData();
     }
     
     /**
@@ -138,10 +157,27 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         
         assertNotNull(radiologyOrder);
         assertNotNull(radiologyOrder.getOrderId());
+        assertNotNull(radiologyOrder.getAccessionNumber());
         assertNotNull(radiologyOrder.getStudy());
         assertNotNull(radiologyOrder.getStudy()
                 .getStudyId());
         assertNotNull(radiologyOrder.getEncounter());
+    }
+    
+    /**
+     * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
+     * @verifies set the radiology order accession number
+     */
+    @Test
+    public void placeRadiologyOrder_shouldSetTheRadiologyOrderAccessionNumber() throws Exception {
+        
+        RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
+        radiologyOrder.setAccessionNumber(null);
+        
+        radiologyOrder = radiologyOrderService.placeRadiologyOrder(radiologyOrder);
+        
+        assertNotNull(radiologyOrder);
+        assertNotNull(radiologyOrder.getAccessionNumber());
     }
     
     /**
@@ -228,6 +264,45 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
+     * @see AccessionNumberGenerator#getNewAccessionNumber()
+     * @verifies always return a unique accession number when called multiple times
+     */
+    @Test
+    public void getNewAccessionNumber_shouldAlwaysReturnAUniqueAccessionNumberWhenCalledMultipleTimes() throws Exception {
+        
+        int N = 50;
+        final Set<String> uniqueAccessionNumbers = new HashSet<String>(N);
+        List<Thread> threads = new ArrayList<Thread>();
+        for (int i = 0; i < N; i++) {
+            threads.add(new Thread(new Runnable() {
+                
+                
+                @Override
+                public void run() {
+                    try {
+                        Context.openSession();
+                        uniqueAccessionNumbers
+                                .add(((AccessionNumberGenerator) radiologyOrderService).getNewAccessionNumber());
+                    }
+                    finally {
+                        Context.closeSession();
+                    }
+                }
+            }));
+        }
+        for (int i = 0; i < N; ++i) {
+            threads.get(i)
+                    .start();
+        }
+        for (int i = 0; i < N; ++i) {
+            threads.get(i)
+                    .join();
+        }
+        // since we used a set we should have the size as N indicating that there were no duplicates
+        Assert.assertEquals(N, uniqueAccessionNumbers.size());
+    }
+    
+    /**
      * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
      * @verifies throw illegal argument exception if given radiology order has no study
      */
@@ -284,9 +359,9 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-    * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
-    * @verifies create radiology order encounter
-    */
+     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
+     * @verifies create radiology order encounter
+     */
     @Test
     public void discontinueRadiologyOrder_shouldCreateRadiologyOrderEncounter() throws Exception {
         

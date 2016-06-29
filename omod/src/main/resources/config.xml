@@ -161,7 +161,17 @@
 		<defaultValue>fe898a34-1ade-11e1-9c71-00248140a5eb</defaultValue>
 		<description>Radiology Visit Type UUID</description>
 	</globalProperty>
-
+	<globalProperty>
+		<property>@MODULE_ID@.nextAccessionNumberSeed</property>
+		<defaultValue>1</defaultValue>
+		<description>
+			The next accession number available for assignment to a
+			radiology order. (Validated by Java Regex "^\\d+$")
+		</description>
+		<datatypeClassname>org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype
+		</datatypeClassname>
+		<datatypeConfig>^\d+$</datatypeConfig>
+	</globalProperty>
 	<!--Required Global Properties -->
 
 	<!-- Internationalization -->
