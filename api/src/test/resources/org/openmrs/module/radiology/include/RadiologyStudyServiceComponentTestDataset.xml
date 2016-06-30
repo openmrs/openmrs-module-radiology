@@ -13,7 +13,7 @@
   <location location_id="1" name="Radiology Department" creator="1" date_created="2015-01-01 00:00:00.0" retired="false" uuid="c36006e5-9fbb-4f20-866b-0ece245615a1"/>
 
   <!-- define the metadata for the Radiology Module -->
-  <global_property property="radiology.dicomUIDOrgRoot" property_value="2.25" description="DICOM UID org root component" uuid="498e94f1-ebea-4bff-bd39-0e4e3168d239"/>
+  <global_property property="radiology.dicomUIDOrgRoot" property_value="2.25" description="DICOM UID org root component" datatype="org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype" datatype_config="^[012]((\.0)|(\.[1-9]\d*))+$" uuid="498e94f1-ebea-4bff-bd39-0e4e3168d239"/>
   <global_property property="radiology.radiologyCareSetting" property_value="6f0c9a92-6f24-11e3-af88-005056821db0" uuid="a3209d7c-ae4c-41a4-96de-876facd77226"/> <!--  set to uuid from CareSetting OUTPATIENT in openmrs core -->
   <global_property property="radiology.radiologyOrderingProviderEncounterRole" property_value="13fc9b4a-49ed-429c-9dde-ca005b387a3d" description="Radiology Ordering Provider Encounter Role UUID"/>
   <global_property property="radiology.radiologyOrderEncounterType" property_value="19db8c0d-3520-48f2-babd-77f2d450e5c7" description="Radiology Order Encounter Type UUID"/>

@@ -58,9 +58,10 @@
 			the default which should be used for development purpose only! Refer
 			to DICOM Standard DICOM PS3.5 Chapter 9 Unique Identifiers.
 
-			Module
+			This
+			modules
 			DICOM UIDs
-			adhere to: [org root].[unique]
+			adhere to scheme: [org root].[unique]
 			Allowed to
 			contain
 			only
@@ -70,7 +71,12 @@
 			without
 			non-significant
 			leading zeroes and without trailing '.'
+			(Validated by Java Regex
+			"^[012]((\\.0)|(\\.[1-9]\\d*))+$")
 		</description>
+		<datatypeClassname>org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype
+		</datatypeClassname>
+		<datatypeConfig>^[012]((\.0)|(\.[1-9]\d*))+$</datatypeConfig>
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.dicomWebViewerAddress</property>
