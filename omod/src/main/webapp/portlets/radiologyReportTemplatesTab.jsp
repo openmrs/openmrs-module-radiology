@@ -7,7 +7,7 @@
           .ready(
                   function() {
                     var templateTitle = $j('#templateTitle');
-                    var find = $j('#findButton2');
+                    var find = $j('#findReportTemplates');
                     var clearResults = $j('a#clearResults');
 
                     var radiologyTemplatesTable = $j('#radiologyTemplatesTable')
@@ -157,7 +157,7 @@
         <td><label><spring:message code="radiology.report.template.title" />:</label> <input id="templateTitle"
           name="titleQuery" type="text" style="width: 20em" title="<spring:message
 						code="radiology.minChars" />" /></td>
-        <td><input id="findButton2" type="button" value="<spring:message code="radiology.find"/>" /></td>
+        <td><input id="findReportTemplates" type="button" value="<spring:message code="radiology.find"/>" /></td>
         <td id="errorSpan"></td>
       </form>
     </tr>
