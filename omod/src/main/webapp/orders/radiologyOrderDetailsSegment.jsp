@@ -25,9 +25,11 @@
       </tr>
       <tr>
         <td><spring:message code="radiology.radiologyOrder.orderReasonNonCoded" /></td>
-        <td><spring:bind path="orderReasonNonCoded">
-                    ${status.value}
-                </spring:bind></td>
+        <td><spring:bind path="orderReasonNonCoded">${status.value}</spring:bind></td>
+      </tr>
+      <tr>
+        <td><spring:message code="radiology.radiologyOrder.clinicalHistory" /></td>
+        <td><spring:bind path="clinicalHistory">${status.value}</spring:bind></td>
       </tr>
       <tr>
         <td><spring:message code="Order.orderer" /></td>
