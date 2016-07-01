@@ -91,6 +91,15 @@
           </spring:bind></td>
       </tr>
       <tr>
+        <td><spring:message code="radiology.radiologyOrder.clinicalHistory" /></td>
+        <td><spring:bind path="clinicalHistory">
+            <textarea name="${status.expression}">${status.value}</textarea>
+            <c:if test="${not empty status.errorMessage}">
+              <span class="error">${status.errorMessage}</span>
+            </c:if>
+          </spring:bind></td>
+      </tr>
+      <tr>
         <td><spring:message code="radiology.urgency" /></td>
         <td><spring:bind path="urgency">
             <select name="${status.expression}" id="urgencySelect">
