@@ -20,6 +20,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 import org.openmrs.util.OpenmrsUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * A parser to parse MRRT report templates and and return an MrrtReportTemplate object.
@@ -28,6 +29,9 @@ class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParse
     
     
     private static final Log log = LogFactory.getLog(DefaultMrrtReportTemplateFileParser.class);
+    
+    @Autowired
+    private MrrtReportTemplateValidator validator;
     
     private static final String CHARSET = "UTF-8";
     
@@ -65,8 +69,8 @@ class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParse
     * @should should throw an mrrt report template exception if file is invalid
     */
     @Override
-    public MrrtReportTemplate parse(File file) throws IOException {
-        MrrtReportTemplateValidator.validate(file);
+    public MrrtReportTemplate parse(File file) throws IOException {    
+    	validator.validate(file);
         
         Document doc = Jsoup.parse(file, CHARSET);
         MrrtReportTemplate result = new MrrtReportTemplate();

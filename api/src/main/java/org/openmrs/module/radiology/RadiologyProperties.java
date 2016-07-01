@@ -191,6 +191,11 @@ public class RadiologyProperties extends ModuleProperties {
         return result;
     }
     
+    /**
+     * Gets folder to store {@code MRRT} templates.
+     * 
+     * @return templates folder
+     */
     public String getReportTemplateHome() {
         
         Path templatesPath = Paths.get(getGlobalProperty(RadiologyConstants.GP_MRRT_REPORT_TEMPLATE_DIR, true));
