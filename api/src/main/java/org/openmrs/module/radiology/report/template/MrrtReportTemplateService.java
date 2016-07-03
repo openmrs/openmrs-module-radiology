@@ -8,6 +8,8 @@
  */
 package org.openmrs.module.radiology.report.template;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.openmrs.annotation.Authorized;
@@ -23,6 +25,16 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional
 public interface MrrtReportTemplateService extends OpenmrsService {
     
+    
+    /**
+     * Import an {@code MrrtReportTemplate} into the system.
+     * 
+     * @param fileName the name of the file been imported
+     * @param in input stream of the mrrt template file
+     * @throws IOException 
+     */
+    @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_REPORT_TEMPLATES)
+    public void importMrrtReportTemplate(String fileName, InputStream in) throws IOException;
     
     /**
      * Get an {@code MrrtReportTemplate} with a given id.
@@ -60,7 +72,7 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      * @should return empty list of no match is found
      * @should throw illegal argument exception if given null
      */
-    @Authorized
+    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
     public List<MrrtReportTemplate> getMrrtReportTemplateByTitle(String title);
     
     /**

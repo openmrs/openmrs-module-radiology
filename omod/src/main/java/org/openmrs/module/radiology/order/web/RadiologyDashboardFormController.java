@@ -12,25 +12,19 @@ import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.openmrs.module.radiology.RadiologyProperties;
-import org.openmrs.module.radiology.report.template.MrrtReportTemplateFileParser;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 @RequestMapping(RadiologyDashboardFormController.RADIOLOGY_DASHBOARD_FORM_REQUEST_MAPPING)
 public class RadiologyDashboardFormController {
     
-    
-    @Autowired
-    private RadiologyProperties radiologyProperties;
-    
-    @Autowired
-    private MrrtReportTemplateFileParser parser;
     
     public static final String RADIOLOGY_DASHBOARD_FORM_REQUEST_MAPPING = "/module/radiology/radiologyDashboard.form";
     
@@ -46,10 +40,11 @@ public class RadiologyDashboardFormController {
     
     @RequestMapping(method = RequestMethod.POST)
     protected ModelAndView upload(HttpServletRequest request) throws IOException {
-        //        final MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
-        //        final MultipartFile templateFile = multipartHttpServletRequest.getFile("templateFile");
-        //        
-        //        mrrtReportTemplateService.importMrrtReportTemplate(templateFile.getOriginalName(), templateFile.getInputStream());
+        final MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
+        final MultipartFile templateFile = multipartHttpServletRequest.getFile("templateFile");
+        
+        mrrtReportTemplateService.importMrrtReportTemplate(templateFile.getName(),
+            templateFile.getInputStream());
         
         return new ModelAndView(RADIOLOGY_DASHBOARD_FORM_VIEW);
     }

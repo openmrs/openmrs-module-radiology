@@ -8,13 +8,26 @@
  */
 package org.openmrs.module.radiology.report.template;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.openmrs.module.radiology.RadiologyProperties;
+import org.openmrs.util.OpenmrsUtil;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtReportTemplateService {
     
+    
+    @Autowired
+    private MrrtReportTemplateFileParser parser;
+    
+    @Autowired
+    private RadiologyProperties radiologyProperties;
     
     private MrrtReportTemplateDAO mrrtReportTemplateDAO;
     
@@ -24,6 +37,19 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
     
     public void setMrrtReportTemplateDAO(MrrtReportTemplateDAO mrrtReportTemplateDAO) {
         this.mrrtReportTemplateDAO = mrrtReportTemplateDAO;
+    }
+    
+    /**
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#importMrrtReportTemplate(String, InputStream)
+     */
+    @Transactional
+    @Override
+    public void importMrrtReportTemplate(String fileName, InputStream in) throws IOException {
+        MrrtReportTemplate template = parser.parse(fileName, in);
+        File destinationFile = new File(radiologyProperties.getReportTemplateHome(), fileName);
+        template.setPath(destinationFile.getAbsolutePath());
+        saveMrrtReportTemplate(template);
+        OpenmrsUtil.copyFile(in, new FileOutputStream(destinationFile));
     }
     
     /**
