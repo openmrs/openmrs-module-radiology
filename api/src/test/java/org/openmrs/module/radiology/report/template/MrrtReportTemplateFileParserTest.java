@@ -15,15 +15,22 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.openmrs.api.APIException;
+import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 /**
  * Unit test for the {@code MrrtReportTemplateFileParser}.
  */
-public class MrrtReportTemplateFileParserTest {
+public class MrrtReportTemplateFileParserTest extends BaseModuleContextSensitiveTest {
     
     
     private MrrtReportTemplateFileParser parser;
+    
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
     
     private static final String CHARSET = "UTF-8";
     
@@ -60,7 +67,7 @@ public class MrrtReportTemplateFileParserTest {
     @Test
     public void parse_shouldReturnAnMrrtTemplateObjectIfFileIsValid() throws Exception {
         File file = new File(getClass().getClassLoader()
-                .getResource("TestMrrtReportTemplate.html")
+                .getResource("mrrttemplates/radreport/0000049.html")
                 .getFile());
         
         MrrtReportTemplate template = parser.parse(file);
@@ -79,5 +86,18 @@ public class MrrtReportTemplateFileParserTest {
         assertThat(template.getDcTermsLicense(), is(TEST_DCTERMS_LICENSE));
         assertThat(template.getDcTermsDate(), is(TEST_DCTERMS_DATE));
         assertThat(template.getDcTermsCreator(), is(TEST_DCTERMS_CREATOR));
+    }
+    
+    /**
+     * @see MrrtReportTemplateFileParser#parse(File)
+     * @verifies throw an APIException when file failed validation.
+     */
+    @Test
+    public void parse_shouldThrowAnAPIExceptionWhenFileFailedValidation() throws Exception {
+        
+        expectedException.expect(APIException.class);
+        expectedException.expectMessage("Invalid file extension. Only .html files are accepted");
+        File file = File.createTempFile("test", ".php");
+        parser.parse(file);
     }
 }

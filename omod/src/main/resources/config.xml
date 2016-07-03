@@ -161,9 +161,10 @@
 	</globalProperty>
 	<globalProperty>
 		<property>@MODULE_ID@.reportTemplatesHome</property>
-		<defaultValue>reportTemplates</defaultValue>
+		<defaultValue>reporttemplates</defaultValue>
 		<description>
-			This is the directory for report templates
+			Directory where report templates are stored. Absolute and relative paths are valid. 
+			Relative paths are appended to the application data directory; necessary parent directories are created if they do not exist.
 		</description>
 	</globalProperty>
 	<!--Required Global Properties -->

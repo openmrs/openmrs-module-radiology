@@ -12,10 +12,34 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 
+/**
+ * A parser that is responsible for parsing mrrt report templates and extract metadata.
+ */
 public interface MrrtReportTemplateFileParser {
     
     
+    /**
+     * Parse an {@code MRRT} template file and extract metada and create an {@code MrrtReportTemplate} object
+     * 
+     * @param file
+     * @return
+     * @throws IOException when the file could not be read.
+     * @throws APIException when the file fails validation. That is it is not of MRRT standards.
+     * @should throw an APIException when file failed validation.
+     * @should return an MrrtReportTemplate object if file is valid.
+     */
     public MrrtReportTemplate parse(File file) throws IOException;
     
-    public MrrtReportTemplate parse(InputStream in) throws IOException;
+    /**
+     * Parse an {@code MRRT} template file and extract metada and create an {@code MrrtReportTemplate} object
+     * 
+     * @param fileName the name of the file being parsed
+     * @param in input stream of the file being parsed
+     * @return returns an {@code MrrtReportTemplate}
+     * @throws IOException when the file could not be read.
+     * @throws APIException when the file fails validation. That is it is not of MRRT standards
+     * @should throw an APIException when file is invalid
+     * @should return an MrrtReportTemplate object is file is valid.
+     */
+    public MrrtReportTemplate parse(String fileName, InputStream in) throws IOException;
 }

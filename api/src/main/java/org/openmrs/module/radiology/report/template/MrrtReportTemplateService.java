@@ -16,19 +16,23 @@ import org.openmrs.module.radiology.RadiologyPrivileges;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * The service for managing MrrtReportTemplates 
+ * Service layer for {@code MrrtReportTemplate}.
+ * 
+ * @see org.openmrs.module.radiology.report.template.MrrtReportTemplate
  */
 @Transactional
 public interface MrrtReportTemplateService extends OpenmrsService {
     
     
     /**
-     * Get an {@code MrrtReportTemplate} with a given id
+     * Get an {@code MrrtReportTemplate} with a given id.
      * 
      * @param id the {MrrtReportTemplate} id
      * @return {@code MrrtReportTemplate} with given id
-     * 
+     * @throws IllegalArgumentException if given null
      * @should get template with given id
+     * @should return null if no match was found
+     * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
     public MrrtReportTemplate getMrrtReportTemplate(Integer id);
@@ -38,8 +42,10 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      *
      *  @param uuid UUID of {@code MrrtReportTemplate}
      *  @return mrrt {@code MrrtReportTemplate} object or null
-     *  @should should find object given valid uuid
-     *  @should should return null if no object found with given uuid
+     *  @throws IllegalArgumentException if given null
+     *  @should find object given valid uuid
+     *  @should return null if no object found with given uuid
+     *  @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
     public MrrtReportTemplate getMrrtReportTemplateByUuid(String uuid);
@@ -49,8 +55,10 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      * 
      * @param title title of {@code MrrtReportTemplate}
      * @return list of {@code MrrtReportTemplate} objects matching title
-     * @should should get list of templates that match given title
-     * @should should return empty list of no match is found
+     * @throws IllegalArgumentException if given null
+     * @should get list of templates that match given title
+     * @should return empty list of no match is found
+     * @should throw illegal argument exception if given null
      */
     @Authorized
     public List<MrrtReportTemplate> getMrrtReportTemplateByTitle(String title);
@@ -60,7 +68,9 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      *
      *  @param template the {@code MrrtReportTemplate} to save
      *  @return the saved template
-     *  @should save report
+     *  @throws IllegalArgumentException if given null
+     *  @should throw illegal argument exception if given null
+     *  @should save or update given template
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_REPORT_TEMPLATES)
     public MrrtReportTemplate saveMrrtReportTemplate(MrrtReportTemplate template);
@@ -69,7 +79,9 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      * Delete an {@code MrrtReportTemplate} from the database.
      *
      * @param template the {@code MrrtReportTemplate} that is been deleted
+     * @throws IllegalArgumentException if given null
      * @should delete report from database
+     * @should throw illigal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.DELETE_RADIOLOGY_REPORT_TEMPLATES)
     public void purgeMrrtReportTemplate(MrrtReportTemplate template);

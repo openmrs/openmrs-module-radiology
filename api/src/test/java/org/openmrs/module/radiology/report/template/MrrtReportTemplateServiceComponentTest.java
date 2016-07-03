@@ -17,12 +17,17 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSensitiveTest {
     
+    
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
     
     private static final String TEST_DATASET =
             "org/openmrs/module/radiology/include/MrrtReportTemplateServiceComponentTestDataset.xml";
@@ -60,6 +65,95 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
+    * @see MrrtReportTemplateService#getMrrtReportTemplate(Integer)
+    * @verifies return null if no match was found
+    */
+    @Test
+    public void getMrrtReportTemplate_shouldReturnNullIfNoMatchWasFound() throws Exception {
+        assertNull(mrrtReportTemplateService.getMrrtReportTemplate(23));
+    }
+    
+    /**
+    * @see MrrtReportTemplateService#getMrrtReportTemplate(Integer)
+    * @verifies throw illegal argument exception if given null
+    */
+    @Test
+    public void getMrrtReportTemplate_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("id cannot be null");
+        mrrtReportTemplateService.getMrrtReportTemplate(null);
+    }
+    
+    /**
+    * @see MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
+    * @verifies find object given valid uuid
+    */
+    @Test
+    public void getMrrtReportTemplateByUuid_shouldFindObjectGivenValidUuid() {
+        MrrtReportTemplate valid = mrrtReportTemplateService.getMrrtReportTemplateByUuid(VALID_UUID);
+        
+        assertNotNull(valid);
+        assertThat(valid.getTemplateId(), is(EXISTING_TEMPLATE_ID));
+        assertThat(valid.getDcTermsTitle(), is("title1"));
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
+     * @verifies return null if no object found with given uuid
+     */
+    @Test
+    public void getMrrtReportTemplateByUuid_shouldReturnNullIfNoObjectFoundWithGivenUuid() {
+        assertNull(mrrtReportTemplateService.getMrrtReportTemplateByUuid(INVALID_UUID));
+    }
+    
+    /**
+    * @see MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
+    * @verifies throw illegal argument exception if given null
+    */
+    @Test
+    public void getMrrtReportTemplateByUuid_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("uuid cannot be null");
+        mrrtReportTemplateService.getMrrtReportTemplateByUuid(null);
+    }
+    
+    /**
+    * @see MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
+    * @verifies should get list of templates that match given title
+    */
+    @Test
+    public void getMrrtReportTemplateByTitle_shouldGetListOfTemplatesThatMatchGivenTitle() throws Exception {
+        List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplateByTitle(EXISTING_TEMPLATE_TITLE);
+        
+        assertNotNull(templates);
+        assertThat(templates.size(), is(1));
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
+     * @verifies should return empty list of no match is found
+     */
+    @Test
+    public void getMrrtReportTemplateByTitle_shouldReturnEmptyListOfNoMatchIsFound() throws Exception {
+        List<MrrtReportTemplate> templates =
+                mrrtReportTemplateService.getMrrtReportTemplateByTitle(NON_EXISTENT_TEMPLATE_TITLE);
+        
+        assertNotNull(templates);
+        assertEquals(templates.isEmpty(), true);
+    }
+    
+    /**
+    * @see MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
+    * @verifies throw illegal argument exception if given null
+    */
+    @Test
+    public void getMrrtReportTemplateByTitle_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("title cannot be null");
+        mrrtReportTemplateService.getMrrtReportTemplateByTitle(null);
+    }
+    
+    /**
     * @see MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
     * @verifies delete report from database
     */
@@ -75,11 +169,22 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
-    * @verifies save report
+    * @see MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
+    * @verifies throw illigal argument exception if given null
     */
     @Test
-    public void saveMrrtReportTemplate_shouldSaveReport() throws Exception {
+    public void purgeMrrtReportTemplate_shouldThrowIlligalArgumentExceptionIfGivenNull() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("template cannot be null");
+        mrrtReportTemplateService.purgeMrrtReportTemplate(null);
+    }
+    
+    /**
+    * @see MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
+    * @verifies save or update given template
+    */
+    @Test
+    public void saveMrrtReportTemplate_shouldSaveOrUpdateGivenTemplate() throws Exception {
         MrrtReportTemplate template = new MrrtReportTemplate();
         
         template.setDcTermsTitle("sample title");
@@ -95,51 +200,14 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-     * @see MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
-     * @verifies find object given valid uuid
-     */
+    * @see MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
+    * @verifies throw illegal argument exception if given null
+    */
     @Test
-    public void getMrrtReportTemplateByUuid_shouldFindObjectGivenValidUuid() {
-        MrrtReportTemplate valid = mrrtReportTemplateService.getMrrtReportTemplateByUuid(VALID_UUID);
-        
-        assertNotNull(valid);
-        assertThat(valid.getTemplateId(), is(EXISTING_TEMPLATE_ID));
-        assertThat(valid.getDcTermsTitle(), is("title1"));
+    public void saveMrrtReportTemplate_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("template cannot be null");
+        mrrtReportTemplateService.saveMrrtReportTemplate(null);
     }
     
-    /**
-     * @see MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
-     * @verifies return null if no object found with given uuid
-     */
-    @Test
-    public void getMrrtReportTemplateByUuid_shouldReturnNullIfNoObjectfoundWithGivenUuid() {
-        MrrtReportTemplate missing = mrrtReportTemplateService.getMrrtReportTemplateByUuid(INVALID_UUID);
-        
-        assertNull(missing);
-    }
-    
-    /**
-     * @see MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
-     * @verifies should get list of templates that match given title
-     */
-    @Test
-    public void getMrrtReportTemplateByTitle_shouldShouldGetListOfTemplatesThatMatchGivenTitle() throws Exception {
-        List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplateByTitle(EXISTING_TEMPLATE_TITLE);
-        
-        assertNotNull(templates);
-        assertEquals(1, templates.size());
-    }
-    
-    /**
-     * @see MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
-     * @verifies should return empty list of no match is found
-     */
-    @Test
-    public void getMrrtReportTemplateByTitle_shouldShouldReturnEmptyListOfNoMatchIsFound() throws Exception {
-        List<MrrtReportTemplate> templates =
-                mrrtReportTemplateService.getMrrtReportTemplateByTitle(NON_EXISTENT_TEMPLATE_TITLE);
-        
-        assertNotNull(templates);
-        assertEquals(0, templates.size());
-    }
 }

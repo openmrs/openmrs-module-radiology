@@ -8,6 +8,7 @@
  */
 package org.openmrs.module.radiology;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
@@ -196,7 +197,7 @@ public class RadiologyProperties extends ModuleProperties {
      * 
      * @return templates folder
      */
-    public String getReportTemplateHome() {
+    public File getReportTemplateHome() {
         
         Path templatesPath = Paths.get(getGlobalProperty(RadiologyConstants.GP_MRRT_REPORT_TEMPLATE_DIR, true));
         
@@ -209,6 +210,6 @@ public class RadiologyProperties extends ModuleProperties {
                     .mkdirs();
         }
         
-        return templatesPath.toString();
+        return templatesPath.toFile();
     }
 }

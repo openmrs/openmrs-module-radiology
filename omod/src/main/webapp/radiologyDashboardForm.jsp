@@ -77,7 +77,7 @@
     </openmrs:hasPrivilege>
     <openmrs:hasPrivilege privilege="View Radiology Report Templates">
       <li><a id="radiologyReportTemplatesTab" href="#" onclick="return changeTab(this);" hidefocus="hidefocus"><openmrs:message
-              code="radiology.radiologyTabs.reportTemplates" /></a></li>
+              code="radiology.dashboard.tabs.reportTemplates" /></a></li>
     </openmrs:hasPrivilege>
   </ul>
 </div>

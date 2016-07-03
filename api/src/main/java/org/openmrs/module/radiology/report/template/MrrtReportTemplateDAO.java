@@ -11,9 +11,10 @@ package org.openmrs.module.radiology.report.template;
 import java.util.List;
 
 /**
- * MRRTReportTemplate-related database functions
+ * {@code MrrTReportTemplate} related database methods.
  * 
  * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService
+ * @see org.openmrs.module.radiology.report.template.MrrtReportTemplate
  */
 interface MrrtReportTemplateDAO {
     
@@ -29,7 +30,7 @@ interface MrrtReportTemplateDAO {
     public MrrtReportTemplate getMrrtReportTemplateByUuid(String uuid);
     
     /**
-     * 
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
      */
     public List<MrrtReportTemplate> getMrrtReportTemplateByTitle(String title);
     

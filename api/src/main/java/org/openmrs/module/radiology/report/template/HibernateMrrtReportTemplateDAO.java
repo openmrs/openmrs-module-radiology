@@ -51,7 +51,7 @@ class HibernateMrrtReportTemplateDAO implements MrrtReportTemplateDAO {
     @Override
     public MrrtReportTemplate getMrrtReportTemplateByUuid(String uuid) {
         final Criteria criteria = createMrrtReportTemplateCriteria();
-        addRestrictionOnUuid(criteria, uuid);
+        criteria.add(Restrictions.eq("uuid", uuid));
         return (MrrtReportTemplate) criteria.uniqueResult();
     }
     
@@ -106,15 +106,5 @@ class HibernateMrrtReportTemplateDAO implements MrrtReportTemplateDAO {
      */
     private void addRestrictionOnTitle(Criteria criteria, String title) {
         criteria.add(Restrictions.ilike("dcTermsTitle", title + "%"));
-    }
-    
-    /**
-     * Adds equals restriction for given uuid on criteria.
-     * 
-     * @param criteria criteria on which equals restriction is set
-     * @param uuid uuid for which equals restriction will be set
-     */
-    private void addRestrictionOnUuid(Criteria criteria, String uuid) {
-        criteria.add(Restrictions.eq("uuid", uuid));
     }
 }

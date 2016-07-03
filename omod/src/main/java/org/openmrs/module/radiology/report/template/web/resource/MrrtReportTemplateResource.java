@@ -43,7 +43,6 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
             DelegatingResourceDescription description = new DelegatingResourceDescription();
             
             description.addProperty("uuid");
-            description.addProperty("display");
             description.addProperty("templateId");
             description.addProperty("dcTermsIdentifier");
             description.addProperty("dcTermsTitle");

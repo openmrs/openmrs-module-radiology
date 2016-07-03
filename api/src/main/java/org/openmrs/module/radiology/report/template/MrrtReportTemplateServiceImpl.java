@@ -32,6 +32,9 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
     @Transactional(readOnly = true)
     @Override
     public MrrtReportTemplate getMrrtReportTemplate(Integer id) {
+        if (id == null) {
+            throw new IllegalArgumentException("id cannot be null");
+        }
         return mrrtReportTemplateDAO.getMrrtReportTemplate(id);
     }
     
@@ -41,7 +44,21 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
     @Transactional(readOnly = true)
     @Override
     public MrrtReportTemplate getMrrtReportTemplateByUuid(String uuid) {
+        if (uuid == null) {
+            throw new IllegalArgumentException("uuid cannot be null");
+        }
         return mrrtReportTemplateDAO.getMrrtReportTemplateByUuid(uuid);
+    }
+    
+    /**
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
+     */
+    @Override
+    public List<MrrtReportTemplate> getMrrtReportTemplateByTitle(String title) {
+        if (title == null) {
+            throw new IllegalArgumentException("title cannot be null");
+        }
+        return mrrtReportTemplateDAO.getMrrtReportTemplateByTitle(title);
     }
     
     /**
@@ -50,6 +67,9 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
     @Transactional
     @Override
     public MrrtReportTemplate saveMrrtReportTemplate(MrrtReportTemplate template) {
+        if (template == null) {
+            throw new IllegalArgumentException("template cannot be null");
+        }
         return mrrtReportTemplateDAO.saveMrrtReportTemplate(template);
     }
     
@@ -59,14 +79,9 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
     @Transactional
     @Override
     public void purgeMrrtReportTemplate(MrrtReportTemplate template) {
+        if (template == null) {
+            throw new IllegalArgumentException("template cannot be null");
+        }
         mrrtReportTemplateDAO.purgeMrrtReportTemplate(template);
-    }
-    
-    /**
-     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
-     */
-    @Override
-    public List<MrrtReportTemplate> getMrrtReportTemplateByTitle(String title) {
-        return mrrtReportTemplateDAO.getMrrtReportTemplateByTitle(title);
     }
 }
