@@ -201,7 +201,9 @@ public interface RadiologyReportService extends OpenmrsService {
      * @should return all radiology reports with report date after or equal to from date if only date from was specified
      * @should return all radiology reports with report date before or equal to to date if only date to was specified
      * @should return empty list if from date after to date
-     * @should return empty list given criteria without match
+     * @should return empty search result if no report is in date range
+     * @should return all radiology reports for given principal results interpreter
+     * @should return empty search result if no report exists for principal results interpreter
      * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)

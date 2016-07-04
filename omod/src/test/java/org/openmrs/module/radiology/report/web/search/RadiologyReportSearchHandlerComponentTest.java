@@ -13,6 +13,7 @@ import java.util.List;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.openmrs.api.ProviderService;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportSearchCriteria;
 import org.openmrs.module.radiology.report.RadiologyReportService;
@@ -39,10 +40,17 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
     
     private static final String DATE_BETWEEN_REPORT_DATES = "2016-06-15";
     
+    private static final String PROVIDER_WITH_RADIOLOGY_REPORTS = "c2299800-cca9-11e0-9572-0800200c9a66";
+    
+    private static final String PROVIDER_WITHOUT_RADIOLOGY_REPORTS = "550e8400-e29b-11d4-a716-446655440000";
+    
     private static final String RADIOLOGY_REPORT_UUID = "82d3fb80-e403-4b9b-982c-22161ec29811";
     
     @Autowired
     RadiologyReportService radiologyReportService;
+    
+    @Autowired
+    ProviderService providerService;
     
     DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
     
@@ -205,10 +213,66 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
     
     /**
      * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return all radiology reports within given date range and totalCount if requested
+     * @verifies return all radiology reports for given principal results interpreter
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void search_shouldReturnAllRadiologyReportsForGivenPrincipalResultsInterpreter() throws Exception {
+        
+        MockHttpServletRequest request = request(RequestMethod.GET, getURI());
+        request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER,
+            PROVIDER_WITH_RADIOLOGY_REPORTS);
+        
+        SimpleObject result = deserialize(handle(request));
+        
+        assertNotNull(result);
+        List<Object> hits = (List<Object>) result.get("results");
+        assertThat(hits.size(), is(2));
+    }
+    
+    /**
+     * @see RadiologyReportSearchHandler#search(RequestContext)
+     * @verifies return empty search result if no report exists for principal results interpreter
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void search_shouldReturnEmptySearchResultIfNoReportExistsForPrincipalResultsInterpreter() throws Exception {
+        
+        MockHttpServletRequest request = request(RequestMethod.GET, getURI());
+        request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER,
+            PROVIDER_WITHOUT_RADIOLOGY_REPORTS);
+        
+        SimpleObject result = deserialize(handle(request));
+        
+        assertNotNull(result);
+        List<Object> hits = (List<Object>) result.get("results");
+        assertTrue(hits.isEmpty());
+    }
+    
+    /**
+     * @see RadiologyReportSearchHandler#search(RequestContext)
+     * @verifies return empty search result if principal results interpreter cannot be found
+     */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void search_shouldReturnEmptySearchResultIfPrincipalResultsInterpreterCannotBeFound() throws Exception {
+        
+        MockHttpServletRequest request = request(RequestMethod.GET, getURI());
+        request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER,"wrong_uuid");
+        
+        SimpleObject result = deserialize(handle(request));
+        
+        assertNotNull(result);
+        List<Object> hits = (List<Object>) result.get("results");
+        assertTrue(hits.isEmpty());
+    }
+    
+    /**
+     * @see RadiologyReportSearchHandler#search(RequestContext)
+     * @verifies return all radiology reports matching the search query and totalCount if requested
      */
     @Test
-    public void search_shouldReturnAllRadiologyReportsWithinGivenDateRangeAndTotalCountIfRequested() throws Exception {
+    public void search_shouldReturnAllRadiologyReportsMatchingTheSearchQueryAndTotalCountIfRequested() throws Exception {
         
         MockHttpServletRequest requestDateRangeWithOneReport = request(RequestMethod.GET, getURI());
         requestDateRangeWithOneReport.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_DATE_FROM,

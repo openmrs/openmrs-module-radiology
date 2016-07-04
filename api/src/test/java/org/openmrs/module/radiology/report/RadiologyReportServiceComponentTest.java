@@ -64,6 +64,10 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     private static final int RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT = 2008;
     
+    private static final String PROVIDER_WITH_RADIOLOGY_REPORTS = "c2299800-cca9-11e0-9572-0800200c9a66";
+    
+    private static final String PROVIDER_WITHOUT_RADIOLOGY_REPORTS = "550e8400-e29b-11d4-a716-446655440000";
+    
     @Autowired
     private ProviderService providerService;
     
@@ -832,20 +836,59 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     }
     
     /**
-     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-     * @verifies return empty list given criteria without match
-     */
+    * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+    * @verifies return empty search result if no report is in date range
+    */
     @Test
-    public void getRadiologyReports_shouldReturnEmptyListGivenCriteriaWithoutMatch() throws Exception {
+    public void getRadiologyReports_shouldReturnEmptySearchResultIfNoReportIsInDateRange() throws Exception {
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+        RadiologyReportSearchCriteria radiologyReportSearchCriteriaDateRange =
                 new RadiologyReportSearchCriteria.Builder().withFromDate(format.parse("2016-04-25"))
                         .withToDate(format.parse("2016-05-27"))
                         .build();
         
+        List<RadiologyReport> radiologyReportsWithDateRange =
+                radiologyReportService.getRadiologyReports(radiologyReportSearchCriteriaDateRange);
+        assertTrue(radiologyReportsWithDateRange.isEmpty());
+        
+    }
+    
+    /**
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return all radiology reports for given principal results interpreter
+     */
+    @Test
+    public void getRadiologyReports_shouldReturnAllRadiologyReportsForGivenPrincipalResultsInterpreter() throws Exception {
+        
+        Provider principalResultsInterpreter = providerService.getProviderByUuid(PROVIDER_WITH_RADIOLOGY_REPORTS);
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+                new RadiologyReportSearchCriteria.Builder().withPrincipalResultsInterpreter(principalResultsInterpreter)
+                        .build();
+        
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
-        assertTrue(radiologyReports.isEmpty());
+        assertThat(radiologyReports.size(), is(3));
+        for (RadiologyReport radiologyReport : radiologyReports) {
+            assertThat(radiologyReport.getPrincipalResultsInterpreter(), is(principalResultsInterpreter));
+        }
+    }
+    
+    /**
+    * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+    * @verifies return empty search result if no report exists for principal results interpreter
+    */
+    @Test
+    public void getRadiologyReports_shouldReturnEmptySearchResultIfNoReportExistsForPrincipalResultsInterpreter()
+            throws Exception {
+        
+        Provider principalResultsInterpreter = providerService.getProviderByUuid(PROVIDER_WITHOUT_RADIOLOGY_REPORTS);
+        RadiologyReportSearchCriteria radiologyReportSearchCriteriaWithPrincipalResultsInterpreter =
+                new RadiologyReportSearchCriteria.Builder().withPrincipalResultsInterpreter(principalResultsInterpreter)
+                        .build();
+        
+        List<RadiologyReport> radiologyReportsWithPrincipalResultsInterpreter =
+                radiologyReportService.getRadiologyReports(radiologyReportSearchCriteriaWithPrincipalResultsInterpreter);
+        assertTrue(radiologyReportsWithPrincipalResultsInterpreter.isEmpty());
     }
     
     /**
@@ -859,4 +902,5 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         expectedException.expectMessage("radiologyReportSearchCriteria cannot be null");
         radiologyReportService.getRadiologyReports(null);
     }
+    
 }
