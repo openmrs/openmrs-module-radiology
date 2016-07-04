@@ -3,8 +3,7 @@ package org.openmrs.module.radiology.report;
 import java.util.Date;
 
 /**
- * The search parameter object for {@code RadiologyReport's}. A convenience interface for building
- * instances.
+ * The search parameter object for {@code RadiologyReport's}.
  */
 public class RadiologyReportSearchCriteria {
     

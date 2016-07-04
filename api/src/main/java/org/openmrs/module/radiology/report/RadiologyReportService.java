@@ -195,11 +195,12 @@ public interface RadiologyReportService extends OpenmrsService {
      * Each extra value for a parameter that is provided acts as an "and" and will reduce the number of results returned
      *
      * @param radiologyReportSearchCriteria the object containing search parameters
-     * @return a list of radiology reports ordered by increasing report date
+     * @return the radiology reports matching given criteria ordered by increasing report date
      * @throws IllegalArgumentException if given null
      * @should return all radiology reports within given date range if date to and date from are specified
      * @should return all radiology reports with report date after or equal to from date if only date from was specified
      * @should return all radiology reports with report date before or equal to to date if only date to was specified
+     * @should return empty list if from date after to date
      * @should return empty list given criteria without match
      * @should throw illegal argument exception if given null
      */

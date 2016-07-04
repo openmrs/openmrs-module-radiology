@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -747,7 +748,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void getRadiologyReports_shouldReturnAllRadiologyReportsWithinGivenDateRangeIfDateToAndDateFromAreSpecified()
             throws Exception {
         
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date fromDate = format.parse("2016-05-28");
         Date toDate = format.parse("2016-07-01");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
@@ -774,7 +775,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             getRadiologyReports_shouldReturnAllRadiologyReportsWithReportDateAfterOrEqualToFromDateIfOnlyDateFromWasSpecified()
                     throws Exception {
         
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date fromDate = format.parse("2016-05-29");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
                 new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
@@ -797,7 +798,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             getRadiologyReports_shouldReturnAllRadiologyReportsWithReportDateBeforeOrEqualToToDateIfOnlyDateToWasSpecified()
                     throws Exception {
         
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date toDate = format.parse("2016-06-30");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
                 new RadiologyReportSearchCriteria.Builder().withToDate(toDate)
@@ -813,12 +814,31 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     /**
      * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return empty list if from date after to date
+     */
+    @Test
+    public void getRadiologyReports_shouldReturnEmptyListIfFromDateAfterToDate() throws Exception {
+        
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date fromDate = format.parse("2016-06-30");
+        Date toDate = format.parse("2016-05-29");
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+                new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
+                        .withToDate(toDate)
+                        .build();
+        
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        assertTrue(radiologyReports.isEmpty());
+    }
+    
+    /**
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
      * @verifies return empty list given criteria without match
      */
     @Test
     public void getRadiologyReports_shouldReturnEmptyListGivenCriteriaWithoutMatch() throws Exception {
         
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
                 new RadiologyReportSearchCriteria.Builder().withFromDate(format.parse("2016-04-25"))
                         .withToDate(format.parse("2016-05-27"))

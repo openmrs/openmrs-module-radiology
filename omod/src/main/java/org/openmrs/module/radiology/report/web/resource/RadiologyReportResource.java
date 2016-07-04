@@ -31,6 +31,7 @@ public class RadiologyReportResource extends DataDelegatingCrudResource<Radiolog
      */
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
+        
         if (rep instanceof DefaultRepresentation) {
             final DelegatingResourceDescription description = new DelegatingResourceDescription();
             addDefaultProperties(description);
@@ -49,6 +50,7 @@ public class RadiologyReportResource extends DataDelegatingCrudResource<Radiolog
     }
     
     private void addDefaultProperties(DelegatingResourceDescription description) {
+        
         description.addProperty("uuid");
         description.addProperty("radiologyOrder", Representation.REF);
         description.addProperty("reportDate");
