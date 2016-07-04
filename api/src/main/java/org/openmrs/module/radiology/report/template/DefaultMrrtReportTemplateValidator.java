@@ -27,8 +27,10 @@ class DefaultMrrtReportTemplateValidator implements MrrtReportTemplateValidator 
     @Override
     public void validate(File templateFile) throws APIException {
         
-        if (!VALID_EXTENSION.equals(getFileExtension(templateFile)))
-            throw new APIException("Invalid file extension (" + getFileExtension(templateFile) +"). Only .html files are accepted");
+        if (!VALID_EXTENSION.equals(getFileExtension(templateFile))) {
+            throw new APIException(
+                    "Invalid file extension (." + getFileExtension(templateFile) + "). Only (.html) files are accepted");
+        }
     }
     
     private String getFileExtension(File file) {

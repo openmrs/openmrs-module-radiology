@@ -88,7 +88,7 @@ class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParse
     public MrrtReportTemplate parse(String fileName, InputStream in) throws IOException {
         
         final String prefix = fileName.substring(0, fileName.lastIndexOf('.'));
-        final String suffix = fileName.substring(fileName.indexOf('.') + 1);
+        final String suffix = fileName.substring(fileName.lastIndexOf('.'));
         final File file = File.createTempFile(prefix, suffix);
         final OutputStream os = new FileOutputStream(file);
         OpenmrsUtil.copyFile(in, os);

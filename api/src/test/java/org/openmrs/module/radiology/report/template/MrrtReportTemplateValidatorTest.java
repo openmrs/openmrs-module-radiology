@@ -32,7 +32,7 @@ public class MrrtReportTemplateValidatorTest {
         File invalidFile = File.createTempFile("templateFile", ".css");
         
         expectedException.expect(APIException.class);
-        expectedException.expectMessage("Invalid file extension. Only .html files are accepted");
+        expectedException.expectMessage("Invalid file extension (.css). Only (.html) files are accepted");
         validator.validate(invalidFile);
     }
 }

@@ -19,12 +19,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.api.APIException;
-import org.openmrs.test.BaseModuleContextSensitiveTest;
 
 /**
  * Unit test for the {@code MrrtReportTemplateFileParser}.
  */
-public class MrrtReportTemplateFileParserTest extends BaseModuleContextSensitiveTest {
+public class MrrtReportTemplateFileParserTest {
     
     
     private MrrtReportTemplateFileParser parser;
@@ -96,8 +95,9 @@ public class MrrtReportTemplateFileParserTest extends BaseModuleContextSensitive
     public void parse_shouldThrowAnAPIExceptionWhenFileFailedValidation() throws Exception {
         
         expectedException.expect(APIException.class);
-        expectedException.expectMessage("Invalid file extension. Only .html files are accepted");
+        expectedException.expectMessage("Invalid file extension (.php). Only (.html) files are accepted");
         File file = File.createTempFile("test", ".php");
+        System.out.println(file.getName());
         parser.parse(file);
     }
 }

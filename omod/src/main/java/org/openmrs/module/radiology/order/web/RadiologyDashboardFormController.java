@@ -43,7 +43,7 @@ public class RadiologyDashboardFormController {
         final MultipartHttpServletRequest multipartHttpServletRequest = (MultipartHttpServletRequest) request;
         final MultipartFile templateFile = multipartHttpServletRequest.getFile("templateFile");
         
-        mrrtReportTemplateService.importMrrtReportTemplate(templateFile.getName(),
+        mrrtReportTemplateService.importMrrtReportTemplate(templateFile.getOriginalFilename(),
             templateFile.getInputStream());
         
         return new ModelAndView(RADIOLOGY_DASHBOARD_FORM_VIEW);
