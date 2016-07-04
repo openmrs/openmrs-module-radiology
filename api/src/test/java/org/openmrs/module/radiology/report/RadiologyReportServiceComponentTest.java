@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
 
@@ -735,5 +736,85 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyOrder cannot be null");
         radiologyReportService.getActiveRadiologyReportByRadiologyOrder(null);
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return a list of radiology reports being within the date range
+     */
+    @Test
+    public void getRadiologyReports_shouldReturnAListOfRadiologyReportsBeingWithinTheDateRange() throws Exception {
+        
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+                new RadiologyReportSearchCriteria.Builder().setFromDate(format.parse("2016-05-28"))
+                        .setToDate(format.parse("2016-07-01"))
+                        .build();
+        
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        assertThat(radiologyReports.size(), is(3));
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return a list of radiology reports with report date after or equal to from date
+     */
+    @Test
+    public void getRadiologyReports_shouldReturnAListOfRadiologyReportsWithReportDateAfterOrEqualToFromDate()
+            throws Exception {
+        
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+                new RadiologyReportSearchCriteria.Builder().setFromDate(format.parse("2016-05-29"))
+                        .build();
+        
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        assertThat(radiologyReports.size(), is(2));
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return a list of radiology reports with report date before or equal to from date
+     */
+    @Test
+    public void getRadiologyReports_shouldReturnAListOfRadiologyReportsWithReportDateBeforeOrEqualToToDate()
+            throws Exception {
+        
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+                new RadiologyReportSearchCriteria.Builder().setToDate(format.parse("2016-06-30"))
+                        .build();
+        
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        assertThat(radiologyReports.size(), is(2));
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return a empty list if no radiology report matches the criteria
+     */
+    @Test
+    public void getRadiologyReports_shouldReturnAEmptyListIfNoRadiologyReportMatchesTheCriteria() throws Exception {
+        
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+                new RadiologyReportSearchCriteria.Builder().setFromDate(format.parse("2016-04-25"))
+                        .setToDate(format.parse("2016-05-27"))
+                        .build();
+        
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        assertThat(radiologyReports.size(), is(0));
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies throw illegal argument exception if given null
+     */
+    @Test
+    public void getRadiologyReports_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+        
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("radiologyReportSearchCriteria cannot be null");
+        radiologyReportService.getRadiologyReports(null);
     }
 }
