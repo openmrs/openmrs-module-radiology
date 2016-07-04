@@ -1,4 +1,4 @@
-package org.openmrs.module.radiology.order.web.resource;
+package org.openmrs.module.radiology.report.web.resource;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,12 +7,12 @@ import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOp
 import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest;
 
 /**
- * Tests {@link RadiologyRestController} with respect to {@link RadiologyOrderResource}.
+ * Tests {@link RadiologyRestController} with respect to {@link RadiologyReportResource}.
  */
-public class RadiologyOrderControllerComponentTest extends MainResourceControllerTest {
+public class RadiologyReportControllerComponentTest extends MainResourceControllerTest {
     
     
-    protected static final String TEST_DATASET = "RadiologyOrderResourceComponentTestDataset.xml";
+    protected static final String TEST_DATASET = "RadiologyReportResourceComponentTestDataset.xml";
     
     @Before
     public void setUp() throws Exception {
@@ -25,7 +25,7 @@ public class RadiologyOrderControllerComponentTest extends MainResourceControlle
     @Override
     public String getURI() {
         
-        return "radiologyorder";
+        return "radiologyreport";
     }
     
     /**
@@ -34,7 +34,7 @@ public class RadiologyOrderControllerComponentTest extends MainResourceControlle
     @Override
     public String getUuid() {
         
-        return "1bae735a-fca0-11e5-9e59-08002719a237";
+        return "82d3fb80-e403-4b9b-982c-22161ec29810";
     }
     
     @Override
