@@ -11,7 +11,9 @@ package org.openmrs.module.radiology.report;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 
@@ -124,5 +126,26 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
                         .add(Restrictions.eq("reportStatus", RadiologyReportStatus.COMPLETED)))
                 .list()
                 .get(0);
+    }
+    
+    /**
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<RadiologyReport> getRadiologyReports(RadiologyReportSearchCriteria searchCriteria) {
+        
+        final Criteria crit = sessionFactory.getCurrentSession()
+                .createCriteria(RadiologyReport.class);
+        
+        if (searchCriteria.getFromDate() != null) {
+            crit.add(Restrictions.ge("reportDate", searchCriteria.getFromDate()));
+        }
+        if (searchCriteria.getToDate() != null) {
+            crit.add(Restrictions.le("reportDate", searchCriteria.getToDate()));
+        }
+        
+        crit.addOrder(Order.asc("reportDate"));
+        return crit.list();
     }
 }

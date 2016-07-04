@@ -8,13 +8,13 @@
  */
 package org.openmrs.module.radiology.order;
 
-import java.util.Calendar;
-import java.util.Date;
-
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
+import java.util.Calendar;
+import java.util.Date;
 
 import org.junit.Test;
 import org.openmrs.Concept;

@@ -215,4 +215,17 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
         }
         return null;
     }
+    
+    /**
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     */
+    @Transactional(readOnly = true)
+    @Override
+    public List<RadiologyReport> getRadiologyReports(RadiologyReportSearchCriteria radiologyReportSearchCriteria) {
+        
+        if (radiologyReportSearchCriteria == null) {
+            throw new IllegalArgumentException("radiologyReportSearchCriteria cannot be null");
+        }
+        return radiologyReportDAO.getRadiologyReports(radiologyReportSearchCriteria);
+    }
 }
