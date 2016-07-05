@@ -43,7 +43,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<javaCompilerVersion>1.8</javaCompilerVersion>
 		<openMRSVersion>2.0.0-SNAPSHOT</openMRSVersion>
-		<emr-apiVersion>1.13</emr-apiVersion>
+		<emr-apiVersion>1.14</emr-apiVersion>
 		<openmrs-legacyui-version>0.3</openmrs-legacyui-version>
 		<openmrs-webservicesrest-version>2.15-SNAPSHOT</openmrs-webservicesrest-version>
 		<maven-formatter-plugin-version>1.6.0</maven-formatter-plugin-version>

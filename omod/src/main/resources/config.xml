@@ -153,18 +153,6 @@
 		<defaultValue>fe898a34-1ade-11e1-9c71-00248140a5eb</defaultValue>
 		<description>Radiology Visit Type UUID</description>
 	</globalProperty>
-	<!-- we provide the setting for the GP of the emr-api here since it is not 
-		provided by them. otherwise users would need to set the GP via the database. 
-		remove once emr-api defines this GP in their config.xml -->
-	<globalProperty>
-		<property>emr.encounterMatcher</property>
-		<defaultValue>org.openmrs.module.radiology.RadiologyEncounterMatcher
-		</defaultValue>
-		<description>
-			Class name of a custom encounter matcher (e.g.
-			org.openmrs.module.example.CustomEncounterMatcher)
-		</description>
-	</globalProperty>
 
 	<!--Required Global Properties -->
 
