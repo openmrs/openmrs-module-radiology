@@ -78,7 +78,6 @@ public class RadiologyOrderSearchHandlerTest {
         
         patientWithoutOrders.setUuid(PATIENT_UUID_WITHOUT_ORDERS);
         
-        PowerMockito.mockStatic(RestUtil.class);
         PowerMockito.mockStatic(Context.class);
         when(Context.getPatientService()).thenReturn(patientService);
         when(patientResource.getByUniqueId(PATIENT_UUID_WITH_ORDERS)).thenReturn(patientWithOrders);

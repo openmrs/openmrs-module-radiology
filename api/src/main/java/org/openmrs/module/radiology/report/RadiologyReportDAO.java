@@ -57,4 +57,9 @@ interface RadiologyReportDAO {
      * @see org.openmrs.module.radiology.report.RadiologyReportService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
      */
     RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder);
+    
+    /**
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     */
+    List<RadiologyReport> getRadiologyReports(RadiologyReportSearchCriteria searchCriteria);
 }

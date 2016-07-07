@@ -189,4 +189,19 @@ public interface RadiologyReportService extends OpenmrsService {
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
     public RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder);
+    
+    /**
+     * Get all radiology reports that match a variety of (nullable) criteria contained in the parameter object.
+     * Each extra value for a parameter that is provided acts as an "and" and will reduce the number of results returned
+     *
+     * @param radiologyReportSearchCriteria the object containing search parameters
+     * @return a list of radiology reports ordered by increasing report date
+     * @should return a list of radiology reports being within the date range
+     * @should return a list of radiology reports with report date after or equal to from date
+     * @should return a list of radiology reports with report date before or equal to from date 
+     * @should return a empty list if no radiology report matches the criteria
+     * @should throw illegal argument exception if given null
+     */
+    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
+    public List<RadiologyReport> getRadiologyReports(RadiologyReportSearchCriteria radiologyReportSearchCriteria);
 }
