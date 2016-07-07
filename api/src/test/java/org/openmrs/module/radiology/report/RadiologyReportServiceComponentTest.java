@@ -18,6 +18,8 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -735,5 +737,106 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyOrder cannot be null");
         radiologyReportService.getActiveRadiologyReportByRadiologyOrder(null);
+    }
+    
+    /**
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return all radiology reports within given date range if date to and date from are specified
+     */
+    @Test
+    public void getRadiologyReports_shouldReturnAllRadiologyReportsWithinGivenDateRangeIfDateToAndDateFromAreSpecified()
+            throws Exception {
+        
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date fromDate = format.parse("2016-05-28");
+        Date toDate = format.parse("2016-07-01");
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+                new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
+                        .withToDate(toDate)
+                        .build();
+        
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        assertThat(radiologyReports.size(), is(3));
+        for (RadiologyReport radiologyReport : radiologyReports) {
+            assertTrue(radiologyReport.getReportDate()
+                    .compareTo(fromDate) >= 0);
+            assertTrue(radiologyReport.getReportDate()
+                    .compareTo(toDate) <= 0);
+        }
+    }
+    
+    /**
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return all radiology reports with report date after or equal to from date if only date from was specified
+     */
+    @Test
+    public void
+            getRadiologyReports_shouldReturnAllRadiologyReportsWithReportDateAfterOrEqualToFromDateIfOnlyDateFromWasSpecified()
+                    throws Exception {
+        
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date fromDate = format.parse("2016-05-29");
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+                new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
+                        .build();
+        
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        assertThat(radiologyReports.size(), is(2));
+        for (RadiologyReport radiologyReport : radiologyReports) {
+            assertTrue(radiologyReport.getReportDate()
+                    .compareTo(fromDate) >= 0);
+        }
+    }
+    
+    /**
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return all radiology reports with report date before or equal to to date if only date to was specified
+     */
+    @Test
+    public void
+            getRadiologyReports_shouldReturnAllRadiologyReportsWithReportDateBeforeOrEqualToToDateIfOnlyDateToWasSpecified()
+                    throws Exception {
+        
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date toDate = format.parse("2016-06-30");
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+                new RadiologyReportSearchCriteria.Builder().withToDate(toDate)
+                        .build();
+        
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        assertThat(radiologyReports.size(), is(2));
+        for (RadiologyReport radiologyReport : radiologyReports) {
+            assertTrue(radiologyReport.getReportDate()
+                    .compareTo(toDate) <= 0);
+        }
+    }
+    
+    /**
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return empty list given criteria without match
+     */
+    @Test
+    public void getRadiologyReports_shouldReturnEmptyListGivenCriteriaWithoutMatch() throws Exception {
+        
+        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+                new RadiologyReportSearchCriteria.Builder().withFromDate(format.parse("2016-04-25"))
+                        .withToDate(format.parse("2016-05-27"))
+                        .build();
+        
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        assertTrue(radiologyReports.isEmpty());
+    }
+    
+    /**
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies throw illegal argument exception if given null
+     */
+    @Test
+    public void getRadiologyReports_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+        
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("radiologyReportSearchCriteria cannot be null");
+        radiologyReportService.getRadiologyReports(null);
     }
 }
