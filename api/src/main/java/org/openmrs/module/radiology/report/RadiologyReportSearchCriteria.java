@@ -10,10 +10,11 @@ import java.util.Date;
  */
 public class RadiologyReportSearchCriteria {
     
-    private Date fromDate;
     
-    private Date toDate; 
-
+    private final Date fromDate;
+    
+    private final Date toDate;
+    
     private RadiologyReportSearchCriteria(Builder builder) {
         
         this.fromDate = builder.fromDate;
@@ -28,7 +29,6 @@ public class RadiologyReportSearchCriteria {
         return fromDate;
     }
     
-
     /**
      * @return the maximum date (inclusive) the report date
      */
@@ -38,6 +38,7 @@ public class RadiologyReportSearchCriteria {
     }
     
     public static class Builder {
+        
         
         private Date fromDate;
         

@@ -18,6 +18,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Properties;
@@ -745,7 +746,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     @Test
     public void getRadiologyReports_shouldReturnAListOfRadiologyReportsBeingWithinTheDateRange() throws Exception {
         
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
                 new RadiologyReportSearchCriteria.Builder().setFromDate(format.parse("2016-05-28"))
                         .setToDate(format.parse("2016-07-01"))
@@ -763,7 +764,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void getRadiologyReports_shouldReturnAListOfRadiologyReportsWithReportDateAfterOrEqualToFromDate()
             throws Exception {
         
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
                 new RadiologyReportSearchCriteria.Builder().setFromDate(format.parse("2016-05-29"))
                         .build();
@@ -780,7 +781,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void getRadiologyReports_shouldReturnAListOfRadiologyReportsWithReportDateBeforeOrEqualToToDate()
             throws Exception {
         
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
                 new RadiologyReportSearchCriteria.Builder().setToDate(format.parse("2016-06-30"))
                         .build();
@@ -796,7 +797,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     @Test
     public void getRadiologyReports_shouldReturnAEmptyListIfNoRadiologyReportMatchesTheCriteria() throws Exception {
         
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        final DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
                 new RadiologyReportSearchCriteria.Builder().setFromDate(format.parse("2016-04-25"))
                         .setToDate(format.parse("2016-05-27"))
