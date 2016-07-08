@@ -258,7 +258,7 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
     public void search_shouldReturnEmptySearchResultIfPrincipalResultsInterpreterCannotBeFound() throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
-        request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER,"wrong_uuid");
+        request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER, "wrong_uuid");
         
         SimpleObject result = deserialize(handle(request));
         

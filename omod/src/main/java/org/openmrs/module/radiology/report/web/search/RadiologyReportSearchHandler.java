@@ -97,7 +97,7 @@ public class RadiologyReportSearchHandler implements SearchHandler {
         if (StringUtils.isNotBlank(principalResultsInterpreterUuid)) {
             principalResultsInterpreter = ((ProviderResource1_9) Context.getService(RestService.class)
                     .getResourceBySupportedClass(Provider.class)).getByUniqueId(principalResultsInterpreterUuid);
-            if(principalResultsInterpreter == null) {
+            if (principalResultsInterpreter == null) {
                 return new EmptySearchResult();
             }
         }
