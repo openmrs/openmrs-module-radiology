@@ -28,6 +28,8 @@
   <person person_id="70021" gender="M" birthdate="1990-04-13" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
   <person_name person_name_id="4" preferred="true" person_id="70021" given_name="Karl" family_name="Karlsson" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="6753aaa1-545d-44e2-9a9f-6c682f37a135"/>
   <provider provider_id="1" person_id="70021" name="Radiology Technician" identifier="1" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="c2299800-cca9-11e0-9572-0800200c9a66" />
+  <provider provider_id="2" name="Radiology Technician" identifier="2" creator="1" date_created="2005-01-02 00:00:00.0" retired="false" uuid="550e8400-e29b-11d4-a716-446655440000" />
+	
 
   <!-- concept name and concept -->
   <concept concept_id="178" retired="false" datatype_id="4" class_id="4" is_set="false" creator="1" date_created="2004-01-01 00:00:00" changed_by="1" date_changed="2005-02-16 00:00:00" version="" uuid="1565b6e6-df81-11e4-98ec-08002798a7ad"/>

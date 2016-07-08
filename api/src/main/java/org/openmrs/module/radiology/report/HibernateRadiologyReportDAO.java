@@ -144,6 +144,9 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
         if (searchCriteria.getToDate() != null) {
             crit.add(Restrictions.le("reportDate", searchCriteria.getToDate()));
         }
+        if (searchCriteria.getPrincipalResultsInterpreter() != null) {
+            crit.add(Restrictions.eq("principalResultsInterpreter", searchCriteria.getPrincipalResultsInterpreter()));
+        }
         
         crit.addOrder(Order.asc("reportDate"));
         return crit.list();
