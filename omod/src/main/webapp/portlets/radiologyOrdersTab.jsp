@@ -10,11 +10,11 @@
   $j(document)
           .ready(
                   function() {
-                    var patientUuid = $j('#patientUuid');
-                    var find = $j('#findButton');
-                    var clearResults = $j('a#clearResults');
+                    var patientUuid = $j('#ordersTabPatientFilter');
+                    var find = $j('#ordersTabFind');
+                    var clearResults = $j('a#ordersTabClearFilters');
 
-                    var radiologyOrdersTable = $j('#radiologyOrdersTable')
+                    var radiologyOrdersTable = $j('#ordersTabTable')
                             .DataTable(
                                     {
                                       "processing": true,
@@ -163,7 +163,7 @@
                     });
 
                     clearResults.on('mouseup keyup', function() {
-                      $j('table#searchForm input:text').val('');
+                      $j('table#ordersTabTableFilters input:text').val('');
                       patientUuid.val('');
                       radiologyOrdersTable.ajax.reload();
                     });
@@ -207,7 +207,7 @@
                               + '</table>';
                     }
 
-                    $j('#radiologyOrdersTable tbody').on('click', 'td',
+                    $j('#ordersTabTable tbody').on('click', 'td',
                             function(e) {
                               if ($j(e.target).is(':not(td)')) { return; }
 
@@ -232,23 +232,23 @@
   <br>
 </openmrs:hasPrivilege>
 <br>
-<span class="boxHeader"> <b><spring:message code="radiology.radiologyOrders" /></b> <a id="clearResults" href="#"
+<span class="boxHeader"> <b><spring:message code="radiology.radiologyOrders" /></b> <a id="ordersTabClearFilters" href="#"
   style="float: right"> <spring:message code="radiology.clearResults" />
 </a>
 </span>
 <div class="box">
-  <table id="searchForm" cellspacing="10">
+  <table id="ordersTabTableFilters" cellspacing="10">
     <tr>
-      <form id="radiologyOrderListForm">
+      <form>
         <td><label><spring:message code="radiology.patient" /></label> <radiology:patientField formFieldName="patient"
-            formFieldId="patientUuid" /></td>
-        <td><input id="findButton" type="button" value="<spring:message code="radiology.find"/>" /></td>
+            formFieldId="ordersTabPatientFilter" /></td>
+        <td><input id="ordersTabFind" type="button" value="<spring:message code="radiology.find"/>" /></td>
       </form>
     </tr>
   </table>
   <br>
-  <div id="results">
-    <table id="radiologyOrdersTable" cellspacing="0" width="100%" class="display nowrap">
+  <div>
+    <table id="ordersTabTable" cellspacing="0" width="100%" class="display nowrap">
       <thead>
         <tr>
           <th></th>
