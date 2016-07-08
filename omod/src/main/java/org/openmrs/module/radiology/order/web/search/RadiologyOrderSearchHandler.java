@@ -53,7 +53,7 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
     }
     
     /**
-     * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#getSearchConfig()
+     * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search()
      * @should return all radiology orders for given patient
      * @should return all radiology orders for given patient and totalCount if requested
      * @should return empty search result if patient cannot be found
