@@ -25,3 +25,17 @@ tinymce.com
 Authors : see https://github.com/tinymce/tinymce
 License : GNU LESSER GENERAL PUBLIC LICENSE Version 2.1, February 1999
 Version : 4.3.8
+
+============================
+jquery.com
+============================
+Authors : see https://github.com/jquery/jquery
+License : MIT
+Version : 1.12.3
+
+============================
+daterangepicker
+============================
+Authors : see https://github.com/longbill/jquery-date-range-picker
+License : MIT
+Version : 0.4.0

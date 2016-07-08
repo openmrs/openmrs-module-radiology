@@ -1,8 +1,3 @@
-/*radiologyOrderList.jsp*/
-div[name="loading"]{
-margin-right:2%;
-float:right;
-}
 .left{
 float:left;
 width:25%;
@@ -24,12 +19,6 @@ height:2em;
 }
 .verticalCentered > *{
 vertical-align:middle;
-}
-div#matchedOrders_paginate > span  > span{
-vertical-align:top;
-}
-div.colVisDiv,div.colVisDiv *{
-height:100%;
 }
 div.dataTables_paginate.fg-buttonset.ui-buttonset.fg-buttonset-multi.ui-buttonset-multi.paging_full_numbers span{
 width:auto;

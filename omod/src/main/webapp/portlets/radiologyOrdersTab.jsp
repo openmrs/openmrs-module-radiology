@@ -1,4 +1,5 @@
 <%@ include file="/WEB-INF/view/module/radiology/template/include.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeDatatablesWithDefaults.jsp"%>
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/moment/moment-with-locales.min.js" />
 
@@ -233,16 +234,16 @@
 </openmrs:hasPrivilege>
 <br>
 <span class="boxHeader"> <b><spring:message code="radiology.radiologyOrders" /></b> <a id="ordersTabClearFilters" href="#"
-  style="float: right"> <spring:message code="radiology.clearResults" />
+  style="float: right"> <spring:message code="radiology.dashboard.tabs.filters.clearFilters" />
 </a>
 </span>
 <div class="box">
   <table id="ordersTabTableFilters" cellspacing="10">
     <tr>
       <form>
-        <td><label><spring:message code="radiology.patient" /></label> <radiology:patientField formFieldName="patient"
+        <td><label><spring:message code="radiology.dashboard.tabs.orders.filters.patient" /></label> <radiology:patientField formFieldName="patient"
             formFieldId="ordersTabPatientFilter" /></td>
-        <td><input id="ordersTabFind" type="button" value="<spring:message code="radiology.find"/>" /></td>
+        <td><input id="ordersTabFind" type="button" value="<spring:message code="radiology.dashboard.tabs.filters.find"/>" /></td>
       </form>
     </tr>
   </table>
@@ -267,4 +268,3 @@
     </table>
   </div>
 </div>
-<br />
