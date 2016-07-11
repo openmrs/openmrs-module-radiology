@@ -63,7 +63,12 @@
                                             "name": "principalResultsInterpreter",
                                             "render": function(data, type,
                                                     full, meta) {
-                                              return full.principalResultsInterpreter.display;
+                                              if ((typeof (full.principalResultsInterpreter) !== 'undefined')
+                                                      && (full.principalResultsInterpreter !== null)) {
+                                                return full.principalResultsInterpreter.display;
+                                              } else {
+                                                return "";
+                                              }
                                             }
                                           },
                                           {
@@ -72,7 +77,6 @@
                                                     full, meta) {
                                               var result = "";
                                               if (full.reportDate) {
-
                                                 result = moment(full.reportDate)
                                                         .format("LL");
                                               }
@@ -81,10 +85,29 @@
                                           },
                                           {
                                             "name": "reportStatus",
-                                            "visible": false,
                                             "render": function(data, type,
                                                     full, meta) {
                                               return full.reportStatus;
+                                            }
+                                          },
+                                          {
+                                            "name": "dateCreated",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              var result = "";
+                                              if (full.auditInfo.dateCreated) {
+                                                result = moment(
+                                                        full.auditInfo.dateCreated)
+                                                        .format("LLL");
+                                              }
+                                              return result;
+                                            }
+                                          },
+                                          {
+                                            "name": "creatorBy",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return full.auditInfo.creator.display;
                                             }
                                           }, ],
                                     });
@@ -128,6 +151,8 @@
           <th><spring:message code="radiology.datatables.column.report.principalResultsInterpreter" /></th>
           <th><spring:message code="radiology.datatables.column.report.date" /></th>
           <th><spring:message code="radiology.datatables.column.report.status" /></th>
+          <th><spring:message code="radiology.datatables.column.report.dateCreated" /></th>
+          <th><spring:message code="radiology.datatables.column.report.createdBy" /></th>
         </tr>
       </thead>
     </table>
