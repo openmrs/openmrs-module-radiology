@@ -197,9 +197,10 @@ public interface RadiologyReportService extends OpenmrsService {
      * @param radiologyReportSearchCriteria the object containing search parameters
      * @return the radiology reports matching given criteria ordered by increasing report date
      * @throws IllegalArgumentException if given null
+     * @should return all radiology reports (including discontinued) matching the search query if include discontinued is set
      * @should return all radiology reports within given date range if date to and date from are specified
-     * @should return all radiology reports with report date after or equal to from date if only date from was specified
-     * @should return all radiology reports with report date before or equal to to date if only date to was specified
+     * @should return all radiology reports with report date after or equal to from date if only date from is specified
+     * @should return all radiology reports with report date before or equal to to date if only date to is specified
      * @should return empty list if from date after to date
      * @should return empty search result if no report is in date range
      * @should return all radiology reports for given principal results interpreter

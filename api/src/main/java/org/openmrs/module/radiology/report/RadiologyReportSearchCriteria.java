@@ -16,6 +16,8 @@ public class RadiologyReportSearchCriteria {
     
     private final Provider principalResultsInterpreter;
     
+    private final Boolean includeDiscontinued;
+    
     /**
      * @return the minimum date (inclusive) the report date
      */
@@ -30,6 +32,14 @@ public class RadiologyReportSearchCriteria {
     public Date getToDate() {
         
         return toDate;
+    }
+    
+    /**
+     * @return the {@code Boolean} specifying whether or not to include discontinued radiology reports
+     */
+    public Boolean getIncludeDiscontinued() {
+        
+        return includeDiscontinued;
     }
     
     /**
@@ -48,6 +58,8 @@ public class RadiologyReportSearchCriteria {
         private Date toDate;
         
         private Provider principalResultsInterpreter;
+        
+        private Boolean includeDiscontinued = false;
         
         /**
          * @param fromDate the minimum date (inclusive) the report date
@@ -80,6 +92,17 @@ public class RadiologyReportSearchCriteria {
         }
         
         /**
+         * includes discontinued radiology reports
+         * 
+         * @return this builder instance
+         */
+        public Builder includeDiscontinued() {
+            
+            this.includeDiscontinued = true;
+            return this;
+        }
+        
+        /**
          * Create an {@link RadiologyReportSearchCriteria} with the properties of this builder instance.
          * 
          * @return a new search criteria instance
@@ -94,5 +117,6 @@ public class RadiologyReportSearchCriteria {
         this.fromDate = builder.fromDate;
         this.toDate = builder.toDate;
         this.principalResultsInterpreter = builder.principalResultsInterpreter;
+        this.includeDiscontinued = builder.includeDiscontinued;
     }
 }

@@ -11,7 +11,9 @@
  */
 package org.openmrs.module.radiology.report;
 
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -24,6 +26,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
+import org.hamcrest.Matchers;
 import org.hibernate.cfg.Environment;
 import org.junit.Before;
 import org.junit.Rule;
@@ -63,6 +66,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     private static final int RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT = 2007;
     
     private static final int RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT = 2008;
+    
+    private static final String RADIOLOGY_REPORT_UUID_OF_DISCONTINUED = "7b2b9619-a6b2-4fb7-bf6b-fc7917d6dd59";
     
     private static final String PROVIDER_WITH_RADIOLOGY_REPORTS = "c2299800-cca9-11e0-9572-0800200c9a66";
     
@@ -746,6 +751,31 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     /**
      * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return all radiology reports (including discontinued) matching the search query if include discontinued is
+     *           set
+     */
+    @Test
+    public void
+            getRadiologyReports_shouldReturnAllRadiologyReportsIncludingDiscontinuedMatchingTheSearchQueryIfIncludeDiscontinuedIsSet()
+                    throws Exception {
+        
+        Provider principalResultsInterpreter = providerService.getProviderByUuid(PROVIDER_WITH_RADIOLOGY_REPORTS);
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+                new RadiologyReportSearchCriteria.Builder().withPrincipalResultsInterpreter(principalResultsInterpreter)
+                        .includeDiscontinued()
+                        .build();
+        
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        assertThat(radiologyReports.size(), is(4));
+        assertThat(radiologyReports,
+            hasItem(Matchers.<RadiologyReport> hasProperty("uuid", is(RADIOLOGY_REPORT_UUID_OF_DISCONTINUED))));
+        assertThat(radiologyReports,
+            hasItem(Matchers.<RadiologyReport> hasProperty("reportStatus", is(RadiologyReportStatus.DISCONTINUED))));
+        
+    }
+    
+    /**
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
      * @verifies return all radiology reports within given date range if date to and date from are specified
      */
     @Test
@@ -767,6 +797,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                     .compareTo(fromDate) >= 0);
             assertTrue(radiologyReport.getReportDate()
                     .compareTo(toDate) <= 0);
+            assertThat(radiologyReport.getReportStatus(), is(not(RadiologyReportStatus.DISCONTINUED)));
         }
     }
     
@@ -790,6 +821,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         for (RadiologyReport radiologyReport : radiologyReports) {
             assertTrue(radiologyReport.getReportDate()
                     .compareTo(fromDate) >= 0);
+            assertThat(radiologyReport.getReportStatus(), is(not(RadiologyReportStatus.DISCONTINUED)));
         }
     }
     
@@ -813,6 +845,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         for (RadiologyReport radiologyReport : radiologyReports) {
             assertTrue(radiologyReport.getReportDate()
                     .compareTo(toDate) <= 0);
+            assertThat(radiologyReport.getReportStatus(), is(not(RadiologyReportStatus.DISCONTINUED)));
         }
     }
     
@@ -836,9 +869,9 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     }
     
     /**
-    * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-    * @verifies return empty search result if no report is in date range
-    */
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return empty search result if no report is in date range
+     */
     @Test
     public void getRadiologyReports_shouldReturnEmptySearchResultIfNoReportIsInDateRange() throws Exception {
         
@@ -870,13 +903,14 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         assertThat(radiologyReports.size(), is(3));
         for (RadiologyReport radiologyReport : radiologyReports) {
             assertThat(radiologyReport.getPrincipalResultsInterpreter(), is(principalResultsInterpreter));
+            assertThat(radiologyReport.getReportStatus(), is(not(RadiologyReportStatus.DISCONTINUED)));
         }
     }
     
     /**
-    * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-    * @verifies return empty search result if no report exists for principal results interpreter
-    */
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return empty search result if no report exists for principal results interpreter
+     */
     @Test
     public void getRadiologyReports_shouldReturnEmptySearchResultIfNoReportExistsForPrincipalResultsInterpreter()
             throws Exception {
