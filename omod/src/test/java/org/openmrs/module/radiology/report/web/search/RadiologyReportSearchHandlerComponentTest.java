@@ -1,9 +1,11 @@
 package org.openmrs.module.radiology.report.web.search;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.CoreMatchers.not;
+import static org.hamcrest.CoreMatchers.either;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 
 import java.text.DateFormat;
@@ -11,14 +13,17 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.api.ProviderService;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportSearchCriteria;
 import org.openmrs.module.radiology.report.RadiologyReportService;
+import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
+import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.v1_0.controller.MainResourceControllerTest;
@@ -33,6 +38,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
     
     
     protected static final String TEST_DATASET = "RadiologyReportSearchHandlerComponentTestDataset.xml";
+    
+    private static final String RADIOLOGY_REPORT_UUID_OF_DISCONTINUED = "90765170-473f-11e6-beb8-9e71128cae77";
     
     private static final String DATE_AFTER_REPORT_DATES = "2016-07-02";
     
@@ -100,6 +107,31 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
     }
     
     /**
+    * @see RadiologyReportSearchHandler#search(RequestContext)
+    * @verifies return all radiology reports (including discontinued) matching the search query if include all is set
+    */
+    @SuppressWarnings("unchecked")
+    @Test
+    public void search_shouldReturnAllRadiologyReportsIncludingDiscontinuedMatchingTheSearchQueryIfIncludeAllIsSet()
+            throws Exception {
+        
+        MockHttpServletRequest request = request(RequestMethod.GET, getURI());
+        request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER,
+            PROVIDER_WITH_RADIOLOGY_REPORTS);
+        request.setParameter(RestConstants.REQUEST_PROPERTY_FOR_INCLUDE_ALL, "true");
+        request.setParameter("v", Representation.FULL.getRepresentation());
+        
+        SimpleObject result = deserialize(handle(request));
+        
+        assertNotNull(result);
+        List<Object> hits = (List<Object>) result.get("results");
+        assertThat(hits.size(), is(3));
+        assertThat(PropertyUtils.getProperty(hits.get(2), "uuid"), is(RADIOLOGY_REPORT_UUID_OF_DISCONTINUED));
+        assertThat(PropertyUtils.getProperty(hits.get(2), "reportStatus"),
+            is(RadiologyReportStatus.DISCONTINUED.toString()));
+    }
+    
+    /**
      * @see RadiologyReportSearchHandler#search(RequestContext)
      * @verifies return all radiology reports with report date after or equal to from date if only date from was specified
      */
@@ -127,6 +159,7 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
             is(resultFormat.format(radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria)
                     .get(0)
                     .getReportDate())));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "reportStatus"), is(not(RadiologyReportStatus.DISCONTINUED)));
     }
     
     /**
@@ -157,6 +190,7 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
             is(resultFormat.format(radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria)
                     .get(0)
                     .getReportDate())));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "reportStatus"), is(not(RadiologyReportStatus.DISCONTINUED)));
     }
     
     /**
@@ -191,6 +225,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
                 .getReportDate())));
         assertThat(PropertyUtils.getProperty(hits.get(1), "reportDate"), is(resultFormat.format(radiologyReports.get(1)
                 .getReportDate())));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "reportStatus"), is(not(RadiologyReportStatus.DISCONTINUED)));
+        assertThat(PropertyUtils.getProperty(hits.get(1), "reportStatus"), is(not(RadiologyReportStatus.DISCONTINUED)));
     }
     
     /**
@@ -228,6 +264,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertNotNull(result);
         List<Object> hits = (List<Object>) result.get("results");
         assertThat(hits.size(), is(2));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "reportStatus"), is(not(RadiologyReportStatus.DISCONTINUED)));
+        assertThat(PropertyUtils.getProperty(hits.get(1), "reportStatus"), is(not(RadiologyReportStatus.DISCONTINUED)));
     }
     
     /**

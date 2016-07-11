@@ -121,9 +121,7 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
         return (RadiologyReport) sessionFactory.getCurrentSession()
                 .createCriteria(RadiologyReport.class)
                 .add(Restrictions.eq("radiologyOrder", radiologyOrder))
-                .add(Restrictions.disjunction()
-                        .add(Restrictions.eq("reportStatus", RadiologyReportStatus.CLAIMED))
-                        .add(Restrictions.eq("reportStatus", RadiologyReportStatus.COMPLETED)))
+                .add(Restrictions.not(Restrictions.eq("reportStatus", RadiologyReportStatus.DISCONTINUED)))
                 .list()
                 .get(0);
     }
@@ -138,6 +136,9 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
         final Criteria crit = sessionFactory.getCurrentSession()
                 .createCriteria(RadiologyReport.class);
         
+        if (!searchCriteria.getIncludeDiscontinued()) {
+            crit.add(Restrictions.not(Restrictions.eq("reportStatus", RadiologyReportStatus.DISCONTINUED)));
+        }
         if (searchCriteria.getFromDate() != null) {
             crit.add(Restrictions.ge("reportDate", searchCriteria.getFromDate()));
         }

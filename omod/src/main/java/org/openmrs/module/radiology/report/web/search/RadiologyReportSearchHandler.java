@@ -47,8 +47,8 @@ public class RadiologyReportSearchHandler implements SearchHandler {
     
     SearchQuery searchQuery = new SearchQuery.Builder(
             "Allows you to search for RadiologyReport's by from date, to date and principal results interpreter")
-                    .withOptionalParameters(REQUEST_PARAM_DATE_FROM, REQUEST_PARAM_DATE_TO,
-                        REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER, REQUEST_PARAM_TOTAL_COUNT)
+                    .withOptionalParameters(RestConstants.REQUEST_PROPERTY_FOR_INCLUDE_ALL, REQUEST_PARAM_DATE_FROM,
+                        REQUEST_PARAM_DATE_TO, REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER, REQUEST_PARAM_TOTAL_COUNT)
                     .build();
     
     private final SearchConfig searchConfig =
@@ -65,9 +65,10 @@ public class RadiologyReportSearchHandler implements SearchHandler {
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search()
+     * @should return all radiology reports (including discontinued) matching the search query if include all is set
      * @should return all radiology reports within given date range if date to and date from are specified
-     * @should return all radiology reports with report date after or equal to from date if only date from was specified
-     * @should return all radiology reports with report date before or equal to to date if only date to was specified
+     * @should return all radiology reports with report date after or equal to from date if only date from is specified
+     * @should return all radiology reports with report date before or equal to to date if only date to is specified
      * @should return empty search result if no report is in date range
      * @should return all radiology reports for given principal results interpreter
      * @should return empty search result if no report exists for principal results interpreter
@@ -102,11 +103,19 @@ public class RadiologyReportSearchHandler implements SearchHandler {
             }
         }
         
-        final RadiologyReportSearchCriteria radiologyReportSearchCriteria =
-                new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
-                        .withToDate(toDate)
-                        .withPrincipalResultsInterpreter(principalResultsInterpreter)
-                        .build();
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria;
+        if (context.getIncludeAll()) {
+            radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
+                    .withToDate(toDate)
+                    .withPrincipalResultsInterpreter(principalResultsInterpreter)
+                    .includeDiscontinued()
+                    .build();
+        } else {
+            radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
+                    .withToDate(toDate)
+                    .withPrincipalResultsInterpreter(principalResultsInterpreter)
+                    .build();
+        }
         
         final List<RadiologyReport> result = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
         
