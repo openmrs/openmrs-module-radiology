@@ -33,7 +33,6 @@
 				<property name="radiologyStudyService" ref="radiologyStudyService"></property>
 				<property name="orderService" ref="orderService"></property>
 				<property name="encounterService" ref="encounterService"></property>
-				<property name="emrEncounterService" ref="emrEncounterService"></property>
 				<property name="radiologyProperties" ref="radiologyProperties"></property>
 			</bean>
 		</property>
