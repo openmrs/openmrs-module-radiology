@@ -35,18 +35,17 @@ import org.openmrs.Encounter;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
-import org.openmrs.Visit;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
-import org.openmrs.api.VisitService;
 import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.study.RadiologyStudy;
+import org.openmrs.parameter.EncounterSearchCriteriaBuilder;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -68,10 +67,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     private static final int PATIENT_ID_WITH_FIVE_RADIOLOGY_ORDERS = 70022;
     
-    private static final int PATIENT_ID_WITH_ONE_RADIOLOGY_ORDER_AND_ACTIVE_VISIT = 70055;
-    
-    private static final int PATIENT_ID_WITH_NO_RADIOLOGY_ORDER_AND_NO_EXISTIG_ENCOUNTER_AND_ACTIVE_VISIT = 70033;
-    
     private static final int EXISTING_RADIOLOGY_ORDER_ID = 2001;
     
     private static final String EXISTING_RADIOLOGY_ORDER_UUID = "44f24d7e-ebbd-4500-bfba-1db19561ca04";
@@ -82,9 +77,7 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     private static final int CONCEPT_ID_FOR_FRACTURE = 178;
     
-    private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 4;
-    
-    private static final int RADIOLOGY_ORDER_WITH_ENCOUNTER_AND_ACTIVE_VISIT = 2009;
+    private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 3;
     
     @Autowired
     private PatientService patientService;
@@ -107,9 +100,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     @Autowired
     private RadiologyOrderService radiologyOrderService;
-    
-    @Autowired
-    private VisitService visitService;
     
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -186,91 +176,26 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
-     * @verifies create radiology order encounter with orderer and attached to existing active visit if patient has active
-     *           visit
+     * @verifies create radiology order encounter
      */
     @Test
-    public void
-            placeRadiologyOrder_shouldCreateRadiologyOrderEncounterWithOrdererAndAttachedToExistingActiveVisitIfPatientHasActiveVisit()
-                    throws Exception {
-        
+    public void placeRadiologyOrder_shouldCreateRadiologyOrderEncounter() throws Exception {
         RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
-        radiologyOrder.setPatient(
-            patientService.getPatient(PATIENT_ID_WITH_NO_RADIOLOGY_ORDER_AND_NO_EXISTIG_ENCOUNTER_AND_ACTIVE_VISIT));
         
-        assertThat(encounterService.getEncountersByPatient(radiologyOrder.getPatient()), is(empty()));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient()), is(not(empty())));
-        Visit preExistingVisit = visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .get(0);
-        
+        EncounterSearchCriteriaBuilder encounterSearchCriteria =
+                new EncounterSearchCriteriaBuilder().setPatient(radiologyOrder.getPatient())
+                        .setProviders(Arrays.asList(radiologyOrder.getOrderer()));
+        List<Encounter> matchingEncounters =
+                encounterService.getEncounters(encounterSearchCriteria.createEncounterSearchCriteria());
+        assertThat(matchingEncounters, is(empty()));
         assertThat(radiologyOrder.getEncounter(), is(nullValue()));
         
         radiologyOrder = radiologyOrderService.placeRadiologyOrder(radiologyOrder);
         
-        Encounter encounter = radiologyOrder.getEncounter();
-        assertThat(encounter, is(not(nullValue())));
-        assertThat(encounter.getEncounterProviders()
-                .size(),
-            is(1));
-        assertThat(encounter.getEncounterProviders()
-                .iterator()
-                .next()
-                .getProvider(),
-            is(radiologyOrder.getOrderer()));
-        assertThat(encounterService.getEncountersByPatient(radiologyOrder.getPatient())
-                .size(),
-            is(1));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .size(),
-            is(1));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .get(0),
-            is(preExistingVisit));
-        assertThat(orderService.getAllOrdersByPatient(radiologyOrder.getPatient())
-                .size(),
-            is(1));
-    }
-    
-    /**
-     * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
-     * @verifies create radiology order encounter with orderer attached to new active visit if patient without active visit
-     */
-    @Test
-    public void
-            placeRadiologyOrder_shouldCreateRadiologyOrderEncounterWithOrdererAttachedToNewActiveVisitIfPatientWithoutActiveVisit()
-                    throws Exception {
-        RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
-        
-        assertThat(encounterService.getEncountersByPatient(radiologyOrder.getPatient()), is(empty()));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient()), is(empty()));
-        assertThat(radiologyOrder.getEncounter(), is(nullValue()));
-        
-        radiologyOrder = radiologyOrderService.placeRadiologyOrder(radiologyOrder);
-        
-        Encounter encounter = radiologyOrder.getEncounter();
-        assertThat(encounter, is(not(nullValue())));
-        assertThat(encounter.getEncounterProviders()
-                .size(),
-            is(1));
-        assertThat(encounter.getEncounterProviders()
-                .iterator()
-                .next()
-                .getProvider(),
-            is(radiologyOrder.getOrderer()));
-        assertThat(encounterService.getEncountersByPatient(radiologyOrder.getPatient())
-                .size(),
-            is(1));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .size(),
-            is(1));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .get(0)
-                .getEncounters(),
-            hasItem(encounter));
-        assertThat(orderService.getAllOrdersByPatient(radiologyOrder.getPatient())
-                .size(),
-            is(1));
-        
+        assertThat(radiologyOrder.getEncounter(), is(not(nullValue())));
+        matchingEncounters = encounterService.getEncounters(encounterSearchCriteria.createEncounterSearchCriteria());
+        assertThat(matchingEncounters, hasItem(radiologyOrder.getEncounter()));
+        assertThat(matchingEncounters.size(), is(1));
     }
     
     /**
@@ -361,94 +286,31 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
-     * @verifies create discontinuation order with encounter attached to existing active visit if patient has active visit
-     */
+    * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
+    * @verifies create radiology order encounter
+    */
     @Test
-    public void
-            discontinueRadiologyOrder_shouldCreateDiscontinuationOrderWithEncounterAttachedToExistingActiveVisitIfPatientHasActiveVisit()
-                    throws Exception {
-        Patient patient = patientService.getPatient(PATIENT_ID_WITH_ONE_RADIOLOGY_ORDER_AND_ACTIVE_VISIT);
+    public void discontinueRadiologyOrder_shouldCreateRadiologyOrderEncounter() throws Exception {
         
-        assertThat(visitService.getActiveVisitsByPatient(patient), is(not(empty())));
-        assertThat(visitService.getActiveVisitsByPatient(patient)
-                .get(0)
-                .getEncounters(),
-            is(not(empty())));
-        
-        RadiologyOrder radiologyOrder =
-                radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_ENCOUNTER_AND_ACTIVE_VISIT);
-        
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .size(),
-            is(1));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .get(0)
-                .getEncounters()
-                .size(),
-            is(1));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .get(0)
-                .getEncounters(),
-            hasItem(radiologyOrder.getEncounter()));
-        
-        String discontinueReason = "Wrong Procedure";
-        
-        assertThat(radiologyOrder.getPatient()
-                .getUuid(),
-            is(not(nullValue())));
-        Order discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrder,
-            radiologyOrder.getOrderer(), discontinueReason);
-        
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .size(),
-            is(1));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .get(0)
-                .getEncounters()
-                .size(),
-            is(2));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .get(0)
-                .getEncounters(),
-            hasItem(radiologyOrder.getEncounter()));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .get(0)
-                .getEncounters(),
-            hasItem(discontinuationOrder.getEncounter()));
-    }
-    
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
-     * @verifies create discontinuation order with encounter attached to new active visit if patient without active visit
-     */
-    @Test
-    public void
-            discontinueRadiologyOrder_shouldCreateDiscontinuationOrderWithEncounterAttachedToNewActiveVisitIfPatientWithoutActiveVisit()
-                    throws Exception {
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
-        
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient()), is(empty()));
-        
         radiologyOrder.getStudy()
                 .setPerformedStatus(null);
         String discontinueReason = "Wrong Procedure";
+        EncounterSearchCriteriaBuilder encounterSearchCriteria =
+                new EncounterSearchCriteriaBuilder().setPatient(radiologyOrder.getPatient())
+                        .setProviders(Arrays.asList(radiologyOrder.getOrderer()));
+        List<Encounter> matchingEncounters =
+                encounterService.getEncounters(encounterSearchCriteria.createEncounterSearchCriteria());
+        assertThat(matchingEncounters, hasItem(radiologyOrder.getEncounter()));
+        assertThat(matchingEncounters.size(), is(1));
         
         Order discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrder,
             radiologyOrder.getOrderer(), discontinueReason);
         
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .size(),
-            is(1));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .get(0)
-                .getEncounters()
-                .size(),
-            is(1));
-        assertThat(visitService.getActiveVisitsByPatient(radiologyOrder.getPatient())
-                .get(0)
-                .getEncounters(),
-            hasItem(discontinuationOrder.getEncounter()));
+        assertThat(discontinuationOrder.getEncounter(), is(not(nullValue())));
+        matchingEncounters = encounterService.getEncounters(encounterSearchCriteria.createEncounterSearchCriteria());
+        assertThat(matchingEncounters, hasItem(radiologyOrder.getEncounter()));
+        assertThat(matchingEncounters, hasItem(discontinuationOrder.getEncounter()));
     }
     
     /**
@@ -688,15 +550,9 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertThat(orderService.getAllOrdersByPatient(patientWithFiveRadiologyOrders)
                 .size(),
             is(1));
-        Patient patientWithOneRadiologyOrder =
-                patientService.getPatient(PATIENT_ID_WITH_ONE_RADIOLOGY_ORDER_AND_ACTIVE_VISIT);
-        assertThat(orderService.getAllOrdersByPatient(patientWithOneRadiologyOrder)
-                .size(),
-            is(1));
         List<Patient> allPatientsWithRadiologyOrders = new ArrayList<Patient>();
         allPatientsWithRadiologyOrders.add(patientWithTwoRadiologyOrders);
         allPatientsWithRadiologyOrders.add(patientWithFiveRadiologyOrders);
-        allPatientsWithRadiologyOrders.add(patientWithOneRadiologyOrder);
         
         List<RadiologyOrder> radiologyOrders =
                 radiologyOrderService.getRadiologyOrdersByPatients(allPatientsWithRadiologyOrders);

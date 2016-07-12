@@ -9,12 +9,8 @@
 package org.openmrs.module.radiology.order;
 
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.Encounter;
 import org.openmrs.Order;
 import org.openmrs.Patient;
@@ -23,16 +19,12 @@ import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderContext;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.impl.BaseOpenmrsService;
-import org.openmrs.module.emrapi.encounter.EmrEncounterService;
-import org.openmrs.module.emrapi.encounter.domain.EncounterTransaction;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.study.RadiologyStudyService;
 import org.springframework.transaction.annotation.Transactional;
 
 class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyOrderService {
     
-    
-    private static final Log log = LogFactory.getLog(RadiologyOrderServiceImpl.class);
     
     private RadiologyOrderDAO radiologyOrderDAO;
     
@@ -41,8 +33,6 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     private OrderService orderService;
     
     private EncounterService encounterService;
-    
-    private EmrEncounterService emrEncounterService;
     
     private RadiologyProperties radiologyProperties;
     
@@ -60,10 +50,6 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     
     public void setEncounterService(EncounterService encounterService) {
         this.encounterService = encounterService;
-    }
-    
-    public void setEmrEncounterService(EmrEncounterService emrEncounterService) {
-        this.emrEncounterService = emrEncounterService;
     }
     
     public void setRadiologyProperties(RadiologyProperties radiologyProperties) {
@@ -114,32 +100,16 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
      * @param provider the encounter provider
      * @param encounterDateTime the encounter date
      * @return radiology order encounter for given parameters
-     * @should create radiology order encounter attached to existing active visit given patient with
-     *         active visit
-     * @should create radiology order encounter attached to new active visit given patient without
-     *         active visit
+     * @should create radiology order encounter
      */
     @Transactional
     private Encounter saveRadiologyOrderEncounter(Patient patient, Provider provider, Date encounterDateTime) {
-        
-        final EncounterTransaction encounterTransaction = new EncounterTransaction();
-        encounterTransaction.setPatientUuid(patient.getUuid());
-        final EncounterTransaction.Provider encounterProvider = new EncounterTransaction.Provider();
-        encounterProvider.setEncounterRoleUuid(radiologyProperties.getRadiologyOrderingProviderEncounterRole()
-                .getUuid());
-        // sets the provider of the encounterprovider
-        encounterProvider.setUuid(provider.getUuid());
-        final Set<EncounterTransaction.Provider> encounterProviderSet = new HashSet<EncounterTransaction.Provider>();
-        encounterProviderSet.add(encounterProvider);
-        encounterTransaction.setProviders(encounterProviderSet);
-        encounterTransaction.setEncounterDateTime(encounterDateTime);
-        encounterTransaction.setVisitTypeUuid(this.radiologyProperties.getRadiologyVisitType()
-                .getUuid());
-        encounterTransaction.setEncounterTypeUuid(this.radiologyProperties.getRadiologyOrderEncounterType()
-                .getUuid());
-        
-        return this.encounterService.getEncounterByUuid(this.emrEncounterService.save(encounterTransaction)
-                .getEncounterUuid());
+        Encounter radiologyOrderEncounter = new Encounter();
+        radiologyOrderEncounter.setPatient(patient);
+        radiologyOrderEncounter.setProvider(radiologyProperties.getRadiologyOrderingProviderEncounterRole(), provider);
+        radiologyOrderEncounter.setEncounterDatetime(encounterDateTime);
+        radiologyOrderEncounter.setEncounterType(radiologyProperties.getRadiologyOrderEncounterType());
+        return encounterService.saveEncounter(radiologyOrderEncounter);
     }
     
     /**
@@ -176,7 +146,7 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
         }
         
         final Encounter encounter =
-                this.saveRadiologyOrderEncounter(radiologyOrderToDiscontinue.getPatient(), orderer, null);
+                this.saveRadiologyOrderEncounter(radiologyOrderToDiscontinue.getPatient(), orderer, new Date());
         
         return this.orderService.discontinueOrder(radiologyOrderToDiscontinue, nonCodedDiscontinueReason, null, orderer,
             encounter);
