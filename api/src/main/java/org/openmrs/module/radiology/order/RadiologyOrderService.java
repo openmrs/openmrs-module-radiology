@@ -38,9 +38,7 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @throws IllegalArgumentException if radiologyOrder.study is null
      * @throws IllegalArgumentException if radiologyOrder.study.modality is null
      * @should create new radiology order and study from given radiology order object
-     * @should create radiology order encounter with orderer and attached to existing active visit if patient has active
-     *         visit
-     * @should create radiology order encounter with orderer attached to new active visit if patient without active visit
+     * @should create radiology order encounter
      * @should throw illegal argument exception given null
      * @should throw illegal argument exception given existing radiology order
      * @should throw illegal argument exception if given radiology order has no study
@@ -62,8 +60,7 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @throws IllegalArgumentException if radiology order is completed
      * @throws IllegalArgumentException if provider is null
      * @should create discontinuation order which discontinues given radiology order that is not in progress or completed
-     * @should create discontinuation order with encounter attached to existing active visit if patient has active visit
-     * @should create discontinuation order with encounter attached to new active visit if patient without active visit
+     * @should create radiology order encounter
      * @should throw illegal argument exception if given radiology order is null
      * @should throw illegal argument exception if given radiology order with orderId null
      * @should throw illegal argument exception if given radiology order is discontinued

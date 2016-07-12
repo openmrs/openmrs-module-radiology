@@ -17,9 +17,7 @@
   <global_property property="radiology.radiologyCareSetting" property_value="6f0c9a92-6f24-11e3-af88-005056821db0" uuid="a3209d7c-ae4c-41a4-96de-876facd77226"/> <!--  set to uuid from CareSetting OUTPATIENT in openmrs core -->
   <global_property property="radiology.radiologyOrderingProviderEncounterRole" property_value="13fc9b4a-49ed-429c-9dde-ca005b387a3d" description="Radiology Ordering Provider Encounter Role UUID"/>
   <global_property property="radiology.radiologyOrderEncounterType" property_value="19db8c0d-3520-48f2-babd-77f2d450e5c7" description="Radiology Order Encounter Type UUID"/>
-  <global_property property="radiology.radiologyVisitType" property_value="fe898a34-1ade-11e1-9c71-00248140a5eb" description="Radiology Visit Type UUID"/>
   <global_property property="radiology.radiologyTestOrderType" property_value="dbdb9a9b-56ea-11e5-a47f-08002719a237" description="Radiology Test Order Type UUID"/>
-  <global_property property="emr.encounterMatcher" property_value="org.openmrs.module.radiology.RadiologyEncounterMatcher" description="Radiology Encounter Matcher"/>
 
   <encounter_type encounter_type_id="1001" name="Radiology Order Encounter Type" description="Ordering radiology exams" creator="1" date_created="2015-09-09 00:00:00.0" retired="false" uuid="19db8c0d-3520-48f2-babd-77f2d450e5c7"/>
   <encounter_role encounter_role_id="1001" name="Radiology Ordering Provider Encounter Role " description="Provider ordering tests, exams, drugs, ..." creator="1" retired="false" date_created="2015-09-09 14:00:00.0" uuid="13fc9b4a-49ed-429c-9dde-ca005b387a3d" />
@@ -30,9 +28,6 @@
   <!-- concept name and concept -->
   <concept concept_id="178" retired="false" datatype_id="4" class_id="4" is_set="false" creator="1" date_created="2004-01-01 00:00:00" changed_by="1" date_changed="2005-02-16 00:00:00" version="" uuid="1565b6e6-df81-11e4-98ec-08002798a7ad"/>
   <concept_name concept_id="178" name="FRACTURE" locale="en" creator="1" date_created="2004-01-01 00:00:00" concept_name_id="178" concept_name_type="FULLY_SPECIFIED" locale_preferred="1" voided="false" uuid="15736c16-df81-11e4-98ec-08002798a7ad"/>
-
-  <!-- visit type for radiology module -->
-  <visit_type visit_type_id="3" name="Radiology Order Visit" description="Visit type for radiology orders" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="fe898a34-1ade-11e1-9c71-00248140a5eb"/>
 
   <!-- radiology order type -->
   <order_type order_type_id="5" name="Radiology Order" java_class_name="org.openmrs.module.radiology.order.RadiologyOrder" description="Order type for radiology exams" creator="1" date_created="2015-09-09" retired="0" uuid="dbdb9a9b-56ea-11e5-a47f-08002719a237"/>
@@ -56,14 +51,6 @@
   <person_name person_name_id="2" preferred="true" person_id="70021" given_name="John" middle_name="Francis" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="0f1f7d08-076b-4fc6-acac-4bb91515141e"/>
   <patient patient_id="70021" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
   <patient_identifier patient_identifier_id="1" patient_id="70021" identifier="4321" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="1ac98ec8-e9d9-4626-998c-c795c2f0aa9f"/>
-  
-  <!-- patient with no radiology order and visits -->
-  <person person_id="70044" gender="M" birthdate="1983-04-13" dead="false" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid=""/>
-  <person_name person_name_id="3" preferred="true" person_id="70044" given_name="Peter" family_name="Peterson" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="f58d1689-f5ac-11e5-b84b-08002719a237" />
-  <patient patient_id="70044" creator="1" date_created="2015-01-01 00:00:00.0" voided="false"/>
-  <patient_identifier patient_identifier_id="4" patient_id="70044" identifier="1237" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="fd452850-f5ac-11e5-b84b-08002719a237"/>
-  <visit visit_id="3002" patient_id="70044" visit_type_id="3" date_started="2006-01-01 02:00:00.0" creator="1" date_created="2006-01-02 00:00:00.0" voided="0" uuid="5b7ba73f-f5a3-11e5-b84b-08002719a237" />
-  <visit visit_id="3003" patient_id="70044" visit_type_id="3" date_started="2006-01-01 02:00:00.0" creator="1" date_created="2006-01-02 00:00:00.0" voided="0" uuid="c83e8ef9-f5aa-11e5-b84b-08002719a237" />
 
   <!-- radiology orders with study -->
   <encounter encounter_id="2001" encounter_type="1001" patient_id="70021" location_id="1" form_id="1" encounter_datetime="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" uuid="6849c394-2c58-49d9-b928-215a75a90959"/>
