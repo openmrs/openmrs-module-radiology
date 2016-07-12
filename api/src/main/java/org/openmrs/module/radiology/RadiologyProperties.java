@@ -8,21 +8,44 @@
  */
 package org.openmrs.module.radiology;
 
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.CareSetting;
 import org.openmrs.ConceptClass;
 import org.openmrs.EncounterRole;
 import org.openmrs.EncounterType;
 import org.openmrs.OrderType;
 import org.openmrs.VisitType;
-import org.openmrs.module.emrapi.utils.ModuleProperties;
+import org.openmrs.api.AdministrationService;
+import org.openmrs.api.ConceptService;
+import org.openmrs.api.EncounterService;
+import org.openmrs.api.OrderService;
+import org.openmrs.api.VisitService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
 
 /**
  * Properties, mostly configured via GPs for this module.
  */
 @Component
-public class RadiologyProperties extends ModuleProperties {
+public class RadiologyProperties {
     
+    
+    @Autowired
+    @Qualifier("adminService")
+    private AdministrationService administrationService;
+    
+    @Autowired
+    private OrderService orderService;
+    
+    @Autowired
+    private ConceptService conceptService;
+    
+    @Autowired
+    private EncounterService encounterService;
+    
+    @Autowired
+    private VisitService visitService;
     
     /**
      * Return DICOM UID component used to identify the org root.
@@ -96,8 +119,8 @@ public class RadiologyProperties extends ModuleProperties {
      * @should throw illegal state exception if radiology care setting cannot be found
      */
     public CareSetting getRadiologyCareSetting() {
-        final String radiologyCareSettingUuid = getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING, true);
-        final CareSetting result = orderService.getCareSettingByUuid(radiologyCareSettingUuid);
+        final CareSetting result =
+                orderService.getCareSettingByUuid(getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CARE_SETTING, true));
         if (result == null) {
             throw new IllegalStateException(
                     "No existing care setting for uuid: " + RadiologyConstants.GP_RADIOLOGY_CARE_SETTING);
@@ -113,7 +136,7 @@ public class RadiologyProperties extends ModuleProperties {
      * @should throw illegal state exception for non existing radiology test order type
      */
     public OrderType getRadiologyTestOrderType() {
-        return getOrderTypeByGlobalProperty(RadiologyConstants.GP_RADIOLOGY_TEST_ORDER_TYPE);
+        return orderService.getOrderTypeByUuid(getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_TEST_ORDER_TYPE, true));
     }
     
     /**
@@ -124,7 +147,8 @@ public class RadiologyProperties extends ModuleProperties {
      * @should throw illegal state exception for non existing radiology encounter type
      */
     public EncounterType getRadiologyOrderEncounterType() {
-        return getEncounterTypeByGlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDER_ENCOUNTER_TYPE);
+        return encounterService
+                .getEncounterTypeByUuid(getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDER_ENCOUNTER_TYPE, true));
     }
     
     /**
@@ -135,7 +159,8 @@ public class RadiologyProperties extends ModuleProperties {
      * @should throw illegal state exception for non existing ordering provider encounter role
      */
     public EncounterRole getRadiologyOrderingProviderEncounterRole() {
-        return getEncounterRoleByGlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDERING_PROVIDER_ENCOUNTER_ROLE);
+        return encounterService.getEncounterRoleByUuid(
+            getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDERING_PROVIDER_ENCOUNTER_ROLE, true));
     }
     
     /**
@@ -146,7 +171,7 @@ public class RadiologyProperties extends ModuleProperties {
      * @should throw illegal state exception for non existing radiology visit type
      */
     public VisitType getRadiologyVisitType() {
-        return getVisitTypeByGlobalProperty(RadiologyConstants.GP_RADIOLOGY_VISIT_TYPE);
+        return visitService.getVisitTypeByUuid(getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_VISIT_TYPE, true));
     }
     
     /**
@@ -184,6 +209,25 @@ public class RadiologyProperties extends ModuleProperties {
             result = result + fetchedConceptClass.getName() + ",";
         }
         result = result.substring(0, result.length() - 1);
+        return result;
+    }
+    
+    /**
+     * Gets a global property by its name.
+     * 
+     * @param globalPropertyName the name of the requested global property
+     * @param required indicates if the global property must be configured
+     * @return value of global property for given name
+     * @throws IllegalStateException if global property cannot be found
+     * @should return global property given valid global property name
+     * @should return null given non required and non configured global property
+     * @should throw illegal state exception given required non configured global property
+     */
+    private String getGlobalProperty(String globalPropertyName, boolean required) {
+        final String result = administrationService.getGlobalProperty(globalPropertyName);
+        if (required && StringUtils.isBlank(result)) {
+            throw new IllegalStateException("Configuration required: " + globalPropertyName);
+        }
         return result;
     }
 }

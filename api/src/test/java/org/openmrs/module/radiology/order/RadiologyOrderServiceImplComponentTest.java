@@ -10,7 +10,7 @@ package org.openmrs.module.radiology.order;
 
 import static org.hamcrest.collection.IsEmptyCollection.empty;
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
+import static org.hamcrest.core.IsCollectionContaining.hasItem;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
@@ -29,15 +29,13 @@ import org.junit.rules.ExpectedException;
 import org.openmrs.Encounter;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
-import org.openmrs.Visit;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
-import org.openmrs.api.VisitService;
-import org.openmrs.module.emrapi.encounter.EmrEncounterService;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.study.RadiologyStudyService;
+import org.openmrs.parameter.EncounterSearchCriteriaBuilder;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -50,9 +48,7 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
     private static final String TEST_DATASET =
             "org/openmrs/module/radiology/include/RadiologyOrderServiceComponentTestDataset.xml";
     
-    private static final int PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER_AND_NO_ACTIVE_VISIT = 70011;
-    
-    private static final int PATIENT_ID_WITH_NO_RADIOLOGY_ORDER_AND_NO_EXISTIG_ENCOUNTER_AND_ACTIVE_VISIT = 70033;
+    private static final int PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER = 70011;
     
     private static final String RADIOLOGY_ORDER_PROVIDER_UUID = "c2299800-cca9-11e0-9572-0800200c9a66";
     
@@ -61,12 +57,6 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
     
     @Autowired
     private EncounterService encounterService;
-    
-    @Autowired
-    private VisitService visitService;
-    
-    @Autowired
-    private EmrEncounterService emrEncounterService;
     
     @Autowired
     private ProviderService providerService;
@@ -101,9 +91,6 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
             Field encounterServiceField = RadiologyOrderServiceImpl.class.getDeclaredField("encounterService");
             encounterServiceField.setAccessible(true);
             encounterServiceField.set(radiologyOrderServiceImpl, encounterService);
-            Field emrEncounterServiceField = RadiologyOrderServiceImpl.class.getDeclaredField("emrEncounterService");
-            emrEncounterServiceField.setAccessible(true);
-            emrEncounterServiceField.set(radiologyOrderServiceImpl, emrEncounterService);
             Field radiologyPropertiesField = RadiologyOrderServiceImpl.class.getDeclaredField("radiologyProperties");
             radiologyPropertiesField.setAccessible(true);
             radiologyPropertiesField.set(radiologyOrderServiceImpl, radiologyProperties);
@@ -117,76 +104,32 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
     }
     
     /**
-     * @see RadiologyOrderServiceImpl#saveRadiologyOrderEncounter(Patient,Provider,Date)
-     * @verifies create radiology order encounter attached to existing active visit given patient with active visit
-     */
+    * @see RadiologyOrderServiceImpl#saveRadiologyOrderEncounter(Patient,Provider,Date)
+    * @verifies create radiology order encounter
+    */
     @Test
-    public void
-            saveRadiologyOrderEncounter_shouldCreateRadiologyOrderEncounterAttachedToExistingActiveVisitGivenPatientWithActiveVisit()
-                    throws Exception {
+    public void saveRadiologyOrderEncounter_shouldCreateRadiologyOrderEncounter() throws Exception {
         // given
-        Patient patient =
-                patientService.getPatient(PATIENT_ID_WITH_NO_RADIOLOGY_ORDER_AND_NO_EXISTIG_ENCOUNTER_AND_ACTIVE_VISIT);
+        Patient patient = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER);
         Provider provider = providerService.getProviderByUuid(RADIOLOGY_ORDER_PROVIDER_UUID);
         Date encounterDatetime = new GregorianCalendar(2010, Calendar.OCTOBER, 10).getTime();
         
-        List<Visit> preExistingVisits = visitService.getActiveVisitsByPatient(patient);
-        assertThat(encounterService.getEncountersByPatient(patient), is(empty()));
-        assertThat(visitService.getActiveVisitsByPatient(patient), is(not(empty())));
+        EncounterSearchCriteriaBuilder encounterSearchCriteria = new EncounterSearchCriteriaBuilder().setPatient(patient);
+        List<Encounter> matchingEncounters =
+                encounterService.getEncounters(encounterSearchCriteria.createEncounterSearchCriteria());
+        assertThat(matchingEncounters, is(empty()));
         
         Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyOrderServiceImpl,
             new Object[] { patient, provider, encounterDatetime });
         
         assertNotNull(encounter);
-        assertThat(encounter.getPatient(), is(patient));
-        assertThat(encounter.getProvidersByRole(radiologyProperties.getRadiologyOrderingProviderEncounterRole())
-                .size(),
-            is(1));
-        assertThat(encounter.getProvidersByRole(radiologyProperties.getRadiologyOrderingProviderEncounterRole())
-                .contains(provider),
-            is(true));
-        assertThat(encounter.getEncounterDatetime(), is(encounterDatetime));
-        assertThat(encounter.getVisit()
-                .getVisitType(),
-            is(radiologyProperties.getRadiologyVisitType()));
-        assertThat(encounter.getEncounterType(), is(radiologyProperties.getRadiologyOrderEncounterType()));
-        assertThat(encounterService.getEncountersByPatient(patient), is(Arrays.asList(encounter)));
-        assertThat(visitService.getActiveVisitsByPatient(patient), is(preExistingVisits));
-    }
-    
-    /**
-     * @see RadiologyOrderServiceImpl#saveRadiologyOrderEncounter(Patient,Provider,Date)
-     * @verifies create radiology order encounter attached to new active visit given patient without active visit
-     */
-    @Test
-    public void
-            saveRadiologyOrderEncounter_shouldCreateRadiologyOrderEncounterAttachedToNewActiveVisitGivenPatientWithoutActiveVisit()
-                    throws Exception {
-        // given
-        Patient patient = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER_AND_NO_ACTIVE_VISIT);
-        Provider provider = providerService.getProviderByUuid(RADIOLOGY_ORDER_PROVIDER_UUID);
-        Date encounterDatetime = new GregorianCalendar(2010, Calendar.OCTOBER, 10).getTime();
-        
-        assertThat(encounterService.getEncountersByPatient(patient), is(empty()));
-        assertThat(visitService.getActiveVisitsByPatient(patient), is(empty()));
-        
-        Encounter encounter = (Encounter) saveRadiologyOrderEncounterMethod.invoke(radiologyOrderServiceImpl,
-            new Object[] { patient, provider, encounterDatetime });
-        
-        assertNotNull(encounter);
-        assertThat(encounter.getPatient(), is(patient));
-        assertThat(encounter.getProvidersByRole(radiologyProperties.getRadiologyOrderingProviderEncounterRole())
-                .size(),
-            is(1));
-        assertThat(encounter.getProvidersByRole(radiologyProperties.getRadiologyOrderingProviderEncounterRole())
-                .contains(provider),
-            is(true));
-        assertThat(encounter.getEncounterDatetime(), is(encounterDatetime));
-        assertThat(encounter.getVisit()
-                .getVisitType(),
-            is(radiologyProperties.getRadiologyVisitType()));
-        assertThat(encounter.getEncounterType(), is(radiologyProperties.getRadiologyOrderEncounterType()));
-        assertThat(encounterService.getEncountersByPatient(patient), is(Arrays.asList(encounter)));
-        assertThat(visitService.getVisitsByPatient(patient), is(not(empty())));
+        encounterSearchCriteria = new EncounterSearchCriteriaBuilder().setPatient(patient)
+                .setProviders(Arrays.asList(provider))
+                .setFromDate(encounterDatetime)
+                .setToDate(encounterDatetime)
+                .setEncounterTypes(Arrays.asList(radiologyProperties.getRadiologyOrderEncounterType()));
+        matchingEncounters = encounterService.getEncounters(encounterSearchCriteria.createEncounterSearchCriteria());
+        assertThat(matchingEncounters, hasItem(encounter));
+        assertThat(matchingEncounters.size(), is(1));
     }
 }

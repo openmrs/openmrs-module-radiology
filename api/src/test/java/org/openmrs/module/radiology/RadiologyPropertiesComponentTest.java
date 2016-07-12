@@ -9,11 +9,15 @@
 package org.openmrs.module.radiology;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertThat;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -59,6 +63,16 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
+    
+    private Method getGlobalPropertyMethod = null;
+    
+    @Before
+    public void setUp() throws Exception {
+        
+        getGlobalPropertyMethod = RadiologyProperties.class.getDeclaredMethod("getGlobalProperty",
+            new Class[] { String.class, boolean.class });
+        getGlobalPropertyMethod.setAccessible(true);
+    }
     
     /**
      * @see RadiologyProperties#getDicomUIDOrgRoot()
@@ -482,5 +496,43 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
         expectedException.expectMessage("Property radiology.radiologyConceptClasses contains UUID");
         
         radiologyProperties.getRadiologyConceptClassNames();
+    }
+    
+    /**
+    * @see RadiologyProperties#getGlobalProperty(String)
+    * @verifies return global property given valid global property name
+    */
+    @Test
+    public void getGlobalProperty_shouldReturnGlobalPropertyGivenValidGlobalPropertyName() throws Exception {
+        administrationService.saveGlobalProperty(
+            new GlobalProperty(RadiologyConstants.GP_DICOM_UID_ORG_ROOT, "1.2.826.0.1.3680043.8.2186"));
+        
+        String globalProperty = (String) getGlobalPropertyMethod.invoke(radiologyProperties,
+            new Object[] { RadiologyConstants.GP_DICOM_UID_ORG_ROOT, true });
+        assertThat(globalProperty, is("1.2.826.0.1.3680043.8.2186"));
+    }
+    
+    /**
+    * @see RadiologyProperties#getGlobalProperty(String,boolean)
+    * @verifies return null given non required and non configured global property
+    */
+    @Test
+    public void getGlobalProperty_shouldReturnNullGivenNonRequiredAndNonConfiguredGlobalProperty() throws Exception {
+        
+        String globalProperty = (String) getGlobalPropertyMethod.invoke(radiologyProperties,
+            new Object[] { RadiologyConstants.GP_DICOM_UID_ORG_ROOT, false });
+        assertThat(globalProperty, is(nullValue()));
+    }
+    
+    /**
+    * @see RadiologyProperties#getGlobalProperty(String)
+    * @verifies throw illegal state exception given required non configured global property
+    */
+    @Test
+    public void getGlobalProperty_shouldThrowIllegalStateExceptionGivenRequiredNonConfiguredGlobalProperty()
+            throws Exception {
+        expectedException.expect(InvocationTargetException.class);
+        
+        getGlobalPropertyMethod.invoke(radiologyProperties, new Object[] { RadiologyConstants.GP_DICOM_UID_ORG_ROOT, true });
     }
 }
