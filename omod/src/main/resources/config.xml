@@ -21,8 +21,6 @@
 	<require_database_version>1.0.0</require_database_version>
 	<!-- Required Modules -->
 	<require_modules>
-		<require_module version="${emr-apiVersion}">org.openmrs.module.emrapi
-		</require_module>
 		<require_module version="${openmrs-legacyui-version}">org.openmrs.module.legacyui
 		</require_module>
 		<require_module version="${openmrs-webservicesrest-version}">org.openmrs.module.webservices.rest
