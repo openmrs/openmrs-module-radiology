@@ -1,6 +1,9 @@
 <%@ include file="/WEB-INF/view/module/radiology/template/include.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeDatatablesWithDefaults.jsp"%>
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/moment/moment-with-locales.min.js" />
+<openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/css/daterangepicker.min.css" />
+<openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/js/jquery.daterangepicker.min.js" />
 
 <script type="text/javascript">
   // configure current locale as momentjs default, fall back to "en" if locale not found
@@ -10,6 +13,8 @@
   $j(document)
           .ready(
                   function() {
+                    var fromDate = $j('#reportsTabFromDateFilter');
+                    var toDate = $j('#reportsTabToDateFilter');
                     var find = $j('#reportsTabFind');
                     var clearResults = $j('a#reportsTabClearFilters');
 
@@ -31,6 +36,8 @@
                                             startIndex: data.start,
                                             limit: data.length,
                                             v: "full",
+                                            fromdate: fromDate.val(),
+                                            todate: toDate.val(),
                                             totalCount: true,
                                           };
                                         },
@@ -130,16 +137,45 @@
                       radiologyReportsTable.ajax.reload();
                     });
 
+                    $j('#reportsTabDateRangePicker').dateRangePicker({
+                      showShortcuts: true,
+                      shortcuts : {
+                    	'prev-days': [3,5,7],
+                    	'prev': ['week','month'],
+                    	'next-days':null,
+                    	'next':null
+                      },
+                      separator: ' <spring:message code="radiology.dashboard.tabs.reports.filters.date.to"/> ',
+                      getValue: function() {
+                      if (fromDate.val() && toDate.val())
+                        return fromDate.val() + ' <spring:message code="radiology.dashboard.tabs.reports.filters.date.to"/> ' + toDate.val();
+                      else
+                        return '';
+                      },
+                      setValue: function(s, s1, s2) {
+                        fromDate.val(s1);
+                        toDate.val(s2);
+                      }
+                    });
                   });
 </script>
 
 <br>
 <span class="boxHeader"> <b><spring:message code="radiology.report.boxheader" /></b> <a id="reportsTabClearFilters"
-  href="#" style="float: right"> <spring:message code="radiology.clearResults" />
+	href="#" style="float: right"> <spring:message code="radiology.dashboard.tabs.filters.clearFilters" />
 </a>
 </span>
 <div class="box">
   <table id="reportsTabTableFilters" cellspacing="10">
+    <tr>
+      <form>
+        <td id="reportsTabDateRangePicker">
+          <label for="reportsTabFromDateFilter"><spring:message code="radiology.dashboard.tabs.reports.filters.date" /> <spring:message code="radiology.dashboard.tabs.reports.filters.date.from" /></label> <input type="text" id="reportsTabFromDateFilter" />
+          <label for="reportsTabToDateFilter"><spring:message code="radiology.dashboard.tabs.reports.filters.date.to" /></label> <input type="text" id="reportsTabToDateFilter" />
+		</td>
+        <td><input id="reportsTabFind" type="button" value="<spring:message code="radiology.dashboard.tabs.filters.find"/>" /></td>
+      </form>
+	</tr>
   </table>
   <br>
   <div>
@@ -158,4 +194,3 @@
     </table>
   </div>
 </div>
-<br />

@@ -1,11 +1,9 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
+<c:set var="DO_NOT_INCLUDE_JQUERY" value="true" />
+<%@ include file="/WEB-INF/template/header.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
 
 <openmrs:require privilege="View Orders" otherwise="/login.htm" redirect="/module/radiology/radiologyDashboard.form" />
-
-<%@ include file="/WEB-INF/template/header.jsp"%>
-
-<openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui-1.7.2.custom.min.js" />
-<openmrs:htmlInclude file="/moduleResources/radiology/css/radiology.css" />
 
 <h2>
   <spring:message code="radiology.dashboard.title" />
@@ -14,10 +12,11 @@
 <script type="text/javascript">
   var timeOut = null;
 
-  <openmrs:authentication>var
-  userId = "${authenticatedUser.userId}";
+  <openmrs:authentication>
+  var userId = "${authenticatedUser.userId}";
   </openmrs:authentication>
 
+  var $j = jQuery.noConflict();  
   //initTabs
   $j(document).ready(
           function() {
