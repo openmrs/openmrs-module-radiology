@@ -1,11 +1,38 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/template/header.jsp"%>
+<openmrs:htmlInclude file="/moduleResources/radiology/scripts/tinymce/tinymce.min.js" />
 
 <%@ include file="/WEB-INF/view/module/radiology/localHeader.jsp"%>
 
-<openmrs:htmlInclude file="/moduleResources/radiology/scripts/tinymce/tinymce.min.js" />
 <script type="text/javascript">
   var $j = jQuery.noConflict();
+
+  function showUnclaimRadiologyReportDialog() {
+    var dialogDiv = $j("<div></div>").html('<spring:message code="radiology.report.form.unclaim.dialog.message"/>');
+    dialogDiv.dialog({
+      resizable: false,
+      width:'auto',
+      height:'auto',
+      title: '<spring:message code="radiology.report.form.unclaim.dialog.title"/>',
+      modal: true,
+      buttons: {
+        '<spring:message code="radiology.report.form.unclaim.dialog.button.ok"/>': function() {
+          $j(this).dialog("close");
+          submitUnclaimRadiologyReport();
+        },
+        '<spring:message code="radiology.report.form.unclaim.dialog.button.cancel"/>': function() {
+          $j(this).dialog("close");
+        }
+      }
+    });
+  }
+  
+  function submitUnclaimRadiologyReport() {
+    var unclaimRadiologyReport = $j("<input>").attr("type","hidden").attr("name", "unclaimRadiologyReport").val("Unclaim");
+    $j("#radiologyReportFormId").append(unclaimRadiologyReport);
+    $j("#radiologyReportFormId").submit()
+  }
+  
   $j(document).ready(function() {
     var reportBody = $j("#reportBodyId");
 
@@ -21,7 +48,16 @@
       menubar: "edit,format",
       elementpath: false,
     });
+
+    $j("#unclaimRadiologyReportButtonId").click(function() {
+      if(tinymce.activeEditor.getContent() != "") {
+        showUnclaimRadiologyReportDialog();
+      } else {
+        submitUnclaimRadiologyReport();
+      }
+    }); 
   });
+  
 </script>
 
 <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${order.patient.patientId}" />
@@ -40,7 +76,7 @@
 </spring:hasBindErrors>
 <span class="boxHeader"> <b><spring:message code="radiology.radiologyReportTitle" /></b>
 </span>
-<form:form modelAttribute="radiologyReport" method="post">
+<form:form id="radiologyReportFormId" modelAttribute="radiologyReport" method="post">
   <div class="box">
     <table>
       <tr>
@@ -113,10 +149,9 @@
     <br>
     <c:if test="${radiologyReport.reportStatus != 'COMPLETED'}">
       <c:if test="${radiologyReport.reportStatus != 'DISCONTINUED'}">
-        <input type="submit" value="<spring:message code="radiology.radiologyReportUnclaim"/>" name="unclaimRadiologyReport" />
+        <input type="button" value="<spring:message code="radiology.radiologyReportUnclaim"/>" id="unclaimRadiologyReportButtonId"/>
         <input type="submit" value="<spring:message code="radiology.radiologyReportSave"/>" name="saveRadiologyReport" />
-        <input type="submit" value="<spring:message code="radiology.radiologyReportComplete"/>"
-          name="completeRadiologyReport" />
+        <input type="submit" value="<spring:message code="radiology.radiologyReportComplete"/>" name="completeRadiologyReport" />
       </c:if>
     </c:if>
   </div>
