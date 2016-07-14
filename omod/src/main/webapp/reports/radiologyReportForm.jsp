@@ -1,5 +1,8 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
+<c:set var="DO_NOT_INCLUDE_JQUERY" value="true" />
 <%@ include file="/WEB-INF/template/header.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
+
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/tinymce/tinymce.min.js" />
 
 <%@ include file="/WEB-INF/view/module/radiology/localHeader.jsp"%>
