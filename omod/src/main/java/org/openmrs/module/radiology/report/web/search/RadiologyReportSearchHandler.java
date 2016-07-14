@@ -10,6 +10,7 @@ import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportSearchCriteria;
 import org.openmrs.module.radiology.report.RadiologyReportService;
+import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -40,6 +41,8 @@ public class RadiologyReportSearchHandler implements SearchHandler {
     
     public static final String REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER = "principalResultsInterpreter";
     
+    public static final String REQUEST_PARAM_STATUS = "status";
+    
     public static final String REQUEST_PARAM_TOTAL_COUNT = "totalCount";
     
     @Autowired
@@ -48,7 +51,8 @@ public class RadiologyReportSearchHandler implements SearchHandler {
     SearchQuery searchQuery = new SearchQuery.Builder(
             "Allows you to search for RadiologyReport's by from date, to date and principal results interpreter")
                     .withOptionalParameters(RestConstants.REQUEST_PROPERTY_FOR_INCLUDE_ALL, REQUEST_PARAM_DATE_FROM,
-                        REQUEST_PARAM_DATE_TO, REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER, REQUEST_PARAM_TOTAL_COUNT)
+                        REQUEST_PARAM_DATE_TO, REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER, REQUEST_PARAM_STATUS,
+                        REQUEST_PARAM_TOTAL_COUNT)
                     .build();
     
     private final SearchConfig searchConfig =
@@ -65,6 +69,7 @@ public class RadiologyReportSearchHandler implements SearchHandler {
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search()
+     * @throws IllegalArgumentException if report status doesn't exist 
      * @should return all radiology reports (including discontinued) matching the search query if include all is set
      * @should return all radiology reports within given date range if date to and date from are specified
      * @should return all radiology reports with report date after or equal to from date if only date from is specified
@@ -73,6 +78,9 @@ public class RadiologyReportSearchHandler implements SearchHandler {
      * @should return all radiology reports for given principal results interpreter
      * @should return empty search result if no report exists for principal results interpreter
      * @should return empty search result if principal results interpreter cannot be found
+     * @should return all radiology reports with given status
+     * @should return empty search result if no report exists for given status
+     * @should throw illegal argument exception if report status doesn't exist
      * @should return all radiology reports matching the search query and totalCount if requested
      */
     @Override
@@ -84,10 +92,13 @@ public class RadiologyReportSearchHandler implements SearchHandler {
                 .getParameter(REQUEST_PARAM_DATE_TO);
         final String principalResultsInterpreterUuid = context.getRequest()
                 .getParameter(REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER);
+        final String statusString = context.getRequest()
+                .getParameter(REQUEST_PARAM_STATUS);
         
         Date fromDate = null;
         Date toDate = null;
         Provider principalResultsInterpreter = null;
+        RadiologyReportStatus status = null;
         
         if (StringUtils.isNotBlank(fromDateString)) {
             fromDate = (Date) ConversionUtil.convert(fromDateString, java.util.Date.class);
@@ -102,6 +113,9 @@ public class RadiologyReportSearchHandler implements SearchHandler {
                 return new EmptySearchResult();
             }
         }
+        if (StringUtils.isNotBlank(statusString)) {
+            status = RadiologyReportStatus.valueOf(statusString);
+        }
         
         RadiologyReportSearchCriteria radiologyReportSearchCriteria;
         if (context.getIncludeAll()) {
@@ -109,11 +123,13 @@ public class RadiologyReportSearchHandler implements SearchHandler {
                     .withToDate(toDate)
                     .withPrincipalResultsInterpreter(principalResultsInterpreter)
                     .includeDiscontinued()
+                    .withStatus(status)
                     .build();
         } else {
             radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
                     .withToDate(toDate)
                     .withPrincipalResultsInterpreter(principalResultsInterpreter)
+                    .withStatus(status)
                     .build();
         }
         

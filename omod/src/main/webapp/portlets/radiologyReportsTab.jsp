@@ -15,6 +15,7 @@
                   function() {
                     var fromDate = $j('#reportsTabFromDateFilter');
                     var toDate = $j('#reportsTabToDateFilter');
+                    var status = $j('#reportsTabStatusSelect');
                     var find = $j('#reportsTabFind');
                     var clearResults = $j('a#reportsTabClearFilters');
 
@@ -38,6 +39,7 @@
                                             v: "full",
                                             fromdate: fromDate.val(),
                                             todate: toDate.val(),
+                                            status: status.val(),
                                             totalCount: true,
                                           };
                                         },
@@ -169,9 +171,17 @@
   <table id="reportsTabTableFilters" cellspacing="10">
     <tr>
       <form>
-        <td id="reportsTabDateRangePicker">
-          <label for="reportsTabFromDateFilter"><spring:message code="radiology.dashboard.tabs.reports.filters.date" /> <spring:message code="radiology.dashboard.tabs.reports.filters.date.from" /></label> <input type="text" id="reportsTabFromDateFilter" />
-          <label for="reportsTabToDateFilter"><spring:message code="radiology.dashboard.tabs.reports.filters.date.to" /></label> <input type="text" id="reportsTabToDateFilter" />
+        <td>
+          <span id="reportsTabDateRangePicker">
+            <label for="reportsTabFromDateFilter"><spring:message code="radiology.dashboard.tabs.reports.filters.date" /> <spring:message code="radiology.dashboard.tabs.reports.filters.date.from" /></label> <input type="text" id="reportsTabFromDateFilter" />
+            <label for="reportsTabToDateFilter"><spring:message code="radiology.dashboard.tabs.reports.filters.date.to" /></label> <input type="text" id="reportsTabToDateFilter" />
+		  </span>
+		  <label for="reportsTabStatusSelect"><spring:message code="radiology.dashboard.tabs.reports.filters.status" /></label>
+          <select id="reportsTabStatusSelect">
+            <c:forEach var="radiologyReportStatus" items="${model.radiologyReportStatuses}">
+              <option value="${radiologyReportStatus}"><spring:message code="radiology.report.status.${radiologyReportStatus}" text="${radiologyReportStatus}" /></option>
+            </c:forEach>
+          </select>
 		</td>
         <td><input id="reportsTabFind" type="button" value="<spring:message code="radiology.dashboard.tabs.filters.find"/>" /></td>
       </form>

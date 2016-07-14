@@ -205,6 +205,8 @@ public interface RadiologyReportService extends OpenmrsService {
      * @should return empty search result if no report is in date range
      * @should return all radiology reports for given principal results interpreter
      * @should return empty search result if no report exists for principal results interpreter
+     * @should return all radiology reports with given status
+     * @should return empty search result if no report exists for given status
      * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
