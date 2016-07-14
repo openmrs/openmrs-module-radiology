@@ -11,9 +11,9 @@
  */
 package org.openmrs.module.radiology.report;
 
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.not;
-import static org.hamcrest.CoreMatchers.hasItem;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -923,6 +923,64 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         List<RadiologyReport> radiologyReportsWithPrincipalResultsInterpreter =
                 radiologyReportService.getRadiologyReports(radiologyReportSearchCriteriaWithPrincipalResultsInterpreter);
         assertTrue(radiologyReportsWithPrincipalResultsInterpreter.isEmpty());
+    }
+    
+    /**
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return all radiology reports with given status
+     */
+    @Test
+    public void getRadiologyReports_shouldReturnAllRadiologyReportsWithGivenStatus() throws Exception {
+        
+        RadiologyReportSearchCriteria radiologyReportSearchCriteriaWithCompletedStatus =
+                new RadiologyReportSearchCriteria.Builder().withStatus(RadiologyReportStatus.COMPLETED)
+                        .build();
+        
+        List<RadiologyReport> radiologyReportsWithCompletedStatus =
+                radiologyReportService.getRadiologyReports(radiologyReportSearchCriteriaWithCompletedStatus);
+        assertThat(radiologyReportsWithCompletedStatus.size(), is(2));
+        for (RadiologyReport radiologyReport : radiologyReportsWithCompletedStatus) {
+            assertThat(radiologyReport.getReportStatus(), is(RadiologyReportStatus.COMPLETED));
+        }
+        
+        RadiologyReportSearchCriteria radiologyReportSearchCriteriaWithClaimedStatus =
+                new RadiologyReportSearchCriteria.Builder().withStatus(RadiologyReportStatus.CLAIMED)
+                        .build();
+        
+        List<RadiologyReport> radiologyReportsWithClaimedStatus =
+                radiologyReportService.getRadiologyReports(radiologyReportSearchCriteriaWithClaimedStatus);
+        assertThat(radiologyReportsWithClaimedStatus.size(), is(1));
+        for (RadiologyReport radiologyReport : radiologyReportsWithClaimedStatus) {
+            assertThat(radiologyReport.getReportStatus(), is(RadiologyReportStatus.CLAIMED));
+        }
+        
+        RadiologyReportSearchCriteria radiologyReportSearchCriteriaWithDiscontinuedStatus =
+                new RadiologyReportSearchCriteria.Builder().withStatus(RadiologyReportStatus.DISCONTINUED)
+                        .build();
+        
+        List<RadiologyReport> radiologyReportsWithDiscontinuedStatus =
+                radiologyReportService.getRadiologyReports(radiologyReportSearchCriteriaWithDiscontinuedStatus);
+        assertThat(radiologyReportsWithDiscontinuedStatus.size(), is(1));
+        for (RadiologyReport radiologyReport : radiologyReportsWithDiscontinuedStatus) {
+            assertThat(radiologyReport.getReportStatus(), is(RadiologyReportStatus.DISCONTINUED));
+        }
+    }
+    
+    /**
+     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
+     * @verifies return empty search result if no report exists for given status
+     */
+    @Test
+    public void getRadiologyReports_shouldReturnEmptySearchResultIfNoReportExistsForGivenStatus() throws Exception {
+        
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria =
+                new RadiologyReportSearchCriteria.Builder().withToDate(format.parse("2016-05-01"))
+                        .withStatus(RadiologyReportStatus.CLAIMED)
+                        .build();
+        
+        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        assertTrue(radiologyReports.isEmpty());
     }
     
     /**
