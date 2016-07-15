@@ -15,6 +15,7 @@
                   function() {
                     var fromDate = $j('#reportsTabFromDateFilter');
                     var toDate = $j('#reportsTabToDateFilter');
+                    var principalResultsInterpreterUuid = $j('#reportsTabProviderFilter');
                     var status = $j('#reportsTabStatusSelect');
                     var find = $j('#reportsTabFind');
                     var clearResults = $j('a#reportsTabClearFilters');
@@ -39,6 +40,7 @@
                                             v: "full",
                                             fromdate: fromDate.val(),
                                             todate: toDate.val(),
+                                            principalResultsInterpreter: principalResultsInterpreterUuid.val(),
                                             status: status.val(),
                                             totalCount: true,
                                           };
@@ -135,7 +137,7 @@
                     });
 
                     clearResults.on('mouseup keyup', function() {
-                      $j('table#reportsTabTableFilters input:text').val('');
+                      $j('table#reportsTabTableFilters input:text, #reportsTabProviderFilter, table#reportsTabTableFilters select').val('');
                       radiologyReportsTable.ajax.reload();
                     });
 
@@ -176,6 +178,10 @@
             <label for="reportsTabFromDateFilter"><spring:message code="radiology.dashboard.tabs.reports.filters.date" /> <spring:message code="radiology.dashboard.tabs.reports.filters.date.from" /></label> <input type="text" id="reportsTabFromDateFilter" />
             <label for="reportsTabToDateFilter"><spring:message code="radiology.dashboard.tabs.reports.filters.date.to" /></label> <input type="text" id="reportsTabToDateFilter" />
 		  </span>
+          <label for="reportsTabProviderFilter"> 
+            <spring:message code="radiology.dashboard.tabs.reports.filters.principalResultsInterpreter" />
+          </label> 
+          <radiology:providerField formFieldName="principalResultsInterpreter" formFieldId="reportsTabProviderFilter" />
 		  <label for="reportsTabStatusSelect"><spring:message code="radiology.dashboard.tabs.reports.filters.status" /></label>
           <select id="reportsTabStatusSelect">
             <c:forEach var="radiologyReportStatus" items="${model.radiologyReportStatuses}">
