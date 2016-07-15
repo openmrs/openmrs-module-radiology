@@ -16,14 +16,12 @@ import org.openmrs.Provider;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.RadiologyPrivileges;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service layer for {@code RadiologyOrder}.
  * 
  * @see org.openmrs.module.radiology.order.RadiologyOrder
  */
-@Transactional
 public interface RadiologyOrderService extends OpenmrsService {
     
     

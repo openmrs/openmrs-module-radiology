@@ -11,6 +11,7 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 class RadiologyReportServiceImpl extends BaseOpenmrsService implements RadiologyReportService {
     
     
@@ -25,8 +26,8 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     /**
      * @see RadiologyReportService#createAndClaimRadiologyReport(RadiologyOrder)
      */
-    @Transactional
     @Override
+    @Transactional
     public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder)
             throws IllegalArgumentException, UnsupportedOperationException {
         
@@ -51,8 +52,8 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     /**
      * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
      */
-    @Transactional
     @Override
+    @Transactional
     public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport)
             throws IllegalArgumentException, UnsupportedOperationException {
         
@@ -74,8 +75,8 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     /**
      * @see RadiologyReportService#unclaimRadiologyReport(RadiologyReport)
      */
-    @Transactional
     @Override
+    @Transactional
     public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport)
             throws IllegalArgumentException, UnsupportedOperationException {
         
@@ -98,8 +99,8 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     /**
      * @see RadiologyReportService#completeRadiologyReport(RadiologyReport, Provider)
      */
-    @Transactional
     @Override
+    @Transactional
     public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter)
             throws IllegalArgumentException, UnsupportedOperationException {
         
@@ -127,7 +128,6 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     /**
      * @see RadiologyReportService#getRadiologyReport(Integer)
      */
-    @Transactional(readOnly = true)
     @Override
     public RadiologyReport getRadiologyReport(Integer reportId) throws IllegalArgumentException {
         
@@ -140,7 +140,6 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     /**
      * @see RadiologyReportService#getRadiologyReportByUuid(String)
      */
-    @Transactional(readOnly = true)
     @Override
     public RadiologyReport getRadiologyReportByUuid(String radiologyReportUuid) throws IllegalArgumentException {
         
@@ -153,7 +152,6 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     /**
      * @see RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder, RadiologyReportStatus)
      */
-    @Transactional(readOnly = true)
     @Override
     public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder radiologyOrder,
             RadiologyReportStatus reportStatus) throws IllegalArgumentException {
@@ -174,7 +172,6 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     /**
      * @see RadiologyReportService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
      */
-    @Transactional(readOnly = true)
     @Override
     public boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder) {
         
@@ -187,7 +184,6 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     /**
      * @see RadiologyReportService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
      */
-    @Transactional(readOnly = true)
     @Override
     public boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder) {
         
@@ -200,7 +196,6 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     /**
      * @see RadiologyReportService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
      */
-    @Transactional(readOnly = true)
     @Override
     public RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder) {
         
@@ -219,7 +214,6 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     /**
      * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
      */
-    @Transactional(readOnly = true)
     @Override
     public List<RadiologyReport> getRadiologyReports(RadiologyReportSearchCriteria radiologyReportSearchCriteria) {
         

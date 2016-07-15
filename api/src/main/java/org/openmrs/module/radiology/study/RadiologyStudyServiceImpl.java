@@ -21,6 +21,7 @@ import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyStudyService {
     
     
@@ -89,8 +90,8 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
     /**
      * @see RadiologyStudyService#updateStudyPerformedStatus(String, PerformedProcedureStepStatus)
      */
-    @Transactional
     @Override
+    @Transactional
     public RadiologyStudy updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus) {
         
         if (studyInstanceUid == null) {
@@ -109,7 +110,6 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
     /**
      * @see RadiologyStudyService#getRadiologyStudy(Integer)
      */
-    @Transactional(readOnly = true)
     @Override
     public RadiologyStudy getRadiologyStudy(Integer studyId) {
         
@@ -123,7 +123,6 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
     /**
      * @see RadiologyStudyService#getRadiologyStudyByUuid(String)
      */
-    @Transactional(readOnly = true)
     @Override
     public RadiologyStudy getRadiologyStudyByUuid(String uuid) {
         
@@ -137,7 +136,6 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
     /**
      * @see RadiologyStudyService#getRadiologyStudyByOrderId(Integer)
      */
-    @Transactional(readOnly = true)
     @Override
     public RadiologyStudy getRadiologyStudyByOrderId(Integer orderId) {
         
@@ -151,7 +149,6 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
     /**
      * @see RadiologyStudyService#getRadiologyStudyByStudyInstanceUid(String)
      */
-    @Transactional(readOnly = true)
     public RadiologyStudy getRadiologyStudyByStudyInstanceUid(String studyInstanceUid) {
         
         if (studyInstanceUid == null) {
@@ -164,7 +161,6 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
      * @see RadiologyStudyService#getStudiesByRadiologyOrders
      */
     @Override
-    @Transactional(readOnly = true)
     public List<RadiologyStudy> getRadiologyStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
         
         if (radiologyOrders == null) {
