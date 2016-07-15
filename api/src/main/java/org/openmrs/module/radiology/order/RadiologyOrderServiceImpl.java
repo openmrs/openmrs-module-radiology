@@ -23,6 +23,7 @@ import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.study.RadiologyStudyService;
 import org.springframework.transaction.annotation.Transactional;
 
+@Transactional(readOnly = true)
 class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyOrderService {
     
     
@@ -59,8 +60,8 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     /**
      * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
      */
-    @Transactional
     @Override
+    @Transactional
     public RadiologyOrder placeRadiologyOrder(RadiologyOrder radiologyOrder) {
         
         if (radiologyOrder == null) {
@@ -102,7 +103,6 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
      * @return radiology order encounter for given parameters
      * @should create radiology order encounter
      */
-    @Transactional
     private Encounter saveRadiologyOrderEncounter(Patient patient, Provider provider, Date encounterDateTime) {
         Encounter radiologyOrderEncounter = new Encounter();
         radiologyOrderEncounter.setPatient(patient);
@@ -116,8 +116,8 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
      * @throws Exception
      * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
      */
-    @Transactional
     @Override
+    @Transactional
     public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrderToDiscontinue, Provider orderer,
             String nonCodedDiscontinueReason) throws Exception {
         
@@ -155,7 +155,6 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     /**
      * @see RadiologyOrderService#getRadiologyOrder(Integer)
      */
-    @Transactional(readOnly = true)
     @Override
     public RadiologyOrder getRadiologyOrder(Integer orderId) {
         
@@ -169,7 +168,6 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     /**
      * @see RadiologyOrderService#getRadiologyOrderByUuid(String)
      */
-    @Transactional(readOnly = true)
     @Override
     public RadiologyOrder getRadiologyOrderByUuid(String uuid) {
         
@@ -183,7 +181,6 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     /**
      * @see RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
      */
-    @Transactional(readOnly = true)
     @Override
     public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient) {
         
@@ -197,7 +194,6 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     /**
      * @see RadiologyOrderService#getRadiologyOrdersByPatients
      */
-    @Transactional(readOnly = true)
     @Override
     public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients) {
         

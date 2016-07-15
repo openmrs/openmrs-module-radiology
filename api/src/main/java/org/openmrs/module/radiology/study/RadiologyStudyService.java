@@ -13,14 +13,12 @@ import java.util.List;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
-import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Service layer for {@code RadiologyStudy}.
  * 
  * @see org.openmrs.module.radiology.study.RadiologyStudy
  */
-@Transactional
 public interface RadiologyStudyService extends OpenmrsService {
     
     
