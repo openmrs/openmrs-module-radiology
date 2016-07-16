@@ -3,6 +3,7 @@
  * v. 2.0. If a copy of the MPL was not distributed with this file, You can
  * obtain one at http://mozilla.org/MPL/2.0/. OpenMRS is also distributed under
  * the terms of the Healthcare Disclaimer located at http://openmrs.org/license.
+ *
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
@@ -499,9 +500,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     }
     
     /**
-    * @see RadiologyProperties#getGlobalProperty(String)
-    * @verifies return global property given valid global property name
-    */
+     * @see RadiologyProperties#getGlobalProperty(String)
+     * @verifies return global property given valid global property name
+     */
     @Test
     public void getGlobalProperty_shouldReturnGlobalPropertyGivenValidGlobalPropertyName() throws Exception {
         administrationService.saveGlobalProperty(
@@ -513,9 +514,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     }
     
     /**
-    * @see RadiologyProperties#getGlobalProperty(String,boolean)
-    * @verifies return null given non required and non configured global property
-    */
+     * @see RadiologyProperties#getGlobalProperty(String, boolean)
+     * @verifies return null given non required and non configured global property
+     */
     @Test
     public void getGlobalProperty_shouldReturnNullGivenNonRequiredAndNonConfiguredGlobalProperty() throws Exception {
         
@@ -525,9 +526,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     }
     
     /**
-    * @see RadiologyProperties#getGlobalProperty(String)
-    * @verifies throw illegal state exception given required non configured global property
-    */
+     * @see RadiologyProperties#getGlobalProperty(String)
+     * @verifies throw illegal state exception given required non configured global property
+     */
     @Test
     public void getGlobalProperty_shouldThrowIllegalStateExceptionGivenRequiredNonConfiguredGlobalProperty()
             throws Exception {
