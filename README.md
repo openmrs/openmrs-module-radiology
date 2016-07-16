@@ -10,29 +10,86 @@ enterprise electronic medical record system [OpenMRS](http://www.openmrs.org)
 with the open source clinical image and object management system
 [dcm4che](http://www.dcm4che.org).
 
-## Quickstart
+## Build
 
-### Build
+Make sure you have java jdk 8 and [maven](https://maven.apache.org/) installed.
 
-Make sure you have a java jdk and [maven](https://maven.apache.org/) installed.
+Clone this repository:
 
-Clone this project:
 ```bash
 git clone https://github.com/openmrs/openmrs-module-radiology.git
 ```
 
 And execute the following command on the command line:
+
 ```bash
 mvn clean package
 ```
 
-### Installation
+This will generate the radiology module in `omod/target/radiology-{VERSION}.omod` which you will have to deploy into OpenMRS.
 
-For a detailed guide on how to install and configure this module see
+## Install
+
+The easiest way to install the module is to use [Docker](https://www.docker.com/).
+
+### Docker :whale:
+
+This module can be baked into a Docker image so you can easily run and test it.
+
+#### Prerequisites
+
+Build the module as described under [Build](#build).
+
+Make sure you have [Docker](https://docs.docker.com/) installed.
+
+This Docker image cannot run without the correct database appropriate for the OpenMRS Platform 2.0 version used.
+
+Ensure you have the Docker image [OpenMRS Platform MySQL](https://github.com/teleivo/docker-openmrs-platform-mysql).
+
+You can either build it yourself or pull it from [Docker Hub](https://hub.docker.com/r/teleivo/openmrs-platform-mysql/) via
+
+```
+docker pull teleivo/openmrs-platform-mysql
+```
+
+I suggest you use [Docker Compose](https://docs.docker.com/compose/install/) to install and wire these two images together.
+
+Just follow the next sections.
+
+#### Build
+
+Enter the omod directory and build the Docker image for the Radiology Module
+you just built:
+
+```bash
+cd omod
+mvn clean package -Dmaven.test.skip=true build:docker
+```
+
+#### Run
+
+To run an instance of the OpenMRS Platform MySQL database, the Platform itself
+and the Radiology Module execute:
+
+```
+docker-compose up
+```
+
+in the root directory of this repository.
+
+OpenMRS will be accessible at `localhost:8080/openmrs`
+
+Look at `docker-compose.yml` which connects the required Docker images
+and sets credentials and exposed ports.
+
+## Documentation
+
+For a detailed guide on ways to install and configure this module see
 
 https://wiki.openmrs.org/display/docs/Radiology+Module
 
-### Contributing
+
+## Contributing
 
 Contributions are very welcome, we can definitely use your help!
 

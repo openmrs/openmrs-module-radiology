@@ -191,6 +191,22 @@
 						</lifecycleMappingMetadata>
 					</configuration>
 				</plugin>
+				<plugin>
+					<groupId>com.spotify</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>${maven-docker-plugin-version}</version>
+					<configuration>
+						<imageName>${docker.image.prefix}/module-${project.parent.artifactId}</imageName>
+						<dockerDirectory>src/main/docker</dockerDirectory>
+						<resources>
+							<resource>
+								<targetPath>/</targetPath>
+								<directory>${project.build.directory}</directory>
+								<include>${project.build.finalName}.omod</include>
+							</resource>
+						</resources>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>

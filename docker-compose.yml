@@ -1,0 +1,25 @@
+version: "2"
+services:
+  db:
+    image: teleivo/openmrs-platform-mysql
+    ports:
+      - "3306:3306"
+    container_name: &db openmrs-platform-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: openmrs
+      MYSQL_USER: &openmrs_db_user openmrs
+      MYSQL_PASSWORD: &openmrs_db_password openmrs
+      MYSQL_DATABASE: &openmrs_db openmrs
+  openmrs:
+    image: openmrs/module-radiology
+    ports:
+      - "8080:8080"
+    container_name: openmrs-module-radiology
+    depends_on:
+      - db
+    environment:
+      MYSQL_USER: *openmrs_db_user
+      MYSQL_PASSWORD: *openmrs_db_password
+      MYSQL_DATABASE: *openmrs_db
+      MYSQL_HOST: *db
+      MYSQL_PORT: 3306
