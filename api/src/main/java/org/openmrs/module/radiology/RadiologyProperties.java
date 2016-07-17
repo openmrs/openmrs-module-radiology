@@ -9,6 +9,10 @@
  */
 package org.openmrs.module.radiology;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.apache.commons.lang.StringUtils;
 import org.openmrs.CareSetting;
 import org.openmrs.ConceptClass;
@@ -21,6 +25,7 @@ import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderService;
 import org.openmrs.api.VisitService;
+import org.openmrs.util.OpenmrsUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Component;
@@ -230,5 +235,27 @@ public class RadiologyProperties {
             throw new IllegalStateException("Configuration required: " + globalPropertyName);
         }
         return result;
+    }
+    
+    /**
+     * Gets folder to store {@code MRRT} templates.
+     * 
+     * @return templates folder
+     * @should return directory specified by global property
+     */
+    public File getReportTemplateHome() {
+        
+        Path templatesPath = Paths.get(getGlobalProperty(RadiologyConstants.GP_MRRT_REPORT_TEMPLATE_DIR, true));
+        
+        if (!templatesPath.isAbsolute()) {
+            templatesPath = Paths.get(OpenmrsUtil.getApplicationDataDirectory(), templatesPath.toString());
+        }
+        if (!templatesPath.toFile()
+                .exists()) {
+            templatesPath.toFile()
+                    .mkdirs();
+        }
+        
+        return templatesPath.toFile();
     }
 }

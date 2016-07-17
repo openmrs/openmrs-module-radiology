@@ -141,4 +141,39 @@
 			</list>
 		</property>
 	</bean>
+	
+	<bean id="mrrtReportTemplateService"
+		class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">
+		<property name="transactionManager">
+			<ref bean="transactionManager" />
+		</property>
+		<property name="target">
+			<bean
+				class="org.openmrs.module.radiology.report.template.MrrtReportTemplateServiceImpl">
+				<property name="mrrtReportTemplateDAO">
+					<bean
+						class="org.openmrs.module.radiology.report.template.HibernateMrrtReportTemplateDAO">
+						<property name="sessionFactory">
+							<ref bean="sessionFactory" />
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</property>
+		<property name="preInterceptors">
+			<ref bean="serviceInterceptors" />
+		</property>
+		<property name="transactionAttributeSource">
+			<ref bean="transactionAttributeSource" />
+		</property>
+	</bean>
+	
+	<bean parent="serviceContext">
+		<property name="moduleService">
+			<list merge="true">
+				<value>org.openmrs.module.radiology.report.template.MrrtReportTemplateService</value>
+				<ref local="mrrtReportTemplateService" />
+			</list>
+		</property>
+	</bean>
 </beans>
