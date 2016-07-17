@@ -53,6 +53,8 @@
 		<maven-formatter-plugin-version>1.6.0</maven-formatter-plugin-version>
 		<maven-formatter-plugin-style-java>${project.parent.basedir}/tools/formatter/java.xml</maven-formatter-plugin-style-java>
 		<maven-formatter-plugin-style-javascript>${project.parent.basedir}/tools/formatter/javascript.xml</maven-formatter-plugin-style-javascript>
+		<maven-docker-plugin-version>0.4.11</maven-docker-plugin-version>
+		<docker.image.prefix>openmrs</docker.image.prefix>
 		<skip.integration.tests>false</skip.integration.tests>
 		<skip.unit.tests>false</skip.unit.tests>
 	</properties>
@@ -170,6 +172,11 @@
 					<groupId>org.eluder.coveralls</groupId>
 					<artifactId>coveralls-maven-plugin</artifactId>
 					<version>4.0.0</version>
+				</plugin>
+				<plugin>
+					<groupId>com.spotify</groupId>
+					<artifactId>docker-maven-plugin</artifactId>
+					<version>${maven-docker-plugin-version}</version>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
