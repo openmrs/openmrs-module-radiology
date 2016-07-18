@@ -10,7 +10,7 @@
 
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>org.openmrs.module</groupId>
@@ -225,6 +225,22 @@
 						<include>**/*.txt</include>
 						<include>**/*.xml</include>
 					</includes>
+					<excludes>
+						<exclude>acceptanceTest/**/build/**</exclude>
+						<exclude>license-header.txt</exclude>
+						<exclude>.git/**</exclude>
+						<exclude>tools/formatter/**</exclude>
+						<!-- From gitignore -->
+						<exclude>.idea/**</exclude>
+						<exclude>target/**</exclude>
+						<exclude>bin/**</exclude>
+						<exclude>tmp/**</exclude>
+						<exclude>.settings/**</exclude>
+						<exclude>.externalToolBuilders/</exclude>
+						<exclude>build/</exclude>
+						<exclude>bin/</exclude>
+						<exclude>dist/</exclude>
+					</excludes>
 				</configuration>
 				<executions>
 					<execution>
