@@ -64,3 +64,6 @@ margin:0 1px 0 0;
 #radiologyTabs a:hover {
 	text-decoration: underline;
 }
+.fa-chevron-circle-down, .fa-chevron-circle-up{
+	color: #1AAD9B;
+}

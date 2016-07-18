@@ -56,15 +56,6 @@
                                       },
                                       "columns": [
                                           {
-                                            "name": "view",
-                                            "render": function(data, type,
-                                                    full, meta) {
-                                              return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?radiologyReportId='
-                                                      + full.uuid
-                                                      + '">View</a>';
-                                            }
-                                          },
-                                          {
                                             "name": "radiologyOrder",
                                             "render": function(data, type,
                                                     full, meta) {
@@ -121,7 +112,16 @@
                                                     full, meta) {
                                               return full.auditInfo.creator.display;
                                             }
-                                          }, ],
+                                          }, 
+                                          {
+                                            "name": "action",
+                                            "className": "dt-center",
+                                            "render": function(data, type, full, meta) {
+                                                return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?radiologyReportId='
+                                                      + full.uuid
+                                                      + '"><i class="fa fa-eye fa-lg"></i></a>';
+                                            }
+                                          } ],
                                     });
 
                     // prevent form submit when user hits enter
@@ -141,8 +141,7 @@
                             .on(
                                     'mouseup keyup',
                                     function() {
-                                      $j(
-                                              '#reportsTabTableFilterFields input, #reportsTabTableFilterFields select')
+                                      $j('#reportsTabTableFilterFields input, #reportsTabTableFilterFields select')
                                               .val('');
                                       radiologyReportsTable.ajax.reload();
                                     });
@@ -210,13 +209,13 @@
     <table id="reportsTabTable" cellspacing="0" width="100%" class="display nowrap">
       <thead>
         <tr>
-          <th><spring:message code="radiology.datatables.column.report.view" /></th>
           <th><spring:message code="radiology.datatables.column.report.order" /></th>
           <th><spring:message code="radiology.datatables.column.report.principalResultsInterpreter" /></th>
           <th><spring:message code="radiology.datatables.column.report.date" /></th>
           <th><spring:message code="radiology.datatables.column.report.status" /></th>
           <th><spring:message code="radiology.datatables.column.report.dateCreated" /></th>
           <th><spring:message code="radiology.datatables.column.report.createdBy" /></th>
+          <th><spring:message code="radiology.datatables.column.action" /></th>
         </tr>
       </thead>
     </table>
