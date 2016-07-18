@@ -5,24 +5,39 @@
 ## Overview
 
 OpenMRS module radiology (previously called radiologydcm4chee) is a module adding capabilities of a Radiology
-Information System (RIS) onto OpenMRS. This module connects the open source
-enterprise electronic medical record system [OpenMRS](http://www.openmrs.org)
-with the open source clinical image and object management system
-[dcm4che](http://www.dcm4che.org).
+Information System (RIS) onto OpenMRS.
 
 ## Build
 
-Make sure you have java jdk 8 and [maven](https://maven.apache.org/) installed.
+### Prerequisites
 
-Clone this repository:
+You need to have installed
+
+* a Java JDK 8
+* the build tool [Maven](https://maven.apache.org/)
+
+You need to configure Maven to use the JAVA JDK 8
+
+```bash
+mvn -version
+```
+
+Should tell you what version Maven is using.
+
+You need to clone this repository:
 
 ```bash
 git clone https://github.com/openmrs/openmrs-module-radiology.git
 ```
 
-And execute the following command on the command line:
+### Command
+
+After you have taken care of the [Prerequisites](#prerequisites)
+
+Execute the following command:
 
 ```bash
+cd openmrs-module-radiology
 mvn clean package
 ```
 
@@ -44,15 +59,8 @@ Make sure you have [Docker](https://docs.docker.com/) installed.
 
 This Docker image cannot run without the correct database appropriate for the OpenMRS Platform 2.0 version used.
 
-Ensure you have the Docker image [OpenMRS Platform MySQL](https://github.com/teleivo/docker-openmrs-platform-mysql).
-
-You can either build it yourself or pull it from [Docker Hub](https://hub.docker.com/r/teleivo/openmrs-platform-mysql/) via
-
-```
-docker pull teleivo/openmrs-platform-mysql
-```
-
-I suggest you use [Docker Compose](https://docs.docker.com/compose/install/) to install and wire these two images together.
+I suggest you install and use [Docker Compose](https://docs.docker.com/compose/install/) to install the Docker image for the Radiology Module you built together with
+the Docker image [OpenMRS Platform MySQL](https://github.com/teleivo/docker-openmrs-platform-mysql) for the database.
 
 Just follow the next sections.
 
@@ -63,7 +71,7 @@ you just built:
 
 ```bash
 cd omod
-mvn clean package -Dmaven.test.skip=true build:docker
+mvn clean package -Dmaven.test.skip=true docker:build
 ```
 
 #### Run
