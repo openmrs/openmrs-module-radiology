@@ -15,6 +15,7 @@ import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.annotation.Authorized;
+import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.RadiologyPrivileges;
 
@@ -25,6 +26,15 @@ import org.openmrs.module.radiology.RadiologyPrivileges;
  */
 public interface RadiologyOrderService extends OpenmrsService {
     
+    
+    /**
+     * Gets the next available accession number seed.
+     * 
+     * @return the accession number seed
+     * @throws APIException
+     * @should return the next accession number seed
+     */
+    public Long getNextAccessionNumberSeedSequenceValue();
     
     /**
      * Saves a new {@code RadiologyOrder} and its {@code RadiologyStudy} to the
@@ -38,6 +48,7 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @throws IllegalArgumentException if radiologyOrder.study.modality is null
      * @should create new radiology order and study from given radiology order object
      * @should create radiology order encounter
+     * @should set the radiology order accession number
      * @should throw illegal argument exception given null
      * @should throw illegal argument exception given existing radiology order
      * @should throw illegal argument exception if given radiology order has no study

@@ -21,6 +21,7 @@
   <global_property property="radiology.radiologyOrderingProviderEncounterRole" property_value="13fc9b4a-49ed-429c-9dde-ca005b387a3d" description="Radiology Ordering Provider Encounter Role UUID"/>
   <global_property property="radiology.radiologyOrderEncounterType" property_value="19db8c0d-3520-48f2-babd-77f2d450e5c7" description="Radiology Order Encounter Type UUID"/>
   <global_property property="radiology.radiologyTestOrderType" property_value="dbdb9a9b-56ea-11e5-a47f-08002719a237" description="Radiology Test Order Type UUID"/>
+  <global_property property="radiology.nextAccessionNumberSeed" property_value="2" datatype="org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype" datatype_config="^\d+$" uuid="f45d1722-d983-427b-82ed-c4e8beffd1c7"/>
 
   <encounter_type encounter_type_id="1001" name="Radiology Order Encounter Type" description="Ordering radiology exams" creator="1" date_created="2015-09-09 00:00:00.0" retired="false" uuid="19db8c0d-3520-48f2-babd-77f2d450e5c7"/>
   <encounter_role encounter_role_id="1001" name="Radiology Ordering Provider Encounter Role " description="Provider ordering tests, exams, drugs, ..." creator="1" retired="false" date_created="2015-09-09 14:00:00.0" uuid="13fc9b4a-49ed-429c-9dde-ca005b387a3d" />
@@ -46,7 +47,7 @@
   <encounter encounter_id="2004" encounter_type="1001" patient_id="70022" location_id="1" form_id="1" encounter_datetime="2015-02-03 13:17:15.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" uuid="05715654-a566-4cb3-921f-2f7067eb119f"/>
   
   <!-- radiology order with associated study and a completed report -->
-  <orders order_id="2007" order_number="2007" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="ROUTINE" orderer="1" concept_id="178" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" uuid="ed994ec5-4a6a-4c77-96a2-59fcfab79655"/>
+  <orders order_id="2007" order_number="2007" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="ROUTINE" orderer="1" concept_id="178" accession_number="1" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" uuid="ed994ec5-4a6a-4c77-96a2-59fcfab79655"/>
   <test_order order_id="2007" />
   <radiology_order order_id="2007" />
   <radiology_study study_id="5" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.5" order_id="2007" scheduled_status="SCHEDULED" performed_status="COMPLETED" modality="CT" creator="1" date_created="2015-02-03 13:17:15.0" uuid="486f9e2b-844c-4f3b-8fcf-9a543414a5cf"/>

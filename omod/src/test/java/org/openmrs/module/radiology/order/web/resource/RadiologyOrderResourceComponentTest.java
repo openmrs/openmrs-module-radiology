@@ -37,7 +37,7 @@ public class RadiologyOrderResourceComponentTest extends BaseDelegatingResourceT
     @Override
     public String getDisplayProperty() {
         
-        return "FRACTURE";
+        return "4 - FRACTURE";
     }
     
     /**

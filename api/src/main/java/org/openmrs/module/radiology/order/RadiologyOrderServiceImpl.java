@@ -19,13 +19,15 @@ import org.openmrs.Provider;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderContext;
 import org.openmrs.api.OrderService;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.study.RadiologyStudyService;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
-class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyOrderService {
+class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyOrderService, AccessionNumberGenerator {
     
     
     private RadiologyOrderDAO radiologyOrderDAO;
@@ -63,7 +65,7 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
      */
     @Override
     @Transactional
-    public RadiologyOrder placeRadiologyOrder(RadiologyOrder radiologyOrder) {
+    public synchronized RadiologyOrder placeRadiologyOrder(RadiologyOrder radiologyOrder) {
         
         if (radiologyOrder == null) {
             throw new IllegalArgumentException("radiologyOrder cannot be null");
@@ -81,6 +83,8 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
                 .getModality() == null) {
             throw new IllegalArgumentException("radiologyOrder.study.modality cannot be null");
         }
+        
+        radiologyOrder.setAccessionNumber(getNewAccessionNumber());
         
         final Encounter encounter =
                 saveRadiologyOrderEncounter(radiologyOrder.getPatient(), radiologyOrder.getOrderer(), new Date());
@@ -203,5 +207,25 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
         }
         
         return radiologyOrderDAO.getRadiologyOrdersByPatients(patients);
+    }
+    
+    /**
+     * @see AccessionNumberGenerator#getNewAccessionNumber()
+     */
+    @Override
+    public String getNewAccessionNumber() {
+        return Context.getService(RadiologyOrderService.class)
+                .getNextAccessionNumberSeedSequenceValue()
+                .toString();
+    }
+    
+    /**
+     * @see RadiologyOrderService#getNextAccessionNumberSeedSequenceValue()
+     */
+    @Override
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public synchronized Long getNextAccessionNumberSeedSequenceValue() {
+        
+        return radiologyOrderDAO.getNextAccessionNumberSeedSequenceValue();
     }
 }
