@@ -25,44 +25,14 @@ width:auto;
 height:auto;
 margin:0 1px 0 0;
 }
-
-#radiologyTabs {
-	font-size: 0.8em;
-	margin: 10px auto 7px auto;
-	padding-top: 5px;
-	padding-left: 5px;
-	padding-bottom: 2px;
-	border-bottom: 1px solid navy;
-	width: 99%;
+#radiologyTabsList {
+        font-size: 0.8em;
 }
-
-#radiologyTabs ul, #radiologyTabs li {
-	display: inline;
-	list-style-type: none;
-	padding: 0 0 0 0;
-}
-
-#radiologyTabs a:link, #radiologyTabs a:visited {
-	border: 1px solid navy;
-	font-size: small;
-	font-weight: bold;
-	margin-right: 8px;
-	padding: 2px 10px 2px 10px;
-	text-decoration: none;
-	color: navy;
-	background: #E0E0F0;
-}
-#radiologyTabs a:link.active, #radiologyTabs a:visited.active {
-	border-bottom: 1px solid #FFFFFF;
-}
-#radiologyTabs a.current, #radiologyTabs a:link.current, #radiologyTabs a:visited.current, #radiologyTabs a.current:hover {
-	background: #FFFFFF;
-	border-bottom: 1px solid #FFFFFF;
-	color: navy;
-	text-decoration: none;
-}
-#radiologyTabs a:hover {
-	text-decoration: underline;
+#radiologyReports, #radiologyOrders {
+        font-size: 0.9em;
+        padding-left: 5px;
+        padding-right: 5px;
+        padding-top: 5px;
 }
 .fa-chevron-circle-down, .fa-chevron-circle-up{
 	color: #1AAD9B;
