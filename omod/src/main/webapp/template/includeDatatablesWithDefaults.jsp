@@ -1,6 +1,4 @@
-<openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/datatables/js/jquery.dataTables.min.js" />
-<openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/datatables/css/jquery.dataTables.min.css" />
-<openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/datatables/css/jquery.details-control.dataTables.css" />
+<%@ include file="/WEB-INF/view/module/radiology/template/includeDatatables.jsp"%>
 <script type="text/javascript">
   jQuery
           .extend(

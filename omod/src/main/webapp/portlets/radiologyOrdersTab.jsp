@@ -47,20 +47,19 @@
                                       },
                                       "columns": [
                                           {
-                                            "className": "details-control",
+                                            "className": "expand",
                                             "orderable": false,
                                             "data": null,
-                                            "defaultContent": ""
+                                            "defaultContent": "",
+                                            "render": function() {
+                                              return '<i class="fa fa-chevron-circle-down fa-lg"></i>';
+                                            }
                                           },
                                           {
                                             "name": "orderNumber",
                                             "render": function(data, type,
                                                     full, meta) {
-                                              return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId='
-                                                      + full.uuid
-                                                      + '">'
-                                                      + full.orderNumber
-                                                      + '</a>';
+                                              return full.orderNumber;
                                             }
                                           },
                                           {
@@ -120,6 +119,15 @@
                                             }
                                           },
                                           {
+                                            "name": "action",
+                                            "className": "dt-center",
+                                            "render": function(data, type, full, meta) {
+                                                return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId='
+                                                      + full.uuid
+                                                      + '"><i class="fa fa-eye fa-lg"></i></a>';
+                                            }
+                                          },
+                                          {
                                             "name": "orderReason",
                                             "visible": false,
                                             "render": function(data, type,
@@ -147,9 +155,11 @@
                                                     full, meta) {
                                               return full.instructions;
                                             }
-                                          }, ],
+                                          } ],
                                     });
 
+                    
+                    
                     // prevent form submit when user hits enter
                     $j(window).keydown(function(event) {
                       if (event.keyCode == 13) {
@@ -188,19 +198,19 @@
                       }
                       return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'
                               + '<tr>'
-                              + '<td><spring:message code="radiology.datatables.column.orderReason"/>:</td>'
+                              + '<td><spring:message code="radiology.datatables.column.order.reason"/>:</td>'
                               + '<td>'
                               + orderReason
                               + '</td>'
                               + '</tr>'
                               + '<tr>'
-                              + '<td><spring:message code="radiology.datatables.column.orderReasonNonCoded"/>:</td>'
+                              + '<td><spring:message code="radiology.datatables.column.order.reasonNonCoded"/>:</td>'
                               + '<td>'
                               + orderReasonNonCoded
                               + '</td>'
                               + '</tr>'
                               + '<tr>'
-                              + '<td><spring:message code="radiology.datatables.column.instructions"/>:</td>'
+                              + '<td><spring:message code="radiology.datatables.column.order.instructions"/>:</td>'
                               + '<td>'
                               + instructions
                               + '</td>'
@@ -213,13 +223,16 @@
                               if ($j(e.target).is(':not(td)')) { return; }
 
                               var tr = $j(this).closest('tr');
-                              var row = radiologyOrdersTable.row(tr);
-
+                         	  var row = radiologyOrdersTable.row(tr);
+                         	  var expandIconField = tr.find('.expand');
+                         	  
                               if (row.child.isShown()) {
                                 row.child.hide();
+                                expandIconField.html("<i class='fa fa-chevron-circle-down fa-lg'></i>");
                                 tr.removeClass('shown');
                               } else {
                                 row.child(formatChildRow(row.data())).show();
+                                expandIconField.html("<i class='fa fa-chevron-circle-up fa-lg'></i>");
                                 tr.addClass('shown');
                               }
                             });
@@ -233,17 +246,18 @@
   <br>
 </openmrs:hasPrivilege>
 <br>
-<span class="boxHeader"> <b><spring:message code="radiology.radiologyOrders" /></b> <a id="ordersTabClearFilters" href="#"
-  style="float: right"> <spring:message code="radiology.dashboard.tabs.filters.clearFilters" />
+<span class="boxHeader"> <b><spring:message code="radiology.radiologyOrders" /></b> <a id="ordersTabClearFilters"
+  href="#" style="float: right"> <spring:message code="radiology.dashboard.tabs.filters.clearFilters" />
 </a>
 </span>
 <div class="box">
   <table id="ordersTabTableFilters" cellspacing="10">
     <tr>
       <form>
-        <td><label><spring:message code="radiology.dashboard.tabs.orders.filters.patient" /></label> <radiology:patientField formFieldName="patient"
-            formFieldId="ordersTabPatientFilter" /></td>
-        <td><input id="ordersTabFind" type="button" value="<spring:message code="radiology.dashboard.tabs.filters.find"/>" /></td>
+        <td><label><spring:message code="radiology.dashboard.tabs.orders.filters.patient" /></label> <radiology:patientField
+            formFieldName="patient" formFieldId="ordersTabPatientFilter" /></td>
+        <td><input id="ordersTabFind" type="button"
+          value="<spring:message code="radiology.dashboard.tabs.filters.find"/>" /></td>
       </form>
     </tr>
   </table>
@@ -253,16 +267,17 @@
       <thead>
         <tr>
           <th></th>
-          <th><spring:message code="radiology.datatables.column.orderNumber" /></th>
-          <th><spring:message code="radiology.datatables.column.patient" /></th>
-          <th><spring:message code="radiology.datatables.column.priority" /></th>
-          <th><spring:message code="radiology.datatables.column.imagingProcedure" /></th>
-          <th><spring:message code="radiology.datatables.column.referringPhysician" /></th>
-          <th><spring:message code="radiology.datatables.column.scheduledDate" /></th>
-          <th><spring:message code="radiology.datatables.column.dateActivated" /></th>
-          <th><spring:message code="radiology.datatables.column.orderReason" /></th>
-          <th><spring:message code="radiology.datatables.column.orderReasonNonCoded" /></th>
-          <th><spring:message code="radiology.datatables.column.instructions" /></th>
+          <th><spring:message code="radiology.datatables.column.order.orderNumber" /></th>
+          <th><spring:message code="radiology.datatables.column.order.patient" /></th>
+          <th><spring:message code="radiology.datatables.column.order.priority" /></th>
+          <th><spring:message code="radiology.datatables.column.order.imagingProcedure" /></th>
+          <th><spring:message code="radiology.datatables.column.order.referringPhysician" /></th>
+          <th><spring:message code="radiology.datatables.column.order.scheduledDate" /></th>
+          <th><spring:message code="radiology.datatables.column.order.dateActivated" /></th>
+          <th><spring:message code="radiology.datatables.column.action" /></th>
+          <th><spring:message code="radiology.datatables.column.order.reason" /></th>
+          <th><spring:message code="radiology.datatables.column.order.reasonNonCoded" /></th>
+          <th><spring:message code="radiology.datatables.column.order.instructions" /></th>
         </tr>
       </thead>
     </table>
