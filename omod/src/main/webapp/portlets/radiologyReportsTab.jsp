@@ -32,7 +32,8 @@
                                         },
                                         cache: true,
                                         dataType: "json",
-                                        url: "${pageContext.request.contextPath}/ws/rest/v1/radiologyreport/",
+                                        url: Radiology.getRestRootEndpoint()
+                                                + "/radiologyreport/",
                                         data: function(data) {
                                           return {
                                             startIndex: data.start,
@@ -66,12 +67,10 @@
                                             "name": "principalResultsInterpreter",
                                             "render": function(data, type,
                                                     full, meta) {
-                                              if ((typeof (full.principalResultsInterpreter) !== 'undefined')
-                                                      && (full.principalResultsInterpreter !== null)) {
-                                                return full.principalResultsInterpreter.display;
-                                              } else {
-                                                return "";
-                                              }
+
+                                              return Radiology
+                                                      .getProperty(full,
+                                                              "principalResultsInterpreter.display");
                                             }
                                           },
                                           {
@@ -112,16 +111,17 @@
                                                     full, meta) {
                                               return full.auditInfo.creator.display;
                                             }
-                                          }, 
+                                          },
                                           {
                                             "name": "action",
                                             "className": "dt-center",
-                                            "render": function(data, type, full, meta) {
-                                                return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?radiologyReportId='
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?radiologyReportId='
                                                       + full.uuid
                                                       + '"><i class="fa fa-eye fa-lg"></i></a>';
                                             }
-                                          } ],
+                                          }],
                                     });
 
                     // prevent form submit when user hits enter
@@ -141,7 +141,8 @@
                             .on(
                                     'mouseup keyup',
                                     function() {
-                                      $j('#reportsTabTableFilterFields input, #reportsTabTableFilterFields select')
+                                      $j(
+                                              '#reportsTabTableFilterFields input, #reportsTabTableFilterFields select')
                                               .val('');
                                       radiologyReportsTable.ajax.reload();
                                     });
