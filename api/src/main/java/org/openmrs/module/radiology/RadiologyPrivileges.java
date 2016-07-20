@@ -22,9 +22,13 @@ public class RadiologyPrivileges {
     
     public static final String ADD_RADIOLOGY_REPORTS = "Add Radiology Reports";
     
+    public static final String ADD_RADIOLOGY_REPORT_TEMPLATES = "Add Radiology Report Templates";
+    
     public static final String DELETE_RADIOLOGY_ORDERS = "Delete Radiology Orders";
     
     public static final String DELETE_RADIOLOGY_REPORTS = "Delete Radiology Reports";
+    
+    public static final String DELETE_RADIOLOGY_REPORT_TEMPLATES = "Delete Radiology Report Templates";
     
     public static final String EDIT_RADIOLOGY_REPORTS = "Edit Radiology Reports";
     
@@ -32,7 +36,11 @@ public class RadiologyPrivileges {
     
     public static final String GET_RADIOLOGY_REPORTS = "Get Radiology Reports";
     
+    public static final String GET_RADIOLOGY_REPORT_TEMPLATES = "Get Radiology Report Templates";
+    
     public static final String VIEW_RADIOLOGY_SECTION = "Patient Dashboard - View Radiology Section";
+    
+    public static final String VIEW_RADIOLOGY_REPORT_TEMPLATES = "View Radiology Report Templates";
     
     private RadiologyPrivileges() {
         // Utility class not meant to be instantiated.
