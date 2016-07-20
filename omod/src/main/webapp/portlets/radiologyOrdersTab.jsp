@@ -27,7 +27,8 @@
                                         },
                                         cache: true,
                                         dataType: "json",
-                                        url: "${pageContext.request.contextPath}/ws/rest/v1/radiologyorder/",
+                                        url: Radiology.getRestRootEndpoint()
+                                                + "/radiologyorder/",
                                         data: function(data) {
                                           return {
                                             startIndex: data.start,
@@ -121,45 +122,15 @@
                                           {
                                             "name": "action",
                                             "className": "dt-center",
-                                            "render": function(data, type, full, meta) {
-                                                return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId='
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId='
                                                       + full.uuid
                                                       + '"><i class="fa fa-eye fa-lg"></i></a>';
                                             }
-                                          },
-                                          {
-                                            "name": "orderReason",
-                                            "visible": false,
-                                            "render": function(data, type,
-                                                    full, meta) {
-                                              if ((typeof (full.orderReason) !== 'undefined')
-                                                      && (full.orderReason !== null)) {
-                                                return full.orderReason.display;
-                                              } else {
-                                                return "";
-                                              }
-                                            }
-                                          },
-                                          {
-                                            "name": "orderReasonNonCoded",
-                                            "visible": false,
-                                            "render": function(data, type,
-                                                    full, meta) {
-                                              return full.orderReasonNonCoded;
-                                            }
-                                          },
-                                          {
-                                            "name": "instructions",
-                                            "visible": false,
-                                            "render": function(data, type,
-                                                    full, meta) {
-                                              return full.instructions;
-                                            }
-                                          } ],
+                                          }],
                                     });
 
-                    
-                    
                     // prevent form submit when user hits enter
                     $j(window).keydown(function(event) {
                       if (event.keyCode == 13) {
@@ -180,22 +151,12 @@
                     });
 
                     function formatChildRow(data) {
-                      var orderReason = "";
-                      var orderReasonNonCoded = "";
-                      var instructions = "";
-
-                      if ((typeof (data.orderReason) !== 'undefined')
-                              && (data.orderReason !== null)) {
-                        orderReason = data.orderReason.display;
-                      }
-                      if ((typeof (data.orderReasonNonCoded) !== 'undefined')
-                              && (data.orderReasonNonCoded !== null)) {
-                        orderReasonNonCoded = data.orderReasonNonCoded;
-                      }
-                      if ((typeof (data.instructions) !== 'undefined')
-                              && (data.instructions !== null)) {
-                        instructions = data.instructions;
-                      }
+                      var orderReason = Radiology.getProperty(data,
+                              "orderReason.display");
+                      var orderReasonNonCoded = Radiology.getProperty(data,
+                              "orderReasonNonCoded");
+                      var instructions = Radiology.getProperty(data,
+                              "instructions");
                       return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'
                               + '<tr>'
                               + '<td><spring:message code="radiology.datatables.column.order.reason"/>:</td>'
@@ -218,24 +179,30 @@
                               + '</table>';
                     }
 
-                    $j('#ordersTabTable tbody').on('click', 'td',
-                            function(e) {
-                              if ($j(e.target).is(':not(td)')) { return; }
+                    $j('#ordersTabTable tbody')
+                            .on(
+                                    'click',
+                                    'td',
+                                    function(e) {
+                                      if ($j(e.target).is(':not(td)')) { return; }
 
-                              var tr = $j(this).closest('tr');
-                         	  var row = radiologyOrdersTable.row(tr);
-                         	  var expandIconField = tr.find('.expand');
-                         	  
-                              if (row.child.isShown()) {
-                                row.child.hide();
-                                expandIconField.html("<i class='fa fa-chevron-circle-down fa-lg'></i>");
-                                tr.removeClass('shown');
-                              } else {
-                                row.child(formatChildRow(row.data())).show();
-                                expandIconField.html("<i class='fa fa-chevron-circle-up fa-lg'></i>");
-                                tr.addClass('shown');
-                              }
-                            });
+                                      var tr = $j(this).closest('tr');
+                                      var row = radiologyOrdersTable.row(tr);
+                                      var expandIconField = tr.find('.expand');
+
+                                      if (row.child.isShown()) {
+                                        row.child.hide();
+                                        expandIconField
+                                                .html("<i class='fa fa-chevron-circle-down fa-lg'></i>");
+                                        tr.removeClass('shown');
+                                      } else {
+                                        row.child(formatChildRow(row.data()))
+                                                .show();
+                                        expandIconField
+                                                .html("<i class='fa fa-chevron-circle-up fa-lg'></i>");
+                                        tr.addClass('shown');
+                                      }
+                                    });
 
                   });
 </script>
@@ -275,9 +242,6 @@
           <th><spring:message code="radiology.datatables.column.order.scheduledDate" /></th>
           <th><spring:message code="radiology.datatables.column.order.dateActivated" /></th>
           <th><spring:message code="radiology.datatables.column.action" /></th>
-          <th><spring:message code="radiology.datatables.column.order.reason" /></th>
-          <th><spring:message code="radiology.datatables.column.order.reasonNonCoded" /></th>
-          <th><spring:message code="radiology.datatables.column.order.instructions" /></th>
         </tr>
       </thead>
     </table>
