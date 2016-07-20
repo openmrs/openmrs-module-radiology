@@ -71,7 +71,7 @@ you just built:
 
 ```bash
 cd omod
-mvn clean package -Dmaven.test.skip=true docker:build
+mvn docker:build
 ```
 
 #### Run
