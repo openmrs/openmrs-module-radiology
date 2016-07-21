@@ -300,6 +300,14 @@
 				<artifactId>jasmine-maven-plugin</artifactId>
 				<version>2.1</version>
 				<configuration>
+					<phantomjs>
+						<version>2.1.1</version>
+						<checkSystemPath>true</checkSystemPath>
+						<enforceVersion>true</enforceVersion>
+						<source>REPOSITORY</source>
+						<baseUrl/>
+						<outputDirectory>target/phantomjs</outputDirectory>
+					</phantomjs>
 					<jsSrcDir>${project.basedir}/src/main/webapp/resources/scripts</jsSrcDir>
 					<preloadSources>
 						<source>helpers/jquery-1.8.1.js</source>
