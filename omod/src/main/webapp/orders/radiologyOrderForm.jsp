@@ -29,7 +29,6 @@
   <c:otherwise>
     <!--  Show existing RadiologyOrder/discontinued Order -->
 
-    <br>
     <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${order.patient.patientId}" />
     <br>
 
