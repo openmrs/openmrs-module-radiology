@@ -364,4 +364,13 @@
 			</column>
 		</addColumn>
 	</changeSet>
+	<changeSet id="radiology-31" author="teleivo">
+		<comment>add own privilege for radiology link in gutterlist</comment>
+		<insert tableName="privilege">
+			<column name="privilege" value="View Navigation Menu - Radiology" />
+			<column name="description"
+				value="Able to view the 'Radiology' link in the navigation menu" />
+			<column name="uuid" value="be83ee13-1df7-4855-8792-0e04b4e27cd3" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>

@@ -9,7 +9,8 @@
  */
 package org.openmrs.module.radiology.web.extension.html;
 
-import org.openmrs.module.radiology.RadiologyPrivileges;
+import static org.openmrs.module.radiology.RadiologyPrivileges.VIEW_GUTTERLIST_RADIOLOGY_LINK;
+
 import org.openmrs.module.radiology.order.web.RadiologyDashboardFormController;
 import org.openmrs.module.web.extension.LinkExt;
 
@@ -23,7 +24,7 @@ public class GutterListExt extends LinkExt {
     
     @Override
     public String getRequiredPrivilege() {
-        return RadiologyPrivileges.VIEW_RADIOLOGY_SECTION;
+        return VIEW_GUTTERLIST_RADIOLOGY_LINK;
     }
     
     @Override
