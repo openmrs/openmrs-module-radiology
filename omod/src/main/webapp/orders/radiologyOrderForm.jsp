@@ -28,11 +28,10 @@
 
   <c:otherwise>
     <!--  Show existing RadiologyOrder/discontinued Order -->
-
-    <br>
-    <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${order.patient.patientId}" />
-    <br>
-
+    <openmrs:hasPrivilege privilege="View Patients">
+      <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${order.patient.patientId}" />
+      <br>
+    </openmrs:hasPrivilege>
     <c:choose>
       <c:when test="${not empty radiologyOrder}">
         <!--  Show existing RadiologyOrder -->

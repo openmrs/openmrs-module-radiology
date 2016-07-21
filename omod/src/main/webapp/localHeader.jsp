@@ -1,31 +1,18 @@
-<!-- Add, Edit, Delete, View Orders -->
-<!-- Add, Edit, Delete, View Reports -->
-
 <ul id="menu">
-  <li class="first"><a href="${pageContext.request.contextPath}/admin"><spring:message code="admin.title.short" /></a></li>
-  <openmrs:hasPrivilege privilege="View Orders">
-    <li
-      <c:if test='<%=request.getRequestURI()
-                            .contains("radiologyOrderList")%>'>class="active"</c:if>>
-      <a href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.list"> <spring:message
-          code="radiology.manageOrders" />
-    </a>
-    </li>
-    <c:if test='<%=request.getRequestURI()
-                            .contains("radiologyOrderForm")%>'>
-      <li class="active"><a
-        href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId=${radiologyOrder.orderId}">
-          Radiology Order </a></li>
-    </c:if>
+  <c:if test="${not empty radiologyOrder && not empty radiologyOrder.patient}">
+    <openmrs:hasPrivilege privilege="View Patients">
+      <li class="first"><a
+        href="${pageContext.request.contextPath}/patientDashboard.form?patientId=${radiologyOrder.patient.patientId}"><spring:message
+            code="radiology.localHeader.links.patientDashboard" /></a></li>
+      <c:set var="VIEW_PATIENTS_PRIVILEGE" value="true" />
+    </openmrs:hasPrivilege>
     <c:if test='<%=request.getRequestURI()
                             .contains("radiologyReport")%>'>
-      <li><a
-        href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId=${radiologyOrder.orderId}">
-          Radiology Order </a></li>
-      <li class="active"><a
-        href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?radiologyReportId=${radiologyReport.id}">
-          Radiology Report </a></li>
+      <openmrs:hasPrivilege privilege="View Orders">
+        <li <c:if test="${empty VIEW_PATIENTS_PRIVILEGE}">class="first"</c:if>><a
+          href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId=${radiologyOrder.orderId}"><spring:message
+              code="radiology.localHeader.links.radiologyOrder" /></a></li>
+      </openmrs:hasPrivilege>
     </c:if>
-  </openmrs:hasPrivilege>
-
+  </c:if>
 </ul>
