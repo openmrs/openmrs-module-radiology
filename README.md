@@ -2,6 +2,19 @@
 
 [![Build Status](https://secure.travis-ci.org/openmrs/openmrs-module-radiology.png?branch=master)](https://travis-ci.org/openmrs/openmrs-module-radiology) [![Coverage Status](https://coveralls.io/repos/openmrs/openmrs-module-radiology/badge.svg?branch=master&service=github)](https://coveralls.io/github/openmrs/openmrs-module-radiology?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/grade/5e0137f0c916494eaa3ba7de43149ef7)](https://www.codacy.com/app/teleivo/openmrs-module-radiology_2)
 
+####Table of Contents
+
+1. [Overview](#overview)
+2. [Build](#build)
+3. [Install](#install)
+4. [Documentation](#documentation)
+5. [Contributing](#contributing)
+6. [Issues](#issues)
+7. [Limitations](#limitations)
+8. [Community](#community)
+9. [Support](#support)
+10. [License](#license)
+
 ## Overview
 
 OpenMRS module radiology (previously called radiologydcm4chee) is a module adding capabilities of a Radiology
@@ -89,6 +102,14 @@ OpenMRS will be accessible at `localhost:8080/openmrs`
 
 Look at `docker-compose.yml` which connects the required Docker images
 and sets credentials and exposed ports.
+
+#### Demo data
+
+You can import the demo data set [demo-data.sql](acceptanceTest/resources/demo-data.sql) into
+your database which enables you to try out the modules features or test your
+changes.
+
+Please read the corresponding [DEMO-DATA.md](acceptanceTest/resources/DEMO-DATA.md).
 
 ## Documentation
 
