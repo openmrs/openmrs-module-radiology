@@ -55,7 +55,6 @@
         formField.val('');
       }
     });
-    displayNameInput.tooltip();
 
   })
 </script>
