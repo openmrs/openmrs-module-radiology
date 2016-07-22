@@ -30,6 +30,7 @@
                       show: function(event, ui) {
                         localStorage.setItem("selectedRadiologyTab", $j(this)
                                 .tabs("option", "selected"));
+                        $j('.date-picker-wrapper').hide();
                       }
                     });
             $j('.ui-corner-all,.ui-corner-top').removeClass(

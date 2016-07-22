@@ -20,6 +20,11 @@
                     var find = $j('#reportsTabFind');
                     var clearResults = $j('a#reportsTabClearFilters');
 
+                    fromDate.val(moment().subtract(1, 'weeks').startOf('week')
+                            .format('YYYY-MM-DD'));
+                    toDate.val(moment().subtract(1, 'weeks').endOf('week')
+                            .format('YYYY-MM-DD'));
+
                     var radiologyReportsTable = $j('#reportsTabTable')
                             .DataTable(
                                     {
@@ -144,6 +149,8 @@
                                       $j(
                                               '#reportsTabTableFilterFields input, #reportsTabTableFilterFields select')
                                               .val('');
+                                      $j('#reportsTabDateRangePicker').data(
+                                              'dateRangePicker').clear();
                                       radiologyReportsTable.ajax.reload();
                                     });
 
