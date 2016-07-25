@@ -37,3 +37,12 @@ margin:0 1px 0 0;
 .fa-chevron-circle-down, .fa-chevron-circle-up{
 	color: #1AAD9B;
 }
+.fa-check-circle{
+	color: #1AAD9B;
+}
+.fa-times-circle{
+	color: #ff0000;
+}
+.fa-circle{
+	color: #f4920b;
+}

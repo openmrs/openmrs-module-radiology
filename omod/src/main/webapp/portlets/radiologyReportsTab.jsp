@@ -91,13 +91,6 @@
                                             }
                                           },
                                           {
-                                            "name": "reportStatus",
-                                            "render": function(data, type,
-                                                    full, meta) {
-                                              return full.reportStatus;
-                                            }
-                                          },
-                                          {
                                             "name": "dateCreated",
                                             "render": function(data, type,
                                                     full, meta) {
@@ -115,6 +108,21 @@
                                             "render": function(data, type,
                                                     full, meta) {
                                               return full.auditInfo.creator.display;
+                                            }
+                                          },
+                                          {
+                                            "name": "reportStatus",
+                                            "className": "dt-center",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              switch (full.reportStatus) {
+                                              case "COMPLETED":
+                                                return '<i title="<spring:message code="radiology.report.status.COMPLETED"/>" class="fa fa-check-circle fa-lg"></i>';
+                                              case "CLAIMED":
+                                                return '<i title="<spring:message code="radiology.report.status.CLAIMED"/>" class="fa fa-circle fa-lg"></i>';
+                                              case "DISCONTINUED":
+                                                return '<i title="<spring:message code="radiology.report.status.DISCONTINUED"/>" class="fa fa-times-circle fa-lg"></i>';
+                                              }
                                             }
                                           },
                                           {
@@ -220,9 +228,9 @@
           <th><spring:message code="radiology.datatables.column.report.order" /></th>
           <th><spring:message code="radiology.datatables.column.report.principalResultsInterpreter" /></th>
           <th><spring:message code="radiology.datatables.column.report.date" /></th>
-          <th><spring:message code="radiology.datatables.column.report.status" /></th>
           <th><spring:message code="radiology.datatables.column.report.dateCreated" /></th>
           <th><spring:message code="radiology.datatables.column.report.createdBy" /></th>
+          <th><spring:message code="radiology.datatables.column.report.status" /></th>
           <th><spring:message code="radiology.datatables.column.action" /></th>
         </tr>
       </thead>
