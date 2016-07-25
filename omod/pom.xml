@@ -144,7 +144,7 @@
 							<nonFilteredFileExtension>svg</nonFilteredFileExtension>
 							<nonFilteredFileExtension>eot</nonFilteredFileExtension>
 							<nonFilteredFileExtension>otf</nonFilteredFileExtension>
-    					</nonFilteredFileExtensions>
+						</nonFilteredFileExtensions>
 					</configuration>
 				</plugin>
 				<!--This plugin's configuration is used to store Eclipse m2e settings 
@@ -197,22 +197,6 @@
 								</pluginExecution>
 							</pluginExecutions>
 						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-				<plugin>
-					<groupId>com.spotify</groupId>
-					<artifactId>docker-maven-plugin</artifactId>
-					<version>${maven-docker-plugin-version}</version>
-					<configuration>
-						<imageName>${docker.image.prefix}/module-${project.parent.artifactId}</imageName>
-						<dockerDirectory>src/main/docker</dockerDirectory>
-						<resources>
-							<resource>
-								<targetPath>/</targetPath>
-								<directory>${project.build.directory}</directory>
-								<include>${project.build.finalName}.omod</include>
-							</resource>
-						</resources>
 					</configuration>
 				</plugin>
 			</plugins>
@@ -305,7 +289,7 @@
 						<checkSystemPath>true</checkSystemPath>
 						<enforceVersion>true</enforceVersion>
 						<source>REPOSITORY</source>
-						<baseUrl/>
+						<baseUrl />
 						<outputDirectory>target/phantomjs</outputDirectory>
 					</phantomjs>
 					<jsSrcDir>${project.basedir}/src/main/webapp/resources/scripts</jsSrcDir>
@@ -334,6 +318,79 @@
 						</goals>
 					</execution>
 				</executions>
+			</plugin>
+			<plugin>
+				<groupId>io.fabric8</groupId>
+				<artifactId>docker-maven-plugin</artifactId>
+				<configuration>
+					<logDate>default</logDate>
+					<autoPull>true</autoPull>
+					<verbose>true</verbose>
+					<images>
+						<!-- DB Image is used 'as-is' and is linked into the openmrs image -->
+						<image>
+							<alias>db</alias>
+							<name>teleivo/openmrs-platform-mysql:latest</name>
+							<run>
+								<log>
+									<prefix>DB</prefix>
+									<color>yellow</color>
+								</log>
+								<ports>
+									<port>3306:3306</port>
+								</ports>
+								<env>
+									<MYSQL_ROOT_PASSWORD>openmrs</MYSQL_ROOT_PASSWORD>
+									<MYSQL_USER>openmrs</MYSQL_USER>
+									<MYSQL_PASSWORD>openmrs</MYSQL_PASSWORD>
+									<MYSQL_DATABASE>openmrs</MYSQL_DATABASE>
+								</env>
+								<wait>
+									<log>MySQL init process done. Ready for start up.</log>
+									<time>60000</time>
+								</wait>
+							</run>
+						</image>
+						<!-- Image holding the artifact of this build -->
+						<image>
+							<alias>openmrs</alias>
+							<name>teleivo/openmrs-module-${project.parent.artifactId}</name>
+							<build>
+								<dockerFile>Dockerfile</dockerFile>
+								<assembly>
+									<basedir>/</basedir>
+									<descriptor>${basedir}/src/main/assembly.xml</descriptor>
+								</assembly>
+								<ports>
+									<port>8080</port>
+								</ports>
+							</build>
+							<run>
+								<ports>
+									<port>8080:8080</port>
+								</ports>
+								<links>
+									<link>db:db</link>
+								</links>
+								<env>
+									<MYSQL_USER>openmrs</MYSQL_USER>
+									<MYSQL_PASSWORD>openmrs</MYSQL_PASSWORD>
+									<MYSQL_DATABASE>openmrs</MYSQL_DATABASE>
+									<MYSQL_HOST>db</MYSQL_HOST>
+									<MYSQL_PORT>3306</MYSQL_PORT>
+								</env>
+								<wait>
+									<log>Server startup in</log>
+									<time>300000</time>
+								</wait>
+								<log>
+									<prefix>TC</prefix>
+									<color>cyan</color>
+								</log>
+							</run>
+						</image>
+					</images>
+				</configuration>
 			</plugin>
 		</plugins>
 	</build>

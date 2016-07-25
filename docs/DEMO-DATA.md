@@ -22,7 +22,7 @@ be used as radiology order reason
 * insert statements to assign necessary privileges to the radiology roles
 * a set of users/providers for every radiology roles
 
-*NOTE: users, providers, patients and their cases are purely fictional*
+**NOTE: users, providers, patients and their cases are purely fictional**
 
 Person related data has been generated using the awesome [Faker.js](https://github.com/marak/Faker.js/) project.
 
@@ -33,10 +33,11 @@ Person related data has been generated using the awesome [Faker.js](https://gith
 To import it in your database do:
 
 ```bash
-mysql -h 192.168.99.100 -uopenmrs -popenmrs openmrs < demo-data.sql
+mysql -h <IP ADDRESS> -uopenmrs -popenmrs openmrs < demo-data.sql
 ```
 
-NOTE: please update the mysql host, port ... for your setup
+**NOTE: please adjust the mysql connection details (host, port ...) according to
+your your setup!**
 
 ### Update Search Index
 

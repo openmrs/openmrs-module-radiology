@@ -7,6 +7,8 @@
 1. [Overview](#overview)
 2. [Build](#build)
 3. [Install](#install)
+  * [Docker](#docker-whale)
+  * [Demo data](#demo-data)
 4. [Documentation](#documentation)
 5. [Contributing](#contributing)
 6. [Issues](#issues)
@@ -66,57 +68,58 @@ This module can be baked into a Docker image so you can easily run and test it.
 
 #### Prerequisites
 
-Build the module as described under [Build](#build).
+After you have taken care of the [Build Prerequisites](#prerequisites)
 
 Make sure you have [Docker](https://docs.docker.com/) installed.
 
-This Docker image cannot run without the correct database appropriate for the OpenMRS Platform 2.0 version used.
-
-I suggest you install and use [Docker Compose](https://docs.docker.com/compose/install/) to install the Docker image for the Radiology Module you built together with
-the Docker image [OpenMRS Platform MySQL](https://github.com/teleivo/docker-openmrs-platform-mysql) for the database.
-
-Just follow the next sections.
-
 #### Build
 
-Enter the omod directory and build the Docker image for the Radiology Module
-you just built:
+Build the Radiology Module and its Docker image:
 
 ```bash
-cd omod
-mvn docker:build
+cd openmrs-module-radiology
+mvn clean package docker:build
 ```
 
 #### Run
 
-To run an instance of the OpenMRS Platform MySQL database, the Platform itself
-and the Radiology Module execute:
+To run an instance of the OpenMRS Radiology Module execute (assumes you have
+created a Docker image):
 
+```bash
+cd openmrs-module-radiology
+mvn docker:start
 ```
-docker-compose up
-```
 
-in the root directory of this repository.
+OpenMRS will be accessible at `http://<IP ADDRESS>:8080/openmrs`
 
-OpenMRS will be accessible at `localhost:8080/openmrs`
+**NOTE: The IP address varies depending on your setup.**
 
-Look at `docker-compose.yml` which connects the required Docker images
-and sets credentials and exposed ports.
+If you are using [Docker machine](https://docs.docker.com/machine/) refer to its documentation on how to get the IP address.
+If you are on Linux it will probably be will be `localhost`.
 
-#### Demo data
+#### Documentation
+
+Please read the corresponding [DOCKER.md](docs/DOCKER.md) for more detailed
+explanations on using Docker with the Radiology Module.
+
+### Demo data
 
 You can import the demo data set [demo-data.sql](acceptanceTest/resources/demo-data.sql) into
 your database which enables you to try out the modules features or test your
 changes.
 
-Please read the corresponding [DEMO-DATA.md](acceptanceTest/resources/DEMO-DATA.md).
+Please read the corresponding [DEMO-DATA.md](docs/DEMO-DATA.md).
 
 ## Documentation
 
 For a detailed guide on ways to install and configure this module see
 
-https://wiki.openmrs.org/display/docs/Radiology+Module
+http://teleivo.github.io/docs-openmrs-module-radiology/
 
+For some more background informations on the module see
+
+https://wiki.openmrs.org/display/docs/Radiology+Module
 
 ## Contributing
 
