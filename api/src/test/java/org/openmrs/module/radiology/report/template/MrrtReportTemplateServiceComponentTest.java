@@ -14,6 +14,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -174,46 +175,6 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
-    * @verifies should get list of templates that match given title
-    */
-    @Test
-    public void getMrrtReportTemplateByTitle_shouldGetListOfTemplatesThatMatchGivenTitle() throws Exception {
-        List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplateByTitle(EXISTING_TEMPLATE_TITLE);
-        
-        assertNotNull(templates);
-        assertThat(templates.size(), is(1));
-        for (MrrtReportTemplate template : templates) {
-            assertThat(template.getDcTermsTitle()
-                    .contains(EXISTING_TEMPLATE_TITLE),
-                is(true));
-        }
-    }
-    
-    /**
-     * @see MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
-     * @verifies should return empty list of no match is found
-     */
-    @Test
-    public void getMrrtReportTemplateByTitle_shouldReturnEmptyListOfNoMatchIsFound() throws Exception {
-        List<MrrtReportTemplate> templates =
-                mrrtReportTemplateService.getMrrtReportTemplateByTitle(NON_EXISTING_TEMPLATE_TITLE);
-        assertNotNull(templates);
-        assertEquals(templates.isEmpty(), true);
-    }
-    
-    /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
-    * @verifies throw illegal argument exception if given null
-    */
-    @Test
-    public void getMrrtReportTemplateByTitle_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("title cannot be null");
-        mrrtReportTemplateService.getMrrtReportTemplateByTitle(null);
-    }
-    
-    /**
     * @see MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
     * @verifies delete report from database
     */
@@ -324,5 +285,48 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
         assertThat(templatePath.getParentFile()
                 .getName(),
             is(templateHome.getName()));
+    }
+    
+    /**
+    * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
+    * @verifies return all mrrt report templates that match given title search query if title is specified
+    */
+    @Test
+    public void getMrrtReportTemplates_shouldReturnAllMrrtReportTemplatesThatMatchGivenTitleSearchQueryIfTitleIsSpecified()
+            throws Exception {
+        
+        MrrtReportTemplateSearchCriteria searchCriteria =
+                new MrrtReportTemplateSearchCriteria.Builder().withTitle(EXISTING_TEMPLATE_TITLE)
+                        .build();
+        List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        assertNotNull(templates);
+        assertThat(templates.size(), is(1));
+    }
+    
+    /**
+    * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
+    * @verifies return an empty list of no match for title was found
+    */
+    @Test
+    public void getMrrtReportTemplates_shouldReturnAnEmptyListOfNoMatchForTitleWasFound() throws Exception {
+        
+        MrrtReportTemplateSearchCriteria searchCriteria =
+                new MrrtReportTemplateSearchCriteria.Builder().withTitle(NON_EXISTING_TEMPLATE_TITLE)
+                        .build();
+        List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        assertNotNull(templates);
+        assertTrue(templates.isEmpty());
+    }
+    
+    /**
+    * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
+    * @verifies throw illegal argument exception of given null
+    */
+    @Test
+    public void getMrrtReportTemplates_shouldThrowIllegalArgumentExceptionOfGivenNull() throws Exception {
+        
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("mrrtReportTemplateSearchCriteria cannot be null");
+        mrrtReportTemplateService.getMrrtReportTemplates(null);
     }
 }

@@ -36,9 +36,9 @@ interface MrrtReportTemplateDAO {
     public MrrtReportTemplate getMrrtReportTemplateByIdentifier(String identifier);
     
     /**
-     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
      */
-    public List<MrrtReportTemplate> getMrrtReportTemplateByTitle(String title);
+    public List<MrrtReportTemplate> getMrrtReportTemplates(MrrtReportTemplateSearchCriteria searchCriteria);
     
     /**
      * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)

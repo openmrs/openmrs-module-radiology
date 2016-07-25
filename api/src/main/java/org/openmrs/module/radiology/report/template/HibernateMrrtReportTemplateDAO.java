@@ -68,16 +68,20 @@ class HibernateMrrtReportTemplateDAO implements MrrtReportTemplateDAO {
     }
     
     /**
-     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
      */
+    @SuppressWarnings("unchecked")
     @Override
-    public List<MrrtReportTemplate> getMrrtReportTemplateByTitle(String title) {
+    public List<MrrtReportTemplate> getMrrtReportTemplates(MrrtReportTemplateSearchCriteria searchCriteria) {
         
-        final Criteria criteria = createMrrtReportTemplateCriteria();
-        criteria.add(Restrictions.ilike("dcTermsTitle", title + "%", MatchMode.ANYWHERE));
-        @SuppressWarnings("unchecked")
-        List<MrrtReportTemplate> result = (List<MrrtReportTemplate>) criteria.list();
-        return result == null ? new ArrayList<MrrtReportTemplate>() : result;
+        final Criteria crit = sessionFactory.getCurrentSession()
+                .createCriteria(MrrtReportTemplate.class);
+        
+        if (searchCriteria.getTitle() != null) {
+            crit.add(Restrictions.ilike("dcTermsTitle", searchCriteria.getTitle() + "%", MatchMode.ANYWHERE));
+        }
+        List<MrrtReportTemplate> result = (List<MrrtReportTemplate>) crit.list();
+        return result == null ? new ArrayList<>() : result;
     }
     
     /**

@@ -19,6 +19,7 @@ import java.util.List;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.openmrs.module.radiology.report.template.MrrtReportTemplateSearchCriteria;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -106,9 +107,12 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
         
         assertNotNull(resultMrrtReportTemplate);
         List<Object> hits = (List<Object>) resultMrrtReportTemplate.get("results");
+        MrrtReportTemplateSearchCriteria searchCriteria =
+                new MrrtReportTemplateSearchCriteria.Builder().withTitle(TITLE_QUERY)
+                        .build();
         assertThat(hits.size(), is(2));
         assertThat(PropertyUtils.getProperty(hits.get(0), "uuid"),
-            is(mrrtReportTemplateService.getMrrtReportTemplateByTitle(TITLE_QUERY)
+            is(mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria)
                     .get(0)
                     .getUuid()));
         assertNull(PropertyUtils.getProperty(resultMrrtReportTemplate, "totalCount"));

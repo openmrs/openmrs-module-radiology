@@ -13,6 +13,7 @@ import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.when;
+import static org.mockito.Matchers.any;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,6 +25,7 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplate;
+import org.openmrs.module.radiology.report.template.MrrtReportTemplateSearchCriteria;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestUtil;
@@ -50,6 +52,8 @@ public class MrrtReportTemplateSearchHandlerTest {
     
     private static final String NON_EXISTING_TITLE = "Invalid";
     
+    private static final String BLANK_TITLE = "";
+    
     private static final String TITLE_QUERY = "Cardiac MRI";
     
     @Mock
@@ -65,17 +69,18 @@ public class MrrtReportTemplateSearchHandlerTest {
     
     MrrtReportTemplate mrrtReportTemplate2 = new MrrtReportTemplate();
     
+    List<MrrtReportTemplate> mrrtReportTemplates;
+    
     @Before
     public void setUp() {
         mrrtReportTemplate1.setDcTermsTitle(MRRT_REPORT_TEMPLATE1_TITLE);
         mrrtReportTemplate2.setDcTermsTitle(MRRT_REPORT_TEMPLATE2_TITLE);
-        List<MrrtReportTemplate> mrrtReportTemplates = new ArrayList<>();
+        mrrtReportTemplates = new ArrayList<>();
         mrrtReportTemplates.add(mrrtReportTemplate1);
         mrrtReportTemplates.add(mrrtReportTemplate2);
         
         PowerMockito.mockStatic(RestUtil.class);
         PowerMockito.mockStatic(Context.class);
-        when(mrrtReportTemplateService.getMrrtReportTemplateByTitle(TITLE_QUERY)).thenReturn(mrrtReportTemplates);
     }
     
     /**
@@ -103,6 +108,8 @@ public class MrrtReportTemplateSearchHandlerTest {
         request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_TITLE, TITLE_QUERY);
         RequestContext requestContext = new RequestContext();
         requestContext.setRequest(request);
+        when(mrrtReportTemplateService.getMrrtReportTemplates(any(MrrtReportTemplateSearchCriteria.class)))
+                .thenReturn(mrrtReportTemplates);
         
         PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
         assertThat(pageableResult, is(instanceOf(NeedsPaging.class)));
