@@ -566,49 +566,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
-     * @verifies should return all radiology orders associated with given patient
-     */
-    @Test
-    public void getRadiologyOrdersByPatient_shouldReturnAllRadiologyOrdersAssociatedWithGivenPatient() {
-        
-        Patient patientWithTwoRadiologyOrders =
-                patientService.getPatient(PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER);
-        
-        List<RadiologyOrder> radiologyOrders =
-                radiologyOrderService.getRadiologyOrdersByPatient(patientWithTwoRadiologyOrders);
-        
-        assertThat(radiologyOrders.size(), is(2));
-    }
-    
-    /**
-     * @see RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
-     * @verifies should return empty list given patient without associated radiology orders
-     */
-    @Test
-    public void getRadiologyOrdersByPatient_shouldReturnEmptyListGivenPatientWithoutAssociatedRadiologyOrders() {
-        
-        Patient patientWithoutRadiologyOrders = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER);
-        
-        List<RadiologyOrder> radiologyOrders =
-                radiologyOrderService.getRadiologyOrdersByPatient(patientWithoutRadiologyOrders);
-        
-        assertThat(radiologyOrders.size(), is(0));
-    }
-    
-    /**
-     * @see RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
-     * @verifies throw illegal argument exception if given null
-     */
-    @Test
-    public void getRadiologyOrdersByPatient_shouldThrowIllegalArgumentExceptionIfGivenNull() {
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("patient cannot be null");
-        radiologyOrderService.getRadiologyOrdersByPatient(null);
-    }
-    
-    /**
      * @see RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
      * @verifies should return all radiology orders associated with given patients
      */
@@ -673,5 +630,36 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
                 radiologyOrderService.getRadiologyOrdersByPatients(Arrays.asList(patientWithoutRadiologyOrders));
         
         assertThat(radiologyOrders.size(), is(0));
+    }
+    
+    /**
+    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+    * @verifies return all radiology orders for given patient if patient is specified
+    */
+    @Test
+    public void getRadiologyOrders_shouldReturnAllRadiologyOrdersForGivenPatientIfPatientIsSpecified() throws Exception {
+        
+        Patient patient = patientService.getPatient(PATIENT_ID_WITH_TWO_RADIOLOGY_ORDERS);
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
+                new RadiologyOrderSearchCriteria.Builder().withPatient(patient)
+                        .build();
+        
+        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        assertThat(radiologyOrders.size(), is(2));
+        for (RadiologyOrder radiologyOrder : radiologyOrders) {
+            assertThat(radiologyOrder.getPatient(), is(patient));
+        }
+    }
+    
+    /**
+    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+    * @verifies throw illegal argument exception if given null
+    */
+    @Test
+    public void getRadiologyOrders_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+        
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("radiologyOrderSearchCriteria cannot be null");
+        radiologyOrderService.getRadiologyOrders(null);
     }
 }

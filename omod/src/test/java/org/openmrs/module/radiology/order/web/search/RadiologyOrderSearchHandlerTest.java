@@ -95,8 +95,6 @@ public class RadiologyOrderSearchHandlerTest {
         when(patientResource.getByUniqueId(PATIENT_UUID_UNKNOWN)).thenReturn(null);
         when(Context.getService(RestService.class)).thenReturn(restService);
         when(restService.getResourceBySupportedClass(Patient.class)).thenReturn(patientResource);
-        
-        when(radiologyOrderService.getRadiologyOrdersByPatient(patientWithOrders)).thenReturn(radiologyOrders);
     }
     
     /**
