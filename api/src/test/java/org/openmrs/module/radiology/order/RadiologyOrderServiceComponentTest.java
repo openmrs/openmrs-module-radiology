@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Encounter;
 import org.openmrs.Order;
+import org.openmrs.Order.Action;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.AdministrationService;
@@ -73,6 +74,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     private static final int PATIENT_ID_WITH_ONE_VOIDED_AND_ONE_NON_VOIDED_RADIOLOGY_ORDER = 70023;
     
+    private static final int PATIENT_ID_WITH_ONE_DISCONTINUED_AND_ONE_NON_DISCONTINUED_RADIOLOGY_ORDER = 70024;
+    
     private static final int EXISTING_RADIOLOGY_ORDER_ID = 2001;
     
     private static final String EXISTING_RADIOLOGY_ORDER_UUID = "44f24d7e-ebbd-4500-bfba-1db19561ca04";
@@ -83,9 +86,11 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     private static final String RADIOLOGY_ORDER_UUID_OF_VOIDED = "56816dbe-59aa-4d4d-a943-3016009e9ae1";
     
+    private static final String RADIOLOGY_ORDER_UUID_OF_DISCONTINUED = "443b7c18-da33-4884-9377-9de6850d13b1";
+    
     private static final int CONCEPT_ID_FOR_FRACTURE = 178;
     
-    private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 5;
+    private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 7;
     
     @Autowired
     private PatientService patientService;
@@ -590,11 +595,17 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertThat(orderService.getAllOrdersByPatient(patientWithTwoRadiologyOrdersOneVoidedOneNonVoided)
                 .size(),
             is(2));
+        Patient patientWithTwoRadiologyOrdersOneDiscontinuedOneNonDiscontinued =
+                patientService.getPatient(PATIENT_ID_WITH_ONE_DISCONTINUED_AND_ONE_NON_DISCONTINUED_RADIOLOGY_ORDER);
+        assertThat(orderService.getAllOrdersByPatient(patientWithTwoRadiologyOrdersOneDiscontinuedOneNonDiscontinued)
+                .size(),
+            is(2));
         
         List<Patient> allPatientsWithRadiologyOrders = new ArrayList<Patient>();
         allPatientsWithRadiologyOrders.add(patientWithTwoRadiologyOrders);
         allPatientsWithRadiologyOrders.add(patientWithFiveRadiologyOrders);
         allPatientsWithRadiologyOrders.add(patientWithTwoRadiologyOrdersOneVoidedOneNonVoided);
+        allPatientsWithRadiologyOrders.add(patientWithTwoRadiologyOrdersOneDiscontinuedOneNonDiscontinued);
         
         List<RadiologyOrder> radiologyOrders =
                 radiologyOrderService.getRadiologyOrdersByPatients(allPatientsWithRadiologyOrders);
@@ -682,6 +693,29 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertThat(radiologyOrders,
             hasItem(Matchers.<RadiologyOrder> hasProperty("uuid", is(RADIOLOGY_ORDER_UUID_OF_VOIDED))));
         assertThat(radiologyOrders, hasItem(Matchers.<RadiologyOrder> hasProperty("voided", is(true))));
+    }
+    
+    /**
+    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+    * @verifies return all radiology orders (including discontinued) matching the search query if include discontinued is set
+    */
+    @Test
+    public void
+            getRadiologyOrders_shouldReturnAllRadiologyOrdersIncludingDiscontinuedMatchingTheSearchQueryIfIncludeDiscontinuedIsSet()
+                    throws Exception {
+        
+        Patient patient =
+                patientService.getPatient(PATIENT_ID_WITH_ONE_DISCONTINUED_AND_ONE_NON_DISCONTINUED_RADIOLOGY_ORDER);
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
+                new RadiologyOrderSearchCriteria.Builder().withPatient(patient)
+                        .includeDiscontinued()
+                        .build();
+        
+        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        assertThat(radiologyOrders.size(), is(2));
+        assertThat(radiologyOrders,
+            hasItem(Matchers.<RadiologyOrder> hasProperty("uuid", is(RADIOLOGY_ORDER_UUID_OF_DISCONTINUED))));
+        assertThat(radiologyOrders, hasItem(Matchers.<RadiologyOrder> hasProperty("action", is(Action.DISCONTINUE))));
     }
     
     /**

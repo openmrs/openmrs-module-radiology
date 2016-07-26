@@ -21,6 +21,8 @@ public class RadiologyOrderSearchCriteria {
     
     private final Boolean includeVoided;
     
+    private final Boolean includeDiscontinued;
+    
     /**
      * @return the order patient
      */
@@ -37,12 +39,22 @@ public class RadiologyOrderSearchCriteria {
         return includeVoided;
     }
     
+    /**
+     * @return the {@code Boolean} specifying whether or not to include discontinued radiology orders
+     */
+    public Boolean getIncludeDiscontinued() {
+        
+        return includeDiscontinued;
+    }
+    
     public static class Builder {
         
         
         private Patient patient;
         
         private Boolean includeVoided = false;
+        
+        private Boolean includeDiscontinued = false;
         
         /**
          * @param patient the order patient
@@ -66,11 +78,23 @@ public class RadiologyOrderSearchCriteria {
         }
         
         /**
+         * Includes discontinued radiology orders.
+         * 
+         * @return this builder instance
+         */
+        public Builder includeDiscontinued() {
+            
+            this.includeDiscontinued = true;
+            return this;
+        }
+        
+        /**
          * Create an {@link RadiologyOrderSearchCriteria} with the properties of this builder instance.
          * 
          * @return a new search criteria instance
          * @should create a new radiology order search criteria instance with patient if patient is set
          * @should create a new radiology order search criteria instance with include voided set to true if voided orders should be included
+         * @should create a new radiology order search criteria instance with include discontinued set to true if discontinued orders should be included
          */
         public RadiologyOrderSearchCriteria build() {
             
@@ -82,5 +106,6 @@ public class RadiologyOrderSearchCriteria {
         
         this.patient = builder.patient;
         this.includeVoided = builder.includeVoided;
+        this.includeDiscontinued = builder.includeDiscontinued;
     }
 }
