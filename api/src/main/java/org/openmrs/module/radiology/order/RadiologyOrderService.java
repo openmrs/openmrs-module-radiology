@@ -130,6 +130,7 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @return the radiology orders matching given criteria
      * @throws IllegalArgumentException if given null
      * @should return all radiology orders for given patient if patient is specified
+     * @should return all radiology orders (including voided) matching the search query if include voided is set
      * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_ORDERS)

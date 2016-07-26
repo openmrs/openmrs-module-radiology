@@ -21,7 +21,7 @@
   <global_property property="radiology.radiologyOrderingProviderEncounterRole" property_value="13fc9b4a-49ed-429c-9dde-ca005b387a3d" description="Radiology Ordering Provider Encounter Role UUID"/>
   <global_property property="radiology.radiologyOrderEncounterType" property_value="19db8c0d-3520-48f2-babd-77f2d450e5c7" description="Radiology Order Encounter Type UUID"/>
   <global_property property="radiology.radiologyTestOrderType" property_value="dbdb9a9b-56ea-11e5-a47f-08002719a237" description="Radiology Test Order Type UUID"/>
-  <global_property property="radiology.nextAccessionNumberSeed" property_value="4" datatype="org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype" datatype_config="^\d+$" uuid="f45d1722-d983-427b-82ed-c4e8beffd1c7"/>
+  <global_property property="radiology.nextAccessionNumberSeed" property_value="6" datatype="org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype" datatype_config="^\d+$" uuid="f45d1722-d983-427b-82ed-c4e8beffd1c7"/>
 
   <encounter_type encounter_type_id="1001" name="Radiology Order Encounter Type" description="Ordering radiology exams" creator="1" date_created="2015-09-09 00:00:00.0" retired="false" uuid="19db8c0d-3520-48f2-babd-77f2d450e5c7"/>
   <encounter_role encounter_role_id="1001" name="Radiology Ordering Provider Encounter Role " description="Provider ordering tests, exams, drugs, ..." creator="1" retired="false" date_created="2015-09-09 14:00:00.0" uuid="13fc9b4a-49ed-429c-9dde-ca005b387a3d" />
@@ -80,4 +80,20 @@
   <orders order_id="2004" order_number="2004" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="ROUTINE" orderer="1" concept_id="178" accession_number="3" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" uuid="be24cb45-6ae2-4bf1-8aa1-4d95fd679e1f"/>
   <test_order order_id="2004"/>
   <radiology_order order_id="2004" />
+  
+  <!-- patient with one voided and one non voided radiology order -->
+  <encounter encounter_id="2005" encounter_type="1001" patient_id="70023" location_id="1" form_id="1" encounter_datetime="2015-02-03 13:17:15.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" uuid="4e0e172b-510e-4d35-b705-4b363540fc62"/>
+  <patient patient_id="70023" creator="1" date_created="2016-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="4" patient_id="70023" identifier="1237" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2016-01-01 00:00:00.0" voided="false" uuid="4d447d87-a746-4b83-94da-7a7d4e5e8957"/>
+  <person person_id="70023" gender="M" birthdate="1991-04-13" dead="false" creator="1" date_created="2016-01-01 00:00:00.0" voided="false"/>
+  <person_name person_name_id="4" preferred="true" person_id="70023" given_name="John" family_name="Doe" creator="1" date_created="2016-01-01 00:00:00.0" voided="false" uuid="7efb681e-df66-4cb3-9504-8b2f2b034fc0"/>
+
+  <orders order_id="2005" order_number="2005" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2005" urgency="ROUTINE"  orderer="1" concept_id="178" accession_number="4" instructions="MR Left Knee" date_activated="2015-02-02 12:26:35.0" date_voided="2016-02-02 12:26:35.0" creator="1" date_created="2015-02-02 12:26:35.0" voided="true" patient_id="70023" uuid="56816dbe-59aa-4d4d-a943-3016009e9ae1"/>
+  <test_order order_id="2005"/>
+  <radiology_order order_id="2005" />
+
+  <orders order_id="2006" order_number="2006" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2005" urgency="ROUTINE"  orderer="1" concept_id="178" accession_number="5" instructions="MR Left Knee" date_activated="2015-02-02 12:26:35.0" creator="1" date_created="2015-02-02 12:26:35.0" voided="false" patient_id="70023" uuid="cf8c1b34-9060-4190-8831-3b8038556bad"/>
+  <test_order order_id="2006"/>
+  <radiology_order order_id="2006" />
+  
 </dataset>

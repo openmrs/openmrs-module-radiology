@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.radiology.order;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -35,6 +37,22 @@ public class RadiologyOrderSearchCriteriaTest {
         
         assertTrue(radiologyOrderSearchCriteria.getPatient()
                 .equals(patient));
+        assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
     }
     
+    /**
+     * @see RadiologyOrderSearchCriteria.Builder#build()
+     * @verifies create a new radiology order search criteria instance with include voided set to true if voided orders should be included
+     */
+    @Test
+    public void
+            build_createANewRadiologyOrderSearchCriteriaInstanceWithIncludeVoidedSetToTrueIfVoidedOrdersShouldBeIncluded()
+                    throws Exception {
+        
+        radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder().includeVoided()
+                .build();
+        
+        assertTrue(radiologyOrderSearchCriteria.getIncludeVoided());
+        assertNull(radiologyOrderSearchCriteria.getPatient());
+    }
 }

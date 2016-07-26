@@ -161,6 +161,10 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
             crit.add(Restrictions.eq("patient", searchCriteria.getPatient()));
         }
         
+        if (!searchCriteria.getIncludeVoided()) {
+            crit.add(Restrictions.not(Restrictions.eq("voided", true)));
+        }
+        
         return crit.list();
     }
 }

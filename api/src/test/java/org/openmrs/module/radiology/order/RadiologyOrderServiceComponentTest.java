@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import org.hamcrest.Matchers;
 import org.hibernate.cfg.Environment;
 import org.junit.After;
 import org.junit.Assert;
@@ -70,6 +71,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     private static final int PATIENT_ID_WITH_FIVE_RADIOLOGY_ORDERS = 70022;
     
+    private static final int PATIENT_ID_WITH_ONE_VOIDED_AND_ONE_NON_VOIDED_RADIOLOGY_ORDER = 70023;
+    
     private static final int EXISTING_RADIOLOGY_ORDER_ID = 2001;
     
     private static final String EXISTING_RADIOLOGY_ORDER_UUID = "44f24d7e-ebbd-4500-bfba-1db19561ca04";
@@ -78,9 +81,11 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     private static final String NON_EXISTING_RADIOLOGY_ORDER_UUID = "99999999-ebbd-4500-bfba-1db19561ca04";
     
+    private static final String RADIOLOGY_ORDER_UUID_OF_VOIDED = "56816dbe-59aa-4d4d-a943-3016009e9ae1";
+    
     private static final int CONCEPT_ID_FOR_FRACTURE = 178;
     
-    private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 3;
+    private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 5;
     
     @Autowired
     private PatientService patientService;
@@ -580,9 +585,16 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertThat(orderService.getAllOrdersByPatient(patientWithFiveRadiologyOrders)
                 .size(),
             is(1));
+        Patient patientWithTwoRadiologyOrdersOneVoidedOneNonVoided =
+                patientService.getPatient(PATIENT_ID_WITH_ONE_VOIDED_AND_ONE_NON_VOIDED_RADIOLOGY_ORDER);
+        assertThat(orderService.getAllOrdersByPatient(patientWithTwoRadiologyOrdersOneVoidedOneNonVoided)
+                .size(),
+            is(2));
+        
         List<Patient> allPatientsWithRadiologyOrders = new ArrayList<Patient>();
         allPatientsWithRadiologyOrders.add(patientWithTwoRadiologyOrders);
         allPatientsWithRadiologyOrders.add(patientWithFiveRadiologyOrders);
+        allPatientsWithRadiologyOrders.add(patientWithTwoRadiologyOrdersOneVoidedOneNonVoided);
         
         List<RadiologyOrder> radiologyOrders =
                 radiologyOrderService.getRadiologyOrdersByPatients(allPatientsWithRadiologyOrders);
@@ -649,6 +661,27 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         for (RadiologyOrder radiologyOrder : radiologyOrders) {
             assertThat(radiologyOrder.getPatient(), is(patient));
         }
+    }
+    
+    /**
+    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+    * @verifies return all radiology orders (including voided) matching the search query if include voided is set
+    */
+    @Test
+    public void getRadiologyOrders_shouldReturnAllRadiologyOrdersIncludingVoidedMatchingTheSearchQueryIfIncludeVoidedIsSet()
+            throws Exception {
+        
+        Patient patient = patientService.getPatient(PATIENT_ID_WITH_ONE_VOIDED_AND_ONE_NON_VOIDED_RADIOLOGY_ORDER);
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
+                new RadiologyOrderSearchCriteria.Builder().withPatient(patient)
+                        .includeVoided()
+                        .build();
+        
+        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        assertThat(radiologyOrders.size(), is(2));
+        assertThat(radiologyOrders,
+            hasItem(Matchers.<RadiologyOrder> hasProperty("uuid", is(RADIOLOGY_ORDER_UUID_OF_VOIDED))));
+        assertThat(radiologyOrders, hasItem(Matchers.<RadiologyOrder> hasProperty("voided", is(true))));
     }
     
     /**
