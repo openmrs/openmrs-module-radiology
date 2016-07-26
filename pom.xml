@@ -100,7 +100,6 @@
 				<version>${openMRSVersion}</version>
 			</dependency>
 		</dependencies>
-
 	</dependencyManagement>
 
 	<build>
@@ -135,6 +134,9 @@
 						<overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
 						<configFile>${maven-formatter-plugin-style-java}</configFile>
 						<configJsFile>${maven-formatter-plugin-style-javascript}</configJsFile>
+						<includes>
+							<include>**/*.java</include>
+						</includes>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -209,6 +211,7 @@
 				</configuration>
 				<executions>
 					<execution>
+						<id>check-license-header</id>
 						<goals>
 							<goal>check</goal>
 						</goals>
@@ -250,4 +253,40 @@
 		</snapshotRepository>
 	</distributionManagement>
 
+	<profiles>
+		<profile>
+			<id>development</id>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>com.mycila</groupId>
+							<artifactId>license-maven-plugin</artifactId>
+							<executions>
+								<execution>
+									<id>format-license-header</id>
+									<phase>process-sources</phase>
+									<goals>
+										<goal>format</goal>
+									</goals>
+								</execution>
+							</executions>
+						</plugin>
+						<plugin>
+							<groupId>com.marvinformatics.formatter</groupId>
+							<artifactId>formatter-maven-plugin</artifactId>
+							<executions>
+								<execution>
+									<id>format-code</id>
+									<goals>
+										<goal>format</goal>
+									</goals>
+								</execution>
+							</executions>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
 </project>
