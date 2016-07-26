@@ -159,6 +159,10 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
             crit.add(Restrictions.eq("accessionNumber", searchCriteria.getAccessionNumber()));
         }
         
+        if (searchCriteria.getOrderer() != null) {
+            crit.add(Restrictions.eq("orderer", searchCriteria.getOrderer()));
+        }
+        
         crit.addOrder(Order.asc("accessionNumber"));
         return crit.list();
     }

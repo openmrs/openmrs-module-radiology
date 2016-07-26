@@ -28,6 +28,7 @@
 
     <!-- Provider for Radiology Orders -->
   <provider provider_id="1" name="Radiology Technician" identifier="1" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="c2299800-cca9-11e0-9572-0800200c9a66" />
+  <provider provider_id="2" name="Radiology Technician 2" identifier="2" creator="1" date_created="2005-01-01 00:00:00.0" retired="false" uuid="53f7a3ee-39e8-487d-ac02-3888ef2a6d62" />
 
   <!-- concept name and concept -->
   <concept concept_id="178" retired="false" datatype_id="4" class_id="4" is_set="false" creator="1" date_created="2004-01-01 00:00:00" changed_by="1" date_changed="2005-02-16 00:00:00" version="" uuid="1565b6e6-df81-11e4-98ec-08002798a7ad"/>
@@ -80,7 +81,7 @@
   <test_order order_id="2005"/>
   <radiology_order order_id="2005" />
 
-  <orders order_id="2006" order_number="2006" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2005" urgency="STAT"  orderer="1" concept_id="178" accession_number="5" instructions="MR Left Knee" date_activated="2015-02-02 12:26:35.0" creator="1" date_created="2015-02-02 12:26:35.0" voided="false" patient_id="70023" uuid="cf8c1b34-9060-4190-8831-3b8038556bad"/>
+  <orders order_id="2006" order_number="2006" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2005" urgency="STAT"  orderer="2" concept_id="178" accession_number="5" instructions="MR Left Knee" date_activated="2015-02-02 12:26:35.0" creator="1" date_created="2015-02-02 12:26:35.0" voided="false" patient_id="70023" uuid="cf8c1b34-9060-4190-8831-3b8038556bad"/>
   <test_order order_id="2006"/>
   <radiology_order order_id="2006" />
   
@@ -96,7 +97,7 @@
   <person person_id="70024" gender="M" birthdate="1996-04-13" dead="false" creator="1" date_created="2016-01-01 00:00:00.0" voided="false"/>
   <person_name person_name_id="4" preferred="true" person_id="70024" given_name="John" family_name="Doe" creator="1" date_created="2016-01-01 00:00:00.0" voided="false" uuid="9c76ebfa-5142-4cae-a22f-b2a1f31c9dca"/>
 
-  <orders order_id="2008" order_number="2008" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2006" urgency="ROUTINE"  orderer="1" concept_id="178" accession_number="7" instructions="MR Left Knee" date_activated="2016-01-01 00:00:00.0" creator="1" date_created="2016-01-01 00:00:00.0" voided="false" patient_id="70024" uuid="75e8d4c6-fe8f-485c-8fca-93eb67ae7776"/>
+  <orders order_id="2008" order_number="2008" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2006" urgency="ROUTINE"  orderer="2" concept_id="178" accession_number="7" instructions="MR Left Knee" date_activated="2016-01-01 00:00:00.0" creator="1" date_created="2016-01-01 00:00:00.0" voided="false" patient_id="70024" uuid="75e8d4c6-fe8f-485c-8fca-93eb67ae7776"/>
   <test_order order_id="2008"/>
   <radiology_order order_id="2008" />
 
