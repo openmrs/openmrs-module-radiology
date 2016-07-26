@@ -54,7 +54,7 @@
 		<maven-formatter-plugin-style-java>${project.parent.basedir}/tools/formatter/java.xml</maven-formatter-plugin-style-java>
 		<maven-formatter-plugin-style-javascript>${project.parent.basedir}/tools/formatter/javascript.xml</maven-formatter-plugin-style-javascript>
 		<maven-docker-plugin-version>0.4.11</maven-docker-plugin-version>
-		<docker.image.prefix>openmrs</docker.image.prefix>
+		<docker.maven.plugin.fabric8.version>0.15.11</docker.maven.plugin.fabric8.version>
 	</properties>
 
 	<dependencyManagement>
@@ -172,9 +172,9 @@
 					<version>4.0.0</version>
 				</plugin>
 				<plugin>
-					<groupId>com.spotify</groupId>
+					<groupId>io.fabric8</groupId>
 					<artifactId>docker-maven-plugin</artifactId>
-					<version>${maven-docker-plugin-version}</version>
+					<version>${docker.maven.plugin.fabric8.version}</version>
 				</plugin>
 			</plugins>
 		</pluginManagement>

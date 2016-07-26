@@ -11,7 +11,7 @@ services:
       MYSQL_PASSWORD: &openmrs_db_password openmrs
       MYSQL_DATABASE: &openmrs_db openmrs
   openmrs:
-    image: openmrs/module-radiology
+    image: teleivo/openmrs-module-radiology
     ports:
       - "8080:8080"
     container_name: openmrs-module-radiology
