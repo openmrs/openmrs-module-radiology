@@ -10,7 +10,6 @@
 package org.openmrs.module.radiology.web.extension.html;
 
 import static org.openmrs.module.radiology.RadiologyPrivileges.VIEW_PATIENT_DASHBOARD_RADIOLOGY_TAB;
-import static org.openmrs.module.radiology.order.web.PatientDashboardRadiologyTabPortletController.PATIENT_DASHBOARD_RADIOLOGY_TAB;
 
 import org.openmrs.module.web.extension.PatientDashboardTabExt;
 
@@ -34,6 +33,6 @@ public class PatientDashboardRadiologyTabExt extends PatientDashboardTabExt {
     
     @Override
     public String getPortletUrl() {
-        return PATIENT_DASHBOARD_RADIOLOGY_TAB;
+        return "patientDashboardRadiologyTab.portlet";
     }
 }

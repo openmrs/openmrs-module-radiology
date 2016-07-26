@@ -20,6 +20,7 @@ import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.api.PatientService;
+import org.openmrs.module.radiology.order.RadiologyOrderSearchCriteria;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.test.Util;
@@ -147,8 +148,11 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
         assertNotNull(resultPatientWithOneOrder);
         List<Object> hits = (List<Object>) resultPatientWithOneOrder.get("results");
         assertThat(hits.size(), is(1));
+        final RadiologyOrderSearchCriteria radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder()
+                .withPatient(patientService.getPatientByUuid(PATIENT_WITH_ONE_ORDER))
+                .build();
         assertThat(PropertyUtils.getProperty(hits.get(0), "uuid"),
-            is(radiologyOrderService.getRadiologyOrdersByPatient(patientService.getPatientByUuid(PATIENT_WITH_ONE_ORDER))
+            is(radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria)
                     .get(0)
                     .getUuid()));
         assertNull(PropertyUtils.getProperty(resultPatientWithOneOrder, "totalCount"));

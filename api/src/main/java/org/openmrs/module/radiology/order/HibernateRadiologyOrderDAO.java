@@ -112,20 +112,6 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
     }
     
     /**
-     * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient) {
-        
-        final Criteria radiologyOrderCriteria = createRadiologyOrderCriteria();
-        addRestrictionOnPatient(radiologyOrderCriteria, patient);
-        
-        final List<RadiologyOrder> result = (List<RadiologyOrder>) radiologyOrderCriteria.list();
-        return result == null ? new ArrayList<RadiologyOrder>() : result;
-    }
-    
-    /**
      * A utility method creating a criteria for RadiologyOrder
      *
      * @return criteria for RadiologyOrder
@@ -133,18 +119,6 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
     private Criteria createRadiologyOrderCriteria() {
         return sessionFactory.getCurrentSession()
                 .createCriteria(RadiologyOrder.class);
-    }
-    
-    /**
-     * Adds an equality restriction for given patient on given criteria if patient is not null
-     *
-     * @param criteria criteria on which equality restriction is set if patient is not null
-     * @param patient patient for which equality restriction will be set
-     */
-    private void addRestrictionOnPatient(Criteria criteria, Patient patient) {
-        if (patient != null) {
-            criteria.add(Restrictions.eq("patient", patient));
-        }
     }
     
     /**
@@ -171,5 +145,22 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
         if (!patients.isEmpty()) {
             criteria.add(Restrictions.in("patient", patients));
         }
+    }
+    
+    /**
+     * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+     */
+    @SuppressWarnings("unchecked")
+    @Override
+    public List<RadiologyOrder> getRadiologyOrders(RadiologyOrderSearchCriteria searchCriteria) {
+        
+        final Criteria crit = sessionFactory.getCurrentSession()
+                .createCriteria(RadiologyOrder.class);
+        
+        if (searchCriteria.getPatient() != null) {
+            crit.add(Restrictions.eq("patient", searchCriteria.getPatient()));
+        }
+        
+        return crit.list();
     }
 }

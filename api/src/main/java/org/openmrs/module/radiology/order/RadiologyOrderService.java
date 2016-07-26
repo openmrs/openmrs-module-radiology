@@ -109,19 +109,6 @@ public interface RadiologyOrderService extends OpenmrsService {
     public RadiologyOrder getRadiologyOrderByUuid(String uuid);
     
     /**
-     * Get the {@code RadiologyOrder's} associated with a {@code Patient}.
-     * 
-     * @param patient the patient for which radiology orders should be returned
-     * @return the radiology orders associated with given patient
-     * @throws IllegalArgumentException if given null
-     * @should return all radiology orders associated with given patient
-     * @should return empty list given patient without associated radiology orders
-     * @should throw illegal argument exception if given null
-     */
-    @Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
-    public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient);
-    
-    /**
      * Get the {@code RadiologyOrder's} associated with a list of {@code Patient's}.
      *
      * @param patients the list of patients for which radiology orders should be returned
@@ -134,4 +121,17 @@ public interface RadiologyOrderService extends OpenmrsService {
      */
     @Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
     public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients);
+    
+    /**
+     * Get all {@code RadiologyOrder's} matching a variety of (nullable) criteria.
+     * Each extra value for a parameter that is provided acts as an "and" and will reduce the number of results returned
+     *
+     * @param radiologyOrderSearchCriteria the object containing search parameters
+     * @return the radiology orders matching given criteria
+     * @throws IllegalArgumentException if given null
+     * @should return all radiology orders for given patient if patient is specified
+     * @should throw illegal argument exception if given null
+     */
+    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_ORDERS)
+    public List<RadiologyOrder> getRadiologyOrders(RadiologyOrderSearchCriteria radiologyOrderSearchCriteria);
 }

@@ -15,6 +15,7 @@ import java.util.List;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.radiology.order.RadiologyOrderSearchCriteria;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -79,8 +80,10 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
         if (patient == null) {
             return new EmptySearchResult();
         }
-        
-        List<RadiologyOrder> result = radiologyOrderService.getRadiologyOrdersByPatient(patient);
+        final RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
+                new RadiologyOrderSearchCriteria.Builder().withPatient(patient)
+                        .build();
+        final List<RadiologyOrder> result = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
         if (result.isEmpty()) {
             return new EmptySearchResult();
         } else {

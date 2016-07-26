@@ -184,19 +184,6 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     }
     
     /**
-     * @see RadiologyOrderService#getRadiologyOrdersByPatient(Patient)
-     */
-    @Override
-    public List<RadiologyOrder> getRadiologyOrdersByPatient(Patient patient) {
-        
-        if (patient == null) {
-            throw new IllegalArgumentException("patient cannot be null");
-        }
-        
-        return radiologyOrderDAO.getRadiologyOrdersByPatient(patient);
-    }
-    
-    /**
      * @see RadiologyOrderService#getRadiologyOrdersByPatients
      */
     @Override
@@ -227,5 +214,17 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     public synchronized Long getNextAccessionNumberSeedSequenceValue() {
         
         return radiologyOrderDAO.getNextAccessionNumberSeedSequenceValue();
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+     */
+    @Override
+    public List<RadiologyOrder> getRadiologyOrders(RadiologyOrderSearchCriteria radiologyOrderSearchCriteria) {
+        
+        if (radiologyOrderSearchCriteria == null) {
+            throw new IllegalArgumentException("radiologyOrderSearchCriteria cannot be null");
+        }
+        return radiologyOrderDAO.getRadiologyOrders(radiologyOrderSearchCriteria);
     }
 }
