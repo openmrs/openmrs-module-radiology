@@ -265,8 +265,7 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     * @verifies throw api exception if saving template that already exists
     */
     @Test
-    public void saveMrrtReportTemplate_shouldThrowApiExceptionIfSavingTemplateThatAlreadyExists()
-            throws Exception {
+    public void saveMrrtReportTemplate_shouldThrowApiExceptionIfSavingTemplateThatAlreadyExists() throws Exception {
         MrrtReportTemplate existing = mrrtReportTemplateService.getMrrtReportTemplate(EXISTING_TEMPLATE_ID);
         existing.setDcTermsTitle("modified");
         expectedException.expect(APIException.class);

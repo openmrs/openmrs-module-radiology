@@ -220,13 +220,6 @@
 						<exclude>**/tinymce/**/*.*</exclude>
 					</excludes>
 				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>format</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.openmrs.maven.plugins</groupId>

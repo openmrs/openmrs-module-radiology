@@ -100,7 +100,6 @@
 				<version>${openMRSVersion}</version>
 			</dependency>
 		</dependencies>
-
 	</dependencyManagement>
 
 	<build>
@@ -125,6 +124,44 @@
 					<version>2.4</version>
 				</plugin>
 				<plugin>
+					<groupId>com.mycila</groupId>
+					<artifactId>license-maven-plugin</artifactId>
+					<version>2.6</version>
+					<configuration>
+						<header>license-header.txt</header>
+						<includes>
+							<include>**/*.java</include>
+							<include>**/*.txt</include>
+							<include>**/*.xml</include>
+						</includes>
+						<excludes>
+							<exclude>acceptanceTest/**/build/**</exclude>
+							<exclude>license-header.txt</exclude>
+							<exclude>.git/**</exclude>
+							<exclude>tools/formatter/**</exclude>
+							<!-- From gitignore -->
+							<exclude>.idea/**</exclude>
+							<exclude>target/**</exclude>
+							<exclude>bin/**</exclude>
+							<exclude>tmp/**</exclude>
+							<exclude>.settings/**</exclude>
+							<exclude>.externalToolBuilders/</exclude>
+							<exclude>build/</exclude>
+							<exclude>bin/</exclude>
+							<exclude>dist/</exclude>
+						</excludes>
+					</configuration>
+					<executions>
+						<execution>
+							<id>format-license-header</id>
+							<phase>process-sources</phase>
+							<goals>
+								<goal>format</goal>
+							</goals>
+						</execution>
+					</executions>
+				</plugin>
+				<plugin>
 					<groupId>com.marvinformatics.formatter</groupId>
 					<artifactId>formatter-maven-plugin</artifactId>
 					<version>${maven-formatter-plugin-version}</version>
@@ -135,7 +172,18 @@
 						<overrideConfigCompilerVersion>true</overrideConfigCompilerVersion>
 						<configFile>${maven-formatter-plugin-style-java}</configFile>
 						<configJsFile>${maven-formatter-plugin-style-javascript}</configJsFile>
+						<includes>
+							<include>**/*.java</include>
+						</includes>
 					</configuration>
+					<executions>
+						<execution>
+							<id>format-code</id>
+							<goals>
+								<goal>format</goal>
+							</goals>
+						</execution>
+					</executions>
 				</plugin>
 				<plugin>
 					<groupId>org.apache.maven.plugins</groupId>
@@ -182,38 +230,6 @@
 			<plugin>
 				<groupId>com.mycila</groupId>
 				<artifactId>license-maven-plugin</artifactId>
-				<version>2.6</version>
-				<configuration>
-					<header>license-header.txt</header>
-					<includes>
-						<include>**/*.java</include>
-						<include>**/*.txt</include>
-						<include>**/*.xml</include>
-					</includes>
-					<excludes>
-						<exclude>acceptanceTest/**/build/**</exclude>
-						<exclude>license-header.txt</exclude>
-						<exclude>.git/**</exclude>
-						<exclude>tools/formatter/**</exclude>
-						<!-- From gitignore -->
-						<exclude>.idea/**</exclude>
-						<exclude>target/**</exclude>
-						<exclude>bin/**</exclude>
-						<exclude>tmp/**</exclude>
-						<exclude>.settings/**</exclude>
-						<exclude>.externalToolBuilders/</exclude>
-						<exclude>build/</exclude>
-						<exclude>bin/</exclude>
-						<exclude>dist/</exclude>
-					</excludes>
-				</configuration>
-				<executions>
-					<execution>
-						<goals>
-							<goal>check</goal>
-						</goals>
-					</execution>
-				</executions>
 			</plugin>
 		</plugins>
 	</build>
@@ -250,4 +266,48 @@
 		</snapshotRepository>
 	</distributionManagement>
 
+	<profiles>
+		<profile>
+			<id>ci</id>
+			<activation>
+				<property>
+					<name>env.CI</name>
+					<value>true</value>
+				</property>
+			</activation>
+			<build>
+				<pluginManagement>
+					<plugins>
+						<plugin>
+							<groupId>com.mycila</groupId>
+							<artifactId>license-maven-plugin</artifactId>
+							<executions>
+								<execution>
+									<id>format-license-header</id>
+									<phase>none</phase>
+								</execution>
+								<execution>
+									<id>validate-license-header</id>
+									<goals>
+										<goal>check</goal>
+									</goals>
+									<phase>initialize</phase>
+								</execution>
+							</executions>
+						</plugin>
+						<plugin>
+							<groupId>com.marvinformatics.formatter</groupId>
+							<artifactId>formatter-maven-plugin</artifactId>
+							<executions>
+								<execution>
+									<id>format-code</id>
+									<phase>none</phase>
+								</execution>
+							</executions>
+						</plugin>
+					</plugins>
+				</pluginManagement>
+			</build>
+		</profile>
+	</profiles>
 </project>
