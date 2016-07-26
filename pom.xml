@@ -55,8 +55,6 @@
 		<maven-formatter-plugin-style-javascript>${project.parent.basedir}/tools/formatter/javascript.xml</maven-formatter-plugin-style-javascript>
 		<maven-docker-plugin-version>0.4.11</maven-docker-plugin-version>
 		<docker.image.prefix>openmrs</docker.image.prefix>
-		<skip.integration.tests>false</skip.integration.tests>
-		<skip.unit.tests>false</skip.unit.tests>
 	</properties>
 
 	<dependencyManagement>
@@ -178,39 +176,6 @@
 					<artifactId>docker-maven-plugin</artifactId>
 					<version>${maven-docker-plugin-version}</version>
 				</plugin>
-				<plugin>
-					<groupId>org.apache.maven.plugins</groupId>
-					<artifactId>maven-surefire-plugin</artifactId>
-					<version>2.18.1</version>
-					<executions>
-						<execution>
-							<id>default-test</id>
-							<phase>test</phase>
-							<goals>
-								<goal>test</goal>
-							</goals>
-							<configuration>
-								<excludes>
-									<exclude>**/*ComponentTest.java</exclude>
-								</excludes>
-								<skipTests>${skip.unit.tests}</skipTests>
-							</configuration>
-						</execution>
-						<execution>
-							<id>integration-test</id>
-							<phase>test</phase>
-							<goals>
-								<goal>test</goal>
-							</goals>
-							<configuration>
-								<includes>
-									<include>**/*ComponentTest.java</include>
-								</includes>
-								<skipTests>${skip.integration.tests}</skipTests>
-							</configuration>
-						</execution>
-					</executions>
-				</plugin>
 			</plugins>
 		</pluginManagement>
 		<plugins>
@@ -284,22 +249,5 @@
 			<url>http://mavenrepo.openmrs.org/nexus/content/repositories/snapshots</url>
 		</snapshotRepository>
 	</distributionManagement>
-
-	<profiles>
-		<profile>
-			<id>unit-test</id>
-			<properties>
-				<skip.integration.tests>true</skip.integration.tests>
-				<skip.unit.tests>false</skip.unit.tests>
-			</properties>
-		</profile>
-		<profile>
-			<id>integration-test</id>
-			<properties>
-				<skip.integration.tests>false</skip.integration.tests>
-				<skip.unit.tests>true</skip.unit.tests>
-			</properties>
-		</profile>
-	</profiles>
 
 </project>
