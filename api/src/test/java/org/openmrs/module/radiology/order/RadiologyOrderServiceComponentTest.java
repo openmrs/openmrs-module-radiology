@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Encounter;
 import org.openmrs.Order;
+import org.openmrs.Order.Urgency;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.api.AdministrationService;
@@ -65,7 +66,7 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     private static final int PATIENT_ID_WITH_TWO_RADIOLOGY_ORDERS = 70021;
     
-    private static final int PATIENT_ID_WITH_ONE_VOIDED_AND_ONE_NON_VOIDED_RADIOLOGY_ORDER = 70023;
+    private static final int PATIENT_ID_WITH_ONE_VOIDED_AND_TWO_NON_VOIDED_RADIOLOGY_ORDERS = 70023;
     
     private static final int EXISTING_RADIOLOGY_ORDER_ID = 2001;
     
@@ -573,23 +574,41 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     public void getRadiologyOrders_shouldReturnAllRadiologyOrdersIncludingVoidedMatchingTheSearchQueryIfIncludeVoidedIsSet()
             throws Exception {
         
-        Patient patient = patientService.getPatient(PATIENT_ID_WITH_ONE_VOIDED_AND_ONE_NON_VOIDED_RADIOLOGY_ORDER);
+        Patient patient = patientService.getPatient(PATIENT_ID_WITH_ONE_VOIDED_AND_TWO_NON_VOIDED_RADIOLOGY_ORDERS);
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
                 new RadiologyOrderSearchCriteria.Builder().withPatient(patient)
                         .includeVoided()
                         .build();
         
         List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
-        assertThat(radiologyOrders.size(), is(2));
+        assertThat(radiologyOrders.size(), is(3));
         assertThat(radiologyOrders,
             hasItem(Matchers.<RadiologyOrder> hasProperty("uuid", is(RADIOLOGY_ORDER_UUID_OF_VOIDED))));
         assertThat(radiologyOrders, hasItem(Matchers.<RadiologyOrder> hasProperty("voided", is(true))));
     }
     
     /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies throw illegal argument exception if given null
-     */
+    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+    * @verifies return all radiology orders for given urgency
+    */
+    @Test
+    public void getRadiologyOrders_shouldReturnAllRadiologyOrdersForGivenUrgency() throws Exception {
+        
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
+                new RadiologyOrderSearchCriteria.Builder().withUrgency(Urgency.STAT)
+                        .build();
+        
+        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        assertThat(radiologyOrders.size(), is(2));
+        for (RadiologyOrder radiologyOrder : radiologyOrders) {
+            assertThat(radiologyOrder.getUrgency(), is(Urgency.STAT));
+        }
+    }
+    
+    /**
+    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+    * @verifies throw illegal argument exception if given null
+    */
     @Test
     public void getRadiologyOrders_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
         

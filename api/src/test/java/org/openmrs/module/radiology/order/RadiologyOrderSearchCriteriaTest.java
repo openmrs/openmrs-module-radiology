@@ -14,6 +14,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.openmrs.Order.Urgency;
 import org.openmrs.Patient;
 
 /**
@@ -38,6 +39,7 @@ public class RadiologyOrderSearchCriteriaTest {
         assertTrue(radiologyOrderSearchCriteria.getPatient()
                 .equals(patient));
         assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
+        assertNull(radiologyOrderSearchCriteria.getUrgency());
     }
     
     /**
@@ -53,6 +55,23 @@ public class RadiologyOrderSearchCriteriaTest {
                 .build();
         
         assertTrue(radiologyOrderSearchCriteria.getIncludeVoided());
+        assertNull(radiologyOrderSearchCriteria.getPatient());
+        assertNull(radiologyOrderSearchCriteria.getUrgency());
+    }
+    
+    /**
+     * @see RadiologyOrderSearchCriteria.Builder#build()
+     * @verifies create a new radiology order search criteria instance with urgency if urgency is set
+     */
+    @Test
+    public void build_createANewRadiologyOrderSearchCriteriaInstanceWithUrgencyIfUrgencyIsSet() throws Exception {
+        
+        radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder().withUrgency(Urgency.ROUTINE)
+                .build();
+        
+        assertTrue(radiologyOrderSearchCriteria.getUrgency()
+                .equals(Urgency.ROUTINE));
+        assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
         assertNull(radiologyOrderSearchCriteria.getPatient());
     }
 }

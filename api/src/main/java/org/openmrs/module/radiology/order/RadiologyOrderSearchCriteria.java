@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.radiology.order;
 
+import org.openmrs.Order.Urgency;
 import org.openmrs.Patient;
 
 /**
@@ -20,6 +21,8 @@ public class RadiologyOrderSearchCriteria {
     private final Patient patient;
     
     private final Boolean includeVoided;
+    
+    private final Urgency urgency;
     
     /**
      * @return the order patient
@@ -37,12 +40,22 @@ public class RadiologyOrderSearchCriteria {
         return includeVoided;
     }
     
+    /**
+     * @return the order urgency
+     */
+    public Urgency getUrgency() {
+        
+        return urgency;
+    }
+    
     public static class Builder {
         
         
         private Patient patient;
         
         private Boolean includeVoided = false;
+        
+        private Urgency urgency;
         
         /**
          * @param patient the order patient
@@ -66,11 +79,22 @@ public class RadiologyOrderSearchCriteria {
         }
         
         /**
+         * @param urgency the order urgency
+         * @return this builder instance
+         */
+        public Builder withUrgency(Urgency urgency) {
+            
+            this.urgency = urgency;
+            return this;
+        }
+        
+        /**
          * Create an {@link RadiologyOrderSearchCriteria} with the properties of this builder instance.
          * 
          * @return a new search criteria instance
          * @should create a new radiology order search criteria instance with patient if patient is set
          * @should create a new radiology order search criteria instance with include voided set to true if voided orders should be included
+         * @should create a new radiology order search criteria instance with urgency if urgency is set
          */
         public RadiologyOrderSearchCriteria build() {
             
@@ -82,5 +106,6 @@ public class RadiologyOrderSearchCriteria {
         
         this.patient = builder.patient;
         this.includeVoided = builder.includeVoided;
+        this.urgency = builder.urgency;
     }
 }
