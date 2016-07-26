@@ -35,7 +35,6 @@
 -- ----------------------------
 -- Setup Role Data Clerk
 INSERT INTO role VALUES ('Data clerk','The user who enters patients and their demographic data','bd6ec731-1f97-4e5f-a10a-7ec1a9ca8e8a');
-INSERT INTO `role_privilege` VALUES ('Data clerk','View Navigation Menu');
 INSERT INTO `role_privilege` VALUES ('Data clerk','Patient Dashboard - View Demographics Section');
 INSERT INTO `role_privilege` VALUES ('Data clerk','Patient Dashboard - View Encounters Section');
 INSERT INTO `role_privilege` VALUES ('Data clerk','Patient Dashboard - View Overview Section');
@@ -66,12 +65,12 @@ INSERT INTO `role_privilege` VALUES ('Data clerk','Get Users');
 INSERT INTO `role_privilege` VALUES ('Data clerk','Get Visit Attribute Types');
 INSERT INTO `role_privilege` VALUES ('Data clerk','Get Visit Types');
 INSERT INTO `role_privilege` VALUES ('Data clerk','Get Visits');
+INSERT INTO `role_privilege` VALUES ('Data clerk','View Navigation Menu');
 INSERT INTO `role_privilege` VALUES ('Data clerk','View Orders');
 INSERT INTO `role_privilege` VALUES ('Data clerk','View Patients');
 INSERT INTO `role_privilege` VALUES ('Data clerk','Manage Visit Types');
 
 -- Setup Role Radiology: Referring physician
-INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','View Navigation Menu');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Patient Dashboard - View Demographics Section');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Patient Dashboard - View Encounters Section');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Patient Dashboard - View Overview Section');
@@ -103,13 +102,12 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get Users
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get Visit Attribute Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get Visit Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get Visits');
+INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','View Navigation Menu');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','View Orders');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','View Patients');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Manage Visit Types');
 
 -- Setup Role Radiology: Scheduler
-INSERT INTO `role_privilege` VALUES ('Radiology: Scheduler','View Navigation Menu');
-INSERT INTO `role_privilege` VALUES ('Radiology: Scheduler','View Navigation Menu - Radiology');
 INSERT INTO `role_privilege` VALUES ('Radiology: Scheduler','Get Care Settings');
 INSERT INTO `role_privilege` VALUES ('Radiology: Scheduler','Get Concepts');
 INSERT INTO `role_privilege` VALUES ('Radiology: Scheduler','Get Encounter Roles');
@@ -122,11 +120,11 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Scheduler','Get Users');
 INSERT INTO `role_privilege` VALUES ('Radiology: Scheduler','Get Visit Attribute Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Scheduler','Get Visit Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Scheduler','Get Visits');
+INSERT INTO `role_privilege` VALUES ('Radiology: Scheduler','View Navigation Menu');
+INSERT INTO `role_privilege` VALUES ('Radiology: Scheduler','View Navigation Menu - Radiology');
 INSERT INTO `role_privilege` VALUES ('Radiology: Scheduler','View Orders');
 
 -- Setup Role Radiology: Performing physician
-INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','View Navigation Menu');
-INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','View Navigation Menu - Radiology');
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Care Settings');
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Concepts');
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Encounter Roles');
@@ -139,12 +137,13 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get User
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Visit Attribute Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Visit Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Visits');
+INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','View Navigation Menu');
+INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','View Navigation Menu - Radiology');
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','View Orders');
 
 -- Setup Role Radiology: Reading physician
-INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','View Navigation Menu');
-INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','View Navigation Menu - Radiology');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Add Radiology Reports');
+INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Add Radiology Report Templates');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Delete Radiology Reports');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Edit Radiology Reports');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Care Settings');
@@ -156,11 +155,15 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Patient
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Providers');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Radiology Orders');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Radiology Reports');
+INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Radiology Report Templates');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Users');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Visit Attribute Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Visit Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Visits');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','View Orders');
+INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','View Navigation Menu');
+INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','View Navigation Menu - Radiology');
+INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','View Radiology Report Templates');
 
 -- ----------------------------
 --  Radiology Module Users
