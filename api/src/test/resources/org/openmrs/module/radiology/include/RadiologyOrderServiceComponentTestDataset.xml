@@ -21,7 +21,7 @@
   <global_property property="radiology.radiologyOrderingProviderEncounterRole" property_value="13fc9b4a-49ed-429c-9dde-ca005b387a3d" description="Radiology Ordering Provider Encounter Role UUID"/>
   <global_property property="radiology.radiologyOrderEncounterType" property_value="19db8c0d-3520-48f2-babd-77f2d450e5c7" description="Radiology Order Encounter Type UUID"/>
   <global_property property="radiology.radiologyTestOrderType" property_value="dbdb9a9b-56ea-11e5-a47f-08002719a237" description="Radiology Test Order Type UUID"/>
-  <global_property property="radiology.nextAccessionNumberSeed" property_value="6" datatype="org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype" datatype_config="^\d+$" uuid="f45d1722-d983-427b-82ed-c4e8beffd1c7"/>
+  <global_property property="radiology.nextAccessionNumberSeed" property_value="8" datatype="org.openmrs.customdatatype.datatype.RegexValidatedTextDatatype" datatype_config="^\d+$" uuid="f45d1722-d983-427b-82ed-c4e8beffd1c7"/>
 
   <encounter_type encounter_type_id="1001" name="Radiology Order Encounter Type" description="Ordering radiology exams" creator="1" date_created="2015-09-09 00:00:00.0" retired="false" uuid="19db8c0d-3520-48f2-babd-77f2d450e5c7"/>
   <encounter_role encounter_role_id="1001" name="Radiology Ordering Provider Encounter Role " description="Provider ordering tests, exams, drugs, ..." creator="1" retired="false" date_created="2015-09-09 14:00:00.0" uuid="13fc9b4a-49ed-429c-9dde-ca005b387a3d" />
@@ -96,4 +96,18 @@
   <test_order order_id="2006"/>
   <radiology_order order_id="2006" />
   
+  <!-- patient with one discontinued and one non discontinued radiology order -->
+  <encounter encounter_id="2006" encounter_type="1001" patient_id="70024" location_id="1" form_id="1" encounter_datetime="2015-02-03 13:17:15.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" uuid="c7b3f471-3b06-4c11-9407-1a7f417f93a0"/>
+  <patient patient_id="70024" creator="1" date_created="2016-01-01 00:00:00.0" voided="false"/>
+  <patient_identifier patient_identifier_id="4" patient_id="70024" identifier="1237" identifier_type="1" preferred="1" location_id="1" creator="1" date_created="2016-01-01 00:00:00.0" voided="false" uuid="ec499286-25c5-494c-9097-4a658f7cdd48"/>
+  <person person_id="70024" gender="M" birthdate="1991-04-13" dead="false" creator="1" date_created="2016-01-01 00:00:00.0" voided="false"/>
+  <person_name person_name_id="4" preferred="true" person_id="70024" given_name="John" family_name="Doe" creator="1" date_created="2016-01-01 00:00:00.0" voided="false" uuid="c5d19339-ef3a-4ddb-a129-ef3d13fd0f47"/>
+
+  <orders order_id="2007" order_number="2007" order_type_id="5" order_action="DISCONTINUE" care_setting="1" encounter_id="2006" urgency="ROUTINE"  orderer="1" concept_id="178" accession_number="6" instructions="MR Left Knee" date_activated="2015-02-02 12:26:35.0" date_stopped="2016-02-02 12:26:35.0" creator="1" date_created="2015-02-02 12:26:35.0" voided="false" patient_id="70024" uuid="443b7c18-da33-4884-9377-9de6850d13b1"/>
+  <test_order order_id="2007"/>
+  <radiology_order order_id="2007" />
+
+  <orders order_id="2008" order_number="2008" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2006" urgency="ROUTINE"  orderer="1" concept_id="178" accession_number="7" instructions="MR Left Knee" date_activated="2015-02-02 12:26:35.0" creator="1" date_created="2015-02-02 12:26:35.0" voided="false" patient_id="70024" uuid="7fc7bd5c-69d3-40ec-884a-48bbf08f377f"/>
+  <test_order order_id="2008"/>
+  <radiology_order order_id="2008" />
 </dataset>

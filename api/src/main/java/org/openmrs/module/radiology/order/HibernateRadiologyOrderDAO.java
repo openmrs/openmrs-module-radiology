@@ -18,6 +18,7 @@ import org.hibernate.LockOptions;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.GlobalProperty;
+import org.openmrs.Order.Action;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.RadiologyConstants;
@@ -163,6 +164,10 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
         
         if (!searchCriteria.getIncludeVoided()) {
             crit.add(Restrictions.not(Restrictions.eq("voided", true)));
+        }
+        
+        if (!searchCriteria.getIncludeDiscontinued()) {
+            crit.add(Restrictions.not(Restrictions.eq("action", Action.DISCONTINUE)));
         }
         
         return crit.list();

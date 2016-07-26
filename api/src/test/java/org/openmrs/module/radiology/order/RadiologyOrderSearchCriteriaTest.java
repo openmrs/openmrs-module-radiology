@@ -38,6 +38,7 @@ public class RadiologyOrderSearchCriteriaTest {
         assertTrue(radiologyOrderSearchCriteria.getPatient()
                 .equals(patient));
         assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
+        assertFalse(radiologyOrderSearchCriteria.getIncludeDiscontinued());
     }
     
     /**
@@ -54,5 +55,24 @@ public class RadiologyOrderSearchCriteriaTest {
         
         assertTrue(radiologyOrderSearchCriteria.getIncludeVoided());
         assertNull(radiologyOrderSearchCriteria.getPatient());
+        assertFalse(radiologyOrderSearchCriteria.getIncludeDiscontinued());
+    }
+    
+    /**
+     * @see RadiologyOrderSearchCriteria.Builder#build()
+     * @verifies create a new radiology order search criteria instance with include discontinued set to true if discontinued orders should be included
+     */
+    @Test
+    public void
+            build_createANewRadiologyOrderSearchCriteriaInstanceWithIncludeDiscontinuedSetToTrueIfDiscontinuedOrdersShouldBeIncluded()
+                    throws Exception {
+        
+        radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder().includeDiscontinued()
+                .build();
+        
+        assertTrue(radiologyOrderSearchCriteria.getIncludeDiscontinued());
+        assertNull(radiologyOrderSearchCriteria.getPatient());
+        assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
+        
     }
 }
