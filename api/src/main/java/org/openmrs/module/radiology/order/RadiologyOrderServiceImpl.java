@@ -79,11 +79,6 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
             throw new IllegalArgumentException("radiologyOrder.study cannot be null");
         }
         
-        if (radiologyOrder.getStudy()
-                .getModality() == null) {
-            throw new IllegalArgumentException("radiologyOrder.study.modality cannot be null");
-        }
-        
         radiologyOrder.setAccessionNumber(getNewAccessionNumber());
         
         final Encounter encounter =

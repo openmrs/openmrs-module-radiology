@@ -12,7 +12,6 @@ package org.openmrs.module.radiology.order.web;
 import static org.openmrs.module.radiology.RadiologyPrivileges.ADD_RADIOLOGY_REPORTS;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -24,11 +23,9 @@ import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.radiology.order.RadiologyOrderValidator;
@@ -276,18 +273,6 @@ public class RadiologyOrderFormController {
         }
     }
     
-    @ModelAttribute("modalities")
-    private Map<String, String> getModalityList() {
-        
-        final Map<String, String> modalities = new HashMap<String, String>();
-        
-        for (final Modality modality : Modality.values()) {
-            modalities.put(modality.name(), modality.getFullName());
-        }
-        
-        return modalities;
-    }
-    
     @ModelAttribute("urgencies")
     private List<String> getUrgenciesList() {
         
@@ -298,19 +283,6 @@ public class RadiologyOrderFormController {
         }
         
         return urgencies;
-    }
-    
-    @ModelAttribute("scheduledProcedureStepStatuses")
-    private Map<String, String> getScheduledProcedureStepStatusList() {
-        
-        final Map<String, String> scheduledProcedureStepStatuses = new LinkedHashMap<String, String>();
-        scheduledProcedureStepStatuses.put("", "Select");
-        
-        for (final ScheduledProcedureStepStatus scheduledProcedureStepStatus : ScheduledProcedureStepStatus.values()) {
-            scheduledProcedureStepStatuses.put(scheduledProcedureStepStatus.name(), scheduledProcedureStepStatus.name());
-        }
-        
-        return scheduledProcedureStepStatuses;
     }
     
     @ModelAttribute("performedStatuses")

@@ -56,20 +56,8 @@
                 </spring:bind></td>
       </tr>
       <tr>
-        <td><spring:message code="radiology.scheduledStatus" /></td>
-        <td><spring:bind path="study.scheduledStatus">
-            <spring:message code="radiology.${status.value}" text="${status.value}" />
-          </spring:bind></td>
-      </tr>
-      <tr>
         <td><spring:message code="radiology.performedStatus" /></td>
         <td><spring:bind path="study.performedStatus">
-            <spring:message code="radiology.${status.value}" text="${status.value}" />
-          </spring:bind></td>
-      </tr>
-      <tr>
-        <td><spring:message code="radiology.modality" /></td>
-        <td><spring:bind path="study.modality">
             <spring:message code="radiology.${status.value}" text="${status.value}" />
           </spring:bind></td>
       </tr>

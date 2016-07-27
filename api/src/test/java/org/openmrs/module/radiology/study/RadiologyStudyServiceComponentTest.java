@@ -27,9 +27,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Patient;
 import org.openmrs.api.PatientService;
-import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.order.RadiologyOrderSearchCriteria;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
@@ -117,7 +115,6 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
         assertThat(createdStudy, is(radiologyStudy));
         assertThat(createdStudy.getStudyId(), is(radiologyStudy.getStudyId()));
         assertNotNull(createdStudy.getStudyInstanceUid());
-        assertThat(createdStudy.getModality(), is(radiologyStudy.getModality()));
         assertThat(createdStudy.getRadiologyOrder(), is(radiologyStudy.getRadiologyOrder()));
     }
     
@@ -130,8 +127,6 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     public RadiologyStudy getUnsavedStudy() {
         
         RadiologyStudy radiologyStudy = new RadiologyStudy();
-        radiologyStudy.setModality(Modality.CT);
-        radiologyStudy.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
         return radiologyStudy;
     }
     
@@ -143,16 +138,16 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     public void saveRadiologyStudy_shouldUpdateExistingRadiologyStudy() throws Exception {
         
         RadiologyStudy existingStudy = radiologyStudyService.getRadiologyStudy(EXISTING_STUDY_ID);
-        Modality modalityPreUpdate = existingStudy.getModality();
-        Modality modalityPostUpdate = Modality.XA;
-        existingStudy.setModality(modalityPostUpdate);
+        PerformedProcedureStepStatus performedStatusPreUpdate = existingStudy.getPerformedStatus();
+        PerformedProcedureStepStatus performedStatusPostUpdate = PerformedProcedureStepStatus.COMPLETED;
+        existingStudy.setPerformedStatus(performedStatusPostUpdate);
         
         RadiologyStudy updatedStudy = radiologyStudyService.saveRadiologyStudy(existingStudy);
         
         assertNotNull(updatedStudy);
         assertThat(updatedStudy, is(existingStudy));
-        assertThat(modalityPreUpdate, is(not(modalityPostUpdate)));
-        assertThat(updatedStudy.getModality(), is(modalityPostUpdate));
+        assertThat(performedStatusPreUpdate, is(not(performedStatusPostUpdate)));
+        assertThat(updatedStudy.getPerformedStatus(), is(performedStatusPostUpdate));
     }
     
     /**

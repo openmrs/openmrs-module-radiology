@@ -69,12 +69,12 @@
   <orders order_id="2001" order_number="2001" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2001" urgency="ROUTINE" orderer="1" concept_id="178" accession_number="1" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70021" uuid="44f24d7e-ebbd-4500-bfba-1db19561ca04"/>
   <test_order order_id="2001"/>
   <radiology_order order_id="2001" />
-  <radiology_study study_id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="CT" creator="1" date_created="2015-02-02 12:24:10.0" uuid="dde7399b-6092-4a3d-88a2-405b6b4499fc"/>
+  <radiology_study study_id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" performed_status="IN_PROGRESS" creator="1" date_created="2015-02-02 12:24:10.0" uuid="dde7399b-6092-4a3d-88a2-405b6b4499fc"/>
 
   <orders order_id="2002" order_number="2002" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2001" urgency="ROUTINE"  orderer="1" concept_id="178" accession_number="2" instructions="MR Left Knee" date_activated="2015-02-02 12:26:35.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-02 12:26:35.0" voided="false" patient_id="70021" uuid="65d68058-c75b-4807-a8ba-1728558c9f8e"/>
   <test_order order_id="2002"/>
   <radiology_order order_id="2002" />
-  <radiology_study study_id="2" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" scheduled_status="SCHEDULED" performed_status="IN_PROGRESS" modality="MR" creator="1" date_created="2015-02-02 12:26:35.0" uuid="d1307f3e-a02a-4f1d-91cf-f9537c5cc93f"/>
+  <radiology_study study_id="2" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.2" order_id="2002" performed_status="IN_PROGRESS" creator="1" date_created="2015-02-02 12:26:35.0" uuid="d1307f3e-a02a-4f1d-91cf-f9537c5cc93f"/>
 
   <!-- patient with one radiology order with no associated study -->
   <encounter encounter_id="2004" encounter_type="1001" patient_id="70022" location_id="1" form_id="1" encounter_datetime="2015-02-03 13:17:15.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" uuid="05715654-a566-4cb3-921f-2f7067eb119f"/>

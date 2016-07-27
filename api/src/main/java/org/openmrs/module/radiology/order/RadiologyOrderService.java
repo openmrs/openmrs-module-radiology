@@ -12,7 +12,6 @@ package org.openmrs.module.radiology.order;
 import java.util.List;
 
 import org.openmrs.Order;
-import org.openmrs.Patient;
 import org.openmrs.Provider;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
@@ -45,7 +44,6 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @throws IllegalArgumentException if radiologyOrder is null
      * @throws IllegalArgumentException if radiologyOrder.orderId is not null
      * @throws IllegalArgumentException if radiologyOrder.study is null
-     * @throws IllegalArgumentException if radiologyOrder.study.modality is null
      * @should create new radiology order and study from given radiology order object
      * @should create radiology order encounter
      * @should set the radiology order accession number

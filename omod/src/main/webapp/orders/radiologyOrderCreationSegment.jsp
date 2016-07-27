@@ -117,41 +117,12 @@
           </spring:bind></td>
       </tr>
       <tr>
-        <td><spring:message code="radiology.scheduledStatus" /></td>
-        <td><spring:bind path="study.scheduledStatus">
-            <select name="${status.expression}" id="scheduledProcedureStepStatusSelect">
-              <c:forEach var="scheduledProcedureStepStatus" items="${scheduledProcedureStepStatuses}">
-                <option value="${scheduledProcedureStepStatus.key}"
-                  ${status.value == scheduledProcedureStepStatus.key ? 'selected="selected"' : ''}><spring:message
-                    code="radiology.${scheduledProcedureStepStatus.value}" text="${scheduledProcedureStepStatus.value}" /></option>
-              </c:forEach>
-            </select>
-            <c:if test="${status.errorMessage != ''}">
-              <span class="error">${status.errorMessage}</span>
-            </c:if>
-          </spring:bind></td>
-      </tr>
-      <tr>
         <td><spring:message code="radiology.performedStatus" /></td>
         <td><spring:bind path="study.performedStatus">
             <select name="${status.expression}" id="performedStatusSelect">
               <c:forEach var="performedStatus" items="${performedStatuses}">
                 <option value="${performedStatus.key}" ${status.value == performedStatus.key ? 'selected="selected"' : ''}><spring:message
                     code="radiology.${performedStatus.key}" text="${performedStatus.value}" /></option>
-              </c:forEach>
-            </select>
-            <c:if test="${status.errorMessage != ''}">
-              <span class="error">${status.errorMessage}</span>
-            </c:if>
-          </spring:bind></td>
-      </tr>
-      <tr>
-        <td><spring:message code="radiology.modality" /></td>
-        <td><spring:bind path="study.modality">
-            <select name="${status.expression}" id="modalitySelect">
-              <c:forEach var="modality" items="${modalities}">
-                <option value="${modality.key}" ${status.value == modality.key ? 'selected="selected"' : ''}><spring:message
-                    code="radiology.${modality.key}" text="${modality.value}" /></option>
               </c:forEach>
             </select>
             <c:if test="${status.errorMessage != ''}">
