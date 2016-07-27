@@ -30,6 +30,8 @@ public class RadiologyOrderSearchCriteria {
     
     private final Date toEffectiveStartDate;
     
+    private final String accessionNumber;
+    
     /**
      * @return the order patient
      */
@@ -70,6 +72,14 @@ public class RadiologyOrderSearchCriteria {
         return toEffectiveStartDate;
     }
     
+    /**
+     * @return the order accessionNumber
+     */
+    public String getAccessionNumber() {
+        
+        return accessionNumber;
+    }
+    
     public static class Builder {
         
         
@@ -82,6 +92,8 @@ public class RadiologyOrderSearchCriteria {
         private Date fromEffectiveStartDate;
         
         private Date toEffectiveStartDate;
+        
+        private String accessionNumber;
         
         /**
          * @param patient the order patient
@@ -131,7 +143,16 @@ public class RadiologyOrderSearchCriteria {
         public Builder withToEffectiveStartDate(Date toEffectiveStartDate) {
             
             this.toEffectiveStartDate = toEffectiveStartDate;
+            return this;
+        }
+        
+        /**
+         * @param accessionNumber the order accession number
+         * @return this builder instance
+         */
+        public Builder withAccessionNumber(String accessionNumber) {
             
+            this.accessionNumber = accessionNumber;
             return this;
         }
         
@@ -144,6 +165,7 @@ public class RadiologyOrderSearchCriteria {
          * @should create a new radiology order search criteria instance with urgency if urgency is set
          * @should create a new radiology order search criteria instance with from effective start date if from effective start date is set
          * @should create a new radiology order search criteria instance with to effective start date if to effective start date is set
+         * @should create a new radiology order search criteria instance with accession number if accession number is set
          */
         public RadiologyOrderSearchCriteria build() {
             
@@ -158,5 +180,6 @@ public class RadiologyOrderSearchCriteria {
         this.urgency = builder.urgency;
         this.fromEffectiveStartDate = builder.fromEffectiveStartDate;
         this.toEffectiveStartDate = builder.toEffectiveStartDate;
+        this.accessionNumber = builder.accessionNumber;
     }
 }
