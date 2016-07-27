@@ -45,9 +45,7 @@ import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.openmrs.parameter.EncounterSearchCriteriaBuilder;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -202,8 +200,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         radiologyOrder.setUrgency(Order.Urgency.ON_SCHEDULED_DATE);
         
         RadiologyStudy radiologyStudy = new RadiologyStudy();
-        radiologyStudy.setModality(Modality.CT);
-        radiologyStudy.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
         radiologyOrder.setStudy(radiologyStudy);
         
         return radiologyOrder;
@@ -315,22 +311,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyOrder.study cannot be null");
-        radiologyOrderService.placeRadiologyOrder(radiologyOrder);
-    }
-    
-    /**
-     * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
-     * @verifies throw illegal argument exception if given study modality is null
-     */
-    @Test
-    public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenStudyModalityIsNull() throws Exception {
-        
-        RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
-        radiologyOrder.getStudy()
-                .setModality(null);
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyOrder.study.modality cannot be null");
         radiologyOrderService.placeRadiologyOrder(radiologyOrder);
     }
     
@@ -567,9 +547,9 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-    * @verifies return all radiology orders for given patient if patient is specified
-    */
+     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+     * @verifies return all radiology orders for given patient if patient is specified
+     */
     @Test
     public void getRadiologyOrders_shouldReturnAllRadiologyOrdersForGivenPatientIfPatientIsSpecified() throws Exception {
         
@@ -586,9 +566,9 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-    * @verifies return all radiology orders (including voided) matching the search query if include voided is set
-    */
+     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+     * @verifies return all radiology orders (including voided) matching the search query if include voided is set
+     */
     @Test
     public void getRadiologyOrders_shouldReturnAllRadiologyOrdersIncludingVoidedMatchingTheSearchQueryIfIncludeVoidedIsSet()
             throws Exception {
@@ -607,9 +587,9 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-    * @verifies throw illegal argument exception if given null
-    */
+     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+     * @verifies throw illegal argument exception if given null
+     */
     @Test
     public void getRadiologyOrders_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
         

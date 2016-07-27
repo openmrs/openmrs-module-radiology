@@ -18,7 +18,6 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.dicom.DicomUidGenerator;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -55,12 +54,6 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
         
         if (radiologyStudy == null) {
             throw new IllegalArgumentException("radiologyStudy cannot be null");
-        }
-        
-        final RadiologyOrder order = radiologyStudy.getRadiologyOrder();
-        
-        if (radiologyStudy.getScheduledStatus() == null && order.getScheduledDate() != null) {
-            radiologyStudy.setScheduledStatus(ScheduledProcedureStepStatus.SCHEDULED);
         }
         
         setStudyInstanceUidIfBlank(radiologyStudy);

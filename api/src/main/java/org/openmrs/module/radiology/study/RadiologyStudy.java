@@ -10,9 +10,7 @@
 package org.openmrs.module.radiology.study;
 
 import org.openmrs.BaseOpenmrsData;
-import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.dicom.code.ScheduledProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 
 /**
@@ -28,11 +26,7 @@ public class RadiologyStudy extends BaseOpenmrsData {
     
     private RadiologyOrder radiologyOrder;
     
-    private ScheduledProcedureStepStatus scheduledStatus;
-    
     private PerformedProcedureStepStatus performedStatus;
-    
-    private Modality modality;
     
     /**
      * Get studyId of RadiologyStudy.
@@ -53,20 +47,12 @@ public class RadiologyStudy extends BaseOpenmrsData {
         return studyId;
     }
     
-    public Modality getModality() {
-        return modality;
-    }
-    
     public RadiologyOrder getRadiologyOrder() {
         return radiologyOrder;
     }
     
     public PerformedProcedureStepStatus getPerformedStatus() {
         return performedStatus;
-    }
-    
-    public ScheduledProcedureStepStatus getScheduledStatus() {
-        return scheduledStatus;
     }
     
     public String getStudyInstanceUid() {
@@ -128,20 +114,12 @@ public class RadiologyStudy extends BaseOpenmrsData {
         this.studyId = studyId;
     }
     
-    public void setModality(Modality modality) {
-        this.modality = modality;
-    }
-    
     public void setRadiologyOrder(RadiologyOrder radiologyOrder) {
         this.radiologyOrder = radiologyOrder;
     }
     
     public void setPerformedStatus(PerformedProcedureStepStatus performedStatus) {
         this.performedStatus = performedStatus;
-    }
-    
-    public void setScheduledStatus(ScheduledProcedureStepStatus scheduledStatus) {
-        this.scheduledStatus = scheduledStatus;
     }
     
     public void setStudyInstanceUid(String studyInstanceUid) {

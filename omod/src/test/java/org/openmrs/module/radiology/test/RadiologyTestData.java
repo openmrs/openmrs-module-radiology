@@ -33,7 +33,6 @@ import org.openmrs.PersonName;
 import org.openmrs.Provider;
 import org.openmrs.Role;
 import org.openmrs.User;
-import org.openmrs.module.radiology.Modality;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.report.RadiologyReport;
@@ -53,10 +52,7 @@ public class RadiologyTestData {
      */
     public static RadiologyStudy getMockStudy1PreSave() {
         
-        RadiologyStudy mockStudy = new RadiologyStudy();
-        mockStudy.setModality(Modality.CT);
-        
-        return mockStudy;
+        return new RadiologyStudy();
     }
     
     /**
@@ -78,10 +74,7 @@ public class RadiologyTestData {
      */
     public static RadiologyStudy getMockStudy2PreSave() {
         
-        RadiologyStudy mockStudy = new RadiologyStudy();
-        mockStudy.setModality(Modality.CT);
-        
-        return mockStudy;
+        return new RadiologyStudy();
     }
     
     /**
