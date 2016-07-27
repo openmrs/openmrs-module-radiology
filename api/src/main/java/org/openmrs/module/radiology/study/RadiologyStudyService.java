@@ -11,7 +11,9 @@ package org.openmrs.module.radiology.study;
 
 import java.util.List;
 
+import org.openmrs.annotation.Authorized;
 import org.openmrs.api.OpenmrsService;
+import org.openmrs.module.radiology.RadiologyPrivileges;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 
@@ -40,6 +42,7 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @should update existing radiology study
      * @should throw illegal argument exception if given null
      */
+    @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_STUDIES)
     public RadiologyStudy saveRadiologyStudy(RadiologyStudy radiologyStudy);
     
     /**
@@ -54,6 +57,7 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @should throw illegal argument exception if study instance uid is null
      * @should throw illegal argument exception if performed status is null
      */
+    @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_STUDIES)
     public RadiologyStudy updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus);
     
     /**
@@ -66,6 +70,7 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @should return null if no match was found
      * @should throw illegal argument exception if given null
      */
+    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_STUDIES)
     public RadiologyStudy getRadiologyStudy(Integer studyId);
     
     /**
@@ -78,6 +83,7 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @should return null if no match was found
      * @should throw illegal argument exception if given null
      */
+    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_STUDIES)
     public RadiologyStudy getRadiologyStudyByUuid(String uuid);
     
     /**
@@ -90,6 +96,7 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @should return null if no match was found
      * @should throw illegal argument exception if given null
      */
+    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_STUDIES)
     public RadiologyStudy getRadiologyStudyByOrderId(Integer orderId);
     
     /**
@@ -102,6 +109,7 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @should return null if no match was found
      * @should throw illegal argument exception if given null
      */
+    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_STUDIES)
     public RadiologyStudy getRadiologyStudyByStudyInstanceUid(String studyInstanceUid);
     
     /**
@@ -115,5 +123,6 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @should return empty list given empty radiology order list
      * @should throw illegal argument exception given null
      */
+    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_STUDIES)
     public List<RadiologyStudy> getRadiologyStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
 }

@@ -24,6 +24,8 @@ public class RadiologyPrivileges {
     
     public static final String ADD_RADIOLOGY_REPORT_TEMPLATES = "Add Radiology Report Templates";
     
+    public static final String ADD_RADIOLOGY_STUDIES = "Add Radiology Studies";
+    
     public static final String DELETE_RADIOLOGY_ORDERS = "Delete Radiology Orders";
     
     public static final String DELETE_RADIOLOGY_REPORTS = "Delete Radiology Reports";
@@ -32,9 +34,13 @@ public class RadiologyPrivileges {
     
     public static final String EDIT_RADIOLOGY_REPORTS = "Edit Radiology Reports";
     
+    public static final String EDIT_RADIOLOGY_STUDIES = "Edit Radiology Studies";
+    
     public static final String GET_RADIOLOGY_ORDERS = "Get Radiology Orders";
     
     public static final String GET_RADIOLOGY_REPORTS = "Get Radiology Reports";
+    
+    public static final String GET_RADIOLOGY_STUDIES = "Get Radiology Studies";
     
     public static final String VIEW_PATIENT_DASHBOARD_RADIOLOGY_TAB = "Patient Dashboard - View Radiology Section";
     
