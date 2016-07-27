@@ -13,6 +13,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.openmrs.module.radiology.report.template.MrrtReportTemplate;
+import org.openmrs.module.radiology.report.template.MrrtReportTemplateSearchCriteria;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
@@ -64,9 +65,13 @@ public class MrrtReportTemplateSearchHandler implements SearchHandler {
      */
     @Override
     public PageableResult search(RequestContext context) throws ResponseException {
-        final String templateTitle = context.getParameter("title");
         
-        List<MrrtReportTemplate> result = mrrtReportTemplateService.getMrrtReportTemplateByTitle(templateTitle);
+        final String templateTitle = context.getParameter("title");
+        final MrrtReportTemplateSearchCriteria searchCriteria =
+                new MrrtReportTemplateSearchCriteria.Builder().withTitle(templateTitle)
+                        .build();
+        
+        List<MrrtReportTemplate> result = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
         if (result.isEmpty()) {
             return new EmptySearchResult();
         } else {

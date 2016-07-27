@@ -126,13 +126,14 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
     }
     
     /**
-     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplateByTitle(String)
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
      */
     @Override
-    public List<MrrtReportTemplate> getMrrtReportTemplateByTitle(String title) {
-        if (title == null) {
-            throw new IllegalArgumentException("title cannot be null");
+    public List<MrrtReportTemplate>
+            getMrrtReportTemplates(MrrtReportTemplateSearchCriteria mrrtReportTemplateSearchCriteria) {
+        if (mrrtReportTemplateSearchCriteria == null) {
+            throw new IllegalArgumentException("mrrtReportTemplateSearchCriteria cannot be null");
         }
-        return mrrtReportTemplateDAO.getMrrtReportTemplateByTitle(title);
+        return mrrtReportTemplateDAO.getMrrtReportTemplates(mrrtReportTemplateSearchCriteria);
     }
 }

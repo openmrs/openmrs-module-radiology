@@ -101,15 +101,16 @@ public interface MrrtReportTemplateService extends OpenmrsService {
     public MrrtReportTemplate getMrrtReportTemplateByIdentifier(String identifier);
     
     /**
-     * Get list of {@code MrrtReportTemplate} objects matching a particular title.
+     * Get all {@code MrrtReportTemplate's} matching a variety of (nullable) criteria.
      * 
-     * @param title the title of the mrrt report template
-     * @return a list of mrrt report template objects matching title
+     * @param mrrtReportTemplateSearchCriteria the object containing search parameters
+     * @return the mrrt report templates matching the given criteria
      * @throws IllegalArgumentException if given null
-     * @should get list of templates that match given title
-     * @should return empty list if no match is found
+     * @should return all mrrt report templates that match given title search query if title is specified
+     * @should return an empty list of no match for title was found
      * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
-    public List<MrrtReportTemplate> getMrrtReportTemplateByTitle(String title);
+    public List<MrrtReportTemplate>
+            getMrrtReportTemplates(MrrtReportTemplateSearchCriteria mrrtReportTemplateSearchCriteria);
 }
