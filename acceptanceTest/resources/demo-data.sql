@@ -80,12 +80,14 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Patient D
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Add Encounters');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Add Orders');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Add Radiology Orders');
+INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Add Radiology Studies');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Add Relationships');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Add Visits');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Delete Radiology Orders');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Delete Relationships');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Edit Encounters');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Edit Orders');
+INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Edit Radiology Studies');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Edit Relationships');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Edit Visits');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get Care Settings');
@@ -98,6 +100,7 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get Patie
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get People');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get Providers');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get Radiology Orders');
+INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get Radiology Studies');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get Users');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get Visit Attribute Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Referring physician','Get Visit Types');
@@ -133,6 +136,7 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Orde
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Patients');
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Providers');
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Radiology Orders');
+INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Radiology Studies');
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Users');
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Visit Attribute Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','Get Visit Types');
@@ -156,6 +160,7 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Provide
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Radiology Orders');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Radiology Reports');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Radiology Report Templates');
+INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Radiology Studies');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Users');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Visit Attribute Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Visit Types');

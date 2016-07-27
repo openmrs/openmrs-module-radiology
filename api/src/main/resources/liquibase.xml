@@ -435,4 +435,22 @@
 		<dropColumn columnName="scheduled_status" tableName="radiology_study" />
 		<dropColumn columnName="modality" tableName="radiology_study" />
 	</changeSet>
+	<changeSet id="radiology-35" author="teleivo">
+		<comment>Add privileges for radiology studies</comment>
+		<insert tableName="privilege">
+			<column name="privilege" value="Add Radiology Studies" />
+			<column name="description" value="Able to add radiology studies" />
+			<column name="uuid" value="da0ba0b6-fda8-49b4-a39c-dad7d24590b4" />
+		</insert>
+		<insert tableName="privilege">
+			<column name="privilege" value="Edit Radiology Studies" />
+			<column name="description" value="Able to edit radiology studies" />
+			<column name="uuid" value="0e97caa3-2329-407d-bf2b-c11b811bd4e2" />
+		</insert>
+		<insert tableName="privilege">
+			<column name="privilege" value="Get Radiology Studies" />
+			<column name="description" value="Able to get radiology studies" />
+			<column name="uuid" value="bf112ddf-02e9-4d5f-bf1c-d3e4c8410bf5" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>
