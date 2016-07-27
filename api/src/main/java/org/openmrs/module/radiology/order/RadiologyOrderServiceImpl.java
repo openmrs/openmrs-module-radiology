@@ -184,19 +184,6 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     }
     
     /**
-     * @see RadiologyOrderService#getRadiologyOrdersByPatients
-     */
-    @Override
-    public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients) {
-        
-        if (patients == null) {
-            throw new IllegalArgumentException("patients cannot be null");
-        }
-        
-        return radiologyOrderDAO.getRadiologyOrdersByPatients(patients);
-    }
-    
-    /**
      * @see AccessionNumberGenerator#getNewAccessionNumber()
      */
     @Override

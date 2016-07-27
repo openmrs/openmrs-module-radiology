@@ -112,42 +112,6 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
     }
     
     /**
-     * A utility method creating a criteria for RadiologyOrder
-     *
-     * @return criteria for RadiologyOrder
-     */
-    private Criteria createRadiologyOrderCriteria() {
-        return sessionFactory.getCurrentSession()
-                .createCriteria(RadiologyOrder.class);
-    }
-    
-    /**
-     * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrdersByPatients
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients) {
-        
-        final Criteria radiologyOrderCriteria = createRadiologyOrderCriteria();
-        addRestrictionOnPatients(radiologyOrderCriteria, patients);
-        
-        final List<RadiologyOrder> result = (List<RadiologyOrder>) radiologyOrderCriteria.list();
-        return result == null ? new ArrayList<RadiologyOrder>() : result;
-    }
-    
-    /**
-     * Adds an in restriction for given patients on given criteria if patients is not empty
-     *
-     * @param criteria criteria on which in restriction is set if patients is not empty
-     * @param patients patient list for which in restriction will be set
-     */
-    private void addRestrictionOnPatients(Criteria criteria, List<Patient> patients) {
-        if (!patients.isEmpty()) {
-            criteria.add(Restrictions.in("patient", patients));
-        }
-    }
-    
-    /**
      * @see org.openmrs.module.radiology.order.RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
      */
     @SuppressWarnings("unchecked")
