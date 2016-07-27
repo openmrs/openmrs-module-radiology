@@ -10,6 +10,9 @@
   * [Docker](#docker-whale)
   * [Demo data](#demo-data)
 4. [Documentation](#documentation)
+  * [Website](#website)
+  * [Developer guides](#developer-guides)
+  * [Wiki](#wiki)
 5. [Contributing](#contributing)
 6. [Issues](#issues)
 7. [Limitations](#limitations)
@@ -113,9 +116,17 @@ Please read the corresponding [DEMO-DATA.md](docs/DEMO-DATA.md).
 
 ## Documentation
 
+### Website
+
 For a detailed guide on ways to install and configure this module see
 
 http://teleivo.github.io/docs-openmrs-module-radiology/
+
+### Developer guides
+
+Please check out the readme files at [docs](docs/).
+
+### Wiki
 
 For some more background informations on the module see
 

@@ -1,6 +1,6 @@
-# Code Style
+# Formatter
 # java.xml
-The java.xml file contains coding conventions used by the OpenMRS Radiology Module for its Java files.
+The `tools/formatter/java.xml` file contains coding conventions used by the OpenMRS Radiology Module for its Java files.
 
 The conventions are close to the OpenMRS conventions described in
 http://wiki.openmrs.org/display/docs/Coding+Conventions but do differ in some
@@ -10,7 +10,7 @@ Import java.xml into Eclipse so that control-shift-f will format your code
 accordingly.
 
 # javascript.xml
-The javascript.xml file contains coding conventions used by the OpenMRS Radiology Module for its JavaScript files.
+The `tools/formatter/javascript.xml` file contains coding conventions used by the OpenMRS Radiology Module for its JavaScript files.
 
 Import javascript.xml into Eclipse so that control-shift-f will format your code
 accordingly.
