@@ -65,11 +65,7 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     private static final int PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER = 70011;
     
-    private static final int PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER = 70021;
-    
     private static final int PATIENT_ID_WITH_TWO_RADIOLOGY_ORDERS = 70021;
-    
-    private static final int PATIENT_ID_WITH_FIVE_RADIOLOGY_ORDERS = 70022;
     
     private static final int PATIENT_ID_WITH_ONE_VOIDED_AND_ONE_NON_VOIDED_RADIOLOGY_ORDER = 70023;
     
@@ -568,80 +564,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("uuid cannot be null");
         radiologyOrderService.getRadiologyOrderByUuid(null);
-    }
-    
-    /**
-     * @see RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
-     * @verifies should return all radiology orders associated with given patients
-     */
-    @Test
-    public void getRadiologyOrdersByPatients_shouldReturnAllRadiologyOrdersAssociatedWithGivenPatients() {
-        
-        Patient patientWithTwoRadiologyOrders = patientService.getPatient(PATIENT_ID_WITH_TWO_RADIOLOGY_ORDERS);
-        assertThat(orderService.getAllOrdersByPatient(patientWithTwoRadiologyOrders)
-                .size(),
-            is(2));
-        Patient patientWithFiveRadiologyOrders = patientService.getPatient(PATIENT_ID_WITH_FIVE_RADIOLOGY_ORDERS);
-        assertThat(orderService.getAllOrdersByPatient(patientWithFiveRadiologyOrders)
-                .size(),
-            is(1));
-        Patient patientWithTwoRadiologyOrdersOneVoidedOneNonVoided =
-                patientService.getPatient(PATIENT_ID_WITH_ONE_VOIDED_AND_ONE_NON_VOIDED_RADIOLOGY_ORDER);
-        assertThat(orderService.getAllOrdersByPatient(patientWithTwoRadiologyOrdersOneVoidedOneNonVoided)
-                .size(),
-            is(2));
-        
-        List<Patient> allPatientsWithRadiologyOrders = new ArrayList<Patient>();
-        allPatientsWithRadiologyOrders.add(patientWithTwoRadiologyOrders);
-        allPatientsWithRadiologyOrders.add(patientWithFiveRadiologyOrders);
-        allPatientsWithRadiologyOrders.add(patientWithTwoRadiologyOrdersOneVoidedOneNonVoided);
-        
-        List<RadiologyOrder> radiologyOrders =
-                radiologyOrderService.getRadiologyOrdersByPatients(allPatientsWithRadiologyOrders);
-        
-        assertThat(radiologyOrders.size(), is(TOTAL_NUMBER_OF_RADIOLOGY_ORDERS));
-    }
-    
-    /**
-     * @see RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
-     * @verifies should return all radiology orders given empty patient list
-     */
-    @Test
-    public void getRadiologyOrdersByPatients_shouldReturnAllRadiologyOrdersGivenEmptyPatientList() {
-        
-        List<Patient> emptyPatientList = new ArrayList<Patient>();
-        
-        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrdersByPatients(emptyPatientList);
-        
-        assertThat(radiologyOrders.size(), is(TOTAL_NUMBER_OF_RADIOLOGY_ORDERS));
-    }
-    
-    /**
-     * @see RadiologyOrderService#getRadiologyOrdersByPatients(List<Patient>)
-     * @verifies throw illegal argument exception if given null
-     */
-    @Test
-    public void getRadiologyOrdersByPatients_shouldThrowIllegalArgumentExceptionIfGivenNull() {
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("patients cannot be null");
-        radiologyOrderService.getRadiologyOrdersByPatients(null);
-    }
-    
-    /**
-     * @see RadiologyOrderService#getRadiologyOrdersByPatients(List)
-     * @verifies return empty list given patient list without associated radiology orders
-     */
-    @Test
-    public void getRadiologyOrdersByPatients_shouldReturnEmptyListGivenPatientListWithoutAssociatedRadiologyOrders()
-            throws Exception {
-        
-        Patient patientWithoutRadiologyOrders = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER);
-        
-        List<RadiologyOrder> radiologyOrders =
-                radiologyOrderService.getRadiologyOrdersByPatients(Arrays.asList(patientWithoutRadiologyOrders));
-        
-        assertThat(radiologyOrders.size(), is(0));
     }
     
     /**

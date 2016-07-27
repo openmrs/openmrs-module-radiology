@@ -109,20 +109,6 @@ public interface RadiologyOrderService extends OpenmrsService {
     public RadiologyOrder getRadiologyOrderByUuid(String uuid);
     
     /**
-     * Get the {@code RadiologyOrder's} associated with a list of {@code Patient's}.
-     *
-     * @param patients the list of patients for which radiology orders should be returned
-     * @return the radiology orders associated with given patients
-     * @throws IllegalArgumentException if given null
-     * @should return all radiology orders associated with given patients
-     * @should return all radiology orders given empty patient list
-     * @should return empty list given patient list without associated radiology orders
-     * @should throw illegal argument exception if given null
-     */
-    @Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
-    public List<RadiologyOrder> getRadiologyOrdersByPatients(List<Patient> patients);
-    
-    /**
      * Get all {@code RadiologyOrder's} matching a variety of (nullable) criteria.
      * Each extra value for a parameter that is provided acts as an "and" and will reduce the number of results returned
      *
