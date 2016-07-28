@@ -17,10 +17,14 @@ import static org.hamcrest.core.IsNull.nullValue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
@@ -588,9 +592,9 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-    * @verifies return all radiology orders for given urgency
-    */
+     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+     * @verifies return all radiology orders for given urgency
+     */
     @Test
     public void getRadiologyOrders_shouldReturnAllRadiologyOrdersForGivenUrgency() throws Exception {
         
@@ -599,16 +603,171 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
                         .build();
         
         List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
-        assertThat(radiologyOrders.size(), is(2));
+        assertThat(radiologyOrders.size(), is(5));
         for (RadiologyOrder radiologyOrder : radiologyOrders) {
             assertThat(radiologyOrder.getUrgency(), is(Urgency.STAT));
         }
     }
     
     /**
-    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-    * @verifies throw illegal argument exception if given null
-    */
+     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+     * @verifies return all radiology orders with effective order start date in given date range if to date and from date are specified
+     */
+    @Test
+    public void
+            getRadiologyOrders_shouldReturnAllRadiologyOrdersWithEffectiveOrderStartDateInGivenDateRangeIfToDateAndFromDateAreSpecified()
+                    throws Exception {
+        
+        Patient patient = patientService.getPatient(70024);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date fromDate = format.parse("2016-02-02");
+        Date toDate = format.parse("2016-04-04");
+        
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteriaDateRange =
+                new RadiologyOrderSearchCriteria.Builder().includeVoided()
+                        .withPatient(patient)
+                        .withFromEffectiveStartDate(fromDate)
+                        .withToEffectiveStartDate(toDate)
+                        .build();
+        List<RadiologyOrder> radiologyOrders =
+                radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteriaDateRange);
+        assertThat(radiologyOrders.size(), is(3));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(2009)));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20012)));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20015)));
+        for (RadiologyOrder radiologyOrder : radiologyOrders) {
+            if (radiologyOrder.getUrgency()
+                    .equals(Urgency.ON_SCHEDULED_DATE)) {
+                assertTrue(radiologyOrder.getScheduledDate()
+                        .compareTo(fromDate) >= 0);
+                assertTrue(radiologyOrder.getScheduledDate()
+                        .compareTo(toDate) <= 0);
+            } else {
+                assertTrue(radiologyOrder.getDateActivated()
+                        .compareTo(fromDate) >= 0);
+                assertTrue(radiologyOrder.getDateActivated()
+                        .compareTo(toDate) <= 0);
+            }
+        }
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+     * @verifies return all radiology orders with effective order start date after or equal to from date if only from date is specified
+     */
+    @Test
+    public void
+            getRadiologyOrders_shouldReturnAllRadiologyOrdersWithEffectiveOrderStartDateAfterOrEqualToFromDateIfOnlyFromDateIsSpecified()
+                    throws Exception {
+        
+        Patient patient = patientService.getPatient(70024);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date fromDate = format.parse("2016-03-03");
+        
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteriaDateRange =
+                new RadiologyOrderSearchCriteria.Builder().includeVoided()
+                        .withPatient(patient)
+                        .withFromEffectiveStartDate(fromDate)
+                        .build();
+        List<RadiologyOrder> radiologyOrders =
+                radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteriaDateRange);
+        assertThat(radiologyOrders.size(), is(6));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(2009)));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20010)));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20012)));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20013)));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20015)));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20016)));
+        for (RadiologyOrder radiologyOrder : radiologyOrders) {
+            if (radiologyOrder.getUrgency()
+                    .equals(Urgency.ON_SCHEDULED_DATE)) {
+                assertTrue(radiologyOrder.getScheduledDate()
+                        .compareTo(fromDate) >= 0);
+            } else {
+                assertTrue(radiologyOrder.getDateActivated()
+                        .compareTo(fromDate) >= 0);
+            }
+        }
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+     * @verifies return all radiology orders with effective order start date before or equal to to date if only to date is specified
+     */
+    @Test
+    public void
+            getRadiologyOrders_shouldReturnAllRadiologyOrdersWithEffectiveOrderStartDateBeforeOrEqualToToDateIfOnlyToDateIsSpecified()
+                    throws Exception {
+        
+        Patient patient = patientService.getPatient(70024);
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date toDate = format.parse("2016-03-03");
+        
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteriaDateRange =
+                new RadiologyOrderSearchCriteria.Builder().includeVoided()
+                        .withPatient(patient)
+                        .withToEffectiveStartDate(toDate)
+                        .build();
+        List<RadiologyOrder> radiologyOrders =
+                radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteriaDateRange);
+        assertThat(radiologyOrders.size(), is(6));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(2008)));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(2009)));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20011)));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20012)));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20014)));
+        assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20015)));
+        for (RadiologyOrder radiologyOrder : radiologyOrders) {
+            if (radiologyOrder.getUrgency()
+                    .equals(Urgency.ON_SCHEDULED_DATE)) {
+                assertTrue(radiologyOrder.getScheduledDate()
+                        .compareTo(toDate) <= 0);
+            } else {
+                assertTrue(radiologyOrder.getDateActivated()
+                        .compareTo(toDate) <= 0);
+            }
+        }
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+     * @verifies return empty list if from date after to date
+     */
+    @Test
+    public void getRadiologyOrders_shouldReturnEmptyListIfFromDateAfterToDate() throws Exception {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date fromDate = format.parse("2016-06-30");
+        Date toDate = format.parse("2016-05-29");
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
+                new RadiologyOrderSearchCriteria.Builder().withFromEffectiveStartDate(fromDate)
+                        .withToEffectiveStartDate(toDate)
+                        .build();
+        
+        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        assertTrue(radiologyOrders.isEmpty());
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+     * @verifies return empty search result if no effective order start is in date range
+     */
+    @Test
+    public void getRadiologyOrders_shouldReturnEmptySearchResultIfNoEffectiveOrderStartIsInDateRange() throws Exception {
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteriaDateRange =
+                new RadiologyOrderSearchCriteria.Builder().withFromEffectiveStartDate(format.parse("2016-06-06"))
+                        .withToEffectiveStartDate(format.parse("2016-07-07"))
+                        .build();
+        
+        List<RadiologyOrder> radiologyOrdersWithDateRange =
+                radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteriaDateRange);
+        assertTrue(radiologyOrdersWithDateRange.isEmpty());
+    }
+    
+    /**
+     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+     * @verifies throw illegal argument exception if given null
+     */
     @Test
     public void getRadiologyOrders_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
         

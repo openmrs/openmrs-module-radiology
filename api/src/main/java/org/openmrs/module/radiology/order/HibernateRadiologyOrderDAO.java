@@ -15,8 +15,10 @@ import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.LockOptions;
 import org.hibernate.SessionFactory;
+import org.hibernate.criterion.Disjunction;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.GlobalProperty;
+import org.openmrs.Order.Urgency;
 import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.RadiologyConstants;
 
@@ -129,6 +131,27 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
         
         if (searchCriteria.getUrgency() != null) {
             crit.add(Restrictions.eq("urgency", searchCriteria.getUrgency()));
+        }
+        if (searchCriteria.getFromEffectiveStartDate() != null) {
+            final Disjunction disjunction = Restrictions.disjunction();
+            disjunction.add(Restrictions.conjunction()
+                    .add(Restrictions.eq("urgency", Urgency.ON_SCHEDULED_DATE))
+                    .add(Restrictions.ge("scheduledDate", searchCriteria.getFromEffectiveStartDate())));
+            disjunction.add(Restrictions.conjunction()
+                    .add(Restrictions.not(Restrictions.eq("urgency", Urgency.ON_SCHEDULED_DATE)))
+                    .add(Restrictions.ge("dateActivated", searchCriteria.getFromEffectiveStartDate())));
+            crit.add(disjunction);
+        }
+        
+        if (searchCriteria.getToEffectiveStartDate() != null) {
+            final Disjunction disjunction = Restrictions.disjunction();
+            disjunction.add(Restrictions.conjunction()
+                    .add(Restrictions.eq("urgency", Urgency.ON_SCHEDULED_DATE))
+                    .add(Restrictions.le("scheduledDate", searchCriteria.getToEffectiveStartDate())));
+            disjunction.add(Restrictions.conjunction()
+                    .add(Restrictions.not((Restrictions.eq("urgency", Urgency.ON_SCHEDULED_DATE))))
+                    .add(Restrictions.le("dateActivated", searchCriteria.getToEffectiveStartDate())));
+            crit.add(disjunction);
         }
         
         return crit.list();
