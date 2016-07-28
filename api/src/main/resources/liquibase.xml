@@ -453,4 +453,9 @@
 			<column name="uuid" value="bf112ddf-02e9-4d5f-bf1c-d3e4c8410bf5" />
 		</insert>
 	</changeSet>
+	<changeSet id="radiology-36" author="teleivo">
+		<comment>add not null constraint to column study_instance_uid</comment>
+		<addNotNullConstraint tableName="radiology_study"
+			columnName="study_instance_uid" columnDataType="varchar(255)" />
+	</changeSet>
 </databaseChangeLog>
