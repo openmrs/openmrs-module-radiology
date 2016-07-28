@@ -65,6 +65,7 @@ public class RadiologyOrderResourceComponentTest extends BaseDelegatingResourceT
     public void validateDefaultRepresentation() throws Exception {
         super.validateDefaultRepresentation();
         assertPropPresent("orderNumber");
+        assertPropPresent("accessionNumber");
         assertPropPresent("patient");
         assertPropPresent("concept");
         assertPropPresent("action");
@@ -90,6 +91,7 @@ public class RadiologyOrderResourceComponentTest extends BaseDelegatingResourceT
     public void validateFullRepresentation() throws Exception {
         super.validateFullRepresentation();
         assertPropPresent("orderNumber");
+        assertPropPresent("accessionNumber");
         assertPropPresent("patient");
         assertPropPresent("concept");
         assertPropPresent("action");

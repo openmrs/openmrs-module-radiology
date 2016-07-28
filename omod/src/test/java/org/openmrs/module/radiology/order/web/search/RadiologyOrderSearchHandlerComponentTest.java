@@ -17,7 +17,6 @@ import static org.junit.Assert.assertThat;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -26,7 +25,6 @@ import org.openmrs.Order.Urgency;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.radiology.order.RadiologyOrderSearchCriteria;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
-import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.test.Util;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -44,6 +42,10 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     
     protected static final String TEST_DATASET = "RadiologyOrderSearchHandlerComponentTestDataset.xml";
+    
+    private static final String ACCESSION_NUMBER_WITH_ORDER = "4";
+    
+    private static final String ACCESSION_NUMBER_WITH_NO_ORDER = "6";
     
     private static final String UNKNOWN_PATIENT = "99999999-9999-9999-9999-9999999999999";
     
@@ -104,6 +106,45 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     public void shouldGetAll() throws Exception {
         
         deserialize(handle(request(RequestMethod.GET, getURI())));
+    }
+    
+    /**
+     * @see RadiologyOrderSearchHandler#search(RequestContext)
+     * @verifies return all radiology orders for given accession number
+     */
+    @Test
+    public void search_shouldReturnAllRadiologyOrdersForGivenAccessionNumber() throws Exception {
+        
+        MockHttpServletRequest requestAccessionNumberWithOrder = request(RequestMethod.GET, getURI());
+        requestAccessionNumberWithOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_ACCESSION_NUMBER,
+            ACCESSION_NUMBER_WITH_ORDER);
+        requestAccessionNumberWithOrder.setParameter("v", Representation.FULL.getRepresentation());
+        
+        SimpleObject resultAccessionNumberWithOrder = deserialize(handle(requestAccessionNumberWithOrder));
+        
+        assertNotNull(resultAccessionNumberWithOrder);
+        List<Object> hits = (List<Object>) resultAccessionNumberWithOrder.get("results");
+        assertThat(hits.size(), is(1));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "accessionNumber"), is(ACCESSION_NUMBER_WITH_ORDER));
+        assertNull(PropertyUtils.getProperty(resultAccessionNumberWithOrder, "totalCount"));
+    }
+    
+    /**
+     * @see RadiologyOrderSearchHandler#search(RequestContext)
+     * @verifies return empty search result if no radiology order exists for given accession number
+     */
+    @Test
+    public void search_shouldReturnEmptySearchResultIfNoRadiologyOrderExistsForGivenAccessionNumber() throws Exception {
+        
+        MockHttpServletRequest requestAccessionNumberWithNoOrders = request(RequestMethod.GET, getURI());
+        requestAccessionNumberWithNoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_ACCESSION_NUMBER,
+            ACCESSION_NUMBER_WITH_NO_ORDER);
+        
+        SimpleObject resultAccessionNumberWithNoOrders = deserialize(handle(requestAccessionNumberWithNoOrders));
+        
+        assertNotNull(resultAccessionNumberWithNoOrders);
+        List<Object> hits = (List<Object>) resultAccessionNumberWithNoOrders.get("results");
+        assertThat(hits.size(), is(0));
     }
     
     /**
