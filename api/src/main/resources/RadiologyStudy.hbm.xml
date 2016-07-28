@@ -21,7 +21,7 @@
 			</generator>
 		</id>
 		<property name="studyInstanceUid" column="study_instance_uid"
-			unique="true">
+			unique="true" not-null="true">
 		</property>
 		<many-to-one name="radiologyOrder" column="order_id"
 			unique="true" not-null="true" />
