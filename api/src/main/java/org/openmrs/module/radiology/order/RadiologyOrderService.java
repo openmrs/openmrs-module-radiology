@@ -116,6 +116,11 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @should return all radiology orders for given patient if patient is specified
      * @should return all radiology orders (including voided) matching the search query if include voided is set
      * @should return all radiology orders for given urgency
+     * @should return all radiology orders with effective order start date in given date range if to date and from date are specified
+     * @should return all radiology orders with effective order start date after or equal to from date if only from date is specified
+     * @should return all radiology orders with effective order start date before or equal to to date if only to date is specified
+     * @should return empty list if from date after to date
+     * @should return empty search result if no effective order start is in date range
      * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_ORDERS)

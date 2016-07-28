@@ -9,9 +9,15 @@
  */
 package org.openmrs.module.radiology.order;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.junit.Test;
 import org.openmrs.Order.Urgency;
@@ -40,6 +46,8 @@ public class RadiologyOrderSearchCriteriaTest {
                 .equals(patient));
         assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
         assertNull(radiologyOrderSearchCriteria.getUrgency());
+        assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
+        assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
     }
     
     /**
@@ -57,6 +65,8 @@ public class RadiologyOrderSearchCriteriaTest {
         assertTrue(radiologyOrderSearchCriteria.getIncludeVoided());
         assertNull(radiologyOrderSearchCriteria.getPatient());
         assertNull(radiologyOrderSearchCriteria.getUrgency());
+        assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
+        assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
     }
     
     /**
@@ -71,7 +81,51 @@ public class RadiologyOrderSearchCriteriaTest {
         
         assertTrue(radiologyOrderSearchCriteria.getUrgency()
                 .equals(Urgency.ROUTINE));
-        assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
         assertNull(radiologyOrderSearchCriteria.getPatient());
+        assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
+        assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
+        assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
+    }
+    
+    /**
+     * @see RadiologyOrderSearchCriteria.Builder#build()
+     * @verifies create a new radiology order search criteria instance with from effective start date if from effective start date is set
+     */
+    @Test
+    public void build_createANewRadiologyOrderSearchCriteriaInstanceWithFromEffectiveStartDateIfFromEffectiveStartDateIsSet()
+            throws Exception {
+        
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date fromEffectiveStartDate = format.parse("2016-05-01");
+        radiologyOrderSearchCriteria =
+                new RadiologyOrderSearchCriteria.Builder().withFromEffectiveStartDate(fromEffectiveStartDate)
+                        .build();
+        
+        assertThat(radiologyOrderSearchCriteria.getFromEffectiveStartDate(), is(fromEffectiveStartDate));
+        assertNull(radiologyOrderSearchCriteria.getPatient());
+        assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
+        assertNull(radiologyOrderSearchCriteria.getUrgency());
+        assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
+    }
+    
+    /**
+     * @see RadiologyOrderSearchCriteria.Builder#build()
+     * @verifies create a new radiology order search criteria instance with to effective start date if to effective start date is set
+     */
+    @Test
+    public void build_createANewRadiologyOrderSearchCriteriaInstanceWithToEffectiveStartDateIfToEffectiveStartDateIsSet()
+            throws Exception {
+        
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
+        Date toEffectiveStartDate = format.parse("2016-05-01");
+        radiologyOrderSearchCriteria =
+                new RadiologyOrderSearchCriteria.Builder().withToEffectiveStartDate(toEffectiveStartDate)
+                        .build();
+        
+        assertThat(radiologyOrderSearchCriteria.getToEffectiveStartDate(), is(toEffectiveStartDate));
+        assertNull(radiologyOrderSearchCriteria.getPatient());
+        assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
+        assertNull(radiologyOrderSearchCriteria.getUrgency());
+        assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
     }
 }

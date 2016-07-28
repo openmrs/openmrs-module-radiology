@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.radiology.order;
 
+import java.util.Date;
+
 import org.openmrs.Order.Urgency;
 import org.openmrs.Patient;
 
@@ -23,6 +25,10 @@ public class RadiologyOrderSearchCriteria {
     private final Boolean includeVoided;
     
     private final Urgency urgency;
+    
+    private final Date fromEffectiveStartDate;
+    
+    private final Date toEffectiveStartDate;
     
     /**
      * @return the order patient
@@ -48,6 +54,22 @@ public class RadiologyOrderSearchCriteria {
         return urgency;
     }
     
+    /**
+     * @return the minimum effective start date
+     */
+    public Date getFromEffectiveStartDate() {
+        
+        return fromEffectiveStartDate;
+    }
+    
+    /**
+     * @return the maximum effective start date
+     */
+    public Date getToEffectiveStartDate() {
+        
+        return toEffectiveStartDate;
+    }
+    
     public static class Builder {
         
         
@@ -56,6 +78,10 @@ public class RadiologyOrderSearchCriteria {
         private Boolean includeVoided = false;
         
         private Urgency urgency;
+        
+        private Date fromEffectiveStartDate;
+        
+        private Date toEffectiveStartDate;
         
         /**
          * @param patient the order patient
@@ -89,12 +115,35 @@ public class RadiologyOrderSearchCriteria {
         }
         
         /**
+         * @return the minimum effective start date
+         * @return this builder instance
+         */
+        public Builder withFromEffectiveStartDate(Date fromEffectiveStartDate) {
+            
+            this.fromEffectiveStartDate = fromEffectiveStartDate;
+            return this;
+        }
+        
+        /**
+         * @return the maximum effective start date
+         * @return this builder instance
+         */
+        public Builder withToEffectiveStartDate(Date toEffectiveStartDate) {
+            
+            this.toEffectiveStartDate = toEffectiveStartDate;
+            
+            return this;
+        }
+        
+        /**
          * Create an {@link RadiologyOrderSearchCriteria} with the properties of this builder instance.
          * 
          * @return a new search criteria instance
          * @should create a new radiology order search criteria instance with patient if patient is set
          * @should create a new radiology order search criteria instance with include voided set to true if voided orders should be included
          * @should create a new radiology order search criteria instance with urgency if urgency is set
+         * @should create a new radiology order search criteria instance with from effective start date if from effective start date is set
+         * @should create a new radiology order search criteria instance with to effective start date if to effective start date is set
          */
         public RadiologyOrderSearchCriteria build() {
             
@@ -107,5 +156,7 @@ public class RadiologyOrderSearchCriteria {
         this.patient = builder.patient;
         this.includeVoided = builder.includeVoided;
         this.urgency = builder.urgency;
+        this.fromEffectiveStartDate = builder.fromEffectiveStartDate;
+        this.toEffectiveStartDate = builder.toEffectiveStartDate;
     }
 }
