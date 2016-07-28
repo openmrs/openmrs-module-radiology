@@ -13,6 +13,7 @@ import java.util.Date;
 
 import org.openmrs.Order.Urgency;
 import org.openmrs.Patient;
+import org.openmrs.Provider;
 
 /**
  * The search parameter object for {@code RadiologyOrder's}.
@@ -31,6 +32,8 @@ public class RadiologyOrderSearchCriteria {
     private final Date toEffectiveStartDate;
     
     private final String accessionNumber;
+    
+    private final Provider orderer;
     
     /**
      * @return the order patient
@@ -80,6 +83,14 @@ public class RadiologyOrderSearchCriteria {
         return accessionNumber;
     }
     
+    /**
+     * @return the order orderer
+     */
+    public Provider getOrderer() {
+        
+        return orderer;
+    }
+    
     public static class Builder {
         
         
@@ -94,6 +105,8 @@ public class RadiologyOrderSearchCriteria {
         private Date toEffectiveStartDate;
         
         private String accessionNumber;
+        
+        private Provider orderer;
         
         /**
          * @param patient the order patient
@@ -157,6 +170,16 @@ public class RadiologyOrderSearchCriteria {
         }
         
         /**
+         * @param urgency the order orderer
+         * @return this builder instance
+         */
+        public Builder withOrderer(Provider orderer) {
+            
+            this.orderer = orderer;
+            return this;
+        }
+        
+        /**
          * Create an {@link RadiologyOrderSearchCriteria} with the properties of this builder instance.
          * 
          * @return a new search criteria instance
@@ -166,6 +189,7 @@ public class RadiologyOrderSearchCriteria {
          * @should create a new radiology order search criteria instance with from effective start date if from effective start date is set
          * @should create a new radiology order search criteria instance with to effective start date if to effective start date is set
          * @should create a new radiology order search criteria instance with accession number if accession number is set
+         * @should create a new radiology order search criteria instance with orderer if orderer is set
          */
         public RadiologyOrderSearchCriteria build() {
             
@@ -181,5 +205,6 @@ public class RadiologyOrderSearchCriteria {
         this.fromEffectiveStartDate = builder.fromEffectiveStartDate;
         this.toEffectiveStartDate = builder.toEffectiveStartDate;
         this.accessionNumber = builder.accessionNumber;
+        this.orderer = builder.orderer;
     }
 }

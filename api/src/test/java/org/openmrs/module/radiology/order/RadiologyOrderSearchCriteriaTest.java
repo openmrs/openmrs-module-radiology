@@ -22,6 +22,7 @@ import java.util.Date;
 import org.junit.Test;
 import org.openmrs.Order.Urgency;
 import org.openmrs.Patient;
+import org.openmrs.Provider;
 
 /**
  * Tests {@link RadiologyOrderSearchCriteria}.
@@ -49,6 +50,7 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
         assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
         assertNull(radiologyOrderSearchCriteria.getAccessionNumber());
+        assertNull(radiologyOrderSearchCriteria.getOrderer());
     }
     
     /**
@@ -69,6 +71,7 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
         assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
         assertNull(radiologyOrderSearchCriteria.getAccessionNumber());
+        assertNull(radiologyOrderSearchCriteria.getOrderer());
     }
     
     /**
@@ -88,6 +91,7 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
         assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
         assertNull(radiologyOrderSearchCriteria.getAccessionNumber());
+        assertNull(radiologyOrderSearchCriteria.getOrderer());
     }
     
     /**
@@ -110,6 +114,7 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getUrgency());
         assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
         assertNull(radiologyOrderSearchCriteria.getAccessionNumber());
+        assertNull(radiologyOrderSearchCriteria.getOrderer());
     }
     
     /**
@@ -132,6 +137,7 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getUrgency());
         assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
         assertNull(radiologyOrderSearchCriteria.getAccessionNumber());
+        assertNull(radiologyOrderSearchCriteria.getOrderer());
     }
     
     /**
@@ -152,5 +158,26 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getUrgency());
         assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
         assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
+        assertNull(radiologyOrderSearchCriteria.getOrderer());
+    }
+    
+    /**
+     * @see RadiologyOrderSearchCriteria.Builder#build()
+     * @verifies create a new radiology order search criteria instance with orderer if orderer is set
+     */
+    @Test
+    public void build_createANewRadiologyOrderSearchCriteriaInstanceWithOrdererIfOrdererIsSet() throws Exception {
+        
+        Provider orderer = new Provider(1);
+        radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder().withOrderer(orderer)
+                .build();
+        
+        assertThat(radiologyOrderSearchCriteria.getOrderer(), is(orderer));
+        assertNull(radiologyOrderSearchCriteria.getPatient());
+        assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
+        assertNull(radiologyOrderSearchCriteria.getUrgency());
+        assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
+        assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
+        assertNull(radiologyOrderSearchCriteria.getAccessionNumber());
     }
 }

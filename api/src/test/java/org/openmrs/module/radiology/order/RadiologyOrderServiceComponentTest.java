@@ -88,6 +88,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 5;
     
+    private static final int PROVIDER_ID_WITH_TWO_ASSIGNED_RADIOLOGY_ORDERS = 2;
+    
     @Autowired
     private PatientService patientService;
     
@@ -783,6 +785,25 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertThat(radiologyOrders.get(0)
                 .getAccessionNumber(),
             is(EXISTING_RADIOLOGY_ORDER_ACCESSION_NUMBER));
+    }
+    
+    /**
+    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+    * @verifies return all radiology orders for given orderer
+    */
+    @Test
+    public void getRadiologyOrders_shouldReturnAllRadiologyOrdersForGivenOrderer() throws Exception {
+        
+        Provider orderer = providerService.getProvider(PROVIDER_ID_WITH_TWO_ASSIGNED_RADIOLOGY_ORDERS);
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
+                new RadiologyOrderSearchCriteria.Builder().withOrderer(orderer)
+                        .build();
+        
+        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        assertThat(radiologyOrders.size(), is(2));
+        for (RadiologyOrder radiologyOrder : radiologyOrders) {
+            assertThat(radiologyOrder.getOrderer(), is(orderer));
+        }
     }
     
     /**
