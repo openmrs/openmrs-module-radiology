@@ -121,6 +121,7 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @should return all radiology orders with effective order start date before or equal to to date if only to date is specified
      * @should return empty list if from date after to date
      * @should return empty search result if no effective order start is in date range
+     * @should return all radiology orders for given accession number if accession number is specified
      * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_ORDERS)

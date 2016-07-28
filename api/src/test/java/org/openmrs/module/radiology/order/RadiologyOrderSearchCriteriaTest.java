@@ -48,6 +48,7 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getUrgency());
         assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
         assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
+        assertNull(radiologyOrderSearchCriteria.getAccessionNumber());
     }
     
     /**
@@ -67,6 +68,7 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getUrgency());
         assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
         assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
+        assertNull(radiologyOrderSearchCriteria.getAccessionNumber());
     }
     
     /**
@@ -85,6 +87,7 @@ public class RadiologyOrderSearchCriteriaTest {
         assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
         assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
         assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
+        assertNull(radiologyOrderSearchCriteria.getAccessionNumber());
     }
     
     /**
@@ -106,6 +109,7 @@ public class RadiologyOrderSearchCriteriaTest {
         assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
         assertNull(radiologyOrderSearchCriteria.getUrgency());
         assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
+        assertNull(radiologyOrderSearchCriteria.getAccessionNumber());
     }
     
     /**
@@ -127,5 +131,26 @@ public class RadiologyOrderSearchCriteriaTest {
         assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
         assertNull(radiologyOrderSearchCriteria.getUrgency());
         assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
+        assertNull(radiologyOrderSearchCriteria.getAccessionNumber());
+    }
+    
+    /**
+     * @see RadiologyOrderSearchCriteria.Builder#build()
+    * @verifies create a new radiology order search criteria instance with accession number if accession number is set
+    */
+    @Test
+    public void build_createANewRadiologyOrderSearchCriteriaInstanceWithAccessionNumberIfAccessionNumberIsSet()
+            throws Exception {
+        
+        String accessionNumber = "1";
+        radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder().withAccessionNumber(accessionNumber)
+                .build();
+        
+        assertThat(radiologyOrderSearchCriteria.getAccessionNumber(), is(accessionNumber));
+        assertNull(radiologyOrderSearchCriteria.getPatient());
+        assertFalse(radiologyOrderSearchCriteria.getIncludeVoided());
+        assertNull(radiologyOrderSearchCriteria.getUrgency());
+        assertNull(radiologyOrderSearchCriteria.getFromEffectiveStartDate());
+        assertNull(radiologyOrderSearchCriteria.getToEffectiveStartDate());
     }
 }

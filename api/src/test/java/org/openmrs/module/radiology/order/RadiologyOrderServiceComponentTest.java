@@ -84,6 +84,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     private static final int CONCEPT_ID_FOR_FRACTURE = 178;
     
+    private static final String EXISTING_RADIOLOGY_ORDER_ACCESSION_NUMBER = "1";
+    
     private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 5;
     
     @Autowired
@@ -765,9 +767,28 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies throw illegal argument exception if given null
-     */
+    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+    * @verifies return all radiology orders for given accession number if accession number is specified
+    */
+    @Test
+    public void getRadiologyOrders_shouldReturnAllRadiologyOrdersForGivenAccessionNumberIfAccessionNumberIsSpecified()
+            throws Exception {
+        
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
+                new RadiologyOrderSearchCriteria.Builder().withAccessionNumber(EXISTING_RADIOLOGY_ORDER_ACCESSION_NUMBER)
+                        .build();
+        
+        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        assertThat(radiologyOrders.size(), is(1));
+        assertThat(radiologyOrders.get(0)
+                .getAccessionNumber(),
+            is(EXISTING_RADIOLOGY_ORDER_ACCESSION_NUMBER));
+    }
+    
+    /**
+    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+    * @verifies throw illegal argument exception if given null
+    */
     @Test
     public void getRadiologyOrders_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
         

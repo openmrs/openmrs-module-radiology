@@ -16,6 +16,7 @@ import org.hibernate.Criteria;
 import org.hibernate.LockOptions;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Disjunction;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 import org.openmrs.GlobalProperty;
 import org.openmrs.Order.Urgency;
@@ -154,6 +155,11 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
             crit.add(disjunction);
         }
         
+        if (StringUtils.isNotBlank(searchCriteria.getAccessionNumber())) {
+            crit.add(Restrictions.eq("accessionNumber", searchCriteria.getAccessionNumber()));
+        }
+        
+        crit.addOrder(Order.asc("accessionNumber"));
         return crit.list();
     }
 }
