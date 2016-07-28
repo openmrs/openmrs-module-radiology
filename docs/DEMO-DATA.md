@@ -9,7 +9,7 @@
 
 ## Overview
 
-The `demo-data.sql` contains a basic set of data used to demonstrate, test the
+The `acceptanceTest/resources/demo-data.sql` contains a basic set of data used to demonstrate, test the
 Radiology Module and its legacy UI interface.
 
 It contains:
@@ -33,7 +33,7 @@ Person related data has been generated using the awesome [Faker.js](https://gith
 To import it in your database do:
 
 ```bash
-mysql -h <IP ADDRESS> -uopenmrs -popenmrs openmrs < demo-data.sql
+mysql -h <IP ADDRESS> -uopenmrs -popenmrs openmrs < acceptanceTest/resources/demo-data.sql
 ```
 
 **NOTE: please adjust the mysql connection details (host, port ...) according to
@@ -50,7 +50,7 @@ Search Index and then the button `Rebuild Search Index`.
 ## Roles and Users
 
 The user logins and their roles are listed here for convenience, for an up to date
-list please see the `demo-data.sql`.
+list please see the `acceptanceTest/resources/demo-data.sql`.
 
 All users in the dataset have password: `Radio1234`
 
