@@ -14,6 +14,8 @@
   * [Developer guides](#developer-guides)
   * [Wiki](#wiki)
 5. [Contributing](#contributing)
+  * [Code](#code)
+  * [Translation](#translation)
 6. [Issues](#issues)
 7. [Limitations](#limitations)
 8. [Community](#community)
@@ -136,7 +138,32 @@ https://wiki.openmrs.org/display/docs/Radiology+Module
 
 Contributions are very welcome, we can definitely use your help!
 
-Check out our [contributing guidelines](CONTRIBUTING.md) to get started.
+### Code
+
+Check out our [contributing guidelines](CONTRIBUTING.md), read through the [Developer guides](#developer-guides).
+
+After you've read up :eyeglasses: [grab an issue](https://issues.openmrs.org/browse/RAD) that is `Ready For Development`.
+
+### Translation
+
+We use
+
+https://www.transifex.com/openmrs/OpenMRS/radiology-module/
+
+to manage our translations.
+
+The `messages.properties` file in this repository is our single source of
+truth. It contains key, value pairs for the English language which is the
+default.
+
+Transifex fetches updates to this file every night which can then be translated
+by you and me on transifex website itself. At any time we can pull new translations from transifex
+back into this repository. Other languages like for ex. Spanish will then be in
+the `messages_es.properties` file.
+
+If you would like to know more about transifex from the coding side read
+
+https://wiki.openmrs.org/display/docs/Maintaining+OpenMRS+Module+Translations+via+Transifex
 
 ## Issues
 
