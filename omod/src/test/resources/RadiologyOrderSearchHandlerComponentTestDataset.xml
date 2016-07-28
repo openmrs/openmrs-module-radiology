@@ -84,7 +84,7 @@
   <person_name person_name_id="3" preferred="true" person_id="70022" given_name="John" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="6753aaa1-545d-44e2-9a9f-6c682f37a134"/>
 
   <!-- radiology order with no associated study -->
-  <orders order_id="2004" order_number="2004" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="ROUTINE" orderer="1" concept_id="178" accession_number="3" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" uuid="be24cb45-6ae2-4bf1-8aa1-4d95fd679e1f"/>
+  <orders order_id="2004" order_number="2004" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="STAT" orderer="1" concept_id="178" accession_number="3" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" uuid="be24cb45-6ae2-4bf1-8aa1-4d95fd679e1f"/>
   <test_order order_id="2004"/>
   <radiology_order order_id="2004" />
 

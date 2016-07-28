@@ -40,7 +40,7 @@
       <tr>
         <td><spring:message code="radiology.urgency" /></td>
         <td><spring:bind path="urgency">
-            <spring:message code="radiology.${status.value}" text="${status.value}" />
+            <spring:message code="radiology.order.urgency.${status.value}" text="${status.value}" />
           </spring:bind></td>
       </tr>
       <tr>

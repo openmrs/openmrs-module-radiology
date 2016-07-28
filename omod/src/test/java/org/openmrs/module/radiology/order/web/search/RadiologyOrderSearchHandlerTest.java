@@ -121,7 +121,7 @@ public class RadiologyOrderSearchHandlerTest {
     public void search_shouldReturnEmptySearchResultIfPatientHasNoRadiologyOrders() throws Exception {
         
         MockHttpServletRequest request = new MockHttpServletRequest();
-        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_UUID_UNKNOWN);
+        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_UUID_WITHOUT_ORDERS);
         RequestContext requestContext = new RequestContext();
         requestContext.setRequest(request);
         

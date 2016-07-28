@@ -12,6 +12,7 @@
           .ready(
                   function() {
                     var patientUuid = $j('#ordersTabPatientFilter');
+                    var urgency = $j('#ordersTabUrgencySelect');
                     var find = $j('#ordersTabFind');
                     var clearResults = $j('a#ordersTabClearFilters');
 
@@ -35,6 +36,7 @@
                                             limit: data.length,
                                             v: "full",
                                             patient: patientUuid.val(),
+                                            urgency: urgency.val(),
                                             totalCount: true,
                                           };
                                         },
@@ -74,7 +76,14 @@
                                             "name": "urgency",
                                             "render": function(data, type,
                                                     full, meta) {
-                                              return full.urgency;
+                                              switch (full.urgency) {
+                                              case "ROUTINE":
+                                                return '<spring:message code="radiology.order.urgency.ROUTINE"/>';
+                                              case "STAT":
+                                                return '<spring:message code="radiology.order.urgency.STAT"/>';
+                                              case "ON_SCHEDULED_DATE":
+                                                return '<spring:message code="radiology.order.urgency.ON_SCHEDULED_DATE"/>';
+                                              }
                                             }
                                           },
                                           {
@@ -221,10 +230,23 @@
   <table id="ordersTabTableFilters" cellspacing="10">
     <tr>
       <form>
-        <td><label><spring:message code="radiology.dashboard.tabs.orders.filters.patient" /></label> <radiology:patientField
-            formFieldName="patient" formFieldId="ordersTabPatientFilter" /></td>
+        <td><label><spring:message code="radiology.dashboard.tabs.filters.filterby" /></label> <radiology:patientField
+            formFieldName="patient" formFieldId="ordersTabPatientFilter" /> <select id="ordersTabUrgencySelect">
+            <c:forEach var="urgency" items="${model.urgencies}">
+              <option value='${urgency}'>
+                <c:choose>
+                  <c:when test="${not empty urgency}">
+                    <spring:message code="radiology.order.urgency.${urgency}" text="${urgency}" />
+                  </c:when>
+                  <c:otherwise>
+                    <spring:message code="radiology.order.urgency.allurgencies" />
+                  </c:otherwise>
+                </c:choose>
+              </option>
+            </c:forEach>
+        </select></td>
         <td><input id="ordersTabFind" type="button"
-          value="<spring:message code="radiology.dashboard.tabs.filters.find"/>" /></td>
+          value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
       </form>
     </tr>
   </table>
@@ -236,7 +258,7 @@
           <th></th>
           <th><spring:message code="radiology.datatables.column.order.orderNumber" /></th>
           <th><spring:message code="radiology.datatables.column.order.patient" /></th>
-          <th><spring:message code="radiology.datatables.column.order.priority" /></th>
+          <th><spring:message code="radiology.datatables.column.order.urgency" /></th>
           <th><spring:message code="radiology.datatables.column.order.imagingProcedure" /></th>
           <th><spring:message code="radiology.datatables.column.order.referringPhysician" /></th>
           <th><spring:message code="radiology.datatables.column.order.scheduledDate" /></th>
