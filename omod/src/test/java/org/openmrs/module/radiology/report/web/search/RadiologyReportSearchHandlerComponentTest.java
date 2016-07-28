@@ -122,7 +122,6 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
      * @see RadiologyReportSearchHandler#search(RequestContext)
      * @verifies return all radiology reports (including discontinued) matching the search query if include all is set
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void search_shouldReturnAllRadiologyReportsIncludingDiscontinuedMatchingTheSearchQueryIfIncludeAllIsSet()
             throws Exception {
@@ -147,7 +146,6 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
      * @see RadiologyReportSearchHandler#search(RequestContext)
      * @verifies return all radiology reports with report date after or equal to from date if only date from was specified
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void search_shouldReturnAllRadiologyReportsWithReportDateAfterOrEqualToFromDateIfOnlyDateFromWasSpecified()
             throws Exception {
@@ -179,7 +177,6 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
      * @see RadiologyReportSearchHandler#search(RequestContext)
      * @verifies return all radiology reports with report date before or equal to to date if only date to was specified
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void search_shouldReturnAllRadiologyReportsWithReportDateBeforeOrEqualToToDateIfOnlyDateToWasSpecified()
             throws Exception {
@@ -211,7 +208,6 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
      * @see RadiologyReportSearchHandler#search(RequestContext)
      * @verifies return all radiology reports within given date range if date to and date from are specified
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void search_shouldReturnAllRadiologyReportsWithinGivenDateRangeIfDateToAndDateFromAreSpecified()
             throws Exception {
@@ -249,7 +245,6 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
      * @see RadiologyReportSearchHandler#search(RequestContext)
      * @verifies return empty search result if no report is in date range
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void search_shouldReturnEmptySearchResultIfNoReportIsInDateRange() throws Exception {
         
@@ -267,7 +262,6 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
      * @see RadiologyReportSearchHandler#search(RequestContext)
      * @verifies return all radiology reports for given principal results interpreter
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void search_shouldReturnAllRadiologyReportsForGivenPrincipalResultsInterpreter() throws Exception {
         
@@ -291,7 +285,6 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
      * @see RadiologyReportSearchHandler#search(RequestContext)
      * @verifies return empty search result if no report exists for principal results interpreter
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void search_shouldReturnEmptySearchResultIfNoReportExistsForPrincipalResultsInterpreter() throws Exception {
         
@@ -310,7 +303,6 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
      * @see RadiologyReportSearchHandler#search(RequestContext)
      * @verifies return empty search result if principal results interpreter cannot be found
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void search_shouldReturnEmptySearchResultIfPrincipalResultsInterpreterCannotBeFound() throws Exception {
         
@@ -328,7 +320,6 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
      * @see RadiologyReportSearchHandler#search(RequestContext)
      * @verifies return all radiology reports with given status
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void search_shouldReturnAllRadiologyReportsWithGivenStatus() throws Exception {
         
@@ -349,7 +340,6 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
      * @see RadiologyReportSearchHandler#search(RequestContext)
      * @verifies return empty search result if no report exists for given status
      */
-    @SuppressWarnings("unchecked")
     @Test
     public void search_shouldReturnEmptySearchResultIfNoReportExistsForGivenStatus() throws Exception {
         

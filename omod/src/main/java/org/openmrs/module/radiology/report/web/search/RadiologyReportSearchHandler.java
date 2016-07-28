@@ -78,7 +78,7 @@ public class RadiologyReportSearchHandler implements SearchHandler {
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search()
-     * @throws IllegalArgumentException if report status doesn't exist 
+     * @throws IllegalArgumentException if report status doesn't exist
      * @should return all radiology reports (including discontinued) matching the search query if include all is set
      * @should return all radiology reports within given date range if date to and date from are specified
      * @should return all radiology reports with report date after or equal to from date if only date from is specified

@@ -105,7 +105,7 @@
             <select name="${status.expression}" id="urgencySelect">
               <c:forEach var="urgency" items="${urgencies}">
                 <option value="${urgency}" ${status.value == urgency ? 'selected="selected"' : ''}><spring:message
-                    code="radiology.${urgency}" text="${urgency}" /></option>
+                    code="radiology.order.urgency.${urgency}" text="${urgency}" /></option>
               </c:forEach>
             </select>
           </spring:bind> <spring:bind path="scheduledDate">

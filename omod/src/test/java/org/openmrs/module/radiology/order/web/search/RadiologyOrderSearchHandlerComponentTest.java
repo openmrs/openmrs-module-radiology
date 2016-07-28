@@ -10,18 +10,23 @@
 package org.openmrs.module.radiology.order.web.search;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
 
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.junit.Assert;
 import org.junit.Before;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
+import org.openmrs.Order.Urgency;
 import org.openmrs.api.PatientService;
 import org.openmrs.module.radiology.order.RadiologyOrderSearchCriteria;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
+import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.module.webservices.rest.SimpleObject;
 import org.openmrs.module.webservices.rest.test.Util;
 import org.openmrs.module.webservices.rest.web.RequestContext;
@@ -55,6 +60,9 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     @Autowired
     RadiologyOrderService radiologyOrderService;
+    
+    @Rule
+    public ExpectedException expectedException = ExpectedException.none();
     
     @Before
     public void setUp() throws Exception {
@@ -100,40 +108,6 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return empty search result if patient cannot be found
-     */
-    @Test
-    public void search_shouldReturnEmptySearchResultIfPatientCannotBeFound() throws Exception {
-        
-        MockHttpServletRequest requestPatientWithOneOrder = request(RequestMethod.GET, getURI());
-        requestPatientWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, UNKNOWN_PATIENT);
-        
-        SimpleObject resultPatientWithOneOrder = deserialize(handle(requestPatientWithOneOrder));
-        
-        assertNotNull(resultPatientWithOneOrder);
-        List<Object> hits = (List<Object>) resultPatientWithOneOrder.get("results");
-        assertThat(hits.size(), is(0));
-    }
-    
-    /**
-     * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return empty search result if patient has no radiology orders
-     */
-    @Test
-    public void search_shouldReturnEmptySearchResultIfPatientHasNoRadiologyOrders() throws Exception {
-        
-        MockHttpServletRequest requestPatientWithOneOrder = request(RequestMethod.GET, getURI());
-        requestPatientWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_WITH_NO_ORDER);
-        
-        SimpleObject resultPatientWithOneOrder = deserialize(handle(requestPatientWithOneOrder));
-        
-        assertNotNull(resultPatientWithOneOrder);
-        List<Object> hits = (List<Object>) resultPatientWithOneOrder.get("results");
-        assertThat(hits.size(), is(0));
-    }
-    
-    /**
-     * @see RadiologyOrderSearchHandler#search(RequestContext)
      * @verifies return all radiology orders for given patient
      */
     @Test
@@ -172,26 +146,135 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return all radiology orders for given patient and totalCount if requested
+     * @verifies return empty search result if patient cannot be found
      */
     @Test
-    public void search_shouldReturnAllRadiologyOrdersForGivenPatientAndTotalCountIfRequested() throws Exception {
+    public void search_shouldReturnEmptySearchResultIfPatientCannotBeFound() throws Exception {
         
-        MockHttpServletRequest requestPatientWithOneOrder = request(RequestMethod.GET, getURI());
-        requestPatientWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_WITH_ONE_ORDER);
-        requestPatientWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_TOTAL_COUNT, "true");
-        SimpleObject resultPatientWithOneOrder = deserialize(handle(requestPatientWithOneOrder));
+        MockHttpServletRequest requestUnknownPatient = request(RequestMethod.GET, getURI());
+        requestUnknownPatient.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, UNKNOWN_PATIENT);
         
-        assertNotNull(resultPatientWithOneOrder);
-        assertThat(PropertyUtils.getProperty(resultPatientWithOneOrder, "totalCount"), is(1));
+        SimpleObject resultUnknownPatient = deserialize(handle(requestUnknownPatient));
         
-        MockHttpServletRequest requestPatientWithTwoOrders = request(RequestMethod.GET, getURI());
-        requestPatientWithTwoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_WITH_TWO_ORDERS);
-        requestPatientWithTwoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_TOTAL_COUNT, "true");
+        assertNotNull(resultUnknownPatient);
+        List<Object> hits = (List<Object>) resultUnknownPatient.get("results");
+        assertThat(hits.size(), is(0));
+    }
+    
+    /**
+     * @see RadiologyOrderSearchHandler#search(RequestContext)
+     * @verifies return empty search result if patient has no radiology orders
+     */
+    @Test
+    public void search_shouldReturnEmptySearchResultIfPatientHasNoRadiologyOrders() throws Exception {
         
-        SimpleObject resultPatientWithTwoOrders = deserialize(handle(requestPatientWithTwoOrders));
+        MockHttpServletRequest requestPatientWithNoOrder = request(RequestMethod.GET, getURI());
+        requestPatientWithNoOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_WITH_NO_ORDER);
         
-        assertNotNull(resultPatientWithTwoOrders);
-        assertThat(PropertyUtils.getProperty(resultPatientWithTwoOrders, "totalCount"), is(2));
+        SimpleObject resultPatientWithNoOrder = deserialize(handle(requestPatientWithNoOrder));
+        
+        assertNotNull(resultPatientWithNoOrder);
+        List<Object> hits = (List<Object>) resultPatientWithNoOrder.get("results");
+        assertThat(hits.size(), is(0));
+    }
+    
+    /**
+     * @see RadiologyOrderSearchHandler#search(RequestContext)
+     * @verifies return all radiology orders for given urgency
+     */
+    @Test
+    public void search_shouldReturnAllRadiologyOrdersForGivenUrgency() throws Exception {
+        
+        MockHttpServletRequest requestUrgencyWithOneOrder = request(RequestMethod.GET, getURI());
+        requestUrgencyWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_URGENCY, Urgency.STAT.toString());
+        requestUrgencyWithOneOrder.setParameter("v", Representation.FULL.getRepresentation());
+        
+        SimpleObject resultUrgencyWithOneOrder = deserialize(handle(requestUrgencyWithOneOrder));
+        
+        assertNotNull(resultUrgencyWithOneOrder);
+        List<Object> hits = (List<Object>) resultUrgencyWithOneOrder.get("results");
+        assertThat(hits.size(), is(1));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "urgency"), is(Urgency.STAT.toString()));
+        assertNull(PropertyUtils.getProperty(resultUrgencyWithOneOrder, "totalCount"));
+        
+        MockHttpServletRequest requestUrgencyWithThreeOrders = request(RequestMethod.GET, getURI());
+        requestUrgencyWithThreeOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_URGENCY,
+            Urgency.ROUTINE.toString());
+        requestUrgencyWithThreeOrders.setParameter("v", Representation.FULL.getRepresentation());
+        
+        SimpleObject resultUrgencyWithThreeOrders = deserialize(handle(requestUrgencyWithThreeOrders));
+        
+        assertNotNull(resultUrgencyWithThreeOrders);
+        hits = (List<Object>) resultUrgencyWithThreeOrders.get("results");
+        assertThat(hits.size(), is(3));
+        for (int i = 0; i < 3; i++) {
+            assertThat(PropertyUtils.getProperty(hits.get(i), "urgency"), is(Urgency.ROUTINE.toString()));
+        }
+        assertNull(PropertyUtils.getProperty(resultUrgencyWithThreeOrders, "totalCount"));
+    }
+    
+    /**
+     * @see RadiologyOrderSearchHandler#search(RequestContext)
+     * @verifies return empty search result if no radiology order exists for given urgency
+     */
+    @Test
+    public void search_shouldReturnEmptySearchResultIfNoRadiologyOrderExistsForGivenUrgency() throws Exception {
+        
+        MockHttpServletRequest requestUrgencyWithNoOrders = request(RequestMethod.GET, getURI());
+        requestUrgencyWithNoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_URGENCY,
+            Urgency.ON_SCHEDULED_DATE.toString());
+        
+        SimpleObject resultUrgencyWithNoOrders = deserialize(handle(requestUrgencyWithNoOrders));
+        
+        assertNotNull(resultUrgencyWithNoOrders);
+        List<Object> hits = (List<Object>) resultUrgencyWithNoOrders.get("results");
+        assertThat(hits.size(), is(0));
+        assertNull(PropertyUtils.getProperty(resultUrgencyWithNoOrders, "totalCount"));
+    }
+    
+    /**
+     * @see RadiologyOrderSearchHandler#search(RequestContext)
+     * @verifies throw illegal argument exception if urgency doesn't exist
+     */
+    @Test
+    public void search_shouldThrowIllegalArgumentExceptionIfUrgencyDoesntExist() throws Exception {
+        
+        expectedException.expect(IllegalArgumentException.class);
+        
+        MockHttpServletRequest requestUrgencyWithNoOrders = request(RequestMethod.GET, getURI());
+        requestUrgencyWithNoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_URGENCY, "wrong_urgency");
+        
+        deserialize(handle(requestUrgencyWithNoOrders));
+    }
+    
+    /**
+     * @see RadiologyOrderSearchHandler#search(RequestContext)
+     * @verifies return all radiology orders matching the search query and totalCount if requested
+     */
+    @Test
+    public void search_shouldReturnAllRadiologyOrdersMatchingTheSearchQueryAndTotalCountIfRequested() throws Exception {
+        
+        MockHttpServletRequest requestPatientAndUrgencyWithOneOrder = request(RequestMethod.GET, getURI());
+        requestPatientAndUrgencyWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT,
+            PATIENT_WITH_ONE_ORDER);
+        requestPatientAndUrgencyWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_URGENCY,
+            Urgency.ROUTINE.toString());
+        requestPatientAndUrgencyWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_TOTAL_COUNT, "true");
+        SimpleObject resultPatientAndUrgencyWithOneOrder = deserialize(handle(requestPatientAndUrgencyWithOneOrder));
+        
+        assertNotNull(resultPatientAndUrgencyWithOneOrder);
+        assertThat(PropertyUtils.getProperty(resultPatientAndUrgencyWithOneOrder, "totalCount"), is(1));
+        
+        MockHttpServletRequest requestPatientAndUrgencyWithTwoOrders = request(RequestMethod.GET, getURI());
+        requestPatientAndUrgencyWithTwoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT,
+            PATIENT_WITH_TWO_ORDERS);
+        requestPatientAndUrgencyWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_URGENCY,
+            Urgency.ROUTINE.toString());
+        requestPatientAndUrgencyWithTwoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_TOTAL_COUNT, "true");
+        
+        SimpleObject resultPatientAndUrgencyWithTwoOrders = deserialize(handle(requestPatientAndUrgencyWithTwoOrders));
+        
+        assertNotNull(resultPatientAndUrgencyWithTwoOrders);
+        assertThat(PropertyUtils.getProperty(resultPatientAndUrgencyWithTwoOrders, "totalCount"), is(2));
     }
 }

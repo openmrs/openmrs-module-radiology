@@ -1,48 +1,52 @@
-.left{
-float:left;
-width:25%;
+.left {
+	float: left;
+	width: 25%;
 }
-.center{
-position:absolute;
-text-align:center;
-left:25%;
-width:50%;
+.center {
+	position: absolute;
+	text-align: center;
+	left: 25%;
+	width: 50%;
 }
-.right{
-float:right;
+.right {
+	float: right;
 }
-.right div{
-float:right;
+.right div {
+	float: right;
 }
-.tableHeader{
-height:2em;
+.tableHeader {
+	height: 2em;
 }
-.verticalCentered > *{
-vertical-align:middle;
+.verticalCentered>* {
+	vertical-align: middle;
 }
 div.dataTables_paginate.fg-buttonset.ui-buttonset.fg-buttonset-multi.ui-buttonset-multi.paging_full_numbers span{
-width:auto;
-height:auto;
-margin:0 1px 0 0;
+	width: auto;
+	height: auto;
+	margin: 0 1px 0 0;
 }
 #radiologyTabsList {
-        font-size: 0.8em;
+	font-size: 0.8em;
 }
 #radiologyReports, #radiologyOrders, #radiologyReportTemplates {
-        font-size: 0.9em;
-        padding-left: 5px;
-        padding-right: 5px;
-        padding-top: 5px;
+	font-size: 0.9em;
+	padding-left: 5px;
+	padding-right: 5px;
+	padding-top: 5px;
 }
-.fa-chevron-circle-down, .fa-chevron-circle-up{
+.fa-chevron-circle-down, .fa-chevron-circle-up {
 	color: #1AAD9B;
 }
-.fa-check-circle{
+.fa-check-circle {
 	color: #1AAD9B;
 }
-.fa-times-circle{
+.fa-times-circle {
 	color: #ff0000;
 }
-.fa-circle{
+.fa-circle {
 	color: #f4920b;
+}
+select {
+	padding: 1px;
+	border: 1px solid cadetblue;
 }

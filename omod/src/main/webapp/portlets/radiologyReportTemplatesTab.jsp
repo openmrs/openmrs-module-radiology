@@ -149,7 +149,7 @@
           title="<spring:message
             code="radiology.minChars" />" /></td>
         <td><input id="reportTemplatesTabFind" type="button"
-          value="<spring:message code="radiology.dashboard.tabs.filters.find"/>" /></td>
+          value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
       </form>
     </tr>
   </table>

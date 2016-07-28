@@ -12,6 +12,8 @@ package org.openmrs.module.radiology.order.web.search;
 import java.util.Arrays;
 import java.util.List;
 
+import org.openmrs.Order.Urgency;
+import org.apache.commons.lang.StringUtils;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
@@ -40,14 +42,15 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
     
     public static final String REQUEST_PARAM_PATIENT = "patient";
     
+    public static final String REQUEST_PARAM_URGENCY = "urgency";
+    
     public static final String REQUEST_PARAM_TOTAL_COUNT = "totalCount";
     
     @Autowired
     RadiologyOrderService radiologyOrderService;
     
-    SearchQuery searchQuery = new SearchQuery.Builder("Allows you to search for RadiologyOrder's by patient")
-            .withRequiredParameters(REQUEST_PARAM_PATIENT)
-            .withOptionalParameters(REQUEST_PARAM_TOTAL_COUNT)
+    SearchQuery searchQuery = new SearchQuery.Builder("Allows you to search for RadiologyOrder's by patient and urgency")
+            .withOptionalParameters(REQUEST_PARAM_PATIENT, REQUEST_PARAM_URGENCY, REQUEST_PARAM_TOTAL_COUNT)
             .build();
     
     private final SearchConfig searchConfig =
@@ -65,29 +68,45 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search()
      * @should return all radiology orders for given patient
-     * @should return all radiology orders for given patient and totalCount if requested
      * @should return empty search result if patient cannot be found
      * @should return empty search result if patient has no radiology orders
+     * @should return all radiology orders for given urgency
+     * @should return empty search result if no radiology order exists for given urgency
+     * @should throw illegal argument exception if urgency doesn't exist
+     * @should return all radiology orders matching the search query and totalCount if
+     *         requested
      */
     @Override
     public PageableResult search(RequestContext context) throws ResponseException {
         
         final String patientUuid = context.getRequest()
-                .getParameter(REQUEST_PARAM_PATIENT);
-        
-        final Patient patient = ((PatientResource1_9) Context.getService(RestService.class)
-                .getResourceBySupportedClass(Patient.class)).getByUniqueId(patientUuid);
-        if (patient == null) {
-            return new EmptySearchResult();
+                .getParameter(REQUEST_PARAM_PATIENT);      
+        Patient patient = null;
+        if (StringUtils.isNotBlank(patientUuid)) {
+            patient = ((PatientResource1_9) Context.getService(RestService.class)
+                    .getResourceBySupportedClass(Patient.class)).getByUniqueId(patientUuid);
+            if (patient == null) {
+                return new EmptySearchResult();
+            }
         }
+        
+        final String urgencyString = context.getRequest()
+                .getParameter(REQUEST_PARAM_URGENCY);
+        Urgency urgency = null;
+        if (StringUtils.isNotBlank(urgencyString)) {
+            urgency = Urgency.valueOf(urgencyString);
+        }
+        
         final RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
                 new RadiologyOrderSearchCriteria.Builder().withPatient(patient)
+                        .withUrgency(urgency)
                         .build();
+        
         final List<RadiologyOrder> result = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        
         if (result.isEmpty()) {
             return new EmptySearchResult();
-        } else {
-            return new NeedsPaging<RadiologyOrder>(result, context);
         }
+        return new NeedsPaging<RadiologyOrder>(result, context);
     }
 }
