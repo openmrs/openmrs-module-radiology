@@ -487,3 +487,7 @@ INSERT INTO `radiology_report` VALUES (3,7,'DISCONTINUED',14,NULL,'<p>Mhmm, not 
 INSERT INTO `radiology_report` VALUES (4,7,'CLAIMED',15,NULL,'<p>Ahh, clear to see that ...</p>',15,'2016-07-22 09:17:00','59ab79b5-15a0-40b2-a45e-57dba76bad25');
 COMMIT;
 
+-- always update these values, they assure that the assigned order or accession numbers continue after the ones from the test data
+UPDATE global_property SET property_value='7' WHERE property='radiology.nextAccessionNumberSeed';
+UPDATE global_property SET property_value='8' WHERE property='order.nextOrderNumberSeed';
+COMMIT;
