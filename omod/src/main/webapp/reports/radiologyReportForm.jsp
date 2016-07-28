@@ -62,9 +62,10 @@
   });
   
 </script>
-
-<openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${order.patient.patientId}" />
-<br>
+<openmrs:hasPrivilege privilege="View Patients">
+  <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${order.patient.patientId}" />
+  <br>
+</openmrs:hasPrivilege>
 <div>
   <span class="boxHeader"> <b><spring:message code="radiology.radiologyOrder" /></b>
   </span>
