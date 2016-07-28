@@ -334,6 +334,48 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
     }
     
     /**
+     * @see RadiologyOrderFormController#saveRadiologyOrder(HttpServletRequest,RadiologyOrder,BindingResult)
+     * @verifies not redirect and set session attribute with openmrs error if api exception is thrown by place radiology
+     */
+    @Test
+    public void
+            saveRadiologyOrder_shouldNotRedirectAndSetSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownByPlaceRadiology()
+                    throws Exception {
+        
+        // given
+        RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
+        
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("saveOrder", "saveOrder");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
+        BindingResult orderErrors = mock(BindingResult.class);
+        when(orderErrors.hasErrors()).thenReturn(false);
+        
+        when(radiologyOrderService.placeRadiologyOrder(mockRadiologyOrder))
+                .thenThrow(new APIException("Order.cannot.edit.existing"));
+        
+        ModelAndView modelAndView =
+                radiologyOrderFormController.saveRadiologyOrder(mockRequest, mockRadiologyOrder, orderErrors);
+        
+        assertNotNull(modelAndView);
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("order"));
+        Order order = (Order) modelAndView.getModelMap()
+                .get("order");
+        assertThat(order, is(mockRadiologyOrder));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
+        RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
+                .get("radiologyOrder");
+        assertThat(radiologyOrder, is(mockRadiologyOrder));
+        
+        assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR), is("Order.cannot.edit.existing"));
+    }
+    
+    /**
      * @see RadiologyOrderFormController#discontinueRadiologyOrder(HttpServletRequest,RadiologyOrder,DiscontinuationOrderRequest,BindingResult)
      * @verifies discontinue non discontinued radiology order and redirect to discontinuation order
      */
@@ -360,8 +402,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         MockHttpSession mockSession = new MockHttpSession();
         mockRequest.setSession(mockSession);
         
-        when(radiologyOrderService.getRadiologyOrder(mockRadiologyOrderToDiscontinue.getOrderId()))
-                .thenReturn(mockRadiologyOrderToDiscontinue);
         when(radiologyOrderService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
             mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getOrderReasonNonCoded()))
                     .thenReturn(mockDiscontinuationOrder);
@@ -405,8 +445,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         MockHttpSession mockSession = new MockHttpSession();
         mockRequest.setSession(mockSession);
         
-        when(radiologyOrderService.getRadiologyOrder(mockRadiologyOrderToDiscontinue.getOrderId()))
-                .thenReturn(mockRadiologyOrderToDiscontinue);
         when(radiologyOrderService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
             mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getOrderReasonNonCoded()))
                     .thenReturn(mockDiscontinuationOrder);
@@ -461,8 +499,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         MockHttpSession mockSession = new MockHttpSession();
         mockRequest.setSession(mockSession);
         
-        when(radiologyOrderService.getRadiologyOrder(mockRadiologyOrderToDiscontinue.getOrderId()))
-                .thenReturn(mockRadiologyOrderToDiscontinue);
         when(radiologyOrderService.discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue,
             mockDiscontinuationOrder.getOrderer(), mockDiscontinuationOrder.getOrderReasonNonCoded()))
                     .thenThrow(new APIException("Cannot discontinue an order that is already stopped, expired or voided"));

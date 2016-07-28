@@ -163,6 +163,8 @@ public class RadiologyOrderFormController {
      * @should save given radiology order if valid and set http session attribute openmrs message to order saved and redirect
      *         to the new radiology order
      * @should not save given radiology order if it is not valid and not redirect
+     * @should not redirect and set session attribute with openmrs error if api exception is thrown by place radiology
+     *         order
      */
     @RequestMapping(method = RequestMethod.POST, params = "saveRadiologyOrder")
     protected ModelAndView saveRadiologyOrder(HttpServletRequest request, @ModelAttribute RadiologyOrder radiologyOrder,
@@ -177,12 +179,21 @@ public class RadiologyOrderFormController {
             return modelAndView;
         }
         
-        radiologyOrderService.placeRadiologyOrder(radiologyOrder);
+        try {
+            radiologyOrderService.placeRadiologyOrder(radiologyOrder);
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
+            modelAndView.setViewName(
+                "redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId=" + radiologyOrder.getOrderId());
+            return modelAndView;
+        }
+        catch (APIException apiException) {
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, apiException.getMessage());
+        }
         
-        request.getSession()
-                .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.saved");
-        modelAndView
-                .setViewName("redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId=" + radiologyOrder.getOrderId());
+        modelAndView.addObject("order", (Order) radiologyOrder);
+        modelAndView.addObject("radiologyOrder", radiologyOrder);
         return modelAndView;
     }
     
@@ -208,13 +219,13 @@ public class RadiologyOrderFormController {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
         
+        if (resultDiscontinuationOrderRequest.hasErrors()) {
+            modelAndView.addObject("order", radiologyOrderToDiscontinue);
+            modelAndView.addObject("radiologyOrder", radiologyOrderToDiscontinue);
+            return modelAndView;
+        }
+        
         try {
-            if (resultDiscontinuationOrderRequest.hasErrors()) {
-                modelAndView.addObject("order", radiologyOrderToDiscontinue);
-                modelAndView.addObject("radiologyOrder",
-                    radiologyOrderService.getRadiologyOrder(radiologyOrderToDiscontinue.getOrderId()));
-                return modelAndView;
-            }
             Order discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
                 discontinuationOrderRequest.getOrderer(), discontinuationOrderRequest.getReasonNonCoded());
             
@@ -222,6 +233,7 @@ public class RadiologyOrderFormController {
                     .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "Order.discontinuedSuccessfully");
             modelAndView.setViewName(
                 "redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId=" + discontinuationOrder.getOrderId());
+            return modelAndView;
         }
         catch (APIException apiException) {
             request.getSession()
@@ -229,8 +241,7 @@ public class RadiologyOrderFormController {
         }
         
         modelAndView.addObject("order", radiologyOrderToDiscontinue);
-        modelAndView.addObject("radiologyOrder",
-            radiologyOrderService.getRadiologyOrder(radiologyOrderToDiscontinue.getOrderId()));
+        modelAndView.addObject("radiologyOrder", radiologyOrderToDiscontinue);
         return modelAndView;
     }
     

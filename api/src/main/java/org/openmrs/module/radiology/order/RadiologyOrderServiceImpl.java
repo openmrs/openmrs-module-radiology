@@ -16,6 +16,7 @@ import org.openmrs.Encounter;
 import org.openmrs.Order;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
+import org.openmrs.api.APIException;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.OrderContext;
 import org.openmrs.api.OrderService;
@@ -72,7 +73,7 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
         }
         
         if (radiologyOrder.getOrderId() != null) {
-            throw new IllegalArgumentException("Cannot edit an existing RadiologyOrder");
+            throw new APIException("Order.cannot.edit.existing");
         }
         
         if (radiologyOrder.getStudy() == null) {
@@ -118,38 +119,32 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
      */
     @Override
     @Transactional
-    public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrderToDiscontinue, Provider orderer,
-            String nonCodedDiscontinueReason) throws Exception {
+    public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrder, Provider orderer, String nonCodedDiscontinueReason)
+            throws Exception {
         
-        if (radiologyOrderToDiscontinue == null) {
+        if (radiologyOrder == null) {
             throw new IllegalArgumentException("radiologyOrder cannot be null");
         }
         
-        if (radiologyOrderToDiscontinue.getOrderId() == null) {
-            throw new IllegalArgumentException("can only discontinue existing RadiologyOrder. orderId is null");
-        }
-        
-        if (radiologyOrderToDiscontinue.isDiscontinuedRightNow()) {
-            throw new IllegalArgumentException("radiologyOrder is already discontinued");
-        }
-        
-        if (radiologyOrderToDiscontinue.isInProgress()) {
-            throw new IllegalArgumentException("radiologyOrder is in progress");
-        }
-        
-        if (radiologyOrderToDiscontinue.isCompleted()) {
-            throw new IllegalArgumentException("radiologyOrder is completed");
+        if (radiologyOrder.getOrderId() == null) {
+            throw new IllegalArgumentException("radiologyOrder.orderId cannot be null, can only discontinue existing order");
         }
         
         if (orderer == null) {
-            throw new IllegalArgumentException("provider cannot be null");
+            throw new IllegalArgumentException("orderer cannot be null");
         }
         
-        final Encounter encounter =
-                this.saveRadiologyOrderEncounter(radiologyOrderToDiscontinue.getPatient(), orderer, new Date());
+        if (radiologyOrder.isDiscontinuedRightNow()) {
+            throw new APIException("RadiologyOrder.cannot.discontinue.discontinued");
+        }
         
-        return this.orderService.discontinueOrder(radiologyOrderToDiscontinue, nonCodedDiscontinueReason, null, orderer,
-            encounter);
+        if (radiologyOrder.isInProgress() | radiologyOrder.isCompleted()) {
+            throw new APIException("RadiologyOrder.cannot.discontinue.inProgressOrcompleted");
+        }
+        
+        final Encounter encounter = this.saveRadiologyOrderEncounter(radiologyOrder.getPatient(), orderer, new Date());
+        
+        return this.orderService.discontinueOrder(radiologyOrder, nonCodedDiscontinueReason, null, orderer, encounter);
     }
     
     /**

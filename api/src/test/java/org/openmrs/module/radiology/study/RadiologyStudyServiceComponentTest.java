@@ -10,7 +10,6 @@
 package org.openmrs.module.radiology.study;
 
 import static org.hamcrest.core.Is.is;
-import static org.hamcrest.core.IsNot.not;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
@@ -22,7 +21,7 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
+import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -117,26 +116,6 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyStudyService#saveRadiologyStudy(RadiologyStudy)
-     * @verifies update existing radiology study
-     */
-    @Test
-    public void saveRadiologyStudy_shouldUpdateExistingRadiologyStudy() throws Exception {
-        
-        RadiologyStudy existingStudy = radiologyStudyService.getRadiologyStudy(EXISTING_STUDY_ID);
-        PerformedProcedureStepStatus performedStatusPreUpdate = existingStudy.getPerformedStatus();
-        PerformedProcedureStepStatus performedStatusPostUpdate = PerformedProcedureStepStatus.COMPLETED;
-        existingStudy.setPerformedStatus(performedStatusPostUpdate);
-        
-        RadiologyStudy updatedStudy = radiologyStudyService.saveRadiologyStudy(existingStudy);
-        
-        assertNotNull(updatedStudy);
-        assertThat(updatedStudy, is(existingStudy));
-        assertThat(performedStatusPreUpdate, is(not(performedStatusPostUpdate)));
-        assertThat(updatedStudy.getPerformedStatus(), is(performedStatusPostUpdate));
-    }
-    
-    /**
-     * @see RadiologyStudyService#saveRadiologyStudy(RadiologyStudy)
      * @verifies throw illegal argument exception if given null
      */
     @Test
@@ -145,6 +124,20 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyStudy cannot be null");
         radiologyStudyService.saveRadiologyStudy(null);
+    }
+    
+    /**
+     * @see RadiologyStudyService#saveRadiologyStudy(RadiologyStudy)
+     * @verifies throw api exception on saving an existing radiology study
+     */
+    @Test
+    public void saveRadiologyStudy_shouldThrowApiExceptionOnSavingAnExistingRadiologyStudy() throws Exception {
+        
+        RadiologyStudy existingStudy = radiologyStudyService.getRadiologyStudy(EXISTING_STUDY_ID);
+        
+        expectedException.expect(APIException.class);
+        expectedException.expectMessage("RadiologyStudy.cannot.edit.existing");
+        radiologyStudyService.saveRadiologyStudy(existingStudy);
     }
     
     /**

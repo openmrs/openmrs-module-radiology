@@ -42,15 +42,14 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @param radiologyOrder the radiology order to be created
      * @return the created radiology order
      * @throws IllegalArgumentException if radiologyOrder is null
-     * @throws IllegalArgumentException if radiologyOrder.orderId is not null
      * @throws IllegalArgumentException if radiologyOrder.study is null
-     * @should create new radiology order and study from given radiology order object
+     * @throws APIException on saving an existing radiology order
+     * @should create new radiology order and study from given radiology order
      * @should create radiology order encounter
      * @should set the radiology order accession number
      * @should throw illegal argument exception given null
-     * @should throw illegal argument exception given existing radiology order
      * @should throw illegal argument exception if given radiology order has no study
-     * @should throw illegal argument exception if given study modality is null
+     * @should throw api exception on saving an existing radiology order
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_ORDERS)
     public RadiologyOrder placeRadiologyOrder(RadiologyOrder radiologyOrder);
@@ -59,22 +58,24 @@ public interface RadiologyOrderService extends OpenmrsService {
      * Discontinues an existing {@code RadiologyOrder}.
      *
      * @param radiologyOrder the radiology order to be discontinued
+     * @param orderer the provider ordering the discontinuation of the radiology order
+     * @param discontinueReason the reason why the radiology order is discontinued
      * @return the discontinuation order
      * @throws Exception
      * @throws IllegalArgumentException if radiologyOrder is null
      * @throws IllegalArgumentException if radiologyOrder orderId is null
-     * @throws IllegalArgumentException if radiology order is discontinued
-     * @throws IllegalArgumentException if radiology order is in progress
-     * @throws IllegalArgumentException if radiology order is completed
      * @throws IllegalArgumentException if provider is null
+     * @throws APIException if radiology order is discontinued
+     * @throws APIException if radiology order is in progress
+     * @throws APIException if radiology order is completed
      * @should create discontinuation order which discontinues given radiology order that is not in progress or completed
      * @should create radiology order encounter
      * @should throw illegal argument exception if given radiology order is null
      * @should throw illegal argument exception if given radiology order with orderId null
-     * @should throw illegal argument exception if given radiology order is discontinued
-     * @should throw illegal argument exception if given radiology order is in progress
-     * @should throw illegal argument exception if given radiology order is completed
-     * @should throw illegal argument exception if given provider is null
+     * @should throw illegal argument exception if given orderer is null
+     * @should throw api exception if given radiology order is discontinued
+     * @should throw api exception if given radiology order is in progress
+     * @should throw api exception if given radiology order is completed
      */
     @Authorized({ RadiologyPrivileges.DELETE_RADIOLOGY_ORDERS })
     public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrder, Provider orderer, String discontinueReason)
@@ -116,9 +117,12 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @should return all radiology orders for given patient if patient is specified
      * @should return all radiology orders (including voided) matching the search query if include voided is set
      * @should return all radiology orders for given urgency
-     * @should return all radiology orders with effective order start date in given date range if to date and from date are specified
-     * @should return all radiology orders with effective order start date after or equal to from date if only from date is specified
-     * @should return all radiology orders with effective order start date before or equal to to date if only to date is specified
+     * @should return all radiology orders with effective order start date in given date range if to date and from date are
+     *         specified
+     * @should return all radiology orders with effective order start date after or equal to from date if only from date is
+     *         specified
+     * @should return all radiology orders with effective order start date before or equal to to date if only to date is
+     *         specified
      * @should return empty list if from date after to date
      * @should return empty search result if no effective order start is in date range
      * @should return all radiology orders for given accession number if accession number is specified

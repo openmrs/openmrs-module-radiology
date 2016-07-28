@@ -22,21 +22,22 @@ public interface RadiologyStudyService extends OpenmrsService {
     
     
     /**
-     * Saves a {@code RadiologyStudy} to the database.
+     * Saves a new {@code RadiologyStudy} to the database.
      * 
-     * @param radiologyStudy the radiology study to be created or updated
-     * @return the created or updated radiology study
+     * @param radiologyStudy the radiology study to be created
+     * @return the created radiology study
      * @throws IllegalArgumentException if given null
      * @throws IllegalArgumentException if global property DICOM UID org root cannot be found
      * @throws IllegalArgumentException if global property DICOM UID org root is empty
      * @throws IllegalArgumentException if global property DICOM UID org root is not a valid UID
      * @throws IllegalArgumentException if global property DICOM UID org root exceeds the maximum length
+     * @throws APIException on saving an existing radiology study
      * @should create new radiology study from given radiology study
      * @should set the study instance uid of given radiology study to a valid dicom uid if null
      * @should set the study instance uid of given radiology study to a valid dicom uid if only containing whitespaces
      * @should not set the study instance uid of given radiology study if contains non whitespace characters
-     * @should update existing radiology study
      * @should throw illegal argument exception if given null
+     * @should throw api exception on saving an existing radiology study
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_STUDIES)
     public RadiologyStudy saveRadiologyStudy(RadiologyStudy radiologyStudy);
