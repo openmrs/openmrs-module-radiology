@@ -44,6 +44,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
             DelegatingResourceDescription description = new DelegatingResourceDescription();
             description.addProperty("uuid");
             description.addProperty("orderNumber");
+            description.addProperty("accessionNumber");
             description.addProperty("patient", Representation.REF);
             description.addProperty("concept", Representation.REF);
             description.addProperty("action");
@@ -68,6 +69,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
             DelegatingResourceDescription description = new DelegatingResourceDescription();
             description.addProperty("uuid");
             description.addProperty("orderNumber");
+            description.addProperty("accessionNumber");
             description.addProperty("patient", Representation.REF);
             description.addProperty("concept", Representation.REF);
             description.addProperty("action");

@@ -40,6 +40,8 @@ import org.springframework.stereotype.Component;
 public class RadiologyOrderSearchHandler implements SearchHandler {
     
     
+    public static final String REQUEST_PARAM_ACCESSION_NUMBER = "accessionNumber";
+    
     public static final String REQUEST_PARAM_PATIENT = "patient";
     
     public static final String REQUEST_PARAM_URGENCY = "urgency";
@@ -50,7 +52,8 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
     RadiologyOrderService radiologyOrderService;
     
     SearchQuery searchQuery = new SearchQuery.Builder("Allows you to search for RadiologyOrder's by patient and urgency")
-            .withOptionalParameters(REQUEST_PARAM_PATIENT, REQUEST_PARAM_URGENCY, REQUEST_PARAM_TOTAL_COUNT)
+            .withOptionalParameters(REQUEST_PARAM_ACCESSION_NUMBER, REQUEST_PARAM_PATIENT, REQUEST_PARAM_URGENCY,
+                REQUEST_PARAM_TOTAL_COUNT)
             .build();
     
     private final SearchConfig searchConfig =
@@ -67,6 +70,8 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search()
+     * @should return all radiology orders for given accession number
+     * @should return empty search result if no radiology order exists for given accession number
      * @should return all radiology orders for given patient
      * @should return empty search result if patient cannot be found
      * @should return empty search result if patient has no radiology orders
@@ -80,7 +85,7 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
     public PageableResult search(RequestContext context) throws ResponseException {
         
         final String patientUuid = context.getRequest()
-                .getParameter(REQUEST_PARAM_PATIENT);      
+                .getParameter(REQUEST_PARAM_PATIENT);
         Patient patient = null;
         if (StringUtils.isNotBlank(patientUuid)) {
             patient = ((PatientResource1_9) Context.getService(RestService.class)
@@ -97,8 +102,12 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
             urgency = Urgency.valueOf(urgencyString);
         }
         
+        final String accessionNumber = context.getRequest()
+                .getParameter(REQUEST_PARAM_ACCESSION_NUMBER);
+        
         final RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
-                new RadiologyOrderSearchCriteria.Builder().withPatient(patient)
+                new RadiologyOrderSearchCriteria.Builder().withAccessionNumber(accessionNumber)
+                        .withPatient(patient)
                         .withUrgency(urgency)
                         .build();
         

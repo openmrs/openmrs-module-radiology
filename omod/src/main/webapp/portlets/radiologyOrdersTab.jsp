@@ -11,6 +11,7 @@
   $j(document)
           .ready(
                   function() {
+                    var accessionNumber = $j('#ordersTabAccessionNumberFilter');
                     var patientUuid = $j('#ordersTabPatientFilter');
                     var urgency = $j('#ordersTabUrgencySelect');
                     var find = $j('#ordersTabFind');
@@ -35,6 +36,7 @@
                                             startIndex: data.start,
                                             limit: data.length,
                                             v: "full",
+                                            accessionNumber: accessionNumber.val(),
                                             patient: patientUuid.val(),
                                             urgency: urgency.val(),
                                             totalCount: true,
@@ -59,10 +61,10 @@
                                             }
                                           },
                                           {
-                                            "name": "orderNumber",
+                                            "name": "accessionNumber",
                                             "render": function(data, type,
                                                     full, meta) {
-                                              return full.orderNumber;
+                                              return full.accessionNumber;
                                             }
                                           },
                                           {
@@ -230,7 +232,9 @@
   <table id="ordersTabTableFilters" cellspacing="10">
     <tr>
       <form>
-        <td><label><spring:message code="radiology.dashboard.tabs.filters.filterby" /></label> <radiology:patientField
+        <td><label><spring:message code="radiology.dashboard.tabs.filters.filterby" /></label> <input type="text"
+          id="ordersTabAccessionNumberFilter"
+          placeholder='<spring:message code="radiology.dashboard.tabs.orders.filters.accessionNumber"/>' /> <radiology:patientField
             formFieldName="patient" formFieldId="ordersTabPatientFilter" /> <select id="ordersTabUrgencySelect">
             <c:forEach var="urgency" items="${model.urgencies}">
               <option value='${urgency}'>
@@ -256,7 +260,7 @@
       <thead>
         <tr>
           <th></th>
-          <th><spring:message code="radiology.datatables.column.order.orderNumber" /></th>
+          <th><spring:message code="radiology.datatables.column.order.accessionNumber" /></th>
           <th><spring:message code="radiology.datatables.column.order.patient" /></th>
           <th><spring:message code="radiology.datatables.column.order.urgency" /></th>
           <th><spring:message code="radiology.datatables.column.order.imagingProcedure" /></th>

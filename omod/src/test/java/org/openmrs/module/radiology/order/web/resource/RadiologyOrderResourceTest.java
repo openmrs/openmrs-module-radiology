@@ -95,9 +95,9 @@ public class RadiologyOrderResourceTest {
                 radiologyOrderResource.getRepresentationDescription(defaultRepresentation);
         assertThat(resourceDescription.getProperties()
                 .keySet(),
-            contains("uuid", "orderNumber", "patient", "concept", "action", "careSetting", "previousOrder", "dateActivated",
-                "dateStopped", "autoExpireDate", "encounter", "orderer", "orderReason", "orderReasonNonCoded", "urgency",
-                "scheduledDate", "instructions", "commentToFulfiller", "display"));
+            contains("uuid", "orderNumber", "accessionNumber", "patient", "concept", "action", "careSetting",
+                "previousOrder", "dateActivated", "dateStopped", "autoExpireDate", "encounter", "orderer", "orderReason",
+                "orderReasonNonCoded", "urgency", "scheduledDate", "instructions", "commentToFulfiller", "display"));
         assertThat(resourceDescription.getProperties()
                 .get("patient")
                 .getRep(),
@@ -142,9 +142,10 @@ public class RadiologyOrderResourceTest {
                 radiologyOrderResource.getRepresentationDescription(fullRepresentation);
         assertThat(resourceDescription.getProperties()
                 .keySet(),
-            contains("uuid", "orderNumber", "patient", "concept", "action", "careSetting", "previousOrder", "dateActivated",
-                "dateStopped", "autoExpireDate", "encounter", "orderer", "orderReason", "orderReasonNonCoded", "urgency",
-                "scheduledDate", "instructions", "commentToFulfiller", "display", "auditInfo"));
+            contains("uuid", "orderNumber", "accessionNumber", "patient", "concept", "action", "careSetting",
+                "previousOrder", "dateActivated", "dateStopped", "autoExpireDate", "encounter", "orderer", "orderReason",
+                "orderReasonNonCoded", "urgency", "scheduledDate", "instructions", "commentToFulfiller", "display",
+                "auditInfo"));
         assertThat(resourceDescription.getProperties()
                 .get("patient")
                 .getRep(),
