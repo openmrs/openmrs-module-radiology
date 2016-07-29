@@ -36,7 +36,8 @@
                                             startIndex: data.start,
                                             limit: data.length,
                                             v: "full",
-                                            accessionNumber: accessionNumber.val(),
+                                            accessionNumber: accessionNumber
+                                                    .val(),
                                             patient: patientUuid.val(),
                                             urgency: urgency.val(),
                                             totalCount: true,
@@ -214,7 +215,6 @@
                                         tr.addClass('shown');
                                       }
                                     });
-
                   });
 </script>
 

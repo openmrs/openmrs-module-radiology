@@ -60,5 +60,7 @@
 </script>
 
 <input type="text" id="${displayNameInputId}"
-  title="<spring:message code="radiology.dashboard.tabs.reports.filters.principalResultsInterpreter.title" />" />
+  title="<spring:message code="radiology.dashboard.tabs.reports.filters.principalResultsInterpreter.title" />"
+  placeholder='<spring:message code="radiology.dashboard.tabs.reports.filters.principalResultsInterpreter"/>'
+  style="width: 15em" />
 <input type="hidden" name="${formFieldName}" id="${formFieldId}" />
