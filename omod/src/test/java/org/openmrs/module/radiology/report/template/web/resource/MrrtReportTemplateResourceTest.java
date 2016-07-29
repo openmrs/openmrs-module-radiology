@@ -96,7 +96,7 @@ public class MrrtReportTemplateResourceTest {
                 mrrtReportTemplateResource.getRepresentationDescription(fullRepresentation);
         assertThat(resourceDescription.getProperties()
                 .keySet(),
-            contains("uuid", "charset", "path", "templateId", "dcTermsIdentifier", "dcTermsTitle", "dcTermsDescription",
+            contains("uuid", "charset", "templateId", "dcTermsIdentifier", "dcTermsTitle", "dcTermsDescription",
                 "dcTermsType", "dcTermsLanguage", "dcTermsPublisher", "dcTermsCreator", "dcTermsRights", "dcTermsLicense",
                 "dcTermsDate", "display"));
     }

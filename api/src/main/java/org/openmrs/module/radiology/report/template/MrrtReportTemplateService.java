@@ -113,4 +113,16 @@ public interface MrrtReportTemplateService extends OpenmrsService {
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
     public List<MrrtReportTemplate>
             getMrrtReportTemplates(MrrtReportTemplateSearchCriteria mrrtReportTemplateSearchCriteria);
+    
+    /**
+     * Get the HTML body content of {@code MrrtReportTemplate's} file.
+     * 
+     * @param mrrtReportTemplate the mrrt report template for which we want to get its html body content
+     * @return the body content of the mrrt report template file
+     * @throws IOException if one is thrown while reading the file
+     * @should return the body content of the mrrt report template file
+     * @should throw illegal argument exception if given null
+     */
+    @Authorized(RadiologyPrivileges.VIEW_RADIOLOGY_REPORT_TEMPLATES)
+    public String getMrrtReportTemplateHtmlBody(MrrtReportTemplate mrrtReportTemplate) throws IOException;
 }

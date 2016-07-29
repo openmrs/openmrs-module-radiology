@@ -15,12 +15,15 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -34,6 +37,9 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 
+/**
+ * Tests {@code MrrtReportTemplateService}.
+ */
 public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSensitiveTest {
     
     
@@ -328,5 +334,32 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("mrrtReportTemplateSearchCriteria cannot be null");
         mrrtReportTemplateService.getMrrtReportTemplates(null);
+    }
+    
+    /**
+    * @see MrrtReportTemplateService#getMrrtReportTemplateHtmlBody(MrrtReportTemplate)
+    * @verifies return the body content of the mrrt report template file
+    */
+    @Test
+    public void getMrrtReportTemplateHtmlBody_shouldReturnTheBodyContentOfTheMrrtReportTemplateFile() throws Exception {
+        File tmpTemplateFile = temporaryFolder.newFile();
+        FileUtils.writeStringToFile(tmpTemplateFile,
+            "<html>" + "<head><title>Sample Template</title></head>" + "<body><p>Sample Template</p></body>" + "</html>");
+        MrrtReportTemplate mockTemplate = mock(MrrtReportTemplate.class);
+        when(mockTemplate.getPath()).thenReturn(tmpTemplateFile.getAbsolutePath());
+        String bodyContentReturned = mrrtReportTemplateService.getMrrtReportTemplateHtmlBody(mockTemplate);
+        assertNotNull(bodyContentReturned);
+        assertThat(bodyContentReturned, is("<p>Sample Template</p>"));
+    }
+    
+    /**
+    * @see MrrtReportTemplateService#getMrrtReportTemplateHtmlBody(MrrtReportTemplate)
+    * @verifies throw illegal argument exception if given null
+    */
+    @Test
+    public void getMrrtReportTemplateHtmlBody_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("mrrtReportTemplate cannot be null");
+        mrrtReportTemplateService.getMrrtReportTemplateHtmlBody(null);
     }
 }

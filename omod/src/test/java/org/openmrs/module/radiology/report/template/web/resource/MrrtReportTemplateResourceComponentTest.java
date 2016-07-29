@@ -81,7 +81,6 @@ public class MrrtReportTemplateResourceComponentTest
         super.validateFullRepresentation();
         assertPropPresent("uuid");
         assertPropPresent("charset");
-        assertPropPresent("path");
         assertPropPresent("templateId");
         assertPropPresent("dcTermsIdentifier");
         assertPropPresent("dcTermsTitle");

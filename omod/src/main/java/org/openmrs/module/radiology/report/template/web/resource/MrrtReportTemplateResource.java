@@ -60,7 +60,6 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
             
             description.addProperty("uuid");
             description.addProperty("charset");
-            description.addProperty("path");
             description.addProperty("templateId");
             description.addProperty("dcTermsIdentifier");
             description.addProperty("dcTermsTitle");

@@ -16,6 +16,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.RadiologyProperties;
@@ -135,5 +137,20 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
             throw new IllegalArgumentException("mrrtReportTemplateSearchCriteria cannot be null");
         }
         return mrrtReportTemplateDAO.getMrrtReportTemplates(mrrtReportTemplateSearchCriteria);
+    }
+    
+    /**
+     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#getMrrtReportTemplateHtmlBody(MrrtReportTemplate)
+     */
+    @Override
+    public String getMrrtReportTemplateHtmlBody(MrrtReportTemplate mrrtReportTemplate) throws IOException {
+        if (mrrtReportTemplate == null) {
+            throw new IllegalArgumentException("mrrtReportTemplate cannot be null");
+        }
+        File templateFile = new File(mrrtReportTemplate.getPath());
+        Document doc = Jsoup.parse(templateFile, null);
+        
+        return doc.select("body")
+                .html();
     }
 }
