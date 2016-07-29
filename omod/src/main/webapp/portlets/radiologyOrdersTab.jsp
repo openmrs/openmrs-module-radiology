@@ -13,6 +13,8 @@
                   function() {
                     var accessionNumber = $j('#ordersTabAccessionNumberFilter');
                     var patientUuid = $j('#ordersTabPatientFilter');
+                    var fromEffectiveStartDate = $j('#ordersTabFromEffectiveStartDateFilter');
+                    var toEffectiveStartDate = $j('#ordersTabToEffectiveStartDateFilter');
                     var urgency = $j('#ordersTabUrgencySelect');
                     var find = $j('#ordersTabFind');
                     var clearResults = $j('a#ordersTabClearFilters');
@@ -39,6 +41,24 @@
                                             accessionNumber: accessionNumber
                                                     .val(),
                                             patient: patientUuid.val(),
+                                            fromEffectiveStartDate: fromEffectiveStartDate
+                                                    .val() === ""
+                                                    ? ""
+                                                    : moment(
+                                                            fromEffectiveStartDate
+                                                                    .val(),
+                                                            "lll")
+                                                            .format(
+                                                                    "YYYY-MM-DDTHH:mm:ss.SSS"),
+                                            toEffectiveStartDate: toEffectiveStartDate
+                                                    .val() === ""
+                                                    ? ""
+                                                    : moment(
+                                                            toEffectiveStartDate
+                                                                    .val(),
+                                                            "lll")
+                                                            .format(
+                                                                    "YYYY-MM-DDTHH:mm:ss.SSS"),
                                             urgency: urgency.val(),
                                             totalCount: true,
                                           };
@@ -132,6 +152,20 @@
                                             }
                                           },
                                           {
+                                            "name": "dateStopped",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              var result = "";
+                                              if (full.dateStopped) {
+
+                                                result = moment(
+                                                        full.dateStopped)
+                                                        .format("LLL");
+                                              }
+                                              return result;
+                                            }
+                                          },
+                                          {
                                             "name": "action",
                                             "className": "dt-center",
                                             "render": function(data, type,
@@ -156,11 +190,18 @@
                       radiologyOrdersTable.ajax.reload();
                     });
 
-                    clearResults.on('mouseup keyup', function() {
-                      $j('table#ordersTabTableFilters input:text').val('');
-                      patientUuid.val('');
-                      radiologyOrdersTable.ajax.reload();
-                    });
+                    clearResults
+                            .on(
+                                    'mouseup keyup',
+                                    function() {
+                                      $j(
+                                              '#ordersTabTableFilters input, #ordersTabTableFilters select')
+                                              .val('');
+                                      $j(
+                                              '#ordersTabEffectiveStartDateRangePicker')
+                                              .data('dateRangePicker').clear();
+                                      radiologyOrdersTable.ajax.reload();
+                                    });
 
                     function formatChildRow(data) {
                       var orderReason = Radiology.getProperty(data,
@@ -215,6 +256,40 @@
                                         tr.addClass('shown');
                                       }
                                     });
+
+                    $j('#ordersTabEffectiveStartDateRangePicker')
+                            .dateRangePicker(
+                                    {
+                                      showShortcuts: true,
+                                      shortcuts: {
+                                        'prev-days': [3, 5, 7],
+                                        'prev': ['week', 'month'],
+                                        'next-days': null,
+                                        'next': null
+                                      },
+                                      separator: '-',
+                                      format: 'lll',
+                                      time: {
+                                        enabled: true
+                                      },
+                                      defaultTime: moment().startOf('day')
+                                              .toDate(),
+                                      defaultEndTime: moment().endOf('day')
+                                              .toDate(),
+                                      getValue: function() {
+                                        if (fromEffectiveStartDate.val()
+                                                && toEffectiveStartDate.val())
+                                          return fromEffectiveStartDate.val()
+                                                  + '-'
+                                                  + toEffectiveStartDate.val();
+                                        else
+                                          return '';
+                                      },
+                                      setValue: function(s, s1, s2) {
+                                        fromEffectiveStartDate.val(s1);
+                                        toEffectiveStartDate.val(s2);
+                                      }
+                                    });
                   });
 </script>
 
@@ -229,13 +304,18 @@
 </a>
 </span>
 <div class="box">
-  <table id="ordersTabTableFilters" cellspacing="10">
+  <table cellspacing="10">
     <tr>
       <form>
-        <td><label><spring:message code="radiology.dashboard.tabs.filters.filterby" /></label> <input type="text"
-          id="ordersTabAccessionNumberFilter"
+        <td id="ordersTabTableFilters"><label><spring:message code="radiology.dashboard.tabs.filters.filterby" /></label>
+          <input type="text" id="ordersTabAccessionNumberFilter"
           placeholder='<spring:message code="radiology.dashboard.tabs.orders.filters.accessionNumber"/>' /> <radiology:patientField
-            formFieldName="patient" formFieldId="ordersTabPatientFilter" /> <select id="ordersTabUrgencySelect">
+            formFieldName="patient" formFieldId="ordersTabPatientFilter" /> <span
+          id="ordersTabEffectiveStartDateRangePicker"> <input type="text" id="ordersTabFromEffectiveStartDateFilter"
+            placeholder='<spring:message code="radiology.dashboard.tabs.orders.filters.effectiveStartDate.from" />' /> <span>-</span>
+            <input type="text" id="ordersTabToEffectiveStartDateFilter"
+            placeholder='<spring:message code="radiology.dashboard.tabs.orders.filters.effectiveStartDate.to" />' />
+        </span><select id="ordersTabUrgencySelect">
             <c:forEach var="urgency" items="${model.urgencies}">
               <option value='${urgency}'>
                 <c:choose>
@@ -249,8 +329,8 @@
               </option>
             </c:forEach>
         </select></td>
-        <td><input id="ordersTabFind" type="button"
-          value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
+      <td><input id="ordersTabFind" type="button"
+        value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
       </form>
     </tr>
   </table>
@@ -267,6 +347,7 @@
           <th><spring:message code="radiology.datatables.column.order.referringPhysician" /></th>
           <th><spring:message code="radiology.datatables.column.order.scheduledDate" /></th>
           <th><spring:message code="radiology.datatables.column.order.dateActivated" /></th>
+          <th><spring:message code="radiology.datatables.column.order.dateStopped" /></th>
           <th><spring:message code="radiology.datatables.column.action" /></th>
         </tr>
       </thead>

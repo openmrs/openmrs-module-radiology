@@ -70,17 +70,24 @@
                                             }
                                           },
                                           {
-                                            "name": "orderNumber",
+                                            "name": "accessionNumber",
                                             "render": function(data, type,
                                                     full, meta) {
-                                              return full.orderNumber;
+                                              return full.accessionNumber;
                                             }
                                           },
                                           {
                                             "name": "urgency",
                                             "render": function(data, type,
                                                     full, meta) {
-                                              return full.urgency;
+                                              switch (full.urgency) {
+                                              case "ROUTINE":
+                                                return '<spring:message code="radiology.order.urgency.ROUTINE"/>';
+                                              case "STAT":
+                                                return '<spring:message code="radiology.order.urgency.STAT"/>';
+                                              case "ON_SCHEDULED_DATE":
+                                                return '<spring:message code="radiology.order.urgency.ON_SCHEDULED_DATE"/>';
+                                              }
                                             }
                                           },
                                           {
@@ -120,6 +127,20 @@
 
                                                 result = moment(
                                                         full.dateActivated)
+                                                        .format("LLL");
+                                              }
+                                              return result;
+                                            }
+                                          },
+                                          {
+                                            "name": "dateStopped",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              var result = "";
+                                              if (full.dateStopped) {
+
+                                                result = moment(
+                                                        full.dateStopped)
                                                         .format("LLL");
                                               }
                                               return result;
@@ -209,12 +230,13 @@
       <thead>
         <tr>
           <th></th>
-          <th><spring:message code="radiology.datatables.column.order.orderNumber" /></th>
-          <th><spring:message code="radiology.datatables.column.order.priority" /></th>
+          <th><spring:message code="radiology.datatables.column.order.accessionNumber" /></th>
+          <th><spring:message code="radiology.datatables.column.order.urgency" /></th>
           <th><spring:message code="radiology.datatables.column.order.imagingProcedure" /></th>
           <th><spring:message code="radiology.datatables.column.order.referringPhysician" /></th>
           <th><spring:message code="radiology.datatables.column.order.scheduledDate" /></th>
           <th><spring:message code="radiology.datatables.column.order.dateActivated" /></th>
+          <th><spring:message code="radiology.datatables.column.order.dateStopped" /></th>
           <th><spring:message code="radiology.datatables.column.action" /></th>
         </tr>
       </thead>
