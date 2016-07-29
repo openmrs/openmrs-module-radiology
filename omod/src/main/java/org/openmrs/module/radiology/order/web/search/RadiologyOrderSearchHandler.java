@@ -10,15 +10,17 @@
 package org.openmrs.module.radiology.order.web.search;
 
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 
-import org.openmrs.Order.Urgency;
 import org.apache.commons.lang.StringUtils;
+import org.openmrs.Order.Urgency;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.order.RadiologyOrderSearchCriteria;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
+import org.openmrs.module.webservices.rest.web.ConversionUtil;
 import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.RestConstants;
 import org.openmrs.module.webservices.rest.web.api.RestService;
@@ -44,6 +46,10 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
     
     public static final String REQUEST_PARAM_PATIENT = "patient";
     
+    public static final String REQUEST_PARAM_EFFECTIVE_START_DATE_FROM = "fromEffectiveStartDate";
+    
+    public static final String REQUEST_PARAM_EFFECTIVE_START_DATE_TO = "toEffectiveStartDate";
+    
     public static final String REQUEST_PARAM_URGENCY = "urgency";
     
     public static final String REQUEST_PARAM_TOTAL_COUNT = "totalCount";
@@ -52,7 +58,8 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
     RadiologyOrderService radiologyOrderService;
     
     SearchQuery searchQuery = new SearchQuery.Builder("Allows you to search for RadiologyOrder's by patient and urgency")
-            .withOptionalParameters(REQUEST_PARAM_ACCESSION_NUMBER, REQUEST_PARAM_PATIENT, REQUEST_PARAM_URGENCY,
+            .withOptionalParameters(REQUEST_PARAM_ACCESSION_NUMBER, REQUEST_PARAM_PATIENT,
+                REQUEST_PARAM_EFFECTIVE_START_DATE_FROM, REQUEST_PARAM_EFFECTIVE_START_DATE_TO, REQUEST_PARAM_URGENCY,
                 REQUEST_PARAM_TOTAL_COUNT)
             .build();
     
@@ -75,6 +82,10 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
      * @should return all radiology orders for given patient
      * @should return empty search result if patient cannot be found
      * @should return empty search result if patient has no radiology orders
+     * @should return all radiology orders with effective order start date in given date range if to date and from date are specified
+     * @should return all radiology orders with effective order start date after or equal to from date if only from date is specified
+     * @should return all radiology orders with effective order start date before or equal to to date if only to date is specified
+     * @should return empty search result if no effective order start is in date range
      * @should return all radiology orders for given urgency
      * @should return empty search result if no radiology order exists for given urgency
      * @should throw illegal argument exception if urgency doesn't exist
@@ -95,6 +106,20 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
             }
         }
         
+        final String fromEffectiveStartDateString = context.getRequest()
+                .getParameter(REQUEST_PARAM_EFFECTIVE_START_DATE_FROM);
+        Date fromEffectiveStartDate = null;
+        if (StringUtils.isNotBlank(fromEffectiveStartDateString)) {
+            fromEffectiveStartDate = (Date) ConversionUtil.convert(fromEffectiveStartDateString, java.util.Date.class);
+        }
+        
+        final String toEffectiveStartDateString = context.getRequest()
+                .getParameter(REQUEST_PARAM_EFFECTIVE_START_DATE_TO);
+        Date toEffectiveStartDate = null;
+        if (StringUtils.isNotBlank(toEffectiveStartDateString)) {
+            toEffectiveStartDate = (Date) ConversionUtil.convert(toEffectiveStartDateString, java.util.Date.class);
+        }
+        
         final String urgencyString = context.getRequest()
                 .getParameter(REQUEST_PARAM_URGENCY);
         Urgency urgency = null;
@@ -108,6 +133,8 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
         final RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
                 new RadiologyOrderSearchCriteria.Builder().withAccessionNumber(accessionNumber)
                         .withPatient(patient)
+                        .withFromEffectiveStartDate(fromEffectiveStartDate)
+                        .withToEffectiveStartDate(toEffectiveStartDate)
                         .withUrgency(urgency)
                         .build();
         

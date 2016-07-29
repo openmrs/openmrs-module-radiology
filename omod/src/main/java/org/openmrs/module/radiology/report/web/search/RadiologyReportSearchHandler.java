@@ -95,26 +95,9 @@ public class RadiologyReportSearchHandler implements SearchHandler {
     @Override
     public PageableResult search(RequestContext context) throws ResponseException {
         
-        final String fromDateString = context.getRequest()
-                .getParameter(REQUEST_PARAM_DATE_FROM);
-        final String toDateString = context.getRequest()
-                .getParameter(REQUEST_PARAM_DATE_TO);
         final String principalResultsInterpreterUuid = context.getRequest()
                 .getParameter(REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER);
-        final String statusString = context.getRequest()
-                .getParameter(REQUEST_PARAM_STATUS);
-        
-        Date fromDate = null;
-        Date toDate = null;
         Provider principalResultsInterpreter = null;
-        RadiologyReportStatus status = null;
-        
-        if (StringUtils.isNotBlank(fromDateString)) {
-            fromDate = (Date) ConversionUtil.convert(fromDateString, java.util.Date.class);
-        }
-        if (StringUtils.isNotBlank(toDateString)) {
-            toDate = (Date) ConversionUtil.convert(toDateString, java.util.Date.class);
-        }
         if (StringUtils.isNotBlank(principalResultsInterpreterUuid)) {
             principalResultsInterpreter = ((ProviderResource1_9) Context.getService(RestService.class)
                     .getResourceBySupportedClass(Provider.class)).getByUniqueId(principalResultsInterpreterUuid);
@@ -122,6 +105,24 @@ public class RadiologyReportSearchHandler implements SearchHandler {
                 return new EmptySearchResult();
             }
         }
+        
+        final String fromDateString = context.getRequest()
+                .getParameter(REQUEST_PARAM_DATE_FROM);
+        Date fromDate = null;
+        if (StringUtils.isNotBlank(fromDateString)) {
+            fromDate = (Date) ConversionUtil.convert(fromDateString, java.util.Date.class);
+        }
+        
+        final String toDateString = context.getRequest()
+                .getParameter(REQUEST_PARAM_DATE_TO);
+        Date toDate = null;
+        if (StringUtils.isNotBlank(toDateString)) {
+            toDate = (Date) ConversionUtil.convert(toDateString, java.util.Date.class);
+        }
+        
+        final String statusString = context.getRequest()
+                .getParameter(REQUEST_PARAM_STATUS);
+        RadiologyReportStatus status = null;
         if (StringUtils.isNotBlank(statusString)) {
             status = RadiologyReportStatus.valueOf(statusString);
         }

@@ -66,7 +66,7 @@
 
   <!-- radiology orders with study -->
   <encounter encounter_id="2001" encounter_type="1001" patient_id="70021" location_id="1" form_id="1" encounter_datetime="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" uuid="6849c394-2c58-49d9-b928-215a75a90959"/>
-  <orders order_id="2001" order_number="2001" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2001" urgency="ROUTINE" orderer="1" concept_id="178" accession_number="1" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70021" uuid="44f24d7e-ebbd-4500-bfba-1db19561ca04"/>
+  <orders order_id="2001" order_number="2001" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2001" urgency="ROUTINE" orderer="1" concept_id="178" accession_number="1" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-01 12:24:10.0" creator="1" date_created="2015-02-01 12:24:10.0" voided="false" patient_id="70021" uuid="44f24d7e-ebbd-4500-bfba-1db19561ca04"/>
   <test_order order_id="2001"/>
   <radiology_order order_id="2001" />
   <radiology_study study_id="1" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.1" order_id="2001" performed_status="IN_PROGRESS" creator="1" date_created="2015-02-02 12:24:10.0" uuid="dde7399b-6092-4a3d-88a2-405b6b4499fc"/>
@@ -84,7 +84,7 @@
   <person_name person_name_id="3" preferred="true" person_id="70022" given_name="John" family_name="Doe" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="6753aaa1-545d-44e2-9a9f-6c682f37a134"/>
 
   <!-- radiology order with no associated study -->
-  <orders order_id="2004" order_number="2004" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="STAT" orderer="1" concept_id="178" accession_number="3" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-03 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-03 13:17:15.0" voided="false" patient_id="70022" uuid="be24cb45-6ae2-4bf1-8aa1-4d95fd679e1f"/>
+  <orders order_id="2004" order_number="2004" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2004" urgency="ON_SCHEDULED_DATE" orderer="1" concept_id="178" accession_number="3" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" scheduled_date="2015-02-03 13:17:15.0" date_activated="2015-02-01 13:17:15.0" auto_expire_date="2015-02-14 00:00:00.0" creator="1" date_created="2015-02-01 13:17:15.0" voided="false" patient_id="70022" uuid="be24cb45-6ae2-4bf1-8aa1-4d95fd679e1f"/>
   <test_order order_id="2004"/>
   <radiology_order order_id="2004" />
 
@@ -102,7 +102,7 @@
   <person_name person_name_id="3" preferred="true" person_id="70055" given_name="John" family_name="Cena" creator="1" date_created="2015-01-01 00:00:00.0" voided="false" uuid="76dbd350-fc9e-11e5-9e59-08002719a237"/>
 	
   <encounter encounter_id="2009" encounter_type="1001" patient_id="70055" visit_id="3004" location_id="1" form_id="1" encounter_datetime="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" uuid="18208334-fca0-11e5-9e59-08002719a237"/>
-  <orders order_id="2009" order_number="2009" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2009" urgency="ROUTINE" orderer="1" concept_id="178" accession_number="4" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="false" patient_id="70055" uuid="1bae735a-fca0-11e5-9e59-08002719a237" />
+  <orders order_id="2009" order_number="2009" order_type_id="5" order_action="NEW" care_setting="1" encounter_id="2009" urgency="ROUTINE" orderer="1" concept_id="178" accession_number="4" instructions="CT ABDOMEN PANCREAS WITH IV CONTRAST" date_activated="2015-02-04 12:24:10.0" creator="1" date_created="2015-02-04 12:24:10.0" voided="false" patient_id="70055" uuid="1bae735a-fca0-11e5-9e59-08002719a237" />
   <test_order order_id="2009"/>
   <radiology_order order_id="2009" />
   <visit visit_id="3004" patient_id="70055" visit_type_id="3" date_started="2015-02-02 12:24:10.0" creator="1" date_created="2015-02-02 12:24:10.0" voided="0" uuid="30a57ce7-fca0-11e5-9e59-08002719a237" />

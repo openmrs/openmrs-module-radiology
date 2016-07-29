@@ -14,6 +14,8 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 import org.apache.commons.beanutils.PropertyUtils;
@@ -23,6 +25,7 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Order.Urgency;
 import org.openmrs.api.PatientService;
+import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.order.RadiologyOrderSearchCriteria;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.module.webservices.rest.SimpleObject;
@@ -55,6 +58,12 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     private static final String PATIENT_WITH_TWO_ORDERS = "5631b434-78aa-102b-91a0-001e378eb67e";
     
+    private static final String DATE_AFTER_ORDER_EFFECTIVE_START_DATES = "2015-02-04 13:00:00";
+    
+    private static final String DATE_BEFORE_ORDER_EFFECTIVE_START_DATES = "2015-02-01 00:00:00";
+    
+    private static final String DATE_BETWEEN_ORDER_EFFECTIVE_START_DATES = "2015-02-03 12:00:00";
+    
     private static final String RADIOLOGY_ORDER_UUID = "1bae735a-fca0-11e5-9e59-08002719a237";
     
     @Autowired
@@ -62,6 +71,10 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     @Autowired
     RadiologyOrderService radiologyOrderService;
+    
+    DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    
+    DateFormat resultFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSZ");
     
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
@@ -221,13 +234,161 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
+     * @verifies return all radiology orders with effective order start date after or equal to from date if only from date is
+     *           specified
+     */
+    @Test
+    public void
+            search_shouldReturnAllRadiologyOrdersWithEffectiveOrderStartDateAfterOrEqualToFromDateIfOnlyFromDateIsSpecified()
+                    throws Exception {
+        
+        MockHttpServletRequest request = request(RequestMethod.GET, getURI());
+        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_EFFECTIVE_START_DATE_FROM,
+            DATE_BETWEEN_ORDER_EFFECTIVE_START_DATES);
+        request.setParameter("v", Representation.FULL.getRepresentation());
+        
+        SimpleObject result = deserialize(handle(request));
+        
+        assertNotNull(result);
+        List<Object> hits = (List<Object>) result.get("results");
+        assertThat(hits.size(), is(2));
+        assertNull(PropertyUtils.getProperty(result, "totalCount"));
+        
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder()
+                .withFromEffectiveStartDate(format.parse(DATE_BETWEEN_ORDER_EFFECTIVE_START_DATES))
+                .build();
+        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        
+        for (int i = 0; i < hits.size(); i++) {
+            if (PropertyUtils.getProperty(hits.get(i), "urgency")
+                    .equals("ON_SCHEDULED_DATE")) {
+                assertThat(PropertyUtils.getProperty(hits.get(i), "scheduledDate"),
+                    is(resultFormat.format(radiologyOrders.get(i)
+                            .getScheduledDate())));
+            } else {
+                assertThat(PropertyUtils.getProperty(hits.get(i), "dateActivated"),
+                    is(resultFormat.format(radiologyOrders.get(i)
+                            .getDateActivated())));
+            }
+        }
+        
+    }
+    
+    /**
+     * @see RadiologyOrderSearchHandler#search(RequestContext)
+     * @verifies return all radiology orders with effective order start date before or equal to to date if only to date is
+     *           specified
+     */
+    @Test
+    public void
+            search_shouldReturnAllRadiologyOrdersWithEffectiveOrderStartDateBeforeOrEqualToToDateIfOnlyToDateIsSpecified()
+                    throws Exception {
+        
+        MockHttpServletRequest request = request(RequestMethod.GET, getURI());
+        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_EFFECTIVE_START_DATE_TO,
+            DATE_BETWEEN_ORDER_EFFECTIVE_START_DATES);
+        request.setParameter("v", Representation.FULL.getRepresentation());
+        
+        SimpleObject result = deserialize(handle(request));
+        
+        assertNotNull(result);
+        List<Object> hits = (List<Object>) result.get("results");
+        assertThat(hits.size(), is(2));
+        assertNull(PropertyUtils.getProperty(result, "totalCount"));
+        
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder()
+                .withToEffectiveStartDate(format.parse(DATE_BETWEEN_ORDER_EFFECTIVE_START_DATES))
+                .build();
+        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        
+        for (int i = 0; i < hits.size(); i++) {
+            if (PropertyUtils.getProperty(hits.get(i), "urgency")
+                    .equals("ON_SCHEDULED_DATE")) {
+                assertThat(PropertyUtils.getProperty(hits.get(i), "scheduledDate"),
+                    is(resultFormat.format(radiologyOrders.get(i)
+                            .getScheduledDate())));
+            } else {
+                assertThat(PropertyUtils.getProperty(hits.get(i), "dateActivated"),
+                    is(resultFormat.format(radiologyOrders.get(i)
+                            .getDateActivated())));
+            }
+        }
+    }
+    
+    /**
+     * @see RadiologyOrderSearchHandler#search(RequestContext)
+     * @verifies return all radiology orders with effective order start date in given date range if to date and from date are
+     *           specified
+     */
+    @Test
+    public void
+            search_shouldReturnAllRadiologyOrdersWithEffectiveOrderStartDateInGivenDateRangeIfToDateAndFromDateAreSpecified()
+                    throws Exception {
+        
+        MockHttpServletRequest request = request(RequestMethod.GET, getURI());
+        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_EFFECTIVE_START_DATE_FROM,
+            DATE_BEFORE_ORDER_EFFECTIVE_START_DATES);
+        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_EFFECTIVE_START_DATE_TO,
+            DATE_AFTER_ORDER_EFFECTIVE_START_DATES);
+        request.setParameter("v", Representation.FULL.getRepresentation());
+        
+        SimpleObject result = deserialize(handle(request));
+        
+        assertNotNull(result);
+        List<Object> hits = (List<Object>) result.get("results");
+        assertThat(hits.size(), is(4));
+        assertNull(PropertyUtils.getProperty(result, "totalCount"));
+        
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder()
+                .withFromEffectiveStartDate(format.parse(DATE_BEFORE_ORDER_EFFECTIVE_START_DATES))
+                .withToEffectiveStartDate(format.parse(DATE_AFTER_ORDER_EFFECTIVE_START_DATES))
+                .build();
+        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        
+        for (int i = 0; i < hits.size(); i++) {
+            if (PropertyUtils.getProperty(hits.get(i), "urgency")
+                    .equals("ON_SCHEDULED_DATE")) {
+                assertThat(PropertyUtils.getProperty(hits.get(i), "scheduledDate"),
+                    is(resultFormat.format(radiologyOrders.get(i)
+                            .getScheduledDate())));
+            } else {
+                assertThat(PropertyUtils.getProperty(hits.get(i), "dateActivated"),
+                    is(resultFormat.format(radiologyOrders.get(i)
+                            .getDateActivated())));
+            }
+        }
+    }
+    
+    /**
+     * @see RadiologyOrderSearchHandler#search(RequestContext)
+     * @verifies return empty search result if no effective order start is in date range
+     */
+    @Test
+    public void search_shouldReturnEmptySearchResultIfNoEffectiveOrderStartIsInDateRange() throws Exception {
+        
+        MockHttpServletRequest request = request(RequestMethod.GET, getURI());
+        request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_EFFECTIVE_START_DATE_FROM,
+            DATE_AFTER_ORDER_EFFECTIVE_START_DATES);
+        request.setParameter("v", Representation.FULL.getRepresentation());
+        
+        SimpleObject result = deserialize(handle(request));
+        
+        assertNotNull(result);
+        List<Object> hits = (List<Object>) result.get("results");
+        assertThat(hits.size(), is(0));
+        assertNull(PropertyUtils.getProperty(result, "totalCount"));
+    }
+    
+    /**
+     * @see RadiologyOrderSearchHandler#search(RequestContext)
      * @verifies return all radiology orders for given urgency
      */
     @Test
     public void search_shouldReturnAllRadiologyOrdersForGivenUrgency() throws Exception {
         
         MockHttpServletRequest requestUrgencyWithOneOrder = request(RequestMethod.GET, getURI());
-        requestUrgencyWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_URGENCY, Urgency.STAT.toString());
+        requestUrgencyWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_URGENCY,
+            Urgency.ON_SCHEDULED_DATE.toString());
         requestUrgencyWithOneOrder.setParameter("v", Representation.FULL.getRepresentation());
         
         SimpleObject resultUrgencyWithOneOrder = deserialize(handle(requestUrgencyWithOneOrder));
@@ -235,7 +396,7 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
         assertNotNull(resultUrgencyWithOneOrder);
         List<Object> hits = (List<Object>) resultUrgencyWithOneOrder.get("results");
         assertThat(hits.size(), is(1));
-        assertThat(PropertyUtils.getProperty(hits.get(0), "urgency"), is(Urgency.STAT.toString()));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "urgency"), is(Urgency.ON_SCHEDULED_DATE.toString()));
         assertNull(PropertyUtils.getProperty(resultUrgencyWithOneOrder, "totalCount"));
         
         MockHttpServletRequest requestUrgencyWithThreeOrders = request(RequestMethod.GET, getURI());
@@ -248,7 +409,7 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
         assertNotNull(resultUrgencyWithThreeOrders);
         hits = (List<Object>) resultUrgencyWithThreeOrders.get("results");
         assertThat(hits.size(), is(3));
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < hits.size(); i++) {
             assertThat(PropertyUtils.getProperty(hits.get(i), "urgency"), is(Urgency.ROUTINE.toString()));
         }
         assertNull(PropertyUtils.getProperty(resultUrgencyWithThreeOrders, "totalCount"));
@@ -262,8 +423,7 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     public void search_shouldReturnEmptySearchResultIfNoRadiologyOrderExistsForGivenUrgency() throws Exception {
         
         MockHttpServletRequest requestUrgencyWithNoOrders = request(RequestMethod.GET, getURI());
-        requestUrgencyWithNoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_URGENCY,
-            Urgency.ON_SCHEDULED_DATE.toString());
+        requestUrgencyWithNoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_URGENCY, Urgency.STAT.toString());
         
         SimpleObject resultUrgencyWithNoOrders = deserialize(handle(requestUrgencyWithNoOrders));
         
