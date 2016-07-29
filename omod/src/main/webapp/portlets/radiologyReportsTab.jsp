@@ -162,30 +162,26 @@
                                       radiologyReportsTable.ajax.reload();
                                     });
 
-                    $j('#reportsTabDateRangePicker')
-                            .dateRangePicker(
-                                    {
-                                      showShortcuts: true,
-                                      shortcuts: {
-                                        'prev-days': [3, 5, 7],
-                                        'prev': ['week', 'month'],
-                                        'next-days': null,
-                                        'next': null
-                                      },
-                                      separator: ' <spring:message code="radiology.dashboard.tabs.reports.filters.date.to"/> ',
-                                      getValue: function() {
-                                        if (fromDate.val() && toDate.val())
-                                          return fromDate.val()
-                                                  + ' <spring:message code="radiology.dashboard.tabs.reports.filters.date.to"/> '
-                                                  + toDate.val();
-                                        else
-                                          return '';
-                                      },
-                                      setValue: function(s, s1, s2) {
-                                        fromDate.val(s1);
-                                        toDate.val(s2);
-                                      }
-                                    });
+                    $j('#reportsTabDateRangePicker').dateRangePicker({
+                      showShortcuts: true,
+                      shortcuts: {
+                        'prev-days': [3, 5, 7],
+                        'prev': ['week', 'month'],
+                        'next-days': null,
+                        'next': null
+                      },
+                      separator: '-',
+                      getValue: function() {
+                        if (fromDate.val() && toDate.val())
+                          return fromDate.val() + '-' + toDate.val();
+                        else
+                          return '';
+                      },
+                      setValue: function(s, s1, s2) {
+                        fromDate.val(s1);
+                        toDate.val(s2);
+                      }
+                    });
                   });
 </script>
 
@@ -198,20 +194,24 @@
   <table cellspacing="10">
     <tr>
       <form>
-        <td id="reportsTabTableFilterFields"><span id="reportsTabDateRangePicker"> <label
-            for="reportsTabFromDateFilter"> <spring:message code="radiology.dashboard.tabs.reports.filters.date" />
-              <spring:message code="radiology.dashboard.tabs.reports.filters.date.from" />
-          </label> <input type="text" id="reportsTabFromDateFilter" /> <label for="reportsTabToDateFilter"> <spring:message
-                code="radiology.dashboard.tabs.reports.filters.date.to" />
-          </label> <input type="text" id="reportsTabToDateFilter" />
-        </span> <label for="reportsTabProviderFilter"> <spring:message
-              code="radiology.dashboard.tabs.reports.filters.principalResultsInterpreter" />
-        </label> <radiology:providerField formFieldName="principalResultsInterpreter" formFieldId="reportsTabProviderFilter" /> <label
-          for="reportsTabStatusSelect"> <spring:message code="radiology.dashboard.tabs.reports.filters.status" />
-        </label> <select id="reportsTabStatusSelect">
+        <td id="reportsTabTableFilterFields"><label><spring:message
+              code="radiology.dashboard.tabs.filters.filterby" /></label> <span id="reportsTabDateRangePicker"> <input
+            type="text" id="reportsTabFromDateFilter"
+            placeholder='<spring:message code="radiology.dashboard.tabs.reports.filters.date.from" />' /> <span>-</span> <input
+            type="text" id="reportsTabToDateFilter"
+            placeholder='<spring:message code="radiology.dashboard.tabs.reports.filters.date.to" />' />
+        </span> <radiology:providerField formFieldName="principalResultsInterpreter" formFieldId="reportsTabProviderFilter" /> <select
+          id="reportsTabStatusSelect">
             <c:forEach var="radiologyReportStatus" items="${model.radiologyReportStatuses}">
               <option value="${radiologyReportStatus}">
-                <spring:message code="radiology.report.status.${radiologyReportStatus}" text="${radiologyReportStatus}" />
+                <c:choose>
+                  <c:when test="${not empty radiologyReportStatus}">
+                    <spring:message code="radiology.report.status.${radiologyReportStatus}" text="${radiologyReportStatus}" />
+                  </c:when>
+                  <c:otherwise>
+                    <spring:message code="radiology.report.status.selectStatus" />
+                  </c:otherwise>
+                </c:choose>
               </option>
             </c:forEach>
         </select></td>

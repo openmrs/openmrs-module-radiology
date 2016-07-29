@@ -1,16 +1,18 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
-<%@ attribute name="formFieldName" required="true" %>
-<%@ attribute name="formFieldId" required="false" %>
-<%@ attribute name="initialValue" required="false" %> <%-- This should be a uuid --%>
-<%@ attribute name="callback" required="false" %> <%-- gets the relType, PatientListItem sent back --%>
+<%@ attribute name="formFieldName" required="true"%>
+<%@ attribute name="formFieldId" required="false"%>
+<%@ attribute name="initialValue" required="false"%>
+<%-- This should be a uuid --%>
+<%@ attribute name="callback" required="false"%>
+<%-- gets the relType, PatientListItem sent back --%>
 
 <openmrs:htmlInclude file="/dwr/interface/DWRPatientService.js" />
 <openmrs:htmlInclude file="/scripts/jquery/autocomplete/OpenmrsAutoComplete.js" />
 <openmrs:htmlInclude file="/scripts/jquery/autocomplete/jquery.ui.autocomplete.autoSelect.js" />
 
 <c:if test="${empty formFieldId}">
-	<c:set var="formFieldId" value="${formFieldName}_id" />
+  <c:set var="formFieldId" value="${formFieldName}_id" />
 </c:if>
 <c:set var="displayNameInputId" value="${formFieldId}_selection" />
 
@@ -29,8 +31,7 @@
 					${callback}("${formFieldName}", ui.item.object, false);
 				}
 				</c:if>
-			},
-            placeholder:'<openmrs:message code="Patient.searchBox.placeholder" javaScriptEscape="true"/>' 
+			}
 		});
 
 		//Clear hidden value on losing focus with no valid entry
@@ -55,5 +56,5 @@
 	})
 </script>
 
-<input type="text" id="${displayNameInputId}" />
+<input type="text" id="${displayNameInputId}" placeholder='<openmrs:message code="Patient.searchBox.placeholder"/>' style="width: 15em"/>
 <input type="hidden" name="${formFieldName}" id="${formFieldId}" />

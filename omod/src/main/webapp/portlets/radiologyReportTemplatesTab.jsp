@@ -22,8 +22,8 @@
                                         },
                                         cache: true,
                                         dataType: "json",
-                                        url: Radiology.getRestRootEndpoint()  
-                                        	+ "/mrrtreporttemplate/",
+                                        url: Radiology.getRestRootEndpoint()
+                                                + "/mrrtreporttemplate/",
                                         data: function(data) {
                                           return {
                                             startIndex: data.start,
@@ -144,10 +144,11 @@
   <table id="reportTemplatesTableFilters" cellspacing="10">
     <tr>
       <form>
-        <td><label><spring:message code="radiology.dashboard.tabs.reportTemplates.filters.title" /></label> <input
+        <td><label><spring:message code="radiology.dashboard.tabs.filters.filterby" /></label> <input
           id="reportTemplatesTabTitleFilter" name="titleQuery" type="text" style="width: 20em"
           title="<spring:message
-            code="radiology.minChars" />" /></td>
+            code="radiology.minChars" />"
+          placeholder='<spring:message code="radiology.dashboard.tabs.reportTemplates.filters.title" />' /></td>
         <td><input id="reportTemplatesTabFind" type="button"
           value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
       </form>
