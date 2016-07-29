@@ -334,99 +334,113 @@ BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('58722','F','1989-2-24','1','2002-3-28 09:00:00','7d791258-fc22-4020-ba97-c5a942d76412');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('58722','58722','Elfrieda','Boyle','1','2002-3-28 09:00:00','fc9d570d-c5fb-4e25-8064-c7b6f01689bd');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('58722','1','2002-3-28 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('58722','58722','2','10','1','2002-3-28 09:00:00','e50f529d-4351-48ac-9e55-15de0d4cac9e');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('6676','F','1967-11-17','1','1999-11-8 09:00:00','a9b14c06-6988-4062-aa5b-625ec6377309');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('6676','6676','Sallie','Thompson','1','1999-11-8 09:00:00','38f0c8be-912b-4530-be0d-c55be7fd289f');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('6676','1','1999-11-8 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('6676','6676','2','10','1','1999-11-8 09:00:00','50977327-f5d5-4982-8908-f262858ab633');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('54913','F','1953-12-24','1','1976-5-24 09:00:00','747755fe-5ada-429e-b28a-de547bd9fc81');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('54913','54913','Laurianne','Sipes','1','1976-5-24 09:00:00','b296ed98-bd55-4630-9d35-3319e51e4702');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('54913','1','1976-5-24 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('54913','54913','2','10','1','1976-5-24 09:00:00','c79249b8-a1ba-4d13-9d07-7c53464217c1');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('1019','M','1966-5-10','1','1986-11-13 09:00:00','9719843a-eb0f-4ac3-84aa-edc0389c89a4');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('1019','1019','Lupe','Kohler','1','1986-11-13 09:00:00','f4e385dd-6390-490a-a910-3336a123f9bb');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('1019','1','1986-11-13 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('1019','1019','2','10','1','1986-11-13 09:00:00','ad2d8751-e51c-49de-b0fb-376893d2b465');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('88400','M','1956-6-12','1','1983-3-31 09:00:00','12edf6d1-1898-4168-ad8a-4e4938aab474');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('88400','88400','Carlos','Wilderman','1','1983-3-31 09:00:00','20c0c378-9b4b-42c3-8553-f3886d687ee2');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('88400','1','1983-3-31 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('88400','88400','2','10','1','1983-3-31 09:00:00','69f2db32-d033-4e31-9c60-008b265dae29');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('2408','F','1982-2-24','1','1990-5-15 09:00:00','b8cacf42-e7ed-46f9-be2d-84b612ec8992');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('2408','2408','Eldora','Hegmann','1','1990-5-15 09:00:00','cedb842c-dad2-453a-8ba9-25d2ce5e266e');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('2408','1','1990-5-15 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('2408','2408','2','10','1','1990-5-15 09:00:00','bd22003e-b175-41e0-858b-f4b2e91cc46c');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('46495','F','1984-5-29','1','1994-8-15 09:00:00','b5078b51-85e9-4497-9939-80d23a3feb31');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('46495','46495','Meaghan','McGlynn','1','1994-8-15 09:00:00','95208a63-393a-47a0-b1fc-298440931ec9');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('46495','1','1994-8-15 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('46495','46495','2','10','1','1994-8-15 09:00:00','e1d8bf27-6202-40d4-9bc4-8e8f2cb5123c');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('48044','M','1947-11-15','1','1978-9-7 09:00:00','45b14ed5-31b3-4009-b949-a6152559c16e');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('48044','48044','Neva','Hegmann','1','1978-9-7 09:00:00','9f2bd04c-0492-4ea6-95fa-b8d2d2bb43d1');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('48044','1','1978-9-7 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('48044','48044','2','10','1','1978-9-7 09:00:00','5b4cefda-769b-4636-bee3-faaf01376828');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('66848','M','1961-6-4','1','1985-1-15 09:00:00','a8daf48b-7d36-4e6f-b7df-b86297c8a884');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('66848','66848','Sydney','Powlowski','1','1985-1-15 09:00:00','6221f17a-ff1c-4082-9cc0-ea0411ec1e90');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('66848','1','1985-1-15 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('66848','66848','2','10','1','1985-1-15 09:00:00','3fec6c40-339a-48f2-b173-d9fea32cba27');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('19895','M','1973-2-20','1','1978-7-25 09:00:00','1130f61b-0a9c-4381-bfe1-698144a1df1d');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('19895','19895','Leo','Durgan','1','1978-7-25 09:00:00','d605fac8-19f5-410f-b4a4-6e89053f8daf');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('19895','1','1978-7-25 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('19895','19895','2','10','1','1978-7-25 09:00:00','2019b075-1b28-4519-ace6-5aa4e5768e9c');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('31572','F','1952-9-29','1','2006-3-27 09:00:00','293dbf14-7a25-4866-b485-99884c121f8a');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('31572','31572','Joyce','Batz','1','2006-3-27 09:00:00','fe528c99-0cba-48e6-b0ff-65e0cd0c19e0');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('31572','1','2006-3-27 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('31572','31572','2','10','1','2006-3-27 09:00:00','861a39e5-838b-4e61-a9d3-1eb5c6a2d333');
 COMMIT;
-
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('91538','F','1984-4-30','1','2012-10-6 09:00:00','ba51534c-afb8-4a8f-b146-2418e9a0755e');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('91538','91538','Janie','Champlin','1','2012-10-6 09:00:00','ef4b1fbd-1830-4fe9-8625-080e7c73f291');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('91538','1','2012-10-6 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('91538','91538','2','10','1','2012-10-6 09:00:00','063a412f-41ff-4f39-91d8-1f2444d0076f');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('42676','M','1952-9-24','1','2003-9-8 09:00:00','9338b59a-2006-4694-a08a-6d1ddbff7cf5');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('42676','42676','Federico','Schoen','1','2003-9-8 09:00:00','fbeb6f5e-106e-4881-a139-ad7f0b4ef2bb');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('42676','1','2003-9-8 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('42676','42676','2','10','1','2003-9-8 09:00:00','6b6de371-9fa6-4824-8429-aeb9c196dd64');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('53648','F','1978-4-21','1','2015-7-6 09:00:00','045a8f91-31a2-48c4-9ec6-094ef59f6e02');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('53648','53648','Emely','Raynor','1','2015-7-6 09:00:00','6fa088ca-b766-42d7-b94a-ebaa71c128db');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('53648','1','2015-7-6 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('53648','53648','2','10','1','2015-7-6 09:00:00','23ab040e-4640-48bb-96ac-5b6cc94d1459');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('81149','F','1985-2-1','1','2010-6-19 09:00:00','b9166879-9b6c-4ee6-b74a-79e17ba74ac6');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('81149','81149','Kathryne','Goyette','1','2010-6-19 09:00:00','e6047839-70d2-4446-8a13-68cccd15f67a');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('81149','1','2010-6-19 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('81149','81149','2','10','1','2010-6-19 09:00:00','95454e2f-abc6-4b19-acec-177ab17ac94f');
 COMMIT;
 
 BEGIN;
 INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES ('46998','M','1952-10-15','1','1980-8-8 09:00:00','f3d3f632-4078-415a-89fb-2b28658a9eb7');
 INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES ('46998','46998','Arturo','Huel','1','1980-8-8 09:00:00','d539e725-42b7-4264-a59a-eba5c2c1b164');
 INSERT INTO `patient` (patient_id,creator,date_created) VALUES ('46998','1','1980-8-8 09:00:00');
+INSERT INTO patient_identifier (patient_id,identifier,identifier_type,location_id,creator,date_created,uuid) VALUES ('46998','46998','2','10','1','1980-8-8 09:00:00','14d4fd7e-fd7f-4905-92dd-33139fbfb17c');
 COMMIT;
-
 
 -- ----------------------------
 --  Radiology Cases
