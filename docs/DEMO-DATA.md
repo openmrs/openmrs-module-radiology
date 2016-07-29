@@ -80,6 +80,8 @@ All users in the dataset have password: `Radio1234`
 
 ### Joyce Batz
 
+#### Accession Number 1
+
 _Clinical History_
 
 This patient has hurt her wrist.
@@ -98,6 +100,8 @@ Radiologist `Alexandra Skiles (user rad1)` has already finished the report.
 
 ### Carlos Wilderman
 
+#### Accession Number 2
+
 _Clinical History_
 
 This patient has a history of strokes and felt dizzy.
@@ -115,6 +119,8 @@ _Report_
 A report has to be written.
 
 ### Eldora Hegmann
+
+#### Accession Number 3 and 4
 
 _Clinical History_
 
@@ -136,7 +142,7 @@ Since there are no images, there is no report.
 
 ### Meaghan McGlynn
 
-#### Case 1
+#### Accession Number 5
 
 _Clinical History_
 
@@ -155,7 +161,7 @@ _Report_
 Radiologist `Alexandra Skiles (user rad1)` has started writing the report but hasnt
 finished it yet.
 
-#### Case 2
+#### Accession Number 6
 
 _Clinical History_
 
