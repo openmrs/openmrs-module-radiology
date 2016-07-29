@@ -9,10 +9,6 @@
  */
 package org.openmrs.module.radiology.study;
 
-import java.util.List;
-
-import org.openmrs.module.radiology.order.RadiologyOrder;
-
 /**
  * {@code RadiologyStudy} related database methods.
  * 
@@ -38,18 +34,7 @@ interface RadiologyStudyDAO {
     public RadiologyStudy getRadiologyStudyByUuid(String uuid);
     
     /**
-     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getRadiologyStudyByOrderId(Integer)
-     */
-    public RadiologyStudy getRadiologyStudyByOrderId(Integer orderId);
-    
-    /**
      * @see org.openmrs.module.radiology.study.RadiologyStudyService#getRadiologyStudyByStudyInstanceUid(String)
      */
     public RadiologyStudy getRadiologyStudyByStudyInstanceUid(String studyInstanceUid);
-    
-    /**
-     * @see org.openmrs.module.radiology.study.RadiologyStudyService#getStudiesByRadiologyOrders
-     */
-    public List<RadiologyStudy> getRadiologyStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
-    
 }
