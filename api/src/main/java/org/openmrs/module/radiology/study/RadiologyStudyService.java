@@ -9,13 +9,9 @@
  */
 package org.openmrs.module.radiology.study;
 
-import java.util.List;
-
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.RadiologyPrivileges;
-import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.order.RadiologyOrder;
 
 /**
  * Service layer for {@code RadiologyStudy}.
@@ -46,21 +42,6 @@ public interface RadiologyStudyService extends OpenmrsService {
     public RadiologyStudy saveRadiologyStudy(RadiologyStudy radiologyStudy);
     
     /**
-     * Updates a {@code RadiologyStudy's} performed status in the database.
-     *
-     * @param studyInstanceUid the study instance uid of the study whos performed status should be updated
-     * @param performedStatus the performed procedure step status to which the study should be set to
-     * @return the radiology study whos performed status was updated
-     * @throws IllegalArgumentException if studyInstanceUid is null
-     * @throws IllegalArgumentException if performedStatus is null
-     * @should update performed status of radiology study associated with given study instance uid
-     * @should throw illegal argument exception if study instance uid is null
-     * @should throw illegal argument exception if performed status is null
-     */
-    @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_STUDIES)
-    public RadiologyStudy updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus);
-    
-    /**
      * Get the {@code RadiologyStudy} by its {@code studyId}.
      *
      * @param studyId the study id of the wanted study
@@ -87,19 +68,6 @@ public interface RadiologyStudyService extends OpenmrsService {
     public RadiologyStudy getRadiologyStudyByUuid(String uuid);
     
     /**
-     * Get the {@code RadiologyStudy} by its associated {@code RadiologyOrder's} {@code orderId}.
-     *
-     * @param orderId the order id of the wanted radiology studies associated radiology order
-     * @return the radiology study associated with a radiology order matching given order id
-     * @throws IllegalArgumentException if given null
-     * @should return radiology study associated with radiology order for which order id is given
-     * @should return null if no match was found
-     * @should throw illegal argument exception if given null
-     */
-    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_STUDIES)
-    public RadiologyStudy getRadiologyStudyByOrderId(Integer orderId);
-    
-    /**
      * Get the {@code RadiologyStudy} by its Study Instance UID.
      *
      * @param studyInstanceUid the study instance uid of wanted radiology study
@@ -111,18 +79,4 @@ public interface RadiologyStudyService extends OpenmrsService {
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_STUDIES)
     public RadiologyStudy getRadiologyStudyByStudyInstanceUid(String studyInstanceUid);
-    
-    /**
-     * Get the {@code RadiologyStudy's} associated with a list of {@code RadiologyOrder's}.
-     *
-     * @param radiologyOrders the radiology orders for which radiology studies will be returned
-     * @return the radiology studies associated with given radiology orders
-     * @throws IllegalArgumentException given null
-     * @should return all radiology studies associated with given radiology orders
-     * @should return empty list given radiology orders without associated radiology studies
-     * @should return empty list given empty radiology order list
-     * @should throw illegal argument exception given null
-     */
-    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_STUDIES)
-    public List<RadiologyStudy> getRadiologyStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders);
 }

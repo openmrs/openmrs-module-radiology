@@ -9,16 +9,12 @@
  */
 package org.openmrs.module.radiology.study;
 
-import java.util.List;
-
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.dicom.DicomUidGenerator;
-import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
-import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
@@ -82,26 +78,6 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
     }
     
     /**
-     * @see RadiologyStudyService#updateStudyPerformedStatus(String, PerformedProcedureStepStatus)
-     */
-    @Override
-    @Transactional
-    public RadiologyStudy updateStudyPerformedStatus(String studyInstanceUid, PerformedProcedureStepStatus performedStatus) {
-        
-        if (studyInstanceUid == null) {
-            throw new IllegalArgumentException("studyInstanceUid cannot be null");
-        }
-        
-        if (performedStatus == null) {
-            throw new IllegalArgumentException("performedStatus cannot be null");
-        }
-        
-        final RadiologyStudy studyToBeUpdated = radiologyStudyDAO.getRadiologyStudyByStudyInstanceUid(studyInstanceUid);
-        studyToBeUpdated.setPerformedStatus(performedStatus);
-        return radiologyStudyDAO.saveRadiologyStudy(studyToBeUpdated);
-    }
-    
-    /**
      * @see RadiologyStudyService#getRadiologyStudy(Integer)
      */
     @Override
@@ -128,19 +104,6 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
     }
     
     /**
-     * @see RadiologyStudyService#getRadiologyStudyByOrderId(Integer)
-     */
-    @Override
-    public RadiologyStudy getRadiologyStudyByOrderId(Integer orderId) {
-        
-        if (orderId == null) {
-            throw new IllegalArgumentException("orderId cannot be null");
-        }
-        
-        return radiologyStudyDAO.getRadiologyStudyByOrderId(orderId);
-    }
-    
-    /**
      * @see RadiologyStudyService#getRadiologyStudyByStudyInstanceUid(String)
      */
     public RadiologyStudy getRadiologyStudyByStudyInstanceUid(String studyInstanceUid) {
@@ -149,19 +112,5 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
             throw new IllegalArgumentException("studyInstanceUid cannot be null");
         }
         return radiologyStudyDAO.getRadiologyStudyByStudyInstanceUid(studyInstanceUid);
-    }
-    
-    /**
-     * @see RadiologyStudyService#getStudiesByRadiologyOrders
-     */
-    @Override
-    public List<RadiologyStudy> getRadiologyStudiesByRadiologyOrders(List<RadiologyOrder> radiologyOrders) {
-        
-        if (radiologyOrders == null) {
-            throw new IllegalArgumentException("radiologyOrders cannot be null");
-        }
-        
-        final List<RadiologyStudy> result = radiologyStudyDAO.getRadiologyStudiesByRadiologyOrders(radiologyOrders);
-        return result;
     }
 }

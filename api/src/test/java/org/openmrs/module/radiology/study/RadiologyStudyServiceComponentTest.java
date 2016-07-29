@@ -15,9 +15,6 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.Properties;
 
 import org.hibernate.cfg.Environment;
@@ -25,11 +22,8 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openmrs.Patient;
-import org.openmrs.api.PatientService;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
-import org.openmrs.module.radiology.order.RadiologyOrderSearchCriteria;
 import org.openmrs.module.radiology.order.RadiologyOrderService;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -43,13 +37,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     private static final String TEST_DATASET =
             "org/openmrs/module/radiology/include/RadiologyStudyServiceComponentTestDataset.xml";
     
-    private static final int PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER = 70021;
-    
     private static final int RADIOLOGY_ORDER_ID_WITHOUT_STUDY = 2004;
-    
-    private static final int EXISTING_RADIOLOGY_ORDER_ID = 2001;
-    
-    private static final int NON_EXISTING_RADIOLOGY_ORDER_ID = 99999;
     
     private static final String EXISTING_STUDY_UUID = "dde7399b-6092-4a3d-88a2-405b6b4499fc";
     
@@ -62,9 +50,6 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     private static final int EXISTING_STUDY_ID = 1;
     
     private static final int NON_EXISTING_STUDY_ID = 99999;
-    
-    @Autowired
-    private PatientService patientService;
     
     @Autowired
     private RadiologyOrderService radiologyOrderService;
@@ -163,51 +148,6 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyStudyService#updateStudyPerformedStatus(String,PerformedProcedureStepStatus)
-     * @verifies update performed status of radiology study associated with given study instance uid
-     */
-    @Test
-    public void updateStudyPerformedStatus_shouldUpdatePerformedStatusOfRadiologyStudyAssociatedWithGivenStudyInstanceUid()
-            throws Exception {
-        
-        RadiologyStudy existingStudy = radiologyStudyService.getRadiologyStudy(EXISTING_STUDY_ID);
-        PerformedProcedureStepStatus performedStatusPreUpdate = existingStudy.getPerformedStatus();
-        PerformedProcedureStepStatus performedStatusPostUpdate = PerformedProcedureStepStatus.COMPLETED;
-        
-        RadiologyStudy updatedStudy = radiologyStudyService.updateStudyPerformedStatus(existingStudy.getStudyInstanceUid(),
-            performedStatusPostUpdate);
-        
-        assertNotNull(updatedStudy);
-        assertThat(updatedStudy, is(existingStudy));
-        assertThat(performedStatusPreUpdate, is(not(performedStatusPostUpdate)));
-        assertThat(updatedStudy.getPerformedStatus(), is(performedStatusPostUpdate));
-    }
-    
-    /**
-     * @see RadiologyStudyService#updateStudyPerformedStatus(String,PerformedProcedureStepStatus)
-     * @verifies throw illegal argument exception if study instance uid is null
-     */
-    @Test
-    public void updateStudyPerformedStatus_shouldThrowIllegalArgumentExceptionIfStudyInstanceUidIsNull() throws Exception {
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("studyInstanceUid cannot be null");
-        radiologyStudyService.updateStudyPerformedStatus(null, PerformedProcedureStepStatus.COMPLETED);
-    }
-    
-    /**
-     * @see RadiologyStudyService#updateStudyPerformedStatus(String,PerformedProcedureStepStatus)
-     * @verifies throw illegal argument exception if performed status is null
-     */
-    @Test
-    public void updateStudyPerformedStatus_shouldThrowIllegalArgumentExceptionIfPerformedStatusIsNull() throws Exception {
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("performedStatus cannot be null");
-        radiologyStudyService.updateStudyPerformedStatus(EXISTING_STUDY_INSTANCE_UID, null);
-    }
-    
-    /**
      * @see RadiologyStudyService#getRadiologyStudy(Integer)
      * @verifies should return radiology study matching given study id
      */
@@ -217,9 +157,7 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
         RadiologyStudy radiologyStudy = radiologyStudyService.getRadiologyStudy(EXISTING_STUDY_ID);
         
         assertNotNull(radiologyStudy);
-        assertThat(radiologyStudy.getRadiologyOrder()
-                .getOrderId(),
-            is(EXISTING_RADIOLOGY_ORDER_ID));
+        assertThat(radiologyStudy.getStudyId(), is(EXISTING_STUDY_ID));
     }
     
     /**
@@ -280,44 +218,6 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyStudyService#getRadiologyStudyByOrderId(Integer)
-     * @verifies return radiology study associated with radiology order for which order id is given
-     */
-    @Test
-    public void getRadiologyStudyByOrderId_shouldReturnRadiologyStudyAssociatedWithRadiologyOrderForWhichOrderIdIsGiven()
-            throws Exception {
-        
-        RadiologyStudy radiologyStudy = radiologyStudyService.getRadiologyStudyByOrderId(EXISTING_RADIOLOGY_ORDER_ID);
-        
-        assertNotNull(radiologyStudy);
-        assertThat(radiologyStudy.getRadiologyOrder()
-                .getOrderId(),
-            is(EXISTING_RADIOLOGY_ORDER_ID));
-    }
-    
-    /**
-     * @see RadiologyStudyService#getRadiologyStudyByOrderId(Integer)
-     * @verifies return null if no match was found
-     */
-    @Test
-    public void getRadiologyStudyByOrderId_shouldReturnNullIfNoMatchIsFound() {
-        
-        assertNull(radiologyStudyService.getRadiologyStudyByOrderId(NON_EXISTING_RADIOLOGY_ORDER_ID));
-    }
-    
-    /**
-     * @see RadiologyStudyService#getRadiologyStudyByOrderId(Integer)
-     * @verifies throw illegal argument exception if given null
-     */
-    @Test
-    public void getRadiologyStudyByOrderId_shouldThrowIllegalArgumentExceptionIfGivenNull() {
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("orderId cannot be null");
-        assertNull(radiologyStudyService.getRadiologyStudyByOrderId(null));
-    }
-    
-    /**
      * @see RadiologyStudyService#getRadiologyStudyByStudyInstanceUid(String)
      * @verifies return radiology study exactly matching given study instance uid
      */
@@ -352,76 +252,5 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("studyInstanceUid cannot be null");
         assertNull(radiologyStudyService.getRadiologyStudyByStudyInstanceUid(null));
-    }
-    
-    /**
-     * @see RadiologyStudyService#getRadiologyStudiesByRadiologyOrders(List<RadiologyOrder>)
-     * @verifies return all radiology studies associated with given radiology orders
-     */
-    @Test
-    public void getRadiologyStudiesByRadiologyOrders_shouldReturnAllRadiologyStudiesAssociatedWithGivenRadiologyOrders()
-            throws Exception {
-        
-        Patient patient = patientService.getPatient(PATIENT_ID_WITH_TWO_STUDIES_AND_NO_NON_RADIOLOGY_ORDER);
-        RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
-                new RadiologyOrderSearchCriteria.Builder().withPatient(patient)
-                        .build();
-        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
-        
-        List<RadiologyStudy> radiologyStudies = radiologyStudyService.getRadiologyStudiesByRadiologyOrders(radiologyOrders);
-        
-        assertThat(radiologyStudies.size(), is(radiologyOrders.size()));
-        assertThat(radiologyStudies.get(0)
-                .getRadiologyOrder(),
-            is(radiologyOrders.get(0)));
-        assertThat(radiologyStudies.get(1)
-                .getRadiologyOrder(),
-            is(radiologyOrders.get(1)));
-    }
-    
-    /**
-     * @see RadiologyStudyService#getRadiologyStudiesByRadiologyOrders(List<RadiologyOrder>)
-     * @verifies return empty list given radiology orders without associated radiology studies
-     */
-    @Test
-    public void
-            getRadiologyStudiesByRadiologyOrders_shouldReturnEmptyListGivenRadiologyOrdersWithoutAssociatedRadiologyStudies()
-                    throws Exception {
-        
-        RadiologyOrder radiologyOrderWithoutStudy =
-                radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
-        List<RadiologyOrder> radiologyOrders = Arrays.asList(radiologyOrderWithoutStudy);
-        
-        List<RadiologyStudy> radiologyStudies = radiologyStudyService.getRadiologyStudiesByRadiologyOrders(radiologyOrders);
-        
-        assertThat(radiologyOrders.size(), is(1));
-        assertThat(radiologyStudies.size(), is(0));
-    }
-    
-    /**
-     * @see RadiologyStudyService#getRadiologyStudiesByRadiologyOrders(List<RadiologyOrder>)
-     * @verifies return empty list given empty radiology order list
-     */
-    @Test
-    public void getRadiologyStudiesByRadiologyOrders_shouldReturnEmptyListGivenEmptyRadiologyOrderList() throws Exception {
-        
-        List<RadiologyOrder> orders = new ArrayList<RadiologyOrder>();
-        
-        List<RadiologyStudy> radiologyStudies = radiologyStudyService.getRadiologyStudiesByRadiologyOrders(orders);
-        
-        assertThat(orders.size(), is(0));
-        assertThat(radiologyStudies.size(), is(0));
-    }
-    
-    /**
-     * @see RadiologyStudyService#getRadiologyStudiesByRadiologyOrders(List<RadiologyOrder>)
-     * @should throw illegal argument exception if given null
-     */
-    @Test
-    public void getRadiologyStudiesByRadiologyOrders_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyOrders cannot be null");
-        radiologyStudyService.getRadiologyStudiesByRadiologyOrders(null);
     }
 }
