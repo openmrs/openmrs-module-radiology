@@ -92,6 +92,23 @@ You can check with:
 docker ps
 ```
 
+### Run Container with Custom Args
+
+Check out the `properties` secion in the `omod/pom.xml`. There you can find
+maven properties that are exposed. The properties values can be overriden on
+the command line. This enables you to change for example the
+
+* MySQL database name, user, password
+* Tomcat port and its `JAVA_OPTS`
+
+So lets says you want to override all of these mentioned properties, then just
+execute:
+
+```bash
+mvn docker:start -Dmysql.user=ris -Dmysql.database=ris -Dmysql.password=ris \
+  -Dtomcat.port=8082 -Dtomcat.env.java_opts="-Dfile.encoding=UTF-8 -server -Xms256m -Xmx1024m"
+```
+
 ## Stop and Remove Container
 
 ```bash
