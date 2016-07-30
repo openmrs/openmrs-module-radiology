@@ -1,4 +1,4 @@
-FROM teleivo/openmrs-platform:latest
+FROM teleivo/openmrs-platform:2.0.0
 
 # Get radiology modules dependencies
 RUN curl -L \

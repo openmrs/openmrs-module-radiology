@@ -323,7 +323,7 @@
 						<!-- DB Image is used 'as-is' and is linked into the openmrs image -->
 						<image>
 							<alias>db</alias>
-							<name>teleivo/openmrs-platform-mysql:latest</name>
+							<name>teleivo/openmrs-platform-mysql:2.0.0</name>
 							<run>
 								<log>
 									<prefix>DB</prefix>
