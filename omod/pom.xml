@@ -22,6 +22,22 @@
 	<name>Radiology OMOD</name>
 	<description>OpenMRS module project for Radiology</description>
 
+	<properties>
+		<MODULE_ID>${project.parent.artifactId}</MODULE_ID>
+		<MODULE_NAME>${project.parent.name}</MODULE_NAME>
+		<MODULE_VERSION>${project.parent.version}</MODULE_VERSION>
+		<MODULE_PACKAGE>${project.parent.groupId}.${project.parent.artifactId}</MODULE_PACKAGE>
+		<mysql.image.name>teleivo/openmrs-platform-mysql:2.0.0</mysql.image.name>
+		<mysql.image.alias>db</mysql.image.alias>
+		<mysql.root.password>openmrs</mysql.root.password>
+		<mysql.user>openmrs</mysql.user>
+		<mysql.password>openmrs</mysql.password>
+		<mysql.database>openmrs</mysql.database>
+		<radiology.image.alias>radiology</radiology.image.alias>
+		<tomcat.port>8080</tomcat.port>
+		<tomcat.env.java_opts>-Dfile.encoding=UTF-8 -server -Xms256m -Xmx768m</tomcat.env.java_opts>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.openmrs.module</groupId>
@@ -322,8 +338,8 @@
 					<images>
 						<!-- DB Image is used 'as-is' and is linked into the openmrs image -->
 						<image>
-							<alias>db</alias>
-							<name>teleivo/openmrs-platform-mysql:2.0.0</name>
+							<alias>${mysql.image.alias}</alias>
+							<name>${mysql.image.name}</name>
 							<run>
 								<log>
 									<prefix>DB</prefix>
@@ -333,10 +349,10 @@
 									<port>3306:3306</port>
 								</ports>
 								<env>
-									<MYSQL_ROOT_PASSWORD>openmrs</MYSQL_ROOT_PASSWORD>
-									<MYSQL_USER>openmrs</MYSQL_USER>
-									<MYSQL_PASSWORD>openmrs</MYSQL_PASSWORD>
-									<MYSQL_DATABASE>openmrs</MYSQL_DATABASE>
+									<MYSQL_ROOT_PASSWORD>${mysql.root.password}</MYSQL_ROOT_PASSWORD>
+									<MYSQL_USER>${mysql.user}</MYSQL_USER>
+									<MYSQL_PASSWORD>${mysql.password}</MYSQL_PASSWORD>
+									<MYSQL_DATABASE>${mysql.database}</MYSQL_DATABASE>
 								</env>
 								<wait>
 									<log>MySQL init process done. Ready for start up.</log>
@@ -346,8 +362,8 @@
 						</image>
 						<!-- Image holding the artifact of this build -->
 						<image>
-							<alias>openmrs</alias>
-							<name>teleivo/openmrs-module-${project.parent.artifactId}</name>
+							<alias>${radiology.image.alias}</alias>
+							<name>teleivo/openmrs-module-radiology</name>
 							<build>
 								<dockerFile>Dockerfile</dockerFile>
 								<assembly>
@@ -360,17 +376,18 @@
 							</build>
 							<run>
 								<ports>
-									<port>8080:8080</port>
+									<port>${tomcat.port}:8080</port>
 								</ports>
 								<links>
-									<link>db:db</link>
+									<link>${mysql.image.alias}</link>
 								</links>
 								<env>
-									<MYSQL_USER>openmrs</MYSQL_USER>
-									<MYSQL_PASSWORD>openmrs</MYSQL_PASSWORD>
-									<MYSQL_DATABASE>openmrs</MYSQL_DATABASE>
-									<MYSQL_HOST>db</MYSQL_HOST>
+									<MYSQL_USER>${mysql.user}</MYSQL_USER>
+									<MYSQL_PASSWORD>${mysql.password}</MYSQL_PASSWORD>
+									<MYSQL_DATABASE>${mysql.database}</MYSQL_DATABASE>
+									<MYSQL_HOST>${mysql.image.alias}</MYSQL_HOST>
 									<MYSQL_PORT>3306</MYSQL_PORT>
+									<JAVA_OPTS>${tomcat.env.java_opts}</JAVA_OPTS>
 								</env>
 								<wait>
 									<log>Server startup in</log>
@@ -387,12 +404,4 @@
 			</plugin>
 		</plugins>
 	</build>
-
-	<properties>
-		<MODULE_ID>${project.parent.artifactId}</MODULE_ID>
-		<MODULE_NAME>${project.parent.name}</MODULE_NAME>
-		<MODULE_VERSION>${project.parent.version}</MODULE_VERSION>
-		<MODULE_PACKAGE>${project.parent.groupId}.${project.parent.artifactId}</MODULE_PACKAGE>
-	</properties>
-
 </project>
