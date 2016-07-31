@@ -71,7 +71,27 @@ mvn formatter:format
 
 #### Code Style
 
-to come
+We have some rules about what we think is code with style :bowtie:
+
+You can find the rules about java code in the `checkstyle.xml`.
+
+This file is imported into [codacy](https://www.codacy.com/app/teleivo/openmrs-module-radiology_2/dashboard)
+which we use to publicly display things we need to work on.
+
+##### Commands
+
+_Check source code for style_
+
+If you want to check your changes locally, execute:
+
+```bash
+mvn checkstyle:checkstyle
+```
+
+This will generate html reports into
+
+* `api/target/site/checkstyle.html`
+* `omod/target/site/checkstyle.html`
 
 #### Test coverage
 
