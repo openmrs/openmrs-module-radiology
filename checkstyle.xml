@@ -50,6 +50,8 @@
 	<module name="FileTabCharacter">
 		<property name="eachLine" value="true" />
 	</module>
+	<module name="NewlineAtEndOfFile"/>
+
 
 	<!-- -->
 	<!-- MISCELLANEOUS CHECKS -->
@@ -69,6 +71,7 @@
 		<property name="tabWidth" value="4" />
 		<module name="AvoidStarImport" />
 		<module name="RedundantImport" />
+		<module name="UnusedImports"/>
 		<module name="IllegalImport" />
 		<module name="PackageName" />
 		<module name="TypeName">
@@ -106,6 +109,8 @@
 		<module name="NestedIfDepth">
 			<property name="max" value="2" />
 		</module>
+		<module name="NestedTryDepth"/>
+		<module name="NestedForDepth"/>
 		<module name="MissingOverride">
 			<property name="javaFiveCompatibility" value="false" />
 		</module>
@@ -114,6 +119,7 @@
 		<module name="ModifierOrder" />
 		<module name="SimplifyBooleanReturn" />
 		<module name="SimplifyBooleanExpression" />
+		<module name="EqualsAvoidNull"/>
 		<module name="NeedBraces" />
 		<module name="LeftCurly">
 			<property name="option" value="eol" />
@@ -142,5 +148,14 @@
 			<property name="allowedAnnotations" value="Override, Test" />
 			<property name="allowThrowsTagsForSubclasses" value="true" />
 		</module>
+		<module name="AvoidInlineConditionals"/>
+		<module name="DeclarationOrder"/>
+		<module name="FinalLocalVariable"/>
+		<module name="UnnecessaryParentheses"/>
+		<module name="TodoComment"/>
+		<module name="EmptyCatchBlock">
+			<property name="exceptionVariableName" value="expected"/>
+		</module>
+		<module name="EmptyStatement"/>
 	</module>
 </module>
