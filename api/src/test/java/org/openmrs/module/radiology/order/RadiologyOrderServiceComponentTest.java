@@ -46,7 +46,6 @@ import org.openmrs.Provider;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
-import org.openmrs.api.OrderService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
@@ -86,8 +85,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     private static final String EXISTING_RADIOLOGY_ORDER_ACCESSION_NUMBER = "1";
     
-    private static final int TOTAL_NUMBER_OF_RADIOLOGY_ORDERS = 5;
-    
     private static final int PROVIDER_ID_WITH_TWO_ASSIGNED_RADIOLOGY_ORDERS = 2;
     
     @Autowired
@@ -105,9 +102,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     @Autowired
     private ProviderService providerService;
-    
-    @Autowired
-    private OrderService orderService;
     
     @Autowired
     private RadiologyOrderService radiologyOrderService;
@@ -804,6 +798,31 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         for (RadiologyOrder radiologyOrder : radiologyOrders) {
             assertThat(radiologyOrder.getOrderer(), is(orderer));
         }
+    }
+    
+    /**
+    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
+    * @verifies return all radiology orders for given urgency and orderer
+    */
+    @Test
+    public void getRadiologyOrders_shouldReturnAllRadiologyOrdersForGivenUrgencyAndOrderer() throws Exception {
+        Provider orderer = providerService.getProvider(PROVIDER_ID_WITH_TWO_ASSIGNED_RADIOLOGY_ORDERS);
+        RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
+                new RadiologyOrderSearchCriteria.Builder().withOrderer(orderer)
+                        .withUrgency(Urgency.STAT)
+                        .build();
+        
+        List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        assertThat(radiologyOrders.size(), is(1));
+        assertThat(radiologyOrders.get(0)
+                .getOrderer(),
+            is(orderer));
+        assertThat(radiologyOrders.get(0)
+                .getUrgency(),
+            is(Urgency.STAT));
+        assertThat(radiologyOrders.get(0)
+                .getOrderId(),
+            is(2006));
     }
     
     /**

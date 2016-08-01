@@ -150,7 +150,7 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
                     .add(Restrictions.eq("urgency", Urgency.ON_SCHEDULED_DATE))
                     .add(Restrictions.le("scheduledDate", searchCriteria.getToEffectiveStartDate())));
             disjunction.add(Restrictions.conjunction()
-                    .add(Restrictions.not((Restrictions.eq("urgency", Urgency.ON_SCHEDULED_DATE))))
+                    .add(Restrictions.not(Restrictions.eq("urgency", Urgency.ON_SCHEDULED_DATE)))
                     .add(Restrictions.le("dateActivated", searchCriteria.getToEffectiveStartDate())));
             crit.add(disjunction);
         }
