@@ -62,7 +62,15 @@
                                       },
                                       "columns": [
                                           {
+                                            "className": "control",
+                                            "orderable": false,
+                                            "data": null,
+                                            "defaultContent": "",
+                                            "responsivePriority": 1
+                                          },
+                                          {
                                             "name": "radiologyOrder",
+                                            "responsivePriority": 1,
                                             "render": function(data, type,
                                                     full, meta) {
                                               return full.radiologyOrder.display;
@@ -92,6 +100,7 @@
                                           },
                                           {
                                             "name": "dateCreated",
+                                            "responsivePriority": 11000,
                                             "render": function(data, type,
                                                     full, meta) {
                                               var result = "";
@@ -105,6 +114,7 @@
                                           },
                                           {
                                             "name": "creatorBy",
+                                            "responsivePriority": 11000,
                                             "render": function(data, type,
                                                     full, meta) {
                                               return full.auditInfo.creator.display;
@@ -128,6 +138,7 @@
                                           {
                                             "name": "action",
                                             "className": "dt-center",
+                                            "responsivePriority": 1,
                                             "render": function(data, type,
                                                     full, meta) {
                                               return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?radiologyReportId='
@@ -222,9 +233,10 @@
   </table>
   <br>
   <div>
-    <table id="reportsTabTable" cellspacing="0" width="100%" class="display nowrap">
+    <table id="reportsTabTable" cellspacing="0" width="100%" class="display responsive compact">
       <thead>
         <tr>
+          <th></th>
           <th><spring:message code="radiology.datatables.column.report.order" /></th>
           <th><spring:message code="radiology.datatables.column.report.principalResultsInterpreter" /></th>
           <th><spring:message code="radiology.datatables.column.report.date" /></th>

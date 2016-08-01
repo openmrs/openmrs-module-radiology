@@ -21,5 +21,33 @@
                         "last": '<spring:message code="radiology.datatables.last"/>',
                       },
                     },
+                    responsive: {
+                      "autoWidth": false,
+                      details: {
+                        type: "column",
+                        target: "tr > td:not(:has(a))",
+                        renderer: function(api, rowIdx, columns) {
+                          var data = $j
+                                  .map(
+                                          columns,
+                                          function(col, i) {
+                                            return col.hidden
+                                                    ? '<tr data-dt-row="'+col.rowIndex+'" data-dt-column="'+col.columnIndex+'">'
+                                                            + '<td style="font-weight: bold;">'
+                                                            + col.title
+                                                            + ':'
+                                                            + '</td> '
+                                                            + '<td>'
+                                                            + col.data
+                                                            + '</td>' + '</tr>'
+                                                    : '';
+                                          }).join('');
+
+                          return data ? $j(
+                                  '<table style="padding-left:50px;"/>')
+                                  .append(data) : false;
+                        }
+                      }
+                    },
                   });
 </script>
