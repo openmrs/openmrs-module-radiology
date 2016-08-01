@@ -43,6 +43,15 @@
                                       },
                                       "columns": [
                                           {
+                                            "className": "expand",
+                                            "orderable": false,
+                                            "data": null,
+                                            "defaultContent": "",
+                                            "render": function() {
+                                              return '<i class="fa fa-chevron-circle-down fa-lg"></i>';
+                                            }
+                                          },
+                                          {
                                             "name": "templateId",
                                             "render": function(data, type,
                                                     full, meta) {
@@ -71,17 +80,13 @@
                                             }
                                           },
                                           {
-                                            "name": "dcTermsRights",
+                                            "name": "action",
+                                            "className": "dt-center",
                                             "render": function(data, type,
                                                     full, meta) {
-                                              return full.dcTermsRights;
-                                            }
-                                          },
-                                          {
-                                            "name": "dcTermsDescription",
-                                            "render": function(data, type,
-                                                    full, meta) {
-                                              return full.dcTermsDescription;
+                                              return '<a href="${pageContext.request.contextPath}/module/radiology/mrrtReportTemplate.form?templateId='
+                                                      + full.uuid
+                                                      + '"><i class="fa fa-eye fa-lg"></i></a>';
                                             }
                                           }, ],
                                     });
@@ -112,6 +117,57 @@
                     $j('#reportTemplatesTabImportTemplates').click(function() {
                       $j('#reportTemplatesTabImportPopup').dialog('open');
                     });
+
+                    function formatChildRow(data) {
+                      var dcTermsRights = Radiology.getProperty(data,
+                              'dcTermsRights');
+
+                      var dcTermsDescription = Radiology.getProperty(data,
+                              'dcTermsDescription');
+
+                      return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'
+                              + '<tr>'
+                              + '<td><spring:message code="radiology.datatables.column.report.template.rights"/>:</td>'
+                              + '<td>'
+                              + dcTermsRights
+                              + '</td>'
+                              + '</tr>'
+                              + '<tr>'
+                              + '<td><spring:message code="radiology.datatables.column.report.template.description"/>:</td>'
+                              + '<td>'
+                              + dcTermsDescription
+                              + '</td>'
+                              + '</tr>'
+                              + '</table>';
+                    }
+
+                    $j('#reportTemplatesTable tbody')
+                            .on(
+                                    'click',
+                                    'td',
+                                    function(e) {
+
+                                      if ($j(e.target).is(':not(td)')) { return; }
+
+                                      var tr = $j(this).closest('tr');
+                                      var row = radiologyTemplatesTable.row(tr);
+                                      var expandIconField = tr.find('.expand');
+
+                                      if (row.child.isShown()) {
+                                        row.child.hide();
+                                        expandIconField
+                                                .html("<i class='fa fa-chevron-circle-down fa-lg'></i>");
+                                        tr.removeClass('shown');
+                                      } else {
+                                        row.child(formatChildRow(row.data()))
+                                                .show();
+                                        expandIconField
+                                                .html("<i class='fa fa-chevron-circle-up fa-lg'></i>");
+                                        tr.addClass('shown');
+                                      }
+
+                                    });
+
                   });
 </script>
 
@@ -159,12 +215,12 @@
     <table id="reportTemplatesTable" cellspacing="0" width="100%" class="display nowrap">
       <thead>
         <tr>
+          <th></th>
           <th><spring:message code="radiology.datatables.column.report.template.id" /></th>
           <th><spring:message code="radiology.datatables.column.report.template.title" /></th>
           <th><spring:message code="radiology.datatables.column.report.template.creator" /></th>
           <th><spring:message code="radiology.datatables.column.report.template.publisher" /></th>
-          <th><spring:message code="radiology.datatables.column.report.template.rights" /></th>
-          <th><spring:message code="radiology.datatables.column.report.template.description" /></th>
+          <th><spring:message code="radiology.datatables.column.action" /></th>
         </tr>
       </thead>
     </table>
