@@ -170,7 +170,7 @@ public class RadiologyOrderSearchCriteria {
         }
         
         /**
-         * @param urgency the order orderer
+         * @param orderer the order orderer
          * @return this builder instance
          */
         public Builder withOrderer(Provider orderer) {

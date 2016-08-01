@@ -11,8 +11,6 @@ package org.openmrs.module.radiology.order;
 
 import java.util.List;
 
-import org.openmrs.Patient;
-
 /**
  * {@code RadiologyOrder} related database methods.
  * 

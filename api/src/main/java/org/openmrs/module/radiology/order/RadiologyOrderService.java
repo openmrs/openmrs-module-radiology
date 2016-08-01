@@ -123,6 +123,7 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @should return empty search result if no effective order start is in date range
      * @should return all radiology orders for given accession number if accession number is specified
      * @should return all radiology orders for given orderer
+     * @should return all radiology orders for given urgency and orderer
      * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_ORDERS)
