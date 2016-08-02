@@ -20,7 +20,8 @@
 .verticalCentered>* {
 	vertical-align: middle;
 }
-div.dataTables_paginate.fg-buttonset.ui-buttonset.fg-buttonset-multi.ui-buttonset-multi.paging_full_numbers span{
+div.dataTables_paginate.fg-buttonset.ui-buttonset.fg-buttonset-multi.ui-buttonset-multi.paging_full_numbers span
+	{
 	width: auto;
 	height: auto;
 	margin: 0 1px 0 0;
@@ -49,4 +50,16 @@ div.dataTables_paginate.fg-buttonset.ui-buttonset.fg-buttonset-multi.ui-buttonse
 select {
 	padding: 1px;
 	border: 1px solid cadetblue;
+}
+table.dataTable.dtr-column > tbody > tr > td.control:before {
+  font-family: "FontAwesome";
+  content: '\f13a';
+  color: #1AAD9B;
+  font-size: 1.3em;
+}
+table.dataTable.dtr-column > tbody > tr.parent td.control:before {
+  font-family: "FontAwesome";
+  content: '\f139';
+  color: #1AAD9B;
+  font-size: 1.3em;
 }

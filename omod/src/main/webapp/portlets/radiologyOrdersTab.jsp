@@ -73,16 +73,15 @@
                                       },
                                       "columns": [
                                           {
-                                            "className": "expand",
+                                            "className": "control",
                                             "orderable": false,
                                             "data": null,
                                             "defaultContent": "",
-                                            "render": function() {
-                                              return '<i class="fa fa-chevron-circle-down fa-lg"></i>';
-                                            }
+                                            "responsivePriority": 1
                                           },
                                           {
                                             "name": "accessionNumber",
+                                            "responsivePriority": 1,
                                             "render": function(data, type,
                                                     full, meta) {
                                               return full.accessionNumber;
@@ -118,6 +117,7 @@
                                           },
                                           {
                                             "name": "orderer",
+                                            "responsivePriority": 11000,
                                             "render": function(data, type,
                                                     full, meta) {
                                               return full.orderer.display;
@@ -166,8 +166,38 @@
                                             }
                                           },
                                           {
+                                            "name": "orderReason",
+                                            "className": "none",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return Radiology.getProperty(
+                                                      full,
+                                                      "orderReason.display");
+                                            }
+                                          },
+                                          {
+                                            "name": "orderReasonNonCoded",
+                                            "className": "none",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return Radiology.getProperty(
+                                                      full,
+                                                      "orderReasonNonCoded");
+                                            }
+                                          },
+                                          {
+                                            "name": "instructions",
+                                            "className": "none",
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                              return Radiology.getProperty(
+                                                      full, "instructions");
+                                            }
+                                          },
+                                          {
                                             "name": "action",
                                             "className": "dt-center",
+                                            "responsivePriority": 1,
                                             "render": function(data, type,
                                                     full, meta) {
                                               return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyOrder.form?orderId='
@@ -201,60 +231,6 @@
                                               '#ordersTabEffectiveStartDateRangePicker')
                                               .data('dateRangePicker').clear();
                                       radiologyOrdersTable.ajax.reload();
-                                    });
-
-                    function formatChildRow(data) {
-                      var orderReason = Radiology.getProperty(data,
-                              "orderReason.display");
-                      var orderReasonNonCoded = Radiology.getProperty(data,
-                              "orderReasonNonCoded");
-                      var instructions = Radiology.getProperty(data,
-                              "instructions");
-                      return '<table cellpadding="5" cellspacing="0" border="0" style="padding-left:50px;">'
-                              + '<tr>'
-                              + '<td><spring:message code="radiology.datatables.column.order.reason"/>:</td>'
-                              + '<td>'
-                              + orderReason
-                              + '</td>'
-                              + '</tr>'
-                              + '<tr>'
-                              + '<td><spring:message code="radiology.datatables.column.order.reasonNonCoded"/>:</td>'
-                              + '<td>'
-                              + orderReasonNonCoded
-                              + '</td>'
-                              + '</tr>'
-                              + '<tr>'
-                              + '<td><spring:message code="radiology.datatables.column.order.instructions"/>:</td>'
-                              + '<td>'
-                              + instructions
-                              + '</td>'
-                              + '</tr>'
-                              + '</table>';
-                    }
-
-                    $j('#ordersTabTable tbody')
-                            .on(
-                                    'click',
-                                    'td',
-                                    function(e) {
-                                      if ($j(e.target).is(':not(td)')) { return; }
-
-                                      var tr = $j(this).closest('tr');
-                                      var row = radiologyOrdersTable.row(tr);
-                                      var expandIconField = tr.find('.expand');
-
-                                      if (row.child.isShown()) {
-                                        row.child.hide();
-                                        expandIconField
-                                                .html("<i class='fa fa-chevron-circle-down fa-lg'></i>");
-                                        tr.removeClass('shown');
-                                      } else {
-                                        row.child(formatChildRow(row.data()))
-                                                .show();
-                                        expandIconField
-                                                .html("<i class='fa fa-chevron-circle-up fa-lg'></i>");
-                                        tr.addClass('shown');
-                                      }
                                     });
 
                     $j('#ordersTabEffectiveStartDateRangePicker')
@@ -329,14 +305,14 @@
               </option>
             </c:forEach>
         </select></td>
-      <td><input id="ordersTabFind" type="button"
-        value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
+        <td><input id="ordersTabFind" type="button"
+          value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
       </form>
     </tr>
   </table>
   <br>
   <div>
-    <table id="ordersTabTable" cellspacing="0" width="100%" class="display nowrap">
+    <table id="ordersTabTable" cellspacing="0" width="100%" class="display responsive compact">
       <thead>
         <tr>
           <th></th>
@@ -348,6 +324,9 @@
           <th><spring:message code="radiology.datatables.column.order.scheduledDate" /></th>
           <th><spring:message code="radiology.datatables.column.order.dateActivated" /></th>
           <th><spring:message code="radiology.datatables.column.order.dateStopped" /></th>
+          <th><spring:message code="radiology.datatables.column.order.reason" /></th>
+          <th><spring:message code="radiology.datatables.column.order.reasonNonCoded" /></th>
+          <th><spring:message code="radiology.datatables.column.order.instructions" /></th>
           <th><spring:message code="radiology.datatables.column.action" /></th>
         </tr>
       </thead>
