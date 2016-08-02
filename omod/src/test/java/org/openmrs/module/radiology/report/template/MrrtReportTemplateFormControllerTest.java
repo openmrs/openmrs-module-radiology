@@ -49,29 +49,28 @@ public class MrrtReportTemplateFormControllerTest extends BaseContextMockTest {
     
     private MockHttpServletRequest request;
     
-    private static final String TEST_UUID_PARAM = "b10750ca-2099-43df-a503-d8548c6624d6";
-    
     private static final String RADIOLOGY_DASHBOARD_FORM_VIEW = "/module/radiology/radiologyDashboardForm";
     
     @Before
     public void setUp() {
         mrrtReportTemplate = mock(MrrtReportTemplate.class);
         request = new MockHttpServletRequest();
-        
-        when(mrrtReportTemplateService.getMrrtReportTemplateByUuid(TEST_UUID_PARAM)).thenReturn(mrrtReportTemplate);
     }
     
     /**
-     * @see MrrtReportTemplateFormController#displayMrrtReportTemplate(HttpServletRequest,String)
+     * @see MrrtReportTemplateFormController#displayMrrtReportTemplate(HttpServletRequest,MrrtReportTemplate)
      * @verifies return the model and view of the report template form page containing template body in model object
      */
     @Test
     public void
             displayMrrtReportTemplate_shouldReturnTheModelAndViewOfTheReportTemplateFormPageContainingTemplateBodyInModelObject()
                     throws Exception {
+        
         String templateBody = "<div><p>Test template body</p></div>";
         when(mrrtReportTemplateService.getMrrtReportTemplateHtmlBody(mrrtReportTemplate)).thenReturn(templateBody);
-        ModelAndView modelAndView = controller.displayMrrtReportTemplate(request, TEST_UUID_PARAM);
+        
+        ModelAndView modelAndView = controller.displayMrrtReportTemplate(request, mrrtReportTemplate);
+        
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(MrrtReportTemplateFormController.MRRT_REPORT_TEMPLATE_FORM_VIEW));
         assertThat(modelAndView.getModel()
@@ -84,16 +83,19 @@ public class MrrtReportTemplateFormControllerTest extends BaseContextMockTest {
     }
     
     /**
-     * @see MrrtReportTemplateFormController#displayMrrtReportTemplate(HttpServletRequest,String)
+     * @see MrrtReportTemplateFormController#displayMrrtReportTemplate(HttpServletRequest,MrrtReportTemplate)
      * @verifies return the model and view of the radiology dashboard page with error message if io exception is thrown
      */
     @Test
     public void
             displayMrrtReportTemplate_shouldReturnTheModelAndViewOfTheRadiologyDashboardPageWithErrorMessageIfIoExceptionIsThrown()
                     throws Exception {
+        
         when(mrrtReportTemplateService.getMrrtReportTemplateHtmlBody(mrrtReportTemplate))
                 .thenThrow(new IOException("Error reading file."));
-        ModelAndView modelAndView = controller.displayMrrtReportTemplate(request, TEST_UUID_PARAM);
+        
+        ModelAndView modelAndView = controller.displayMrrtReportTemplate(request, mrrtReportTemplate);
+        
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RADIOLOGY_DASHBOARD_FORM_VIEW));
         String errorMessage = (String) request.getSession()
@@ -101,18 +103,4 @@ public class MrrtReportTemplateFormControllerTest extends BaseContextMockTest {
         assertNotNull(errorMessage);
         assertThat(errorMessage, is("Error occured while dispaying template => Error reading file."));
     }
-    
-    /**
-     * @see MrrtReportTemplateFormController#displayMrrtReportTemplate(HttpServletRequest,String)
-     * @verifies throw illegal argument exception if no template was found for given templateId
-     */
-    @Test
-    public void displayMrrtReportTemplate_shouldThrowIllegalArgumentExceptionIfNoTemplateWasFoundForGivenTemplateId()
-            throws Exception {
-        when(mrrtReportTemplateService.getMrrtReportTemplateByUuid(TEST_UUID_PARAM)).thenReturn(null);
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("MrrtReportTemplate not found. templateId '" + TEST_UUID_PARAM + "' unknown.");
-        controller.displayMrrtReportTemplate(request, TEST_UUID_PARAM);
-    }
-    
 }
