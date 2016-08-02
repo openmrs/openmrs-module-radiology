@@ -45,13 +45,13 @@
       </tr>
       <tr>
         <td><spring:message code="radiology.scheduledDate" /></td>
-        <td><spring:bind path="effectiveStartDate">
+        <td class="datetime"><spring:bind path="effectiveStartDate">
                     ${status.value}
                 </spring:bind></td>
       </tr>
       <tr>
         <td><spring:message code="radiology.stopDate" /></td>
-        <td><spring:bind path="effectiveStopDate">
+        <td class="datetime"><spring:bind path="effectiveStopDate">
                     ${status.value}
                 </spring:bind></td>
       </tr>
@@ -71,9 +71,9 @@
         <td><spring:message code="general.createdBy" /></td>
         <td><spring:bind path="creator.personName">
                     ${status.value}
-                </spring:bind> - <spring:bind path="dateCreated">
+                </spring:bind> - <span class="datetime"><spring:bind path="dateCreated">
                     ${status.value}
-                </spring:bind></td>
+                </spring:bind></span></td>
       </tr>
       <c:if test="${not empty dicomViewerUrl}">
         <tr>

@@ -1,12 +1,12 @@
-<%@ include file="/WEB-INF/view/module/radiology/template/include.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/template/includeTags.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeDatatablesWithDefaults.jsp"%>
-<openmrs:htmlInclude file="/moduleResources/radiology/scripts/moment/moment-with-locales.min.js" />
+<openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/css/daterangepicker.min.css" />
+<openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/js/jquery.daterangepicker.min.js" />
 
 <script type="text/javascript">
   // configure current locale as momentjs default, fall back to "en" if locale not found
   moment.locale([jsLocale, 'en']);
-
   var $j = jQuery.noConflict();
   $j(document)
           .ready(
@@ -47,18 +47,18 @@
                                                     : moment(
                                                             fromEffectiveStartDate
                                                                     .val(),
-                                                            "lll")
+                                                            "L LT")
                                                             .format(
-                                                                    "YYYY-MM-DDTHH:mm:ss.SSS"),
+                                                                    "YYYY-MM-DDTHH:mm:ss.SSSZ"),
                                             toEffectiveStartDate: toEffectiveStartDate
                                                     .val() === ""
                                                     ? ""
                                                     : moment(
                                                             toEffectiveStartDate
                                                                     .val(),
-                                                            "lll")
+                                                            "L LT")
                                                             .format(
-                                                                    "YYYY-MM-DDTHH:mm:ss.SSS"),
+                                                                    "YYYY-MM-DDTHH:mm:ss.SSSZ"),
                                             urgency: urgency.val(),
                                             totalCount: true,
                                           };
@@ -244,7 +244,7 @@
                                         'next': null
                                       },
                                       separator: '-',
-                                      format: 'lll',
+                                      format: 'L LT',
                                       time: {
                                         enabled: true
                                       },

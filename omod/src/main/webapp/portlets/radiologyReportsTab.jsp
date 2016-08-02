@@ -1,7 +1,6 @@
-<%@ include file="/WEB-INF/view/module/radiology/template/include.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/template/includeTags.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeDatatablesWithDefaults.jsp"%>
-<openmrs:htmlInclude file="/moduleResources/radiology/scripts/moment/moment-with-locales.min.js" />
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/css/daterangepicker.min.css" />
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/js/jquery.daterangepicker.min.js" />
 
@@ -21,9 +20,9 @@
                     var clearResults = $j('a#reportsTabClearFilters');
 
                     fromDate.val(moment().subtract(1, 'weeks').startOf('week')
-                            .format('YYYY-MM-DD'));
+                            .format('L'));
                     toDate.val(moment().subtract(1, 'weeks').endOf('week')
-                            .format('YYYY-MM-DD'));
+                            .format('L'));
 
                     var radiologyReportsTable = $j('#reportsTabTable')
                             .DataTable(
@@ -44,8 +43,17 @@
                                             startIndex: data.start,
                                             limit: data.length,
                                             v: "full",
-                                            fromdate: fromDate.val(),
-                                            todate: toDate.val(),
+                                            fromdate: fromDate.val() === ""
+                                                    ? ""
+                                                    : moment(fromDate.val(),
+                                                            "L")
+                                                            .format(
+                                                                    "YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                                            todate: toDate.val() === ""
+                                                    ? ""
+                                                    : moment(toDate.val(), "L")
+                                                            .format(
+                                                                    "YYYY-MM-DDTHH:mm:ss.SSSZ"),
                                             principalResultsInterpreter: principalResultsInterpreterUuid
                                                     .val(),
                                             status: status.val(),
@@ -182,6 +190,7 @@
                         'next': null
                       },
                       separator: '-',
+                      format: 'L',
                       getValue: function() {
                         if (fromDate.val() && toDate.val())
                           return fromDate.val() + '-' + toDate.val();

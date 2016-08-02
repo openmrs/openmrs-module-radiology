@@ -1,41 +1,45 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <c:set var="DO_NOT_INCLUDE_JQUERY" value="true" />
 <%@ include file="/WEB-INF/template/header.jsp"%>
+<c:set var="INCLUDE_TIME_ADJUSTMENT" value="true" />
 <%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
-
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/tinymce/tinymce.min.js" />
 
 <%@ include file="/WEB-INF/view/module/radiology/localHeader.jsp"%>
 
 <script type="text/javascript">
   var $j = jQuery.noConflict();
-
-  function showUnclaimRadiologyReportDialog() {
-    var dialogDiv = $j("<div></div>").html('<spring:message code="radiology.report.form.unclaim.dialog.message"/>');
-    dialogDiv.dialog({
-      resizable: false,
-      width:'auto',
-      height:'auto',
-      title: '<spring:message code="radiology.report.form.unclaim.dialog.title"/>',
-      modal: true,
-      buttons: {
-        '<spring:message code="radiology.report.form.unclaim.dialog.button.ok"/>': function() {
-          $j(this).dialog("close");
-          submitUnclaimRadiologyReport();
-        },
-        '<spring:message code="radiology.report.form.unclaim.dialog.button.cancel"/>': function() {
-          $j(this).dialog("close");
-        }
-      }
-    });
-  }
   
+  function showUnclaimRadiologyReportDialog() {
+    var dialogDiv = $j("<div></div>")
+            .html(
+                    '<spring:message code="radiology.report.form.unclaim.dialog.message"/>');
+    dialogDiv
+            .dialog({
+              resizable: false,
+              width: 'auto',
+              height: 'auto',
+              title: '<spring:message code="radiology.report.form.unclaim.dialog.title"/>',
+              modal: true,
+              buttons: {
+                '<spring:message code="radiology.report.form.unclaim.dialog.button.ok"/>': function() {
+                  $j(this).dialog("close");
+                  submitUnclaimRadiologyReport();
+                },
+                '<spring:message code="radiology.report.form.unclaim.dialog.button.cancel"/>': function() {
+                  $j(this).dialog("close");
+                }
+              }
+            });
+  }
+
   function submitUnclaimRadiologyReport() {
-    var unclaimRadiologyReport = $j("<input>").attr("type","hidden").attr("name", "unclaimRadiologyReport").val("Unclaim");
+    var unclaimRadiologyReport = $j("<input>").attr("type", "hidden").attr(
+            "name", "unclaimRadiologyReport").val("Unclaim");
     $j("#radiologyReportFormId").append(unclaimRadiologyReport);
     $j("#radiologyReportFormId").submit()
   }
-  
+
   $j(document).ready(function() {
     var reportBody = $j("#reportBodyId");
 
@@ -53,15 +57,16 @@
     });
 
     $j("#unclaimRadiologyReportButtonId").click(function() {
-      if(tinymce.activeEditor.getContent() != "") {
+      if (tinymce.activeEditor.getContent() != "") {
         showUnclaimRadiologyReportDialog();
       } else {
         submitUnclaimRadiologyReport();
       }
-    }); 
+    });
+
   });
-  
 </script>
+
 <openmrs:hasPrivilege privilege="View Patients">
   <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${order.patient.patientId}" />
   <br>
@@ -144,20 +149,22 @@
         <td><spring:bind path="creator.personName">
 					${status.value}
 					<form:hidden path="creator" />
-          </spring:bind> - <spring:bind path="dateCreated">
+          </spring:bind> - <span class="datetime"><spring:bind path="dateCreated">
 					${status.value}
 					<form:hidden path="dateCreated" />
-          </spring:bind></td>
+            </spring:bind></span></td>
       </tr>
     </table>
     <br>
     <c:if test="${radiologyReport.reportStatus != 'COMPLETED'}">
       <c:if test="${radiologyReport.reportStatus != 'DISCONTINUED'}">
-        <input type="button" value="<spring:message code="radiology.radiologyReportUnclaim"/>" id="unclaimRadiologyReportButtonId"/>
+        <input type="button" value="<spring:message code="radiology.radiologyReportUnclaim"/>"
+          id="unclaimRadiologyReportButtonId" />
         <input type="submit" value="<spring:message code="radiology.radiologyReportSave"/>" name="saveRadiologyReport" />
-        <input type="submit" value="<spring:message code="radiology.radiologyReportComplete"/>" name="completeRadiologyReport" />
+        <input type="submit" value="<spring:message code="radiology.radiologyReportComplete"/>"
+          name="completeRadiologyReport" />
       </c:if>
     </c:if>
   </div>
 </form:form>
-
+<%@ include file="/WEB-INF/template/footer.jsp"%>

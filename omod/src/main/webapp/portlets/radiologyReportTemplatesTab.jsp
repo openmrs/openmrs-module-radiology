@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/view/module/radiology/template/include.jsp"%>
+<%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeDatatablesWithDefaults.jsp"%>
 

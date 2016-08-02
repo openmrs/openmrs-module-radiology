@@ -36,7 +36,7 @@
       </tr>
       <tr>
         <td><spring:message code="general.dateDiscontinued" /></td>
-        <td><spring:bind path="dateActivated">${status.value}</spring:bind></td>
+        <td class="datetime"><spring:bind path="dateActivated">${status.value}</spring:bind></td>
       </tr>
       <tr>
         <td><spring:message code="general.discontinuedReason" /></td>
@@ -50,7 +50,8 @@
       </tr>
       <tr>
         <td><spring:message code="general.createdBy" /></td>
-        <td><spring:bind path="creator.personName">${status.value}</spring:bind> - <spring:bind path="dateCreated">${status.value}</spring:bind></td>
+        <td><spring:bind path="creator.personName">${status.value}</spring:bind> - <span class="datetime"><spring:bind
+              path="dateCreated">${status.value}</spring:bind></span></td>
       </tr>
     </table>
   </form:form>
