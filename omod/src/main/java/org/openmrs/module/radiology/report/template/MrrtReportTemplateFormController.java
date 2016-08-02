@@ -41,21 +41,17 @@ public class MrrtReportTemplateFormController {
      * 
      * @param request
      *            the the HttpServletRequest to view MrrtReportTemplates
-     * @param templateId
-     *            the template uuid of the MrrtReportTemplate being requested
+     * @param mrrtReportTemplate
+     *            the MrrtReportTemplate being requested
      * @return modelAndView of the report template form page containing the body content of template inside a model object
      * @should return the model and view of the report template form page containing template body in model object
      * @should return the model and view of the radiology dashboard page with error message if io exception is thrown
-     * @should throw illegal argument exception if no template was found for given templateId
      */
     @RequestMapping(method = RequestMethod.GET, params = "templateId")
-    public ModelAndView displayMrrtReportTemplate(HttpServletRequest request, @RequestParam String templateId) {
-        final ModelAndView modelAndView = new ModelAndView(MRRT_REPORT_TEMPLATE_FORM_VIEW);
-        MrrtReportTemplate mrrtReportTemplate = mrrtReportTemplateService.getMrrtReportTemplateByUuid(templateId);
+    public ModelAndView displayMrrtReportTemplate(HttpServletRequest request,
+            @RequestParam("templateId") MrrtReportTemplate mrrtReportTemplate) {
         
-        if (mrrtReportTemplate == null) {
-            throw new IllegalArgumentException("MrrtReportTemplate not found. templateId '" + templateId + "' unknown.");
-        }
+        final ModelAndView modelAndView = new ModelAndView(MRRT_REPORT_TEMPLATE_FORM_VIEW);
         
         try {
             String templateBody = mrrtReportTemplateService.getMrrtReportTemplateHtmlBody(mrrtReportTemplate);
