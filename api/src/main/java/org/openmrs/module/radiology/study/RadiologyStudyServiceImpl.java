@@ -12,6 +12,7 @@ package org.openmrs.module.radiology.study;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.dicom.DicomUidGenerator;
@@ -50,6 +51,9 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
         
         if (radiologyStudy == null) {
             throw new IllegalArgumentException("radiologyStudy cannot be null");
+        }
+        if (radiologyStudy.getStudyId() != null) {
+            throw new APIException("RadiologyStudy.cannot.edit.existing");
         }
         
         setStudyInstanceUidIfBlank(radiologyStudy);
