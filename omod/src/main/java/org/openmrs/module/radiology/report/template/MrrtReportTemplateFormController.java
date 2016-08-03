@@ -54,8 +54,8 @@ public class MrrtReportTemplateFormController {
         final ModelAndView modelAndView = new ModelAndView(MRRT_REPORT_TEMPLATE_FORM_VIEW);
         
         try {
-            String templateBody = mrrtReportTemplateService.getMrrtReportTemplateHtmlBody(mrrtReportTemplate);
-            modelAndView.addObject("templateBody", templateBody);
+            modelAndView.addObject("templateBody",
+                mrrtReportTemplateService.getMrrtReportTemplateHtmlBody(mrrtReportTemplate));
             modelAndView.addObject("template", mrrtReportTemplate);
         }
         catch (IOException exception) {

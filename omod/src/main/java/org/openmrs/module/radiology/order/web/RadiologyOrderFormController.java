@@ -88,7 +88,7 @@ public class RadiologyOrderFormController {
     @RequestMapping(method = RequestMethod.GET)
     protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrder() {
         
-        ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
+        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
         modelAndView.addObject("order", new Order());
         modelAndView.addObject("radiologyReport", null);
         final RadiologyOrder radiologyOrder = new RadiologyOrder();
@@ -110,7 +110,7 @@ public class RadiologyOrderFormController {
             getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(@RequestParam("patientId") Patient patient) {
         
         final ModelAndView modelAndView = getRadiologyOrderFormWithNewRadiologyOrder();
-        Order order = (Order) modelAndView.getModel()
+        final Order order = (Order) modelAndView.getModel()
                 .get("radiologyOrder");
         order.setPatient(patient);
         modelAndView.addObject("patientId", patient.getPatientId());
@@ -226,7 +226,7 @@ public class RadiologyOrderFormController {
         }
         
         try {
-            Order discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
+            final Order discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrderToDiscontinue,
                 discontinuationOrderRequest.getOrderer(), discontinuationOrderRequest.getReasonNonCoded());
             
             request.getSession()

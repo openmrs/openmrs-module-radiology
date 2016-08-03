@@ -26,7 +26,7 @@ import org.springframework.util.StringUtils;
 public class RadiologyReportEditor extends PropertyEditorSupport {
     
     
-    final private Log log = LogFactory.getLog(this.getClass());
+    private final Log log = LogFactory.getLog(this.getClass());
     
     /**
      * @should set value to radiology report whos id matches given text

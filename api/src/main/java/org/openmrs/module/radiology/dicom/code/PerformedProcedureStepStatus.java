@@ -31,7 +31,11 @@ public enum PerformedProcedureStepStatus {
      * @should return unknown given null
      */
     public static String getNameOrUnknown(PerformedProcedureStepStatus performedProcedureStepStatus) {
-        return (performedProcedureStepStatus == null) ? "UNKNOWN" : performedProcedureStepStatus.name();
+        if (performedProcedureStepStatus == null) {
+            return "UNKNOWN";
+        } else {
+            return performedProcedureStepStatus.name();
+        }
     }
     
     /**
@@ -49,11 +53,11 @@ public enum PerformedProcedureStepStatus {
             throw new IllegalArgumentException("displayName is required");
         }
         
-        if (displayName.equalsIgnoreCase("in progress")) {
+        if ("in progress".equalsIgnoreCase(displayName)) {
             return IN_PROGRESS;
-        } else if (displayName.equalsIgnoreCase("discontinued")) {
+        } else if ("discontinued".equalsIgnoreCase(displayName)) {
             return DISCONTINUED;
-        } else if (displayName.equalsIgnoreCase("completed")) {
+        } else if ("completed".equalsIgnoreCase(displayName)) {
             return COMPLETED;
         } else {
             return null;

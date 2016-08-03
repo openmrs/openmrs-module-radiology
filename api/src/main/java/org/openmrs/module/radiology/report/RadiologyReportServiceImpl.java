@@ -171,11 +171,9 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
         if (reportStatus == null) {
             throw new IllegalArgumentException("radiologyReportStatus cannot be null");
         }
-        return radiologyReportDAO.getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder, reportStatus)
-                .size() > 0
-                        ? radiologyReportDAO.getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder,
-                            reportStatus)
-                        : new ArrayList<RadiologyReport>();
+        final List<RadiologyReport> result =
+                radiologyReportDAO.getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder, reportStatus);
+        return result == null ? new ArrayList<RadiologyReport>() : result;
     }
     
     /**

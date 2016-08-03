@@ -52,13 +52,13 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
     @Override
     @Transactional
     public void importMrrtReportTemplate(InputStream in) throws IOException {
-        File tmp = File.createTempFile(java.util.UUID.randomUUID()
+        final File tmp = File.createTempFile(java.util.UUID.randomUUID()
                 .toString(),
             java.util.UUID.randomUUID()
                     .toString());
         OpenmrsUtil.copyFile(in, new FileOutputStream(tmp));
-        MrrtReportTemplate template = parser.parse(new FileInputStream(tmp));
-        File destinationFile = new File(radiologyProperties.getReportTemplateHome(), java.util.UUID.randomUUID()
+        final MrrtReportTemplate template = parser.parse(new FileInputStream(tmp));
+        final File destinationFile = new File(radiologyProperties.getReportTemplateHome(), java.util.UUID.randomUUID()
                 .toString());
         template.setPath(destinationFile.getAbsolutePath());
         saveMrrtReportTemplate(template);
@@ -75,7 +75,7 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
         if (template == null) {
             throw new IllegalArgumentException("template cannot be null");
         }
-        MrrtReportTemplate existing = getMrrtReportTemplateByIdentifier(template.getDcTermsIdentifier());
+        final MrrtReportTemplate existing = getMrrtReportTemplateByIdentifier(template.getDcTermsIdentifier());
         if (existing != null) {
             throw new APIException("Template already exist in the system.");
         }
@@ -147,8 +147,8 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
         if (mrrtReportTemplate == null) {
             throw new IllegalArgumentException("mrrtReportTemplate cannot be null");
         }
-        File templateFile = new File(mrrtReportTemplate.getPath());
-        Document doc = Jsoup.parse(templateFile, null);
+        final File templateFile = new File(mrrtReportTemplate.getPath());
+        final Document doc = Jsoup.parse(templateFile, null);
         
         return doc.select("body")
                 .html();
