@@ -12,7 +12,7 @@ package org.openmrs.module.radiology.order.web;
 import org.openmrs.Provider;
 
 /**
- * Used as {@code ModelAttribute} when discontinuing {@ Order's}.
+ * Used as {@code ModelAttribute} when discontinuing {@code Order's}.
  */
 final class DiscontinuationOrderRequest {
     
@@ -26,6 +26,13 @@ final class DiscontinuationOrderRequest {
      * Non coded reason why an {@code Order} should be discontinued.
      */
     String reasonNonCoded;
+    
+    /**
+     * Create a {@code DiscontinuationOrderRequest}.
+     */
+    protected DiscontinuationOrderRequest() {
+        // shall only be used within this package
+    }
     
     public Provider getOrderer() {
         return this.orderer;
@@ -41,12 +48,5 @@ final class DiscontinuationOrderRequest {
     
     public void setReasonNonCoded(String reasonNonCoded) {
         this.reasonNonCoded = reasonNonCoded;
-    }
-    
-    /**
-     * Create a {@code DiscontinuationOrderRequest}.
-     */
-    protected DiscontinuationOrderRequest() {
-        // shall only be used within this package
     }
 }

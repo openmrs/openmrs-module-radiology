@@ -41,7 +41,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
         if (rep instanceof DefaultRepresentation) {
-            DelegatingResourceDescription description = new DelegatingResourceDescription();
+            final DelegatingResourceDescription description = new DelegatingResourceDescription();
             description.addProperty("uuid");
             description.addProperty("orderNumber");
             description.addProperty("accessionNumber");
@@ -66,7 +66,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
             description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
             return description;
         } else if (rep instanceof FullRepresentation) {
-            DelegatingResourceDescription description = new DelegatingResourceDescription();
+            final DelegatingResourceDescription description = new DelegatingResourceDescription();
             description.addProperty("uuid");
             description.addProperty("orderNumber");
             description.addProperty("accessionNumber");

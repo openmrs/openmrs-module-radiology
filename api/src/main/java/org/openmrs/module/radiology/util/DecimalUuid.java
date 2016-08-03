@@ -18,10 +18,12 @@ import java.util.UUID;
 public class DecimalUuid {
     
     
+    private static final int RADIX_HEX = 16;
+    
     /**
      * Holds the decimal representation of a {@link java.util.UUID}.
      */
-    final private BigInteger decimalUuid;
+    private final BigInteger decimalUuid;
     
     /**
      * Create a {@code DecimalUuid} from given {@code uuid}.
@@ -52,7 +54,7 @@ public class DecimalUuid {
         
         final String pureHexUuid = uuid.toString()
                 .replaceAll("-", "");
-        return new BigInteger(pureHexUuid, 16);
+        return new BigInteger(pureHexUuid, RADIX_HEX);
     }
     
     /**

@@ -96,7 +96,7 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
     }
     
     /**
-     * Save radiology order encounter for given parameters
+     * Save radiology order encounter for given parameters.
      * 
      * @param patient the encounter patient
      * @param provider the encounter provider
@@ -105,7 +105,7 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
      * @should create radiology order encounter
      */
     private Encounter saveRadiologyOrderEncounter(Patient patient, Provider provider, Date encounterDateTime) {
-        Encounter radiologyOrderEncounter = new Encounter();
+        final Encounter radiologyOrderEncounter = new Encounter();
         radiologyOrderEncounter.setPatient(patient);
         radiologyOrderEncounter.setProvider(radiologyProperties.getRadiologyOrderingProviderEncounterRole(), provider);
         radiologyOrderEncounter.setEncounterDatetime(encounterDateTime);

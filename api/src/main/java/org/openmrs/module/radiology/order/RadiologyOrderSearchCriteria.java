@@ -140,7 +140,7 @@ public class RadiologyOrderSearchCriteria {
         }
         
         /**
-         * @return the minimum effective start date
+         * @param fromEffectiveStartDate the minimum effective start date
          * @return this builder instance
          */
         public Builder withFromEffectiveStartDate(Date fromEffectiveStartDate) {
@@ -150,7 +150,7 @@ public class RadiologyOrderSearchCriteria {
         }
         
         /**
-         * @return the maximum effective start date
+         * @param toEffectiveStartDate the maximum effective start date
          * @return this builder instance
          */
         public Builder withToEffectiveStartDate(Date toEffectiveStartDate) {

@@ -48,7 +48,7 @@ public class RadiologyReportValidator implements Validator {
      */
     @Override
     public void validate(Object obj, Errors errors) {
-        RadiologyReport radiologyReport = (RadiologyReport) obj;
+        final RadiologyReport radiologyReport = (RadiologyReport) obj;
         if (radiologyReport == null) {
             errors.reject("error.general");
         } else {

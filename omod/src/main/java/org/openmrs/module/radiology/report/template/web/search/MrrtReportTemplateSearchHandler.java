@@ -71,7 +71,7 @@ public class MrrtReportTemplateSearchHandler implements SearchHandler {
                 new MrrtReportTemplateSearchCriteria.Builder().withTitle(templateTitle)
                         .build();
         
-        List<MrrtReportTemplate> result = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        final List<MrrtReportTemplate> result = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
         if (result.isEmpty()) {
             return new EmptySearchResult();
         } else {

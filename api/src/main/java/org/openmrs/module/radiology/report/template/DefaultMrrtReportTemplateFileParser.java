@@ -55,20 +55,20 @@ class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParse
     @Override
     public MrrtReportTemplate parse(InputStream in) throws IOException {
         
-        Document doc = Jsoup.parse(in, null, "");
-        MrrtReportTemplate result = new MrrtReportTemplate();
+        final Document doc = Jsoup.parse(in, null, "");
+        final MrrtReportTemplate result = new MrrtReportTemplate();
         initializeTemplate(result, doc);
         return result;
     }
     
     private final void initializeTemplate(MrrtReportTemplate template, Document doc) {
-        Elements metaTags = doc.getElementsByTag("meta");
+        final Elements metaTags = doc.getElementsByTag("meta");
         
         template.setPath(doc.baseUri());
         template.setCharset(metaTags.attr("charset"));
         for (Element metaTag : metaTags) {
-            String name = metaTag.attr("name");
-            String content = metaTag.attr("content");
+            final String name = metaTag.attr("name");
+            final String content = metaTag.attr("content");
             
             switch (name) {
                 case DCTERMS_TITLE:
