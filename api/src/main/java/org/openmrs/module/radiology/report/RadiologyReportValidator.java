@@ -54,7 +54,7 @@ public class RadiologyReportValidator implements Validator {
         } else {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "principalResultsInterpreter", "error.null",
                 "Provider cannot be null");
-            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "reportBody", "error.null", "Diagnosis cannot be null");
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "body", "error.null", "Diagnosis cannot be null");
         }
     }
 }

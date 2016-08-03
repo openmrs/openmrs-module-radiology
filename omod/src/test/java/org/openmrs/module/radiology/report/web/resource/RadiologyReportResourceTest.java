@@ -101,8 +101,7 @@ public class RadiologyReportResourceTest {
                 radiologyReportResource.getRepresentationDescription(defaultRepresentation);
         assertThat(resourceDescription.getProperties()
                 .keySet(),
-            contains("uuid", "radiologyOrder", "reportDate", "principalResultsInterpreter", "reportStatus", "reportBody",
-                "display"));
+            contains("uuid", "radiologyOrder", "date", "principalResultsInterpreter", "status", "body", "display"));
         assertThat(resourceDescription.getProperties()
                 .get("radiologyOrder")
                 .getRep(),
@@ -123,8 +122,8 @@ public class RadiologyReportResourceTest {
                 radiologyReportResource.getRepresentationDescription(fullRepresentation);
         assertThat(resourceDescription.getProperties()
                 .keySet(),
-            contains("uuid", "radiologyOrder", "reportDate", "principalResultsInterpreter", "reportStatus", "reportBody",
-                "display", "auditInfo"));
+            contains("uuid", "radiologyOrder", "date", "principalResultsInterpreter", "status", "body", "display",
+                "auditInfo"));
         assertThat(resourceDescription.getProperties()
                 .get("radiologyOrder")
                 .getRep(),
@@ -224,7 +223,7 @@ public class RadiologyReportResourceTest {
     @Test
     public void getDisplayString_shouldReturnOrderNumberAndReportStatusStringOfGivenRadiologyReport() throws Exception {
         
-        radiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
+        radiologyReport.setStatus(RadiologyReportStatus.COMPLETED);
         when(radiologyOrder.getOrderNumber()).thenReturn("ORD-1");
         
         assertThat(radiologyReportResource.getDisplayString(radiologyReport), is("ORD-1, COMPLETED"));

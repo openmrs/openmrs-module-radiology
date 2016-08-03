@@ -67,10 +67,10 @@ public class RadiologyReportResourceComponentTest
         super.validateDefaultRepresentation();
         assertPropPresent("uuid");
         assertPropPresent("radiologyOrder");
-        assertPropPresent("reportDate");
+        assertPropPresent("date");
         assertPropPresent("principalResultsInterpreter");
-        assertPropPresent("reportStatus");
-        assertPropPresent("reportBody");
+        assertPropPresent("status");
+        assertPropPresent("body");
         assertPropPresent("display");
     }
     
@@ -82,10 +82,10 @@ public class RadiologyReportResourceComponentTest
         super.validateFullRepresentation();
         assertPropPresent("uuid");
         assertPropPresent("radiologyOrder");
-        assertPropPresent("reportDate");
+        assertPropPresent("date");
         assertPropPresent("principalResultsInterpreter");
-        assertPropPresent("reportStatus");
-        assertPropPresent("reportBody");
+        assertPropPresent("status");
+        assertPropPresent("body");
         assertPropPresent("display");
         assertPropPresent("auditInfo");
     }

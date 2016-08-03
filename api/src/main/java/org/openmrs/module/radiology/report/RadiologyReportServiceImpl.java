@@ -69,13 +69,13 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
         if (radiologyReport == null) {
             throw new IllegalArgumentException("radiologyReport cannot be null");
         }
-        if (radiologyReport.getReportStatus() == null) {
+        if (radiologyReport.getStatus() == null) {
             throw new IllegalArgumentException("radiologyReportStatus cannot be null");
         }
-        if (radiologyReport.getReportStatus() == RadiologyReportStatus.DISCONTINUED) {
+        if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
             throw new UnsupportedOperationException("a discontinued radiologyReport cannot be saved");
         }
-        if (radiologyReport.getReportStatus() == RadiologyReportStatus.COMPLETED) {
+        if (radiologyReport.getStatus() == RadiologyReportStatus.COMPLETED) {
             throw new UnsupportedOperationException("a completed radiologyReport cannot be saved");
         }
         return radiologyReportDAO.saveRadiologyReport(radiologyReport);
@@ -92,16 +92,16 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
         if (radiologyReport == null) {
             throw new IllegalArgumentException("radiologyReport cannot be null");
         }
-        if (radiologyReport.getReportStatus() == null) {
+        if (radiologyReport.getStatus() == null) {
             throw new IllegalArgumentException("radiologyReportStatus cannot be null");
         }
-        if (radiologyReport.getReportStatus() == RadiologyReportStatus.DISCONTINUED) {
+        if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
             throw new UnsupportedOperationException("a discontinued radiologyReport cannot be unclaimed");
         }
-        if (radiologyReport.getReportStatus() == RadiologyReportStatus.COMPLETED) {
+        if (radiologyReport.getStatus() == RadiologyReportStatus.COMPLETED) {
             throw new UnsupportedOperationException("a completed radiologyReport cannot be unclaimed");
         }
-        radiologyReport.setReportStatus(RadiologyReportStatus.DISCONTINUED);
+        radiologyReport.setStatus(RadiologyReportStatus.DISCONTINUED);
         return radiologyReportDAO.saveRadiologyReport(radiologyReport);
     }
     
@@ -119,18 +119,18 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
         if (principalResultsInterpreter == null) {
             throw new IllegalArgumentException("principalResultsInterpreter cannot be null");
         }
-        if (radiologyReport.getReportStatus() == null) {
+        if (radiologyReport.getStatus() == null) {
             throw new IllegalArgumentException("radiologyReportStatus cannot be null");
         }
-        if (radiologyReport.getReportStatus() == RadiologyReportStatus.DISCONTINUED) {
+        if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
             throw new UnsupportedOperationException("a discontinued radiologyReport cannot be completed");
         }
-        if (radiologyReport.getReportStatus() == RadiologyReportStatus.COMPLETED) {
+        if (radiologyReport.getStatus() == RadiologyReportStatus.COMPLETED) {
             throw new UnsupportedOperationException("a completed radiologyReport cannot be completed");
         }
-        radiologyReport.setReportDate(new Date());
+        radiologyReport.setDate(new Date());
         radiologyReport.setPrincipalResultsInterpreter(principalResultsInterpreter);
-        radiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
+        radiologyReport.setStatus(RadiologyReportStatus.COMPLETED);
         return radiologyReportDAO.saveRadiologyReport(radiologyReport);
     }
     

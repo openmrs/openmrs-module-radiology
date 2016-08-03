@@ -590,7 +590,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);
         
         RadiologyReport claimedReport = RadiologyTestData.getMockRadiologyReport1();
-        claimedReport.setReportStatus(RadiologyReportStatus.CLAIMED);
+        claimedReport.setStatus(RadiologyReportStatus.CLAIMED);
         
         RadiologyOrder completedRadiologyOrderWithClaimedReport = claimedReport.getRadiologyOrder();
         completedRadiologyOrderWithClaimedReport.getStudy()
@@ -620,7 +620,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);
         
         RadiologyReport completedReport = RadiologyTestData.getMockRadiologyReport1();
-        completedReport.setReportStatus(RadiologyReportStatus.COMPLETED);
+        completedReport.setStatus(RadiologyReportStatus.COMPLETED);
         
         RadiologyOrder completedRadiologyOrderWithCompletedReport = completedReport.getRadiologyOrder();
         completedRadiologyOrderWithCompletedReport.getStudy()

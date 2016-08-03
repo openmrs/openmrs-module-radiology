@@ -66,7 +66,7 @@ public class RadiologyReportEditor extends PropertyEditorSupport {
         if (radiologyReport == null) {
             return "";
         } else {
-            return radiologyReport.getRadiologyReportId()
+            return radiologyReport.getReportId()
                     .toString();
         }
     }

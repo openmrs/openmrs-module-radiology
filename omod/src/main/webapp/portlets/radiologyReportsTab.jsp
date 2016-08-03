@@ -99,8 +99,8 @@
                                             "render": function(data, type,
                                                     full, meta) {
                                               var result = "";
-                                              if (full.reportDate) {
-                                                result = moment(full.reportDate)
+                                              if (full.date) {
+                                                result = moment(full.date)
                                                         .format("LL");
                                               }
                                               return result;
@@ -129,11 +129,11 @@
                                             }
                                           },
                                           {
-                                            "name": "reportStatus",
+                                            "name": "status",
                                             "className": "dt-center",
                                             "render": function(data, type,
                                                     full, meta) {
-                                              switch (full.reportStatus) {
+                                              switch (full.status) {
                                               case "COMPLETED":
                                                 return '<i title="<spring:message code="radiology.report.status.COMPLETED"/>" class="fa fa-check-circle fa-lg"></i>';
                                               case "CLAIMED":
@@ -149,7 +149,7 @@
                                             "responsivePriority": 1,
                                             "render": function(data, type,
                                                     full, meta) {
-                                              return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?radiologyReportId='
+                                              return '<a href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?reportId='
                                                       + full.uuid
                                                       + '"><i class="fa fa-eye fa-lg"></i></a>';
                                             }
