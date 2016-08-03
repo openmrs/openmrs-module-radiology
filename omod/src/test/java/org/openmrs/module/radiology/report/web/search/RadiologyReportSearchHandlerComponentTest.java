@@ -138,8 +138,7 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         List<Object> hits = (List<Object>) result.get("results");
         assertThat(hits.size(), is(3));
         assertThat(PropertyUtils.getProperty(hits.get(2), "uuid"), is(RADIOLOGY_REPORT_UUID_OF_DISCONTINUED));
-        assertThat(PropertyUtils.getProperty(hits.get(2), "reportStatus"),
-            is(RadiologyReportStatus.DISCONTINUED.toString()));
+        assertThat(PropertyUtils.getProperty(hits.get(2), "status"), is(RadiologyReportStatus.DISCONTINUED.toString()));
     }
     
     /**
@@ -165,12 +164,11 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
                 new RadiologyReportSearchCriteria.Builder().withFromDate(format.parse(DATE_BETWEEN_REPORT_DATES))
                         .build();
         
-        assertThat(PropertyUtils.getProperty(hits.get(0), "reportDate"),
+        assertThat(PropertyUtils.getProperty(hits.get(0), "date"),
             is(resultFormat.format(radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria)
                     .get(0)
-                    .getReportDate())));
-        assertThat(PropertyUtils.getProperty(hits.get(0), "reportStatus"),
-            is(not(RadiologyReportStatus.DISCONTINUED.toString())));
+                    .getDate())));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "status"), is(not(RadiologyReportStatus.DISCONTINUED.toString())));
     }
     
     /**
@@ -196,12 +194,11 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
                 new RadiologyReportSearchCriteria.Builder().withToDate(format.parse(DATE_BETWEEN_REPORT_DATES))
                         .build();
         
-        assertThat(PropertyUtils.getProperty(hits.get(0), "reportDate"),
+        assertThat(PropertyUtils.getProperty(hits.get(0), "date"),
             is(resultFormat.format(radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria)
                     .get(0)
-                    .getReportDate())));
-        assertThat(PropertyUtils.getProperty(hits.get(0), "reportStatus"),
-            is(not(RadiologyReportStatus.DISCONTINUED.toString())));
+                    .getDate())));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "status"), is(not(RadiologyReportStatus.DISCONTINUED.toString())));
     }
     
     /**
@@ -231,14 +228,12 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
         
-        assertThat(PropertyUtils.getProperty(hits.get(0), "reportDate"), is(resultFormat.format(radiologyReports.get(0)
-                .getReportDate())));
-        assertThat(PropertyUtils.getProperty(hits.get(1), "reportDate"), is(resultFormat.format(radiologyReports.get(1)
-                .getReportDate())));
-        assertThat(PropertyUtils.getProperty(hits.get(0), "reportStatus"),
-            is(not(RadiologyReportStatus.DISCONTINUED.toString())));
-        assertThat(PropertyUtils.getProperty(hits.get(1), "reportStatus"),
-            is(not(RadiologyReportStatus.DISCONTINUED.toString())));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "date"), is(resultFormat.format(radiologyReports.get(0)
+                .getDate())));
+        assertThat(PropertyUtils.getProperty(hits.get(1), "date"), is(resultFormat.format(radiologyReports.get(1)
+                .getDate())));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "status"), is(not(RadiologyReportStatus.DISCONTINUED.toString())));
+        assertThat(PropertyUtils.getProperty(hits.get(1), "status"), is(not(RadiologyReportStatus.DISCONTINUED.toString())));
     }
     
     /**
@@ -275,10 +270,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertNotNull(result);
         List<Object> hits = (List<Object>) result.get("results");
         assertThat(hits.size(), is(2));
-        assertThat(PropertyUtils.getProperty(hits.get(0), "reportStatus"),
-            is(not(RadiologyReportStatus.DISCONTINUED.toString())));
-        assertThat(PropertyUtils.getProperty(hits.get(1), "reportStatus"),
-            is(not(RadiologyReportStatus.DISCONTINUED.toString())));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "status"), is(not(RadiologyReportStatus.DISCONTINUED.toString())));
+        assertThat(PropertyUtils.getProperty(hits.get(1), "status"), is(not(RadiologyReportStatus.DISCONTINUED.toString())));
     }
     
     /**
@@ -332,8 +325,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertNotNull(result);
         List<Object> hits = (List<Object>) result.get("results");
         assertThat(hits.size(), is(2));
-        assertThat(PropertyUtils.getProperty(hits.get(0), "reportStatus"), is(RadiologyReportStatus.COMPLETED.toString()));
-        assertThat(PropertyUtils.getProperty(hits.get(1), "reportStatus"), is(RadiologyReportStatus.COMPLETED.toString()));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "status"), is(RadiologyReportStatus.COMPLETED.toString()));
+        assertThat(PropertyUtils.getProperty(hits.get(1), "status"), is(RadiologyReportStatus.COMPLETED.toString()));
     }
     
     /**

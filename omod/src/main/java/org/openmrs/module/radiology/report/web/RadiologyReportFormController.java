@@ -68,19 +68,19 @@ public class RadiologyReportFormController {
         
         final RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
         return new ModelAndView(
-                "redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?radiologyReportId=" + radiologyReport.getId());
+                "redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?reportId=" + radiologyReport.getId());
     }
     
     /**
      * Handles requests for getting existing {@code RadiologyReport's}.
      * 
-     * @param radiologyReportId the radiology report which is requested
+     * @param radiologyReport the radiology report which is requested
      * @return the model and view containing radiology report for given radiology report id
      * @should populate model and view with given radiology report
      */
-    @RequestMapping(method = RequestMethod.GET, params = "radiologyReportId")
-    protected ModelAndView getRadiologyReportFormWithExistingRadiologyReport(
-            @RequestParam("radiologyReportId") RadiologyReport radiologyReport) {
+    @RequestMapping(method = RequestMethod.GET, params = "reportId")
+    protected ModelAndView
+            getRadiologyReportFormWithExistingRadiologyReport(@RequestParam("reportId") RadiologyReport radiologyReport) {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         addObjectsToModelAndView(modelAndView, radiologyReport);

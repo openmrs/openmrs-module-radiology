@@ -77,7 +77,7 @@ public class RadiologyReportTest {
         radiologyReport = new RadiologyReport(radiologyOrder);
         
         assertThat(radiologyReport.getRadiologyOrder(), is(radiologyOrder));
-        assertThat(radiologyReport.getReportStatus(), is(RadiologyReportStatus.CLAIMED));
+        assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.CLAIMED));
     }
     
     /**

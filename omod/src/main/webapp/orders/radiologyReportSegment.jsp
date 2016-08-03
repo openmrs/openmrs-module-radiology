@@ -18,9 +18,9 @@
       <form:form method="post" modelAttribute="radiologyReport" cssClass="box">
         <tr>
           <td><a
-            href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?radiologyReportId=${radiologyReport.id}">
+            href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?reportId=${radiologyReport.id}">
               <c:choose>
-                <c:when test="${radiologyReport.reportStatus == 'CLAIMED'}">
+                <c:when test="${radiologyReport.status == 'CLAIMED'}">
                   <spring:message code="radiology.radiologyReportResume" />
                 </c:when>
                 <c:otherwise>

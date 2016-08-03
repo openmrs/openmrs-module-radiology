@@ -41,10 +41,10 @@
   }
 
   $j(document).ready(function() {
-    var reportBody = $j("#reportBodyId");
+    var reportBody = $j("#bodyId");
 
     tinymce.init({
-      selector: '#reportBodyId',
+      selector: '#bodyId',
       setup: function(editor) {
         if (reportBody.attr("disabled") != null) {
           editor.settings.readonly = true;
@@ -98,26 +98,26 @@
       </tr>
       <tr>
         <td><spring:message code="radiology.reportStatus" /></td>
-        <td>${radiologyReport.reportStatus}</td>
-        <form:hidden path="reportStatus" />
+        <td>${radiologyReport.status}</td>
+        <form:hidden path="status" />
       </tr>
-      <c:if test="${radiologyReport.reportStatus == 'COMPLETED'}">
+      <c:if test="${radiologyReport.status == 'COMPLETED'}">
         <tr>
           <td><spring:message code="radiology.radiologyReportDate" /></td>
-          <td>${radiologyReport.reportDate}</td>
-          <form:hidden path="reportDate" />
+          <td>${radiologyReport.date}</td>
+          <form:hidden path="date" />
         </tr>
       </c:if>
       <tr>
         <td><spring:message code="radiology.radiologyReportDiagnosis" /></td>
         <td><c:choose>
-            <c:when test="${radiologyReport.reportStatus == 'COMPLETED'}">
-              <spring:bind path="reportBody">
+            <c:when test="${radiologyReport.status == 'COMPLETED'}">
+              <spring:bind path="body">
                 <textarea id="${status.expression}Id" name="${status.expression}" disabled="true">${status.value}</textarea>
               </spring:bind>
             </c:when>
             <c:otherwise>
-              <spring:bind path="reportBody">
+              <spring:bind path="body">
                 <textarea id="${status.expression}Id" name="${status.expression}">${status.value}</textarea>
                 <c:if test="${status.errorMessage != ''}">
                   <span class="error">${status.errorMessage}</span>
@@ -156,8 +156,8 @@
       </tr>
     </table>
     <br>
-    <c:if test="${radiologyReport.reportStatus != 'COMPLETED'}">
-      <c:if test="${radiologyReport.reportStatus != 'DISCONTINUED'}">
+    <c:if test="${radiologyReport.status != 'COMPLETED'}">
+      <c:if test="${radiologyReport.status != 'DISCONTINUED'}">
         <input type="button" value="<spring:message code="radiology.radiologyReportUnclaim"/>"
           id="unclaimRadiologyReportButtonId" />
         <input type="submit" value="<spring:message code="radiology.radiologyReportSave"/>" name="saveRadiologyReport" />

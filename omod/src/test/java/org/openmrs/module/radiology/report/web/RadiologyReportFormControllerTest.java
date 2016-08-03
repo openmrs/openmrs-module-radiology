@@ -68,7 +68,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
-            is("redirect:/module/radiology/radiologyReport.form?radiologyReportId=" + mockRadiologyReport.getId()));
+            is("redirect:/module/radiology/radiologyReport.form?reportId=" + mockRadiologyReport.getId()));
     }
     
     /**
@@ -186,7 +186,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
         mockRadiologyReport.setPrincipalResultsInterpreter(RadiologyTestData.getMockProvider1());
         RadiologyReport mockCompletedRadiologyReport = mockRadiologyReport;
-        mockCompletedRadiologyReport.setReportStatus(RadiologyReportStatus.COMPLETED);
+        mockCompletedRadiologyReport.setStatus(RadiologyReportStatus.COMPLETED);
         BindingResult reportErrors = mock(BindingResult.class);
         
         when(radiologyReportService.completeRadiologyReport(mockRadiologyReport,
@@ -251,6 +251,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap()
                 .get("radiologyReport");
         assertNotNull(radiologyReport);
-        assertThat(radiologyReport.getReportStatus(), is(RadiologyReportStatus.CLAIMED));
+        assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.CLAIMED));
     }
 }

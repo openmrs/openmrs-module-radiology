@@ -22,29 +22,29 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
 public class RadiologyReport extends BaseOpenmrsData {
     
     
-    private Integer radiologyReportId;
+    private Integer reportId;
     
     private RadiologyOrder radiologyOrder;
     
-    private Date reportDate;
+    private Date date;
     
     private Provider principalResultsInterpreter;
     
-    private RadiologyReportStatus reportStatus;
+    private RadiologyReportStatus status;
     
-    private String reportBody;
+    private String body;
     
     /**
-     * Instantiate a RadiologyReport
+     * Creates a new instance of {@link RadiologyReport}.
      */
     private RadiologyReport() {
         // needed by hibernate to instantiate a bean
     }
     
     /**
-     * Instantiate a RadiologyReport for given RadiologyOrder
+     * Creates a new instance of {@link RadiologyReport} for given RadiologyOrder.
      * 
-     * @param radiologyOrder RadiologyOrder which is being/was reported
+     * @param radiologyOrder the radiology order which is being/was reported
      * @throws IllegalArgumentException if given radiology order is null
      * @throws IllegalArgumentException if given radiology order is not completed
      * @should set radiology order to given radiology order and report status to claimed
@@ -62,7 +62,7 @@ public class RadiologyReport extends BaseOpenmrsData {
         }
         
         this.radiologyOrder = radiologyOrder;
-        this.reportStatus = RadiologyReportStatus.CLAIMED;
+        this.status = RadiologyReportStatus.CLAIMED;
     }
     
     /**
@@ -102,94 +102,94 @@ public class RadiologyReport extends BaseOpenmrsData {
     }
     
     /**
-     * Get radiologyReportId of RadiologyReport.
+     * Get reportId of RadiologyReport.
      * 
-     * @return radiologyReportId of RadiologyReport
+     * @return reportId of RadiologyReport
      */
     @Override
     public Integer getId() {
-        return getRadiologyReportId();
+        return getReportId();
     }
     
     /**
-     * Set radiologyReportId of RadiologyReport.
+     * Set reportId of RadiologyReport.
      * 
-     * @param radiologyReportId Id of RadiologyReport
+     * @param reportId the id of the RadiologyReport
      */
     @Override
-    public void setId(Integer radiologyReportId) {
-        setRadiologyReportId(radiologyReportId);
+    public void setId(Integer reportId) {
+        setReportId(reportId);
     }
     
     /**
-     * Get radiologyReportId of RadiologyReport.
+     * Get reportId of RadiologyReport.
      * 
-     * @return radiologyReportId of RadiologyReport
+     * @return reportId of RadiologyReport
      */
-    public Integer getRadiologyReportId() {
-        return this.radiologyReportId;
+    public Integer getReportId() {
+        return this.reportId;
     }
     
     /**
-     * Set radiologyReportId of RadiologyReport.
+     * Set reportId of RadiologyReport.
      * 
-     * @param radiologyReportId Id of RadiologyReport
+     * @param reportId Id of RadiologyReport
      */
-    private void setRadiologyReportId(Integer radiologyReportId) {
-        this.radiologyReportId = radiologyReportId;
+    private void setReportId(Integer reportId) {
+        this.reportId = reportId;
     }
     
     /**
-     * Get reportDate of RadiologyReport.
+     * Get date of RadiologyReport.
      * 
-     * @return reportDate of RadiologyReport
+     * @return date of RadiologyReport
      */
-    public Date getReportDate() {
-        return reportDate;
+    public Date getDate() {
+        return date;
     }
     
     /**
-     * Set reportDate of RadiologyReport.
+     * Set date of RadiologyReport.
      * 
-     * @param reportDate date of RadiologyReport
+     * @param date date of RadiologyReport
      */
-    public void setReportDate(Date reportDate) {
-        this.reportDate = reportDate;
+    public void setDate(Date date) {
+        this.date = date;
     }
     
     /**
-     * Get reportStatus of RadiologyReport.
+     * Get status of RadiologyReport.
      * 
-     * @return reportStatus of RadiologyReport
+     * @return status of RadiologyReport
      */
-    public RadiologyReportStatus getReportStatus() {
-        return reportStatus;
+    public RadiologyReportStatus getStatus() {
+        return status;
     }
     
     /**
-     * Set reportStatus of RadiologyReport.
+     * Set status of RadiologyReport.
      * 
-     * @param reportStatus status of RadiologyReport
+     * @param status status of RadiologyReport
      */
-    public void setReportStatus(RadiologyReportStatus reportStatus) {
-        this.reportStatus = reportStatus;
+    public void setStatus(RadiologyReportStatus status) {
+        this.status = status;
     }
     
     /**
-     * Get reportBody of RadiologyReport.
+     * Get body of RadiologyReport.
      * 
-     * @return reportBody of RadiologyReport
+     * @return body of RadiologyReport
      */
-    public String getReportBody() {
-        return reportBody;
+    public String getBody() {
+        return body;
     }
     
     /**
-     * Set reportBody of RadiologyReport.
+     * Set body of RadiologyReport.
      * 
-     * @param reportBody body of RadiologyReport
+     * @param body body of RadiologyReport
      */
-    public void setReportBody(String reportBody) {
-        this.reportBody = reportBody;
+    public void setBody(String body) {
+        this.body = body;
     }
 }

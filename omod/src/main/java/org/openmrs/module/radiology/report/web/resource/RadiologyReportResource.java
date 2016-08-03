@@ -62,10 +62,10 @@ public class RadiologyReportResource extends DataDelegatingCrudResource<Radiolog
         
         description.addProperty("uuid");
         description.addProperty("radiologyOrder", Representation.REF);
-        description.addProperty("reportDate");
+        description.addProperty("date");
         description.addProperty("principalResultsInterpreter", Representation.REF);
-        description.addProperty("reportStatus");
-        description.addProperty("reportBody");
+        description.addProperty("status");
+        description.addProperty("body");
         description.addProperty("display");
     }
     
@@ -91,7 +91,7 @@ public class RadiologyReportResource extends DataDelegatingCrudResource<Radiolog
         
         return radiologyReport.getRadiologyOrder()
                 .getOrderNumber() + ", "
-                + radiologyReport.getReportStatus()
+                + radiologyReport.getStatus()
                         .toString();
     }
     
