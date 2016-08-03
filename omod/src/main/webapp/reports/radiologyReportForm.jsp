@@ -94,6 +94,9 @@
         <form:hidden path="id" />
       </tr>
       <tr>
+        <form:hidden path="uuid" />
+      </tr>
+      <tr>
         <form:hidden path="radiologyOrder" />
       </tr>
       <tr>
