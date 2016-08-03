@@ -1,38 +1,66 @@
-<openmrs:htmlInclude file="/scripts/timepicker/timepicker.js" />
-<openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui-timepicker-addon.js" />
+<openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/css/daterangepicker.min.css" />
+<openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/js/jquery.daterangepicker.min.js" />
 <script type="text/javascript">
+  var $j = jQuery.noConflict();
+
   function onQuestionSelect(concept) {
     $j("#conceptDescription").show();
     $j("#conceptDescription").html(concept.description);
   }
-</script>
-<script type="text/javascript">
-  var $j = jQuery.noConflict();
+
   $j(document).ready(
           function() {
             var scheduledDate = $j("#scheduledDateId");
             var scheduledDateInput = $j("#scheduledDateInputId");
             var scheduledDateErrorSpan = $j("#scheduledDateErrorSpan");
             var urgencySelect = $j("#urgencySelect");
-
+            
+            scheduledDateInput.dateRangePicker({
+              startOfWeek: "monday",
+              customTopBar: '<b style="font-size: 0.9em" class="start-day">...</b>',
+              format: 'L LT',
+              singleDate: true,
+              singleMonth: true,
+              time: {
+                enabled: true
+              }
+            }).bind(
+                    'datepicker-change',
+                    function(event, obj) {
+                      setUtcScheduledDate();
+                    });
+            
+            scheduledDateInput.change(function() {
+              setUtcScheduledDate();
+            });
+            
+            var setUtcScheduledDate = function() {
+              if ($j.trim(scheduledDateInput.val())) {
+                scheduledDate.val(moment(scheduledDateInput.val(),
+                        "L LT").utc().format("L LT"));
+              } else {
+                scheduledDate.val("");
+              }
+            }
+            
+            if (urgencySelect.val() === "ON_SCHEDULED_DATE") {
+              scheduledDateInput.show();
+              if ($j.trim(scheduledDate.val())){
+              	scheduledDateInput.val(moment.utc(scheduledDate.val(), "L LT").local()
+                                          .format("L LT"));
+              }
+            }
+           
             var showOrHideScheduledDate = function() {
               if (urgencySelect.val() === "ON_SCHEDULED_DATE") {
                 scheduledDateInput.show();
-                scheduledDateInput.click();
               } else {
                 scheduledDateInput.hide();
                 scheduledDateErrorSpan.hide();
                 scheduledDateInput.val("");
               }
             }
-            
-            scheduledDateInput.change(function() {
-              scheduledDate.val(moment(scheduledDateInput.val(), "L LT").utc()
-                      .format("L LT"));
-            });
-
-            showOrHideScheduledDate();
-
+  
             urgencySelect.change(function() {
               showOrHideScheduledDate();
             });
@@ -117,8 +145,9 @@
             </select>
           </spring:bind> <spring:bind path="scheduledDate">
             <input name="${status.expression}" id="${status.expression}Id" type="hidden" value="${status.value}">
-            <input name="${status.expression}Input" id="${status.expression}InputId" type="text" style="display: none;"
-              onclick="showDateTimePicker(this)" value="">
+            <input name="${status.expression}Input" id="${status.expression}InputId" type="text"
+              style="display: none; width: 150px;" value=""
+              placeholder="<spring:message code="radiology.order.creation.scheduledDate.placeholder"/>">
             <c:if test="${status.errorMessage != ''}">
               <span id="scheduledDateErrorSpan" class="error">${status.errorMessage}</span>
             </c:if>
@@ -156,8 +185,10 @@
             </c:if>
           </spring:bind></td>
       </tr>
+      <tr>
+        <td></td>
+        <td><input type="submit" name="saveRadiologyOrder" value="<spring:message code="Order.save"/>"></td>
+      </tr>
     </table>
-    <br />
-    <input type="submit" name="saveRadiologyOrder" value="<spring:message code="Order.save"/>">
   </form:form>
 </div>

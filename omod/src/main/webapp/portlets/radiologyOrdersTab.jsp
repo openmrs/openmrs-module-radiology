@@ -236,6 +236,8 @@
                     $j('#ordersTabEffectiveStartDateRangePicker')
                             .dateRangePicker(
                                     {
+                                      startOfWeek: "monday",
+                                      customTopBar: '<b class="start-day">...</b> - <b class="end-day">...</b><i class="selected-days"> (<span class="selected-days-num">3</span>)</i>',
                                       showShortcuts: true,
                                       shortcuts: {
                                         'prev-days': [3, 5, 7],
