@@ -7,8 +7,8 @@
       <form:form method="post" modelAttribute="radiologyOrder" cssClass="box">
         <tr>
           <td><spring:bind path="orderId">
-              <a href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?orderId=${status.value}"> <spring:message
-                  code="radiology.radiologyReportClaim" />
+              <a href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?orderId=${status.value}">
+                <spring:message code="radiology.radiologyReportClaim" />
               </a>
             </spring:bind></td>
         </tr>

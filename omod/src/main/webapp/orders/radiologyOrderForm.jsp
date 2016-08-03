@@ -1,11 +1,14 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
+<c:set var="DO_NOT_INCLUDE_JQUERY" value="true" />
+<%@ include file="/WEB-INF/template/header.jsp"%>
+<c:set var="INCLUDE_TIME_ADJUSTMENT" value="true" />
+<%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
+
+<%@ include file="/WEB-INF/view/module/radiology/localHeader.jsp"%>
 
 <openmrs:require
   allPrivileges="Get Care Settings,Get Concepts,Get Encounter Roles,Get Encounters,Get Orders,Get Patients,Get Providers,Get Radiology Orders,Get Users,Get Visit Attribute Types,Get Visit Types,Get Visits,View Orders"
   otherwise="/login.htm" redirect="/module/radiology/radiologyOrder.form" />
-
-<%@ include file="/WEB-INF/template/header.jsp"%>
-<%@ include file="/WEB-INF/view/module/radiology/localHeader.jsp"%>
 
 <c:choose>
   <c:when test="${not empty radiologyOrder && empty radiologyOrder.orderId}">

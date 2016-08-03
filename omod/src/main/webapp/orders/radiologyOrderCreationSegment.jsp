@@ -1,5 +1,5 @@
-<openmrs:htmlInclude file="/scripts/calendar/calendar.js" />
 <openmrs:htmlInclude file="/scripts/timepicker/timepicker.js" />
+<openmrs:htmlInclude file="/scripts/jquery-ui/js/jquery-ui-timepicker-addon.js" />
 <script type="text/javascript">
   function onQuestionSelect(concept) {
     $j("#conceptDescription").show();
@@ -8,28 +8,35 @@
 </script>
 <script type="text/javascript">
   var $j = jQuery.noConflict();
-  $j(document).ready(function() {
-    var scheduledDate = $j("#scheduledDateId");
-    var scheduledDateErrorSpan = $j("#scheduledDateErrorSpan");
-    var urgencySelect = $j("#urgencySelect");
+  $j(document).ready(
+          function() {
+            var scheduledDate = $j("#scheduledDateId");
+            var scheduledDateInput = $j("#scheduledDateInputId");
+            var scheduledDateErrorSpan = $j("#scheduledDateErrorSpan");
+            var urgencySelect = $j("#urgencySelect");
 
-    var showOrHideScheduledDate = function() {
-      if (urgencySelect.val() === "ON_SCHEDULED_DATE") {
-        scheduledDate.show();
-        scheduledDate.click();
-      } else {
-        scheduledDate.hide();
-        scheduledDateErrorSpan.hide();
-        scheduledDate.val("");
-      }
-    }
+            var showOrHideScheduledDate = function() {
+              if (urgencySelect.val() === "ON_SCHEDULED_DATE") {
+                scheduledDateInput.show();
+                scheduledDateInput.click();
+              } else {
+                scheduledDateInput.hide();
+                scheduledDateErrorSpan.hide();
+                scheduledDateInput.val("");
+              }
+            }
+            
+            scheduledDateInput.change(function() {
+              scheduledDate.val(moment(scheduledDateInput.val(), "L LT").utc()
+                      .format("L LT"));
+            });
 
-    showOrHideScheduledDate();
+            showOrHideScheduledDate();
 
-    urgencySelect.on("change", function() {
-      showOrHideScheduledDate();
-    });
-  });
+            urgencySelect.change(function() {
+              showOrHideScheduledDate();
+            });
+          });
 </script>
 
 <spring:hasBindErrors name="radiologyOrder">
@@ -109,8 +116,9 @@
               </c:forEach>
             </select>
           </spring:bind> <spring:bind path="scheduledDate">
-            <input name="${status.expression}" id="${status.expression}Id" type="text" style="display: none;"
-              onclick="showDateTimePicker(this)" value="${status.value}">
+            <input name="${status.expression}" id="${status.expression}Id" type="hidden" value="${status.value}">
+            <input name="${status.expression}Input" id="${status.expression}InputId" type="text" style="display: none;"
+              onclick="showDateTimePicker(this)" value="">
             <c:if test="${status.errorMessage != ''}">
               <span id="scheduledDateErrorSpan" class="error">${status.errorMessage}</span>
             </c:if>

@@ -1,4 +1,4 @@
-<%@ include file="/WEB-INF/view/module/radiology/template/include.jsp"%>
+<%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeDatatables.jsp"%>
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/moment/moment-with-locales.min.js" />
 <openmrs:htmlInclude file="/moduleResources/radiology/css/radiology.css" />
