@@ -4,12 +4,13 @@
 <c:set var="INCLUDE_TIME_ADJUSTMENT" value="true" />
 <%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/tinymce/tinymce.min.js" />
+<openmrs:htmlInclude file="/moduleResources/radiology/fonts/font-awesome/css/font-awesome.min.css" />
 
 <%@ include file="/WEB-INF/view/module/radiology/localHeader.jsp"%>
 
 <script type="text/javascript">
   var $j = jQuery.noConflict();
-  
+ 
   function showUnclaimRadiologyReportDialog() {
     var dialogDiv = $j("<div></div>")
             .html(
@@ -63,6 +64,12 @@
         submitUnclaimRadiologyReport();
       }
     });
+
+    $j('#radiologyOrderDetailsId').hide();
+    $j('#radiologyOrderDetailsAccordion > .boxHeader').click(function() {
+      $j('#radiologyOrderDetailsId').slideToggle();
+      $j('#expandIconId').toggleClass('fa-chevron-down fa-chevron-up');
+    });
   });
 </script>
 
@@ -70,10 +77,12 @@
   <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${order.patient.patientId}" />
   <br>
 </openmrs:hasPrivilege>
-<div>
-  <span class="boxHeader"> <b><spring:message code="radiology.radiologyOrder" /></b>
-  </span>
-  <%@ include file="/WEB-INF/view/module/radiology/orders/radiologyOrderDetailsSegment.jsp"%>
+<div id="radiologyOrderDetailsAccordion">
+  <span class="boxHeader"><i id="expandIconId" class="fa fa-chevron-down"></i><b> <spring:message
+        code="radiology.radiologyOrder" /></b> </span>
+  <div id="radiologyOrderDetailsId">
+    <%@ include file="/WEB-INF/view/module/radiology/orders/radiologyOrderDetailsSegment.jsp"%>
+  </div>
 </div>
 <br>
 <spring:hasBindErrors name="radiologyReport">
