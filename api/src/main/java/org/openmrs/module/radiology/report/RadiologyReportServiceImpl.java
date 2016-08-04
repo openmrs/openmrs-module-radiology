@@ -16,6 +16,7 @@ import java.util.List;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Provider;
+import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,22 +38,19 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
      */
     @Override
     @Transactional
-    public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder)
-            throws IllegalArgumentException, UnsupportedOperationException {
+    public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder) {
         
         if (radiologyOrder == null) {
             throw new IllegalArgumentException("radiologyOrder cannot be null");
         }
         if (radiologyOrder.isNotCompleted()) {
-            throw new IllegalArgumentException("radiologyOrder needs to be completed");
+            throw new APIException("radiologyOrder needs to be completed");
         }
         if (radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyOrder)) {
-            throw new UnsupportedOperationException(
-                    "cannot create radiologyReport for this radiologyOrder because it is already completed");
+            throw new APIException("cannot create radiologyReport for this radiologyOrder because it is already completed");
         }
         if (radiologyReportDAO.hasRadiologyOrderClaimedRadiologyReport(radiologyOrder)) {
-            throw new UnsupportedOperationException(
-                    "cannot create radiologyReport for this radiologyOrder because it is already claimed");
+            throw new APIException("cannot create radiologyReport for this radiologyOrder because it is already claimed");
         }
         final RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
         return radiologyReportDAO.saveRadiologyReport(radiologyReport);
@@ -63,8 +61,7 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
      */
     @Override
     @Transactional
-    public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport)
-            throws IllegalArgumentException, UnsupportedOperationException {
+    public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) {
         
         if (radiologyReport == null) {
             throw new IllegalArgumentException("radiologyReport cannot be null");
@@ -73,10 +70,10 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
             throw new IllegalArgumentException("radiologyReportStatus cannot be null");
         }
         if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
-            throw new UnsupportedOperationException("a discontinued radiologyReport cannot be saved");
+            throw new APIException("a discontinued radiologyReport cannot be saved");
         }
         if (radiologyReport.getStatus() == RadiologyReportStatus.COMPLETED) {
-            throw new UnsupportedOperationException("a completed radiologyReport cannot be saved");
+            throw new APIException("a completed radiologyReport cannot be saved");
         }
         return radiologyReportDAO.saveRadiologyReport(radiologyReport);
     }
@@ -86,8 +83,7 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
      */
     @Override
     @Transactional
-    public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport)
-            throws IllegalArgumentException, UnsupportedOperationException {
+    public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport) {
         
         if (radiologyReport == null) {
             throw new IllegalArgumentException("radiologyReport cannot be null");
@@ -96,10 +92,10 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
             throw new IllegalArgumentException("radiologyReportStatus cannot be null");
         }
         if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
-            throw new UnsupportedOperationException("a discontinued radiologyReport cannot be unclaimed");
+            throw new APIException("a discontinued radiologyReport cannot be unclaimed");
         }
         if (radiologyReport.getStatus() == RadiologyReportStatus.COMPLETED) {
-            throw new UnsupportedOperationException("a completed radiologyReport cannot be unclaimed");
+            throw new APIException("a completed radiologyReport cannot be unclaimed");
         }
         radiologyReport.setStatus(RadiologyReportStatus.DISCONTINUED);
         return radiologyReportDAO.saveRadiologyReport(radiologyReport);
@@ -110,8 +106,7 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
      */
     @Override
     @Transactional
-    public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter)
-            throws IllegalArgumentException, UnsupportedOperationException {
+    public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter) {
         
         if (radiologyReport == null) {
             throw new IllegalArgumentException("radiologyReport cannot be null");
@@ -123,10 +118,10 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
             throw new IllegalArgumentException("radiologyReportStatus cannot be null");
         }
         if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
-            throw new UnsupportedOperationException("a discontinued radiologyReport cannot be completed");
+            throw new APIException("a discontinued radiologyReport cannot be completed");
         }
         if (radiologyReport.getStatus() == RadiologyReportStatus.COMPLETED) {
-            throw new UnsupportedOperationException("a completed radiologyReport cannot be completed");
+            throw new APIException("a completed radiologyReport cannot be completed");
         }
         radiologyReport.setDate(new Date());
         radiologyReport.setPrincipalResultsInterpreter(principalResultsInterpreter);
@@ -138,7 +133,7 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
      * @see RadiologyReportService#getRadiologyReport(Integer)
      */
     @Override
-    public RadiologyReport getRadiologyReport(Integer reportId) throws IllegalArgumentException {
+    public RadiologyReport getRadiologyReport(Integer reportId) {
         
         if (reportId == null) {
             throw new IllegalArgumentException("reportId cannot be null");
@@ -150,7 +145,7 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
      * @see RadiologyReportService#getRadiologyReportByUuid(String)
      */
     @Override
-    public RadiologyReport getRadiologyReportByUuid(String radiologyReportUuid) throws IllegalArgumentException {
+    public RadiologyReport getRadiologyReportByUuid(String radiologyReportUuid) {
         
         if (radiologyReportUuid == null) {
             throw new IllegalArgumentException("radiologyReportUuid cannot be null");
@@ -163,7 +158,7 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
      */
     @Override
     public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder radiologyOrder,
-            RadiologyReportStatus reportStatus) throws IllegalArgumentException {
+            RadiologyReportStatus reportStatus) {
         
         if (radiologyOrder == null) {
             throw new IllegalArgumentException("radiologyOrder cannot be null");
