@@ -158,11 +158,7 @@
 						</property>
 					</bean>
 				</property>
-				<property name="mrrtReportTemplateFileParser">
-					<bean 
-						class="org.openmrs.module.radiology.report.template.DefaultMrrtReportTemplateFileParser">
-					</bean>
-				</property>
+				<property name="parser" ref="mrrtReportTemplateFileParser"/>
 				<property name="radiologyProperties" ref="radiologyProperties"></property>
 			</bean>
 		</property>
@@ -180,6 +176,11 @@
 				<value>org.openmrs.module.radiology.report.template.MrrtReportTemplateService</value>
 				<ref local="mrrtReportTemplateService" />
 			</list>
+		</property>
+	</bean>
+	<bean id="mrrtReportTemplateFileParser" class="org.openmrs.module.radiology.report.template.DefaultMrrtReportTemplateFileParser">
+		<property name="validator">
+			<bean class="org.openmrs.module.radiology.report.template.XsdMrrtReportTemplateValidator"></bean>
 		</property>
 	</bean>
 </beans>

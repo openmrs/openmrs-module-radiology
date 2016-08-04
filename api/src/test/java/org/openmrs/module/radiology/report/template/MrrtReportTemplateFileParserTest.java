@@ -16,17 +16,19 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.FileInputStream;
 
-import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
+import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Tests {@code MrrtReportTemplateFileParser}.
  */
-public class MrrtReportTemplateFileParserTest {
+public class MrrtReportTemplateFileParserTest extends BaseModuleContextSensitiveTest {
     
     
+    @Autowired
     private MrrtReportTemplateFileParser parser;
     
     @Rule
@@ -34,31 +36,25 @@ public class MrrtReportTemplateFileParserTest {
     
     private static final String CHARSET = "UTF-8";
     
-    private static final String TEST_DCTERMS_TITLE = "Cardiac MRI: Function and Viability";
+    private static final String TEST_DCTERMS_TITLE = "CT Chest-Abdomen";
     
-    private static final String TEST_DCTERMS_DESCRIPTION =
-            "Cardiac MRI: Function and Viability template :: Authored by Jacobs JE, et al. ";
+    private static final String TEST_DCTERMS_DESCRIPTION = "CT Chest-Abdomen";
     
-    private static final String TEST_DCTERMS_IDENTIFIER = "http://www.radreport.org/template/0000049";
+    private static final String TEST_DCTERMS_IDENTIFIER = "1.3.6.1.4.1.21367.13.199.1015";
     
     private static final String TEST_DCTERMS_LANGUAGE = "en";
     
     private static final String TEST_DCTERMS_TYPE = "IMAGE_REPORT_TEMPLATE";
     
-    private static final String TEST_DCTERMS_PUBLISHER = "Radiological Society of North America (RSNA)";
+    private static final String TEST_DCTERMS_PUBLISHER = "IHE CAT Publisher";
     
-    private static final String TEST_DCTERMS_RIGHTS = "May be used gratis, subject to license agreement";
+    private static final String TEST_DCTERMS_RIGHTS = "IHE Connectathon Rights";
     
-    private static final String TEST_DCTERMS_LICENSE = "http://www.radreport.org/license.pdf";
+    private static final String TEST_DCTERMS_LICENSE = "IHE Connectathon License";
     
-    private static final String TEST_DCTERMS_DATE = "2012-07-19";
+    private static final String TEST_DCTERMS_DATE = "2013-06-01";
     
-    private static final String TEST_DCTERMS_CREATOR = "Jacobs JE, et al. ";
-    
-    @Before
-    public void setUp() {
-        parser = new DefaultMrrtReportTemplateFileParser();
-    }
+    private static final String TEST_DCTERMS_CREATOR = "Creator James, et al.";
     
     /**
      * @see MrrtReportTemplateFileParser#parse()
@@ -67,12 +63,11 @@ public class MrrtReportTemplateFileParserTest {
     @Test
     public void parse_shouldReturnAnMrrtTemplateObjectIfFileIsValid() throws Exception {
         File file = new File(getClass().getClassLoader()
-                .getResource("mrrttemplates/radreport/0000049.html")
+                .getResource("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html")
                 .getFile());
         
         FileInputStream in = new FileInputStream(file);
         MrrtReportTemplate template = parser.parse(in);
-        in.close();
         
         assertNotNull(template);
         assertThat(template.getCharset(), is(CHARSET));

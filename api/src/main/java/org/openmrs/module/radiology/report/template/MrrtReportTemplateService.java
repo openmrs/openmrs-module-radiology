@@ -14,6 +14,7 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.openmrs.annotation.Authorized;
+import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.RadiologyPrivileges;
 
@@ -44,6 +45,7 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      * 
      * @param in the input stream of the mrrt template file
      * @throws IOException if OpenmrsUtil.copyFile throws one
+     * @throws APIException if importing an invalid template file
      * @should create mrrt report template in the database with metadata from input stream
      * @should create report template file in report template home directory
      */
