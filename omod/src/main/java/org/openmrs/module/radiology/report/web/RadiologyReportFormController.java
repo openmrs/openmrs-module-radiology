@@ -126,9 +126,9 @@ public class RadiologyReportFormController {
      *
      * @param radiologyReport the radiology report to be completed
      * @param bindingResult the binding result for the radiology report
-     * @return the model and view for the order form if complete was successful, otherwise the
+     * @return the model and view with redirect to report form if complete was successful, otherwise the
      *         model and view contains binding result errors
-     * @should complete given radiology report if it is valid
+     * @should redirect to radiology report form if it is valid
      * @should not complete given radiology report if it is not valid
      */
     @RequestMapping(method = RequestMethod.POST, params = "completeRadiologyReport")
@@ -142,10 +142,9 @@ public class RadiologyReportFormController {
             return modelAndView;
         }
         
-        final RadiologyReport completedRadiologyReport = radiologyReportService.completeRadiologyReport(radiologyReport,
-            radiologyReport.getPrincipalResultsInterpreter());
-        addObjectsToModelAndView(modelAndView, completedRadiologyReport);
-        return modelAndView;
+        radiologyReportService.completeRadiologyReport(radiologyReport, radiologyReport.getPrincipalResultsInterpreter());
+        return new ModelAndView(
+                "redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?reportId=" + radiologyReport.getId());
     }
     
     /**
