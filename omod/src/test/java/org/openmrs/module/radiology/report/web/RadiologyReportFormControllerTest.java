@@ -195,24 +195,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         ModelAndView modelAndView = radiologyReportFormController.completeRadiologyReport(mockRadiologyReport, reportErrors);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("order"));
-        Order order = (Order) modelAndView.getModelMap()
-                .get("order");
-        assertNotNull(order);
-        assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
-        RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
-                .get("radiologyOrder");
-        assertNotNull(radiologyOrder);
-        assertThat(radiologyOrder, is(mockRadiologyReport.getRadiologyOrder()));
-        
-        RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap()
-                .get("radiologyReport");
-        assertNotNull(radiologyReport);
-        assertThat(radiologyReport, is(mockRadiologyReport));
+        assertThat(modelAndView.getViewName(),
+            is("redirect:/module/radiology/radiologyReport.form?reportId=" + mockRadiologyReport.getId()));
     }
     
     /**

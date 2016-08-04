@@ -63,7 +63,6 @@
         submitUnclaimRadiologyReport();
       }
     });
-
   });
 </script>
 
@@ -107,7 +106,7 @@
       <c:if test="${radiologyReport.status == 'COMPLETED'}">
         <tr>
           <td><spring:message code="radiology.radiologyReportDate" /></td>
-          <td>${radiologyReport.date}</td>
+          <td id="reportDateId"><spring:bind path="date">${status.value}</spring:bind></td>
           <form:hidden path="date" />
         </tr>
       </c:if>
