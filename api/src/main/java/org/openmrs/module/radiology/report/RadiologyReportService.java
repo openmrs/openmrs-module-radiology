@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.openmrs.Provider;
 import org.openmrs.annotation.Authorized;
+import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.RadiologyPrivileges;
 import org.openmrs.module.radiology.order.RadiologyOrder;
@@ -32,14 +33,14 @@ public interface RadiologyReportService extends OpenmrsService {
      * @return the created and claimed radiology report
      * @throws IllegalArgumentException if given null
      * @throws IllegalArgumentException if Study of given radiologyOrder is null
-     * @throws IllegalArgumentException if Study of given radiologyOrder is not completed
-     * @throws UnsupportedOperationException if given radiologyOrder has a completed RadiologyReport
-     * @throws UnsupportedOperationException if given radiologyOrder has a claimed RadiologyReport
+     * @throws APIException if RadiologyStudy of given radiologyOrder is not completed
+     * @throws APIException if given radiologyOrder has a completed RadiologyReport
+     * @throws APIException if given radiologyOrder has a claimed RadiologyReport
      * @should create a radiology order with report status claimed given a completed radiology order
      * @should throw illegal argument exception if given null
-     * @should throw illegal argument exception if given radiology order is not completed
-     * @should throw unsupported operation exception if given order has a completed radiology report
-     * @should throw unsupported operation exception if given order has a claimed radiology report
+     * @should throw api exception if given radiology order is not completed
+     * @should throw api exception if given order has a completed radiology report
+     * @should throw api exception if given order has a claimed radiology report
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_REPORTS)
     public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder);
@@ -51,13 +52,13 @@ public interface RadiologyReportService extends OpenmrsService {
      * @return the saved radiology report
      * @throws IllegalArgumentException if given null
      * @throws IllegalArgumentException if radiologyReportStatus is null
-     * @throws UnsupportedOperationException if radiologyReport is discontinued
-     * @throws UnsupportedOperationException if radiologyReport is completed
+     * @throws APIException if radiologyReport is discontinued
+     * @throws APIException if radiologyReport is completed
      * @should save radiology report to the database and return it
      * @should throw illegal argument exception if given null
      * @should throw illegal argument exception if radiology report status is null
-     * @should throw unsupported operation exception if radiology report is completed
-     * @should throw unsupported operation exception if radiology report is discontinued
+     * @should throw api exception if radiology report is completed
+     * @should throw api exception if radiology report is discontinued
      */
     @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
     public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport);
@@ -69,13 +70,13 @@ public interface RadiologyReportService extends OpenmrsService {
      * @return the discontinued radiology report
      * @throws IllegalArgumentException if given null
      * @throws IllegalArgumentException if radiologyReportStatus is null
-     * @throws UnsupportedOperationException if radiologyReport is discontinued
-     * @throws UnsupportedOperationException if radiologyReport is completed
+     * @throws APIException if radiologyReport is discontinued
+     * @throws APIException if radiologyReport is completed
      * @should set the radiology report status to discontinued
      * @should throw illegal argument exception if given null
      * @should throw illegal argument exception if radiology report status is null
-     * @should throw unsupported operation exception if radiology report is completed
-     * @should throw unsupported operation exception if radiology report is discontinued
+     * @should throw api exception if radiology report is completed
+     * @should throw api exception if radiology report is discontinued
      */
     @Authorized(RadiologyPrivileges.DELETE_RADIOLOGY_REPORTS)
     public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport);
@@ -90,15 +91,15 @@ public interface RadiologyReportService extends OpenmrsService {
      * @throws IllegalArgumentException if radiologyReport is null
      * @throws IllegalArgumentException if principalResultsInterpreter is null
      * @throws IllegalArgumentException if radiologyReportStatus is null
-     * @throws UnsupportedOperationException if radiologyReport is discontinued
-     * @throws UnsupportedOperationException if radiologyReport is completed
+     * @throws APIException if radiologyReport is discontinued
+     * @throws APIException if radiologyReport is completed
      * @should set the report date of the radiology report to the day the radiology report was completed
      * @should set the radiology report status to complete
      * @should throw illegal argument exception if principal results interpreter is null
      * @should throw illegal argument exception if radiology report is null
      * @should throw illegal argument exception if radiology report status is null
-     * @should throw unsupported operation exception if radiology report is completed
-     * @should throw unsupported operation exception if radiology report is discontinued
+     * @should throw api exception if radiology report is completed
+     * @should throw api exception if radiology report is discontinued
      */
     @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
     public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter);

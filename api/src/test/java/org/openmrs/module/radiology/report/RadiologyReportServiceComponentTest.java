@@ -31,6 +31,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.Provider;
+import org.openmrs.api.APIException;
 import org.openmrs.api.ProviderService;
 import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.order.RadiologyOrder;
@@ -138,36 +139,34 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     /**
      * @see RadiologyReportService#createAndClaimRadiologyReport(RadiologyOrder)
-     * @verifies throw illegal argument exception if given radiology order is not completed
+     * @verifies throw api exception if given radiology order is not completed
      */
     @Test
-    public void createAndClaimRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderIsNotCompleted()
-            throws Exception {
+    public void createAndClaimRadiologyReport_shouldThrowAPIExceptionIfGivenRadiologyOrderIsNotCompleted() throws Exception {
         
         RadiologyOrder existingRadiologyOrder =
                 radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT);
         existingRadiologyOrder.getStudy()
                 .setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
-        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expect(APIException.class);
         expectedException.expectMessage("radiologyOrder needs to be completed");
         radiologyReportService.createAndClaimRadiologyReport(existingRadiologyOrder);
     }
     
     /**
      * @see RadiologyReportService#createAndClaimRadiologyReport(RadiologyOrder)
-     * @verifies throw unsupported operation exception if given order has a completed radiology report
+     * @verifies throw api exception if given order has a completed radiology report
      */
     @Test
-    public void
-            createAndClaimRadiologyReport_shouldThrowUnsupportedOperationExceptionIfGivenOrderHasACompletedRadiologyReport()
-                    throws Exception {
+    public void createAndClaimRadiologyReport_shouldThrowAPIExceptionIfGivenOrderHasACompletedRadiologyReport()
+            throws Exception {
         RadiologyOrder existingRadiologyOrder =
                 radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT);
         RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         existingRadiologyReport.setStatus(RadiologyReportStatus.CLAIMED);
         radiologyReportService.saveRadiologyReport(existingRadiologyReport);
         radiologyReportService.completeRadiologyReport(existingRadiologyReport, providerService.getProvider(1));
-        expectedException.expect(UnsupportedOperationException.class);
+        expectedException.expect(APIException.class);
         expectedException
                 .expectMessage("cannot create radiologyReport for this radiologyOrder because it is already completed");
         radiologyReportService.createAndClaimRadiologyReport(existingRadiologyOrder);
@@ -175,16 +174,15 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     /**
      * @see RadiologyReportService#createAndClaimRadiologyReport(RadiologyOrder)
-     * @verifies throw unsupported operation exception if given order has a claimed radiology report
+     * @verifies throw api exception if given order has a claimed radiology report
      */
     @Test
-    public void
-            createAndClaimRadiologyReport_shouldThrowUnsupportedOperationExceptionIfGivenOrderHasAClaimedRadiologyReport()
-                    throws Exception {
+    public void createAndClaimRadiologyReport_shouldThrowAPIExceptionIfGivenOrderHasAClaimedRadiologyReport()
+            throws Exception {
         
         RadiologyOrder existingRadiologyOrder =
                 radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT);
-        expectedException.expect(UnsupportedOperationException.class);
+        expectedException.expect(APIException.class);
         expectedException
                 .expectMessage("cannot create radiologyReport for this radiologyOrder because it is already claimed");
         radiologyReportService.createAndClaimRadiologyReport(existingRadiologyOrder);
@@ -238,31 +236,30 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     /**
      * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
-     * @verifies throw unsupported operation exception if radiology report is completed
+     * @verifies throw api exception if radiology report is completed
      */
     @Test
-    public void saveRadiologyReport_shouldThrowUnsupportedOperationExceptionIfRadiologyReportIsCompleted() throws Exception {
+    public void saveRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsCompleted() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         radiologyReport.setStatus(RadiologyReportStatus.COMPLETED);
         
-        expectedException.expect(UnsupportedOperationException.class);
+        expectedException.expect(APIException.class);
         expectedException.expectMessage("a completed radiologyReport cannot be saved");
         radiologyReportService.saveRadiologyReport(radiologyReport);
     }
     
     /**
      * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
-     * @verifies throw unsupported operation exception if radiology report is discontinued
+     * @verifies throw api exception if radiology report is discontinued
      */
     @Test
-    public void saveRadiologyReport_shouldThrowUnsupportedOperationExceptionIfRadiologyReportIsDiscontinued()
-            throws Exception {
+    public void saveRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsDiscontinued() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         radiologyReport.setStatus(RadiologyReportStatus.DISCONTINUED);
         
-        expectedException.expect(UnsupportedOperationException.class);
+        expectedException.expect(APIException.class);
         expectedException.expectMessage("a discontinued radiologyReport cannot be saved");
         radiologyReportService.saveRadiologyReport(radiologyReport);
     }
@@ -309,32 +306,30 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     /**
      * @see RadiologyReportService#unclaimRadiologyReport(RadiologyReport)
-     * @verifies throw unsupported operation exception if radiology report is completed
+     * @verifies throw api exception if radiology report is completed
      */
     @Test
-    public void unclaimRadiologyReport_shouldThrowUnsupportedOperationExceptionIfRadiologyReportIsCompleted()
-            throws Exception {
+    public void unclaimRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsCompleted() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         radiologyReport.setStatus(RadiologyReportStatus.COMPLETED);
         
-        expectedException.expect(UnsupportedOperationException.class);
+        expectedException.expect(APIException.class);
         expectedException.expectMessage("a completed radiologyReport cannot be unclaimed");
         radiologyReportService.unclaimRadiologyReport(radiologyReport);
     }
     
     /**
      * @see RadiologyReportService#unclaimRadiologyReport(RadiologyReport)
-     * @verifies throw unsupported operation exception if radiology report is discontinued
+     * @verifies throw api exception if radiology report is discontinued
      */
     @Test
-    public void unclaimRadiologyReport_shouldThrowUnsupportedOperationExceptionIfRadiologyReportIsDiscontinued()
-            throws Exception {
+    public void unclaimRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsDiscontinued() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         radiologyReport.setStatus(RadiologyReportStatus.DISCONTINUED);
         
-        expectedException.expect(UnsupportedOperationException.class);
+        expectedException.expect(APIException.class);
         expectedException.expectMessage("a discontinued radiologyReport cannot be unclaimed");
         radiologyReportService.unclaimRadiologyReport(radiologyReport);
     }
@@ -419,11 +414,10 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     /**
      * @see RadiologyReportService#completeRadiologyReport(RadiologyReport, Provider)
-     * @verifies throw unsupported operation exception if radiology report is completed
+     * @verifies throw api exception if radiology report is completed
      */
     @Test
-    public void completeRadiologyReport_shouldThrowUnsupportedOperationExceptionIfRadiologyReportIsCompleted()
-            throws Exception {
+    public void completeRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsCompleted() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         radiologyReport.setStatus(RadiologyReportStatus.COMPLETED);
@@ -431,18 +425,17 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         provider.setId(1);
         provider.setName("doctor");
         
-        expectedException.expect(UnsupportedOperationException.class);
+        expectedException.expect(APIException.class);
         expectedException.expectMessage("a completed radiologyReport cannot be completed");
         radiologyReportService.completeRadiologyReport(radiologyReport, provider);
     }
     
     /**
      * @see RadiologyReportService#completeRadiologyReport(RadiologyReport, Provider)
-     * @verifies throw unsupported operation exception if radiology report is discontinued
+     * @verifies throw api exception if radiology report is discontinued
      */
     @Test
-    public void completeRadiologyReport_shouldThrowUnsupportedOperationExceptionIfRadiologyReportIsDiscontinued()
-            throws Exception {
+    public void completeRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsDiscontinued() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         radiologyReport.setStatus(RadiologyReportStatus.DISCONTINUED);
@@ -450,7 +443,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         provider.setId(1);
         provider.setName("doctor");
         
-        expectedException.expect(UnsupportedOperationException.class);
+        expectedException.expect(APIException.class);
         expectedException.expectMessage("a discontinued radiologyReport cannot be completed");
         radiologyReportService.completeRadiologyReport(radiologyReport, provider);
     }
