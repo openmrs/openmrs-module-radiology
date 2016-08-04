@@ -47,19 +47,39 @@ div.dataTables_paginate.fg-buttonset.ui-buttonset.fg-buttonset-multi.ui-buttonse
 .fa-circle {
 	color: #f4920b;
 }
-select {
+input[type=text], textarea, select {
 	padding: 1px;
 	border: 1px solid cadetblue;
+	box-sizing: border-box;
 }
-table.dataTable.dtr-column > tbody > tr > td.control:before {
-  font-family: "FontAwesome";
-  content: '\f13a';
-  color: #1AAD9B;
-  font-size: 1.3em;
+input[type=submit], input[type=button] {
+	padding: 2px;
+	border: 1px solid cadetblue;
+	box-sizing: border-box;
+	background-color: lightgrey;
 }
-table.dataTable.dtr-column > tbody > tr.parent td.control:before {
-  font-family: "FontAwesome";
-  content: '\f139';
-  color: #1AAD9B;
-  font-size: 1.3em;
+#radiologyOrder input[type=submit] {
+	margin-top: 8px;
+}
+#radiologyOrder input, #radiologyOrder select {
+	width: 270px;
+}
+#radiologyOrder textarea {
+	width: 270px;
+	height: 100px;
+}
+#radiologyOrder tr:first-child td {
+	min-width: 200px;
+}
+table.dataTable.dtr-column>tbody>tr>td.control:before {
+	font-family: "FontAwesome";
+	content: '\f13a';
+	color: #1AAD9B;
+	font-size: 1.3em;
+}
+table.dataTable.dtr-column>tbody>tr.parent td.control:before {
+	font-family: "FontAwesome";
+	content: '\f139';
+	color: #1AAD9B;
+	font-size: 1.3em;
 }

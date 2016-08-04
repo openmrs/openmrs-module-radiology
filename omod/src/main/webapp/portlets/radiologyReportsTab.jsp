@@ -19,11 +19,6 @@
                     var find = $j('#reportsTabFind');
                     var clearResults = $j('a#reportsTabClearFilters');
 
-                    fromDate.val(moment().subtract(1, 'weeks').startOf('week')
-                            .format('L'));
-                    toDate.val(moment().subtract(1, 'weeks').endOf('week')
-                            .format('L'));
-
                     var radiologyReportsTable = $j('#reportsTabTable')
                             .DataTable(
                                     {
@@ -182,6 +177,8 @@
                                     });
 
                     $j('#reportsTabDateRangePicker').dateRangePicker({
+                      startOfWeek: "monday",
+                      customTopBar: '<b class="start-day">...</b> - <b class="end-day">...</b><i class="selected-days"> (<span class="selected-days-num">3</span>)</i>',
                       showShortcuts: true,
                       shortcuts: {
                         'prev-days': [3, 5, 7],
@@ -202,6 +199,13 @@
                         toDate.val(s2);
                       }
                     });
+
+                    $j('#reportsTabDateRangePicker').data('dateRangePicker')
+                            .setDateRange(
+                                    moment().subtract(1, 'weeks').startOf(
+                                            'week').format('L'),
+                                    moment().subtract(1, 'weeks').endOf('week')
+                                            .format('L'));
                   });
 </script>
 
