@@ -20,48 +20,64 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
 
 /**
  * Service layer for {@code RadiologyReport}.
- * 
+ *
+ * <p>Typical usage involves:
+ * <ol>
+ * <li>Create a new {@code RadiologyReport} for a completed {@code RadiologyOrder}.
+ * <pre>{@code
+ * RadiologyReport radiologyReport = RadiologyReportService.createRadiologyReport(RadiologyOrder);
+ * }</pre>
+ * </li>
+ * <li>Set fields like for example {@code radiologyReport.setBody("Fracture of around 5mm visible in right tibia.")} through the setters of {@link RadiologyReport}.</li>
+ * <li>Optionally, save the {@code RadiologyReport} as a draft via {@link #saveRadiologyReportDraft(RadiologyReport)}.</li>
+ * <li>Optionally, void the {@code RadiologyReport} via {@link #unclaimRadiologyReport(RadiologyReport)}.</li>
+ * <li>Finally, complete the {@code RadiologyReport} via {@link #completeRadiologyReport(RadiologyReport, Provider)}.</li>
+ * </ol>
+ *
  * @see org.openmrs.module.radiology.report.RadiologyReport
  */
 public interface RadiologyReportService extends OpenmrsService {
     
     
     /**
-     * Saves a {@code RadiologyReport} to the database and sets its status to claimed.
+     * Saves a new {@code RadiologyReport} to the database and sets its status to claimed.
      *
-     * @param radiologyOrder the radiology order for which a radiology report will be created and claimed
-     * @return the created and claimed radiology report
+     * @param radiologyOrder the radiology order for which a radiology report will be created
+     * @return the created radiology report
      * @throws IllegalArgumentException if given null
-     * @throws IllegalArgumentException if Study of given radiologyOrder is null
      * @throws APIException if RadiologyStudy of given radiologyOrder is not completed
-     * @throws APIException if given radiologyOrder has a completed RadiologyReport
      * @throws APIException if given radiologyOrder has a claimed RadiologyReport
+     * @throws APIException if given radiologyOrder has a completed RadiologyReport
      * @should create a radiology order with report status claimed given a completed radiology order
      * @should throw illegal argument exception if given null
      * @should throw api exception if given radiology order is not completed
-     * @should throw api exception if given order has a completed radiology report
      * @should throw api exception if given order has a claimed radiology report
+     * @should throw api exception if given order has a completed radiology report
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_REPORTS)
-    public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder);
+    public RadiologyReport createRadiologyReport(RadiologyOrder radiologyOrder);
     
     /**
-     * Saves a {@code RadiologyReport} to the database.
-     *
-     * @param radiologyReport the radiology report to be saved
+     * Saves an existing {@code RadiologyReport} which is in a draft state to the database.
+     * <p>
+     * A {@code RadiologyReport} is considered a draft as long as its status is {@code CLAIMED}.
+     * </p>
+     * @param radiologyReport the existing radiology report to be saved
      * @return the saved radiology report
      * @throws IllegalArgumentException if given null
-     * @throws IllegalArgumentException if radiologyReportStatus is null
-     * @throws APIException if radiologyReport is discontinued
+     * @throws IllegalArgumentException if radiologyReport reportId is null
      * @throws APIException if radiologyReport is completed
-     * @should save radiology report to the database and return it
+     * @throws APIException if radiologyReport is discontinued
+     * @throws APIException if radiologyReport.radiologyOrder has a completed RadiologyReport
+     * @should save existing radiology report to the database and return it
      * @should throw illegal argument exception if given null
-     * @should throw illegal argument exception if radiology report status is null
+     * @should throw illegal argument exception if given radiology report with reportId null
      * @should throw api exception if radiology report is completed
      * @should throw api exception if radiology report is discontinued
+     * @should throw api exception if given radiology reports order has a completed radiology report
      */
     @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
-    public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport);
+    public RadiologyReport saveRadiologyReportDraft(RadiologyReport radiologyReport);
     
     /**
      * Unclaims a {@code RadiologyReport} and and sets its status to discontinued.
@@ -89,15 +105,17 @@ public interface RadiologyReportService extends OpenmrsService {
      * @return the completed radiology report
      *         principalResultsInterpreter
      * @throws IllegalArgumentException if radiologyReport is null
+     * @throws IllegalArgumentException if radiologyReport reportId is null
+     * @throws IllegalArgumentException if radiologyReport status is null
      * @throws IllegalArgumentException if principalResultsInterpreter is null
-     * @throws IllegalArgumentException if radiologyReportStatus is null
-     * @throws APIException if radiologyReport is discontinued
      * @throws APIException if radiologyReport is completed
+     * @throws APIException if radiologyReport is discontinued
      * @should set the report date of the radiology report to the day the radiology report was completed
      * @should set the radiology report status to complete
-     * @should throw illegal argument exception if principal results interpreter is null
-     * @should throw illegal argument exception if radiology report is null
-     * @should throw illegal argument exception if radiology report status is null
+     * @should throw illegal argument exception if given radiology report is null
+     * @should throw illegal argument exception if given radiology report with reportId null
+     * @should throw illegal argument exception if given radiology report with status null
+     * @should throw illegal argument exception if given principal results interpreter is null
      * @should throw api exception if radiology report is completed
      * @should throw api exception if radiology report is discontinued
      */

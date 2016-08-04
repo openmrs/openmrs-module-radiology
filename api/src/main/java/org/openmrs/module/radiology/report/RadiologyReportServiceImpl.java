@@ -34,46 +34,49 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     }
     
     /**
-     * @see RadiologyReportService#createAndClaimRadiologyReport(RadiologyOrder)
+     * @see RadiologyReportService#createRadiologyReport(RadiologyOrder)
      */
     @Override
     @Transactional
-    public RadiologyReport createAndClaimRadiologyReport(RadiologyOrder radiologyOrder) {
+    public synchronized RadiologyReport createRadiologyReport(RadiologyOrder radiologyOrder) {
         
         if (radiologyOrder == null) {
             throw new IllegalArgumentException("radiologyOrder cannot be null");
         }
         if (radiologyOrder.isNotCompleted()) {
-            throw new APIException("radiologyOrder needs to be completed");
-        }
-        if (radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyOrder)) {
-            throw new APIException("cannot create radiologyReport for this radiologyOrder because it is already completed");
+            throw new APIException("radiology.RadiologyReport.cannot.create.for.not.completed.order");
         }
         if (radiologyReportDAO.hasRadiologyOrderClaimedRadiologyReport(radiologyOrder)) {
-            throw new APIException("cannot create radiologyReport for this radiologyOrder because it is already claimed");
+            throw new APIException("radiology.RadiologyReport.cannot.create.already.claimed");
+        }
+        if (radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyOrder)) {
+            throw new APIException("radiology.RadiologyReport.cannot.create.already.completed");
         }
         final RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
         return radiologyReportDAO.saveRadiologyReport(radiologyReport);
     }
     
     /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
+     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
      */
     @Override
     @Transactional
-    public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) {
+    public synchronized RadiologyReport saveRadiologyReportDraft(RadiologyReport radiologyReport) {
         
         if (radiologyReport == null) {
             throw new IllegalArgumentException("radiologyReport cannot be null");
         }
-        if (radiologyReport.getStatus() == null) {
-            throw new IllegalArgumentException("radiologyReportStatus cannot be null");
-        }
-        if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
-            throw new APIException("a discontinued radiologyReport cannot be saved");
+        if (radiologyReport.getReportId() == null) {
+            throw new IllegalArgumentException("radiologyReport.reportId cannot be null");
         }
         if (radiologyReport.getStatus() == RadiologyReportStatus.COMPLETED) {
-            throw new APIException("a completed radiologyReport cannot be saved");
+            throw new APIException("radiology.RadiologyReport.cannot.saveDraft.already.completed");
+        }
+        if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
+            throw new APIException("radiology.RadiologyReport.cannot.saveDraft.already.discontinued");
+        }
+        if (radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyReport.getRadiologyOrder())) {
+            throw new APIException("radiology.RadiologyReport.cannot.saveDraft.already.reported");
         }
         return radiologyReportDAO.saveRadiologyReport(radiologyReport);
     }
@@ -106,22 +109,26 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
      */
     @Override
     @Transactional
-    public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter) {
+    public synchronized RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport,
+            Provider principalResultsInterpreter) {
         
         if (radiologyReport == null) {
             throw new IllegalArgumentException("radiologyReport cannot be null");
+        }
+        if (radiologyReport.getReportId() == null) {
+            throw new IllegalArgumentException("radiologyReport.reportId cannot be null");
         }
         if (principalResultsInterpreter == null) {
             throw new IllegalArgumentException("principalResultsInterpreter cannot be null");
         }
         if (radiologyReport.getStatus() == null) {
-            throw new IllegalArgumentException("radiologyReportStatus cannot be null");
-        }
-        if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
-            throw new APIException("a discontinued radiologyReport cannot be completed");
+            throw new IllegalArgumentException("radiologyReport.status cannot be null");
         }
         if (radiologyReport.getStatus() == RadiologyReportStatus.COMPLETED) {
-            throw new APIException("a completed radiologyReport cannot be completed");
+            throw new APIException("radiology.RadiologyReport.cannot.complete.completed");
+        }
+        if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
+            throw new APIException("radiology.RadiologyReport.cannot.complete.discontinued");
         }
         radiologyReport.setDate(new Date());
         radiologyReport.setPrincipalResultsInterpreter(principalResultsInterpreter);

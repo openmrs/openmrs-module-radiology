@@ -33,7 +33,7 @@ interface RadiologyReportDAO {
     RadiologyReport getRadiologyReportByUuid(String radiologyReportUuid);
     
     /**
-     * @see org.openmrs.module.radiology.report.RadiologyReportService#saveRadiologyReport(RadiologyReport)
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
      */
     RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport);
     

@@ -171,7 +171,7 @@
       <c:if test="${radiologyReport.status != 'DISCONTINUED'}">
         <input type="button" value="<spring:message code="radiology.radiologyReportUnclaim"/>"
           id="unclaimRadiologyReportButtonId" />
-        <input type="submit" value="<spring:message code="radiology.radiologyReportSave"/>" name="saveRadiologyReport" />
+        <input type="submit" value="<spring:message code="radiology.radiologyReportSave"/>" name="saveRadiologyReportDraft" />
         <input type="submit" value="<spring:message code="radiology.radiologyReportComplete"/>"
           name="completeRadiologyReport" />
       </c:if>

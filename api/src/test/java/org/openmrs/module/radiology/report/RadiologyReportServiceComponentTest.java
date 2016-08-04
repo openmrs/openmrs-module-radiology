@@ -58,6 +58,12 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     private static final String NON_EXISTING_RADIOLOGY_REPORT_UUID = "637d5011-49f5-4ce8-b4ce-47b37ff2cda2";
     
+    private static final int CLAIMED_RADIOLOGY_REPORT = 1;
+    
+    private static final int COMPLETED_RADIOLOGY_REPORT = 2;
+    
+    private static final int DISCONTINUED_RADIOLOGY_REPORT = 3;
+    
     private static final int RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT = 2005;
     
     private static final int RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT = 2006;
@@ -108,160 +114,176 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     }
     
     /**
-     * @see RadiologyReportService#createAndClaimRadiologyReport(RadiologyOrder)
+     * @see RadiologyReportService#createRadiologyReport(RadiologyOrder)
      * @verifies create a radiology order with report status claimed given a completed radiology
      *           order
      */
     @Test
-    public void
-            createAndClaimRadiologyReport_shouldCreateARadiologyOrderWithReportStatusClaimedGivenACompletedRadiologyOrder()
-                    throws Exception {
+    public void createRadiologyReport_shouldCreateARadiologyOrderWithReportStatusClaimedGivenACompletedRadiologyOrder()
+            throws Exception {
         
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
         radiologyOrder.getStudy()
                 .setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-        RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
+        
+        RadiologyReport radiologyReport = radiologyReportService.createRadiologyReport(radiologyOrder);
         assertNotNull(radiologyReport);
+        assertThat(radiologyReport.getRadiologyOrder(), is(radiologyOrder));
         assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.CLAIMED));
     }
     
     /**
-     * @see RadiologyReportService#createAndClaimRadiologyReport(RadiologyOrder)
+     * @see RadiologyReportService#createRadiologyReport(RadiologyOrder)
      * @verifies throw illegal argument exception given null
      */
     @Test
-    public void createAndClaimRadiologyReport_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
+    public void createRadiologyReport_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyOrder cannot be null");
-        radiologyReportService.createAndClaimRadiologyReport(null);
+        radiologyReportService.createRadiologyReport(null);
     }
     
     /**
-     * @see RadiologyReportService#createAndClaimRadiologyReport(RadiologyOrder)
+     * @see RadiologyReportService#createRadiologyReport(RadiologyOrder)
      * @verifies throw api exception if given radiology order is not completed
      */
     @Test
-    public void createAndClaimRadiologyReport_shouldThrowAPIExceptionIfGivenRadiologyOrderIsNotCompleted() throws Exception {
+    public void createRadiologyReport_shouldThrowAPIExceptionIfGivenRadiologyOrderIsNotCompleted() throws Exception {
         
         RadiologyOrder existingRadiologyOrder =
                 radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT);
         existingRadiologyOrder.getStudy()
                 .setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
+        
         expectedException.expect(APIException.class);
-        expectedException.expectMessage("radiologyOrder needs to be completed");
-        radiologyReportService.createAndClaimRadiologyReport(existingRadiologyOrder);
+        expectedException.expectMessage("radiology.RadiologyReport.cannot.create.for.not.completed.order");
+        radiologyReportService.createRadiologyReport(existingRadiologyOrder);
     }
     
     /**
-     * @see RadiologyReportService#createAndClaimRadiologyReport(RadiologyOrder)
-     * @verifies throw api exception if given order has a completed radiology report
-     */
-    @Test
-    public void createAndClaimRadiologyReport_shouldThrowAPIExceptionIfGivenOrderHasACompletedRadiologyReport()
-            throws Exception {
-        RadiologyOrder existingRadiologyOrder =
-                radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT);
-        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
-        existingRadiologyReport.setStatus(RadiologyReportStatus.CLAIMED);
-        radiologyReportService.saveRadiologyReport(existingRadiologyReport);
-        radiologyReportService.completeRadiologyReport(existingRadiologyReport, providerService.getProvider(1));
-        expectedException.expect(APIException.class);
-        expectedException
-                .expectMessage("cannot create radiologyReport for this radiologyOrder because it is already completed");
-        radiologyReportService.createAndClaimRadiologyReport(existingRadiologyOrder);
-    }
-    
-    /**
-     * @see RadiologyReportService#createAndClaimRadiologyReport(RadiologyOrder)
+     * @see RadiologyReportService#createRadiologyReport(RadiologyOrder)
      * @verifies throw api exception if given order has a claimed radiology report
      */
     @Test
-    public void createAndClaimRadiologyReport_shouldThrowAPIExceptionIfGivenOrderHasAClaimedRadiologyReport()
-            throws Exception {
+    public void createRadiologyReport_shouldThrowAPIExceptionIfGivenOrderHasAClaimedRadiologyReport() throws Exception {
         
-        RadiologyOrder existingRadiologyOrder =
+        RadiologyOrder radiologyOrder =
                 radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT);
+        
         expectedException.expect(APIException.class);
-        expectedException
-                .expectMessage("cannot create radiologyReport for this radiologyOrder because it is already claimed");
-        radiologyReportService.createAndClaimRadiologyReport(existingRadiologyOrder);
+        expectedException.expectMessage("radiology.RadiologyReport.cannot.create.already.claimed");
+        radiologyReportService.createRadiologyReport(radiologyOrder);
     }
     
     /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
-     * @verifies save radiology report to the database and return it
+     * @see RadiologyReportService#createRadiologyReport(RadiologyOrder)
+     * @verifies throw api exception if given order has a completed radiology report
      */
     @Test
-    public void saveRadiologyReport_shouldSaveRadiologyReportTotTheDatabaseAndReturnIt() throws Exception {
+    public void createRadiologyReport_shouldThrowAPIExceptionIfGivenOrderHasACompletedRadiologyReport() throws Exception {
+        
+        RadiologyOrder radiologyOrder =
+                radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT);
+        
+        expectedException.expect(APIException.class);
+        expectedException.expectMessage("radiology.RadiologyReport.cannot.create.already.completed");
+        radiologyReportService.createRadiologyReport(radiologyOrder);
+    }
+    
+    /**
+     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
+     * @verifies save existing radiology report to the database and return it
+     */
+    @Test
+    public void saveRadiologyReportDraft_shouldSaveExistingRadiologyReportTotTheDatabaseAndReturnIt() throws Exception {
         
         RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         existingRadiologyReport.setStatus(RadiologyReportStatus.CLAIMED);
         existingRadiologyReport.setBody("test - text");
         
-        assertNotNull(radiologyReportService.saveRadiologyReport(existingRadiologyReport));
-        assertThat(radiologyReportService.saveRadiologyReport(existingRadiologyReport)
+        assertNotNull(radiologyReportService.saveRadiologyReportDraft(existingRadiologyReport));
+        assertThat(radiologyReportService.saveRadiologyReportDraft(existingRadiologyReport)
                 .getId(),
             is(EXISTING_RADIOLOGY_REPORT_ID));
-        assertThat(radiologyReportService.saveRadiologyReport(existingRadiologyReport)
+        assertThat(radiologyReportService.saveRadiologyReportDraft(existingRadiologyReport)
                 .getBody(),
             is("test - text"));
     }
     
     /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
+     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
      * @verifies throw illegal argument exception if given null
      */
     @Test
-    public void saveRadiologyReport_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
+    public void saveRadiologyReportDraft_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReport cannot be null");
-        radiologyReportService.saveRadiologyReport(null);
+        radiologyReportService.saveRadiologyReportDraft(null);
     }
     
     /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
-     * @verifies throw illegal argument exception if radiology report status is null
+     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
+     * @verifies throw illegal argument exception if given radiology report with reportId null
      */
     @Test
-    public void saveRadiologyReport_shouldThrowIllegalArgumentExceptionIfRadiologyReportStatusIsNull() throws Exception {
+    public void saveRadiologyReportDraft_shouldThrowIllegalArgumentExceptionGivenRadiologyReportWithReportIdNull()
+            throws Exception {
         
-        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
-        existingRadiologyReport.setStatus(null);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
+        radiologyReport.setId(null);
+        
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyReportStatus cannot be null");
-        radiologyReportService.saveRadiologyReport(existingRadiologyReport);
+        expectedException.expectMessage("radiologyReport.reportId cannot be null");
+        radiologyReportService.saveRadiologyReportDraft(radiologyReport);
     }
     
     /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
+     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
      * @verifies throw api exception if radiology report is completed
      */
     @Test
-    public void saveRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsCompleted() throws Exception {
+    public void saveRadiologyReportDraft_shouldThrowAPIExceptionIfRadiologyReportIsCompleted() throws Exception {
         
-        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
-        radiologyReport.setStatus(RadiologyReportStatus.COMPLETED);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(COMPLETED_RADIOLOGY_REPORT);
         
         expectedException.expect(APIException.class);
-        expectedException.expectMessage("a completed radiologyReport cannot be saved");
-        radiologyReportService.saveRadiologyReport(radiologyReport);
+        expectedException.expectMessage("radiology.RadiologyReport.cannot.saveDraft.already.completed");
+        radiologyReportService.saveRadiologyReportDraft(radiologyReport);
     }
     
     /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
+     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
      * @verifies throw api exception if radiology report is discontinued
      */
     @Test
-    public void saveRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsDiscontinued() throws Exception {
+    public void saveRadiologyReportDraft_shouldThrowAPIExceptionIfRadiologyReportIsDiscontinued() throws Exception {
         
-        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
-        radiologyReport.setStatus(RadiologyReportStatus.DISCONTINUED);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(DISCONTINUED_RADIOLOGY_REPORT);
         
         expectedException.expect(APIException.class);
-        expectedException.expectMessage("a discontinued radiologyReport cannot be saved");
-        radiologyReportService.saveRadiologyReport(radiologyReport);
+        expectedException.expectMessage("radiology.RadiologyReport.cannot.saveDraft.already.discontinued");
+        radiologyReportService.saveRadiologyReportDraft(radiologyReport);
+    }
+    
+    /**
+     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
+     * @verifies throw api exception if given radiology reports order has a completed radiology report
+     */
+    @Test
+    public void saveRadiologyReportDraft_shouldThrowAPIExceptionIfGivenRadiologyReportsOrderHasACompletedRadiologyReport()
+            throws Exception {
+        
+        RadiologyOrder radiologyOrder =
+                radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT);
+        RadiologyReport radiologyReport = new RadiologyReport(radiologyOrder);
+        radiologyReport.setId(1000);
+        radiologyReport.setBody("fracture somewhere; not done still draft.");
+        
+        expectedException.expect(APIException.class);
+        expectedException.expectMessage("radiology.RadiologyReport.cannot.saveDraft.already.reported");
+        radiologyReportService.saveRadiologyReportDraft(radiologyReport);
     }
     
     /**
@@ -342,13 +364,13 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     public void completeRadiologyReport_shouldSetTheReportDateOfTheRadiologyReportToTheDayTheRadiologyReportWasCompleted()
             throws Exception {
         
-        RadiologyReport radiologyReport = radiologyReportService.completeRadiologyReport(
-            radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID),
-            radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID)
-                    .getPrincipalResultsInterpreter());
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(CLAIMED_RADIOLOGY_REPORT);
         
-        assertNotNull(radiologyReport);
-        assertNotNull(radiologyReport.getDate());
+        RadiologyReport completedRadiologyReport = radiologyReportService.completeRadiologyReport(radiologyReport,
+            radiologyReport.getPrincipalResultsInterpreter());
+        
+        assertNotNull(completedRadiologyReport);
+        assertNotNull(completedRadiologyReport.getDate());
     }
     
     /**
@@ -358,58 +380,75 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     @Test
     public void completeRadiologyReport_shouldSetTheRadiologyReportStatusToComplete() throws Exception {
         
-        RadiologyReport radiologyReport = radiologyReportService.completeRadiologyReport(
-            radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID),
-            radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID)
-                    .getPrincipalResultsInterpreter());
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(CLAIMED_RADIOLOGY_REPORT);
         
-        assertNotNull(radiologyReport);
-        assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.COMPLETED));
+        RadiologyReport completedRadiologyReport = radiologyReportService.completeRadiologyReport(radiologyReport,
+            radiologyReport.getPrincipalResultsInterpreter());
+        
+        assertNotNull(completedRadiologyReport);
+        assertThat(completedRadiologyReport.getStatus(), is(RadiologyReportStatus.COMPLETED));
     }
     
     /**
      * @see RadiologyReportService#completeRadiologyReport(RadiologyReport, Provider)
-     * @verifies throw illegal argument exception if principal results interpreter is null
+     * @verifies throw illegal argument exception if given radiology report is null
      */
     @Test
-    public void completeRadiologyReport_shouldThrowIllegalArgumentExceptionIfPrincipalResultsInterpreterIsNull()
-            throws Exception {
+    public void completeRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenRadiologyReportIsNull() throws Exception {
         
-        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(CLAIMED_RADIOLOGY_REPORT);
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReport cannot be null");
-        radiologyReportService.completeRadiologyReport(null, existingRadiologyReport.getPrincipalResultsInterpreter());
+        radiologyReportService.completeRadiologyReport(null, radiologyReport.getPrincipalResultsInterpreter());
     }
     
     /**
      * @see RadiologyReportService#completeRadiologyReport(RadiologyReport, Provider)
-     * @verifies throw illegal argument exception if radiology report is null
+     * @verifies throw illegal argument exception if given radiology report with reportId null
      */
     @Test
-    public void completeRadiologyReport_shouldThrowIllegalArgumentExceptionIfRadiologyReportIsNull() throws Exception {
+    public void completeRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenRadiologyReportWithReportIdNull()
+            throws Exception {
         
-        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
-        existingRadiologyReport.setPrincipalResultsInterpreter(null);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(CLAIMED_RADIOLOGY_REPORT);
+        radiologyReport.setId(null);
+        
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("radiologyReport.reportId cannot be null");
+        radiologyReportService.completeRadiologyReport(radiologyReport, radiologyReport.getPrincipalResultsInterpreter());
+    }
+    
+    /**
+     * @see RadiologyReportService#completeRadiologyReport(RadiologyReport, Provider)
+     * @verifies throw illegal argument exception if given radiology report with status null
+     */
+    @Test
+    public void completeRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenRadiologyReportWithStatusNull()
+            throws Exception {
+        
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(CLAIMED_RADIOLOGY_REPORT);
+        radiologyReport.setStatus(null);
+        
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("radiologyReport.status cannot be null");
+        radiologyReportService.completeRadiologyReport(radiologyReport, radiologyReport.getPrincipalResultsInterpreter());
+    }
+    
+    /**
+     * @see RadiologyReportService#completeRadiologyReport(RadiologyReport, Provider)
+     * @verifies throw illegal argument exception if given principal results interpreter is null
+     */
+    @Test
+    public void completeRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenPrincipalResultsInterpreterIsNull()
+            throws Exception {
+        
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(CLAIMED_RADIOLOGY_REPORT);
+        radiologyReport.setPrincipalResultsInterpreter(null);
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("principalResultsInterpreter cannot be null");
-        radiologyReportService.completeRadiologyReport(existingRadiologyReport, null);
-    }
-    
-    /**
-     * @see RadiologyReportService#completeRadiologyReport(RadiologyReport, Provider)
-     * @verifies throw illegal argument exception if radiology report status is null
-     */
-    @Test
-    public void completeRadiologyReport_shouldThrowIllegalArgumentExceptionIfRadiologyReportStatusIsNull() throws Exception {
-        
-        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
-        existingRadiologyReport.setStatus(null);
-        Provider provider = new Provider();
-        provider.setId(1);
-        provider.setName("doctor");
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyReportStatus cannot be null");
-        radiologyReportService.completeRadiologyReport(existingRadiologyReport, provider);
+        radiologyReportService.completeRadiologyReport(radiologyReport, null);
     }
     
     /**
@@ -419,15 +458,11 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     @Test
     public void completeRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsCompleted() throws Exception {
         
-        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
-        radiologyReport.setStatus(RadiologyReportStatus.COMPLETED);
-        Provider provider = new Provider();
-        provider.setId(1);
-        provider.setName("doctor");
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(COMPLETED_RADIOLOGY_REPORT);
         
         expectedException.expect(APIException.class);
-        expectedException.expectMessage("a completed radiologyReport cannot be completed");
-        radiologyReportService.completeRadiologyReport(radiologyReport, provider);
+        expectedException.expectMessage("radiology.RadiologyReport.cannot.complete.completed");
+        radiologyReportService.completeRadiologyReport(radiologyReport, radiologyReport.getPrincipalResultsInterpreter());
     }
     
     /**
@@ -437,15 +472,11 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     @Test
     public void completeRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsDiscontinued() throws Exception {
         
-        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
-        radiologyReport.setStatus(RadiologyReportStatus.DISCONTINUED);
-        Provider provider = new Provider();
-        provider.setId(1);
-        provider.setName("doctor");
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(DISCONTINUED_RADIOLOGY_REPORT);
         
         expectedException.expect(APIException.class);
-        expectedException.expectMessage("a discontinued radiologyReport cannot be completed");
-        radiologyReportService.completeRadiologyReport(radiologyReport, provider);
+        expectedException.expectMessage("radiology.RadiologyReport.cannot.complete.discontinued");
+        radiologyReportService.completeRadiologyReport(radiologyReport, radiologyReport.getPrincipalResultsInterpreter());
     }
     
     /**

@@ -20,16 +20,23 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.Order;
+import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.openmrs.module.radiology.order.web.RadiologyOrderFormController;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportService;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.module.radiology.report.RadiologyReportValidator;
 import org.openmrs.module.radiology.test.RadiologyTestData;
 import org.openmrs.test.BaseContextMockTest;
+import org.openmrs.web.WebConstants;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * Tests {@link RadiologyReportFormController}.
@@ -50,21 +57,20 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
     private RadiologyReportFormController radiologyReportFormController = new RadiologyReportFormController();
     
     /**
-     * @see RadiologyReportFormController#getRadiologyReportFormWithNewRadiologyReport(RadiologyOrder)
-     * @verifies populate model and view with new radiology report for given radiology order
+     * @see RadiologyReportFormController#createRadiologyReport(RadiologyOrder)
+     * @verifies create a new radiology report for given radiology order and redirect to its radiology report form
      */
     @Test
     public void
-            getRadiologyReportFormWithNewRadiologyReport_shouldPopulateModelAndViewWithNewRadiologyReportForGivenRadiologyOrder() {
+            createRadiologyReport_shouldCreateANewRadiologyReportForGivenRadiologyOrderAndRedirectToItsRadiologyReportForm() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
         RadiologyOrder mockRadiologyOrder = mockRadiologyReport.getRadiologyOrder();
         
-        when(radiologyReportService.createAndClaimRadiologyReport(mockRadiologyOrder)).thenReturn(mockRadiologyReport);
+        when(radiologyReportService.createRadiologyReport(mockRadiologyOrder)).thenReturn(mockRadiologyReport);
         
-        ModelAndView modelAndView =
-                radiologyReportFormController.getRadiologyReportFormWithNewRadiologyReport(mockRadiologyOrder);
+        ModelAndView modelAndView = radiologyReportFormController.createRadiologyReport(mockRadiologyOrder);
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
@@ -115,20 +121,55 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
     }
     
     /**
-     * @see RadiologyReportFormController#saveRadiologyReport(RadiologyReport)
-     * @verifies save given radiology report and populate model and view with it
+     * @see RadiologyReportFormController#saveRadiologyReportDraft(HttpServletRequest,RadiologyReport)
+     * @verifies save given radiology report and set http session attribute openmrs message to report draft saved and redirect
+     *         to its report form
      */
     @Test
-    public void saveRadiologyReport_shouldSaveGivenRadiologyReportAndPopulateModelAndViewWithIt() {
+    public void
+            saveRadiologyReportDraft_shouldSaveGivenRadiologyReportAndSetHttpSessionAttributeOpenmrsMessageToReportDraftSavedAndRedirectToItsReportForm() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
         
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("saveRadiologyReportDraft", "saveRadiologyReportDraft");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
+        ModelAndView modelAndView = radiologyReportFormController.saveRadiologyReportDraft(mockRequest, mockRadiologyReport);
+        
+        assertNotNull(modelAndView);
+        assertThat(modelAndView.getViewName(),
+            is("redirect:/module/radiology/radiologyReport.form?reportId=" + mockRadiologyReport.getReportId()));
+        assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR),
+            is("radiology.RadiologyReport.savedDraft"));
+    }
+    
+    /**
+     * @see RadiologyReportFormController#saveRadiologyReportDraft(HttpServletRequest,RadiologyReport)
+     * @verifies not redirect and set session attribute with openmrs error if api exception is thrown by save radiology report draft
+     */
+    @Test
+    public void
+            saveRadiologyReportDraft_shouldNotRedirectAndSetSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownBySaveRadiologyReportDraft()
+                    throws Exception {
+        
+        // given
+        RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
+        
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("saveRadiologyReportDraft", "saveRadiologyReportDraft");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
         when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
                 .getStudy())).thenReturn(
                     "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
+        when(radiologyReportService.saveRadiologyReportDraft(mockRadiologyReport))
+                .thenThrow(new APIException("RadiologyReport.cannot.saveDraft.already.reported"));
         
-        ModelAndView modelAndView = radiologyReportFormController.saveRadiologyReport(mockRadiologyReport);
+        ModelAndView modelAndView = radiologyReportFormController.saveRadiologyReportDraft(mockRequest, mockRadiologyReport);
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
@@ -154,6 +195,9 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .get("dicomViewerUrl");
         assertThat(dicomViewerUrl,
             is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
+        
+        assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR),
+            is("RadiologyReport.cannot.saveDraft.already.reported"));
     }
     
     /**
@@ -175,12 +219,14 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
     }
     
     /**
-     * @see RadiologyReportFormController#completeRadiologyReport(RadiologyReport,
+     * @see RadiologyReportFormController#completeRadiologyReport(HttpServletRequest, RadiologyReport,
      *      BindingResult)
-     * @verifies complete given radiology report if it is valid
+     * @verifies complete given radiology report if valid and set http session attribute openmrs message to report completed and redirect
+     *         to its report form
      */
     @Test
-    public void completeRadiologyReport_shouldCompleteGivenRadiologyReportIfItIsValid() {
+    public void
+            completeRadiologyReport_shouldCompleteGivenRadiologyReportIfValidAndSetHttpSessionAttributeOpenmrsMessageToReportCompletedAndRedirectToItsReportForm() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
@@ -192,17 +238,25 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         when(radiologyReportService.completeRadiologyReport(mockRadiologyReport,
             mockRadiologyReport.getPrincipalResultsInterpreter())).thenReturn(mockCompletedRadiologyReport);
         
-        ModelAndView modelAndView = radiologyReportFormController.completeRadiologyReport(mockRadiologyReport, reportErrors);
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("completeRadiologyReport", "completeRadiologyReport");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
+        ModelAndView modelAndView =
+                radiologyReportFormController.completeRadiologyReport(mockRequest, mockRadiologyReport, reportErrors);
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
-            is("redirect:/module/radiology/radiologyReport.form?reportId=" + mockRadiologyReport.getId()));
+            is("redirect:/module/radiology/radiologyReport.form?reportId=" + mockCompletedRadiologyReport.getReportId()));
+        assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR),
+            is("radiology.RadiologyReport.completed"));
     }
     
     /**
-     * @see RadiologyReportFormController#completeRadiologyReport(RadiologyReport,
+     * @see RadiologyReportFormController#completeRadiologyReport(HttpServletRequest, RadiologyReport,
      *      BindingResult)
-     * @verifies not complete given radiology report if it is not valid
+     * @verifies not complete and redirect given invalid radiology report
      */
     @Test
     public void completeRadiologyReport_shouldNotCompleteGivenRadiologyReportIfItIsNotValid() {
@@ -215,7 +269,13 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         when(reportErrors.hasErrors()).thenReturn(true);
         
-        ModelAndView modelAndView = radiologyReportFormController.completeRadiologyReport(mockRadiologyReport, reportErrors);
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("completeRadiologyReport", "completeRadiologyReport");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
+        ModelAndView modelAndView =
+                radiologyReportFormController.completeRadiologyReport(mockRequest, mockRadiologyReport, reportErrors);
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
@@ -236,5 +296,64 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .get("radiologyReport");
         assertNotNull(radiologyReport);
         assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.CLAIMED));
+    }
+    
+    /**
+     * @see RadiologyReportFormController#completeRadiologyReport(HttpServletRequest, RadiologyReport,
+     *      BindingResult)
+     * @verifies not redirect and set session attribute with openmrs error if api exception is thrown by complete radiology report
+     */
+    @Test
+    public void
+            completeRadiologyReport_shouldNotRedirectAndSetSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownByCompleteRadiologyReport()
+                    throws Exception {
+        
+        // given
+        RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
+        
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("completeRadiologyReport", "completeRadiologyReport");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
+        BindingResult reportErrors = mock(BindingResult.class);
+        
+        when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
+                .getStudy())).thenReturn(
+                    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
+        when(radiologyReportService.completeRadiologyReport(mockRadiologyReport,
+            mockRadiologyReport.getPrincipalResultsInterpreter()))
+                    .thenThrow(new APIException("RadiologyReport.cannot.complete.reported"));
+        
+        ModelAndView modelAndView =
+                radiologyReportFormController.completeRadiologyReport(mockRequest, mockRadiologyReport, reportErrors);
+        
+        assertNotNull(modelAndView);
+        assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("order"));
+        Order order = (Order) modelAndView.getModelMap()
+                .get("order");
+        assertNotNull(order);
+        assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
+        RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
+                .get("radiologyOrder");
+        assertThat(radiologyOrder, is(mockRadiologyReport.getRadiologyOrder()));
+        
+        RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap()
+                .get("radiologyReport");
+        assertNotNull(radiologyReport);
+        assertThat(radiologyReport, is(mockRadiologyReport));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
+        String dicomViewerUrl = (String) modelAndView.getModelMap()
+                .get("dicomViewerUrl");
+        assertThat(dicomViewerUrl,
+            is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
+        
+        assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR),
+            is("RadiologyReport.cannot.complete.reported"));
     }
 }
