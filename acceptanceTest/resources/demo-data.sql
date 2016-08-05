@@ -453,7 +453,7 @@ INSERT INTO `orders` VALUES (1,4,161318,10,1,NULL,'2016-07-22 09:04:28',NULL,NUL
 INSERT INTO `test_order` VALUES (1,NULL,NULL,NULL,NULL,NULL);
 INSERT INTO `radiology_order` VALUES (1);
 INSERT INTO `radiology_study` VALUES (1,'2.25.246163855101151575419381898503875072573',1,'COMPLETED',10,'2016-07-22 09:04:29',NULL,NULL,'52cf158d-bd6b-4b60-b0ec-597dda94c372');
-INSERT INTO `radiology_report` VALUES (1,1,'COMPLETED',14,'2016-07-22','<p>Left&nbsp;wrist is broken, needs cask.</p>',14,'2016-07-22 09:06:00','022d45cc-ca76-49c0-8572-3c75a6f85e76');
+INSERT INTO `radiology_report` VALUES (1,1,'COMPLETED',14,'2016-07-22','<p>Left&nbsp;wrist is broken, needs cask.</p>',14,'2016-07-22 09:06:00','022d45cc-ca76-49c0-8572-3c75a6f85e76',false,NULL,NULL,NULL);
 COMMIT;
 
 -- Carlos Wilderman
@@ -488,7 +488,7 @@ INSERT INTO `orders` VALUES (6,4,161267,11,6,NULL,'2016-07-22 09:12:14',NULL,NUL
 INSERT INTO `test_order` VALUES (6,NULL,NULL,'already had broken her ankle once',NULL,NULL);
 INSERT INTO `radiology_order` VALUES (6);
 INSERT INTO `radiology_study` VALUES (5,'2.25.178890805958223695051050558077248903949',6,'COMPLETED',11,'2016-07-22 09:12:14',NULL,NULL,'07485517-d0dc-4a79-8e22-fd7d9326d055');
-INSERT INTO `radiology_report` VALUES (2,6,'CLAIMED',14,NULL,'<p>Old&nbsp;fracture visible, new one close to it.</p>',14,'2016-07-22 09:14:00','b56781de-7dad-4e25-b377-ebba7f3bf30c');
+INSERT INTO `radiology_report` VALUES (2,6,'CLAIMED',14,NULL,'<p>Old&nbsp;fracture visible, new one close to it.</p>',14,'2016-07-22 09:14:00','b56781de-7dad-4e25-b377-ebba7f3bf30c',false,NULL,NULL,NULL);
 COMMIT;
 
 BEGIN;
@@ -497,8 +497,8 @@ INSERT INTO `orders` VALUES (7,4,161291,11,7,NULL,'2016-07-22 09:14:28',NULL,NUL
 INSERT INTO `test_order` VALUES (7,NULL,NULL,'patient had several events of sharp abdominal pain for a few weeks',NULL,NULL);
 INSERT INTO `radiology_order` VALUES (7);
 INSERT INTO `radiology_study` VALUES (6,'2.25.195788626541510102066856864853818401349',7,'COMPLETED',11,'2016-07-22 09:14:28',NULL,NULL,'84feac4a-8954-4d0b-950b-e2b4ba1d4e9f');
-INSERT INTO `radiology_report` VALUES (3,7,'DISCONTINUED',14,NULL,'<p>Mhmm, not very firm with ultrasound. I\'ll ask Arden for help on this.</p>',14,'2016-07-22 09:16:00','d60338f6-27e0-4e69-bd91-fbc6e8f29660');
-INSERT INTO `radiology_report` VALUES (4,7,'CLAIMED',15,NULL,'<p>Ahh, clear to see that ...</p>',15,'2016-07-22 09:17:00','59ab79b5-15a0-40b2-a45e-57dba76bad25');
+INSERT INTO `radiology_report` VALUES (3,7,'CLAIMED',14,NULL,'<p>Mhmm, not very firm with ultrasound. I\'ll ask Arden for help on this.</p>',14,'2016-07-22 09:16:00','d60338f6-27e0-4e69-bd91-fbc6e8f29660',true,'2016-07-22 09:16:00',14,'Not firm enough with ultrasound, need Arden to help out here.');
+INSERT INTO `radiology_report` VALUES (4,7,'CLAIMED',15,NULL,'<p>Ahh, clear to see that ...</p>',15,'2016-07-22 09:17:00','59ab79b5-15a0-40b2-a45e-57dba76bad25',false,NULL,NULL,NULL);
 COMMIT;
 
 -- always update these values, they assure that the assigned order or accession numbers continue after the ones from the test data

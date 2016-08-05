@@ -101,7 +101,8 @@ public class RadiologyReportResourceTest {
                 radiologyReportResource.getRepresentationDescription(defaultRepresentation);
         assertThat(resourceDescription.getProperties()
                 .keySet(),
-            contains("uuid", "radiologyOrder", "date", "principalResultsInterpreter", "status", "body", "display"));
+            contains("uuid", "radiologyOrder", "date", "principalResultsInterpreter", "status", "body", "display",
+                "voided"));
         assertThat(resourceDescription.getProperties()
                 .get("radiologyOrder")
                 .getRep(),
@@ -122,7 +123,7 @@ public class RadiologyReportResourceTest {
                 radiologyReportResource.getRepresentationDescription(fullRepresentation);
         assertThat(resourceDescription.getProperties()
                 .keySet(),
-            contains("uuid", "radiologyOrder", "date", "principalResultsInterpreter", "status", "body", "display",
+            contains("uuid", "radiologyOrder", "date", "principalResultsInterpreter", "status", "body", "display", "voided",
                 "auditInfo"));
         assertThat(resourceDescription.getProperties()
                 .get("radiologyOrder")

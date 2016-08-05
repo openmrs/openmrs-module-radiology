@@ -16,7 +16,6 @@ import org.openmrs.Order;
 import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.order.RadiologyOrder;
-import org.openmrs.module.radiology.order.web.RadiologyOrderFormController;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportService;
 import org.openmrs.module.radiology.report.RadiologyReportValidator;
@@ -55,9 +54,17 @@ public class RadiologyReportFormController {
     @Autowired
     private RadiologyReportValidator radiologyReportValidator;
     
+    @Autowired
+    private VoidRadiologyReportRequestValidator voidRadiologyReportRequestValidator;
+    
     @InitBinder("radiologyReport")
     protected void initBinderRadiologyReport(WebDataBinder webDataBinder) {
         webDataBinder.setValidator(radiologyReportValidator);
+    }
+    
+    @InitBinder("voidRadiologyReportRequest")
+    protected void initBinderVoidRadiologyReportRequest(WebDataBinder webDataBinder) {
+        webDataBinder.setValidator(voidRadiologyReportRequestValidator);
     }
     
     /**
@@ -88,12 +95,14 @@ public class RadiologyReportFormController {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         addObjectsToModelAndView(modelAndView, radiologyReport);
+        modelAndView.addObject(new VoidRadiologyReportRequest());
         return modelAndView;
     }
     
     /**
      * Handles requests for saving a {@code RadiologyReport} as draft.
      *
+     * @param request the http servlet request
      * @param radiologyReport the radiology report to be saved
      * @return the model and view containing saved radiology report draft
      * @should save given radiology report and set http session attribute openmrs message to report draft saved and redirect
@@ -121,29 +130,58 @@ public class RadiologyReportFormController {
         }
         
         addObjectsToModelAndView(modelAndView, radiologyReport);
+        modelAndView.addObject(new VoidRadiologyReportRequest());
         return modelAndView;
     }
     
     /**
-     * Handles requests for unclaiming a {@code RadiologyReport}.
+     * Handles requests for voiding a {@code RadiologyReport}.
      *
-     * @param radiologyReport the radiology report to be unclaimed
-     * @return the model and view with redirect to order form if unclaim was successful, otherwise stay on
-     *         report form
-     * @should redirect to radiology order form if unclaim was successful
+     * @param request the http servlet request
+     * @param radiologyReport the radiology report to be voided
+     * @param voidRadiologyReportRequest the void radiology report request holding the void reason
+     * @param bindingResult the binding result for the void radiology report request
+     * @return the model and view with redirect to report form if voiding was successful, otherwise the
+     *         model and view contains binding result errors
+     * @should void given radiology report and set http session attribute openmrs message to report voided and redirect
+     *         to its report form
+     * @should not void and not redirect given invalid void radiology report request
+     * @should not redirect and set session attribute with openmrs error if api exception is thrown by void radiology
+     *         report
      */
-    @RequestMapping(method = RequestMethod.POST, params = "unclaimRadiologyReport")
-    protected ModelAndView unclaimRadiologyReport(@ModelAttribute RadiologyReport radiologyReport) {
+    @RequestMapping(method = RequestMethod.POST, params = "voidRadiologyReport")
+    protected ModelAndView voidRadiologyReport(HttpServletRequest request,
+            @RequestParam("reportId") RadiologyReport radiologyReport,
+            @Valid @ModelAttribute VoidRadiologyReportRequest voidRadiologyReportRequest, BindingResult bindingResult) {
         
-        radiologyReportService.unclaimRadiologyReport(radiologyReport);
-        return new ModelAndView(
-                "redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId=" + radiologyReport.getRadiologyOrder()
-                        .getOrderId());
+        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
+        
+        if (bindingResult.hasErrors()) {
+            addObjectsToModelAndView(modelAndView, radiologyReport);
+            return modelAndView;
+        }
+        
+        try {
+            radiologyReportService.voidRadiologyReport(radiologyReport, voidRadiologyReportRequest.getVoidReason());
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.RadiologyReport.voided");
+            return new ModelAndView(
+                    "redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId=" + radiologyReport.getRadiologyOrder()
+                            .getOrderId());
+        }
+        catch (APIException apiException) {
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, apiException.getMessage());
+        }
+        
+        addObjectsToModelAndView(modelAndView, radiologyReport);
+        return modelAndView;
     }
     
     /**
      * Handles requests for completing a {@code RadiologyReport}.
      *
+     * @param request the http servlet request
      * @param radiologyReport the radiology report to be completed
      * @param bindingResult the binding result for the radiology report
      * @return the model and view with redirect to report form if complete was successful, otherwise the
@@ -162,6 +200,7 @@ public class RadiologyReportFormController {
         
         if (bindingResult.hasErrors()) {
             addObjectsToModelAndView(modelAndView, radiologyReport);
+            modelAndView.addObject(new VoidRadiologyReportRequest());
             return modelAndView;
         }
         
@@ -179,6 +218,7 @@ public class RadiologyReportFormController {
                     .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, apiException.getMessage());
         }
         addObjectsToModelAndView(modelAndView, radiologyReport);
+        modelAndView.addObject(new VoidRadiologyReportRequest());
         return modelAndView;
     }
     

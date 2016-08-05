@@ -67,6 +67,7 @@ public class RadiologyReportResource extends DataDelegatingCrudResource<Radiolog
         description.addProperty("status");
         description.addProperty("body");
         description.addProperty("display");
+        description.addProperty("voided");
     }
     
     /**

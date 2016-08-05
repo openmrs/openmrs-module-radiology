@@ -9,10 +9,10 @@
  */
 package org.openmrs.module.radiology.report;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.Provider;
@@ -72,8 +72,8 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
         if (radiologyReport.getStatus() == RadiologyReportStatus.COMPLETED) {
             throw new APIException("radiology.RadiologyReport.cannot.saveDraft.already.completed");
         }
-        if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
-            throw new APIException("radiology.RadiologyReport.cannot.saveDraft.already.discontinued");
+        if (radiologyReport.getVoided()) {
+            throw new APIException("radiology.RadiologyReport.cannot.saveDraft.already.voided");
         }
         if (radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyReport.getRadiologyOrder())) {
             throw new APIException("radiology.RadiologyReport.cannot.saveDraft.already.reported");
@@ -82,25 +82,24 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     }
     
     /**
-     * @see RadiologyReportService#unclaimRadiologyReport(RadiologyReport)
+     * @see RadiologyReportService#voidRadiologyReport(RadiologyReport, String)
      */
     @Override
     @Transactional
-    public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport) {
+    public RadiologyReport voidRadiologyReport(RadiologyReport radiologyReport, String voidReason) {
         
         if (radiologyReport == null) {
             throw new IllegalArgumentException("radiologyReport cannot be null");
         }
-        if (radiologyReport.getStatus() == null) {
-            throw new IllegalArgumentException("radiologyReportStatus cannot be null");
+        if (radiologyReport.getReportId() == null) {
+            throw new IllegalArgumentException("radiologyReport.reportId cannot be null");
         }
-        if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
-            throw new APIException("a discontinued radiologyReport cannot be unclaimed");
+        if (StringUtils.isBlank(voidReason)) {
+            throw new IllegalArgumentException("voidReason cannot be null or empty");
         }
         if (radiologyReport.getStatus() == RadiologyReportStatus.COMPLETED) {
-            throw new APIException("a completed radiologyReport cannot be unclaimed");
+            throw new APIException("radiology.RadiologyReport.cannot.void.completed");
         }
-        radiologyReport.setStatus(RadiologyReportStatus.DISCONTINUED);
         return radiologyReportDAO.saveRadiologyReport(radiologyReport);
     }
     
@@ -127,8 +126,8 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
         if (radiologyReport.getStatus() == RadiologyReportStatus.COMPLETED) {
             throw new APIException("radiology.RadiologyReport.cannot.complete.completed");
         }
-        if (radiologyReport.getStatus() == RadiologyReportStatus.DISCONTINUED) {
-            throw new APIException("radiology.RadiologyReport.cannot.complete.discontinued");
+        if (radiologyReport.getVoided()) {
+            throw new APIException("radiology.RadiologyReport.cannot.complete.voided");
         }
         radiologyReport.setDate(new Date());
         radiologyReport.setPrincipalResultsInterpreter(principalResultsInterpreter);
@@ -158,24 +157,6 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
             throw new IllegalArgumentException("radiologyReportUuid cannot be null");
         }
         return radiologyReportDAO.getRadiologyReportByUuid(radiologyReportUuid);
-    }
-    
-    /**
-     * @see RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder, RadiologyReportStatus)
-     */
-    @Override
-    public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder radiologyOrder,
-            RadiologyReportStatus reportStatus) {
-        
-        if (radiologyOrder == null) {
-            throw new IllegalArgumentException("radiologyOrder cannot be null");
-        }
-        if (reportStatus == null) {
-            throw new IllegalArgumentException("radiologyReportStatus cannot be null");
-        }
-        final List<RadiologyReport> result =
-                radiologyReportDAO.getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(radiologyOrder, reportStatus);
-        return result == null ? new ArrayList<RadiologyReport>() : result;
     }
     
     /**

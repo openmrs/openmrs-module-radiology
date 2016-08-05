@@ -25,7 +25,7 @@ public class RadiologyReportSearchCriteria {
     
     private final Provider principalResultsInterpreter;
     
-    private final Boolean includeDiscontinued;
+    private final Boolean includeVoided;
     
     private final RadiologyReportStatus status;
     
@@ -54,11 +54,11 @@ public class RadiologyReportSearchCriteria {
     }
     
     /**
-     * @return the {@code Boolean} specifying whether or not to include discontinued radiology reports
+     * @return the {@code Boolean} specifying whether or not to include voided radiology reports
      */
-    public Boolean getIncludeDiscontinued() {
+    public Boolean getIncludeVoided() {
         
-        return includeDiscontinued;
+        return includeVoided;
     }
     
     /**
@@ -78,7 +78,7 @@ public class RadiologyReportSearchCriteria {
         
         private Provider principalResultsInterpreter;
         
-        private Boolean includeDiscontinued = false;
+        private Boolean inludeVoided = false;
         
         private RadiologyReportStatus status;
         
@@ -113,18 +113,18 @@ public class RadiologyReportSearchCriteria {
         }
         
         /**
-         * Includes discontinued radiology reports.
+         * Includes voided radiology reports.
          * 
          * @return this builder instance
          */
-        public Builder includeDiscontinued() {
+        public Builder includeVoided() {
             
-            this.includeDiscontinued = true;
+            this.inludeVoided = true;
             return this;
         }
         
         /**
-         * Sets the criteria's report status and ensures {@code includeDiscontinued} is true if given status is discontinued.
+         * Sets the criteria's report status.
          * 
          * @param status the status of the report
          * @return this builder instance
@@ -132,9 +132,6 @@ public class RadiologyReportSearchCriteria {
         public Builder withStatus(RadiologyReportStatus status) {
             
             this.status = status;
-            if (status == RadiologyReportStatus.DISCONTINUED) {
-                this.includeDiscontinued = true;
-            }
             return this;
         }
         
@@ -144,9 +141,8 @@ public class RadiologyReportSearchCriteria {
          * @return a new search criteria instance
          * @should create a new radiology report search criteria instance with from and to date specified if date from and date to are set
          * @should create a new radiology report search criteria instance with principal results interpreter specified if principal results interpreter is set
-         * @should create a new radiology report search criteria instance with include discontinued set to true if discontinued reports should be included
+         * @should create a new radiology report search criteria instance with include voided set to true if voided reports should be included
          * @should create a new radiology report search criteria instance with report status specified if status is set to claimed or completed
-         * @should create a new radiology report search criteria instance with report status set to discontinued and include discontinued set to true if status is set to discontinued
          */
         public RadiologyReportSearchCriteria build() {
             
@@ -159,7 +155,7 @@ public class RadiologyReportSearchCriteria {
         this.fromDate = builder.fromDate;
         this.toDate = builder.toDate;
         this.principalResultsInterpreter = builder.principalResultsInterpreter;
-        this.includeDiscontinued = builder.includeDiscontinued;
+        this.includeVoided = builder.inludeVoided;
         this.status = builder.status;
     }
 }

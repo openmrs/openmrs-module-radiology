@@ -11,34 +11,34 @@
 <script type="text/javascript">
   var $j = jQuery.noConflict();
  
-  function showUnclaimRadiologyReportDialog() {
+  function showVoidRadiologyReportDialog() {
     var dialogDiv = $j("<div></div>")
             .html(
-                    '<spring:message code="radiology.report.form.unclaim.dialog.message"/>');
+                    '<spring:message code="radiology.report.form.void.dialog.message"/>');
     dialogDiv
             .dialog({
               resizable: false,
               width: 'auto',
               height: 'auto',
-              title: '<spring:message code="radiology.report.form.unclaim.dialog.title"/>',
+              title: '<spring:message code="radiology.report.form.void.dialog.title"/>',
               modal: true,
               buttons: {
-                '<spring:message code="radiology.report.form.unclaim.dialog.button.ok"/>': function() {
+                '<spring:message code="radiology.report.form.void.dialog.button.ok"/>': function() {
                   $j(this).dialog("close");
-                  submitUnclaimRadiologyReport();
+                  submitVoidRadiologyReport();
                 },
-                '<spring:message code="radiology.report.form.unclaim.dialog.button.cancel"/>': function() {
+                '<spring:message code="radiology.report.form.void.dialog.button.cancel"/>': function() {
                   $j(this).dialog("close");
                 }
               }
             });
   }
 
-  function submitUnclaimRadiologyReport() {
-    var unclaimRadiologyReport = $j("<input>").attr("type", "hidden").attr(
-            "name", "unclaimRadiologyReport").val("Unclaim");
-    $j("#radiologyReportFormId").append(unclaimRadiologyReport);
-    $j("#radiologyReportFormId").submit()
+  function submitVoidRadiologyReport() {
+    var voidRadiologyReport = $j("<input>").attr("type", "hidden").attr(
+            "name", "voidRadiologyReport").val('<spring:message code="general.void"/>');
+    $j("#voidRadiologyReportForm").append(voidRadiologyReport);
+    $j("#voidRadiologyReportForm").submit()
   }
 
   $j(document).ready(function() {
@@ -57,11 +57,11 @@
       elementpath: false,
     });
 
-    $j("#unclaimRadiologyReportButtonId").click(function() {
+    $j("#voidRadiologyReportButtonId").click(function() {
       if (tinymce.activeEditor.getContent() != "") {
-        showUnclaimRadiologyReportDialog();
+        showVoidRadiologyReportDialog();
       } else {
-        submitUnclaimRadiologyReport();
+        submitVoidRadiologyReport();
       }
     });
 
@@ -91,6 +91,13 @@
   </div>
   <br>
 </spring:hasBindErrors>
+<c:if test="${radiologyReport.voided}">
+  <div class="retiredMessage">
+    <div>
+      <spring:message code="general.voided"/>
+    </div>
+  </div>
+</c:if>
 <span class="boxHeader"> <b><spring:message code="radiology.radiologyReportTitle" /></b>
 </span>
 <form:form id="radiologyReportFormId" modelAttribute="radiologyReport" method="post">
@@ -165,17 +172,46 @@
 					<form:hidden path="dateCreated" />
             </spring:bind></span></td>
       </tr>
+      <c:if test="${radiologyReport.voided}">
+          <form:hidden path="voided" />
+          <tr>
+            <td><spring:message code="general.voidedBy" /></td>
+            <td><spring:bind path="voidedBy.personName">
+                        ${status.value}
+                        <form:hidden path="voidedBy" />
+              </spring:bind> - <span class="datetime"><spring:bind path="dateVoided">
+                        ${status.value}
+                        <form:hidden path="dateVoided" />
+                </spring:bind></span></td>
+          </tr>
+          <tr>
+            <td><spring:message code="general.voidReason" /></td>
+            <td><spring:bind path="voidReason">${status.value}</spring:bind></td>
+          </tr>
+      </c:if>
     </table>
     <br>
-    <c:if test="${radiologyReport.status != 'COMPLETED'}">
-      <c:if test="${radiologyReport.status != 'DISCONTINUED'}">
-        <input type="button" value="<spring:message code="radiology.radiologyReportUnclaim"/>"
-          id="unclaimRadiologyReportButtonId" />
+    <c:if test="${(radiologyReport.status == 'CLAIMED') && (not radiologyReport.voided)}">
         <input type="submit" value="<spring:message code="radiology.radiologyReportSave"/>" name="saveRadiologyReportDraft" />
         <input type="submit" value="<spring:message code="radiology.radiologyReportComplete"/>"
           name="completeRadiologyReport" />
-      </c:if>
     </c:if>
   </div>
 </form:form>
+<c:if test="${(radiologyReport.status == 'CLAIMED') && (not radiologyReport.voided)}">
+  </br>
+  <form:form method="post" id="voidRadiologyReportForm" modelAttribute="voidRadiologyReportRequest" cssClass="box">
+    <table>
+        <td><spring:message code="general.voidReason" /></td>
+        <td><spring:bind path="voidReason">
+            <textarea name="${status.expression}">${status.value}</textarea>
+            <c:if test="${not empty status.errorMessage}">
+              <span class="error">${status.errorMessage}</span>
+            </c:if>
+          </spring:bind></td>
+      </tr>
+    </table>
+    <input type="button" value="<spring:message code="general.void"/>" id="voidRadiologyReportButtonId" />
+  </form:form>
+</c:if>
 <%@ include file="/WEB-INF/template/footer.jsp"%>

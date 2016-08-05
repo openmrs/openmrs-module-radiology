@@ -458,4 +458,15 @@
 		<addNotNullConstraint tableName="radiology_study"
 			columnName="study_instance_uid" columnDataType="varchar(255)" />
 	</changeSet>
+	<changeSet id="radiology-37" author="teleivo">
+		<comment>Add columns to support voiding radiology_report</comment>
+		<addColumn tableName="radiology_report">
+			<column name="voided" type="BOOLEAN" defaultValueBoolean="false" >
+				<constraints nullable="false" />
+            </column>
+            <column name="date_voided" type="DATETIME"/>
+			<column name="voided_by" type="int"/>
+            <column name="void_reason" type="varchar(255)"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>

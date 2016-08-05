@@ -93,25 +93,9 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
                 .createCriteria(RadiologyReport.class)
                 .add(Restrictions.eq("radiologyOrder", radiologyOrder))
                 .add(Restrictions.eq("status", RadiologyReportStatus.CLAIMED))
+                .add(Restrictions.eq("voided", false))
                 .list();
         return radiologyReports.size() == 1;
-    }
-    
-    /**
-     * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder,
-     *      RadiologyReportStatus)
-     */
-    @SuppressWarnings("unchecked")
-    @Override
-    public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(RadiologyOrder radiologyOrder,
-            RadiologyReportStatus radiologyReportStatus) {
-        
-        final List<RadiologyReport> result = sessionFactory.getCurrentSession()
-                .createCriteria(RadiologyReport.class)
-                .add(Restrictions.eq("radiologyOrder", radiologyOrder))
-                .add(Restrictions.eq("status", radiologyReportStatus))
-                .list();
-        return result == null ? new ArrayList<RadiologyReport>() : result;
     }
     
     /**
@@ -122,7 +106,7 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
         return (RadiologyReport) sessionFactory.getCurrentSession()
                 .createCriteria(RadiologyReport.class)
                 .add(Restrictions.eq("radiologyOrder", radiologyOrder))
-                .add(Restrictions.not(Restrictions.eq("status", RadiologyReportStatus.DISCONTINUED)))
+                .add(Restrictions.eq("voided", false))
                 .list()
                 .get(0);
     }
@@ -137,8 +121,8 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
         final Criteria crit = sessionFactory.getCurrentSession()
                 .createCriteria(RadiologyReport.class);
         
-        if (!searchCriteria.getIncludeDiscontinued()) {
-            crit.add(Restrictions.not(Restrictions.eq("status", RadiologyReportStatus.DISCONTINUED)));
+        if (!searchCriteria.getIncludeVoided()) {
+            crit.add(Restrictions.eq("voided", false));
         }
         if (searchCriteria.getFromDate() != null) {
             crit.add(Restrictions.ge("date", searchCriteria.getFromDate()));

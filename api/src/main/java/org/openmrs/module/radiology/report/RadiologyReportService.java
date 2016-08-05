@@ -30,7 +30,7 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
  * </li>
  * <li>Set fields like for example {@code radiologyReport.setBody("Fracture of around 5mm visible in right tibia.")} through the setters of {@link RadiologyReport}.</li>
  * <li>Optionally, save the {@code RadiologyReport} as a draft via {@link #saveRadiologyReportDraft(RadiologyReport)}.</li>
- * <li>Optionally, void the {@code RadiologyReport} via {@link #unclaimRadiologyReport(RadiologyReport)}.</li>
+ * <li>Optionally, void the {@code RadiologyReport} via {@link #voidRadiologyReport(RadiologyReport, String)}.</li>
  * <li>Finally, complete the {@code RadiologyReport} via {@link #completeRadiologyReport(RadiologyReport, Provider)}.</li>
  * </ol>
  *
@@ -67,35 +67,36 @@ public interface RadiologyReportService extends OpenmrsService {
      * @throws IllegalArgumentException if given null
      * @throws IllegalArgumentException if radiologyReport reportId is null
      * @throws APIException if radiologyReport is completed
-     * @throws APIException if radiologyReport is discontinued
+     * @throws APIException if radiologyReport is voided
      * @throws APIException if radiologyReport.radiologyOrder has a completed RadiologyReport
      * @should save existing radiology report to the database and return it
      * @should throw illegal argument exception if given null
      * @should throw illegal argument exception if given radiology report with reportId null
      * @should throw api exception if radiology report is completed
-     * @should throw api exception if radiology report is discontinued
+     * @should throw api exception if radiology report is voided
      * @should throw api exception if given radiology reports order has a completed radiology report
      */
     @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
     public RadiologyReport saveRadiologyReportDraft(RadiologyReport radiologyReport);
     
     /**
-     * Unclaims a {@code RadiologyReport} and and sets its status to discontinued.
+     * Marks a {@code RadiologyReport} as voided.
      *
-     * @param radiologyReport the radiology report to be unclaimed
-     * @return the discontinued radiology report
+     * @param radiologyReport the radiology report to be voided
+     * @param voidReason the reason why the radiology report should be voided
+     * @return the voided radiology report
      * @throws IllegalArgumentException if given null
-     * @throws IllegalArgumentException if radiologyReportStatus is null
-     * @throws APIException if radiologyReport is discontinued
+     * @throws IllegalArgumentException if radiologyReport reportId is null
+     * @throws IllegalArgumentException if voidReason is null or contains only whitespaces
      * @throws APIException if radiologyReport is completed
-     * @should set the radiology report status to discontinued
-     * @should throw illegal argument exception if given null
-     * @should throw illegal argument exception if radiology report status is null
+     * @should void the given radiology report
+     * @should throw illegal argument exception if given radiology report is null
+     * @should throw illegal argument exception if given radiology report with reportId null
+     * @should throw illegal argument exception if given void reason is null or contains only whitespaces
      * @should throw api exception if radiology report is completed
-     * @should throw api exception if radiology report is discontinued
      */
     @Authorized(RadiologyPrivileges.DELETE_RADIOLOGY_REPORTS)
-    public RadiologyReport unclaimRadiologyReport(RadiologyReport radiologyReport);
+    public RadiologyReport voidRadiologyReport(RadiologyReport radiologyReport, String voidReason);
     
     /**
      * Completes a {@code radiologyReport} and and sets its status to completed.
@@ -109,7 +110,7 @@ public interface RadiologyReportService extends OpenmrsService {
      * @throws IllegalArgumentException if radiologyReport status is null
      * @throws IllegalArgumentException if principalResultsInterpreter is null
      * @throws APIException if radiologyReport is completed
-     * @throws APIException if radiologyReport is discontinued
+     * @throws APIException if radiologyReport is voided
      * @should set the report date of the radiology report to the day the radiology report was completed
      * @should set the radiology report status to complete
      * @should throw illegal argument exception if given radiology report is null
@@ -117,7 +118,7 @@ public interface RadiologyReportService extends OpenmrsService {
      * @should throw illegal argument exception if given radiology report with status null
      * @should throw illegal argument exception if given principal results interpreter is null
      * @should throw api exception if radiology report is completed
-     * @should throw api exception if radiology report is discontinued
+     * @should throw api exception if radiology report is voided
      */
     @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
     public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter);
@@ -149,32 +150,13 @@ public interface RadiologyReportService extends OpenmrsService {
     public RadiologyReport getRadiologyReportByUuid(String uuid);
     
     /**
-     * Get the {@code RadiologyReport's} associated with a {@code RadiologyOrder} and a specific status.
-     *
-     * @param radiologyOrder the radiology order for which the radiology reports should be returned
-     * @param reportStatus the status the radiology report should have
-     * @return the radiology reports associated with given radiology order and matching given report status
-     * @throws IllegalArgumentException if given radiologyOrder is null
-     * @throws IllegalArgumentException if given reportStatus is null
-     * @should return list of claimed radiology reports if report status is claimed
-     * @should return list of completed radiology reports if report status is completed
-     * @should return list of discontinued radiology reports if report status is discontinued
-     * @should return empty list given radiology order without associated radiology reports
-     * @should throw illegal argument exception if given radiology order is null
-     * @should throw illegal argument exception if given report status is null
-     */
-    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
-    public List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder radiologyOrder,
-            RadiologyReportStatus reportStatus);
-    
-    /**
      * Check if a {@code RadiologyOrder} has a claimed {@code RadiologyReport}.
      *
      * @param radiologyOrder the radiology order which should be checked for a claimed report
      * @return true if the radiology order has a claimed report and false otherwise
      * @throws IllegalArgumentException if given null
-     * @should return true if given radiology order has a claimed radiology report
-     * @should return false if given radiology order has no claimed radiology report
+     * @should return true if given radiology order has a claimed radiology report that is not voided
+     * @should return false if given radiology order has no claimed radiology report that is not voided
      * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
@@ -202,7 +184,7 @@ public interface RadiologyReportService extends OpenmrsService {
      * @throws IllegalArgumentException if given null
      * @should return a radiology report if given radiology order is associated with a report with status claimed
      * @should return a radiology report if given radiology order is associated with a report with status completed
-     * @should return null if given radiology order is only associated with a report with status discontinued
+     * @should return null if given radiology order is only associated with a voided report
      * @should throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
@@ -215,7 +197,7 @@ public interface RadiologyReportService extends OpenmrsService {
      * @param radiologyReportSearchCriteria the object containing search parameters
      * @return the radiology reports matching given criteria ordered by increasing report date
      * @throws IllegalArgumentException if given null
-     * @should return all radiology reports (including discontinued) matching the search query if include discontinued is set
+     * @should return all radiology reports (including voided) matching the search query if include voided is set
      * @should return all radiology reports within given date range if date to and date from are specified
      * @should return all radiology reports with report date after or equal to from date if only date from is specified
      * @should return all radiology reports with report date before or equal to to date if only date to is specified

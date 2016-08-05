@@ -50,7 +50,7 @@ public class RadiologyReportSearchCriteriaTest {
                 .equals(fromDate));
         assertTrue(radiologyReportSearchCriteria.getToDate()
                 .equals(toDate));
-        assertFalse(radiologyReportSearchCriteria.getIncludeDiscontinued());
+        assertFalse(radiologyReportSearchCriteria.getIncludeVoided());
         assertNull(radiologyReportSearchCriteria.getPrincipalResultsInterpreter());
         assertNull(radiologyReportSearchCriteria.getStatus());
     }
@@ -72,7 +72,7 @@ public class RadiologyReportSearchCriteriaTest {
         assertThat(radiologyReportSearchCriteria.getPrincipalResultsInterpreter()
                 .getId(),
             is(1));
-        assertFalse(radiologyReportSearchCriteria.getIncludeDiscontinued());
+        assertFalse(radiologyReportSearchCriteria.getIncludeVoided());
         assertNull(radiologyReportSearchCriteria.getToDate());
         assertNull(radiologyReportSearchCriteria.getFromDate());
         assertNull(radiologyReportSearchCriteria.getStatus());
@@ -80,17 +80,17 @@ public class RadiologyReportSearchCriteriaTest {
     
     /**
      * @see RadiologyReportSearchCriteria.Builder#build()
-     * @verifies create a new radiology report search criteria instance with include discontinued set to true if discontinued reports should be included
+     * @verifies create a new radiology report search criteria instance with include voided set to true if voided reports should be included
      */
     @Test
     public void
             build_createANewRadiologyReportSearchCriteriaInstanceWithIncludeDiscontinuedSetToTrueIfDiscontinuedReportsShouldBeIncluded()
                     throws Exception {
         
-        radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().includeDiscontinued()
+        radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().includeVoided()
                 .build();
         
-        assertTrue(radiologyReportSearchCriteria.getIncludeDiscontinued());
+        assertTrue(radiologyReportSearchCriteria.getIncludeVoided());
         assertNull(radiologyReportSearchCriteria.getToDate());
         assertNull(radiologyReportSearchCriteria.getFromDate());
         assertNull(radiologyReportSearchCriteria.getPrincipalResultsInterpreter());
@@ -110,7 +110,7 @@ public class RadiologyReportSearchCriteriaTest {
                 .build();
         
         assertThat(radiologyReportSearchCriteria.getStatus(), is(RadiologyReportStatus.CLAIMED));
-        assertFalse(radiologyReportSearchCriteria.getIncludeDiscontinued());
+        assertFalse(radiologyReportSearchCriteria.getIncludeVoided());
         assertNull(radiologyReportSearchCriteria.getToDate());
         assertNull(radiologyReportSearchCriteria.getFromDate());
         assertNull(radiologyReportSearchCriteria.getPrincipalResultsInterpreter());
@@ -119,30 +119,9 @@ public class RadiologyReportSearchCriteriaTest {
                 new RadiologyReportSearchCriteria.Builder().withStatus(RadiologyReportStatus.COMPLETED)
                         .build();
         assertThat(radiologyReportSearchCriteria.getStatus(), is(RadiologyReportStatus.COMPLETED));
-        assertFalse(radiologyReportSearchCriteria.getIncludeDiscontinued());
+        assertFalse(radiologyReportSearchCriteria.getIncludeVoided());
         assertNull(radiologyReportSearchCriteria.getToDate());
         assertNull(radiologyReportSearchCriteria.getFromDate());
         assertNull(radiologyReportSearchCriteria.getPrincipalResultsInterpreter());
     }
-    
-    /**
-     * @see RadiologyReportSearchCriteria.Builder#build()
-     * @verifies create a new radiology report search criteria instance with report status set to discontinued and include discontinued set to true if status is set to discontinued
-     */
-    @Test
-    public void
-            build_createANewRadiologyReportSearchCriteriaInstanceWithReportStatusSetToDiscontinuedAndIncludeDiscontinuedSetToTrueIfStatusIsSetToDiscontinued()
-                    throws Exception {
-        
-        radiologyReportSearchCriteria =
-                new RadiologyReportSearchCriteria.Builder().withStatus(RadiologyReportStatus.DISCONTINUED)
-                        .build();
-        
-        assertThat(radiologyReportSearchCriteria.getStatus(), is(RadiologyReportStatus.DISCONTINUED));
-        assertTrue(radiologyReportSearchCriteria.getIncludeDiscontinued());
-        assertNull(radiologyReportSearchCriteria.getToDate());
-        assertNull(radiologyReportSearchCriteria.getFromDate());
-        assertNull(radiologyReportSearchCriteria.getPrincipalResultsInterpreter());
-    }
-    
 }

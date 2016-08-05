@@ -23,6 +23,11 @@ interface RadiologyReportDAO {
     
     
     /**
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
+     */
+    RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport);
+    
+    /**
      * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReport(Integer)
      */
     RadiologyReport getRadiologyReport(Integer reportId);
@@ -33,11 +38,6 @@ interface RadiologyReportDAO {
     RadiologyReport getRadiologyReportByUuid(String radiologyReportUuid);
     
     /**
-     * @see org.openmrs.module.radiology.report.RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
-     */
-    RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport);
-    
-    /**
      * @see org.openmrs.module.radiology.report.RadiologyReportService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
      */
     boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder);
@@ -46,13 +46,6 @@ interface RadiologyReportDAO {
      * @see org.openmrs.module.radiology.report.RadiologyReportService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
      */
     boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder);
-    
-    /**
-     * @see org.openmrs.module.radiology.report.RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder,
-     *      RadiologyReportStatus)
-     */
-    List<RadiologyReport> getRadiologyReportsByRadiologyOrderAndRadiologyReportStatus(RadiologyOrder radiologyOrder,
-            RadiologyReportStatus radiologyReportStatus);
     
     /**
      * @see org.openmrs.module.radiology.report.RadiologyReportService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)

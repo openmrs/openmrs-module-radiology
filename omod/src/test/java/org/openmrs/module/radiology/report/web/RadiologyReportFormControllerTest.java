@@ -23,7 +23,6 @@ import org.openmrs.Order;
 import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.order.RadiologyOrder;
-import org.openmrs.module.radiology.order.web.RadiologyOrderFormController;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportService;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
@@ -118,6 +117,10 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .get("dicomViewerUrl");
         assertThat(dicomViewerUrl,
             is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
+        
+        VoidRadiologyReportRequest voidRadiologyReportRequest = (VoidRadiologyReportRequest) modelAndView.getModelMap()
+                .get("voidRadiologyReportRequest");
+        assertNotNull(voidRadiologyReportRequest);
     }
     
     /**
@@ -196,26 +199,152 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         assertThat(dicomViewerUrl,
             is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
         
+        VoidRadiologyReportRequest voidRadiologyReportRequest = (VoidRadiologyReportRequest) modelAndView.getModelMap()
+                .get("voidRadiologyReportRequest");
+        assertNotNull(voidRadiologyReportRequest);
+        
         assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR),
             is("RadiologyReport.cannot.saveDraft.already.reported"));
     }
     
     /**
-     * @verifies redirect to radiology order form if unclaim was successful
-     * @see RadiologyReportFormController#unclaimRadiologyReport(RadiologyReport)
+     * @see RadiologyReportFormController#voidRadiologyReport(HttpServletRequest, RadiologyReport, VoidRadiologyReportRequest, BindingResult)
+     * @verifies void given radiology report and set http session attribute openmrs message to report voided and redirect
+     *         to its report form
      */
     @Test
-    public void unclaimRadiologyReport_shouldRedirectToRadiologyOrderFormIfUnclaimWasSuccessful() {
+    public void
+            voidRadiologyReport_shouldVoidGivenRadiologyReportAndSetHttpSessionAttributeOpenmrsMessageToReportVoidedAndRedirectToItsReportForm() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
+        VoidRadiologyReportRequest voidRadiologyReportRequest = new VoidRadiologyReportRequest();
+        voidRadiologyReportRequest.setVoidReason("selected wrong order");
+        BindingResult bindingResult = mock(BindingResult.class);
         
-        ModelAndView modelAndView = radiologyReportFormController.unclaimRadiologyReport(mockRadiologyReport);
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("voidRadiologyReport", "voidRadiologyReport");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
+        ModelAndView modelAndView = radiologyReportFormController.voidRadiologyReport(mockRequest, mockRadiologyReport,
+            voidRadiologyReportRequest, bindingResult);
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is("redirect:/module/radiology/radiologyOrder.form?orderId=" + mockRadiologyReport.getRadiologyOrder()
                     .getOrderId()));
+        assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("radiology.RadiologyReport.voided"));
+    }
+    
+    /**
+     * @see RadiologyReportFormController#voidRadiologyReport(HttpServletRequest, RadiologyReport, VoidRadiologyReportRequest, BindingResult)
+     * @verifies not void and not redirect given invalid void radiology report request
+     */
+    @Test
+    public void voidRadiologyReport_shouldNotVoidAndNotRedirectGivenInvalidRadiologyReportRequest() {
+        
+        // given
+        RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
+        VoidRadiologyReportRequest voidRadiologyReportRequest = new VoidRadiologyReportRequest();
+        voidRadiologyReportRequest.setVoidReason("selected wrong order");
+        BindingResult bindingResult = mock(BindingResult.class);
+        
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("voidRadiologyReport", "voidRadiologyReport");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
+        when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
+                .getStudy())).thenReturn(
+                    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
+        when(bindingResult.hasErrors()).thenReturn(true);
+        
+        ModelAndView modelAndView = radiologyReportFormController.voidRadiologyReport(mockRequest, mockRadiologyReport,
+            voidRadiologyReportRequest, bindingResult);
+        
+        assertNotNull(modelAndView);
+        assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("order"));
+        Order order = (Order) modelAndView.getModelMap()
+                .get("order");
+        assertNotNull(order);
+        assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
+        RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
+                .get("radiologyOrder");
+        assertThat(radiologyOrder, is(mockRadiologyReport.getRadiologyOrder()));
+        
+        RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap()
+                .get("radiologyReport");
+        assertNotNull(radiologyReport);
+        assertThat(radiologyReport, is(mockRadiologyReport));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
+        String dicomViewerUrl = (String) modelAndView.getModelMap()
+                .get("dicomViewerUrl");
+        assertThat(dicomViewerUrl,
+            is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
+    }
+    
+    /**
+     * @see RadiologyReportFormController#voidRadiologyReport(HttpServletRequest, RadiologyReport, VoidRadiologyReportRequest, BindingResult)
+     * @verifies not redirect and set session attribute with openmrs error if api exception is thrown by void radiology
+     *         report
+     */
+    @Test
+    public void
+            voidRadiologyReport_shouldNotRedirectAndSetHttpSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownByVoidRadiologyReport() {
+        
+        // given
+        RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
+        VoidRadiologyReportRequest voidRadiologyReportRequest = new VoidRadiologyReportRequest();
+        voidRadiologyReportRequest.setVoidReason("selected wrong order");
+        BindingResult bindingResult = mock(BindingResult.class);
+        
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("voidRadiologyReport", "voidRadiologyReport");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
+        when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
+                .getStudy())).thenReturn(
+                    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
+        when(radiologyReportService.voidRadiologyReport(mockRadiologyReport, voidRadiologyReportRequest.getVoidReason()))
+                .thenThrow(new APIException("RadiologyReport.cannot.void.completed"));
+        
+        ModelAndView modelAndView = radiologyReportFormController.voidRadiologyReport(mockRequest, mockRadiologyReport,
+            voidRadiologyReportRequest, bindingResult);
+        
+        assertNotNull(modelAndView);
+        assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("order"));
+        Order order = (Order) modelAndView.getModelMap()
+                .get("order");
+        assertNotNull(order);
+        assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
+        RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
+                .get("radiologyOrder");
+        assertThat(radiologyOrder, is(mockRadiologyReport.getRadiologyOrder()));
+        
+        RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap()
+                .get("radiologyReport");
+        assertNotNull(radiologyReport);
+        assertThat(radiologyReport, is(mockRadiologyReport));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
+        String dicomViewerUrl = (String) modelAndView.getModelMap()
+                .get("dicomViewerUrl");
+        assertThat(dicomViewerUrl,
+            is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
+        
+        assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR),
+            is("RadiologyReport.cannot.void.completed"));
     }
     
     /**
@@ -266,8 +395,11 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         mockRadiologyReport.setPrincipalResultsInterpreter(null);
         
         BindingResult reportErrors = mock(BindingResult.class);
-        
         when(reportErrors.hasErrors()).thenReturn(true);
+        
+        when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
+                .getStudy())).thenReturn(
+                    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.addParameter("completeRadiologyReport", "completeRadiologyReport");
@@ -296,6 +428,16 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .get("radiologyReport");
         assertNotNull(radiologyReport);
         assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.CLAIMED));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
+        String dicomViewerUrl = (String) modelAndView.getModelMap()
+                .get("dicomViewerUrl");
+        assertThat(dicomViewerUrl,
+            is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
+        
+        VoidRadiologyReportRequest voidRadiologyReportRequest = (VoidRadiologyReportRequest) modelAndView.getModelMap()
+                .get("voidRadiologyReportRequest");
+        assertNotNull(voidRadiologyReportRequest);
     }
     
     /**
@@ -352,6 +494,10 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .get("dicomViewerUrl");
         assertThat(dicomViewerUrl,
             is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
+        
+        VoidRadiologyReportRequest voidRadiologyReportRequest = (VoidRadiologyReportRequest) modelAndView.getModelMap()
+                .get("voidRadiologyReportRequest");
+        assertNotNull(voidRadiologyReportRequest);
         
         assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR),
             is("RadiologyReport.cannot.complete.reported"));

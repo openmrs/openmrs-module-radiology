@@ -21,8 +21,4 @@ public enum RadiologyReportStatus {
      * The report is claimed by a physician and currently being worked on.
      */
     CLAIMED,
-    /**
-     * The report is discontinued and cannot be given to a patient.
-     */
-    DISCONTINUED
 }
