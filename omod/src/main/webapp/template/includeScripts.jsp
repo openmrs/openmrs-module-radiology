@@ -16,7 +16,7 @@
                         function() {
                           if ($j.trim($j(this).html())) {
                             $j(this).html(
-                                    moment.utc($j(this).html(), "L LT").local()
+                                    moment.utc($j(this).html(), ["L LT","YYYY-MM-DD hh:mm:ss.S"]).local()
                                             .format("L LT"));
                           }
                         });

@@ -31,6 +31,7 @@ public class RadiologyReportsTabPortletController extends PortletController {
     /**
      * @see org.openmrs.web.controller.PortletController#populateModel(javax.servlet.http.HttpServletRequest,
      *      java.util.Map)
+     * @should populate model with an entry containing all report status values and an empty string
      */
     @Override
     protected void populateModel(HttpServletRequest request, Map<String, Object> model) {

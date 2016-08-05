@@ -74,14 +74,14 @@
 </script>
 
 <openmrs:hasPrivilege privilege="View Patients">
-  <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${order.patient.patientId}" />
+  <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${radiologyOrder.patient.patientId}" />
   <br>
 </openmrs:hasPrivilege>
 <div id="radiologyOrderDetailsAccordion">
   <span class="boxHeader"><i id="expandIconId" class="fa fa-chevron-down"></i><b> <spring:message
-        code="radiology.radiologyOrder" /></b> </span>
-  <div id="radiologyOrderDetailsId">
-    <%@ include file="/WEB-INF/view/module/radiology/orders/radiologyOrderDetailsSegment.jsp"%>
+        code="radiology.radiologyOrder" /> - ${radiologyOrder.accessionNumber}</b> </span>
+  <div id="radiologyOrderDetailsId" class="box">
+    <openmrs:portlet url="radiologyOrderDetails" moduleId="radiology" parameters="orderUuid=${radiologyOrder.uuid}"/>
   </div>
 </div>
 <br>

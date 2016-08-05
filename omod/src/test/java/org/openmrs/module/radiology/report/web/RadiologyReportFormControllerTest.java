@@ -16,12 +16,12 @@ import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.openmrs.Order;
 import org.openmrs.api.APIException;
-import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportService;
@@ -35,8 +35,6 @@ import org.springframework.mock.web.MockHttpSession;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
  * Tests {@link RadiologyReportFormController}.
  */
@@ -45,9 +43,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
     
     @Mock
     private RadiologyReportService radiologyReportService;
-    
-    @Mock
-    private DicomWebViewer dicomWebViewer;
     
     @Mock
     private RadiologyReportValidator radiologyReportValidator;
@@ -86,21 +81,11 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
         
-        when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
-                .getStudy())).thenReturn(
-                    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
-        
         ModelAndView modelAndView =
                 radiologyReportFormController.getRadiologyReportFormWithExistingRadiologyReport(mockRadiologyReport);
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("order"));
-        Order order = (Order) modelAndView.getModelMap()
-                .get("order");
-        assertNotNull(order);
-        assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
         RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
@@ -111,12 +96,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .get("radiologyReport");
         assertNotNull(radiologyReport);
         assertThat(radiologyReport, is(mockRadiologyReport));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
-        String dicomViewerUrl = (String) modelAndView.getModelMap()
-                .get("dicomViewerUrl");
-        assertThat(dicomViewerUrl,
-            is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
         
         VoidRadiologyReportRequest voidRadiologyReportRequest = (VoidRadiologyReportRequest) modelAndView.getModelMap()
                 .get("voidRadiologyReportRequest");
@@ -166,9 +145,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         MockHttpSession mockSession = new MockHttpSession();
         mockRequest.setSession(mockSession);
         
-        when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
-                .getStudy())).thenReturn(
-                    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
         when(radiologyReportService.saveRadiologyReportDraft(mockRadiologyReport))
                 .thenThrow(new APIException("RadiologyReport.cannot.saveDraft.already.reported"));
         
@@ -176,12 +152,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("order"));
-        Order order = (Order) modelAndView.getModelMap()
-                .get("order");
-        assertNotNull(order);
-        assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
         RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
@@ -192,12 +162,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .get("radiologyReport");
         assertNotNull(radiologyReport);
         assertThat(radiologyReport, is(mockRadiologyReport));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
-        String dicomViewerUrl = (String) modelAndView.getModelMap()
-                .get("dicomViewerUrl");
-        assertThat(dicomViewerUrl,
-            is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
         
         VoidRadiologyReportRequest voidRadiologyReportRequest = (VoidRadiologyReportRequest) modelAndView.getModelMap()
                 .get("voidRadiologyReportRequest");
@@ -254,9 +218,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         MockHttpSession mockSession = new MockHttpSession();
         mockRequest.setSession(mockSession);
         
-        when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
-                .getStudy())).thenReturn(
-                    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
         when(bindingResult.hasErrors()).thenReturn(true);
         
         ModelAndView modelAndView = radiologyReportFormController.voidRadiologyReport(mockRequest, mockRadiologyReport,
@@ -264,12 +225,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("order"));
-        Order order = (Order) modelAndView.getModelMap()
-                .get("order");
-        assertNotNull(order);
-        assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
         RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
@@ -280,12 +235,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .get("radiologyReport");
         assertNotNull(radiologyReport);
         assertThat(radiologyReport, is(mockRadiologyReport));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
-        String dicomViewerUrl = (String) modelAndView.getModelMap()
-                .get("dicomViewerUrl");
-        assertThat(dicomViewerUrl,
-            is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
     }
     
     /**
@@ -308,9 +257,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         MockHttpSession mockSession = new MockHttpSession();
         mockRequest.setSession(mockSession);
         
-        when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
-                .getStudy())).thenReturn(
-                    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
         when(radiologyReportService.voidRadiologyReport(mockRadiologyReport, voidRadiologyReportRequest.getVoidReason()))
                 .thenThrow(new APIException("RadiologyReport.cannot.void.completed"));
         
@@ -319,12 +265,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("order"));
-        Order order = (Order) modelAndView.getModelMap()
-                .get("order");
-        assertNotNull(order);
-        assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
         RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
@@ -335,12 +275,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .get("radiologyReport");
         assertNotNull(radiologyReport);
         assertThat(radiologyReport, is(mockRadiologyReport));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
-        String dicomViewerUrl = (String) modelAndView.getModelMap()
-                .get("dicomViewerUrl");
-        assertThat(dicomViewerUrl,
-            is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
         
         assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR),
             is("RadiologyReport.cannot.void.completed"));
@@ -395,10 +329,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         BindingResult reportErrors = mock(BindingResult.class);
         when(reportErrors.hasErrors()).thenReturn(true);
         
-        when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
-                .getStudy())).thenReturn(
-                    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
-        
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.addParameter("completeRadiologyReport", "completeRadiologyReport");
         MockHttpSession mockSession = new MockHttpSession();
@@ -409,11 +339,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("order"));
-        Order order = (Order) modelAndView.getModelMap()
-                .get("order");
-        assertNotNull(order);
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
         RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
@@ -426,12 +351,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .get("radiologyReport");
         assertNotNull(radiologyReport);
         assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.DRAFT));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
-        String dicomViewerUrl = (String) modelAndView.getModelMap()
-                .get("dicomViewerUrl");
-        assertThat(dicomViewerUrl,
-            is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
         
         VoidRadiologyReportRequest voidRadiologyReportRequest = (VoidRadiologyReportRequest) modelAndView.getModelMap()
                 .get("voidRadiologyReportRequest");
@@ -458,9 +377,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         BindingResult reportErrors = mock(BindingResult.class);
         
-        when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
-                .getStudy())).thenReturn(
-                    "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
         when(radiologyReportService.saveRadiologyReport(mockRadiologyReport))
                 .thenThrow(new APIException("RadiologyReport.cannot.complete.reported"));
         
@@ -469,12 +385,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("order"));
-        Order order = (Order) modelAndView.getModelMap()
-                .get("order");
-        assertNotNull(order);
-        assertThat(order, is((Order) mockRadiologyReport.getRadiologyOrder()));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
         RadiologyOrder radiologyOrder = (RadiologyOrder) modelAndView.getModelMap()
@@ -485,12 +395,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .get("radiologyReport");
         assertNotNull(radiologyReport);
         assertThat(radiologyReport, is(mockRadiologyReport));
-        
-        assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
-        String dicomViewerUrl = (String) modelAndView.getModelMap()
-                .get("dicomViewerUrl");
-        assertThat(dicomViewerUrl,
-            is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
         
         VoidRadiologyReportRequest voidRadiologyReportRequest = (VoidRadiologyReportRequest) modelAndView.getModelMap()
                 .get("voidRadiologyReportRequest");
