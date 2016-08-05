@@ -9,15 +9,18 @@
  */
 package org.openmrs.module.radiology.report.web;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.openmrs.Order;
+import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.order.web.RadiologyOrderFormController;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportService;
 import org.openmrs.module.radiology.report.RadiologyReportValidator;
+import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -28,6 +31,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
+
+import static org.openmrs.module.radiology.order.web.RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING;
 
 /**
  * Controller for the form handling entry, display, saving, unclaiming of {@code RadiologyReport's}.
@@ -56,17 +61,16 @@ public class RadiologyReportFormController {
     }
     
     /**
-     * Handles requests for creating a new {@code RadiologyReport} for a specific {@code RadiologyOrder}.
+     * Handles requests for creating a new {@code RadiologyReport} for a {@code RadiologyOrder}.
      * 
      * @param radiologyOrder the radiology order for which a radiology report will be created
-     * @return the model and view containing new radiology report for given radiology order
-     * @should populate model and view with new radiology report for given radiology order
+     * @return the model and view redirecting to the newly created radiology report
+     * @should create a new radiology report for given radiology order and redirect to its radiology report form
      */
     @RequestMapping(method = RequestMethod.GET, params = "orderId")
-    protected ModelAndView
-            getRadiologyReportFormWithNewRadiologyReport(@RequestParam("orderId") RadiologyOrder radiologyOrder) {
+    protected ModelAndView createRadiologyReport(@RequestParam("orderId") RadiologyOrder radiologyOrder) {
         
-        final RadiologyReport radiologyReport = radiologyReportService.createAndClaimRadiologyReport(radiologyOrder);
+        final RadiologyReport radiologyReport = radiologyReportService.createRadiologyReport(radiologyOrder);
         return new ModelAndView(
                 "redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?reportId=" + radiologyReport.getId());
     }
@@ -90,15 +94,31 @@ public class RadiologyReportFormController {
     /**
      * Handles requests for saving a {@code RadiologyReport} as draft.
      *
-     * @param radiologyReport radiology report to be saved
-     * @return the model and view containing saved radiology report
-     * @should save given radiology report and populate model and view with it
+     * @param radiologyReport the radiology report to be saved
+     * @return the model and view containing saved radiology report draft
+     * @should save given radiology report and set http session attribute openmrs message to report draft saved and redirect
+     *         to its report form
+     * @should not redirect and set session attribute with openmrs error if api exception is thrown by save radiology
+     *         report draft
      */
-    @RequestMapping(method = RequestMethod.POST, params = "saveRadiologyReport")
-    protected ModelAndView saveRadiologyReport(@ModelAttribute RadiologyReport radiologyReport) {
+    @RequestMapping(method = RequestMethod.POST, params = "saveRadiologyReportDraft")
+    protected ModelAndView saveRadiologyReportDraft(HttpServletRequest request,
+            @ModelAttribute RadiologyReport radiologyReport) {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
-        radiologyReportService.saveRadiologyReport(radiologyReport);
+        
+        try {
+            radiologyReportService.saveRadiologyReportDraft(radiologyReport);
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.RadiologyReport.savedDraft");
+            modelAndView.setViewName(
+                "redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?reportId=" + radiologyReport.getReportId());
+            return modelAndView;
+        }
+        catch (APIException apiException) {
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, apiException.getMessage());
+        }
         
         addObjectsToModelAndView(modelAndView, radiologyReport);
         return modelAndView;
@@ -116,8 +136,8 @@ public class RadiologyReportFormController {
     protected ModelAndView unclaimRadiologyReport(@ModelAttribute RadiologyReport radiologyReport) {
         
         radiologyReportService.unclaimRadiologyReport(radiologyReport);
-        return new ModelAndView("redirect:" + RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId="
-                + radiologyReport.getRadiologyOrder()
+        return new ModelAndView(
+                "redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId=" + radiologyReport.getRadiologyOrder()
                         .getOrderId());
     }
     
@@ -128,12 +148,15 @@ public class RadiologyReportFormController {
      * @param bindingResult the binding result for the radiology report
      * @return the model and view with redirect to report form if complete was successful, otherwise the
      *         model and view contains binding result errors
-     * @should redirect to radiology report form if it is valid
-     * @should not complete given radiology report if it is not valid
+     * @should complete given radiology report if valid and set http session attribute openmrs message to report completed and redirect
+     *         to its report form
+     * @should not complete and redirect given invalid radiology report
+     * @should not redirect and set session attribute with openmrs error if api exception is thrown by complete radiology
+     *         report
      */
     @RequestMapping(method = RequestMethod.POST, params = "completeRadiologyReport")
-    protected ModelAndView completeRadiologyReport(@Valid @ModelAttribute RadiologyReport radiologyReport,
-            BindingResult bindingResult) {
+    protected ModelAndView completeRadiologyReport(HttpServletRequest request,
+            @Valid @ModelAttribute RadiologyReport radiologyReport, BindingResult bindingResult) {
         
         final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_FORM_VIEW);
         
@@ -142,9 +165,21 @@ public class RadiologyReportFormController {
             return modelAndView;
         }
         
-        radiologyReportService.completeRadiologyReport(radiologyReport, radiologyReport.getPrincipalResultsInterpreter());
-        return new ModelAndView(
-                "redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?reportId=" + radiologyReport.getId());
+        try {
+            radiologyReportService.completeRadiologyReport(radiologyReport,
+                radiologyReport.getPrincipalResultsInterpreter());
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.RadiologyReport.completed");
+            modelAndView.setViewName(
+                "redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?reportId=" + radiologyReport.getReportId());
+            return modelAndView;
+        }
+        catch (APIException apiException) {
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, apiException.getMessage());
+        }
+        addObjectsToModelAndView(modelAndView, radiologyReport);
+        return modelAndView;
     }
     
     /**

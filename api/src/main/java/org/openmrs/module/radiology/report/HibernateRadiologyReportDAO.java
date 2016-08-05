@@ -60,7 +60,7 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
     }
     
     /**
-     * @see org.openmrs.module.radiology.report.RadiologyReportService#saveRadiologyReport(RadiologyReport)
+     * @see org.openmrs.module.radiology.report.RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
      */
     @Override
     public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) {
