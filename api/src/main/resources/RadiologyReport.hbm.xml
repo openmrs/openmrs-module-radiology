@@ -36,6 +36,10 @@
 		<property name="body" column="report_body" not-null="false" />
 		<many-to-one name="creator" unique="false" not-null="true" />
 		<property name="dateCreated" column="date_created" not-null="true" />
+		<property name="voided" type="java.lang.Boolean" column="voided" length="1" not-null="true"/>
+		<property name="dateVoided" type="java.util.Date" column="date_voided" length="19"/>
+		<many-to-one name="voidedBy" class="org.openmrs.User" column="voided_by" />
+		<property name="voidReason" type="java.lang.String" column="void_reason" length="255"/>
 		<property name="uuid" type="java.lang.String" column="uuid"
 			length="38" unique="true" />
 	</class>

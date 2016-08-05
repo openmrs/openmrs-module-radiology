@@ -72,6 +72,7 @@ public class RadiologyReportResourceComponentTest
         assertPropPresent("status");
         assertPropPresent("body");
         assertPropPresent("display");
+        assertPropPresent("voided");
     }
     
     /**
@@ -87,6 +88,7 @@ public class RadiologyReportResourceComponentTest
         assertPropPresent("status");
         assertPropPresent("body");
         assertPropPresent("display");
+        assertPropPresent("voided");
         assertPropPresent("auditInfo");
     }
 }

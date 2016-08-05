@@ -48,7 +48,7 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
     
     protected static final String TEST_DATASET = "RadiologyReportSearchHandlerComponentTestDataset.xml";
     
-    private static final String RADIOLOGY_REPORT_UUID_OF_DISCONTINUED = "90765170-473f-11e6-beb8-9e71128cae77";
+    private static final String RADIOLOGY_REPORT_UUID_OF_VOIDED = "90765170-473f-11e6-beb8-9e71128cae77";
     
     private static final String DATE_AFTER_REPORT_DATES = "2016-07-02";
     
@@ -120,7 +120,7 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
     
     /**
      * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return all radiology reports (including discontinued) matching the search query if include all is set
+     * @verifies return all radiology reports (including voided) matching the search query if include all is set
      */
     @Test
     public void search_shouldReturnAllRadiologyReportsIncludingDiscontinuedMatchingTheSearchQueryIfIncludeAllIsSet()
@@ -137,8 +137,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertNotNull(result);
         List<Object> hits = (List<Object>) result.get("results");
         assertThat(hits.size(), is(3));
-        assertThat(PropertyUtils.getProperty(hits.get(2), "uuid"), is(RADIOLOGY_REPORT_UUID_OF_DISCONTINUED));
-        assertThat(PropertyUtils.getProperty(hits.get(2), "status"), is(RadiologyReportStatus.DISCONTINUED.toString()));
+        assertThat(PropertyUtils.getProperty(hits.get(2), "uuid"), is(RADIOLOGY_REPORT_UUID_OF_VOIDED));
+        assertThat(PropertyUtils.getProperty(hits.get(2), "voided"), is(true));
     }
     
     /**
@@ -168,7 +168,7 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
             is(resultFormat.format(radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria)
                     .get(0)
                     .getDate())));
-        assertThat(PropertyUtils.getProperty(hits.get(0), "status"), is(not(RadiologyReportStatus.DISCONTINUED.toString())));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "voided"), is(false));
     }
     
     /**
@@ -198,7 +198,7 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
             is(resultFormat.format(radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria)
                     .get(0)
                     .getDate())));
-        assertThat(PropertyUtils.getProperty(hits.get(0), "status"), is(not(RadiologyReportStatus.DISCONTINUED.toString())));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "voided"), is(false));
     }
     
     /**
@@ -232,8 +232,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
                 .getDate())));
         assertThat(PropertyUtils.getProperty(hits.get(1), "date"), is(resultFormat.format(radiologyReports.get(1)
                 .getDate())));
-        assertThat(PropertyUtils.getProperty(hits.get(0), "status"), is(not(RadiologyReportStatus.DISCONTINUED.toString())));
-        assertThat(PropertyUtils.getProperty(hits.get(1), "status"), is(not(RadiologyReportStatus.DISCONTINUED.toString())));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "voided"), is(false));
+        assertThat(PropertyUtils.getProperty(hits.get(1), "voided"), is(false));
     }
     
     /**
@@ -270,8 +270,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertNotNull(result);
         List<Object> hits = (List<Object>) result.get("results");
         assertThat(hits.size(), is(2));
-        assertThat(PropertyUtils.getProperty(hits.get(0), "status"), is(not(RadiologyReportStatus.DISCONTINUED.toString())));
-        assertThat(PropertyUtils.getProperty(hits.get(1), "status"), is(not(RadiologyReportStatus.DISCONTINUED.toString())));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "voided"), is(false));
+        assertThat(PropertyUtils.getProperty(hits.get(1), "voided"), is(false));
     }
     
     /**

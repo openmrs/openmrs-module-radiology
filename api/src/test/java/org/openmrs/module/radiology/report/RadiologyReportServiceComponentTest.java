@@ -62,7 +62,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     private static final int COMPLETED_RADIOLOGY_REPORT = 2;
     
-    private static final int DISCONTINUED_RADIOLOGY_REPORT = 3;
+    private static final int VOIDED_RADIOLOGY_REPORT = 3;
     
     private static final int RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT = 2005;
     
@@ -70,9 +70,9 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     private static final int RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT = 2007;
     
-    private static final int RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT = 2008;
+    private static final int RADIOLOGY_ORDER_WITH_STUDY_AND_VOIDED_RADIOLOGY_REPORT = 2008;
     
-    private static final String RADIOLOGY_REPORT_UUID_OF_DISCONTINUED = "7b2b9619-a6b2-4fb7-bf6b-fc7917d6dd59";
+    private static final String RADIOLOGY_REPORT_UUID_OF_VOIDED = "7b2b9619-a6b2-4fb7-bf6b-fc7917d6dd59";
     
     private static final String PROVIDER_WITH_RADIOLOGY_REPORTS = "c2299800-cca9-11e0-9572-0800200c9a66";
     
@@ -255,15 +255,15 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     /**
      * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
-     * @verifies throw api exception if radiology report is discontinued
+     * @verifies throw api exception if radiology report is voided
      */
     @Test
-    public void saveRadiologyReportDraft_shouldThrowAPIExceptionIfRadiologyReportIsDiscontinued() throws Exception {
+    public void saveRadiologyReportDraft_shouldThrowAPIExceptionIfRadiologyReportIsVoided() throws Exception {
         
-        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(DISCONTINUED_RADIOLOGY_REPORT);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(VOIDED_RADIOLOGY_REPORT);
         
         expectedException.expect(APIException.class);
-        expectedException.expectMessage("radiology.RadiologyReport.cannot.saveDraft.already.discontinued");
+        expectedException.expectMessage("radiology.RadiologyReport.cannot.saveDraft.already.voided");
         radiologyReportService.saveRadiologyReportDraft(radiologyReport);
     }
     
@@ -287,73 +287,89 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     }
     
     /**
-     * @see RadiologyReportService#unclaimRadiologyReport(RadiologyReport)
-     * @verifies set the radiology report status to discontinued
+     * @see RadiologyReportService#voidRadiologyReport(RadiologyReport, String)
+     * @verifies void the given radiology report
      */
     @Test
-    public void unclaimRadiologyReport_shouldSetTheRadiologyReportStatusToDiscontinued() throws Exception {
+    public void voidRadiologyReport_shouldVoidTheGivenRadiologyReport() throws Exception {
         
-        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
-        RadiologyReport radiologyReport = radiologyReportService.unclaimRadiologyReport(existingRadiologyReport);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(CLAIMED_RADIOLOGY_REPORT);
+        assertFalse(radiologyReport.getVoided());
+        assertNull(radiologyReport.getDateVoided());
+        assertNull(radiologyReport.getVoidedBy());
+        assertNull(radiologyReport.getVoidReason());
+        
+        radiologyReportService.voidRadiologyReport(radiologyReport, "wrong order");
         assertNotNull(radiologyReport);
-        assertThat(radiologyReport.getId(), is(EXISTING_RADIOLOGY_REPORT_ID));
-        assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.DISCONTINUED));
+        assertThat(radiologyReport.getVoided(), is(true));
+        assertNotNull(radiologyReport.getDateVoided());
+        assertNotNull(radiologyReport.getVoidedBy());
+        assertNotNull(radiologyReport.getVoidReason());
     }
     
     /**
-     * @see RadiologyReportService#unclaimRadiologyReport(RadiologyReport)
+     * @see RadiologyReportService#voidRadiologyReport(RadiologyReport, String)
      * @verifies throw illegal argument exception if given null
      */
     @Test
-    public void unclaimRadiologyReport_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
+    public void voidRadiologyReport_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReport cannot be null");
-        radiologyReportService.unclaimRadiologyReport(null);
+        radiologyReportService.voidRadiologyReport(null, null);
     }
     
     /**
-     * @see RadiologyReportService#unclaimRadiologyReport(RadiologyReport)
-     * @verifies throw illegal argument exception if radiology report status is null
+     * @see RadiologyReportService#voidRadiologyReport(RadiologyReport, String)
+     * @verifies throw illegal argument exception if given radiology report with reportId null
      */
     @Test
-    public void unclaimRadiologyReport_shouldThrowIllegalArgumentExceptionIfRadiologyReportStatusIsNull() throws Exception {
+    public void voidRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenRadiologyReportWithReportIdNull()
+            throws Exception {
         
-        RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
-        existingRadiologyReport.setStatus(null);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(CLAIMED_RADIOLOGY_REPORT);
+        radiologyReport.setId(null);
+        
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyReportStatus cannot be null");
-        radiologyReportService.unclaimRadiologyReport(existingRadiologyReport);
+        expectedException.expectMessage("radiologyReport.reportId cannot be null");
+        radiologyReportService.voidRadiologyReport(radiologyReport, null);
     }
     
     /**
-     * @see RadiologyReportService#unclaimRadiologyReport(RadiologyReport)
+     * @see RadiologyReportService#voidRadiologyReport(RadiologyReport, String)
+     * @verifies throw illegal argument exception if given void reason is null or contains only whitespaces
+     */
+    @Test
+    public void voidRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenVoidReasonIsNullOrContainsOnlyWhitespaces()
+            throws Exception {
+        
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(CLAIMED_RADIOLOGY_REPORT);
+        
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("voidReason cannot be null or empty");
+        radiologyReportService.voidRadiologyReport(radiologyReport, null);
+        
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("voidReason cannot be null or empty");
+        radiologyReportService.voidRadiologyReport(radiologyReport, "");
+        
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("voidReason cannot be null or empty");
+        radiologyReportService.voidRadiologyReport(radiologyReport, "   ");
+    }
+    
+    /**
+     * @see RadiologyReportService#voidRadiologyReport(RadiologyReport, String)
      * @verifies throw api exception if radiology report is completed
      */
     @Test
-    public void unclaimRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsCompleted() throws Exception {
+    public void voidRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsCompleted() throws Exception {
         
-        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
-        radiologyReport.setStatus(RadiologyReportStatus.COMPLETED);
-        
-        expectedException.expect(APIException.class);
-        expectedException.expectMessage("a completed radiologyReport cannot be unclaimed");
-        radiologyReportService.unclaimRadiologyReport(radiologyReport);
-    }
-    
-    /**
-     * @see RadiologyReportService#unclaimRadiologyReport(RadiologyReport)
-     * @verifies throw api exception if radiology report is discontinued
-     */
-    @Test
-    public void unclaimRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsDiscontinued() throws Exception {
-        
-        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
-        radiologyReport.setStatus(RadiologyReportStatus.DISCONTINUED);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(COMPLETED_RADIOLOGY_REPORT);
         
         expectedException.expect(APIException.class);
-        expectedException.expectMessage("a discontinued radiologyReport cannot be unclaimed");
-        radiologyReportService.unclaimRadiologyReport(radiologyReport);
+        expectedException.expectMessage("radiology.RadiologyReport.cannot.void.completed");
+        radiologyReportService.voidRadiologyReport(radiologyReport, "some reason");
     }
     
     /**
@@ -467,15 +483,15 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     /**
      * @see RadiologyReportService#completeRadiologyReport(RadiologyReport, Provider)
-     * @verifies throw api exception if radiology report is discontinued
+     * @verifies throw api exception if radiology report is voided
      */
     @Test
-    public void completeRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsDiscontinued() throws Exception {
+    public void completeRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsVoided() throws Exception {
         
-        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(DISCONTINUED_RADIOLOGY_REPORT);
+        RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(VOIDED_RADIOLOGY_REPORT);
         
         expectedException.expect(APIException.class);
-        expectedException.expectMessage("radiology.RadiologyReport.cannot.complete.discontinued");
+        expectedException.expectMessage("radiology.RadiologyReport.cannot.complete.voided");
         radiologyReportService.completeRadiologyReport(radiologyReport, radiologyReport.getPrincipalResultsInterpreter());
     }
     
@@ -546,105 +562,13 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     }
     
     /**
-     * @see RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder, RadiologyReportStatus)
-     * @verifies return list of claimed radiology reports if report status is claimed
-     */
-    @Test
-    public void
-            getRadiologyReportsByRadiologyOrderAndReportStatus_shouldReturnListOfClaimedRadiologyReportIfRadiologyReportStatusIsClaimed()
-                    throws Exception {
-        
-        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT),
-            RadiologyReportStatus.CLAIMED);
-        assertNotNull(radiologyReports);
-        assertThat(radiologyReports.size(), is(1));
-        
-    }
-    
-    /**
-     * @see RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder, RadiologyReportStatus)
-     * @verifies return list of completed radiology reports if report status is completed
-     */
-    @Test
-    public void
-            getRadiologyReportsByRadiologyOrderAndReportStatus_shouldReturnListOfCompletedRadiologyReportIfReportStatusIsCompleted()
-                    throws Exception {
-        
-        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT),
-            RadiologyReportStatus.COMPLETED);
-        assertNotNull(radiologyReports);
-        assertThat(radiologyReports.size(), is(1));
-    }
-    
-    /**
-     * @see RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder, RadiologyReportStatus)
-     * @verifies return list of discontinued radiology reports if report status is discontinued
-     */
-    @Test
-    public void
-            getRadiologyReportsByRadiologyOrderAndReportStatus_shouldReturnListOfDiscontinuedRadiologyReportIfReportStatusIsClaimed()
-                    throws Exception {
-        
-        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT),
-            RadiologyReportStatus.DISCONTINUED);
-        assertNotNull(radiologyReports);
-        assertThat(radiologyReports.size(), is(1));
-    }
-    
-    /**
-     * @see RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder, RadiologyReportStatus)
-     * @should return empty list given radiology order without associated radiology reports
-     */
-    @Test
-    public void
-            getRadiologyReportsByRadiologyOrderAndReportStatus_shouldReturnEmptyListGivenRadiologyOrderWithoutAssociatedRadiologyReports()
-                    throws Exception {
-        
-        List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_WITHOUT_RADIOLOGY_REPORT),
-            RadiologyReportStatus.CLAIMED);
-        assertThat(radiologyReports.size(), is(0));
-    }
-    
-    /**
-     * @see RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder, RadiologyReportStatus)
-     * @should throw illegal argument exception if given radiology order is null
-     */
-    @Test
-    public void
-            getRadiologyReportsByRadiologyOrderAndReportStatus_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderIsNull()
-                    throws Exception {
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyOrder cannot be null");
-        radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(null, RadiologyReportStatus.CLAIMED);
-    }
-    
-    /**
-     * @see RadiologyReportService#getRadiologyReportsByRadiologyOrderAndReportStatus(RadiologyOrder, RadiologyReportStatus)
-     * @should throw illegal argument exception if given report status is null
-     */
-    @Test
-    public void
-            getRadiologyReportsByRadiologyOrderAndReportStatus_shouldThrowIllegalArgumentExceptionIfGivenReportStatusIsNull()
-                    throws Exception {
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyReportStatus cannot be null");
-        radiologyReportService.getRadiologyReportsByRadiologyOrderAndReportStatus(
-            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT), null);
-    }
-    
-    /**
      * @see RadiologyReportService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
-     * @should return true if given radiology order has a claimed radiology report
+     * @should return true if given radiology order has a claimed radiology report that is not voided
      */
     @Test
-    public void hasRadiologyOrderClaimedRadiologyReport_shouldReturnTrueIfGivenRadiologyOrderHasAClaimedRadiologyReport()
-            throws Exception {
+    public void
+            hasRadiologyOrderClaimedRadiologyReport_shouldReturnTrueIfGivenRadiologyOrderHasAClaimedRadiologyReportThatIsNotVoided()
+                    throws Exception {
         
         assertTrue(radiologyReportService.hasRadiologyOrderClaimedRadiologyReport(
             radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_CLAIMED_RADIOLOGY_REPORT)));
@@ -652,14 +576,15 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     /**
      * @see RadiologyReportService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
-     * @should return false if given radiology order has no claimed radiology report
+     * @should return false if given radiology order has no claimed radiology report that is not voided
      */
     @Test
-    public void hasRadiologyOrderClaimedRadiologyReport_shouldReturnFalseIfGivenRadiologyOrderHasNoClaimedRadiologyReport()
-            throws Exception {
+    public void
+            hasRadiologyOrderClaimedRadiologyReport_shouldReturnFalseIfGivenRadiologyOrderHasNoClaimedRadiologyReportThatIsNotVoided()
+                    throws Exception {
         
         assertFalse(radiologyReportService.hasRadiologyOrderClaimedRadiologyReport(
-            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT)));
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_VOIDED_RADIOLOGY_REPORT)));
     }
     
     /**
@@ -696,7 +621,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             throws Exception {
         
         boolean hasRadiologyOrderCompletedRadiologyReport = radiologyReportService.hasRadiologyOrderCompletedRadiologyReport(
-            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_VOIDED_RADIOLOGY_REPORT));
         assertFalse(hasRadiologyOrderCompletedRadiologyReport);
     }
     
@@ -746,17 +671,15 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
     
     /**
      * @see RadiologyReportService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
-     * @verifies return null if given radiology order is only associated with a report with status discontinued
+     * @verifies return null if given radiology order is only associated with a voided report
      */
     @Test
     public void
             getActiveRadiologyReportByRadiologyOrder_shouldReturnNullIfGivenRadiologyOrderIsOnlyAssociatedWithAReportWithStatusDiscontinued()
                     throws Exception {
         
-        RadiologyReport activeReport = radiologyReportService.getActiveRadiologyReportByRadiologyOrder(
-            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_DISCONTINUED_RADIOLOGY_REPORT));
-        
-        assertNull(activeReport);
+        assertNull(radiologyReportService.getActiveRadiologyReportByRadiologyOrder(
+            radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_VOIDED_RADIOLOGY_REPORT)));
     }
     
     /**
@@ -784,15 +707,14 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         Provider principalResultsInterpreter = providerService.getProviderByUuid(PROVIDER_WITH_RADIOLOGY_REPORTS);
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
                 new RadiologyReportSearchCriteria.Builder().withPrincipalResultsInterpreter(principalResultsInterpreter)
-                        .includeDiscontinued()
+                        .includeVoided()
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
         assertThat(radiologyReports.size(), is(4));
         assertThat(radiologyReports,
-            hasItem(Matchers.<RadiologyReport> hasProperty("uuid", is(RADIOLOGY_REPORT_UUID_OF_DISCONTINUED))));
-        assertThat(radiologyReports,
-            hasItem(Matchers.<RadiologyReport> hasProperty("status", is(RadiologyReportStatus.DISCONTINUED))));
+            hasItem(Matchers.<RadiologyReport> hasProperty("uuid", is(RADIOLOGY_REPORT_UUID_OF_VOIDED))));
+        assertThat(radiologyReports, hasItem(Matchers.<RadiologyReport> hasProperty("voided", is(true))));
         
     }
     
@@ -819,7 +741,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                     .compareTo(fromDate) >= 0);
             assertTrue(radiologyReport.getDate()
                     .compareTo(toDate) <= 0);
-            assertThat(radiologyReport.getStatus(), is(not(RadiologyReportStatus.DISCONTINUED)));
+            assertThat(radiologyReport.getVoided(), is(not(true)));
         }
     }
     
@@ -843,7 +765,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         for (RadiologyReport radiologyReport : radiologyReports) {
             assertTrue(radiologyReport.getDate()
                     .compareTo(fromDate) >= 0);
-            assertThat(radiologyReport.getStatus(), is(not(RadiologyReportStatus.DISCONTINUED)));
+            assertThat(radiologyReport.getVoided(), is(not(true)));
         }
     }
     
@@ -867,7 +789,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         for (RadiologyReport radiologyReport : radiologyReports) {
             assertTrue(radiologyReport.getDate()
                     .compareTo(toDate) <= 0);
-            assertThat(radiologyReport.getStatus(), is(not(RadiologyReportStatus.DISCONTINUED)));
+            assertThat(radiologyReport.getVoided(), is(not(true)));
         }
     }
     
@@ -925,7 +847,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         assertThat(radiologyReports.size(), is(3));
         for (RadiologyReport radiologyReport : radiologyReports) {
             assertThat(radiologyReport.getPrincipalResultsInterpreter(), is(principalResultsInterpreter));
-            assertThat(radiologyReport.getStatus(), is(not(RadiologyReportStatus.DISCONTINUED)));
+            assertThat(radiologyReport.getVoided(), is(not(true)));
         }
     }
     
@@ -975,17 +897,6 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         for (RadiologyReport radiologyReport : radiologyReportsWithClaimedStatus) {
             assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.CLAIMED));
         }
-        
-        RadiologyReportSearchCriteria radiologyReportSearchCriteriaWithDiscontinuedStatus =
-                new RadiologyReportSearchCriteria.Builder().withStatus(RadiologyReportStatus.DISCONTINUED)
-                        .build();
-        
-        List<RadiologyReport> radiologyReportsWithDiscontinuedStatus =
-                radiologyReportService.getRadiologyReports(radiologyReportSearchCriteriaWithDiscontinuedStatus);
-        assertThat(radiologyReportsWithDiscontinuedStatus.size(), is(1));
-        for (RadiologyReport radiologyReport : radiologyReportsWithDiscontinuedStatus) {
-            assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.DISCONTINUED));
-        }
     }
     
     /**
@@ -1016,5 +927,4 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         expectedException.expectMessage("radiologyReportSearchCriteria cannot be null");
         radiologyReportService.getRadiologyReports(null);
     }
-    
 }

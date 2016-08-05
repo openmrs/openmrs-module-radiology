@@ -16,6 +16,7 @@
                     var toDate = $j('#reportsTabToDateFilter');
                     var principalResultsInterpreterUuid = $j('#reportsTabProviderFilter');
                     var status = $j('#reportsTabStatusSelect');
+                    var includeAll = $j('#reportsTabIncludeAllFilter');
                     var find = $j('#reportsTabFind');
                     var clearResults = $j('a#reportsTabClearFilters');
 
@@ -83,6 +84,7 @@
                                             principalResultsInterpreter: principalResultsInterpreterUuid
                                                     .val(),
                                             status: status.val(),
+                                            includeAll: includeAll.is(':checked'),
                                             totalCount: true,
                                           };
                                         },
@@ -155,6 +157,14 @@
                                             }
                                           },
                                           {
+                                            "name": "voided",
+                                            "responsivePriority": 11000,
+                                            "render": function(data, type,
+                                                    full, meta) {
+                                                return full.voided;
+                                            }
+                                          },
+                                          {
                                             "name": "status",
                                             "className": "dt-center",
                                             "render": function(data, type,
@@ -164,8 +174,6 @@
                                                 return '<i title="<spring:message code="radiology.report.status.COMPLETED"/>" class="fa fa-check-circle fa-lg"></i>';
                                               case "CLAIMED":
                                                 return '<i title="<spring:message code="radiology.report.status.CLAIMED"/>" class="fa fa-circle fa-lg"></i>';
-                                              case "DISCONTINUED":
-                                                return '<i title="<spring:message code="radiology.report.status.DISCONTINUED"/>" class="fa fa-times-circle fa-lg"></i>';
                                               }
                                             }
                                           },
@@ -238,7 +246,10 @@
                 </c:choose>
               </option>
             </c:forEach>
-        </select></td>
+        </select>
+        <input type="checkbox" id="reportsTabIncludeAllFilter" name="includeAllFilter" title="<spring:message code="radiology.dashboard.tabs.reports.filters.includeAll.title"/>" >
+        <spring:message code="radiology.dashboard.tabs.reports.filters.includeAll.description" />
+        </td>
         <td><input id="reportsTabFind" type="button"
           value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
       </form>
@@ -255,6 +266,7 @@
           <th><spring:message code="radiology.datatables.column.report.date" /></th>
           <th><spring:message code="radiology.datatables.column.report.dateCreated" /></th>
           <th><spring:message code="radiology.datatables.column.report.createdBy" /></th>
+          <th><spring:message code="general.voided" /></th>
           <th><spring:message code="radiology.datatables.column.report.status" /></th>
           <th><spring:message code="radiology.datatables.column.action" /></th>
         </tr>

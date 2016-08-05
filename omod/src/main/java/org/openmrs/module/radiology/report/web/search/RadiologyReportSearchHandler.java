@@ -79,7 +79,7 @@ public class RadiologyReportSearchHandler implements SearchHandler {
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search()
      * @throws IllegalArgumentException if report status doesn't exist
-     * @should return all radiology reports (including discontinued) matching the search query if include all is set
+     * @should return all radiology reports (including voided) matching the search query if include all is set
      * @should return all radiology reports within given date range if date to and date from are specified
      * @should return all radiology reports with report date after or equal to from date if only date from is specified
      * @should return all radiology reports with report date before or equal to to date if only date to is specified
@@ -132,7 +132,7 @@ public class RadiologyReportSearchHandler implements SearchHandler {
             radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
                     .withToDate(toDate)
                     .withPrincipalResultsInterpreter(principalResultsInterpreter)
-                    .includeDiscontinued()
+                    .includeVoided()
                     .withStatus(status)
                     .build();
         } else {

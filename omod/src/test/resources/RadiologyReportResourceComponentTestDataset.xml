@@ -51,5 +51,5 @@
   <test_order order_id="2007" />
   <radiology_order order_id="2007" />
   <radiology_study study_id="5" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.5" order_id="2007" performed_status="COMPLETED" creator="1" date_created="2015-02-03 13:17:15.0" uuid="486f9e2b-844c-4f3b-8fcf-9a543414a5cf"/>
-  <radiology_report report_id="2" order_id="2007" report_status="COMPLETED" principal_results_interpreter="1" creator="1" date_created="2015-02-14 09:25:16.0" uuid="82d3fb80-e403-4b9b-982c-22161ec29810"/>
+  <radiology_report report_id="2" order_id="2007" report_status="COMPLETED" principal_results_interpreter="1" creator="1" date_created="2015-02-14 09:25:16.0" voided="false" uuid="82d3fb80-e403-4b9b-982c-22161ec29810"/>
 </dataset>
