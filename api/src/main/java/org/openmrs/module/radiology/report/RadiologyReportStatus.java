@@ -10,7 +10,7 @@
 package org.openmrs.module.radiology.report;
 
 /**
- * RadiologyReportStatus represents a status for a radiologyReport
+ * Represents the states a {@code RadiologyReport} can be in.
  */
 public enum RadiologyReportStatus {
     /**
@@ -18,7 +18,7 @@ public enum RadiologyReportStatus {
      */
     COMPLETED,
     /**
-     * The report is claimed by a physician and currently being worked on.
+     * The report is in draft state right after creation by a physician and as long as it is being worked on and not yet released.
      */
-    CLAIMED,
+    DRAFT,
 }

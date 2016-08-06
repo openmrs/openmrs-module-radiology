@@ -157,14 +157,6 @@
                                             }
                                           },
                                           {
-                                            "name": "voided",
-                                            "responsivePriority": 11000,
-                                            "render": function(data, type,
-                                                    full, meta) {
-                                                return full.voided;
-                                            }
-                                          },
-                                          {
                                             "name": "status",
                                             "className": "dt-center",
                                             "render": function(data, type,
@@ -172,8 +164,13 @@
                                               switch (full.status) {
                                               case "COMPLETED":
                                                 return '<i title="<spring:message code="radiology.report.status.COMPLETED"/>" class="fa fa-check-circle fa-lg"></i>';
-                                              case "CLAIMED":
-                                                return '<i title="<spring:message code="radiology.report.status.CLAIMED"/>" class="fa fa-circle fa-lg"></i>';
+                                              case "DRAFT":
+                                                if (full.voided) {
+                                                    return '<i title="<spring:message code="general.voided"/>" class="fa fa-times-circle fa-lg"></i>';
+                                                }
+                                                else {
+                                                    return '<i title="<spring:message code="radiology.report.status.DRAFT"/>" class="fa fa-circle fa-lg"></i>';
+                                                }
                                               }
                                             }
                                           },
@@ -266,7 +263,6 @@
           <th><spring:message code="radiology.datatables.column.report.date" /></th>
           <th><spring:message code="radiology.datatables.column.report.dateCreated" /></th>
           <th><spring:message code="radiology.datatables.column.report.createdBy" /></th>
-          <th><spring:message code="general.voided" /></th>
           <th><spring:message code="radiology.datatables.column.report.status" /></th>
           <th><spring:message code="radiology.datatables.column.action" /></th>
         </tr>

@@ -427,7 +427,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         RadiologyReport radiologyReport = (RadiologyReport) modelAndView.getModelMap()
                 .get("radiologyReport");
         assertNotNull(radiologyReport);
-        assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.CLAIMED));
+        assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.DRAFT));
         
         assertThat(modelAndView.getModelMap(), hasKey("dicomViewerUrl"));
         String dicomViewerUrl = (String) modelAndView.getModelMap()

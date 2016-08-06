@@ -20,7 +20,7 @@
           <td><a
             href="${pageContext.request.contextPath}/module/radiology/radiologyReport.form?reportId=${radiologyReport.id}">
               <c:choose>
-                <c:when test="${radiologyReport.status == 'CLAIMED'}">
+                <c:when test="${radiologyReport.status == 'DRAFT'}">
                   <spring:message code="radiology.radiologyReportResume" />
                 </c:when>
                 <c:otherwise>

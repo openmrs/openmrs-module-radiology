@@ -60,7 +60,7 @@ public interface RadiologyReportService extends OpenmrsService {
     /**
      * Saves an existing {@code RadiologyReport} which is in a draft state to the database.
      * <p>
-     * A {@code RadiologyReport} is considered a draft as long as its status is {@code CLAIMED}.
+     * A {@code RadiologyReport} is considered a draft as long as its status is {@code DRAFT}.
      * </p>
      * @param radiologyReport the existing radiology report to be saved
      * @return the saved radiology report
