@@ -116,7 +116,7 @@
       </tr>
       <tr>
         <td><spring:message code="radiology.reportStatus" /></td>
-        <td>${radiologyReport.status}</td>
+        <td><spring:message code="radiology.report.status.${radiologyReport.status}" text="${radiologyReport.status}" /></td>
         <form:hidden path="status" />
       </tr>
       <c:if test="${radiologyReport.status == 'COMPLETED'}">
@@ -191,14 +191,14 @@
       </c:if>
     </table>
     <br>
-    <c:if test="${(radiologyReport.status == 'CLAIMED') && (not radiologyReport.voided)}">
+    <c:if test="${(radiologyReport.status == 'DRAFT') && (not radiologyReport.voided)}">
         <input type="submit" value="<spring:message code="radiology.radiologyReportSave"/>" name="saveRadiologyReportDraft" />
         <input type="submit" value="<spring:message code="radiology.radiologyReportComplete"/>"
           name="completeRadiologyReport" />
     </c:if>
   </div>
 </form:form>
-<c:if test="${(radiologyReport.status == 'CLAIMED') && (not radiologyReport.voided)}">
+<c:if test="${(radiologyReport.status == 'DRAFT') && (not radiologyReport.voided)}">
   </br>
   <form:form method="post" id="voidRadiologyReportForm" modelAttribute="voidRadiologyReportRequest" cssClass="box">
     <table>

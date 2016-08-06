@@ -9,7 +9,6 @@
  */
 package org.openmrs.module.radiology.report;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -92,7 +91,7 @@ class HibernateRadiologyReportDAO implements RadiologyReportDAO {
         final List<RadiologyReport> radiologyReports = sessionFactory.getCurrentSession()
                 .createCriteria(RadiologyReport.class)
                 .add(Restrictions.eq("radiologyOrder", radiologyOrder))
-                .add(Restrictions.eq("status", RadiologyReportStatus.CLAIMED))
+                .add(Restrictions.eq("status", RadiologyReportStatus.DRAFT))
                 .add(Restrictions.eq("voided", false))
                 .list();
         return radiologyReports.size() == 1;

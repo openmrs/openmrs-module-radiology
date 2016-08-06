@@ -66,5 +66,5 @@
   <test_order order_id="2009" />
   <radiology_order order_id="2009" />
   <radiology_study study_id="7" study_instance_uid="1.2.826.0.1.3680043.8.2186.1.7" order_id="2009" performed_status="COMPLETED" creator="1" date_created="2016-07-01 13:17:15.0" uuid="7ffd5b5e-473f-11e6-beb8-9e71128cae77"/>
-  <radiology_report report_id="4" order_id="2009" report_status="CLAIMED" principal_results_interpreter="1" creator="1" date_created="2016-07-01 13:17:15.0" voided="true" date_voided="2016-07-02 10:13:47.0" voided_by="1"  void_reason="wrong order selected" uuid="90765170-473f-11e6-beb8-9e71128cae77" report_date="2016-07-01"/>
+  <radiology_report report_id="4" order_id="2009" report_status="DRAFT" principal_results_interpreter="1" creator="1" date_created="2016-07-01 13:17:15.0" voided="true" date_voided="2016-07-02 10:13:47.0" voided_by="1"  void_reason="wrong order selected" uuid="90765170-473f-11e6-beb8-9e71128cae77" report_date="2016-07-01"/>
 </dataset>

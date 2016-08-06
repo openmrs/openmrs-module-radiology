@@ -106,10 +106,10 @@ public class RadiologyReportSearchCriteriaTest {
             build_createANewRadiologyReportSearchCriteriaInstanceWithReportStatusSpecifiedIfStatusIsSetToClaimedOrCompleted()
                     throws Exception {
         
-        radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().withStatus(RadiologyReportStatus.CLAIMED)
+        radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().withStatus(RadiologyReportStatus.DRAFT)
                 .build();
         
-        assertThat(radiologyReportSearchCriteria.getStatus(), is(RadiologyReportStatus.CLAIMED));
+        assertThat(radiologyReportSearchCriteria.getStatus(), is(RadiologyReportStatus.DRAFT));
         assertFalse(radiologyReportSearchCriteria.getIncludeVoided());
         assertNull(radiologyReportSearchCriteria.getToDate());
         assertNull(radiologyReportSearchCriteria.getFromDate());

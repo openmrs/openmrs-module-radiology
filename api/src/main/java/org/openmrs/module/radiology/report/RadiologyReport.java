@@ -62,7 +62,7 @@ public class RadiologyReport extends BaseOpenmrsData {
         }
         
         this.radiologyOrder = radiologyOrder;
-        this.status = RadiologyReportStatus.CLAIMED;
+        this.status = RadiologyReportStatus.DRAFT;
     }
     
     /**

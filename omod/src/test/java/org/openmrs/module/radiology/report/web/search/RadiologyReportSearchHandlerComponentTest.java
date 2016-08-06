@@ -337,7 +337,7 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
     public void search_shouldReturnEmptySearchResultIfNoReportExistsForGivenStatus() throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
-        request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_STATUS, "CLAIMED");
+        request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_STATUS, "DRAFT");
         
         SimpleObject result = deserialize(handle(request));
         
