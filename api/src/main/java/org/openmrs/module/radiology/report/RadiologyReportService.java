@@ -176,11 +176,10 @@ public interface RadiologyReportService extends OpenmrsService {
     public boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder);
     
     /**
-     * Get the active (can be claimed or completed) RadiologyReport matching the radiologyOrder
+     * Get the active (can be a non-voided draft or completed) {@code RadiologyReport} for a {@code RadiologyOrder}.
      *
-     * @param radiologyOrder RadiologyOrder the radiologyOrder which should be checked
-     * @return RadiologyReport filtered by radiologyOrder and radiologyReportStatus not equal to
-     *         discontinued
+     * @param radiologyOrder the radiology order for which an active report should be returned
+     * @return the active radiology report associated with given radiology order
      * @throws IllegalArgumentException if given null
      * @should return a radiology report if given radiology order is associated with a report with status claimed
      * @should return a radiology report if given radiology order is associated with a report with status completed
