@@ -165,9 +165,9 @@ public class RadiologyReportFormController {
             radiologyReportService.voidRadiologyReport(radiologyReport, voidRadiologyReportRequest.getVoidReason());
             request.getSession()
                     .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.RadiologyReport.voided");
-            return new ModelAndView(
-                    "redirect:" + RADIOLOGY_ORDER_FORM_REQUEST_MAPPING + "?orderId=" + radiologyReport.getRadiologyOrder()
-                            .getOrderId());
+            modelAndView.setViewName(
+                "redirect:" + RADIOLOGY_REPORT_FORM_REQUEST_MAPPING + "?reportId=" + radiologyReport.getReportId());
+            return modelAndView;
         }
         catch (APIException apiException) {
             request.getSession()

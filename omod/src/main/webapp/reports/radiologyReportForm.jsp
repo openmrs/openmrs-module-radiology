@@ -98,13 +98,13 @@
     </div>
   </div>
 </c:if>
-<span class="boxHeader"> <b><spring:message code="radiology.radiologyReportTitle" /></b>
+<span class="boxHeader"> <b><spring:message code="radiology.report.form.boxheader" /></b>
 </span>
 <form:form id="radiologyReportFormId" modelAttribute="radiologyReport" method="post">
   <div class="box">
     <table>
       <tr>
-        <td><spring:message code="radiology.radiologyReportId" /></td>
+        <td><spring:message code="radiology.report.form.report.id" /></td>
         <td>${radiologyReport.id}</td>
         <form:hidden path="id" />
       </tr>
@@ -115,19 +115,35 @@
         <form:hidden path="radiologyOrder" />
       </tr>
       <tr>
-        <td><spring:message code="radiology.reportStatus" /></td>
-        <td><spring:message code="radiology.report.status.${radiologyReport.status}" text="${radiologyReport.status}" /></td>
+        <td><spring:message code="radiology.report.form.report.status" /></td>
+        <td><spring:message code="radiology.report.status.${radiologyReport.status}" text="${radiologyReport.status}" />
+        <c:choose>
+            <c:when test="${radiologyReport.status == 'COMPLETED'}">
+                <i class="fa fa-check-circle fa-lg" />
+            </c:when>
+            <c:when test="${radiologyReport.status == 'DRAFT'}">
+                <c:choose>
+                    <c:when test="${radiologyReport.voided}">
+                        <i class="fa fa-times-circle fa-lg" />
+                    </c:when>
+                    <c:otherwise>
+                        <i class="fa fa-circle fa-lg" />
+                    </c:otherwise>
+                </c:choose>
+            </c:when>
+          </c:choose></td>
+          </td>
         <form:hidden path="status" />
       </tr>
       <c:if test="${radiologyReport.status == 'COMPLETED'}">
         <tr>
-          <td><spring:message code="radiology.radiologyReportDate" /></td>
+          <td><spring:message code="radiology.report.form.report.date" /></td>
           <td id="reportDateId"><spring:bind path="date">${status.value}</spring:bind></td>
           <form:hidden path="date" />
         </tr>
       </c:if>
       <tr>
-        <td><spring:message code="radiology.radiologyReportDiagnosis" /></td>
+        <td><spring:message code="radiology.report.form.report.diagnosis" /></td>
         <td><c:choose>
             <c:when test="${radiologyReport.status == 'COMPLETED'}">
               <spring:bind path="body">
@@ -145,7 +161,7 @@
           </c:choose></td>
       </tr>
       <tr>
-        <td><spring:message code="radiology.radiologyReportProvider" /></td>
+        <td><spring:message code="radiology.report.form.report.principalResultsInterpreter" /></td>
         <td><c:choose>
             <c:when test="${not empty radiologyReport.principalResultsInterpreter.id}">
                             ${radiologyReport.principalResultsInterpreter.name}
@@ -192,8 +208,8 @@
     </table>
     <br>
     <c:if test="${(radiologyReport.status == 'DRAFT') && (not radiologyReport.voided)}">
-        <input type="submit" value="<spring:message code="radiology.radiologyReportSave"/>" name="saveRadiologyReportDraft" />
-        <input type="submit" value="<spring:message code="radiology.radiologyReportComplete"/>"
+        <input type="submit" value="<spring:message code="radiology.report.form.button.saveDraft"/>" name="saveRadiologyReportDraft" />
+        <input type="submit" value="<spring:message code="radiology.report.form.button.complete"/>"
           name="completeRadiologyReport" />
     </c:if>
   </div>

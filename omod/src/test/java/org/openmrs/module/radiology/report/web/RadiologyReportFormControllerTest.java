@@ -232,8 +232,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
-            is("redirect:/module/radiology/radiologyOrder.form?orderId=" + mockRadiologyReport.getRadiologyOrder()
-                    .getOrderId()));
+            is("redirect:/module/radiology/radiologyReport.form?reportId=" + mockRadiologyReport.getReportId()));
         assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("radiology.RadiologyReport.voided"));
     }
     
