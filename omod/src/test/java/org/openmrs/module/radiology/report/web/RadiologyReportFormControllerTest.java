@@ -363,8 +363,7 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         mockCompletedRadiologyReport.setStatus(RadiologyReportStatus.COMPLETED);
         BindingResult reportErrors = mock(BindingResult.class);
         
-        when(radiologyReportService.completeRadiologyReport(mockRadiologyReport,
-            mockRadiologyReport.getPrincipalResultsInterpreter())).thenReturn(mockCompletedRadiologyReport);
+        when(radiologyReportService.saveRadiologyReport(mockRadiologyReport)).thenReturn(mockCompletedRadiologyReport);
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.addParameter("completeRadiologyReport", "completeRadiologyReport");
@@ -462,9 +461,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         when(dicomWebViewer.getDicomViewerUrl(mockRadiologyReport.getRadiologyOrder()
                 .getStudy())).thenReturn(
                     "http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1");
-        when(radiologyReportService.completeRadiologyReport(mockRadiologyReport,
-            mockRadiologyReport.getPrincipalResultsInterpreter()))
-                    .thenThrow(new APIException("RadiologyReport.cannot.complete.reported"));
+        when(radiologyReportService.saveRadiologyReport(mockRadiologyReport))
+                .thenThrow(new APIException("RadiologyReport.cannot.complete.reported"));
         
         ModelAndView modelAndView =
                 radiologyReportFormController.completeRadiologyReport(mockRequest, mockRadiologyReport, reportErrors);
