@@ -15,7 +15,6 @@ import java.util.List;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.order.RadiologyOrder;
@@ -104,21 +103,17 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
     }
     
     /**
-     * @see RadiologyReportService#completeRadiologyReport(RadiologyReport, Provider)
+     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
      */
     @Override
     @Transactional
-    public synchronized RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport,
-            Provider principalResultsInterpreter) {
+    public synchronized RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport) {
         
         if (radiologyReport == null) {
             throw new IllegalArgumentException("radiologyReport cannot be null");
         }
         if (radiologyReport.getReportId() == null) {
             throw new IllegalArgumentException("radiologyReport.reportId cannot be null");
-        }
-        if (principalResultsInterpreter == null) {
-            throw new IllegalArgumentException("principalResultsInterpreter cannot be null");
         }
         if (radiologyReport.getStatus() == null) {
             throw new IllegalArgumentException("radiologyReport.status cannot be null");
@@ -130,7 +125,6 @@ class RadiologyReportServiceImpl extends BaseOpenmrsService implements Radiology
             throw new APIException("radiology.RadiologyReport.cannot.complete.voided");
         }
         radiologyReport.setDate(new Date());
-        radiologyReport.setPrincipalResultsInterpreter(principalResultsInterpreter);
         radiologyReport.setStatus(RadiologyReportStatus.COMPLETED);
         return radiologyReportDAO.saveRadiologyReport(radiologyReport);
     }

@@ -11,6 +11,7 @@ package org.openmrs.module.radiology.report;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.annotation.Handler;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -20,6 +21,7 @@ import org.springframework.validation.Validator;
  * Validates {@link RadiologyReport}.
  */
 @Component
+@Handler(supports = { RadiologyReport.class })
 public class RadiologyReportValidator implements Validator {
     
     

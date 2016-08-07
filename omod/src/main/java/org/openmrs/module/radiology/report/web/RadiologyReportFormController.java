@@ -31,8 +31,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
-import static org.openmrs.module.radiology.order.web.RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_REQUEST_MAPPING;
-
 /**
  * Controller for the form handling entry, display, saving, unclaiming of {@code RadiologyReport's}.
  */
@@ -205,8 +203,7 @@ public class RadiologyReportFormController {
         }
         
         try {
-            radiologyReportService.completeRadiologyReport(radiologyReport,
-                radiologyReport.getPrincipalResultsInterpreter());
+            radiologyReportService.saveRadiologyReport(radiologyReport);
             request.getSession()
                     .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.RadiologyReport.completed");
             modelAndView.setViewName(

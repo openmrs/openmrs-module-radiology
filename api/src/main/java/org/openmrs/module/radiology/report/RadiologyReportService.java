@@ -11,7 +11,6 @@ package org.openmrs.module.radiology.report;
 
 import java.util.List;
 
-import org.openmrs.Provider;
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
@@ -31,7 +30,7 @@ import org.openmrs.module.radiology.order.RadiologyOrder;
  * <li>Set fields like for example {@code radiologyReport.setBody("Fracture of around 5mm visible in right tibia.")} through the setters of {@link RadiologyReport}.</li>
  * <li>Optionally, save the {@code RadiologyReport} as a draft via {@link #saveRadiologyReportDraft(RadiologyReport)}.</li>
  * <li>Optionally, void the {@code RadiologyReport} via {@link #voidRadiologyReport(RadiologyReport, String)}.</li>
- * <li>Finally, complete the {@code RadiologyReport} via {@link #completeRadiologyReport(RadiologyReport, Provider)}.</li>
+ * <li>Finally, complete the {@code RadiologyReport} via {@link #saveRadiologyReport(RadiologyReport)}.</li>
  * </ol>
  *
  * @see org.openmrs.module.radiology.report.RadiologyReport
@@ -99,29 +98,27 @@ public interface RadiologyReportService extends OpenmrsService {
     public RadiologyReport voidRadiologyReport(RadiologyReport radiologyReport, String voidReason);
     
     /**
-     * Completes a {@code radiologyReport} and and sets its status to completed.
+     * Saves an existing {@code RadiologyReport} and and sets its status to completed.
      *
-     * @param radiologyReport the radiology report to be completed
-     * @param principalResultsInterpreter the provider which completed the radiology report
-     * @return the completed radiology report
-     *         principalResultsInterpreter
+     * @param radiologyReport the radiology report to be saved and completed
+     * @return the saved radiology report
      * @throws IllegalArgumentException if radiologyReport is null
      * @throws IllegalArgumentException if radiologyReport reportId is null
      * @throws IllegalArgumentException if radiologyReport status is null
-     * @throws IllegalArgumentException if principalResultsInterpreter is null
      * @throws APIException if radiologyReport is completed
      * @throws APIException if radiologyReport is voided
+     * @throws APIException if radiologyReport is not valid
      * @should set the report date of the radiology report to the day the radiology report was completed
      * @should set the radiology report status to complete
      * @should throw illegal argument exception if given radiology report is null
      * @should throw illegal argument exception if given radiology report with reportId null
      * @should throw illegal argument exception if given radiology report with status null
-     * @should throw illegal argument exception if given principal results interpreter is null
      * @should throw api exception if radiology report is completed
      * @should throw api exception if radiology report is voided
+     * @should throw api exception if radiology report is not valid
      */
     @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
-    public RadiologyReport completeRadiologyReport(RadiologyReport radiologyReport, Provider principalResultsInterpreter);
+    public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport);
     
     /**
      * Get the {@code RadiologyReport} by its {@code reportId}.
