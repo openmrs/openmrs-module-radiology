@@ -1,0 +1,348 @@
+<?xml version="1.0"?>
+
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+	<xs:annotation>
+		<xs:documentation>
+			This schema describes an MRRT report template as
+			defined by the IHE
+			Radiology Technical Framework Supplement Management
+			of Radiology
+			Report Templates (MRRT).
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:element name="html">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="head" />
+				<xs:element name="body" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="head">
+		<xs:complexType>
+	        <xs:sequence>
+	        	<xs:element name="title" type="xs:string"/>
+	        	<xs:element ref="meta" minOccurs="0" maxOccurs="unbounded"/>
+	        	<xs:group ref="styleinfo"/>
+	        	<xs:element ref="script"/>
+	        </xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="meta">
+		<xs:complexType>
+			<xs:attributeGroup ref="globalAttributeGroup" />
+			<xs:attribute name="http-equiv" type="httpEquiv" />
+			<xs:attribute name="charset" type="xs:string"/>
+			<xs:attribute name="name" type="xs:string"/>
+			<xs:attribute name="content" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="script">
+		<xs:complexType mixed="true">
+			<xs:sequence>
+				<xs:element ref="template_attributes"/>
+			</xs:sequence>
+			<xs:attribute name="type" type="xs:string" fixed="text/xml" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="template_attributes">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="top-level-flag" type="xs:boolean" minOccurs="0"/>
+				<xs:element ref="status" minOccurs="0"/>
+				<xs:element name="user-list" type="xs:string" minOccurs="0"/>
+				<xs:element name="provider-group-list" type="xs:string" minOccurs="0"/>
+				<xs:element ref="coding_schemes" minOccurs="0"/>
+				<xs:element ref="term" minOccurs="0" maxOccurs="unbounded"/>
+				<xs:element ref="coded_content"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="status">
+		<xs:simpleType>
+			<xs:restriction base="xs:string">
+				<xs:enumeration value="DRAFT"/>
+				<xs:enumeration value="ACTIVE"/>
+				<xs:enumeration value="RETIRED"/>
+			</xs:restriction>
+		</xs:simpleType>
+	</xs:element>
+	
+	<xs:element name="coding_schemes">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="coding_scheme" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="coding_scheme">
+		<xs:complexType>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+			<xs:attribute name="designator" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="term">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="code"/>
+			</xs:sequence>
+			<xs:attribute name="type" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="code">
+		<xs:complexType>
+			<xs:attribute name="meaning" type="xs:string" use="required"/>
+			<xs:attribute name="scheme" type="xs:string" use="required"/>
+			<xs:attribute name="value" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="entry">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="term" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="ORIGTXT" type="xs:string"/>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:element name="coded_content">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="coding_schemes" minOccurs="0"/>
+				<xs:element ref="entry" minOccurs="0" maxOccurs="unbounded"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<xs:group name="styleinfo">
+		<xs:choice>
+			<xs:element ref="style" minOccurs="0"/>
+			<xs:element ref="link" minOccurs="0"/>
+		</xs:choice>
+	</xs:group>
+	
+	<xs:element name="style">
+		<xs:complexType mixed="true">
+			<xs:attribute name="type" type="xs:string"/>
+			<xs:attribute name="media" type="mediaQueryList"
+				default="all" />
+			<xs:attribute name="scoped" type="scoped" />
+			<xs:attributeGroup ref="globalAttributeGroup" />
+		</xs:complexType>
+	</xs:element>
+			
+	<xs:simpleType name="scoped">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="scoped" />
+			<xs:enumeration value="" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:element name="link">
+		<xs:complexType>
+			<xs:attributeGroup ref="globalAttributeGroup" />
+			<xs:attribute name="hreflang" type="languageTag" />
+			<xs:attribute name="rel" type="tokens" use="required"/>
+			<xs:attribute name="href" type="uri" use="required"/>
+			<xs:attribute name="media" type="mediaQueryList"
+				default="all" />
+			<xs:attribute name="type" type="mimeType" />
+			<xs:attribute name="sizes" type="sizes" />
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="header">
+		<xs:complexType>
+			<xs:simpleContent>
+				<xs:extension base="xs:string">
+					<xs:attribute name="class" type="xs:string"/>
+				</xs:extension>
+			</xs:simpleContent>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- Global Attributes ================================================= -->
+	
+	<xs:attributeGroup name="globalAttributeGroup">
+		<xs:attributeGroup ref="coreAttributeGroup" />
+	</xs:attributeGroup>
+	
+	<xs:attributeGroup name="coreAttributeGroup">
+		<xs:attributeGroup ref="coreAttributeGroupNodir" />
+		<xs:attribute name="dir" type="dir" />
+	</xs:attributeGroup>
+	
+	<xs:attributeGroup name="coreAttributeGroupNodir">
+		<xs:attribute name="class" type="tokens" />
+		<xs:attribute name="contenteditable" type="implicitBoolean" />
+		<xs:attribute name="contextmenu" type="idref" />
+		<xs:attribute name="draggable" type="boolean" />
+		<xs:attribute name="dropzone" type="dropzone" />
+		<xs:attribute name="hidden" type="hidden" />
+		<xs:attribute name="id" type="id" />
+		<xs:attribute name="lang" type="languageTag" />
+		<xs:attribute name="spellcheck" type="implicitBoolean" />
+		<xs:attribute name="style" type="string" />
+		<xs:attribute name="title" type="string" />
+	</xs:attributeGroup>
+	
+	<xs:simpleType name="defer">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="defer" />
+			<xs:enumeration value="" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="async">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="async" />
+			<xs:enumeration value="" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<!-- Text-level semantics ============================================== -->
+
+	<xs:simpleType name="id">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="\S+" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="dir">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="ltr" />
+			<xs:enumeration value="rtl" />
+			<xs:enumeration value="auto" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="accesskey">
+		<xs:list>
+			<xs:simpleType>
+				<xs:restriction base="xs:token">
+					<xs:pattern value="\S" />
+				</xs:restriction>
+			</xs:simpleType>
+		</xs:list>
+	</xs:simpleType>
+
+	<xs:simpleType name="dropzone">
+		<xs:list>
+			<xs:simpleType>
+				<xs:union>
+					<xs:simpleType>
+						<xs:restriction base="xs:NMTOKEN">
+							<xs:enumeration value="copy" />
+							<xs:enumeration value="move" />
+							<xs:enumeration value="link" />
+						</xs:restriction>
+					</xs:simpleType>
+
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:pattern value="string:\S+" />
+						</xs:restriction>
+					</xs:simpleType>
+
+					<xs:simpleType>
+						<xs:restriction base="xs:token">
+							<xs:pattern value="file:\S+" />
+						</xs:restriction>
+					</xs:simpleType>
+				</xs:union>
+			</xs:simpleType>
+		</xs:list>
+	</xs:simpleType>
+
+	<xs:simpleType name="hidden">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="hidden" />
+			<xs:enumeration value="" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="idref">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="\S+" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="boolean">
+		<xs:restriction base="xs:boolean" />
+	</xs:simpleType>
+
+	<xs:simpleType name="implicitBoolean">
+		<xs:restriction base="xs:token">
+			<xs:enumeration value="true" />
+			<xs:enumeration value="false" />
+			<xs:enumeration value="" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="languageTag">
+		<xs:restriction base="xs:language" />
+	</xs:simpleType>
+
+	<xs:simpleType name="tokens">
+		<xs:list itemType="token" />
+	</xs:simpleType>
+
+	<xs:simpleType name="token">
+		<xs:restriction base="xs:token">
+			<xs:pattern value="\S+" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="mediaQueryList">
+		<xs:restriction base="nonEmptyToken" />
+	</xs:simpleType>
+
+	<xs:simpleType name="nonEmptyToken">
+		<xs:restriction base="xs:token">
+			<xs:minLength value="1" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="mimeType">
+		<!-- A MIME type may have a parameter. Example: "application/dita+xml; 
+			format=dita" -->
+		<xs:restriction base="nonEmptyToken" />
+	</xs:simpleType>
+
+	<xs:simpleType name="sizes">
+		<xs:restriction base="tokens" />
+	</xs:simpleType>
+	
+	<xs:simpleType name="httpEquiv">
+		<xs:restriction base="xs:NMTOKEN">
+			<xs:enumeration value="content-language" />
+			<xs:enumeration value="content-type" />
+			<xs:enumeration value="default-style" />
+			<xs:enumeration value="refresh" />
+			<xs:enumeration value="set-cookie" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="string">
+		<xs:restriction base="xs:string" />
+	</xs:simpleType>
+
+	<xs:simpleType name="charset">
+		<xs:restriction base="token" />
+	</xs:simpleType>
+	
+	<xs:simpleType name="uri">
+		<xs:restriction base="xs:anyURI" />
+	</xs:simpleType>
+</xs:schema>

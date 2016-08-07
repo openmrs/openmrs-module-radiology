@@ -71,7 +71,7 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     
     private static final String NON_EXISTING_TEMPLATE_TITLE = "invalid";
     
-    private static final String TEMPLATE_IDENTIFIER = "http://www.radreport.org/template/0000049";
+    private static final String TEMPLATE_IDENTIFIER = "1.3.6.1.4.1.21367.13.199.1015";
     
     @Autowired
     private MrrtReportTemplateService mrrtReportTemplateService;
@@ -259,7 +259,7 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     public void importMrrtReportTemplate_shouldCreateMrrtReportTemplateInTheDatabaseWithMetadataFromInputStream()
             throws Exception {
         File file = new File(getClass().getClassLoader()
-                .getResource("mrrttemplates/radreport/0000049.html")
+                .getResource("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html")
                 .getFile());
         FileInputStream in = new FileInputStream(file);
         File tempFolder = temporaryFolder.newFolder("/mrrt_templates");
@@ -278,7 +278,7 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     @Test
     public void importMrrtReportTemplate_shouldCreateReportTemplateFileInReportTemplateHomeDirectory() throws Exception {
         File file = new File(getClass().getClassLoader()
-                .getResource("mrrttemplates/radreport/0000049.html")
+                .getResource("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html")
                 .getFile());
         FileInputStream in = new FileInputStream(file);
         File tempFolder = temporaryFolder.newFolder("/mrrt_templates");
@@ -314,7 +314,7 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     * @verifies return an empty list of no match for title was found
     */
     @Test
-    public void getMrrtReportTemplates_shouldReturnAnEmptyListOfNoMatchForTitleWasFound() throws Exception {
+    public void getMrrtRepdortTemplates_shouldReturnAnEmptyListOfNoMatchForTitleWasFound() throws Exception {
         
         MrrtReportTemplateSearchCriteria searchCriteria =
                 new MrrtReportTemplateSearchCriteria.Builder().withTitle(NON_EXISTING_TEMPLATE_TITLE)

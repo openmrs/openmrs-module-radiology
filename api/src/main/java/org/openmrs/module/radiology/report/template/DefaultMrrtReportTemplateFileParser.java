@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.radiology.report.template;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -18,12 +20,11 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
-import org.springframework.stereotype.Component;
+import org.openmrs.util.OpenmrsUtil;
 
 /**
  * A parser to parse MRRT report templates and and return an MrrtReportTemplate object.
  */
-@Component
 class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParser {
     
     
@@ -49,16 +50,33 @@ class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParse
     
     private static final String DCTERMS_CREATOR = "dcterms.creator";
     
+    private MrrtReportTemplateValidator validator;
+    
+    public void setValidator(MrrtReportTemplateValidator validator) {
+        this.validator = validator;
+    }
+    
     /**
      * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateFileParser#parse(InputStream)
      */
     @Override
     public MrrtReportTemplate parse(InputStream in) throws IOException {
         
-        final Document doc = Jsoup.parse(in, null, "");
+        File templateFile = getTemplateAsFile(in);
+        validator.validate(templateFile);
+        final Document doc = Jsoup.parse(templateFile, null, "");
         final MrrtReportTemplate result = new MrrtReportTemplate();
         initializeTemplate(result, doc);
         return result;
+    }
+    
+    private final File getTemplateAsFile(InputStream in) throws IOException {
+        final File tmpFile = File.createTempFile(java.util.UUID.randomUUID()
+                .toString(),
+            java.util.UUID.randomUUID()
+                    .toString());
+        OpenmrsUtil.copyFile(in, new FileOutputStream(tmpFile));
+        return tmpFile;
     }
     
     private final void initializeTemplate(MrrtReportTemplate template, Document doc) {

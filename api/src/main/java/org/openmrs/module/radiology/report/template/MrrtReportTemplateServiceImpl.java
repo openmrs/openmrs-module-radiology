@@ -38,7 +38,7 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
         this.mrrtReportTemplateDAO = mrrtReportTemplateDAO;
     }
     
-    public void setMrrtReportTemplateFileParser(MrrtReportTemplateFileParser parser) {
+    public void setParser(MrrtReportTemplateFileParser parser) {
         this.parser = parser;
     }
     
