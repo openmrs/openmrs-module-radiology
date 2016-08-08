@@ -109,10 +109,18 @@
         <form:hidden path="id" />
       </tr>
       <tr>
-        <form:hidden path="uuid" />
-      </tr>
-      <tr>
+        <%-- following properties are bound to the form as hidden since they should be or since we show them only in a readonly manner. --%>
+        <%-- if you delete for example the dateCreated it will change on every update of the RadiologyReport  --%>
         <form:hidden path="radiologyOrder" />
+        <form:hidden path="uuid" />
+        <form:hidden path="date" />
+        <form:hidden path="status" />
+        <form:hidden path="creator" />
+        <form:hidden path="dateCreated" />
+        <form:hidden path="voided" />
+        <form:hidden path="voidedBy" />
+        <form:hidden path="dateVoided" />
+        <%-- dateChanged and changedBy do not need to be bound  --%>
       </tr>
       <tr>
         <td><spring:message code="radiology.report.form.report.status" /></td>
@@ -133,37 +141,24 @@
             </c:when>
           </c:choose></td>
           </td>
-        <form:hidden path="status" />
       </tr>
       <c:if test="${radiologyReport.status == 'COMPLETED'}">
         <tr>
           <td><spring:message code="radiology.report.form.report.date" /></td>
           <td id="reportDateId"><spring:bind path="date">${status.value}</spring:bind></td>
-          <form:hidden path="date" />
         </tr>
       </c:if>
       <tr>
         <td><spring:message code="radiology.report.form.report.diagnosis" /></td>
-        <td><c:choose>
-            <c:when test="${radiologyReport.status == 'COMPLETED'}">
-              <spring:bind path="body">
-                <textarea id="${status.expression}Id" name="${status.expression}" disabled="true">${status.value}</textarea>
-              </spring:bind>
-            </c:when>
-            <c:otherwise>
-              <spring:bind path="body">
-                <textarea id="${status.expression}Id" name="${status.expression}">${status.value}</textarea>
-                <c:if test="${status.errorMessage != ''}">
-                  <span class="error">${status.errorMessage}</span>
-                </c:if>
-              </spring:bind>
-            </c:otherwise>
-          </c:choose></td>
+        <td>
+          <form:textarea path="body" id="bodyId" disabled="${radiologyReport.status == 'COMPLETED'}" />
+          <form:errors path="body" cssClass="error" />
+        </td>
       </tr>
       <tr>
         <td><spring:message code="radiology.report.form.report.principalResultsInterpreter" /></td>
         <td><c:choose>
-            <c:when test="${not empty radiologyReport.principalResultsInterpreter.id}">
+            <c:when test="${radiologyReport.voided || not empty radiologyReport.principalResultsInterpreter.id}">
                             ${radiologyReport.principalResultsInterpreter.name}
                             <form:hidden path="principalResultsInterpreter" />
             </c:when>
@@ -171,10 +166,8 @@
               <spring:bind path="principalResultsInterpreter">
                 <openmrs:fieldGen type="org.openmrs.Provider" formFieldName="${status.expression}"
                   val="${status.editor.value}" />
-                <c:if test="${status.errorMessage != ''}">
-                  <span class="error">${status.errorMessage}</span>
-                </c:if>
               </spring:bind>
+              <form:errors path="principalResultsInterpreter" cssClass="error" />
             </c:otherwise>
           </c:choose></td>
       </tr>
@@ -182,22 +175,17 @@
         <td><spring:message code="general.createdBy" /></td>
         <td><spring:bind path="creator.personName">
 					${status.value}
-					<form:hidden path="creator" />
           </spring:bind> - <span class="datetime"><spring:bind path="dateCreated">
 					${status.value}
-					<form:hidden path="dateCreated" />
             </spring:bind></span></td>
       </tr>
       <c:if test="${radiologyReport.voided}">
-          <form:hidden path="voided" />
           <tr>
             <td><spring:message code="general.voidedBy" /></td>
             <td><spring:bind path="voidedBy.personName">
                         ${status.value}
-                        <form:hidden path="voidedBy" />
               </spring:bind> - <span class="datetime"><spring:bind path="dateVoided">
                         ${status.value}
-                        <form:hidden path="dateVoided" />
                 </spring:bind></span></td>
           </tr>
           <tr>
@@ -219,12 +207,8 @@
   <form:form method="post" id="voidRadiologyReportForm" modelAttribute="voidRadiologyReportRequest" cssClass="box">
     <table>
         <td><spring:message code="general.voidReason" /></td>
-        <td><spring:bind path="voidReason">
-            <textarea name="${status.expression}">${status.value}</textarea>
-            <c:if test="${not empty status.errorMessage}">
-              <span class="error">${status.errorMessage}</span>
-            </c:if>
-          </spring:bind></td>
+        <td><form:textarea path="voidReason" /><form:errors path="voidReason" cssClass="error" />
+        </td>
       </tr>
     </table>
     <input type="button" value="<spring:message code="general.void"/>" id="voidRadiologyReportButtonId" />

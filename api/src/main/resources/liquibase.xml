@@ -466,7 +466,28 @@
             </column>
             <column name="date_voided" type="DATETIME"/>
 			<column name="voided_by" type="int"/>
-            <column name="void_reason" type="varchar(255)"/>
+			<column name="void_reason" type="varchar(255)"/>
 		</addColumn>
+	</changeSet>
+	<changeSet id="radiology-38" author="teleivo">
+		<comment>Add foreign key constraint on voided_by at radiology_report</comment>
+		<addForeignKeyConstraint constraintName="radiology_report_voided_by_fk"
+								 baseTableName="radiology_report" baseColumnNames="voided_by"
+								 referencedTableName="users" referencedColumnNames="user_id"/>
+	</changeSet>
+	<changeSet id="radiology-39" author="teleivo">
+		<comment>Add date_changed column to radiology_report</comment>
+		<addColumn tableName="radiology_report">
+			<column name="date_changed" type="DATETIME"/>
+		</addColumn>
+	</changeSet>
+	<changeSet id="radiology-40" author="teleivo">
+		<comment>Add changed_by column to radiology_report</comment>
+		<addColumn tableName="radiology_report">
+			<column name="changed_by" type="int"/>
+		</addColumn>
+		<addForeignKeyConstraint constraintName="radiology_report_changed_by_fk"
+								 baseTableName="radiology_report" baseColumnNames="changed_by"
+								 referencedTableName="users" referencedColumnNames="user_id"/>
 	</changeSet>
 </databaseChangeLog>
