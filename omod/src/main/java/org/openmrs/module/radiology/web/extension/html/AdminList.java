@@ -14,6 +14,7 @@ import java.util.Map;
 
 import org.openmrs.module.Extension;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
+import static org.openmrs.module.radiology.order.web.RadiologyDashboardOrdersTabController.RADIOLOGY_ORDERS_TAB_REQUEST_MAPPING;
 
 public class AdminList extends AdministrationSectionExt {
     
@@ -33,7 +34,7 @@ public class AdminList extends AdministrationSectionExt {
         
         final Map<String, String> map = new HashMap<String, String>();
         
-        map.put("module/radiology/radiologyDashboard.form", "radiology.administrationSection.links.dashboard");
+        map.put(RADIOLOGY_ORDERS_TAB_REQUEST_MAPPING, "radiology.administrationSection.links.dashboard");
         
         return map;
     }

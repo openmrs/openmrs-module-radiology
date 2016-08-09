@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.order.web;
+package org.openmrs.module.radiology.report.template.web;
 
 import java.io.IOException;
 
@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
+import org.openmrs.module.radiology.web.RadiologyWebConstants;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -24,26 +25,36 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * Controller for the dashboard tab containing {@code RadiologyReportTemplates}.
+ */
 @Controller
-@RequestMapping(RadiologyDashboardFormController.RADIOLOGY_DASHBOARD_FORM_REQUEST_MAPPING)
-public class RadiologyDashboardFormController {
+@RequestMapping(RadiologyDashboardReportTemplatesTabController.RADIOLOGY_REPORT_TEMPLATES_TAB_REQUEST_MAPPING)
+public class RadiologyDashboardReportTemplatesTabController {
     
     
-    public static final String RADIOLOGY_DASHBOARD_FORM_REQUEST_MAPPING = "/module/radiology/radiologyDashboard.form";
+    public static final String RADIOLOGY_REPORT_TEMPLATES_TAB_REQUEST_MAPPING =
+            "/module/radiology/radiologyDashboardReportTemplatesTab.htm";
     
-    static final String RADIOLOGY_DASHBOARD_FORM_VIEW = "/module/radiology/radiologyDashboardForm";
+    static final String RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW = "/module/radiology/radiologyDashboardReportTemplatesTab";
     
     @Autowired
     private MrrtReportTemplateService mrrtReportTemplateService;
     
     /**
-     * Handles get requests to the radiology dashboard page.
-     * @return model and view of the radiology dashboard page
-     * @should return model and view of the radiology dashboard page
+     * Handles get requests for radiology report templates tab.
+     * 
+     * @return model and view of the radiology report templates tab page
+     * @should return model and view of the radiology report templates tab page and set tab session attribute to radiology reports tab page
      */
     @RequestMapping(method = RequestMethod.GET)
-    protected ModelAndView get() {
-        return new ModelAndView(RADIOLOGY_DASHBOARD_FORM_VIEW);
+    protected ModelAndView getRadiologyReportTemplatesTab(HttpServletRequest request) {
+        
+        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW);
+        request.getSession()
+                .setAttribute(RadiologyWebConstants.RADIOLOGY_DASHBOARD_TAB_SESSION_ATTRIBUTE,
+                    RADIOLOGY_REPORT_TEMPLATES_TAB_REQUEST_MAPPING);
+        return modelAndView;
     }
     
     /**
@@ -51,12 +62,13 @@ public class RadiologyDashboardFormController {
      * 
      * @param request the HttpServletRequest to import MrrtReportTemplates
      * @param templateFile the MrrtReportTemplate file to be imported
-     * @return model and view of the radiology dashboard page with success or failure message in session attribute 
+     * @return model and view of the radiology dashboard report templates page with success or failure message in session
+     *         attribute
      * @throws IOException when templateFile could not be read or is invalid
      * @should give error message when template file is empty
      * @should set error message in session when api exception is thrown
      * @should set error message in session when io exception is thrown
-     * @should give success message when import was successful 
+     * @should give success message when import was successful
      */
     @RequestMapping(method = RequestMethod.POST, params = "uploadReportTemplate")
     protected ModelAndView uploadReportTemplate(HttpServletRequest request, @RequestParam MultipartFile templateFile)
@@ -65,7 +77,7 @@ public class RadiologyDashboardFormController {
         if (templateFile.isEmpty()) {
             request.getSession()
                     .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.MrrtReportTemplate.not.imported.empty");
-            return new ModelAndView(RADIOLOGY_DASHBOARD_FORM_VIEW);
+            return new ModelAndView(RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW);
         }
         
         try {
@@ -83,6 +95,6 @@ public class RadiologyDashboardFormController {
                     .setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
                         "Failed to import " + templateFile.getOriginalFilename() + " => " + exception.getMessage());
         }
-        return new ModelAndView(RADIOLOGY_DASHBOARD_FORM_VIEW);
+        return new ModelAndView(RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW);
     }
 }

@@ -1,13 +1,7 @@
-<%@ include file="/WEB-INF/view/module/radiology/template/includeTags.jsp"%>
-<%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
-<%@ include file="/WEB-INF/view/module/radiology/template/includeDatatablesWithDefaults.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/dashboardHeader.jsp"%>
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/css/daterangepicker.min.css" />
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/js/jquery.daterangepicker.min.js" />
-
 <script type="text/javascript">
-  // configure current locale as momentjs default, fall back to "en" if locale not found
-  moment.locale([jsLocale, 'en']);
-
   var $j = jQuery.noConflict();
   $j(document)
           .ready(
@@ -20,37 +14,43 @@
                     var find = $j('#reportsTabFind');
                     var clearResults = $j('a#reportsTabClearFilters');
 
-                    $j('#reportsTabDateRangePicker').dateRangePicker({
-                      startOfWeek: "monday",
-                      customTopBar: '<b class="start-day">...</b> - <b class="end-day">...</b><i class="selected-days"> (<span class="selected-days-num">3</span>)</i>',
-                      showShortcuts: true,
-                      shortcuts: {
-                        'prev-days': [3, 5, 7],
-                        'prev': ['week', 'month'],
-                        'next-days': null,
-                        'next': null
-                      },
-                      separator: '-',
-                      format: 'L',
-                      getValue: function() {
-                        if (fromDate.val() && toDate.val())
-                          return fromDate.val() + '-' + toDate.val();
-                        else
-                          return '';
-                      },
-                      setValue: function(s, s1, s2) {
-                        fromDate.val(s1);
-                        toDate.val(s2);
-                      }
-                    });
-                    
+                    $j("#radiologyReportsTab").parent().addClass(
+                            "ui-tabs-selected ui-state-active");
+
+                    $j('#reportsTabDateRangePicker')
+                            .dateRangePicker(
+                                    {
+                                      startOfWeek: "monday",
+                                      customTopBar: '<b class="start-day">...</b> - <b class="end-day">...</b><i class="selected-days"> (<span class="selected-days-num">3</span>)</i>',
+                                      showShortcuts: true,
+                                      shortcuts: {
+                                        'prev-days': [3, 5, 7],
+                                        'prev': ['week', 'month'],
+                                        'next-days': null,
+                                        'next': null
+                                      },
+                                      separator: '-',
+                                      format: 'L',
+                                      getValue: function() {
+                                        if (fromDate.val() && toDate.val())
+                                          return fromDate.val() + '-'
+                                                  + toDate.val();
+                                        else
+                                          return '';
+                                      },
+                                      setValue: function(s, s1, s2) {
+                                        fromDate.val(s1);
+                                        toDate.val(s2);
+                                      }
+                                    });
+
                     $j('#reportsTabDateRangePicker').data('dateRangePicker')
-                    .setDateRange(
-                            moment().subtract(1, 'weeks').startOf(
-                                    'week').format('L'),
-                            moment().subtract(1, 'weeks').endOf('week')
-                                    .format('L'));
-                    
+                            .setDateRange(
+                                    moment().subtract(1, 'weeks').startOf(
+                                            'week').format('L'),
+                                    moment().subtract(1, 'weeks').endOf('week')
+                                            .format('L'));
+
                     var radiologyReportsTable = $j('#reportsTabTable')
                             .DataTable(
                                     {
@@ -84,7 +84,8 @@
                                             principalResultsInterpreter: principalResultsInterpreterUuid
                                                     .val(),
                                             status: status.val(),
-                                            includeAll: includeAll.is(':checked'),
+                                            includeAll: includeAll
+                                                    .is(':checked'),
                                             totalCount: true,
                                           };
                                         },
@@ -166,10 +167,9 @@
                                                 return '<i title="<spring:message code="radiology.report.status.COMPLETED"/>" class="fa fa-check-circle fa-lg"></i>';
                                               case "DRAFT":
                                                 if (full.voided) {
-                                                    return '<i title="<spring:message code="general.voided"/>" class="fa fa-times-circle fa-lg"></i>';
-                                                }
-                                                else {
-                                                    return '<i title="<spring:message code="radiology.report.status.DRAFT"/>" class="fa fa-circle fa-lg"></i>';
+                                                  return '<i title="<spring:message code="general.voided"/>" class="fa fa-times-circle fa-lg"></i>';
+                                                } else {
+                                                  return '<i title="<spring:message code="radiology.report.status.DRAFT"/>" class="fa fa-circle fa-lg"></i>';
                                                 }
                                               }
                                             }
@@ -214,59 +214,56 @@
                   });
 </script>
 
-<br>
-<span class="boxHeader"> <b><spring:message code="radiology.report.boxheader" /></b> <a id="reportsTabClearFilters"
-  href="#" style="float: right"> <spring:message code="radiology.dashboard.tabs.filters.clearFilters" />
-</a>
-</span>
-<div class="box">
-  <table cellspacing="10">
-    <tr>
-      <form>
-        <td id="reportsTabTableFilterFields"><label><spring:message
-              code="radiology.dashboard.tabs.filters.filterby" /></label> <span id="reportsTabDateRangePicker"> <input
-            type="text" id="reportsTabFromDateFilter"
-            placeholder='<spring:message code="radiology.dashboard.tabs.reports.filters.date.from" />' /> <span>-</span> <input
-            type="text" id="reportsTabToDateFilter"
-            placeholder='<spring:message code="radiology.dashboard.tabs.reports.filters.date.to" />' />
-        </span> <radiology:providerField formFieldName="principalResultsInterpreter" formFieldId="reportsTabProviderFilter" /> <select
-          id="reportsTabStatusSelect">
-            <c:forEach var="radiologyReportStatus" items="${model.radiologyReportStatuses}">
-              <option value="${radiologyReportStatus}">
-                <c:choose>
-                  <c:when test="${not empty radiologyReportStatus}">
-                    <spring:message code="radiology.report.status.${radiologyReportStatus}" text="${radiologyReportStatus}" />
-                  </c:when>
-                  <c:otherwise>
-                    <spring:message code="radiology.report.status.selectStatus" />
-                  </c:otherwise>
-                </c:choose>
-              </option>
-            </c:forEach>
-        </select>
-        <input type="checkbox" id="reportsTabIncludeAllFilter" name="includeAllFilter" title="<spring:message code="radiology.dashboard.tabs.reports.filters.includeAll.title"/>" >
-        <spring:message code="radiology.dashboard.tabs.reports.filters.includeAll.description" />
-        </td>
-        <td><input id="reportsTabFind" type="button"
-          value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
-      </form>
-    </tr>
-  </table>
-  <br>
-  <div>
-    <table id="reportsTabTable" cellspacing="0" width="100%" class="display responsive compact">
-      <thead>
+<openmrs:hasPrivilege privilege="Get Radiology Reports">
+  <div id="radiologyReports">
+    <br /> <span class="boxHeader"> <b><spring:message code="radiology.report.boxheader" /></b> <a
+      id="reportsTabClearFilters" href="#" style="float: right"> <spring:message
+          code="radiology.dashboard.tabs.filters.clearFilters" />
+    </a>
+    </span>
+    <div class="box">
+      <table cellspacing="10">
         <tr>
-          <th></th>
-          <th><spring:message code="radiology.datatables.column.report.order" /></th>
-          <th><spring:message code="radiology.datatables.column.report.principalResultsInterpreter" /></th>
-          <th><spring:message code="radiology.datatables.column.report.date" /></th>
-          <th><spring:message code="radiology.datatables.column.report.dateCreated" /></th>
-          <th><spring:message code="radiology.datatables.column.report.createdBy" /></th>
-          <th><spring:message code="radiology.datatables.column.report.status" /></th>
-          <th><spring:message code="radiology.datatables.column.action" /></th>
+          <form>
+            <td id="reportsTabTableFilterFields"><label><spring:message
+                  code="radiology.dashboard.tabs.filters.filterby" /></label> <span id="reportsTabDateRangePicker"> <input
+                type="text" id="reportsTabFromDateFilter"
+                placeholder='<spring:message code="radiology.dashboard.tabs.reports.filters.date.from" />' /> <span>-</span>
+                <input type="text" id="reportsTabToDateFilter"
+                placeholder='<spring:message code="radiology.dashboard.tabs.reports.filters.date.to" />' />
+            </span> <radiology:providerField formFieldName="principalResultsInterpreter" formFieldId="reportsTabProviderFilter" />
+              <select id="reportsTabStatusSelect">
+                <c:forEach var="reportStatus" items="${reportStatuses}">
+                  <option value="${reportStatus.key}"><spring:message
+                      code="radiology.report.status.${reportStatus.value}" text="${reportStatus.value}" /></option>
+                </c:forEach>
+            </select> <input type="checkbox" id="reportsTabIncludeAllFilter" name="includeAllFilter"
+              title="<spring:message code="radiology.dashboard.tabs.reports.filters.includeAll.title"/>"> <spring:message
+                code="radiology.dashboard.tabs.reports.filters.includeAll.description" /></td>
+            <td><input id="reportsTabFind" type="button"
+              value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
+          </form>
         </tr>
-      </thead>
-    </table>
+      </table>
+      <br>
+      <div>
+        <table id="reportsTabTable" cellspacing="0" width="100%" class="display responsive compact">
+          <thead>
+            <tr>
+              <th></th>
+              <th><spring:message code="radiology.datatables.column.report.order" /></th>
+              <th><spring:message code="radiology.datatables.column.report.principalResultsInterpreter" /></th>
+              <th><spring:message code="radiology.datatables.column.report.date" /></th>
+              <th><spring:message code="radiology.datatables.column.report.dateCreated" /></th>
+              <th><spring:message code="radiology.datatables.column.report.createdBy" /></th>
+              <th><spring:message code="radiology.datatables.column.report.status" /></th>
+              <th><spring:message code="radiology.datatables.column.action" /></th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
   </div>
+</openmrs:hasPrivilege>
 </div>
+<%@ include file="/WEB-INF/template/footer.jsp"%>
