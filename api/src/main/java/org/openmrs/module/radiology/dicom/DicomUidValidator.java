@@ -11,7 +11,7 @@ package org.openmrs.module.radiology.dicom;
 
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * Validates DICOM UIDs according to DICOM PS3.5 Chapter 9 Unique Identifiers (UIDs).

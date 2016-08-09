@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Order.Urgency;
 import org.openmrs.Patient;
 import org.openmrs.api.context.Context;
@@ -76,7 +76,7 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
     }
     
     /**
-     * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search()
+     * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search(RequestContext)
      * @should return all radiology orders for given accession number
      * @should return empty search result if no radiology order exists for given accession number
      * @should return all radiology orders for given patient
