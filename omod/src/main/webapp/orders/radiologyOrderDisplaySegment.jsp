@@ -11,5 +11,7 @@
 <div>
   <span class="boxHeader"> <b><spring:message code="radiology.radiologyOrder" /></b>
   </span>
-  <%@ include file="radiologyOrderDetailsSegment.jsp"%>
+  <div class="box">
+    <%@ include file="radiologyOrderDetailsSegment.jsp"%>
+  </div>
 </div>

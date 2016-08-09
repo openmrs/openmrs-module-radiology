@@ -12,9 +12,7 @@ package org.openmrs.module.radiology.report.web;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
-import org.openmrs.Order;
 import org.openmrs.api.APIException;
-import org.openmrs.module.radiology.dicom.DicomWebViewer;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.module.radiology.report.RadiologyReport;
 import org.openmrs.module.radiology.report.RadiologyReportService;
@@ -45,9 +43,6 @@ public class RadiologyReportFormController {
     
     @Autowired
     private RadiologyReportService radiologyReportService;
-    
-    @Autowired
-    private DicomWebViewer dicomWebViewer;
     
     @Autowired
     private RadiologyReportValidator radiologyReportValidator;
@@ -230,9 +225,6 @@ public class RadiologyReportFormController {
     private void addObjectsToModelAndView(ModelAndView modelAndView, RadiologyReport radiologyReport) {
         
         modelAndView.addObject("radiologyReport", radiologyReport);
-        modelAndView.addObject("order", (Order) radiologyReport.getRadiologyOrder());
-        modelAndView.addObject("dicomViewerUrl", dicomWebViewer.getDicomViewerUrl(radiologyReport.getRadiologyOrder()
-                .getStudy()));
         modelAndView.addObject("radiologyOrder", radiologyReport.getRadiologyOrder());
     }
 }

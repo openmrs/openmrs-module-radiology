@@ -25,12 +25,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
  */
 @Controller
 @RequestMapping("**/radiologyOrdersTab.portlet")
-public class RadiologyOrderTabPortletController extends PortletController {
+public class RadiologyOrdersTabPortletController extends PortletController {
     
     
     /**
      * @see org.openmrs.web.controller.PortletController#populateModel(javax.servlet.http.HttpServletRequest,
      *      java.util.Map)
+     * @should populate model with an entry containing all urgency values and an empty string
      */
     @Override
     protected void populateModel(HttpServletRequest request, Map<String, Object> model) {
@@ -38,8 +39,8 @@ public class RadiologyOrderTabPortletController extends PortletController {
         final List<String> urgencies = new LinkedList<String>();
         urgencies.add("");
         
-        for (final Urgency status : Urgency.values()) {
-            urgencies.add(status.name());
+        for (final Urgency urgency : Urgency.values()) {
+            urgencies.add(urgency.name());
         }
         
         model.put("urgencies", urgencies);
