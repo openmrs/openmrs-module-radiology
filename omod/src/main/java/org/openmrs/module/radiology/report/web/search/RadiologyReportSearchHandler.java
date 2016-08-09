@@ -13,7 +13,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.Provider;
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.report.RadiologyReport;
@@ -77,7 +77,7 @@ public class RadiologyReportSearchHandler implements SearchHandler {
     }
     
     /**
-     * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search()
+     * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search(RequestContext)
      * @throws IllegalArgumentException if report status doesn't exist
      * @should return all radiology reports (including voided) matching the search query if include all is set
      * @should return all radiology reports within given date range if date to and date from are specified
