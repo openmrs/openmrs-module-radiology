@@ -1,12 +1,7 @@
-<%@ include file="/WEB-INF/view/module/radiology/template/includeTags.jsp"%>
-<%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
-<%@ include file="/WEB-INF/view/module/radiology/template/includeDatatablesWithDefaults.jsp"%>
+<%@ include file="/WEB-INF/view/module/radiology/dashboardHeader.jsp"%>
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/css/daterangepicker.min.css" />
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/js/jquery.daterangepicker.min.js" />
-
 <script type="text/javascript">
-  // configure current locale as momentjs default, fall back to "en" if locale not found
-  moment.locale([jsLocale, 'en']);
   var $j = jQuery.noConflict();
   $j(document)
           .ready(
@@ -18,6 +13,9 @@
                     var urgency = $j('#ordersTabUrgencySelect');
                     var find = $j('#ordersTabFind');
                     var clearResults = $j('a#ordersTabClearFilters');
+
+                    $j("#radiologyOrdersTab").parent().addClass(
+                            "ui-tabs-selected ui-state-active");
 
                     var radiologyOrdersTable = $j('#ordersTabTable')
                             .DataTable(
@@ -271,67 +269,66 @@
                   });
 </script>
 
-<openmrs:hasPrivilege privilege="Add Radiology Orders">
-  <br>
-  <a href="radiologyOrder.form"><spring:message code="radiology.addOrder" /></a>
-  <br>
-</openmrs:hasPrivilege>
-<br>
-<span class="boxHeader"> <b><spring:message code="radiology.radiologyOrders" /></b> <a id="ordersTabClearFilters"
-  href="#" style="float: right"> <spring:message code="radiology.dashboard.tabs.filters.clearFilters" />
-</a>
-</span>
-<div class="box">
-  <table cellspacing="10">
-    <tr>
-      <form>
-        <td id="ordersTabTableFilters"><label><spring:message code="radiology.dashboard.tabs.filters.filterby" /></label>
-          <input type="text" id="ordersTabAccessionNumberFilter"
-          placeholder='<spring:message code="radiology.dashboard.tabs.orders.filters.accessionNumber"/>' /> <radiology:patientField
-            formFieldName="patient" formFieldId="ordersTabPatientFilter" /> <span
-          id="ordersTabEffectiveStartDateRangePicker"> <input type="text" id="ordersTabFromEffectiveStartDateFilter"
-            placeholder='<spring:message code="radiology.dashboard.tabs.orders.filters.effectiveStartDate.from" />' /> <span>-</span>
-            <input type="text" id="ordersTabToEffectiveStartDateFilter"
-            placeholder='<spring:message code="radiology.dashboard.tabs.orders.filters.effectiveStartDate.to" />' />
-        </span><select id="ordersTabUrgencySelect">
-            <c:forEach var="urgency" items="${model.urgencies}">
-              <option value='${urgency}'>
-                <c:choose>
-                  <c:when test="${not empty urgency}">
-                    <spring:message code="radiology.order.urgency.${urgency}" text="${urgency}" />
-                  </c:when>
-                  <c:otherwise>
-                    <spring:message code="radiology.order.urgency.allurgencies" />
-                  </c:otherwise>
-                </c:choose>
-              </option>
-            </c:forEach>
-        </select></td>
-        <td><input id="ordersTabFind" type="button"
-          value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
-      </form>
-    </tr>
-  </table>
-  <br>
-  <div>
-    <table id="ordersTabTable" cellspacing="0" width="100%" class="display responsive compact">
-      <thead>
+<openmrs:hasPrivilege privilege="View Orders">
+  <div id="radiologyOrders">
+    <openmrs:hasPrivilege privilege="Add Radiology Orders">
+      <br>
+      <a href="radiologyOrder.form"><spring:message code="radiology.addOrder" /></a>
+      <br>
+    </openmrs:hasPrivilege>
+    <br> <span class="boxHeader"> <b><spring:message code="radiology.radiologyOrders" /></b> <a
+      id="ordersTabClearFilters" href="#" style="float: right"> <spring:message
+          code="radiology.dashboard.tabs.filters.clearFilters" />
+    </a>
+    </span>
+    <div class="box">
+      <table cellspacing="10">
         <tr>
-          <th></th>
-          <th><spring:message code="radiology.datatables.column.order.accessionNumber" /></th>
-          <th><spring:message code="radiology.datatables.column.order.patient" /></th>
-          <th><spring:message code="radiology.datatables.column.order.urgency" /></th>
-          <th><spring:message code="radiology.datatables.column.order.imagingProcedure" /></th>
-          <th><spring:message code="radiology.datatables.column.order.referringPhysician" /></th>
-          <th><spring:message code="radiology.datatables.column.order.scheduledDate" /></th>
-          <th><spring:message code="radiology.datatables.column.order.dateActivated" /></th>
-          <th><spring:message code="radiology.datatables.column.order.dateStopped" /></th>
-          <th><spring:message code="radiology.datatables.column.order.reason" /></th>
-          <th><spring:message code="radiology.datatables.column.order.reasonNonCoded" /></th>
-          <th><spring:message code="radiology.datatables.column.order.instructions" /></th>
-          <th><spring:message code="radiology.datatables.column.action" /></th>
+          <form>
+            <td id="ordersTabTableFilters"><label><spring:message
+                  code="radiology.dashboard.tabs.filters.filterby" /></label> <input type="text" id="ordersTabAccessionNumberFilter"
+              placeholder='<spring:message code="radiology.dashboard.tabs.orders.filters.accessionNumber"/>' /> <radiology:patientField
+                formFieldName="patient" formFieldId="ordersTabPatientFilter" /> <span
+              id="ordersTabEffectiveStartDateRangePicker"> <input type="text"
+                id="ordersTabFromEffectiveStartDateFilter"
+                placeholder='<spring:message code="radiology.dashboard.tabs.orders.filters.effectiveStartDate.from" />' /> <span>-</span>
+                <input type="text" id="ordersTabToEffectiveStartDateFilter"
+                placeholder='<spring:message code="radiology.dashboard.tabs.orders.filters.effectiveStartDate.to" />' />
+            </span><select id="ordersTabUrgencySelect">
+                <c:forEach var="urgency" items="${urgencies}">
+                  <option value='${urgency.key}'><spring:message code="radiology.order.urgency.${urgency.value}"
+                      text="${urgency.value}" /></option>
+                </c:forEach>
+            </select></td>
+            <td><input id="ordersTabFind" type="button"
+              value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
+          </form>
         </tr>
-      </thead>
-    </table>
+      </table>
+      <br>
+      <div>
+        <table id="ordersTabTable" cellspacing="0" width="100%" class="display responsive compact">
+          <thead>
+            <tr>
+              <th></th>
+              <th><spring:message code="radiology.datatables.column.order.accessionNumber" /></th>
+              <th><spring:message code="radiology.datatables.column.order.patient" /></th>
+              <th><spring:message code="radiology.datatables.column.order.urgency" /></th>
+              <th><spring:message code="radiology.datatables.column.order.imagingProcedure" /></th>
+              <th><spring:message code="radiology.datatables.column.order.referringPhysician" /></th>
+              <th><spring:message code="radiology.datatables.column.order.scheduledDate" /></th>
+              <th><spring:message code="radiology.datatables.column.order.dateActivated" /></th>
+              <th><spring:message code="radiology.datatables.column.order.dateStopped" /></th>
+              <th><spring:message code="radiology.datatables.column.order.reason" /></th>
+              <th><spring:message code="radiology.datatables.column.order.reasonNonCoded" /></th>
+              <th><spring:message code="radiology.datatables.column.order.instructions" /></th>
+              <th><spring:message code="radiology.datatables.column.action" /></th>
+            </tr>
+          </thead>
+        </table>
+      </div>
+    </div>
   </div>
+</openmrs:hasPrivilege>
 </div>
+<%@ include file="/WEB-INF/template/footer.jsp"%>

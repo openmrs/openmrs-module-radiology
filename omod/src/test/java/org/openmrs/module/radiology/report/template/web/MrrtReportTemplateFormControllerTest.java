@@ -7,7 +7,7 @@
  * Copyright (C) OpenMRS Inc. OpenMRS is a registered trademark and the OpenMRS
  * graphic logo is a trademark of OpenMRS Inc.
  */
-package org.openmrs.module.radiology.report.template;
+package org.openmrs.module.radiology.report.template.web;
 
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
@@ -25,6 +25,9 @@ import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.openmrs.module.radiology.report.template.MrrtReportTemplate;
+import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
+import org.openmrs.module.radiology.report.template.web.MrrtReportTemplateFormController;
 import org.openmrs.test.BaseContextMockTest;
 import org.openmrs.web.WebConstants;
 import org.springframework.mock.web.MockHttpServletRequest;
