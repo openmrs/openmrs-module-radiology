@@ -105,7 +105,7 @@ public class RadiologyOrderSearchCriteriaTest {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date fromEffectiveStartDate = format.parse("2016-05-01");
         radiologyOrderSearchCriteria =
-                new RadiologyOrderSearchCriteria.Builder().withFromEffectiveStartDate(fromEffectiveStartDate)
+                new RadiologyOrderSearchCriteria.Builder().fromEffectiveStartDate(fromEffectiveStartDate)
                         .build();
         
         assertThat(radiologyOrderSearchCriteria.getFromEffectiveStartDate(), is(fromEffectiveStartDate));
@@ -127,9 +127,8 @@ public class RadiologyOrderSearchCriteriaTest {
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date toEffectiveStartDate = format.parse("2016-05-01");
-        radiologyOrderSearchCriteria =
-                new RadiologyOrderSearchCriteria.Builder().withToEffectiveStartDate(toEffectiveStartDate)
-                        .build();
+        radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder().toEffectiveStartDate(toEffectiveStartDate)
+                .build();
         
         assertThat(radiologyOrderSearchCriteria.getToEffectiveStartDate(), is(toEffectiveStartDate));
         assertNull(radiologyOrderSearchCriteria.getPatient());

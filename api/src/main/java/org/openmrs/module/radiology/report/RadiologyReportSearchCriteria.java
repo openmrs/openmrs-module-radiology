@@ -14,7 +14,16 @@ import java.util.Date;
 import org.openmrs.Provider;
 
 /**
- * The search parameter object for {@code RadiologyReport's}.
+ * Search parameter object for {@link RadiologyReport}'s.
+ *
+ * <p>Typical usage involves:
+ * <ol>
+ * <li>Set the various search criteria parameters through the respective methods of the static builder class
+ * ({@link Builder#fromDate(Date)}, {@link Builder#toDate(Date)}, {@link Builder#withPrincipalResultsInterpreter(Provider)}, 
+ * {@link Builder#includeVoided()} and {@link Builder#withStatus(RadiologyReportStatus)}).</li>
+ * <li>Build the {@link RadiolologyReportSearchCriteria} instance with the {@link Builder#build()} method.</li>
+ * <li>Get the search parameters through the getter methods (such as {@link #getFromDate()} or {@link #getStatus()}).</li>
+ * </ol>
  */
 public class RadiologyReportSearchCriteria {
     
@@ -86,7 +95,7 @@ public class RadiologyReportSearchCriteria {
          * @param fromDate the minimum date (inclusive) the report date
          * @return this builder instance
          */
-        public Builder withFromDate(Date fromDate) {
+        public Builder fromDate(Date fromDate) {
             
             this.fromDate = fromDate;
             return this;
@@ -96,7 +105,7 @@ public class RadiologyReportSearchCriteria {
          * @param toDate the maximum date (inclusive) the report date
          * @return this builder instance
          */
-        public Builder withToDate(Date toDate) {
+        public Builder toDate(Date toDate) {
             
             this.toDate = toDate;
             return this;

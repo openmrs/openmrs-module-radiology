@@ -133,8 +133,8 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
         final RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
                 new RadiologyOrderSearchCriteria.Builder().withAccessionNumber(accessionNumber)
                         .withPatient(patient)
-                        .withFromEffectiveStartDate(fromEffectiveStartDate)
-                        .withToEffectiveStartDate(toEffectiveStartDate)
+                        .fromEffectiveStartDate(fromEffectiveStartDate)
+                        .toEffectiveStartDate(toEffectiveStartDate)
                         .withUrgency(urgency)
                         .build();
         
