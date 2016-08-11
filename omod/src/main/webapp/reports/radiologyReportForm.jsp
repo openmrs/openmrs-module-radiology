@@ -10,7 +10,7 @@
 
 <script type="text/javascript">
   var $j = jQuery.noConflict();
- 
+
   function showVoidRadiologyReportDialog() {
     var dialogDiv = $j("<div></div>")
             .html(
@@ -35,8 +35,8 @@
   }
 
   function submitVoidRadiologyReport() {
-    var voidRadiologyReport = $j("<input>").attr("type", "hidden").attr(
-            "name", "voidRadiologyReport").val('<spring:message code="general.void"/>');
+    var voidRadiologyReport = $j("<input>").attr("type", "hidden").attr("name",
+            "voidRadiologyReport").val('<spring:message code="general.void"/>');
     $j("#voidRadiologyReportForm").append(voidRadiologyReport);
     $j("#voidRadiologyReportForm").submit()
   }
@@ -64,12 +64,6 @@
         submitVoidRadiologyReport();
       }
     });
-
-    $j('#radiologyOrderDetailsId').hide();
-    $j('#radiologyOrderDetailsAccordion > .boxHeader').click(function() {
-      $j('#radiologyOrderDetailsId').slideToggle();
-      $j('#expandIconId').toggleClass('fa-chevron-down fa-chevron-up');
-    });
   });
 </script>
 
@@ -77,13 +71,8 @@
   <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${radiologyOrder.patient.patientId}" />
   <br>
 </openmrs:hasPrivilege>
-<div id="radiologyOrderDetailsAccordion">
-  <span class="boxHeader"><i id="expandIconId" class="fa fa-chevron-down"></i><b> <spring:message
-        code="radiology.radiologyOrder" /> - ${radiologyOrder.accessionNumber}</b> </span>
-  <div id="radiologyOrderDetailsId" class="box">
-    <openmrs:portlet url="radiologyOrderDetails" moduleId="radiology" parameters="orderUuid=${radiologyOrder.uuid}"/>
-  </div>
-</div>
+<openmrs:portlet url="radiologyOrderDetails" moduleId="radiology"
+  parameters="orderUuid=${radiologyOrder.uuid}|withAccordion=true" />
 <br>
 <spring:hasBindErrors name="radiologyReport">
   <div class="error">
@@ -94,7 +83,7 @@
 <c:if test="${radiologyReport.voided}">
   <div class="retiredMessage">
     <div>
-      <spring:message code="general.voided"/>
+      <spring:message code="general.voided" />
     </div>
   </div>
 </c:if>
@@ -125,22 +114,22 @@
       <tr>
         <td><spring:message code="radiology.report.form.report.status" /></td>
         <td><spring:message code="radiology.report.status.${radiologyReport.status}" text="${radiologyReport.status}" />
-        <c:choose>
+          <c:choose>
             <c:when test="${radiologyReport.status == 'COMPLETED'}">
-                <i class="fa fa-check-circle fa-lg" />
+              <i class="fa fa-check-circle fa-lg" />
             </c:when>
             <c:when test="${radiologyReport.status == 'DRAFT'}">
-                <c:choose>
-                    <c:when test="${radiologyReport.voided}">
-                        <i class="fa fa-times-circle fa-lg" />
-                    </c:when>
-                    <c:otherwise>
-                        <i class="fa fa-circle fa-lg" />
-                    </c:otherwise>
-                </c:choose>
+              <c:choose>
+                <c:when test="${radiologyReport.voided}">
+                  <i class="fa fa-times-circle fa-lg" />
+                </c:when>
+                <c:otherwise>
+                  <i class="fa fa-circle fa-lg" />
+                </c:otherwise>
+              </c:choose>
             </c:when>
           </c:choose></td>
-          </td>
+        </td>
       </tr>
       <c:if test="${radiologyReport.status == 'COMPLETED'}">
         <tr>
@@ -187,25 +176,26 @@
             </spring:bind></span></td>
       </tr>
       <c:if test="${radiologyReport.voided}">
-          <tr>
-            <td><spring:message code="general.voidedBy" /></td>
-            <td><spring:bind path="voidedBy.personName">
+        <tr>
+          <td><spring:message code="general.voidedBy" /></td>
+          <td><spring:bind path="voidedBy.personName">
                         ${status.value}
               </spring:bind> - <span class="datetime"><spring:bind path="dateVoided">
                         ${status.value}
                 </spring:bind></span></td>
-          </tr>
-          <tr>
-            <td><spring:message code="general.voidReason" /></td>
-            <td><spring:bind path="voidReason">${status.value}</spring:bind></td>
-          </tr>
+        </tr>
+        <tr>
+          <td><spring:message code="general.voidReason" /></td>
+          <td><spring:bind path="voidReason">${status.value}</spring:bind></td>
+        </tr>
       </c:if>
     </table>
     <br>
     <c:if test="${(radiologyReport.status == 'DRAFT') && (not radiologyReport.voided)}">
-        <input type="submit" value="<spring:message code="radiology.report.form.button.saveDraft"/>" name="saveRadiologyReportDraft" />
-        <input type="submit" value="<spring:message code="radiology.report.form.button.complete"/>"
-          name="completeRadiologyReport" />
+      <input type="submit" value="<spring:message code="radiology.report.form.button.saveDraft"/>"
+        name="saveRadiologyReportDraft" />
+      <input type="submit" value="<spring:message code="radiology.report.form.button.complete"/>"
+        name="completeRadiologyReport" />
     </c:if>
   </div>
 </form:form>

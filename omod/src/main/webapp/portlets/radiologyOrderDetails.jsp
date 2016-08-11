@@ -1,7 +1,36 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 
+<%--
+  available properties:
+    orderUuid -> (String) the uuid of the radiology order to display
+                          if not set or no radiology order was found nothing will be displayed
+    withAccordion -> if set the radiology order details box will be shown as an accordion 
+--%>
+
+<script>
+  var $j = jQuery.noConflict();
+  $j(document).ready(function() {
+    if ('${model.withAccordion}') {
+      $j('#radiologyOrderDetailsBoxId').hide();
+      $j('#radiologyOrderDetailsBoxHeaderId').click(function() {
+        $j('#radiologyOrderDetailsBoxId').slideToggle();
+        $j('#expandIconId').toggleClass('fa-chevron-down fa-chevron-up');
+      });
+    }
+  });
+</script>
 <c:set var="rOrder" value="${model.radiologyOrder}" />
 <c:if test="${not empty rOrder}">
+  <span id="radiologyOrderDetailsBoxHeaderId" class="boxHeader"><c:choose>
+      <c:when test="${not empty model.withAccordion}">
+        <i id="expandIconId" class="fa fa-chevron-down"></i>
+        <b><spring:message code="radiology.radiologyOrder" /> - ${radiologyOrder.accessionNumber}</b>
+      </c:when>
+      <c:otherwise>
+        <b><spring:message code="radiology.radiologyOrder" /></b>
+      </c:otherwise>
+    </c:choose></span>
+  <div id="radiologyOrderDetailsBoxId" class="box">
     <table>
       <tr>
         <td><spring:message code="radiology.radiologyOrder.accessionNumber" /></td>
@@ -25,7 +54,7 @@
       </tr>
       <tr>
         <td><spring:message code="Order.orderer" /></td>
-        <td> ${rOrder.orderer.name}</td>
+        <td>${rOrder.orderer.name}</td>
       </tr>
       <tr>
         <td><spring:message code="radiology.urgency" /></td>
@@ -41,8 +70,7 @@
       </tr>
       <tr>
         <td><spring:message code="radiology.performedStatus" /></td>
-        <td><spring:message code="radiology.${rOrder.study.performedStatus}" text="${rOrder.study.performedStatus}" />
-        </td>
+        <td><spring:message code="radiology.${rOrder.study.performedStatus}" text="${rOrder.study.performedStatus}" /></td>
       </tr>
       <tr>
         <td><spring:message code="general.instructions" /></td>
@@ -61,4 +89,5 @@
         </c:if>
       </openmrs:hasPrivilege>
     </table>
+  </div>
 </c:if>
