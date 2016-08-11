@@ -16,7 +16,17 @@ import org.openmrs.Patient;
 import org.openmrs.Provider;
 
 /**
- * The search parameter object for {@code RadiologyOrder's}.
+ * Search parameter object for {@link RadiologyOrder}'s.
+ *
+ * <p>Typical usage involves:
+ * <ol>
+ * <li>Set the various search criteria parameters through the respective methods of the static builder class
+ * ({@link Builder#withPatient(Patient)}, {@link Builder#includeVoided()}, {@link Builder#withUrgency(Urgency)}, 
+ * {@link Builder#fromEffectiveStartDate(Date)}, {@link Builder#toEffectiveStartDate(Date)},
+ * {@link Builder#withAccessionNumber(String)} and {@link Builder#withOrderer(Provider)}).</li>
+ * <li>Build the {@link RadiolologyOrderSearchCriteria} instance with the {@link Builder#build()} method.</li>
+ * <li>Get the search parameters through the getter methods (such as {@link #getPatient()} or {@link #getUrgency()}).</li>
+ * </ol>
  */
 public class RadiologyOrderSearchCriteria {
     
@@ -143,7 +153,7 @@ public class RadiologyOrderSearchCriteria {
          * @param fromEffectiveStartDate the minimum effective start date
          * @return this builder instance
          */
-        public Builder withFromEffectiveStartDate(Date fromEffectiveStartDate) {
+        public Builder fromEffectiveStartDate(Date fromEffectiveStartDate) {
             
             this.fromEffectiveStartDate = fromEffectiveStartDate;
             return this;
@@ -153,7 +163,7 @@ public class RadiologyOrderSearchCriteria {
          * @param toEffectiveStartDate the maximum effective start date
          * @return this builder instance
          */
-        public Builder withToEffectiveStartDate(Date toEffectiveStartDate) {
+        public Builder toEffectiveStartDate(Date toEffectiveStartDate) {
             
             this.toEffectiveStartDate = toEffectiveStartDate;
             return this;

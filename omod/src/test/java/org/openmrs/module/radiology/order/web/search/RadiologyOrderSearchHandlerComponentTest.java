@@ -255,7 +255,7 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
         assertNull(PropertyUtils.getProperty(result, "totalCount"));
         
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder()
-                .withFromEffectiveStartDate(format.parse(DATE_BETWEEN_ORDER_EFFECTIVE_START_DATES))
+                .fromEffectiveStartDate(format.parse(DATE_BETWEEN_ORDER_EFFECTIVE_START_DATES))
                 .build();
         List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
         
@@ -297,7 +297,7 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
         assertNull(PropertyUtils.getProperty(result, "totalCount"));
         
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder()
-                .withToEffectiveStartDate(format.parse(DATE_BETWEEN_ORDER_EFFECTIVE_START_DATES))
+                .toEffectiveStartDate(format.parse(DATE_BETWEEN_ORDER_EFFECTIVE_START_DATES))
                 .build();
         List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
         
@@ -340,8 +340,8 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
         assertNull(PropertyUtils.getProperty(result, "totalCount"));
         
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder()
-                .withFromEffectiveStartDate(format.parse(DATE_BEFORE_ORDER_EFFECTIVE_START_DATES))
-                .withToEffectiveStartDate(format.parse(DATE_AFTER_ORDER_EFFECTIVE_START_DATES))
+                .fromEffectiveStartDate(format.parse(DATE_BEFORE_ORDER_EFFECTIVE_START_DATES))
+                .toEffectiveStartDate(format.parse(DATE_AFTER_ORDER_EFFECTIVE_START_DATES))
                 .build();
         List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
         

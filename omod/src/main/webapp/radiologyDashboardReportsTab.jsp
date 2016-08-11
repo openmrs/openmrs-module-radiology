@@ -75,12 +75,12 @@
                                                     : moment(fromDate.val(),
                                                             "L")
                                                             .format(
-                                                                    "YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                                                                    "YYYY-MM-DD"),
                                             todate: toDate.val() === ""
                                                     ? ""
                                                     : moment(toDate.val(), "L")
                                                             .format(
-                                                                    "YYYY-MM-DDTHH:mm:ss.SSSZ"),
+                                                                    "YYYY-MM-DD"),
                                             principalResultsInterpreter: principalResultsInterpreterUuid
                                                     .val(),
                                             status: status.val(),

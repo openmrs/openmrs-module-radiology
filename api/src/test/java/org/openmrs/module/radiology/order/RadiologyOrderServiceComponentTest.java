@@ -621,8 +621,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteriaDateRange =
                 new RadiologyOrderSearchCriteria.Builder().includeVoided()
                         .withPatient(patient)
-                        .withFromEffectiveStartDate(fromDate)
-                        .withToEffectiveStartDate(toDate)
+                        .fromEffectiveStartDate(fromDate)
+                        .toEffectiveStartDate(toDate)
                         .build();
         List<RadiologyOrder> radiologyOrders =
                 radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteriaDateRange);
@@ -663,7 +663,7 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteriaDateRange =
                 new RadiologyOrderSearchCriteria.Builder().includeVoided()
                         .withPatient(patient)
-                        .withFromEffectiveStartDate(fromDate)
+                        .fromEffectiveStartDate(fromDate)
                         .build();
         List<RadiologyOrder> radiologyOrders =
                 radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteriaDateRange);
@@ -703,7 +703,7 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteriaDateRange =
                 new RadiologyOrderSearchCriteria.Builder().includeVoided()
                         .withPatient(patient)
-                        .withToEffectiveStartDate(toDate)
+                        .toEffectiveStartDate(toDate)
                         .build();
         List<RadiologyOrder> radiologyOrders =
                 radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteriaDateRange);
@@ -736,8 +736,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         Date fromDate = format.parse("2016-06-30");
         Date toDate = format.parse("2016-05-29");
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
-                new RadiologyOrderSearchCriteria.Builder().withFromEffectiveStartDate(fromDate)
-                        .withToEffectiveStartDate(toDate)
+                new RadiologyOrderSearchCriteria.Builder().fromEffectiveStartDate(fromDate)
+                        .toEffectiveStartDate(toDate)
                         .build();
         
         List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
@@ -752,8 +752,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     public void getRadiologyOrders_shouldReturnEmptySearchResultIfNoEffectiveOrderStartIsInDateRange() throws Exception {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteriaDateRange =
-                new RadiologyOrderSearchCriteria.Builder().withFromEffectiveStartDate(format.parse("2016-06-06"))
-                        .withToEffectiveStartDate(format.parse("2016-07-07"))
+                new RadiologyOrderSearchCriteria.Builder().fromEffectiveStartDate(format.parse("2016-06-06"))
+                        .toEffectiveStartDate(format.parse("2016-07-07"))
                         .build();
         
         List<RadiologyOrder> radiologyOrdersWithDateRange =

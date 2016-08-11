@@ -42,8 +42,8 @@ public class RadiologyReportSearchCriteriaTest {
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date fromDate = format.parse("2016-05-01");
         Date toDate = format.parse("2016-05-01");
-        radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
-                .withToDate(toDate)
+        radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().fromDate(fromDate)
+                .toDate(toDate)
                 .build();
         
         assertTrue(radiologyReportSearchCriteria.getFromDate()

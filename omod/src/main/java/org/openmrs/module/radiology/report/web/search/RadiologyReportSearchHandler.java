@@ -127,21 +127,16 @@ public class RadiologyReportSearchHandler implements SearchHandler {
             status = RadiologyReportStatus.valueOf(statusString);
         }
         
-        RadiologyReportSearchCriteria radiologyReportSearchCriteria;
+        RadiologyReportSearchCriteria.Builder radiologyReportSearchCriteriaBuilder =
+                new RadiologyReportSearchCriteria.Builder();
         if (context.getIncludeAll()) {
-            radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
-                    .withToDate(toDate)
-                    .withPrincipalResultsInterpreter(principalResultsInterpreter)
-                    .includeVoided()
-                    .withStatus(status)
-                    .build();
-        } else {
-            radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
-                    .withToDate(toDate)
-                    .withPrincipalResultsInterpreter(principalResultsInterpreter)
-                    .withStatus(status)
-                    .build();
+            radiologyReportSearchCriteriaBuilder.includeVoided();
         }
+        RadiologyReportSearchCriteria radiologyReportSearchCriteria = radiologyReportSearchCriteriaBuilder.fromDate(fromDate)
+                .toDate(toDate)
+                .withPrincipalResultsInterpreter(principalResultsInterpreter)
+                .withStatus(status)
+                .build();
         
         final List<RadiologyReport> result = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
         

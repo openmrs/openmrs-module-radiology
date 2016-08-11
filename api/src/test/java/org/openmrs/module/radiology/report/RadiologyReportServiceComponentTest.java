@@ -732,8 +732,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         Date fromDate = format.parse("2016-05-28");
         Date toDate = format.parse("2016-07-01");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
-                new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
-                        .withToDate(toDate)
+                new RadiologyReportSearchCriteria.Builder().fromDate(fromDate)
+                        .toDate(toDate)
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
@@ -759,7 +759,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date fromDate = format.parse("2016-05-29");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
-                new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
+                new RadiologyReportSearchCriteria.Builder().fromDate(fromDate)
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
@@ -783,7 +783,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date toDate = format.parse("2016-06-30");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
-                new RadiologyReportSearchCriteria.Builder().withToDate(toDate)
+                new RadiologyReportSearchCriteria.Builder().toDate(toDate)
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
@@ -806,8 +806,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         Date fromDate = format.parse("2016-06-30");
         Date toDate = format.parse("2016-05-29");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
-                new RadiologyReportSearchCriteria.Builder().withFromDate(fromDate)
-                        .withToDate(toDate)
+                new RadiologyReportSearchCriteria.Builder().fromDate(fromDate)
+                        .toDate(toDate)
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
@@ -823,8 +823,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         RadiologyReportSearchCriteria radiologyReportSearchCriteriaDateRange =
-                new RadiologyReportSearchCriteria.Builder().withFromDate(format.parse("2016-04-25"))
-                        .withToDate(format.parse("2016-05-27"))
+                new RadiologyReportSearchCriteria.Builder().fromDate(format.parse("2016-04-25"))
+                        .toDate(format.parse("2016-05-27"))
                         .build();
         
         List<RadiologyReport> radiologyReportsWithDateRange =
@@ -910,7 +910,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
-                new RadiologyReportSearchCriteria.Builder().withToDate(format.parse("2016-05-01"))
+                new RadiologyReportSearchCriteria.Builder().toDate(format.parse("2016-05-01"))
                         .withStatus(RadiologyReportStatus.DRAFT)
                         .build();
         

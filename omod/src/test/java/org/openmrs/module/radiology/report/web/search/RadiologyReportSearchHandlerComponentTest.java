@@ -161,7 +161,7 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertNull(PropertyUtils.getProperty(result, "totalCount"));
         
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
-                new RadiologyReportSearchCriteria.Builder().withFromDate(format.parse(DATE_BETWEEN_REPORT_DATES))
+                new RadiologyReportSearchCriteria.Builder().fromDate(format.parse(DATE_BETWEEN_REPORT_DATES))
                         .build();
         
         assertThat(PropertyUtils.getProperty(hits.get(0), "date"),
@@ -191,7 +191,7 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertNull(PropertyUtils.getProperty(result, "totalCount"));
         
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
-                new RadiologyReportSearchCriteria.Builder().withToDate(format.parse(DATE_BETWEEN_REPORT_DATES))
+                new RadiologyReportSearchCriteria.Builder().toDate(format.parse(DATE_BETWEEN_REPORT_DATES))
                         .build();
         
         assertThat(PropertyUtils.getProperty(hits.get(0), "date"),
@@ -222,8 +222,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertNull(PropertyUtils.getProperty(result, "totalCount"));
         
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
-                new RadiologyReportSearchCriteria.Builder().withFromDate(format.parse(DATE_BEFORE_REPORT_DATES))
-                        .withToDate(format.parse(DATE_AFTER_REPORT_DATES))
+                new RadiologyReportSearchCriteria.Builder().fromDate(format.parse(DATE_BEFORE_REPORT_DATES))
+                        .toDate(format.parse(DATE_AFTER_REPORT_DATES))
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
