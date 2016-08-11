@@ -149,20 +149,27 @@
         </tr>
       </c:if>
       <tr>
-        <td><spring:message code="radiology.report.form.report.diagnosis" /></td>
         <td>
-          <form:textarea path="body" id="bodyId" disabled="${radiologyReport.status == 'COMPLETED'}" />
+          <spring:message code="radiology.report.form.report.diagnosis" />
+          <c:if test="${radiologyReport.status != 'COMPLETED' && not radiologyReport.voided}">
+            <span class="required">*</span>
+          </c:if>
+        </td>
+        <td>
+          <form:textarea path="body" id="bodyId" disabled="${radiologyReport.status == 'COMPLETED' || radiologyReport.voided}" />
           <form:errors path="body" cssClass="error" />
         </td>
       </tr>
       <tr>
-        <td><spring:message code="radiology.report.form.report.principalResultsInterpreter" /></td>
-        <td><c:choose>
+        <td><spring:message code="radiology.report.form.report.principalResultsInterpreter" />
+          <c:choose>
             <c:when test="${radiologyReport.voided || not empty radiologyReport.principalResultsInterpreter.id}">
-                            ${radiologyReport.principalResultsInterpreter.name}
-                            <form:hidden path="principalResultsInterpreter" />
+              </td><td>
+                ${radiologyReport.principalResultsInterpreter.name}
+                <form:hidden path="principalResultsInterpreter" />
             </c:when>
             <c:otherwise>
+              <span class="required">*</span></td><td>
               <spring:bind path="principalResultsInterpreter">
                 <openmrs:fieldGen type="org.openmrs.Provider" formFieldName="${status.expression}"
                   val="${status.editor.value}" />
@@ -206,7 +213,7 @@
   </br>
   <form:form method="post" id="voidRadiologyReportForm" modelAttribute="voidRadiologyReportRequest" cssClass="box">
     <table>
-        <td><spring:message code="general.voidReason" /></td>
+        <td><spring:message code="general.voidReason" /><span class="required">*</span></td>
         <td><form:textarea path="voidReason" /><form:errors path="voidReason" cssClass="error" />
         </td>
       </tr>
