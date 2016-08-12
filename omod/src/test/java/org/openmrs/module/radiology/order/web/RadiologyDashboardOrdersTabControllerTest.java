@@ -56,10 +56,10 @@ public class RadiologyDashboardOrdersTabControllerTest {
     
     /**
      * @see RadiologyDashboardOrdersTabController#getRadiologyOrdersTab(HttpServletRequest,String)
-     * @verifies redirect to dashboard tab page given from tab session attribute if change tab is not set
+     * @verifies redirect to dashboard tab page given from tab session attribute if switch tab is not set
      */
     @Test
-    public void getRadiologyOrdersTab_shouldRedirectToDashboardTabPageGivenFromTabSessionAttributeIfChangeTabIsNotSet()
+    public void getRadiologyOrdersTab_shouldRedirectToDashboardTabPageGivenFromTabSessionAttributeIfSwitchTabIsNotSet()
             throws Exception {
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
@@ -79,11 +79,12 @@ public class RadiologyDashboardOrdersTabControllerTest {
     
     /**
      * @see RadiologyDashboardOrdersTabController#getRadiologyOrdersTab(HttpServletRequest,String)
-     * @verifies not redirect to dashboard tab page given from tab session attribute if change tab is set
+     * @verifies not redirect to dashboard tab page given from tab session attribute and set tab session attribute to radiology orders tab page if switch tab is set
      */
     @Test
-    public void getRadiologyOrdersTab_shouldNotRedirectToDashboardTabPageGivenFromTabSessionAttributeIfChangeTabIsSet()
-            throws Exception {
+    public void
+            getRadiologyOrdersTab_shouldNotRedirectToDashboardTabPageGivenFromTabSessionAttributeAndSetTabSessionAttributeToRadiologyOrdersTabPageIfSwitchTabIsSet()
+                    throws Exception {
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         MockHttpSession mockSession = new MockHttpSession();
@@ -96,7 +97,7 @@ public class RadiologyDashboardOrdersTabControllerTest {
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyDashboardOrdersTabController.RADIOLOGY_ORDERS_TAB_VIEW));
         assertThat((String) mockSession.getAttribute(RadiologyWebConstants.RADIOLOGY_DASHBOARD_TAB_SESSION_ATTRIBUTE),
-            is(RadiologyDashboardReportsTabController.RADIOLOGY_REPORTS_TAB_REQUEST_MAPPING));
+            is(RadiologyDashboardOrdersTabController.RADIOLOGY_ORDERS_TAB_REQUEST_MAPPING));
     }
     
     /**

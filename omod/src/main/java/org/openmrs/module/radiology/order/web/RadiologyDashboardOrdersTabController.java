@@ -41,8 +41,8 @@ public class RadiologyDashboardOrdersTabController {
      * 
      * @return model and view of the radiology orders tab page
      * @should return model and view of the radiology orders tab page and set tab session attribute to radiology orders tab page if not already set
-     * @should redirect to dashboard tab page given from tab session attribute if change tab is not set
-     * @should not redirect to dashboard tab page given from tab session attribute if change tab is set
+     * @should not redirect to dashboard tab page given from tab session attribute and set tab session attribute to radiology orders tab page if switch tab is set
+     * @should redirect to dashboard tab page given from tab session attribute if switch tab is not set
      */
     @RequestMapping(method = RequestMethod.GET)
     protected ModelAndView getRadiologyOrdersTab(HttpServletRequest request,
@@ -52,12 +52,12 @@ public class RadiologyDashboardOrdersTabController {
         
         String tabLink = (String) request.getSession()
                 .getAttribute(RadiologyWebConstants.RADIOLOGY_DASHBOARD_TAB_SESSION_ATTRIBUTE);
-        if (StringUtils.isBlank(tabLink)) {
+        if (StringUtils.isBlank(tabLink) || StringUtils.isNotBlank(switchTab)) {
             request.getSession()
                     .setAttribute(RadiologyWebConstants.RADIOLOGY_DASHBOARD_TAB_SESSION_ATTRIBUTE,
                         RADIOLOGY_ORDERS_TAB_REQUEST_MAPPING);
         } else {
-            if (!RADIOLOGY_ORDERS_TAB_REQUEST_MAPPING.equals(tabLink) && StringUtils.isBlank(switchTab)) {
+            if (!RADIOLOGY_ORDERS_TAB_REQUEST_MAPPING.equals(tabLink)) {
                 modelAndView.setViewName("redirect:" + tabLink);
             }
         }
