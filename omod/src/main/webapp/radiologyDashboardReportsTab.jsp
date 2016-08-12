@@ -73,9 +73,8 @@
                                             fromdate: fromDate.val() === ""
                                                     ? ""
                                                     : moment(fromDate.val(),
-                                                            "L")
-                                                            .format(
-                                                                    "YYYY-MM-DD"),
+                                                            "L").format(
+                                                            "YYYY-MM-DD"),
                                             todate: toDate.val() === ""
                                                     ? ""
                                                     : moment(toDate.val(), "L")
@@ -187,16 +186,27 @@
                                           }],
                                     });
 
-                    // prevent form submit when user hits enter
-                    $j(window).keydown(function(event) {
-                      if (event.keyCode == 13) {
-                        event.preventDefault();
-                        return false;
+                    $j("#reportsTabTableFilters input:visible:enabled:first")
+                            .focus();
+                    status.change(function() {
+                      if (status.val() === "COMPLETED") {
+                        $j("#reportsTabIncludeAllFilter")
+                                .prop("disabled", true).prop("checked", false)
+                                .next().css("color", "lightgrey");
+                      } else {
+                        $j("#reportsTabIncludeAllFilter").prop("disabled",
+                                false).next().css("color", "black");
                       }
                     });
-
-                    find.on('mouseup keyup', function(event) {
-                      if (event.type == 'keyup' && event.keyCode != 13) return;
+                    find.add(fromDate).add(toDate).add(
+                            "#reportsTabProviderFilter_selection").add(status)
+                            .add(includeAll).keypress(function(event) {
+                              if (event.which == 13) {
+                                event.preventDefault();
+                                radiologyReportsTable.ajax.reload();
+                              }
+                            });
+                    find.click(function() {
                       radiologyReportsTable.ajax.reload();
                     });
 
@@ -205,10 +215,17 @@
                                     'mouseup keyup',
                                     function() {
                                       $j(
-                                              '#reportsTabTableFilterFields input, #reportsTabTableFilterFields select')
+                                              '#reportsTabTableFilters input, #reportsTabTableFilters select')
                                               .val('');
+                                      $j("#reportsTabIncludeAllFilter").prop(
+                                              "checked", false).prop(
+                                              "disabled", false).next().css(
+                                              "color", "black");
                                       $j('#reportsTabDateRangePicker').data(
                                               'dateRangePicker').clear();
+                                      $j(
+                                              "#reportsTabTableFilters input:visible:enabled:first")
+                                              .focus();
                                       radiologyReportsTable.ajax.reload();
                                     });
                   });
@@ -225,7 +242,7 @@
       <table cellspacing="10">
         <tr>
           <form>
-            <td id="reportsTabTableFilterFields"><label><spring:message
+            <td id="reportsTabTableFilters"><label><spring:message
                   code="radiology.dashboard.tabs.filters.filterby" /></label> <span id="reportsTabDateRangePicker"> <input
                 type="text" id="reportsTabFromDateFilter"
                 placeholder='<spring:message code="radiology.dashboard.tabs.reports.filters.date.from" />' /> <span>-</span>
@@ -238,8 +255,8 @@
                       code="radiology.report.status.${reportStatus.value}" text="${reportStatus.value}" /></option>
                 </c:forEach>
             </select> <input type="checkbox" id="reportsTabIncludeAllFilter" name="includeAllFilter"
-              title="<spring:message code="radiology.dashboard.tabs.reports.filters.includeAll.title"/>"> <spring:message
-                code="radiology.dashboard.tabs.reports.filters.includeAll.description" /></td>
+              title="<spring:message code="radiology.dashboard.tabs.reports.filters.includeAll.title"/>"> <label><spring:message
+                  code="radiology.dashboard.tabs.reports.filters.includeAll.description" /></label></td>
             <td><input id="reportsTabFind" type="button"
               value="<spring:message code="radiology.dashboard.tabs.filters.filter"/>" /></td>
           </form>

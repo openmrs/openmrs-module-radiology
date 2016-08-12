@@ -205,16 +205,18 @@
                                           }],
                                     });
 
-                    // prevent form submit when user hits enter
-                    $j(window).keydown(function(event) {
-                      if (event.keyCode == 13) {
-                        event.preventDefault();
-                        return false;
-                      }
-                    });
-
-                    find.on('mouseup keyup', function(event) {
-                      if (event.type == 'keyup' && event.keyCode != 13) return;
+                    $j("#ordersTabTableFilters input:visible:enabled:first")
+                            .focus();
+                    find.add(accessionNumber).add(
+                            "#ordersTabPatientFilter_selection").add(
+                            fromEffectiveStartDate).add(toEffectiveStartDate)
+                            .add(urgency).keypress(function(event) {
+                              if (event.which == 13) {
+                                event.preventDefault();
+                                radiologyOrdersTable.ajax.reload();
+                              }
+                            });
+                    find.click(function() {
                       radiologyOrdersTable.ajax.reload();
                     });
 
@@ -228,6 +230,9 @@
                                       $j(
                                               '#ordersTabEffectiveStartDateRangePicker')
                                               .data('dateRangePicker').clear();
+                                      $j(
+                                              "#ordersTabTableFilters input:visible:enabled:first")
+                                              .focus();
                                       radiologyOrdersTable.ajax.reload();
                                     });
 

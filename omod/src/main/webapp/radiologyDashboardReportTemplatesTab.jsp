@@ -113,22 +113,32 @@
                                             }
                                           }],
                                     });
-                    // prevent form submit when user hits enter
-                    $j(window).keydown(function(event) {
-                      if (event.keyCode == 13) {
+
+                    $j(
+                            "#reportTemplatesTableFilters input:visible:enabled:first")
+                            .focus();
+                    find.add(templateTitle).keypress(function(event) {
+                      if (event.which == 13) {
                         event.preventDefault();
-                        return false;
+                        radiologyTemplatesTable.ajax.reload();
                       }
                     });
-                    find.on('mouseup keyup', function(event) {
-                      if (event.type == 'keyup' && event.keyCode != 13) return;
+                    find.click(function() {
                       radiologyTemplatesTable.ajax.reload();
                     });
-                    clearResults.on('mouseup keyup', function() {
-                      $j('table#reportTemplatesTableFilters input:text')
-                              .val('');
-                      radiologyTemplatesTable.ajax.reload();
-                    });
+
+                    clearResults
+                            .on(
+                                    'mouseup keyup',
+                                    function() {
+                                      $j(
+                                              'table#reportTemplatesTableFilters input:text')
+                                              .val('');
+                                      $j(
+                                              "#reportTemplatesTableFilters input:visible:enabled:first")
+                                              .focus();
+                                      radiologyTemplatesTable.ajax.reload();
+                                    });
                     $j('#reportTemplatesTabImportPopup')
                             .dialog(
                                     {
@@ -154,7 +164,8 @@
         <div id="reportTemplatesTabImportPopup">
           <b class="boxHeader"><openmrs:message code="radiology.reportTemplates.import.popup.boxheader" /></b>
           <div class="box">
-            <form id="templateAddForm" action="radiologyDashboardReportTemplatesTab.htm" method="post" enctype="multipart/form-data">
+            <form id="templateAddForm" action="radiologyDashboardReportTemplatesTab.htm" method="post"
+              enctype="multipart/form-data">
               <input type="file" name="templateFile" size="40" /> <input type="submit" name="uploadReportTemplate"
                 value='<openmrs:message code="radiology.reportTemplates.import.popup.upload"/>' />
             </form>
