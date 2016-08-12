@@ -46,7 +46,7 @@
             if (urgencySelect.val() === "ON_SCHEDULED_DATE") {
               scheduledDateInput.show();
               if ($j.trim(scheduledDate.val())){
-              	scheduledDateInput.val(moment.utc(scheduledDate.val(), "L LT").local()
+                scheduledDateInput.val(moment.utc(scheduledDate.val(), "L LT").local()
                                           .format("L LT"));
               }
             }
@@ -86,7 +86,7 @@
   <form:form method="post" modelAttribute="radiologyOrder" cssClass="box">
     <table>
       <tr>
-        <td><spring:message code="Order.patient" /></td>
+        <td><spring:message code="Order.patient" /><span class="required">*</span></td>
         <td><spring:bind path="patient">
             <openmrs:fieldGen type="org.openmrs.Patient" formFieldName="${status.expression}" val="${status.editor.value}" />
             <c:if test="${status.errorMessage != ''}">
@@ -95,7 +95,7 @@
           </spring:bind></td>
       </tr>
       <tr>
-        <td><spring:message code="radiology.imagingProcedure" /></td>
+        <td><spring:message code="radiology.imagingProcedure" /><span class="required">*</span></td>
         <td><spring:bind path="concept">
             <openmrs_tag:conceptField formFieldName="concept" formFieldId="conceptId"
               initialValue="${status.editor.value.conceptId}" onSelectFunction="onQuestionSelect"
@@ -135,7 +135,7 @@
           </spring:bind></td>
       </tr>
       <tr>
-        <td><spring:message code="radiology.urgency" /></td>
+        <td><spring:message code="radiology.urgency" /><span class="required">*</span></td>
         <td><spring:bind path="urgency">
             <select name="${status.expression}" id="urgencySelect">
               <c:forEach var="urgency" items="${urgencies}">
@@ -177,7 +177,7 @@
           </spring:bind></td>
       </tr>
       <tr>
-        <td><spring:message code="Order.orderer" /></td>
+        <td><spring:message code="Order.orderer" /><span class="required">*</span></td>
         <td><spring:bind path="orderer">
             <openmrs:fieldGen type="org.openmrs.Provider" formFieldName="${status.expression}" val="${status.editor.value}" />
             <c:if test="${status.errorMessage != ''}">
