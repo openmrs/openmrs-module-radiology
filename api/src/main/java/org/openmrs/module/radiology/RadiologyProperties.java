@@ -181,26 +181,31 @@ public class RadiologyProperties {
     }
     
     /**
-     * Gets the Name of the ConceptClass for the UUID from the config
+     * Gets the names of the concept classes for the UUIDs from the config
      *
-     * @return a String that contains the Names of the ConceptClasses seperated by a comma
-     * @should throw illegal state exception if global property radiologyConceptClasses is null
-     * @should throw illegal state exception if global property radiologyConceptClasses is an empty
+     * @return a string that contains the names of the concept classes seperated by a comma
+     * @throws IllegalStateException if global property radiologyConceptClasses is null
+     * @throws IllegalStateException if global property radiologyConceptClasses is an empty string
+     * @throws IllegalStateException if global property radiologyConceptClasses is badly formatted
+     * @throws IllegalStateException if global property radiologyConceptClasses contains a UUID not found among concept
+     *         classes
+     * @should throw illegal state exception if global property radiology concept classes is null
+     * @should throw illegal state exception if global property radiology concept classes is an empty
      *         string
-     * @should throw illegal state exception if global property radiologyConceptClasses is badly
+     * @should throw illegal state exception if global property radiology concept classes is badly
      *         formatted
-     * @should throw illegal state exception if global property radiologyConceptClasses contains a
-     *         UUID not found among ConceptClasses
-     * @should returns comma separated list of ConceptClass names configured via ConceptClass UUIDs
-     *         in global property radiologyConceptClasses
+     * @should throw illegal state exception if global property radiology concept classes contains a
+     *         UUID not found among concept classes
+     * @should return comma separated list of concept class names configured via concept class UUIDs
+     *         in global property radiology concept classes
      */
     public String getRadiologyConceptClassNames() {
         
         String radiologyConceptClassUuidSetting = getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES, true);
         radiologyConceptClassUuidSetting = radiologyConceptClassUuidSetting.replace(" ", "");
         if (!radiologyConceptClassUuidSetting.matches("^[0-9a-fA-f,-]+$")) {
-            throw new IllegalStateException(
-                    "Property radiology.radiologyConcepts needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
+            throw new IllegalStateException("Property " + RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES
+                    + " needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
         }
         
         final String[] radiologyConceptClassUuids = radiologyConceptClassUuidSetting.split(",");
@@ -209,8 +214,61 @@ public class RadiologyProperties {
         for (final String radiologyConceptClassUuid : radiologyConceptClassUuids) {
             final ConceptClass fetchedConceptClass = conceptService.getConceptClassByUuid(radiologyConceptClassUuid);
             if (fetchedConceptClass == null) {
-                throw new IllegalStateException("Property radiology.radiologyConceptClasses contains UUID "
-                        + radiologyConceptClassUuid + " which cannot be found as ConceptClass in the database.");
+                throw new IllegalStateException(
+                        "Property " + RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES + " contains UUID "
+                                + radiologyConceptClassUuid + " which cannot be found as ConceptClass in the database.");
+            }
+            result = result + fetchedConceptClass.getName() + ",";
+        }
+        result = result.substring(0, result.length() - 1);
+        return result;
+    }
+    
+    /**
+     * Gets the names of the concept classes for the UUIDs from the global property radiologyOrderReasonConceptClasses
+     *
+     * @return a string that contains the names of the concept classes for radiology order reason seperated by a comma
+     * @throws IllegalStateException if global property radiologyOrderReasonConceptClasses is badly formatted
+     * @throws IllegalStateException if global property radiologyOrderReasonConceptClasses contains a UUID not found among
+     *         concept classes
+     * @should throw illegal state exception if global property radiology order reason concept classes is badly formatted
+     * @should throw illegal state exception if global property radiology order reason concept classes contains a UUID not
+     *         found among concept classes
+     * @should return the name of the diagnosis concept class if global property radiology order reason concept classes is
+     *         null
+     * @should return the name of the diagnosis concept class if global property radiology order reason concept classes is an
+     *         empty string
+     * @should return an empty string if global property radiology order reason concept classes is null or an empty string
+     *         and no diagnosis concept class is present
+     * @should return comma separated list of concept class names configured via concept class UUIDs in global property
+     *         radiology order reason concept classes
+     */
+    public String getRadiologyOrderReasonConceptClassNames() {
+        
+        String radiologyReasonConceptClassUuidSetting =
+                getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDER_REASON_CONCEPT_CLASSES, false);
+        if (StringUtils.isBlank(radiologyReasonConceptClassUuidSetting)) {
+            final ConceptClass diagnosisConceptClass = conceptService.getConceptClassByName("Diagnosis");
+            if (diagnosisConceptClass == null) {
+                return "";
+            }
+            return diagnosisConceptClass.getName();
+        }
+        
+        radiologyReasonConceptClassUuidSetting = radiologyReasonConceptClassUuidSetting.replace(" ", "");
+        if (!radiologyReasonConceptClassUuidSetting.matches("^[0-9a-fA-f,-]*$")) {
+            throw new IllegalStateException("Property " + RadiologyConstants.GP_RADIOLOGY_ORDER_REASON_CONCEPT_CLASSES
+                    + " needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
+        }
+        final String[] radiologyReasonConceptClassUuids = radiologyReasonConceptClassUuidSetting.split(",");
+        
+        String result = "";
+        for (final String radiologyReasonConceptClassUuid : radiologyReasonConceptClassUuids) {
+            final ConceptClass fetchedConceptClass = conceptService.getConceptClassByUuid(radiologyReasonConceptClassUuid);
+            if (fetchedConceptClass == null) {
+                throw new IllegalStateException("Property " + RadiologyConstants.GP_RADIOLOGY_ORDER_REASON_CONCEPT_CLASSES
+                        + " contains UUID " + radiologyReasonConceptClassUuid
+                        + " which cannot be found as ConceptClass in the database.");
             }
             result = result + fetchedConceptClass.getName() + ",";
         }

@@ -310,12 +310,22 @@ public class RadiologyOrderFormController {
     }
     
     /**
-     * Gets the Name of the ConceptClasses that should be filtered
+     * Gets the names of the concept classes that should be filtered
      *
-     * @return Name of ConceptClasses
+     * @return names of concept classes
      */
     @ModelAttribute("radiologyConceptClassNames")
     private String getRadiologyConceptClassNames() {
         return radiologyProperties.getRadiologyConceptClassNames();
+    }
+    
+    /**
+     * Gets the names of the concept classes that should be filtered for the order reason field
+     *
+     * @return names of concept classes containing concepts for the order reason field
+     */
+    @ModelAttribute("radiologyOrderReasonConceptClassNames")
+    private String getRadiologyOrderReasonConceptClassNames() {
+        return radiologyProperties.getRadiologyOrderReasonConceptClassNames();
     }
 }

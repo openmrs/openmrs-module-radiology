@@ -63,6 +63,11 @@ public class RadiologyConstants {
     public static final String GP_RADIOLOGY_CONCEPT_CLASSES = "radiology.radiologyConceptClasses";
     
     /**
+     * {@code GlobalProperty} property for the comma separated list of concept class UUIDs which define the reasons for {@code RadiologyOrder's}.
+     */
+    public static final String GP_RADIOLOGY_ORDER_REASON_CONCEPT_CLASSES = "radiology.radiologyOrderReasonConceptClasses";
+    
+    /**
      * {@code GlobalProperty} property for the UUID of the {@code OrderType} which is used when creating a {@code RadiologyOrder}.
      */
     public static final String GP_RADIOLOGY_TEST_ORDER_TYPE = "radiology.radiologyTestOrderType";

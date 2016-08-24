@@ -140,6 +140,13 @@
 		</description>
 	</globalProperty>
 	<globalProperty>
+		<property>@MODULE_ID@.radiologyOrderReasonConceptClasses</property>
+		<defaultValue>8d4918b0-c2cc-11de-8d13-0010c6dffd0f</defaultValue>
+		<description>Comma separated list of concept class UUIDs which define
+			concepts that are reasons for radiology orders
+		</description>
+	</globalProperty>
+	<globalProperty>
 		<property>@MODULE_ID@.radiologyOrderingProviderEncounterRole
 		</property>
 		<defaultValue>13fc9b4a-49ed-429c-9dde-ca005b387a3d</defaultValue>
