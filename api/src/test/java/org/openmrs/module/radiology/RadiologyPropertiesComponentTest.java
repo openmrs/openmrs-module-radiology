@@ -409,12 +409,12 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     
     /**
      * @see RadiologyProperties#getRadiologyConceptClassNames()
-     * @verifies returns comma separated list of ConceptClass names configured via ConceptClass
-     *           UUIDs in global property radiologyConceptClasses
+     * @verifies return comma separated list of concept class names configured via concept class
+     *           UUIDs in global property radiology concept classes
      */
     @Test
     public void
-            getRadiologyConceptClassNames_shouldReturnsCommaSeparatedListOfConceptClassNamesConfiguredViaConceptClassUUIDsInGlobalPropertyRadiologyConceptClasses()
+            getRadiologyConceptClassNames_shouldReturnCommaSeparatedListOfConceptClassNamesConfiguredViaConceptClassUUIDsInGlobalPropertyRadiologyConceptClasses()
                     throws Exception {
         List<ConceptClass> conceptClasses = new LinkedList<ConceptClass>();
         conceptClasses.add(conceptService.getConceptClassByName("Drug"));
@@ -437,7 +437,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     
     /**
      * @see RadiologyProperties#getRadiologyConceptClassNames()
-     * @verifies throw illegal state exception if global property radiologyConceptClasses is null
+     * @verifies throw illegal state exception if global property radiology concept classes is null
      */
     @Test
     public void getRadiologyConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyConceptClassesIsNull()
@@ -452,7 +452,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     
     /**
      * @see RadiologyProperties#getRadiologyConceptClassNames()
-     * @verifies throw illegal state exception if global property radiologyConceptClasses is an
+     * @verifies throw illegal state exception if global property radiology concept classes is an
      *           empty String
      */
     @Test
@@ -469,7 +469,7 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     
     /**
      * @see RadiologyProperties#getRadiologyConceptClassNames()
-     * @verifies throw illegal state exception if global property radiologyConceptClasses is badly
+     * @verifies throw illegal state exception if global property radiology concept classes is badly
      *           formatted
      */
     @Test
@@ -480,16 +480,16 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
             "AAAA-bbbbb-1111-2222/AAAA-BBBB-2222-3333");
         
         expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage(
-            "Property radiology.radiologyConcepts needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
+        expectedException.expectMessage("Property " + RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES
+                + " needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
         
         radiologyProperties.getRadiologyConceptClassNames();
     }
     
     /**
      * @see RadiologyProperties#getRadiologyConceptClassNames()
-     * @verifies throw illegal state exception if global property radiologyConceptClasses contains a
-     *           UUID not found among ConceptClasses
+     * @verifies throw illegal state exception if global property radiology concept classes contains a
+     *           UUID not found among concept classes
      */
     @Test
     public void
@@ -501,9 +501,111 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
                     .getUuid() + "5");
         
         expectedException.expect(IllegalStateException.class);
-        expectedException.expectMessage("Property radiology.radiologyConceptClasses contains UUID");
+        expectedException.expectMessage("Property " + RadiologyConstants.GP_RADIOLOGY_CONCEPT_CLASSES + " contains UUID");
         
         radiologyProperties.getRadiologyConceptClassNames();
+    }
+    
+    /**
+     * @see RadiologyProperties#getRadiologyOrderReasonConceptClassNames()
+     * @verifies throw illegal state exception if global property radiology order reason concept classes is badly formatted
+     */
+    @Test
+    public void
+            getRadiologyOrderReasonConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyOrderReasonConceptClassesIsBadlyFormatted()
+                    throws Exception {
+        
+        administrationService.setGlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDER_REASON_CONCEPT_CLASSES,
+            "AAAA-bbbbb-1111-2222/AAAA-BBBB-2222-3333");
+        
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage("Property " + RadiologyConstants.GP_RADIOLOGY_ORDER_REASON_CONCEPT_CLASSES
+                + " needs to be a comma separated list of concept class UUIDs (allowed characters [a-z][A-Z][0-9][,][-][ ])");
+        
+        radiologyProperties.getRadiologyOrderReasonConceptClassNames();
+    }
+    
+    /**
+     * @see RadiologyProperties#getRadiologyOrderReasonConceptClassNames()
+     * @verifies throw illegal state exception if global property radiology order reason concept classes contains a UUID not
+     *           found among concept classes
+     */
+    @Test
+    public void
+            getRadiologyOrderReasonConceptClassNames_shouldThrowIllegalStateExceptionIfGlobalPropertyRadiologyOrderReasonConceptClassesContainsAUUIDNotFoundAmongConceptClasses()
+                    throws Exception {
+        
+        administrationService.setGlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDER_REASON_CONCEPT_CLASSES,
+            conceptService.getConceptClassByName("Drug")
+                    .getUuid() + "5");
+        
+        expectedException.expect(IllegalStateException.class);
+        expectedException.expectMessage(
+            "Property " + RadiologyConstants.GP_RADIOLOGY_ORDER_REASON_CONCEPT_CLASSES + " contains UUID");
+        
+        radiologyProperties.getRadiologyOrderReasonConceptClassNames();
+    }
+    
+    /**
+     * @see RadiologyProperties#getRadiologyOrderReasonConceptClassNames()
+     * @verifies return the name of the diagnosis concept class if global property radiology order reason concept classes is
+     *           null
+     */
+    @Test
+    public void
+            getRadiologyOrderReasonConceptClassNames_shouldReturnTheNameOfTheDiagnosisConceptClassIfGlobalPropertyRadiologyOrderReasonConceptClassesIsNull()
+                    throws Exception {
+        
+        administrationService.setGlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDER_REASON_CONCEPT_CLASSES, null);
+        
+        ConceptClass diagnosisConceptClass = conceptService.getConceptClassByName("Diagnosis");
+        assertThat(radiologyProperties.getRadiologyOrderReasonConceptClassNames(), is(diagnosisConceptClass.getName()));
+    }
+    
+    /**
+     * @see RadiologyProperties#getRadiologyOrderReasonConceptClassNames()
+     * @verifies return the name of the diagnosis concept class if global property radiology order reason concept classes is
+     *           an empty string
+     */
+    @Test
+    public void
+            getRadiologyOrderReasonConceptClassNames_shouldReturnTheNameOfTheDiagnosisConceptClassIfGlobalPropertyRadiologyOrderReasonConceptClassesIsAnEmptyString()
+                    throws Exception {
+        
+        administrationService.setGlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDER_REASON_CONCEPT_CLASSES, "");
+        
+        ConceptClass diagnosisConceptClass = conceptService.getConceptClassByName("Diagnosis");
+        assertThat(radiologyProperties.getRadiologyOrderReasonConceptClassNames(), is(diagnosisConceptClass.getName()));
+    }
+    
+    /**
+     * @see RadiologyProperties#getRadiologyOrderReasonConceptClassNames()
+     * @verifies return comma separated list of concept class names configured via concept class UUIDs in global property
+     *           radiology order reason concept classes
+     */
+    @Test
+    public void
+            getRadiologyOrderReasonConceptClassNames_shouldReturnCommaSeparatedListOfConceptClassNamesConfiguredViaConceptClassUUIDsInGlobalPropertyRadiologyOrderReasonConceptClasses()
+                    throws Exception {
+        
+        List<ConceptClass> conceptClasses = new LinkedList<ConceptClass>();
+        conceptClasses.add(conceptService.getConceptClassByName("Drug"));
+        conceptClasses.add(conceptService.getConceptClassByName("Test"));
+        conceptClasses.add(conceptService.getConceptClassByName("Anatomy"));
+        conceptClasses.add(conceptService.getConceptClassByName("Diagnosis"));
+        String uuidFromConceptClasses = "";
+        String expectedNames = "";
+        for (ConceptClass conceptClass : conceptClasses) {
+            if (expectedNames.equals("")) {
+                uuidFromConceptClasses = conceptClass.getUuid();
+                expectedNames = conceptClass.getName();
+            }
+            uuidFromConceptClasses = uuidFromConceptClasses + "," + conceptClass.getUuid();
+            expectedNames = expectedNames + "," + conceptClass.getName();
+        }
+        administrationService.setGlobalProperty(RadiologyConstants.GP_RADIOLOGY_ORDER_REASON_CONCEPT_CLASSES,
+            uuidFromConceptClasses);
+        assertThat(radiologyProperties.getRadiologyOrderReasonConceptClassNames(), is(expectedNames));
     }
     
     /**
@@ -545,9 +647,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     }
     
     /**
-    * @see RadiologyProperties#getReportTemplateHome()
-    * @verifies create a directory under the openmrs application data directory if GP value is relative
-    */
+     * @see RadiologyProperties#getReportTemplateHome()
+     * @verifies create a directory under the openmrs application data directory if GP value is relative
+     */
     @Test
     public void getReportTemplateHome_shouldCreateADirectoryUnderTheOpenmrsApplicationDataDirectoryIfGPValueIsRelative()
             throws Exception {
@@ -567,9 +669,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     }
     
     /**
-    * @see RadiologyProperties#getReportTemplateHome()
-    * @verifies create a directory at GP value if it is an absolute path
-    */
+     * @see RadiologyProperties#getReportTemplateHome()
+     * @verifies create a directory at GP value if it is an absolute path
+     */
     @Test
     public void getReportTemplateHome_shouldCreateADirectoryAtGPValueIfItIsAnAbsolutePath() throws Exception {
         File tempFolder = temporaryFolder.newFolder("/mrrt_templates");
@@ -587,9 +689,9 @@ public class RadiologyPropertiesComponentTest extends BaseModuleContextSensitive
     }
     
     /**
-    * @see RadiologyProperties#getReportTemplateHome()
-    * @verifies throw illegal state exception if global property cannot be found
-    */
+     * @see RadiologyProperties#getReportTemplateHome()
+     * @verifies throw illegal state exception if global property cannot be found
+     */
     @Test
     public void getReportTemplateHome_shouldThrowIllegalStateExceptionIfGlobalPropertyCannotBeFound() throws Exception {
         expectedException.expect(IllegalStateException.class);

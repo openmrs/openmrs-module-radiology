@@ -4,10 +4,13 @@
   var $j = jQuery.noConflict();
 
   function onQuestionSelect(concept) {
-    $j("#conceptDescription").show();
     $j("#conceptDescription").html(concept.description);
   }
 
+  function onReasonSelect(concept) {
+    $j("#reasonDescription").html(concept.description);
+  }
+  
   $j(document).ready(
           function() {
             var scheduledDate = $j("#scheduledDateId");
@@ -89,10 +92,7 @@
         <td><spring:message code="Order.patient" /><span class="required">*</span></td>
         <td><spring:bind path="patient">
             <openmrs:fieldGen type="org.openmrs.Patient" formFieldName="${status.expression}" val="${status.editor.value}" />
-            <c:if test="${status.errorMessage != ''}">
-              <span class="error">${status.errorMessage}</span>
-            </c:if>
-          </spring:bind></td>
+          </spring:bind> <form:errors path="patient" cssClass="error" /></td>
       </tr>
       <tr>
         <td><spring:message code="radiology.imagingProcedure" /><span class="required">*</span></td>
@@ -100,39 +100,27 @@
             <openmrs_tag:conceptField formFieldName="concept" formFieldId="conceptId"
               initialValue="${status.editor.value.conceptId}" onSelectFunction="onQuestionSelect"
               includeClasses="${radiologyConceptClassNames}" />
-            <c:if test="${status.errorMessage != ''}">
-              <span class="error">${status.errorMessage}</span>
-            </c:if>
-            <div class="description" id="conceptDescription"></div>
-          </spring:bind></td>
+          </spring:bind> <form:errors path="concept" cssClass="error" />
+          <div class="description" id="conceptDescription"></div></td>
       </tr>
       <tr>
         <td><spring:message code="radiology.radiologyOrder.orderReason" /></td>
         <td><spring:bind path="orderReason">
             <openmrs_tag:conceptField formFieldName="orderReason" formFieldId="orderReasonId"
-              initialValue="${status.editor.value.conceptId}" />
-            <c:if test="${status.errorMessage != ''}">
-              <span class="error">${status.errorMessage}</span>
-            </c:if>
-          </spring:bind></td>
+              initialValue="${status.editor.value.conceptId}" onSelectFunction="onReasonSelect" 
+              includeClasses="${radiologyOrderReasonConceptClassNames}" />
+          </spring:bind> <form:errors path="orderReason" cssClass="error" />
+          <div class="description" id="reasonDescription"></div></td>
       </tr>
       <tr>
         <td><spring:message code="radiology.radiologyOrder.orderReasonNonCoded" /></td>
-        <td><spring:bind path="orderReasonNonCoded">
-            <textarea name="${status.expression}">${status.value}</textarea>
-            <c:if test="${status.errorMessage != ''}">
-              <span class="error">${status.errorMessage}</span>
-            </c:if>
-          </spring:bind></td>
+        <td><form:textarea path="orderReasonNonCoded" id="orderReasonNonCodedId" /> <form:errors
+            path="orderReasonNonCoded" cssClass="error" /></td>
       </tr>
       <tr>
         <td><spring:message code="radiology.radiologyOrder.clinicalHistory" /></td>
-        <td><spring:bind path="clinicalHistory">
-            <textarea name="${status.expression}">${status.value}</textarea>
-            <c:if test="${not empty status.errorMessage}">
-              <span class="error">${status.errorMessage}</span>
-            </c:if>
-          </spring:bind></td>
+        <td><form:textarea path="clinicalHistory" id="clinicalHistoryId" /> <form:errors path="clinicalHistory"
+            cssClass="error" /></td>
       </tr>
       <tr>
         <td><spring:message code="radiology.urgency" /><span class="required">*</span></td>
@@ -148,10 +136,7 @@
             <input name="${status.expression}Input" id="${status.expression}InputId" type="text"
               style="display: none; width: 150px;" value=""
               placeholder="<spring:message code="radiology.order.creation.scheduledDate.placeholder"/>">
-            <c:if test="${status.errorMessage != ''}">
-              <span id="scheduledDateErrorSpan" class="error">${status.errorMessage}</span>
-            </c:if>
-          </spring:bind></td>
+          </spring:bind> <form:errors path="scheduledDate" cssClass="error" /></td>
       </tr>
       <tr>
         <td><spring:message code="radiology.performedStatus" /></td>
@@ -162,28 +147,17 @@
                     code="radiology.${performedStatus.key}" text="${performedStatus.value}" /></option>
               </c:forEach>
             </select>
-            <c:if test="${status.errorMessage != ''}">
-              <span class="error">${status.errorMessage}</span>
-            </c:if>
-          </spring:bind></td>
+          </spring:bind> <form:errors path="study.performedStatus" cssClass="error" /></td>
       </tr>
       <tr>
         <td><spring:message code="general.instructions" /></td>
-        <td><spring:bind path="instructions">
-            <textarea name="${status.expression}">${status.value}</textarea>
-            <c:if test="${status.errorMessage != ''}">
-              <span class="error">${status.errorMessage}</span>
-            </c:if>
-          </spring:bind></td>
+        <td><form:textarea path="instructions" id="instructionsId" /> <form:errors path="instructions" cssClass="error" /></td>
       </tr>
       <tr>
         <td><spring:message code="Order.orderer" /><span class="required">*</span></td>
         <td><spring:bind path="orderer">
             <openmrs:fieldGen type="org.openmrs.Provider" formFieldName="${status.expression}" val="${status.editor.value}" />
-            <c:if test="${status.errorMessage != ''}">
-              <span class="error">${status.errorMessage}</span>
-            </c:if>
-          </spring:bind></td>
+          </spring:bind> <form:errors path="orderer" cssClass="error" /></td>
       </tr>
       <tr>
         <td></td>
