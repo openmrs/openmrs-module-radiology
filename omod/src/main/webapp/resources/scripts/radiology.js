@@ -1,4 +1,28 @@
 var Radiology = (function(openmrsContextPath) {
+  var $j = jQuery.noConflict();
+
+  /**
+   * Show a custom alert dialog with one button
+   * 
+   * @param dialogTitle the title of the dialog
+   * @param dialogMessage the message of the dialog
+   * @param dialogButtonText the text to display on the button
+   */
+  var showAlertDialog = function(dialogTitle, dialogMessage, dialogButtonText) {
+    var dialogDiv = $j("<div></div>").html(dialogMessage);
+    var btns = {};
+    btns[dialogButtonText] = function() {
+      $j(this).dialog("close");
+    };
+    dialogDiv.dialog({
+      resizable: false,
+      width: 'auto',
+      height: 'auto',
+      title: dialogTitle,
+      modal: true,
+      buttons: btns
+    });
+  }
 
   var getRestRootEndpoint = function() {
     return openmrsContextPath + '/ws/rest/v1';
@@ -44,7 +68,8 @@ var Radiology = (function(openmrsContextPath) {
 
   return {
     getRestRootEndpoint: getRestRootEndpoint,
-    getProperty: getProperty
+    getProperty: getProperty,
+    showAlertDialog: showAlertDialog
   };
 
 })(openmrsContextPath);
