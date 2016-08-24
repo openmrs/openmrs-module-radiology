@@ -70,6 +70,13 @@
           });
 </script>
 
+<c:if test="${not empty radiologyOrder.patient}">
+  <openmrs:hasPrivilege privilege="View Patients">
+    <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${radiologyOrder.patient.patientId}" />
+    <br>
+  </openmrs:hasPrivilege>
+</c:if>
+
 <spring:hasBindErrors name="radiologyOrder">
   <div class="error">
     <spring:message code="fix.error" />
