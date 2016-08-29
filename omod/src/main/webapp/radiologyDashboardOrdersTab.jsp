@@ -3,6 +3,7 @@
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/js/jquery.daterangepicker.min.js" />
 <script type="text/javascript">
   var $j = jQuery.noConflict();
+
   $j(document)
           .ready(
                   function() {
@@ -13,6 +14,19 @@
                     var urgency = $j('#ordersTabUrgencySelect');
                     var find = $j('#ordersTabFind');
                     var clearResults = $j('a#ordersTabClearFilters');
+
+                    if (typeof (Storage) !== "undefined") {
+                      accessionNumber.val(sessionStorage
+                              .getItem("accessionNumber"));
+                      $j("#ordersTabPatientFilter_selection").val(
+                              sessionStorage.getItem("patientName"));
+                      patientUuid.val(sessionStorage.getItem("patientUuid"));
+                      fromEffectiveStartDate.val(sessionStorage
+                              .getItem("fromEffectiveStartDate"));
+                      toEffectiveStartDate.val(sessionStorage
+                              .getItem("toEffectiveStartDate"));
+                      urgency.val(sessionStorage.getItem("urgency"));
+                    }
 
                     $j("#radiologyOrdersTab").parent().addClass(
                             "ui-tabs-selected ui-state-active");
@@ -67,6 +81,22 @@
                                           json.recordsFiltered = json.totalCount || 0;
                                           json.data = json.results;
                                           return JSON.stringify(json);
+                                        },
+                                        error: function(jqXHR, textStatus,
+                                                errorThrown) {
+                                          Radiology
+                                                  .showAlertDialog(
+                                                          '<spring:message code="radiology.rest.error.dialog.title"/>',
+                                                          '<spring:message code="radiology.rest.error.dialog.message.line1"/><br />'
+                                                                  + '<spring:message code="radiology.rest.error.dialog.message.line2"/>',
+                                                          '<spring:message code="radiology.rest.error.dialog.button.ok"/>');
+                                          $j("#ordersTabTable_processing")
+                                                  .hide();
+                                          console
+                                                  .error("A rest error occured - "
+                                                          + textStatus
+                                                          + ":\n"
+                                                          + errorThrown);
                                         }
                                       },
                                       "columns": [
@@ -205,6 +235,22 @@
                                           }],
                                     });
 
+                    function storeFilters() {
+                      if (typeof (Storage) !== "undefined") {
+                        sessionStorage.setItem("accessionNumber",
+                                accessionNumber.val());
+                        sessionStorage.setItem("patientName", $j(
+                                "#ordersTabPatientFilter_selection").val());
+                        sessionStorage
+                                .setItem("patientUuid", patientUuid.val());
+                        sessionStorage.setItem("fromEffectiveStartDate",
+                                fromEffectiveStartDate.val());
+                        sessionStorage.setItem("toEffectiveStartDate",
+                                toEffectiveStartDate.val());
+                        sessionStorage.setItem("urgency", urgency.val());
+                      }
+                    }
+
                     $j("#ordersTabTableFilters input:visible:enabled:first")
                             .focus();
                     find.add(accessionNumber).add(
@@ -214,12 +260,13 @@
                               if (event.which == 13) {
                                 event.preventDefault();
                                 radiologyOrdersTable.ajax.reload();
+                                storeFilters();
                               }
                             });
                     find.click(function() {
                       radiologyOrdersTable.ajax.reload();
+                      storeFilters();
                     });
-
                     clearResults
                             .on(
                                     'mouseup keyup',
@@ -234,6 +281,7 @@
                                               "#ordersTabTableFilters input:visible:enabled:first")
                                               .focus();
                                       radiologyOrdersTable.ajax.reload();
+                                      storeFilters();
                                     });
 
                     $j('#ordersTabEffectiveStartDateRangePicker')

@@ -14,6 +14,11 @@
                     $j("#radiologyReportTemplatesTab").parent().addClass(
                             "ui-tabs-selected ui-state-active");
 
+                    if (typeof (Storage) !== "undefined") {
+                      templateTitle
+                              .val(sessionStorage.getItem("templateTitle"));
+                    }
+
                     var radiologyTemplatesTable = $j('#reportTemplatesTable')
                             .DataTable(
                                     {
@@ -43,6 +48,22 @@
                                           json.recordsFiltered = json.totalCount || 0;
                                           json.data = json.results;
                                           return JSON.stringify(json);
+                                        },
+                                        error: function(jqXHR, textStatus,
+                                                errorThrown) {
+                                          Radiology
+                                                  .showAlertDialog(
+                                                          '<spring:message code="radiology.rest.error.dialog.title"/>',
+                                                          '<spring:message code="radiology.rest.error.dialog.message.line1"/><br />'
+                                                                  + '<spring:message code="radiology.rest.error.dialog.message.line2"/>',
+                                                          '<spring:message code="radiology.rest.error.dialog.button.ok"/>');
+                                          $j("#reportTemplatesTable_processing")
+                                                  .hide();
+                                          console
+                                                  .error("A rest error occured - "
+                                                          + textStatus
+                                                          + ":\n"
+                                                          + errorThrown);
                                         }
                                       },
                                       "columns": [
@@ -114,6 +135,13 @@
                                           }],
                                     });
 
+                    function storeFilters() {
+                      if (typeof (Storage) !== "undefined") {
+                        sessionStorage.setItem("templateTitle", templateTitle
+                                .val());
+                      }
+                    }
+
                     $j(
                             "#reportTemplatesTableFilters input:visible:enabled:first")
                             .focus();
@@ -121,12 +149,13 @@
                       if (event.which == 13) {
                         event.preventDefault();
                         radiologyTemplatesTable.ajax.reload();
+                        storeFilters();
                       }
                     });
                     find.click(function() {
                       radiologyTemplatesTable.ajax.reload();
+                      storeFilters();
                     });
-
                     clearResults
                             .on(
                                     'mouseup keyup',
@@ -138,7 +167,9 @@
                                               "#reportTemplatesTableFilters input:visible:enabled:first")
                                               .focus();
                                       radiologyTemplatesTable.ajax.reload();
+                                      storeFilters();
                                     });
+
                     $j('#reportTemplatesTabImportPopup')
                             .dialog(
                                     {

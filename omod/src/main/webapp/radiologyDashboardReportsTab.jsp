@@ -43,6 +43,17 @@
                                         toDate.val(s2);
                                       }
                                     });
+                    
+                    status.change(function() {
+                      if (status.val() === "COMPLETED") {
+                        $j("#reportsTabIncludeAllFilter")
+                                .prop("disabled", true).prop("checked", false)
+                                .next().css("color", "lightgrey");
+                      } else {
+                        $j("#reportsTabIncludeAllFilter").prop("disabled",
+                                false).next().css("color", "black");
+                      }
+                    });
 
                     $j('#reportsTabDateRangePicker').data('dateRangePicker')
                             .setDateRange(
@@ -50,6 +61,25 @@
                                             'week').format('L'),
                                     moment().subtract(1, 'weeks').endOf('week')
                                             .format('L'));
+                    
+                    if (typeof (Storage) !== "undefined") {
+                      if ((sessionStorage.getItem("fromDate") !== null)
+                              || (sessionStorage.getItem("toDate") !== null)) {
+                        fromDate.val(sessionStorage.getItem("fromDate"));
+                        toDate.val(sessionStorage.getItem("toDate"));
+                      }
+                      $j("#reportsTabProviderFilter_selection")
+                              .val(
+                                      sessionStorage
+                                              .getItem("principalResultsInterpreterName"));
+                      principalResultsInterpreterUuid.val(sessionStorage
+                              .getItem("principalResultsInterpreterUuid"));
+                      status.val(sessionStorage.getItem("status"));
+                      if(sessionStorage.getItem("includeAll") === "true") {
+                        includeAll.prop("checked", true);
+                      }
+                      status.change();
+                    }
 
                     var radiologyReportsTable = $j('#reportsTabTable')
                             .DataTable(
@@ -94,6 +124,22 @@
                                           json.recordsFiltered = json.totalCount || 0;
                                           json.data = json.results;
                                           return JSON.stringify(json);
+                                        },
+                                        error: function(jqXHR, textStatus,
+                                                errorThrown) {
+                                          Radiology
+                                                  .showAlertDialog(
+                                                          '<spring:message code="radiology.rest.error.dialog.title"/>',
+                                                          '<spring:message code="radiology.rest.error.dialog.message.line1"/><br />'
+                                                                  + '<spring:message code="radiology.rest.error.dialog.message.line2"/>',
+                                                          '<spring:message code="radiology.rest.error.dialog.button.ok"/>');
+                                          $j("#reportsTabTable_processing")
+                                                  .hide();
+                                          console
+                                                  .error("A rest error occured - "
+                                                          + textStatus
+                                                          + ":\n"
+                                                          + errorThrown);
                                         }
                                       },
                                       "columns": [
@@ -186,30 +232,37 @@
                                           }],
                                     });
 
+                    function storeFilters() {
+                      if (typeof (Storage) !== "undefined") {
+                        sessionStorage.setItem("fromDate", fromDate.val());
+                        sessionStorage.setItem("toDate", toDate.val());
+                        sessionStorage.setItem(
+                                "principalResultsInterpreterName", $j(
+                                        "#reportsTabProviderFilter_selection")
+                                        .val());
+                        sessionStorage.setItem(
+                                "principalResultsInterpreterUuid",
+                                principalResultsInterpreterUuid.val());
+                        sessionStorage.setItem("status", status.val());
+                        sessionStorage.setItem("includeAll", includeAll.is(":checked"));
+                      }
+                    }
+
                     $j("#reportsTabTableFilters input:visible:enabled:first")
                             .focus();
-                    status.change(function() {
-                      if (status.val() === "COMPLETED") {
-                        $j("#reportsTabIncludeAllFilter")
-                                .prop("disabled", true).prop("checked", false)
-                                .next().css("color", "lightgrey");
-                      } else {
-                        $j("#reportsTabIncludeAllFilter").prop("disabled",
-                                false).next().css("color", "black");
-                      }
-                    });
                     find.add(fromDate).add(toDate).add(
                             "#reportsTabProviderFilter_selection").add(status)
                             .add(includeAll).keypress(function(event) {
                               if (event.which == 13) {
                                 event.preventDefault();
                                 radiologyReportsTable.ajax.reload();
+                                storeFilters();
                               }
                             });
                     find.click(function() {
                       radiologyReportsTable.ajax.reload();
+                      storeFilters();
                     });
-
                     clearResults
                             .on(
                                     'mouseup keyup',
@@ -227,6 +280,7 @@
                                               "#reportsTabTableFilters input:visible:enabled:first")
                                               .focus();
                                       radiologyReportsTable.ajax.reload();
+                                      storeFilters();
                                     });
                   });
 </script>
