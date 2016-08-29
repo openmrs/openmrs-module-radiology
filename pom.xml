@@ -15,7 +15,7 @@
 
 	<groupId>org.openmrs.module</groupId>
 	<artifactId>radiology</artifactId>
-	<version>0.1.0.0-dev-SNAPSHOT</version>
+	<version>0.1.0-dev-SNAPSHOT</version>
 	<packaging>pom</packaging>
 	<name>Radiology</name>
 	<description>Parent project for Radiology</description>
