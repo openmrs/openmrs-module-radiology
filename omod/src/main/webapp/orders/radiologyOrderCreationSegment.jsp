@@ -70,9 +70,9 @@
           });
 </script>
 
-<c:if test="${not empty radiologyOrder.patient}">
+<c:if test="${not empty param.patientId}">
   <openmrs:hasPrivilege privilege="View Patients">
-    <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${radiologyOrder.patient.patientId}" />
+    <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${param.patientId}" />
     <br>
   </openmrs:hasPrivilege>
 </c:if>
@@ -98,7 +98,16 @@
       <tr>
         <td><spring:message code="Order.patient" /><span class="required">*</span></td>
         <td><spring:bind path="patient">
-            <openmrs:fieldGen type="org.openmrs.Patient" formFieldName="${status.expression}" val="${status.editor.value}" />
+            <c:choose>
+              <c:when test="${not empty param.patientId}">
+                <input type="text" value="${status.editor.value.personName}" disabled />
+                <input type="hidden" name="${status.expression}" value="${status.value}" />
+              </c:when>
+              <c:otherwise>
+                <openmrs:fieldGen type="org.openmrs.Patient" formFieldName="${status.expression}"
+                  val="${status.editor.value}" />
+              </c:otherwise>
+            </c:choose>
           </spring:bind> <form:errors path="patient" cssClass="error" /></td>
       </tr>
       <tr>
