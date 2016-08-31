@@ -182,7 +182,7 @@
 		</preConditions>
 		<comment>Create radiology_order table for new class RadiologyOrder</comment>
 		<createTable tableName="radiology_order">
-			<column name="order_id" type="int" autoIncrement="true">
+			<column name="order_id" type="int" autoIncrement="false">
 				<constraints primaryKey="true" nullable="false" />
 			</column>
 		</createTable>
