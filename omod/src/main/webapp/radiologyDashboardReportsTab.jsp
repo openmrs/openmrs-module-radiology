@@ -1,6 +1,6 @@
 <%@ include file="/WEB-INF/view/module/radiology/dashboardHeader.jsp"%>
-<openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/css/daterangepicker.min.css" />
-<openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/js/jquery.daterangepicker.min.js" />
+<openmrs:htmlInclude file="/moduleResources/radiology/vendor/jquery-date-range-picker/daterangepicker.min.css" />
+<openmrs:htmlInclude file="/moduleResources/radiology/vendor/jquery-date-range-picker/jquery.daterangepicker.min.js" />
 <script type="text/javascript">
   var $j = jQuery.noConflict();
   $j(document)

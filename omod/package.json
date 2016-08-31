@@ -1,0 +1,20 @@
+{
+  "name": "gulp-dependencies",
+  "version": "0.0.1",
+  "description": "development dependencies for the radiology module to package its webapp js and css dependencies",
+  "repository": "https://github.com/openmrs/openmrs-module-radiology",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "bower": "~1.7.9",
+    "gulp": "~3.9.1",
+    "main-bower-files": "~2.13.1",
+    "gulp-uglify": "~2.0.0",
+    "gulp-clean-css" : "~2.0.13",
+    "run-sequence": "~1.2.2",
+    "gulp-rename": "~1.2.2"
+  },
+  "scripts": {
+    "prebuild": "npm install",
+    "build": "gulp"
+  }
+}

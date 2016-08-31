@@ -67,3 +67,9 @@ nb-configuration.xml
 !.github/
 *~
 #############
+
+### Node and Bower ###
+omod/bower_components/
+omod/node/
+omod/node_modules/
+#############
