@@ -67,6 +67,8 @@
             urgencySelect.change(function() {
               showOrHideScheduledDate();
             });
+
+            $j("#radiologyOrder input:visible:enabled:first").focus();
           });
 </script>
 
@@ -93,7 +95,7 @@
 <div>
   <span class="boxHeader"> <b><spring:message code="radiology.addOrder" /></b>
   </span>
-  <form:form method="post" modelAttribute="radiologyOrder" cssClass="box">
+  <form:form id="radiologyOrder" method="post" modelAttribute="radiologyOrder" cssClass="box">
     <table>
       <tr>
         <td><spring:message code="Order.patient" /><span class="required">*</span></td>
