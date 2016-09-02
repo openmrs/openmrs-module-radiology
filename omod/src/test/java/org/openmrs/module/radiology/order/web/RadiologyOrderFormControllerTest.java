@@ -103,7 +103,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         ModelAndView modelAndView = radiologyOrderFormController.getRadiologyOrderFormWithNewRadiologyOrder();
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_CREATION_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
         RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap()
@@ -134,7 +134,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                 radiologyOrderFormController.getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(mockPatient);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_CREATION_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyOrder"));
         RadiologyOrder order = (RadiologyOrder) modelAndView.getModelMap()
@@ -320,7 +320,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                 radiologyOrderFormController.saveRadiologyOrder(mockRequest, mockRadiologyOrder, orderErrors);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_CREATION_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("order"));
         Order order = (Order) modelAndView.getModelMap()
@@ -360,7 +360,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                 radiologyOrderFormController.saveRadiologyOrder(mockRequest, mockRadiologyOrder, orderErrors);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
+        assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_CREATION_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("order"));
         Order order = (Order) modelAndView.getModelMap()

@@ -1,5 +1,18 @@
+<%@ include file="/WEB-INF/template/include.jsp"%>
+<c:set var="DO_NOT_INCLUDE_JQUERY" value="true" />
+<%@ include file="/WEB-INF/template/header.jsp"%>
+<c:set var="INCLUDE_TIME_ADJUSTMENT" value="true" />
+<%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
+
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/css/daterangepicker.min.css" />
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/jquery/daterangepicker/js/jquery.daterangepicker.min.js" />
+
+<openmrs:require
+  allPrivileges="Add Encounters,Add Orders,Add Radiology Orders,Add Visits,Edit Encounters,Edit Visits,Get Care Settings,Get Concepts,Get Encounter Roles,Get Encounters,Get Orders,Get Patients,Get Providers,Get Radiology Orders,Get Users,Get Visit Attribute Types,Get Visit Types,Get Visits,View Orders"
+  otherwise="/login.htm" redirect="/module/radiology/radiologyOrder.form" />
+
+<!--  This form is for creating new RadiologyOrders -->
+
 <script type="text/javascript">
   var $j = jQuery.noConflict();
 
@@ -184,3 +197,4 @@
     </table>
   </form:form>
 </div>
+<%@ include file="/WEB-INF/template/footer.jsp"%>

@@ -54,6 +54,8 @@ public class RadiologyOrderFormController {
     
     public static final String RADIOLOGY_ORDER_FORM_REQUEST_MAPPING = "/module/radiology/radiologyOrder.form";
     
+    static final String RADIOLOGY_ORDER_CREATION_FORM_VIEW = "/module/radiology/orders/radiologyOrderCreationForm";
+    
     static final String RADIOLOGY_ORDER_FORM_VIEW = "/module/radiology/orders/radiologyOrderForm";
     
     @Autowired
@@ -88,7 +90,7 @@ public class RadiologyOrderFormController {
     @RequestMapping(method = RequestMethod.GET)
     protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrder() {
         
-        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
+        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_CREATION_FORM_VIEW);
         modelAndView.addObject("order", new Order());
         modelAndView.addObject("radiologyReport", null);
         final RadiologyOrder radiologyOrder = new RadiologyOrder();
@@ -170,7 +172,7 @@ public class RadiologyOrderFormController {
     protected ModelAndView saveRadiologyOrder(HttpServletRequest request, @ModelAttribute RadiologyOrder radiologyOrder,
             BindingResult resultRadiologyOrder) {
         
-        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_FORM_VIEW);
+        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_ORDER_CREATION_FORM_VIEW);
         
         radiologyOrderValidator.validate(radiologyOrder, resultRadiologyOrder);
         if (resultRadiologyOrder.hasErrors()) {
