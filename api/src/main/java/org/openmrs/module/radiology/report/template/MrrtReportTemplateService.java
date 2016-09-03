@@ -36,6 +36,7 @@ public interface MrrtReportTemplateService extends OpenmrsService {
     * @should throw illegal argument exception if given null
     * @should save given template
     * @should throw api exception if saving template that already exists
+    * @should save template object with terms if matching concept reference term was found
     */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_REPORT_TEMPLATES)
     public MrrtReportTemplate saveMrrtReportTemplate(MrrtReportTemplate template);
@@ -72,6 +73,7 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      * @should get template with given id
      * @should return null if no match was found
      * @should throw illegal argument exception if given null
+     * @should properly retrieve mrrt report templates with concept reference terms
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
     public MrrtReportTemplate getMrrtReportTemplate(Integer id);
