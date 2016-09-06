@@ -18,6 +18,8 @@ package org.openmrs.module.radiology;
 public class RadiologyPrivileges {
     
     
+    public static final String ADD_RADIOLOGY_MODALITIES = "Add Radiology Modalities";
+    
     public static final String ADD_RADIOLOGY_ORDERS = "Add Radiology Orders";
     
     public static final String ADD_RADIOLOGY_REPORTS = "Add Radiology Reports";
@@ -35,6 +37,8 @@ public class RadiologyPrivileges {
     public static final String EDIT_RADIOLOGY_REPORTS = "Edit Radiology Reports";
     
     public static final String EDIT_RADIOLOGY_STUDIES = "Edit Radiology Studies";
+    
+    public static final String GET_RADIOLOGY_MODALITIES = "Get Radiology Modalities";
     
     public static final String GET_RADIOLOGY_ORDERS = "Get Radiology Orders";
     

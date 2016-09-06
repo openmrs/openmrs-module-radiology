@@ -16,6 +16,7 @@
 
 <hibernate-configuration>
 	<session-factory>
+		<mapping resource="RadiologyModality.hbm.xml"/>
 		<mapping resource="RadiologyOrder.hbm.xml" />
 		<mapping resource="RadiologyStudy.hbm.xml" />
 		<mapping resource="RadiologyReport.hbm.xml" />

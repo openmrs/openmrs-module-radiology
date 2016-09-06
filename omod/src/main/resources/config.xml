@@ -204,7 +204,7 @@
 	</messages>
 	<!-- /Internationalization -->
 
-	<mappingFiles>RadiologyStudy.hbm.xml RadiologyOrder.hbm.xml
+	<mappingFiles>RadiologyModality.hbm.xml RadiologyStudy.hbm.xml RadiologyOrder.hbm.xml
 		RadiologyReport.hbm.xml MrrtReportTemplate.hbm.xml
 	</mappingFiles>
 
