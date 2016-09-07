@@ -519,4 +519,20 @@
 								 baseTableName="radiology_modality" baseColumnNames="changed_by"
 								 referencedTableName="users" referencedColumnNames="user_id"/>
 	</changeSet>
+	<changeSet id="radiology-42" author="ivange94">
+        <createTable tableName="radiology_report_template_reference_term">
+            <column name="template_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="term_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="radiology_report_template_reference_term_template_id_fk"
+								 baseTableName="radiology_report_template_reference_term" baseColumnNames="template_id"
+								 referencedTableName="radiology_report_template" referencedColumnNames="template_id"/>
+		<addForeignKeyConstraint constraintName="radiology_report_template_reference_term_term_id_fk"
+								 baseTableName="radiology_report_template_reference_term" baseColumnNames="term_id"
+								 referencedTableName="concept_reference_term" referencedColumnNames="concept_reference_term_id"/>
+    </changeSet>
 </databaseChangeLog>

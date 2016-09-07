@@ -29,8 +29,11 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
+import org.openmrs.ConceptReferenceTerm;
+import org.openmrs.ConceptSource;
 import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
+import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.RadiologyConstants;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -55,6 +58,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     
     @Autowired
     private RadiologyProperties radiologyProperties;
+    
+    @Autowired
+    private MrrtReportTemplateFileParser parser;
     
     private static final String TEST_DATASET =
             "org/openmrs/module/radiology/include/MrrtReportTemplateServiceComponentTestDataset.xml";
@@ -361,5 +367,44 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("mrrtReportTemplate cannot be null");
         mrrtReportTemplateService.getMrrtReportTemplateHtmlBody(null);
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
+     * @verifies save template object with terms if matching concept reference term was found
+     */
+    @Test
+    public void saveMrrtReportTemplate_shouldSaveTemplateObjectWithTermsIfMatchingConceptReferenceTermWasFound()
+            throws Exception {
+        
+        File file = new File(getClass().getClassLoader()
+                .getResource("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html")
+                .getFile());
+        
+        FileInputStream in = new FileInputStream(file);
+        MrrtReportTemplate template = parser.parse(in);
+        
+        MrrtReportTemplate saved = mrrtReportTemplateService.saveMrrtReportTemplate(template);
+        assertNotNull(saved);
+        assertThat(saved.getTerms()
+                .size(),
+            is(1));
+    }
+    
+    public void getMrrtReportTemplate_shouldProperlyRetrieveMrrtReportTemplatesWithConceptReferenceTerms() {
+        
+        MrrtReportTemplate template = mrrtReportTemplateService.getMrrtReportTemplate(1);
+        assertNotNull(template);
+        assertThat(template.getTerms()
+                .size(),
+            is(1));
+        ConceptSource conceptSource = Context.getConceptService()
+                .getConceptSourceByName("RADLEX");
+        ConceptReferenceTerm referenceTerm = Context.getConceptService()
+                .getConceptReferenceTermByCode("RID10321", conceptSource);
+        
+        assertThat(template.getTerms()
+                .contains(referenceTerm),
+            is(true));
     }
 }

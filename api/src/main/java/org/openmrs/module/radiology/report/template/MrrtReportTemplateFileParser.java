@@ -24,6 +24,10 @@ public interface MrrtReportTemplateFileParser {
      * @param in the input stream containing the mrrt template
      * @return the mrrt report template extracted from the input stream
      * @throws IOException if the template file could not be read
+     * @should return an mrrt template object if file is valid
+     * @should store terms element in template object if they match a concept reference term in openmrs
+     * @should skip terms element in template file if no corresponding concept reference term was found
+     * @should ignore case when searching for a matching concept source
      */
     public MrrtReportTemplate parse(InputStream in) throws IOException;
 }

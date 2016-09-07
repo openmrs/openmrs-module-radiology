@@ -9,7 +9,10 @@
  */
 package org.openmrs.module.radiology.report.template;
 
+import java.util.Set;
+
 import org.openmrs.BaseOpenmrsData;
+import org.openmrs.ConceptReferenceTerm;
 
 /**
  * IHE Management of Radiology Report Templates (MRRT)
@@ -44,6 +47,8 @@ public class MrrtReportTemplate extends BaseOpenmrsData {
     private String dcTermsDate;
     
     private String dcTermsCreator;
+    
+    private Set<ConceptReferenceTerm> terms;
     
     @Override
     public Integer getId() {
@@ -157,5 +162,13 @@ public class MrrtReportTemplate extends BaseOpenmrsData {
     
     public void setDcTermsCreator(String dcTermsCreator) {
         this.dcTermsCreator = dcTermsCreator;
+    }
+    
+    public Set<ConceptReferenceTerm> getTerms() {
+        return terms;
+    }
+    
+    public void setTerms(Set<ConceptReferenceTerm> terms) {
+        this.terms = terms;
     }
 }

@@ -35,6 +35,17 @@
 		<property name="dcTermsLicense" column="dcterms_license" type="java.lang.String"/>
 		<property name="dcTermsDate" column="dcterms_date" type="java.lang.String"/>
 		<property name="dcTermsCreator" column="dcterms_creator" type="java.lang.String"/>
+		
+		<!-- bi-directional many-to-many association to ConceptReferenceTerm -->
+		<set name="terms" table="radiology_report_template_reference_term" lazy="false" cascade="save-update,merge,evict">
+			<cache usage="read-write"/>
+			<key>
+				<column name="template_id"/>
+			</key>
+			<many-to-many class="org.openmrs.ConceptReferenceTerm">
+				<column name="term_id"/>
+			</many-to-many>
+		</set>
 		<many-to-one name="creator" class="org.openmrs.User"
 			not-null="true" />
 		<property name="dateCreated" type="java.util.Date" column="date_created"
