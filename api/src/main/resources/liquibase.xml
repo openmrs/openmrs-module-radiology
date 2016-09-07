@@ -490,4 +490,33 @@
 								 baseTableName="radiology_report" baseColumnNames="changed_by"
 								 referencedTableName="users" referencedColumnNames="user_id"/>
 	</changeSet>
+	<changeSet id="radiology-41" author="teleivo">
+		<comment>Add table for radiology modality</comment>
+		<createTable tableName="radiology_modality">
+			<column name="modality_id" type="int" autoIncrement="true">
+				<constraints primaryKey="true" nullable="false" />
+			</column>
+
+			<column name="modality_aetitle" type="varchar(16)">
+				<constraints nullable="false" unique="true" />
+			</column>
+			<column name="creator" type="int" defaultValueNumeric="0">
+				<constraints nullable="false" />
+			</column>
+			<column name="date_created" type="datetime">
+				<constraints nullable="false" />
+			</column>
+			<column name="changed_by" type="int" />
+			<column name="date_changed" type="datetime" />
+			<column name="uuid" type="char(38)">
+				<constraints nullable="false" unique="true" />
+			</column>
+		</createTable>
+		<addForeignKeyConstraint constraintName="radiology_modality_creator_fk"
+								 baseTableName="radiology_modality" baseColumnNames="creator"
+								 referencedTableName="users" referencedColumnNames="user_id"/>
+		<addForeignKeyConstraint constraintName="radiology_modality_changed_by_fk"
+								 baseTableName="radiology_modality" baseColumnNames="changed_by"
+								 referencedTableName="users" referencedColumnNames="user_id"/>
+	</changeSet>
 </databaseChangeLog>
