@@ -18,6 +18,7 @@ import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 
@@ -47,6 +48,21 @@ public class RadiologyModalityServiceComponentTest extends BaseModuleContextSens
     @Before
     public void setUp() throws Exception {
         executeDataSet(TEST_DATASET);
+    }
+    
+    /**
+     * @verifies save the radiology modality
+     * @see RadiologyModalityService#saveRadiologyModality(RadiologyModality)
+     */
+    @Test
+    public void saveRadiologyModality_shouldSaveTheRadiologyModality() throws Exception {
+        
+        RadiologyModality radiologyModality = new RadiologyModality();
+        radiologyModality.setAeTitle("US10");
+        radiologyModality.setName("Exzelsior YTO234");
+        
+        radiologyModalityService.saveRadiologyModality(radiologyModality);
+        assertNotNull(radiologyModality.getModalityId());
     }
     
     /**

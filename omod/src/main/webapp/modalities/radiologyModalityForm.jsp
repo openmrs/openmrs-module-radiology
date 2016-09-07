@@ -24,6 +24,14 @@
         <td>${radiologyModality.aeTitle}</td>
       </tr>
       <tr>
+        <td><spring:message code="general.name" /></td>
+        <td>${radiologyModality.name}</td>
+      </tr>
+      <tr>
+        <td><spring:message code="general.description" /></td>
+        <td>${radiologyModality.description}</td>
+      </tr>
+      <tr>
         <td><spring:message code="general.createdBy" /></td>
         <td>${radiologyModality.creator.personName} - <span class="datetime"> ${radiologyModality.dateCreated} </span></td>
       </tr>

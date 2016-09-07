@@ -21,9 +21,21 @@
   <form:form method="post" modelAttribute="radiologyModality" cssClass="box">
     <table>
       <tr>
-        <td><spring:message code="radiology.RadiologyModality.aeTitle" /></td>
+        <td><spring:message code="radiology.RadiologyModality.aeTitle" /><span class="required">*</span></td>
         <td><form:input path="aeTitle" />
             <form:errors path="aeTitle" cssClass="error" />
+        </td>
+      </tr>
+      <tr>
+        <td><spring:message code="general.name" /><span class="required">*</span></td>
+        <td><form:input path="name" />
+            <form:errors path="name" cssClass="error" />
+        </td>
+      </tr>
+      <tr>
+        <td><spring:message code="general.description" /></td>
+        <td><form:input path="description" />
+            <form:errors path="description" cssClass="error" />
         </td>
       </tr>
       <tr>

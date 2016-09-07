@@ -9,12 +9,12 @@
  */
 package org.openmrs.module.radiology.modality;
 
-import org.openmrs.BaseOpenmrsData;
+import org.openmrs.BaseOpenmrsMetadata;
 
 /**
  * Represents a radiology modality used to perform imaging procedures/studies which result in radiological images.
  */
-public class RadiologyModality extends BaseOpenmrsData {
+public class RadiologyModality extends BaseOpenmrsMetadata {
     
     
     private Integer modalityId;

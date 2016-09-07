@@ -116,10 +116,10 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
         
         ModelAndView modelAndView =
                 radiologyModalityFormController.saveRadiologyModality(mockRequest, radiologyModality, modalityErrors);
-
+        
         verify(radiologyModalityService, times(1)).saveRadiologyModality(radiologyModality);
         verifyNoMoreInteractions(radiologyModalityService);
-
+        
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is("redirect:/module/radiology/radiologyModality.form?modalityId=" + radiologyModality.getModalityId()));
@@ -144,9 +144,9 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
         
         ModelAndView modelAndView =
                 radiologyModalityFormController.saveRadiologyModality(mockRequest, radiologyModality, modalityErrors);
-
+        
         verifyZeroInteractions(radiologyModalityService);
-
+        
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyModalityFormController.RADIOLOGY_MODALITY_CREATION_FORM_VIEW));
         
@@ -178,10 +178,10 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
         
         ModelAndView modelAndView =
                 radiologyModalityFormController.saveRadiologyModality(mockRequest, radiologyModality, modalityErrors);
-
+        
         verify(radiologyModalityService, times(1)).saveRadiologyModality(radiologyModality);
         verifyNoMoreInteractions(radiologyModalityService);
-
+        
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyModalityFormController.RADIOLOGY_MODALITY_CREATION_FORM_VIEW));
         
