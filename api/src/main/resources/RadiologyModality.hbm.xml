@@ -21,7 +21,9 @@
 				<param name="sequence">radiology_modality_id_seq</param>
 			</generator>
 		</id>
-		<property name="aeTitle" column="modality_aetitle" unique="true" not-null="true"/>
+		<property name="aeTitle" column="modality_aetitle" length="16" unique="true" not-null="true"/>
+		<property name="name" column="modality_name" length="255" not-null="true"/>
+		<property name="description" column="modality_description" length="255"/>
 		<many-to-one name="creator" class="org.openmrs.User" unique="false" not-null="true"/>
 		<property name="dateCreated" type="java.util.Date"
 				  length="19" column="date_created" not-null="true"/>

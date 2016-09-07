@@ -30,6 +30,7 @@ public interface RadiologyModalityService extends OpenmrsService {
      * @throws IllegalArgumentException if radiologyModality is null
      * @throws IllegalArgumentException if radiologyModality id is not null
      * @throws APIException if radiologyModality is not valid
+     * @should save the radiology modality
      * @should throw illegal argument exception if given radiology modality is null
      * @should throw illegal argument exception if given radiology modality with non null id
      * @should throw api exception if radiology modality is not valid

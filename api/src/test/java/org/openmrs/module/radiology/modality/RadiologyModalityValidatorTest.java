@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.radiology.modality;
 
+import liquibase.util.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindException;
@@ -32,6 +33,7 @@ public class RadiologyModalityValidatorTest {
         
         radiologyModality = new RadiologyModality();
         radiologyModality.setAeTitle("CT01");
+        radiologyModality.setName("Medical Corp Excelencium XT5980-Z");
     }
     
     /**
@@ -143,8 +145,63 @@ public class RadiologyModalityValidatorTest {
             is(1));
         assertThat((errors.getAllErrors()).get(0)
                 .getCode(),
-            is("radiology.RadiologyModality.error.max.aeTitle"));
+            is("error.exceededMaxLengthOfField"));
+        Object[] arguments = errors.getAllErrors()
+                .get(0)
+                .getArguments();
+        assertThat(arguments.length, is(1));
+        assertThat(arguments[0], is(16));
         assertTrue(errors.hasFieldErrors("aeTitle"));
+    }
+    
+    /**
+     * @verifies fail validation if name is null or empty or whitespaces only
+     * @see RadiologyModalityValidator#validate(Object, Errors)
+     */
+    @Test
+    public void validate_shouldFailValidationIfNameIsNullOrEmptyOrWhitespacesOnly() throws Exception {
+        
+        radiologyModality.setName(null);
+        
+        Errors errors = new BindException(radiologyModality, "radiologyModality");
+        new RadiologyModalityValidator().validate(radiologyModality, errors);
+        
+        assertTrue(errors.hasErrors());
+        assertThat(errors.getAllErrors()
+                .size(),
+            is(1));
+        assertThat((errors.getAllErrors()).get(0)
+                .getCode(),
+            is("error.null"));
+        assertTrue(errors.hasFieldErrors("name"));
+        
+        radiologyModality.setName("");
+        
+        errors = new BindException(radiologyModality, "radiologyModality");
+        new RadiologyModalityValidator().validate(radiologyModality, errors);
+        
+        assertTrue(errors.hasErrors());
+        assertThat(errors.getAllErrors()
+                .size(),
+            is(1));
+        assertThat((errors.getAllErrors()).get(0)
+                .getCode(),
+            is("error.null"));
+        assertTrue(errors.hasFieldErrors("name"));
+        
+        radiologyModality.setName("  ");
+        
+        errors = new BindException(radiologyModality, "radiologyModality");
+        new RadiologyModalityValidator().validate(radiologyModality, errors);
+        
+        assertTrue(errors.hasErrors());
+        assertThat(errors.getAllErrors()
+                .size(),
+            is(1));
+        assertThat((errors.getAllErrors()).get(0)
+                .getCode(),
+            is("error.null"));
+        assertTrue(errors.hasFieldErrors("name"));
     }
     
     /**
@@ -158,5 +215,32 @@ public class RadiologyModalityValidatorTest {
         new RadiologyModalityValidator().validate(radiologyModality, errors);
         
         assertFalse(errors.hasErrors());
+    }
+    
+    /**
+     * @verifies fail validation if name exceeds 255 characters
+     * @see RadiologyModalityValidator#validate(Object, Errors)
+     */
+    @Test
+    public void validate_shouldFailValidationIfNameExceeds255Characters() throws Exception {
+        
+        radiologyModality.setName(StringUtils.repeat("123", 256));
+        
+        Errors errors = new BindException(radiologyModality, "radiologyModality");
+        new RadiologyModalityValidator().validate(radiologyModality, errors);
+        
+        assertTrue(errors.hasErrors());
+        assertThat(errors.getAllErrors()
+                .size(),
+            is(1));
+        assertThat((errors.getAllErrors()).get(0)
+                .getCode(),
+            is("error.exceededMaxLengthOfField"));
+        Object[] arguments = errors.getAllErrors()
+                .get(0)
+                .getArguments();
+        assertThat(arguments.length, is(1));
+        assertThat(arguments[0], is(255));
+        assertTrue(errors.hasFieldErrors("name"));
     }
 }

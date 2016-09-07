@@ -27,6 +27,10 @@ public class RadiologyModalityValidator implements Validator {
     
     protected final Log log = LogFactory.getLog(RadiologyModalityValidator.class);
     
+    static int MAX_LENGTH_AE_TITLE = 16;
+    
+    static int MAX_LENGTH_NAME = 255;
+    
     /**
      * Determines if the command object being submitted is a valid type.
      *
@@ -46,6 +50,8 @@ public class RadiologyModalityValidator implements Validator {
      * @should fail validation if radiology modality is null
      * @should fail validation if ae title is null or empty or whitespaces only
      * @should fail validation if ae title exceeds 16 characters
+     * @should fail validation if name is null or empty or whitespaces only
+     * @should fail validation if name exceeds 255 characters
      * @should pass validation if all fields are correct
      */
     @Override
@@ -56,8 +62,15 @@ public class RadiologyModalityValidator implements Validator {
         } else {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "aeTitle", "error.null", "Cannot be empty or null");
             if (radiologyModality.getAeTitle() != null && radiologyModality.getAeTitle()
-                    .length() > 16) {
-                errors.rejectValue("aeTitle", "radiology.RadiologyModality.error.max.aeTitle", "Cannot exceed 16 character");
+                    .length() > MAX_LENGTH_AE_TITLE) {
+                errors.rejectValue("aeTitle", "error.exceededMaxLengthOfField", new Object[] { MAX_LENGTH_AE_TITLE },
+                    "Cannot exceed 16 characters");
+            }
+            ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "error.null", "Cannot be empty or null");
+            if (radiologyModality.getName() != null && radiologyModality.getName()
+                    .length() > MAX_LENGTH_NAME) {
+                errors.rejectValue("name", "error.exceededMaxLengthOfField", new Object[] { MAX_LENGTH_NAME },
+                    "Cannot exceed 255 characters");
             }
         }
     }
