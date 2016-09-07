@@ -18,12 +18,15 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -291,7 +294,10 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         
         ModelAndView modelAndView =
                 radiologyOrderFormController.saveRadiologyOrder(mockRequest, mockRadiologyOrder, orderErrors);
-        
+
+        verify(radiologyOrderService, times(1)).placeRadiologyOrder(mockRadiologyOrder);
+        verifyNoMoreInteractions(radiologyOrderService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is("redirect:/module/radiology/radiologyOrder.form?orderId=" + mockRadiologyOrder.getOrderId()));
@@ -318,7 +324,9 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         
         ModelAndView modelAndView =
                 radiologyOrderFormController.saveRadiologyOrder(mockRequest, mockRadiologyOrder, orderErrors);
-        
+
+        verifyZeroInteractions(radiologyOrderService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_CREATION_FORM_VIEW));
         
@@ -358,7 +366,10 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         
         ModelAndView modelAndView =
                 radiologyOrderFormController.saveRadiologyOrder(mockRequest, mockRadiologyOrder, orderErrors);
-        
+
+        verify(radiologyOrderService, times(1)).placeRadiologyOrder(mockRadiologyOrder);
+        verifyNoMoreInteractions(radiologyOrderService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_CREATION_FORM_VIEW));
         
@@ -410,7 +421,10 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         assertThat(mockRadiologyOrderToDiscontinue.getAction(), is(Order.Action.NEW));
         ModelAndView modelAndView = radiologyOrderFormController.discontinueRadiologyOrder(mockRequest,
             mockRadiologyOrderToDiscontinue, discontinuationOrderRequest, resultDiscontinueOrderRequest);
-        
+
+        verify(radiologyOrderService, times(1)).discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue, discontinuationOrderRequest.getOrderer(), discontinuationOrderRequest.getReasonNonCoded());
+        verifyNoMoreInteractions(radiologyOrderService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is("redirect:/module/radiology/radiologyOrder.form?orderId=" + mockDiscontinuationOrder.getOrderId()));
@@ -418,7 +432,7 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
     }
     
     /**
-     * @see RadiologyOrderFormController#discontinueRadiologyOrder(HttpServletRequest,HttpServletResponse,RadiologyOrder,DiscontinuationOrderRequest,BindingResult)
+     * @see RadiologyOrderFormController#discontinueRadiologyOrder(HttpServletRequest,RadiologyOrder,DiscontinuationOrderRequest,BindingResult)
      * @verifies not discontinue given radiology order and not redirect if discontinuation order request is not valid
      */
     @Test
@@ -455,7 +469,9 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         assertThat(mockRadiologyOrderToDiscontinue.getAction(), is(Order.Action.NEW));
         ModelAndView modelAndView = radiologyOrderFormController.discontinueRadiologyOrder(mockRequest,
             mockRadiologyOrderToDiscontinue, discontinuationOrderRequest, resultDiscontinueOrderRequest);
-        
+
+        verifyZeroInteractions(radiologyOrderService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
         
@@ -508,7 +524,10 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         assertThat(mockRadiologyOrderToDiscontinue.getAction(), is(Order.Action.NEW));
         ModelAndView modelAndView = radiologyOrderFormController.discontinueRadiologyOrder(mockRequest,
             mockRadiologyOrderToDiscontinue, discontinuationOrderRequest, resultDiscontinueOrderRequest);
-        
+
+        verify(radiologyOrderService, times(1)).discontinueRadiologyOrder(mockRadiologyOrderToDiscontinue, discontinuationOrderRequest.getOrderer(), discontinuationOrderRequest.getReasonNonCoded());
+        verifyNoMoreInteractions(radiologyOrderService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW));
         

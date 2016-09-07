@@ -14,6 +14,10 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import javax.servlet.http.HttpServletRequest;
@@ -65,6 +69,9 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         when(radiologyReportService.createRadiologyReport(mockRadiologyOrder)).thenReturn(mockRadiologyReport);
         
         ModelAndView modelAndView = radiologyReportFormController.createRadiologyReport(mockRadiologyOrder);
+
+        verify(radiologyReportService, times(1)).createRadiologyReport(mockRadiologyOrder);
+        verifyNoMoreInteractions(radiologyReportService);
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
@@ -120,7 +127,10 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         mockRequest.setSession(mockSession);
         
         ModelAndView modelAndView = radiologyReportFormController.saveRadiologyReportDraft(mockRequest, mockRadiologyReport);
-        
+
+        verify(radiologyReportService, times(1)).saveRadiologyReportDraft(mockRadiologyReport);
+        verifyNoMoreInteractions(radiologyReportService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is("redirect:/module/radiology/radiologyReport.form?reportId=" + mockRadiologyReport.getReportId()));
@@ -149,7 +159,10 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
                 .thenThrow(new APIException("RadiologyReport.cannot.saveDraft.already.reported"));
         
         ModelAndView modelAndView = radiologyReportFormController.saveRadiologyReportDraft(mockRequest, mockRadiologyReport);
-        
+
+        verify(radiologyReportService, times(1)).saveRadiologyReportDraft(mockRadiologyReport);
+        verifyNoMoreInteractions(radiologyReportService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
         
@@ -193,7 +206,10 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         ModelAndView modelAndView = radiologyReportFormController.voidRadiologyReport(mockRequest, mockRadiologyReport,
             voidRadiologyReportRequest, bindingResult);
-        
+
+        verify(radiologyReportService, times(1)).voidRadiologyReport(mockRadiologyReport,voidRadiologyReportRequest.getVoidReason());
+        verifyNoMoreInteractions(radiologyReportService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is("redirect:/module/radiology/radiologyReport.form?reportId=" + mockRadiologyReport.getReportId()));
@@ -222,7 +238,9 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         ModelAndView modelAndView = radiologyReportFormController.voidRadiologyReport(mockRequest, mockRadiologyReport,
             voidRadiologyReportRequest, bindingResult);
-        
+
+        verifyZeroInteractions(radiologyReportService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
         
@@ -262,7 +280,10 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         ModelAndView modelAndView = radiologyReportFormController.voidRadiologyReport(mockRequest, mockRadiologyReport,
             voidRadiologyReportRequest, bindingResult);
-        
+
+        verify(radiologyReportService, times(1)).voidRadiologyReport(mockRadiologyReport,voidRadiologyReportRequest.getVoidReason());
+        verifyNoMoreInteractions(radiologyReportService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
         
@@ -306,7 +327,10 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         ModelAndView modelAndView =
                 radiologyReportFormController.completeRadiologyReport(mockRequest, mockRadiologyReport, reportErrors);
-        
+
+        verify(radiologyReportService, times(1)).saveRadiologyReport(mockRadiologyReport);
+        verifyNoMoreInteractions(radiologyReportService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is("redirect:/module/radiology/radiologyReport.form?reportId=" + mockCompletedRadiologyReport.getReportId()));
@@ -336,7 +360,9 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         ModelAndView modelAndView =
                 radiologyReportFormController.completeRadiologyReport(mockRequest, mockRadiologyReport, reportErrors);
-        
+
+        verifyZeroInteractions(radiologyReportService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
         
@@ -382,7 +408,10 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         
         ModelAndView modelAndView =
                 radiologyReportFormController.completeRadiologyReport(mockRequest, mockRadiologyReport, reportErrors);
-        
+
+        verify(radiologyReportService, times(1)).saveRadiologyReport(mockRadiologyReport);
+        verifyNoMoreInteractions(radiologyReportService);
+
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(), is(RadiologyReportFormController.RADIOLOGY_REPORT_FORM_VIEW));
         
