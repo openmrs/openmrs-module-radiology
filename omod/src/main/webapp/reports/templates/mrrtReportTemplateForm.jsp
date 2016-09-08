@@ -39,15 +39,15 @@
       	<td>
       	<table>
       		<tr>
-      			<th><openmrs:message code="radiology.report.template.view.templateMetadata.referenceTerms.code"/></th>
       			<th><openmrs:message code="radiology.report.template.view.templateMetadata.referenceTerms.scheme"/></th>
-      			<th><openmrs:message code="radiology.report.template.view.templateMetadata.referenceTerms.version"/></th>
+      			<th><openmrs:message code="radiology.report.template.view.templateMetadata.referenceTerms.code"/></th>
+      			<th><openmrs:message code="general.name"/></th>
       		</tr>	
       		<c:forEach items="${template.terms}" var="term">
       			<tr>
-      				<td>${term.code}</td>
       				<td>${term.conceptSource.name}</td>
-      				<td>${term.version}</td>
+      				<td>${term.code}</td>
+      				<td>${term.name}</td>
       			</tr>
       		</c:forEach>
       	</table>
