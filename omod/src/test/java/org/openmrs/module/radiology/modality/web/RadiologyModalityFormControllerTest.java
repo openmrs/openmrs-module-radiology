@@ -71,7 +71,7 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
         ModelAndView modelAndView = radiologyModalityFormController.getRadiologyModality();
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is(RadiologyModalityFormController.RADIOLOGY_MODALITY_CREATION_FORM_VIEW));
+        assertThat(modelAndView.getViewName(), is(RadiologyModalityFormController.RADIOLOGY_MODALITY_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyModality"));
         RadiologyModality modality = (RadiologyModality) modelAndView.getModelMap()
@@ -148,7 +148,7 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
         verifyZeroInteractions(radiologyModalityService);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is(RadiologyModalityFormController.RADIOLOGY_MODALITY_CREATION_FORM_VIEW));
+        assertThat(modelAndView.getViewName(), is(RadiologyModalityFormController.RADIOLOGY_MODALITY_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyModality"));
         RadiologyModality modality = (RadiologyModality) modelAndView.getModelMap()
@@ -183,7 +183,7 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
         verifyNoMoreInteractions(radiologyModalityService);
         
         assertNotNull(modelAndView);
-        assertThat(modelAndView.getViewName(), is(RadiologyModalityFormController.RADIOLOGY_MODALITY_CREATION_FORM_VIEW));
+        assertThat(modelAndView.getViewName(), is(RadiologyModalityFormController.RADIOLOGY_MODALITY_FORM_VIEW));
         
         assertThat(modelAndView.getModelMap(), hasKey("radiologyModality"));
         RadiologyModality modality = (RadiologyModality) modelAndView.getModelMap()

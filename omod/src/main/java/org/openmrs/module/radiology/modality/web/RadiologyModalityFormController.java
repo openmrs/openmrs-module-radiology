@@ -35,8 +35,6 @@ public class RadiologyModalityFormController {
     
     public static final String RADIOLOGY_MODALITY_FORM_REQUEST_MAPPING = "/module/radiology/radiologyModality.form";
     
-    static final String RADIOLOGY_MODALITY_CREATION_FORM_VIEW = "/module/radiology/modalities/radiologyModalityCreationForm";
-    
     static final String RADIOLOGY_MODALITY_FORM_VIEW = "/module/radiology/modalities/radiologyModalityForm";
     
     @Autowired
@@ -54,7 +52,7 @@ public class RadiologyModalityFormController {
     @RequestMapping(method = RequestMethod.GET)
     protected ModelAndView getRadiologyModality() {
         
-        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_MODALITY_CREATION_FORM_VIEW);
+        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_MODALITY_FORM_VIEW);
         modelAndView.addObject(new RadiologyModality());
         return modelAndView;
     }
@@ -91,7 +89,7 @@ public class RadiologyModalityFormController {
     protected ModelAndView saveRadiologyModality(HttpServletRequest request,
             @ModelAttribute RadiologyModality radiologyModality, BindingResult resultRadiologyModality) {
         
-        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_MODALITY_CREATION_FORM_VIEW);
+        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_MODALITY_FORM_VIEW);
         
         radiologyModalityValidator.validate(radiologyModality, resultRadiologyModality);
         if (resultRadiologyModality.hasErrors()) {

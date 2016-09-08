@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.radiology.modality;
 
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -51,11 +52,11 @@ public class RadiologyModalityServiceComponentTest extends BaseModuleContextSens
     }
     
     /**
-     * @verifies save the radiology modality
+     * @verifies create a new radiology modality
      * @see RadiologyModalityService#saveRadiologyModality(RadiologyModality)
      */
     @Test
-    public void saveRadiologyModality_shouldSaveTheRadiologyModality() throws Exception {
+    public void saveRadiologyModality_shouldCreateANewRadiologyModality() throws Exception {
         
         RadiologyModality radiologyModality = new RadiologyModality();
         radiologyModality.setAeTitle("US10");
@@ -63,6 +64,31 @@ public class RadiologyModalityServiceComponentTest extends BaseModuleContextSens
         
         radiologyModalityService.saveRadiologyModality(radiologyModality);
         assertNotNull(radiologyModality.getModalityId());
+    }
+    
+    /**
+     * @verifies update an existing radiology modality
+     * @see RadiologyModalityService#saveRadiologyModality(RadiologyModality)
+     */
+    @Test
+    public void saveRadiologyModality_shouldUpdateAnExistingRadiologyModality() throws Exception {
+        
+        RadiologyModality radiologyModality = new RadiologyModality();
+        radiologyModality.setAeTitle("US10");
+        radiologyModality.setName("Exzelsior YTO234");
+        radiologyModalityService.saveRadiologyModality(radiologyModality);
+        
+        assertThat(radiologyModality.getAeTitle(), is("US10"));
+        assertNull(radiologyModality.getChangedBy());
+        assertNull(radiologyModality.getDateChanged());
+        
+        Integer idBefore = radiologyModality.getModalityId();
+        
+        radiologyModality.setAeTitle("US20");
+        radiologyModalityService.saveRadiologyModality(radiologyModality);
+        
+        assertThat(radiologyModality.getModalityId(), is(idBefore));
+        assertThat(radiologyModality.getAeTitle(), is("US20"));
     }
     
     /**
