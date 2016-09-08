@@ -32,6 +32,14 @@
 		/>
 		<property name="dateChanged" type="java.util.Date"
 				  column="date_changed" length="19"/>
+		<property name="retired" type="java.lang.Boolean"
+			column="retired" length="1" not-null="true"/>
+		<property name="retireReason" column="retire_reason" length="255"/>
+		<many-to-one name="retiredBy" class="org.openmrs.User"
+					 column="retired_by"
+		/>
+		<property name="dateRetired" type="java.util.Date"
+				  column="date_retired" length="19"/>
 		<property name="uuid" type="java.lang.String" column="uuid"
 			length="38" unique="true" />
 	</class>

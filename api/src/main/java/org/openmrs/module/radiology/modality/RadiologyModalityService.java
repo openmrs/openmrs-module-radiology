@@ -38,6 +38,22 @@ public interface RadiologyModalityService extends OpenmrsService {
     public RadiologyModality saveRadiologyModality(RadiologyModality radiologyModality);
     
     /**
+     * Retires an existing {@code RadiologyModality}.
+     * <p>This effectively removes the modality from circulation or use.</p>
+     *
+     * @param radiologyModality the radiology modality to retire
+     * @param reason the reason why to retire the radiology modality
+     * @return the retired radiology modality
+     * @throws IllegalArgumentException if radiologyModality is null
+     * @throws IllegalArgumentException if reason is null or contains only whitespaces
+     * @should retire an existing radiology modality
+     * @should throw illegal argument exception if given radiology modality is null
+     * @should throw illegal argument exception if given reason is null or contains only whitespaces
+     */
+    @Authorized(RadiologyPrivileges.MANAGE_RADIOLOGY_MODALITIES)
+    public RadiologyModality retireRadiologyModality(RadiologyModality radiologyModality, String reason);
+    
+    /**
      * Get the {@code RadiologyModality} by its {@code id}.
      *
      * @param id the modality id of the wanted radiology modality

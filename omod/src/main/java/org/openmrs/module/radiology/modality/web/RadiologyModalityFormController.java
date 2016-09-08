@@ -113,4 +113,46 @@ public class RadiologyModalityFormController {
         modelAndView.addObject(radiologyModality);
         return modelAndView;
     }
+    
+    /**
+     * Handles requests for retiring a {@code RadiologyModality}.
+     *
+     * @param request the http servlet request issued to retire the radiology modality
+     * @param radiologyModality the radiology modality to be retired
+     * @param resultRadiologyModality the binding result for given radiology modality
+     * @return the model and view for the radiology modality form containing binding result errors if given radiology modality is
+     *         not valid
+     * @should retire given radiology modality if valid and set http session attribute openmrs message to modality retired and redirect
+     *         to the radiology modality
+     * @should not retire given radiology modality if it is not valid and not redirect
+     * @should not redirect and set session attribute with openmrs error if api exception is thrown by retire radiology modality
+     */
+    @RequestMapping(method = RequestMethod.POST, params = "retireRadiologyModality")
+    protected ModelAndView retireRadiologyModality(HttpServletRequest request,
+            @ModelAttribute RadiologyModality radiologyModality, BindingResult resultRadiologyModality) {
+        
+        final ModelAndView modelAndView = new ModelAndView(RADIOLOGY_MODALITY_FORM_VIEW);
+        
+        radiologyModalityValidator.validate(radiologyModality, resultRadiologyModality);
+        if (resultRadiologyModality.hasErrors()) {
+            modelAndView.addObject(radiologyModality);
+            return modelAndView;
+        }
+        
+        try {
+            radiologyModalityService.retireRadiologyModality(radiologyModality, radiologyModality.getRetireReason());
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.RadiologyModality.retired");
+            modelAndView.setViewName(
+                "redirect:" + RADIOLOGY_MODALITY_FORM_REQUEST_MAPPING + "?modalityId=" + radiologyModality.getModalityId());
+            return modelAndView;
+        }
+        catch (APIException apiException) {
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, apiException.getMessage());
+        }
+        
+        modelAndView.addObject(radiologyModality);
+        return modelAndView;
+    }
 }

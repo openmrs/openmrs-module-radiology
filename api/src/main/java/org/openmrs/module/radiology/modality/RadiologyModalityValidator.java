@@ -9,9 +9,11 @@
  */
 package org.openmrs.module.radiology.modality;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.openmrs.annotation.Handler;
+import org.openmrs.validator.ValidateUtil;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.ValidationUtils;
@@ -49,9 +51,9 @@ public class RadiologyModalityValidator implements Validator {
      * @see Validator#validate(Object, Errors)
      * @should fail validation if radiology modality is null
      * @should fail validation if ae title is null or empty or whitespaces only
-     * @should fail validation if ae title exceeds 16 characters
      * @should fail validation if name is null or empty or whitespaces only
-     * @should fail validation if name exceeds 255 characters
+     * @should fail validation if retire reason is null or empty if retire is true and set retired to false
+     * @should fail validation if field lengths are not correct
      * @should pass validation if all fields are correct
      */
     @Override
@@ -61,17 +63,12 @@ public class RadiologyModalityValidator implements Validator {
             errors.reject("error.general");
         } else {
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "aeTitle", "error.null", "Cannot be empty or null");
-            if (radiologyModality.getAeTitle() != null && radiologyModality.getAeTitle()
-                    .length() > MAX_LENGTH_AE_TITLE) {
-                errors.rejectValue("aeTitle", "error.exceededMaxLengthOfField", new Object[] { MAX_LENGTH_AE_TITLE },
-                    "Cannot exceed 16 characters");
-            }
             ValidationUtils.rejectIfEmptyOrWhitespace(errors, "name", "error.null", "Cannot be empty or null");
-            if (radiologyModality.getName() != null && radiologyModality.getName()
-                    .length() > MAX_LENGTH_NAME) {
-                errors.rejectValue("name", "error.exceededMaxLengthOfField", new Object[] { MAX_LENGTH_NAME },
-                    "Cannot exceed 255 characters");
+            if (radiologyModality.getRetired() && StringUtils.isBlank(radiologyModality.getRetireReason())) {
+                radiologyModality.setRetired(false);
+                errors.rejectValue("retireReason", "error.null");
             }
+            ValidateUtil.validateFieldLengths(errors, obj.getClass(), "aeTitle", "name", "description", "retireReason");
         }
     }
 }
