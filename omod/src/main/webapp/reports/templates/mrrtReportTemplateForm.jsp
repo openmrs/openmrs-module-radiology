@@ -34,6 +34,25 @@
         <td><b><openmrs:message code="radiology.report.template.view.templateMetadata.description" /></b></td>
         <td>${template.dcTermsDescription}</td>
       </tr>
+      <tr>
+      	<td><b><openmrs:message code="radiology.report.template.view.templateMetadata.referenceTerms"/></b></td>
+      	<td>
+      	<table>
+      		<tr>
+      			<th><openmrs:message code="radiology.report.template.view.templateMetadata.referenceTerms.code"/></th>
+      			<th><openmrs:message code="radiology.report.template.view.templateMetadata.referenceTerms.scheme"/></th>
+      			<th><openmrs:message code="radiology.report.template.view.templateMetadata.referenceTerms.version"/></th>
+      		</tr>	
+      		<c:forEach items="${template.terms}" var="term">
+      			<tr>
+      				<td>${term.code}</td>
+      				<td>${term.conceptSource.name}</td>
+      				<td>${term.version}</td>
+      			</tr>
+      		</c:forEach>
+      	</table>
+      	</td>
+      </tr>
     </table>  
   </div>
 </div>
