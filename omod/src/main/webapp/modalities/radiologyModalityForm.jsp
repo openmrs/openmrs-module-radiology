@@ -5,37 +5,71 @@
 <%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
 
 <openmrs:require
-  allPrivileges="Get Radiology Modalities"
+  allPrivileges="Get Radiology Modalities,Manage Radiology Modalities"
   otherwise="/login.htm" redirect="/module/radiology/radiologyModality.form" />
 
-<!--  This form shows existing RadiologyModality s -->
+<spring:hasBindErrors name="radiologyModality">
+  <div class="error">
+    <spring:message code="fix.error" />
+  </div>
+  <br />
+</spring:hasBindErrors>
 
 <div>
-  <span class="boxHeader"> <b><spring:message code="radiology.radiologyModality.form.boxheader" /></b>
-  </span>
-  <div class="box">
+  <c:choose>
+    <c:when test="${empty radiologyModality.modalityId}">
+      <span class="boxHeader"> <b><spring:message code="radiology.radiologyModality.form.boxheader.add" /></b>
+      </span>
+    </c:when>
+    <c:otherwise>
+      <span class="boxHeader"> <b><spring:message code="radiology.radiologyModality.form.boxheader.edit" /></b>
+      </span>
+    </c:otherwise>
+  </c:choose>
+  <form:form method="post" modelAttribute="radiologyModality" cssClass="box">
+    <form:hidden path="uuid" />
     <table>
       <tr>
-        <td><spring:message code="general.id" /></td>
-        <td>${radiologyModality.modalityId}</td>
+        <td><spring:message code="radiology.RadiologyModality.aeTitle" /><span class="required">*</span></td>
+        <td><form:input path="aeTitle" />
+            <form:errors path="aeTitle" cssClass="error" />
+        </td>
       </tr>
       <tr>
-        <td><spring:message code="radiology.RadiologyModality.aeTitle" /></td>
-        <td>${radiologyModality.aeTitle}</td>
-      </tr>
-      <tr>
-        <td><spring:message code="general.name" /></td>
-        <td>${radiologyModality.name}</td>
+        <td><spring:message code="general.name" /><span class="required">*</span></td>
+        <td><form:input path="name" />
+            <form:errors path="name" cssClass="error" />
+        </td>
       </tr>
       <tr>
         <td><spring:message code="general.description" /></td>
-        <td>${radiologyModality.description}</td>
+        <td><form:input path="description" />
+            <form:errors path="description" cssClass="error" />
+        </td>
       </tr>
+      <c:if test="${not empty radiologyModality.creator}">
+          <tr>
+            <td><spring:message code="general.createdBy" /></td>
+            <td>${radiologyModality.creator.personName} - <span class="datetime"> ${radiologyModality.dateCreated} </span></td>
+          </tr>
+      </c:if>
+      <c:if test="${not empty radiologyModality.changedBy}">
+          <tr>
+            <td><spring:message code="general.changedBy" /></td>
+            <td>${radiologyModality.changedBy.personName} - <span class="datetime"> ${radiologyModality.dateChanged} </span></td>
+          </tr>
+      </c:if>
+      <c:if test="${not empty radiologyModality.modalityId}">
+          <tr>
+            <td><font color="#D0D0D0"><sub><openmrs:message code="general.uuid" /></sub></font></td>
+            <td><font color="#D0D0D0"><sub>${radiologyModality.uuid}</sub></font></td>
+          </tr>
+      </c:if>
       <tr>
-        <td><spring:message code="general.createdBy" /></td>
-        <td>${radiologyModality.creator.personName} - <span class="datetime"> ${radiologyModality.dateCreated} </span></td>
+        <td/>
+        <td><input type="submit" name="saveRadiologyModality" value="<spring:message code="general.save"/>"></td>
       </tr>
     </table>
-  </div>
+  </form:form>
 </div>
 <%@ include file="/WEB-INF/template/footer.jsp"%>
