@@ -122,6 +122,16 @@ public class RadiologyModalityResource extends MetadataDelegatingCrudResource<Ra
     }
     
     /**
+     * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#delete(Object, String, RequestContext)
+     * @should retire given radiology modality
+     */
+    @Override
+    public void delete(RadiologyModality delegate, String reason, RequestContext context) throws ResponseException {
+        Context.getService(RadiologyModalityService.class)
+                .retireRadiologyModality(delegate, reason);
+    }
+    
+    /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#purge(Object, RequestContext)
      * @should throw ResourceDoesNotSupportOperationException
      */
