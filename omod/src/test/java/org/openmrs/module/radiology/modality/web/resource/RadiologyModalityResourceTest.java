@@ -58,6 +58,9 @@ public class RadiologyModalityResourceTest {
     @Mock
     RadiologyModalityService radiologyModalityService;
     
+    @Mock
+    RequestContext requestContext;
+    
     RadiologyModalityResource radiologyModalityResource = new RadiologyModalityResource();
     
     RadiologyModality radiologyModality = new RadiologyModality();
@@ -185,6 +188,18 @@ public class RadiologyModalityResourceTest {
     }
     
     /**
+     * @verifies retire given radiology modality
+     * @see RadiologyModalityResource#delete(RadiologyModality, String, RequestContext)
+     */
+    @Test
+    public void delete_shouldRetireGivenRadiologyModality() throws Exception {
+        
+        radiologyModalityResource.delete(radiologyModality, "out of order", requestContext);
+        verify(radiologyModalityService, times(1)).retireRadiologyModality(radiologyModality, "out of order");
+        verifyNoMoreInteractions(radiologyModalityService);
+    }
+    
+    /**
      * @see RadiologyModalityResource#purge(RadiologyModality,RequestContext)
      * @verifies throw ResourceDoesNotSupportOperationException
      */
@@ -194,5 +209,4 @@ public class RadiologyModalityResourceTest {
         RequestContext requestContext = new RequestContext();
         radiologyModalityResource.purge(radiologyModality, requestContext);
     }
-    
 }
