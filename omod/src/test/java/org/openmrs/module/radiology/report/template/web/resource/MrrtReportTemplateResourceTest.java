@@ -80,7 +80,7 @@ public class MrrtReportTemplateResourceTest {
         assertThat(resourceDescription.getProperties()
                 .keySet(),
             contains("uuid", "templateId", "dcTermsIdentifier", "dcTermsTitle", "dcTermsType", "dcTermsPublisher",
-                "dcTermsCreator", "dcTermsRights", "display"));
+                "dcTermsCreator", "dcTermsRights", "terms", "display"));
     }
     
     /**
@@ -98,7 +98,7 @@ public class MrrtReportTemplateResourceTest {
                 .keySet(),
             contains("uuid", "charset", "templateId", "dcTermsIdentifier", "dcTermsTitle", "dcTermsDescription",
                 "dcTermsType", "dcTermsLanguage", "dcTermsPublisher", "dcTermsCreator", "dcTermsRights", "dcTermsLicense",
-                "dcTermsDate", "display"));
+                "dcTermsDate", "terms", "display"));
     }
     
     /**
