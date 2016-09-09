@@ -14,6 +14,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
 import org.openmrs.api.APIException;
+import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -120,6 +121,58 @@ public class RadiologyModalityServiceComponentTest extends BaseModuleContextSens
         expectedException.expect(APIException.class);
         expectedException.expectMessage("failed to validate with reason:");
         radiologyModalityService.saveRadiologyModality(radiologyModality);
+    }
+    
+    /**
+     * @verifies retire an existing radiology modality
+     * @see RadiologyModalityService#retireRadiologyModality(RadiologyModality, String)
+     */
+    @Test
+    public void retireRadiologyModality_shouldRetireAnExistingRadiologyModality() throws Exception {
+        
+        RadiologyModality radiologyModality =
+                radiologyModalityService.getRadiologyModalityByUuid(EXISTING_RADIOLOGY_MODALITY_UUID);
+        assertThat(radiologyModality.getRetired(), is(false));
+        assertNull(radiologyModality.getRetiredBy());
+        assertNull(radiologyModality.getRetireReason());
+        assertNull(radiologyModality.getDateRetired());
+        
+        String reason = "for fun";
+        radiologyModalityService.retireRadiologyModality(radiologyModality, reason);
+        
+        assertThat(radiologyModality.getRetired(), is(true));
+        assertThat(radiologyModality.getRetireReason(), is(reason));
+        assertThat(radiologyModality.getRetiredBy(), is(Context.getAuthenticatedUser()));
+        assertNotNull(radiologyModality.getDateRetired());
+    }
+    
+    /**
+     * @verifies throw illegal argument exception if given radiology modality is null
+     * @see RadiologyModalityService#retireRadiologyModality(RadiologyModality, String)
+     */
+    @Test
+    public void retireRadiologyModality_shouldThrowIllegalArgumentExceptionIfGivenRadiologyModalityIsNull()
+            throws Exception {
+        
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("radiologyModality cannot be null");
+        radiologyModalityService.retireRadiologyModality(null, "fo fun");
+    }
+    
+    /**
+     * @verifies throw illegal argument exception if given reason is null or contains only whitespaces
+     * @see RadiologyModalityService#retireRadiologyModality(RadiologyModality, String)
+     */
+    @Test
+    public void retireRadiologyModality_shouldThrowIllegalArgumentExceptionIfGivenReasonIsNullOrContainsOnlyWhitespaces()
+            throws Exception {
+        
+        RadiologyModality radiologyModality =
+                radiologyModalityService.getRadiologyModalityByUuid(EXISTING_RADIOLOGY_MODALITY_UUID);
+        
+        expectedException.expect(IllegalArgumentException.class);
+        expectedException.expectMessage("Reason for deletion cannot be empty");
+        radiologyModalityService.retireRadiologyModality(radiologyModality, null);
     }
     
     /**

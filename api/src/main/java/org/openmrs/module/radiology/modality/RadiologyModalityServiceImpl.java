@@ -11,8 +11,10 @@ package org.openmrs.module.radiology.modality;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.springframework.transaction.annotation.Transactional;
+import org.apache.commons.lang3.StringUtils;
 
 @Transactional(readOnly = true)
 class RadiologyModalityServiceImpl extends BaseOpenmrsService implements RadiologyModalityService {
@@ -35,6 +37,23 @@ class RadiologyModalityServiceImpl extends BaseOpenmrsService implements Radiolo
         
         if (radiologyModality == null) {
             throw new IllegalArgumentException("radiologyModality cannot be null");
+        }
+        return radiologyModalityDAO.saveRadiologyModality(radiologyModality);
+    }
+    
+    /**
+     * @see RadiologyModalityService#retireRadiologyModality(RadiologyModality, String)
+     */
+    @Override
+    @Transactional
+    public synchronized RadiologyModality retireRadiologyModality(RadiologyModality radiologyModality, String reason) {
+        
+        if (radiologyModality == null) {
+            throw new IllegalArgumentException("radiologyModality cannot be null");
+        }
+        if (StringUtils.isBlank(reason)) {
+            throw new IllegalArgumentException(Context.getMessageSourceService()
+                    .getMessage("general.voidReason.empty"));
         }
         return radiologyModalityDAO.saveRadiologyModality(radiologyModality);
     }

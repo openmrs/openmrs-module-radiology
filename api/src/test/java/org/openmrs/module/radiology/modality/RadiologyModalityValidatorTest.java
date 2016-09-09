@@ -12,8 +12,10 @@ package org.openmrs.module.radiology.modality;
 import liquibase.util.StringUtils;
 import org.junit.Before;
 import org.junit.Test;
+import org.openmrs.test.BaseModuleContextSensitiveTest;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
+import org.springframework.validation.ObjectError;
 
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
@@ -23,7 +25,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * Tests {@link RadiologyModalityValidator}.
  */
-public class RadiologyModalityValidatorTest {
+public class RadiologyModalityValidatorTest extends BaseModuleContextSensitiveTest {
     
     
     RadiologyModality radiologyModality;
@@ -128,33 +130,6 @@ public class RadiologyModalityValidatorTest {
     }
     
     /**
-     * @verifies fail validation if ae title exceeds 16 characters
-     * @see RadiologyModalityValidator#validate(Object, Errors)
-     */
-    @Test
-    public void validate_shouldFailValidationIfAeTitleExceeds16Characters() throws Exception {
-        
-        radiologyModality.setAeTitle("CTTOOLONGNAME2412");
-        
-        Errors errors = new BindException(radiologyModality, "radiologyModality");
-        new RadiologyModalityValidator().validate(radiologyModality, errors);
-        
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.exceededMaxLengthOfField"));
-        Object[] arguments = errors.getAllErrors()
-                .get(0)
-                .getArguments();
-        assertThat(arguments.length, is(1));
-        assertThat(arguments[0], is(16));
-        assertTrue(errors.hasFieldErrors("aeTitle"));
-    }
-    
-    /**
      * @verifies fail validation if name is null or empty or whitespaces only
      * @see RadiologyModalityValidator#validate(Object, Errors)
      */
@@ -205,6 +180,55 @@ public class RadiologyModalityValidatorTest {
     }
     
     /**
+     * @verifies fail validation if retire reason is null or empty if retire is true and set retired to false
+     * @see RadiologyModalityValidator#validate(Object, Errors)
+     */
+    @Test
+    public void validate_shouldFailValidationIfRetireReasonIsNullOrEmptyIfRetireIsTrueAndSetRetiredToFalse()
+            throws Exception {
+        
+        radiologyModality.setRetired(true);
+        
+        Errors errors = new BindException(radiologyModality, "radiologyModality");
+        new RadiologyModalityValidator().validate(radiologyModality, errors);
+        
+        assertTrue(errors.hasErrors());
+        assertThat(errors.getAllErrors()
+                .size(),
+            is(1));
+        assertThat((errors.getAllErrors()).get(0)
+                .getCode(),
+            is("error.null"));
+        assertTrue(errors.hasFieldErrors("retireReason"));
+    }
+    
+    /**
+     * @verifies fail validation if field lengths are not correct
+     * @see RadiologyModalityValidator#validate(Object, Errors)
+     */
+    @Test
+    public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() throws Exception {
+        
+        radiologyModality.setAeTitle(StringUtils.repeat("1", 17));
+        radiologyModality.setName(StringUtils.repeat("1", 256));
+        radiologyModality.setDescription(StringUtils.repeat("1", 256));
+        radiologyModality.setRetireReason(StringUtils.repeat("1", 256));
+        
+        Errors errors = new BindException(radiologyModality, "radiologyModality");
+        new RadiologyModalityValidator().validate(radiologyModality, errors);
+        
+        assertTrue(errors.hasErrors());
+        ObjectError err = (errors.getAllErrors()).get(0);
+        for (ObjectError error : errors.getAllErrors()) {
+            assertThat(error.getCode(), is("error.exceededMaxLengthOfField"));
+        }
+        assertTrue(errors.hasFieldErrors("aeTitle"));
+        assertTrue(errors.hasFieldErrors("name"));
+        assertTrue(errors.hasFieldErrors("description"));
+        assertTrue(errors.hasFieldErrors("retireReason"));
+    }
+    
+    /**
      * @see RadiologyModalityValidator#validate(Object, Errors)
      * @verifies pass validation if all fields are correct
      */
@@ -217,30 +241,4 @@ public class RadiologyModalityValidatorTest {
         assertFalse(errors.hasErrors());
     }
     
-    /**
-     * @verifies fail validation if name exceeds 255 characters
-     * @see RadiologyModalityValidator#validate(Object, Errors)
-     */
-    @Test
-    public void validate_shouldFailValidationIfNameExceeds255Characters() throws Exception {
-        
-        radiologyModality.setName(StringUtils.repeat("123", 256));
-        
-        Errors errors = new BindException(radiologyModality, "radiologyModality");
-        new RadiologyModalityValidator().validate(radiologyModality, errors);
-        
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.exceededMaxLengthOfField"));
-        Object[] arguments = errors.getAllErrors()
-                .get(0)
-                .getArguments();
-        assertThat(arguments.length, is(1));
-        assertThat(arguments[0], is(255));
-        assertTrue(errors.hasFieldErrors("name"));
-    }
 }

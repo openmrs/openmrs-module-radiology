@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.radiology.modality.web;
 
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -180,6 +181,111 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
                 radiologyModalityFormController.saveRadiologyModality(mockRequest, radiologyModality, modalityErrors);
         
         verify(radiologyModalityService, times(1)).saveRadiologyModality(radiologyModality);
+        verifyNoMoreInteractions(radiologyModalityService);
+        
+        assertNotNull(modelAndView);
+        assertThat(modelAndView.getViewName(), is(RadiologyModalityFormController.RADIOLOGY_MODALITY_FORM_VIEW));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("radiologyModality"));
+        RadiologyModality modality = (RadiologyModality) modelAndView.getModelMap()
+                .get("radiologyModality");
+        assertThat(modality, is(radiologyModality));
+        
+        assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR), is("modality related error"));
+    }
+    
+    /**
+     * @verifies retire given radiology modality if valid and set http session attribute openmrs message to modality retired and redirect to the radiology modality
+     * @see RadiologyModalityFormController#retireRadiologyModality(javax.servlet.http.HttpServletRequest, RadiologyModality, BindingResult)
+     */
+    @Test
+    public void
+            retireRadiologyModality_shouldRetireGivenRadiologyModalityIfValidAndSetHttpSessionAttributeOpenmrsMessageToModalityRetiredAndRedirectToTheRadiologyModality()
+                    throws Exception {
+        
+        radiologyModality.setRetireReason("out of order");
+        
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("retireRadiologyModality", "retireRadiologyModality");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
+        BindingResult modalityErrors = mock(BindingResult.class);
+        when(modalityErrors.hasErrors()).thenReturn(false);
+        
+        ModelAndView modelAndView =
+                radiologyModalityFormController.retireRadiologyModality(mockRequest, radiologyModality, modalityErrors);
+        
+        verify(radiologyModalityService, times(1)).retireRadiologyModality(radiologyModality,
+            radiologyModality.getRetireReason());
+        verifyNoMoreInteractions(radiologyModalityService);
+        
+        assertNotNull(modelAndView);
+        assertThat(modelAndView.getViewName(),
+            is("redirect:/module/radiology/radiologyModality.form?modalityId=" + radiologyModality.getModalityId()));
+        assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR),
+            is("radiology.RadiologyModality.retired"));
+    }
+    
+    /**
+     * @verifies not retire given radiology modality if it is not valid and not redirect
+     * @see RadiologyModalityFormController#retireRadiologyModality(javax.servlet.http.HttpServletRequest, RadiologyModality, BindingResult)
+     */
+    @Test
+    public void retireRadiologyModality_shouldNotRetireGivenRadiologyModalityIfItIsNotValidAndNotRedirect()
+            throws Exception {
+        
+        radiologyModality.setRetireReason(null);
+        
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("retireRadiologyModality", "retireRadiologyModality");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
+        BindingResult modalityErrors = mock(BindingResult.class);
+        when(modalityErrors.hasErrors()).thenReturn(true);
+        
+        ModelAndView modelAndView =
+                radiologyModalityFormController.retireRadiologyModality(mockRequest, radiologyModality, modalityErrors);
+        
+        verifyZeroInteractions(radiologyModalityService);
+        
+        assertNotNull(modelAndView);
+        assertThat(modelAndView.getViewName(), is(RadiologyModalityFormController.RADIOLOGY_MODALITY_FORM_VIEW));
+        
+        assertThat(modelAndView.getModelMap(), hasKey("radiologyModality"));
+        RadiologyModality modality = (RadiologyModality) modelAndView.getModelMap()
+                .get("radiologyModality");
+        assertThat(modality, is(radiologyModality));
+    }
+    
+    /**
+     * @verifies not redirect and set session attribute with openmrs error if api exception is thrown by retire radiology modality
+     * @see RadiologyModalityFormController#retireRadiologyModality(javax.servlet.http.HttpServletRequest, RadiologyModality, BindingResult)
+     */
+    @Test
+    public void
+            retireRadiologyModality_shouldNotRedirectAndSetSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownByRetireRadiologyModality()
+                    throws Exception {
+        
+        radiologyModality.setRetireReason("out of order");
+        
+        when(radiologyModalityService.retireRadiologyModality(radiologyModality, radiologyModality.getRetireReason()))
+                .thenThrow(new APIException("modality related error"));
+        
+        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
+        mockRequest.addParameter("saveRadiologyModality", "saveRadiologyModality");
+        MockHttpSession mockSession = new MockHttpSession();
+        mockRequest.setSession(mockSession);
+        
+        BindingResult modalityErrors = mock(BindingResult.class);
+        when(modalityErrors.hasErrors()).thenReturn(false);
+        
+        ModelAndView modelAndView =
+                radiologyModalityFormController.retireRadiologyModality(mockRequest, radiologyModality, modalityErrors);
+        
+        verify(radiologyModalityService, times(1)).retireRadiologyModality(radiologyModality,
+            radiologyModality.getRetireReason());
         verifyNoMoreInteractions(radiologyModalityService);
         
         assertNotNull(modelAndView);

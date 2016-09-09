@@ -544,4 +544,15 @@
 			<column name="modality_description" type="varchar(255)"/>
 		</addColumn>
 	</changeSet>
+	<changeSet id="radiology-44" author="teleivo">
+		<comment>Add retired, retired_by, date_retired column to radiology_modality</comment>
+		<addColumn tableName="radiology_modality">
+			<column name="retired" type="BOOLEAN" defaultValueBoolean="false" >
+                <constraints nullable="false"/>
+            </column>
+			<column name="retire_reason" type="varchar(255)"/>
+			<column name="retired_by" type="int"/>
+            <column name="date_retired" type="DATETIME"/>
+		</addColumn>
+	</changeSet>
 </databaseChangeLog>
