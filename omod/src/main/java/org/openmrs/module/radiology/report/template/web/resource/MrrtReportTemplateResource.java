@@ -9,6 +9,9 @@
  */
 package org.openmrs.module.radiology.report.template.web.resource;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.openmrs.api.context.Context;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplate;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
@@ -51,6 +54,7 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
             description.addProperty("dcTermsPublisher");
             description.addProperty("dcTermsCreator");
             description.addProperty("dcTermsRights");
+            description.addProperty("terms", Representation.REF);
             description.addProperty("display");
             description.addSelfLink();
             description.addLink("full", ".?v=" + RestConstants.REPRESENTATION_FULL);
@@ -71,12 +75,21 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
             description.addProperty("dcTermsRights");
             description.addProperty("dcTermsLicense");
             description.addProperty("dcTermsDate");
+            description.addProperty("terms", Representation.REF);
             description.addProperty("display");
             description.addSelfLink();
             return description;
         } else {
             return null;
         }
+    }
+    
+    /**
+     * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getPropertiesToExposeAsSubResources()
+     */
+    @Override
+    public List<String> getPropertiesToExposeAsSubResources() {
+        return Arrays.asList("terms");
     }
     
     /**
