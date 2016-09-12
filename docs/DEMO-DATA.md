@@ -54,6 +54,10 @@ list please see the `acceptanceTest/resources/demo-data.sql`.
 
 All users in the dataset have password: `Radio1234`
 
+### Role - Administrator
+
+* `radmin (Nicholaus Wuckert)`
+
 ### Role - Data Clerk
 
 * `dat1 (Makenna Reichert)`

@@ -555,4 +555,17 @@
             <column name="date_retired" type="DATETIME"/>
 		</addColumn>
 	</changeSet>
+	<changeSet id="radiology-45" author="teleivo">
+		<comment>Add privileges to get/manage radiology modalities</comment>
+		<insert tableName="privilege">
+			<column name="privilege" value="Get Radiology Modalities" />
+			<column name="description" value="Able to get radiology modalities" />
+			<column name="uuid" value="7f44d0d8-3e96-4161-a590-1a90a71c8c9b" />
+		</insert>
+		<insert tableName="privilege">
+			<column name="privilege" value="Manage Radiology Modalities" />
+			<column name="description" value="Able to add/edit/retire radiology modalities" />
+			<column name="uuid" value="d9015276-b7b1-45f1-ad72-323896e75a52" />
+		</insert>
+	</changeSet>
 </databaseChangeLog>

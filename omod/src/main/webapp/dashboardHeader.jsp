@@ -32,4 +32,8 @@
       <li class="ui-state-default"><a id="radiologyReportTemplatesTab" href="${pageContext.request.contextPath}/module/radiology/radiologyDashboardReportTemplatesTab.htm"><openmrs:message
             code="radiology.dashboard.tabs.reportTemplates" /></a></li>
     </openmrs:hasPrivilege>
+    <openmrs:hasPrivilege privilege="Get Radiology Modalities">
+      <li class="ui-state-default"><a id="radiologyModalitiesTab" href="${pageContext.request.contextPath}/module/radiology/radiologyDashboardModalitiesTab.htm"><openmrs:message
+            code="radiology.dashboard.tabs.radiologyModalities" /></a></li>
+    </openmrs:hasPrivilege>
   </ul>
