@@ -9,8 +9,13 @@
  */
 package org.openmrs.module.radiology.modality;
 
+import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
+import org.openmrs.module.radiology.report.template.MrrtReportTemplate;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Hibernate specific RadiologyModality related functions. This class should not be used directly. All
@@ -61,5 +66,20 @@ class HibernateRadiologyModalityDAO implements RadiologyModalityDAO {
                 .createCriteria(RadiologyModality.class)
                 .add(Restrictions.eq("uuid", uuid))
                 .uniqueResult();
+    }
+    
+    /**
+     * @see RadiologyModalityService#getRadiologyModalities(boolean)
+     */
+    @Override
+    public List<RadiologyModality> getRadiologyModalities(boolean includeRetired) {
+        
+        final Criteria criteria = sessionFactory.getCurrentSession()
+                .createCriteria(RadiologyModality.class);
+        if (!includeRetired) {
+            criteria.add(Restrictions.eq("retired", false));
+        }
+        final List<RadiologyModality> result = (List<RadiologyModality>) criteria.list();
+        return result == null ? new ArrayList<>() : result;
     }
 }

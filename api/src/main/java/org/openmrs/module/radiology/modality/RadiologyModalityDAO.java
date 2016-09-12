@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.radiology.modality;
 
+import java.util.List;
+
 /**
  * {@code RadiologyModality} related database methods.
  * 
@@ -32,4 +34,9 @@ interface RadiologyModalityDAO {
      * @see RadiologyModalityService#getRadiologyModalityByUuid(String)
      */
     RadiologyModality getRadiologyModalityByUuid(String uuid);
+    
+    /**
+     * @see RadiologyModalityService#getRadiologyModalities(boolean)
+     */
+    List<RadiologyModality> getRadiologyModalities(boolean includeRetired);
 }

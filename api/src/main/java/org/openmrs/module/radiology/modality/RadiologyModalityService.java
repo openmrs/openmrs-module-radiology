@@ -14,6 +14,8 @@ import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.RadiologyPrivileges;
 
+import java.util.List;
+
 /**
  * Service layer for {@code RadiologyModality}.
  *
@@ -78,4 +80,17 @@ public interface RadiologyModalityService extends OpenmrsService {
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_MODALITIES)
     public RadiologyModality getRadiologyModalityByUuid(String uuid);
+    
+    /**
+     * Get the {@code RadiologyModality's}.
+     *
+     * @param includeRetired specifies if retired modalities should also be returned
+     *
+     * @return the radiology modalities
+     * @should return radiology modalities including retired ones if given true
+     * @should return radiology modalities excluding retired ones if given false
+     * @should return empty list if no match was found
+     */
+    @Authorized(RadiologyPrivileges.GET_RADIOLOGY_MODALITIES)
+    public List<RadiologyModality> getRadiologyModalities(boolean includeRetired);
 }

@@ -16,12 +16,16 @@ import org.junit.rules.ExpectedException;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
+import org.openmrs.test.SkipBaseSetup;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Tests {@link RadiologyModalityService}.
@@ -39,6 +43,10 @@ public class RadiologyModalityServiceComponentTest extends BaseModuleContextSens
     private static final String EXISTING_RADIOLOGY_MODALITY_UUID = "015f85fc-1316-45a3-848d-69ba192e64c4";
     
     private static final String NON_EXISTING_RADIOLOGY_MODALITY_UUID = "637d5011-49f5-4ce8-b4ce-47b37ff2cda2";
+    
+    private static final int TOTAL_MODALITIES = 4;
+    
+    private static final int TOTAL_MODALITIES_NON_RETIRED = 3;
     
     @Autowired
     private RadiologyModalityService radiologyModalityService;
@@ -240,5 +248,42 @@ public class RadiologyModalityServiceComponentTest extends BaseModuleContextSens
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("uuid cannot be null");
         radiologyModalityService.getRadiologyModalityByUuid(null);
+    }
+    
+    /**
+     * @verifies return radiology modalities including retired ones if given true
+     * @see RadiologyModalityService#getRadiologyModalities(boolean)
+     */
+    @Test
+    public void getRadiologyModalities_shouldReturnRadiologyModalitiesIncludingRetiredOnesIfGivenTrue() throws Exception {
+        
+        List<RadiologyModality> radiologyModalities = radiologyModalityService.getRadiologyModalities(true);
+        assertThat(radiologyModalities.size(), is(TOTAL_MODALITIES));
+    }
+    
+    /**
+     * @verifies return radiology modalities excluding retired ones if given false
+     * @see RadiologyModalityService#getRadiologyModalities(boolean)
+     */
+    @Test
+    public void getRadiologyModalities_shouldReturnRadiologyModalitiesExcludingRetiredOnesIfGivenFalse() throws Exception {
+        
+        List<RadiologyModality> radiologyModalities = radiologyModalityService.getRadiologyModalities(false);
+        assertThat(radiologyModalities.size(), is(TOTAL_MODALITIES_NON_RETIRED));
+    }
+    
+    /**
+     * @verifies return empty list if no match was found
+     * @see RadiologyModalityService#getRadiologyModalities(boolean)
+     */
+    @Test
+    public void getRadiologyModalities_shouldReturnEmptyListIfNoMatchWasFound() throws Exception {
+        
+        getConnection().createStatement()
+                .execute("DELETE FROM radiology_modality;");
+        getConnection().commit();
+        
+        List<RadiologyModality> radiologyModalities = radiologyModalityService.getRadiologyModalities(true);
+        assertTrue(radiologyModalities.isEmpty());
     }
 }
