@@ -13,5 +13,8 @@
 <dataset>
 
   <radiology_modality modality_id="1" modality_aetitle="CT01" modality_name="Excelsior XT12342X" creator="1" date_created="2015-09-09 00:00:00.0" retired="0" uuid="015f85fc-1316-45a3-848d-69ba192e64c4"/>
+  <radiology_modality modality_id="2" modality_aetitle="CT02" modality_name="Excelsior XT9000" creator="1" date_created="2015-09-09 00:00:00.0" retired="0" uuid="5a4394b8-e2b7-4c5f-a360-523304bcce63"/>
+  <radiology_modality modality_id="3" modality_aetitle="US01" modality_name="Abracadabra ZT400" creator="1" date_created="2015-09-09 00:00:00.0" retired="0" uuid="4bcb0c92-7e18-4f53-b956-275a4f687360"/>
+  <radiology_modality modality_id="4" modality_aetitle="US02" modality_name="Abracadabra ZT400" creator="1" date_created="2015-09-09 00:00:00.0" retired="1" retire_reason="out of order" retired_by="0" date_retired="2016-10-01 00:00:00.0" uuid="66e4cd04-5ec3-4b0d-bfcd-20f9eb9a2d22"/>
 
 </dataset>

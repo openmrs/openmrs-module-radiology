@@ -21,6 +21,7 @@ import org.openmrs.module.webservices.rest.web.representation.FullRepresentation
 import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.resource.impl.MetadataDelegatingCrudResource;
+import org.openmrs.module.webservices.rest.web.resource.impl.NeedsPaging;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.response.ResponseException;
 import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs2_0.RestConstants2_0;
@@ -138,5 +139,16 @@ public class RadiologyModalityResource extends MetadataDelegatingCrudResource<Ra
     @Override
     public void purge(RadiologyModality delegate, RequestContext context) throws ResponseException {
         throw new ResourceDoesNotSupportOperationException();
+    }
+    
+    /**
+     * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource#doGetAll(RequestContext)
+     * @should return radiology modalities including retired ones if include all is true
+     * @should return radiology modalities excluding retired ones if include all is false
+     */
+    @Override
+    protected NeedsPaging<RadiologyModality> doGetAll(RequestContext context) {
+        return new NeedsPaging<>(Context.getService(RadiologyModalityService.class)
+                .getRadiologyModalities(context.getIncludeAll()), context);
     }
 }

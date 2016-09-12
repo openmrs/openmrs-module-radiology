@@ -16,6 +16,8 @@ import org.openmrs.api.impl.BaseOpenmrsService;
 import org.springframework.transaction.annotation.Transactional;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.List;
+
 @Transactional(readOnly = true)
 class RadiologyModalityServiceImpl extends BaseOpenmrsService implements RadiologyModalityService {
     
@@ -80,5 +82,14 @@ class RadiologyModalityServiceImpl extends BaseOpenmrsService implements Radiolo
             throw new IllegalArgumentException("uuid cannot be null");
         }
         return radiologyModalityDAO.getRadiologyModalityByUuid(uuid);
+    }
+    
+    /**
+     * @see RadiologyModalityService#getRadiologyModalities(boolean)
+     */
+    @Override
+    public List<RadiologyModality> getRadiologyModalities(boolean includeRetired) {
+        
+        return radiologyModalityDAO.getRadiologyModalities(includeRetired);
     }
 }

@@ -9,11 +9,21 @@
  */
 package org.openmrs.module.radiology.modality.web.resource;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.junit.Before;
+import org.junit.Test;
 import org.openmrs.module.radiology.modality.RadiologyModality;
 import org.openmrs.module.radiology.modality.RadiologyModalityService;
+import org.openmrs.module.webservices.rest.SimpleObject;
+import org.openmrs.module.webservices.rest.web.RequestContext;
 import org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResourceTest;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertThat;
 
 /**
  * Tests {@link RadiologyModalityResource}.
@@ -23,6 +33,10 @@ public class RadiologyModalityResourceComponentTest
     
     
     protected static final String TEST_DATASET = "RadiologyModalityResourceComponentTestDataset.xml";
+    
+    private static final int TOTAL_MODALITIES = 4;
+    
+    private static final int TOTAL_MODALITIES_NON_RETIRED = 3;
     
     @Autowired
     RadiologyModalityService radiologyModalityService;
@@ -84,5 +98,41 @@ public class RadiologyModalityResourceComponentTest
         assertPropPresent("description");
         assertPropPresent("retired");
         assertPropPresent("auditInfo");
+    }
+    
+    /**
+     * @verifies return radiology modalities including retired ones if include all is true
+     * @see RadiologyModalityResource#doGetAll(RequestContext)
+     */
+    @Test
+    public void doGetAll_shouldReturnRadiologyModalitiesIncludingRetiredOnesIfIncludeAllIsTrue() throws Exception {
+        
+        RadiologyModalityResource radiologyModalityResource = getResource();
+        
+        RequestContext context = new RequestContext();
+        context.setIncludeAll(true);
+        List<Object> modalities = radiologyModalityResource.getAll(context)
+                .get("results");
+        
+        assertThat(modalities.size(), is(TOTAL_MODALITIES));
+    }
+    
+    /**
+     * @verifies return radiology modalities excluding retired ones if include all is false
+     * @see RadiologyModalityResource#doGetAll(RequestContext)
+     */
+    @Test
+    public void doGetAll_shouldReturnRadiologyModalitiesExcludingRetiredOnesIfIncludeAllIsFalse() throws Exception {
+        
+        RadiologyModalityResource radiologyModalityResource = getResource();
+        
+        RequestContext context = new RequestContext();
+        List<Object> modalities = (List) radiologyModalityResource.getAll(context)
+                .get("results");
+        
+        assertThat(modalities.size(), is(TOTAL_MODALITIES_NON_RETIRED));
+        for (Object modality : modalities) {
+            assertThat(PropertyUtils.getProperty(modality, "retired"), is(false));
+        }
     }
 }
