@@ -170,10 +170,52 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','View Naviga
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','View Navigation Menu - Radiology');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','View Radiology Report Templates');
 
+-- Setup Role Radiology: Administrator
+INSERT INTO role VALUES ('Radiology: Administrator','The user who manages modalities, radiology concepts and reference terms','a9d7704b-96e3-4a85-87a0-4d33d771b201');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Add Radiology Report Templates');
+INSERT INTO privilege VALUES ('Edit Concepts','Able to edit concepts.','27a2543a-34ba-4536-b4e4-2a5845cb3bc0');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Edit Concepts');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Concept Attribute Types');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Concepts');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Concept Sources');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Global Properties');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Location Attribute Types');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Locations');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Radiology Modalities');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Radiology Report Templates');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Concept Attribute Types');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Concept Reference Terms');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Concept Sources');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Concepts');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Global Properties');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Implementation Id');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Locations');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Location Tags');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Radiology Modalities');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Search Index');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','View Administration Functions');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','View Concept Classes');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','View Concept Datatypes');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','View Concept Sources');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','View Concepts');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','View Global Properties');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','View Navigation Menu');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','View Navigation Menu - Radiology');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','View Radiology Report Templates');
+
 -- ----------------------------
 --  Radiology Module Users
 -- ----------------------------
 -- Password for all users is "Radio1234"
+
+-- Radiology Administrator
+BEGIN;
+INSERT INTO `person` (person_id,gender,birthdate,creator,date_created,uuid) VALUES (9,'M','1984-07-09',1,'2016-05-24 09:14:38','237304b6-5183-42df-9768-4730bede89f0');
+INSERT INTO `person_name` (person_name_id,person_id,given_name,family_name,creator,date_created,uuid) VALUES (9,9,'Nicholaus','Wuckert',1,'2016-05-24 09:14:38','8c973777-2b1f-489b-8096-3b2717315eb6');
+INSERT INTO `users` (user_id,system_id,person_id,username,password,salt,creator,date_created,uuid) VALUES (9,'9-9',9,'radmin','e25b2d0708d753eb05c53b4f260c901a6719fd093860a6b3d692d01ecda7070519d139d45317d6b2d44337a69c2827c67dbdf52352162056dd114a92c7152ff4','c788c6ad82a157b712392ca695dfcf2eed193d7f',1,'2016-05-24 09:14:38','be6e1383-52e7-4931-a1a4-29bfb4d77c45');
+INSERT INTO `user_role` VALUES (9,'Radiology: Administrator');
+INSERT INTO `provider` (provider_id,person_id,identifier,creator,date_created,uuid) VALUES (9,9,'9',1,'2016-05-24 09:14:38','275b43f9-e1cc-44e3-8b34-65dc2c49b201');
+COMMIT;
 
 -- Referring Phyisicians
 BEGIN;
@@ -504,4 +546,14 @@ COMMIT;
 -- always update these values, they assure that the assigned order or accession numbers continue after the ones from the test data
 UPDATE global_property SET property_value='7' WHERE property='radiology.nextAccessionNumberSeed';
 UPDATE global_property SET property_value='8' WHERE property='order.nextOrderNumberSeed';
+COMMIT;
+
+-- ----------------------------
+--  Radiology Modalities
+-- ----------------------------
+BEGIN;
+INSERT INTO `radiology_modality` (modality_id,modality_aetitle,modality_name,creator,date_created,uuid) VALUES (1,'CT01','Excelsior XT12342X',1,'2015-01-12 19:32:11','015f85fc-1316-45a3-848d-69ba192e64c4');
+INSERT INTO `radiology_modality` (modality_id,modality_aetitle,modality_name,creator,date_created,uuid) VALUES (2,'CT02','Excelsior XT9000',1,'2015-12-22 17:19:53','5a4394b8-e2b7-4c5f-a360-523304bcce63');
+INSERT INTO `radiology_modality` (modality_id,modality_aetitle,modality_name,creator,date_created,uuid) VALUES (3,'US01','Abracadabra ZT400',1,'2016-03-04 09:17:00','4bcb0c92-7e18-4f53-b956-275a4f687360');
+INSERT INTO `radiology_modality` (modality_id,modality_aetitle,modality_name,creator,date_created,uuid,retired,retire_reason,retired_by,date_retired) VALUES (4,'US02','Abracadabra ZT400',1,'2016-03-04 09:18:35','66e4cd04-5ec3-4b0d-bfcd-20f9eb9a2d22',1,'out of order',1,'2016-08-02 11:27:00');
 COMMIT;

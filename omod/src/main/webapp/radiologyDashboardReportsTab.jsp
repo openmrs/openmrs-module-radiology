@@ -327,7 +327,7 @@
               <th><spring:message code="radiology.datatables.column.report.date" /></th>
               <th><spring:message code="radiology.datatables.column.report.dateCreated" /></th>
               <th><spring:message code="radiology.datatables.column.report.createdBy" /></th>
-              <th><spring:message code="radiology.datatables.column.report.status" /></th>
+              <th><spring:message code="radiology.datatables.column.status" /></th>
               <th><spring:message code="radiology.datatables.column.action" /></th>
             </tr>
           </thead>
