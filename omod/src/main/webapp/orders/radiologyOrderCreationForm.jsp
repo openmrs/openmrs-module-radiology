@@ -87,7 +87,7 @@
 
 <c:if test="${not empty param.patientId}">
   <openmrs:hasPrivilege privilege="View Patients">
-    <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${param.patientId}" />
+    <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${param.patientId}" parameters="showPatientDashboardLink=true" />
     <br>
   </openmrs:hasPrivilege>
 </c:if>

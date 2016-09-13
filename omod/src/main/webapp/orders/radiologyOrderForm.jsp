@@ -4,8 +4,6 @@
 <c:set var="INCLUDE_TIME_ADJUSTMENT" value="true" />
 <%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
 
-<%@ include file="/WEB-INF/view/module/radiology/localHeader.jsp"%>
-
 <openmrs:require
   allPrivileges="Get Care Settings,Get Concepts,Get Encounter Roles,Get Encounters,Get Orders,Get Patients,Get Providers,Get Radiology Orders,Get Users,Get Visit Attribute Types,Get Visit Types,Get Visits,View Orders"
   otherwise="/login.htm" redirect="/module/radiology/radiologyOrder.form" />
@@ -13,7 +11,7 @@
 <!--  This form shows existing RadiologyOrder/discontinued Order -->
 
 <openmrs:hasPrivilege privilege="View Patients">
-  <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${order.patient.patientId}" />
+  <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${order.patient.patientId}" parameters="showPatientDashboardLink=true" />
   <br>
 </openmrs:hasPrivilege>
 <c:choose>
