@@ -174,12 +174,16 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','View Radiol
 INSERT INTO role VALUES ('Radiology: Administrator','The user who manages modalities, radiology concepts and reference terms','a9d7704b-96e3-4a85-87a0-4d33d771b201');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Add Radiology Report Templates');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Concept Attribute Types');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Concept Map Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Concepts');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Concept Reference Terms');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Concept Sources');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Forms');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Global Properties');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Location Attribute Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Locations');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Patient Programs');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Observations');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Radiology Modalities');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Radiology Report Templates');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Concept Attribute Types');
