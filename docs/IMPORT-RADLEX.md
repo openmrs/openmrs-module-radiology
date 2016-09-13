@@ -31,8 +31,8 @@ You first need to create Radlex as an OpenMRS concept source.
 You can directly execute this sql statement in your database:
 
 ```sql
-INSERT concept_reference_source (concept_source_id,name,description,creator,date_created,uuid) VALUES
-(1,"RADLEX","RadLex Playbook is a project of the Radiological Society of North America (RSNA)",1,"2016-08-01 09:00:00","616a9691-a1bf-4426-85a6-21a60c558265");
+INSERT concept_reference_source (concept_source_id,hl7_code,name,description,creator,date_created,uuid) VALUES
+(1,"RADLEX","RadLex","RadLex Playbook is a project of the Radiological Society of North America (RSNA)",1,"2016-08-01 09:00:00","616a9691-a1bf-4426-85a6-21a60c558265");
 ```
 
 _Create Concept Reference Terms for Radlex terms_

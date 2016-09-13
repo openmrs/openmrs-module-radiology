@@ -173,10 +173,9 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','View Radiol
 -- Setup Role Radiology: Administrator
 INSERT INTO role VALUES ('Radiology: Administrator','The user who manages modalities, radiology concepts and reference terms','a9d7704b-96e3-4a85-87a0-4d33d771b201');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Add Radiology Report Templates');
-INSERT INTO privilege VALUES ('Edit Concepts','Able to edit concepts.','27a2543a-34ba-4536-b4e4-2a5845cb3bc0');
-INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Edit Concepts');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Concept Attribute Types');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Concepts');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Concept Reference Terms');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Concept Sources');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Global Properties');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Get Location Attribute Types');
@@ -193,6 +192,12 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Location
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Location Tags');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Radiology Modalities');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Manage Search Index');
+INSERT INTO privilege VALUES ('Purge Concepts','Able to purge concepts','785a2fc8-2a53-406d-ac2c-0719552cc185');
+INSERT INTO privilege VALUES ('Purge Concept Reference Terms','Able to purge concept reference terms','f60f05b0-0350-4274-9dcd-0a52a0d109f2');
+INSERT INTO privilege VALUES ('Purge Concept Sources','Able to purge concept sources','fbdcd91c-3fc3-45c4-8f73-773b74f2dbe0');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Purge Concepts');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Purge Concept Reference Terms');
+INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','Purge Concept Sources');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','View Administration Functions');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','View Concept Classes');
 INSERT INTO `role_privilege` VALUES ('Radiology: Administrator','View Concept Datatypes');
