@@ -3,8 +3,6 @@
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
 
-<%@ include file="/WEB-INF/view/module/radiology/localHeader.jsp"%>
-
 <br>
 <div id="mrrtReportTemplateProperties">
   <b class="boxHeader"><openmrs:message code="radiology.report.template.view.templateMetadata.boxheader" /></b>

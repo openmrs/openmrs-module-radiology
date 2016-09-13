@@ -6,8 +6,6 @@
 <openmrs:htmlInclude file="/moduleResources/radiology/scripts/tinymce/tinymce.min.js" />
 <openmrs:htmlInclude file="/moduleResources/radiology/fonts/font-awesome/css/font-awesome.min.css" />
 
-<%@ include file="/WEB-INF/view/module/radiology/localHeader.jsp"%>
-
 <script type="text/javascript">
   var $j = jQuery.noConflict();
 
@@ -68,7 +66,7 @@
 </script>
 
 <openmrs:hasPrivilege privilege="View Patients">
-  <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${radiologyOrder.patient.patientId}" />
+  <openmrs:portlet url="patientHeader" id="patientDashboardHeader" patientId="${radiologyOrder.patient.patientId}" parameters="showPatientDashboardLink=true" />
   <br>
 </openmrs:hasPrivilege>
 <openmrs:portlet url="radiologyOrderDetails" moduleId="radiology"
