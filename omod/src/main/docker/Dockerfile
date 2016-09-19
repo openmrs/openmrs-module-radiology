@@ -2,7 +2,7 @@ FROM teleivo/openmrs-platform:2.0.0-1
 
 # Get radiology modules dependencies
 RUN curl -L \
-    "http://mavenrepo.openmrs.org/nexus/service/local/repositories/snapshots/content/org/openmrs/module/legacyui-omod/1.1-SNAPSHOT/legacyui-omod-1.1-20160912.201607-48.jar" \
+    "http://mavenrepo.openmrs.org/nexus/service/local/repositories/snapshots/content/org/openmrs/module/legacyui-omod/1.1-SNAPSHOT/legacyui-omod-1.1-20160916.121155-57.jar" \
     -o "${OPENMRS_MODULES}/legacyui-1.1-SNAPSHOT.omod"
 RUN curl -L \
     "http://mavenrepo.openmrs.org/nexus/service/local/repositories/modules/content/org/openmrs/module/webservices.rest-omod/2.15/webservices.rest-omod-2.15.jar" \
