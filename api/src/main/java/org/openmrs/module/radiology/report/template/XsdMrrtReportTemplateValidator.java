@@ -11,6 +11,8 @@ package org.openmrs.module.radiology.report.template;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -24,7 +26,9 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openmrs.api.APIException;
+import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Uses xsd with schema to validate {@code MrrtReportTemplate} files.
@@ -44,11 +48,37 @@ public class XsdMrrtReportTemplateValidator implements MrrtReportTemplateValidat
         final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         final Schema schema;
         final Validator validator;
+        final List<SAXParseException> exceptions = new ArrayList<>();
         try {
             schema = factory.newSchema(getSchemaFile());
             validator = schema.newValidator();
+            validator.setErrorHandler(new ErrorHandler() {
+                
+                
+                @Override
+                public void warning(SAXParseException exception) throws SAXException {
+                    exceptions.add(exception);
+                    log.warn(exception.getMessage(), exception);
+                }
+                
+                @Override
+                public void error(SAXParseException exception) throws SAXException {
+                    exceptions.add(exception);
+                    log.error(exception.getMessage(), exception);
+                }
+                
+                @Override
+                public void fatalError(SAXParseException exception) throws SAXException {
+                    exceptions.add(exception);
+                    log.fatal(exception.getMessage(), exception);
+                }
+                
+            });
             validateMetatags(templateFile);
             validator.validate(new StreamSource(templateFile));
+            if (!exceptions.isEmpty()) {
+                throw new MrrtReportTemplateValidationException(exceptions);
+            }
         }
         catch (SAXException e) {
             log.error(e.getMessage(), e);
@@ -61,12 +91,12 @@ public class XsdMrrtReportTemplateValidator implements MrrtReportTemplateValidat
         final Elements metatagsWithCharsetAttribute = doc.select("meta[charset]");
         
         if (metatagsWithCharsetAttribute.isEmpty() || metatagsWithCharsetAttribute.size() > 1) {
-            throw new APIException("radiology.report.template.validation.error.meta.charset");
+            throw new APIException("radiology.report.template.validation.error.meta.charset", null, null);
         }
         
         final Elements dublinAttributes = doc.select("meta[name]");
         if (dublinAttributes.isEmpty()) {
-            throw new APIException("radiology.report.template.validation.error.meta.dublinCore");
+            throw new APIException("radiology.report.template.validation.error.meta.dublinCore", null, null);
         }
     }
     

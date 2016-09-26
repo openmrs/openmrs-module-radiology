@@ -77,7 +77,8 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
         }
         final MrrtReportTemplate existing = getMrrtReportTemplateByIdentifier(template.getDcTermsIdentifier());
         if (existing != null) {
-            throw new APIException("Template already exist in the system.");
+            throw new APIException(
+                    "Template with identifier '" + existing.getDcTermsIdentifier() + "' already exist in the system.");
         }
         return mrrtReportTemplateDAO.saveMrrtReportTemplate(template);
     }
