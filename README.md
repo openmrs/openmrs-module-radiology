@@ -181,7 +181,7 @@ The module depends on [OpenMRS Version 2.0.0](https://github.com/openmrs/openmrs
 run on any version lower than that.
 
 The module depends on [OpenMRS Legacy UI](https://github.com/openmrs/openmrs-module-legacyui)
-for its UI which has not yet been officially released.
+for its UI.
 
 ## Community
 
