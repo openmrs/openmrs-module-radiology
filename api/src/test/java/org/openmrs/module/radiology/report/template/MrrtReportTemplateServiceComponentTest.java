@@ -242,7 +242,8 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
         MrrtReportTemplate existing = mrrtReportTemplateService.getMrrtReportTemplate(EXISTING_TEMPLATE_ID);
         existing.setDcTermsTitle("modified");
         expectedException.expect(APIException.class);
-        expectedException.expectMessage("Template already exist in the system.");
+        expectedException.expectMessage(
+            "Template with identifier '" + existing.getDcTermsIdentifier() + "' already exist in the system.");
         mrrtReportTemplateService.saveMrrtReportTemplate(existing);
     }
     

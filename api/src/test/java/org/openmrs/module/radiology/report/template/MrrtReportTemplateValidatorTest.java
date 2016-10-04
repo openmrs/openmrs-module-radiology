@@ -326,4 +326,18 @@ public class MrrtReportTemplateValidatorTest {
                 .getFile());
         validator.validate(invalidTemplate);
     }
+    
+    /**
+     * @see MrrtReportTemplateValidator#validate(File)
+     * @verifies wrap all validation errors and throw an mrrt report template validation exception
+     */
+    @Test
+    public void validate_shouldWrapAllValidationErrorsAndThrowAnMrrtReportTemplateValidationException() throws Exception {
+        expectedException.expect(MrrtReportTemplateValidationException.class);
+        final File invalidTemplate = new File(getClass().getClassLoader()
+                .getResource(
+                    "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-missingTitleAndTemplateAttributesElements.html")
+                .getFile());
+        validator.validate(invalidTemplate);
+    }
 }
