@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
+import org.openmrs.module.radiology.report.template.MrrtReportTemplateValidationException;
 import org.openmrs.module.radiology.web.RadiologyWebConstants;
 import org.openmrs.web.WebConstants;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,6 +67,7 @@ public class RadiologyDashboardReportTemplatesTabController {
      *         attribute
      * @throws IOException when templateFile could not be read or is invalid
      * @should give error message when template file is empty
+     * @should set error message in session when mrrt report template validation exception is thrown
      * @should set error message in session when api exception is thrown
      * @should set error message in session when io exception is thrown
      * @should give success message when import was successful
@@ -74,10 +76,12 @@ public class RadiologyDashboardReportTemplatesTabController {
     protected ModelAndView uploadReportTemplate(HttpServletRequest request, @RequestParam MultipartFile templateFile)
             throws IOException {
         
+        ModelAndView modelAndView = new ModelAndView(RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW);
+        
         if (templateFile.isEmpty()) {
             request.getSession()
                     .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "radiology.MrrtReportTemplate.not.imported.empty");
-            return new ModelAndView(RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW);
+            return modelAndView;
         }
         
         try {
@@ -90,11 +94,18 @@ public class RadiologyDashboardReportTemplatesTabController {
                     .setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
                         "Failed to import " + templateFile.getOriginalFilename() + " => " + exception.getMessage());
         }
+        catch (MrrtReportTemplateValidationException exception) {
+            modelAndView.addObject("mrrtReportTemplateValidationErrors", exception.getValidationResult()
+                    .getErrors());
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_ERROR_ATTR, "Failed to import " + templateFile.getOriginalFilename());
+        }
         catch (APIException exception) {
             request.getSession()
                     .setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
                         "Failed to import " + templateFile.getOriginalFilename() + " => " + exception.getMessage());
         }
-        return new ModelAndView(RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW);
+        
+        return modelAndView;
     }
 }

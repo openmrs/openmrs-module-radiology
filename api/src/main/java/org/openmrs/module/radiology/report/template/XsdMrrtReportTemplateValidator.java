@@ -36,37 +36,38 @@ public class XsdMrrtReportTemplateValidator implements MrrtReportTemplateValidat
     
     private static final String MRRT_REPORT_TEMPLATE_SCHEMA_FILE = "MrrtReportTemplateSchema.xsd";
     
+    MetaTagsValidationEngine metaTagsValidationEngine;
+    
+    public MetaTagsValidationEngine getMetaTagsValidationEngine() {
+        return metaTagsValidationEngine;
+    }
+    
+    public void setMetaTagsValidationEngine(MetaTagsValidationEngine metaTagsValidationEngine) {
+        this.metaTagsValidationEngine = metaTagsValidationEngine;
+    }
+    
     /**
      * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateValidator#validate(File)
      */
     @Override
     public void validate(File templateFile) throws IOException {
+        
+        final Document document = Jsoup.parse(templateFile, null, "");
+        final Elements metatags = document.getElementsByTag("meta");
+        ValidationResult metaTagsValidationResult = metaTagsValidationEngine.run(metatags);
+        metaTagsValidationResult.assertOk();
+        
         final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         final Schema schema;
         final Validator validator;
         try {
             schema = factory.newSchema(getSchemaFile());
             validator = schema.newValidator();
-            validateMetatags(templateFile);
             validator.validate(new StreamSource(templateFile));
         }
         catch (SAXException e) {
             log.error(e.getMessage(), e);
             throw new APIException("radiology.report.template.validation.error", null, e);
-        }
-    }
-    
-    private void validateMetatags(File templateFile) throws IOException {
-        final Document doc = Jsoup.parse(templateFile, null, "");
-        final Elements metatagsWithCharsetAttribute = doc.select("meta[charset]");
-        
-        if (metatagsWithCharsetAttribute.isEmpty() || metatagsWithCharsetAttribute.size() > 1) {
-            throw new APIException("radiology.report.template.validation.error.meta.charset");
-        }
-        
-        final Elements dublinAttributes = doc.select("meta[name]");
-        if (dublinAttributes.isEmpty()) {
-            throw new APIException("radiology.report.template.validation.error.meta.dublinCore");
         }
     }
     

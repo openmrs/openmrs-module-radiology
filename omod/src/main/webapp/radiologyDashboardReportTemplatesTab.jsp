@@ -184,6 +184,17 @@
 
                   });
 </script>
+<c:if test="${not empty mrrtReportTemplateValidationErrors}" >
+    </br>
+    <div class="error">
+        <spring:message code="radiology.report.template.validation.error.list.header" />
+        <ul>
+        <c:forEach items="${mrrtReportTemplateValidationErrors}" var="validationError">
+            <li><spring:message code="${validationError.messageCode}" text="${validationError.description}" /></li>
+        </c:forEach>
+        </ul>
+    </div>
+</c:if>
 
 <openmrs:hasPrivilege privilege="View Radiology Report Templates">
   <div id="radiologyReportTemplates">

@@ -215,7 +215,12 @@
 	</bean>
 	<bean id="mrrtReportTemplateFileParser" class="org.openmrs.module.radiology.report.template.DefaultMrrtReportTemplateFileParser">
 		<property name="validator">
-			<bean class="org.openmrs.module.radiology.report.template.XsdMrrtReportTemplateValidator"></bean>
+			<ref bean="mrrtReportTemplateValidator" />
+		</property>
+	</bean>
+	<bean id="mrrtReportTemplateValidator" class="org.openmrs.module.radiology.report.template.XsdMrrtReportTemplateValidator">
+		<property name="metaTagsValidationEngine">
+			<bean class="org.openmrs.module.radiology.report.template.MetaTagsValidationEngine"></bean>
 		</property>
 	</bean>
 </beans>

@@ -26,8 +26,10 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.api.APIException;
-import org.openmrs.module.radiology.order.web.RadiologyDashboardOrdersTabController;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
+import org.openmrs.module.radiology.report.template.ValidationError;
+import org.openmrs.module.radiology.report.template.MrrtReportTemplateValidationException;
+import org.openmrs.module.radiology.report.template.ValidationResult;
 import org.openmrs.module.radiology.web.RadiologyWebConstants;
 import org.openmrs.test.BaseContextMockTest;
 import org.openmrs.web.WebConstants;
@@ -118,6 +120,38 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
         String message = (String) request.getSession()
                 .getAttribute(WebConstants.OPENMRS_ERROR_ATTR);
         assertThat(message, is("radiology.MrrtReportTemplate.not.imported.empty"));
+    }
+    
+    /**
+     * @verifies set error message in session when mrrt report template validation exception is thrown
+     * @see RadiologyDashboardReportTemplatesTabController#uploadReportTemplate(HttpServletRequest, MultipartFile)
+     */
+    @Test
+    public void uploadReportTemplate_shouldSetErrorMessageInSessionWhenMrrtReportTemplateValidationExceptionIsThrown()
+            throws Exception {
+        
+        when(mockTemplateFile.getInputStream()).thenReturn(mockInputStream);
+        when(mockTemplateFile.getOriginalFilename()).thenReturn("mockTemplateFile");
+        
+        ValidationResult validationResult = new ValidationResult();
+        validationResult.addError(new ValidationError("Missing header", "err.missing.header"));
+        MrrtReportTemplateValidationException mrrtReportTemplateValidationException =
+                new MrrtReportTemplateValidationException(validationResult);
+        doThrow(mrrtReportTemplateValidationException).when(mrrtReportTemplateService)
+                .importMrrtReportTemplate(mockInputStream);
+        
+        ModelAndView modelAndView =
+                radiologyDashboardReportTemplatesTabController.uploadReportTemplate(request, mockTemplateFile);
+        assertNotNull(modelAndView);
+        assertThat(modelAndView.getViewName(),
+            is(RadiologyDashboardReportTemplatesTabController.RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW));
+        String errorMessage = (String) request.getSession()
+                .getAttribute(WebConstants.OPENMRS_ERROR_ATTR);
+        assertNotNull(errorMessage);
+        assertThat(errorMessage, is("Failed to import mockTemplateFile"));
+        assertThat(modelAndView.getModelMap()
+                .get("mrrtReportTemplateValidationErrors"),
+            is(validationResult.getErrors()));
     }
     
     /**
