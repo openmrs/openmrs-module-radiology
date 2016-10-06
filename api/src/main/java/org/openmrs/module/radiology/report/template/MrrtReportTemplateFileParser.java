@@ -10,7 +10,6 @@
 package org.openmrs.module.radiology.report.template;
 
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
  * A parser that is responsible for parsing mrrt report templates and extract metadata.
@@ -19,15 +18,15 @@ public interface MrrtReportTemplateFileParser {
     
     
     /**
-     * Parse an {@code MRRT} template and extract metadata into a {@code MrrtReportTemplate}.
+     * Parse an mrrt template and extract metadata into a {@code MrrtReportTemplate}.
      * 
-     * @param in the input stream containing the mrrt template
-     * @return the mrrt report template extracted from the input stream
-     * @throws IOException if the template file could not be read
-     * @should return an mrrt template object if file is valid
+     * @param mrrtTemplate the mrrt template to parse
+     * @return the mrrt report template
+     * @throws IOException if one is thrown during validation
+     * @should return an mrrt template object if given template is valid
      * @should store terms element in template object if they match a concept reference term in openmrs
      * @should skip terms element in template file if no corresponding concept reference term was found
      * @should ignore case when searching for a matching concept source
      */
-    public MrrtReportTemplate parse(InputStream in) throws IOException;
+    public MrrtReportTemplate parse(String mrrtTemplate) throws IOException;
 }

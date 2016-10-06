@@ -9,24 +9,25 @@
  */
 package org.openmrs.module.radiology.report.template;
 
-import java.io.File;
+import org.openmrs.api.APIException;
+
 import java.io.IOException;
 
 /**
- * Validates {@code MrrtReportTemplate}.
- * 
+ * Validates an mrrt report template according to the IHE Management of Radiology Report Templates (MRRT).
+ *
  * @see MrrtReportTemplate
  */
 public interface MrrtReportTemplateValidator {
     
     
     /**
-     * Validate template file and make sure it follows {@code MRRT} standards.
+     * Validate an mrrt template according to the IHE standard.
      *
-     * @param templateFile the mrrt report template file been validated
-     * @throws IOException if one is thrown while reading template file
-     * @throws APIException if template file fails validation
-     * @should pass if template template file follows mrrt standards
+     * @param mrrtTemplate the mrrt report template to be validated
+     * @throws IOException
+     * @throws APIException if the mrrt template fails validation
+     * @should pass if template template follows mrrt standards
      * @should throw api exception if template does not have an html element
      * @should throw api exception if template has more than one html element
      * @should throw api exception if html element does not have a head element
@@ -49,5 +50,5 @@ public interface MrrtReportTemplateValidator {
      * @should throw api exception if html element does not have a body element
      * @should throw api exception if html element has more than one body element 
      */
-    public void validate(File templateFile) throws IOException;
+    public void validate(String mrrtTemplate) throws IOException;
 }

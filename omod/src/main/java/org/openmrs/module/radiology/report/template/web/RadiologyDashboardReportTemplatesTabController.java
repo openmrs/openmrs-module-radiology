@@ -10,9 +10,11 @@
 package org.openmrs.module.radiology.report.template.web;
 
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.IOUtils;
 import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateValidationException;
@@ -84,8 +86,9 @@ public class RadiologyDashboardReportTemplatesTabController {
             return modelAndView;
         }
         
-        try {
-            mrrtReportTemplateService.importMrrtReportTemplate(templateFile.getInputStream());
+        try (InputStream in = templateFile.getInputStream()) {
+            String mrrtTemplate = IOUtils.toString(in);
+            mrrtReportTemplateService.importMrrtReportTemplate(mrrtTemplate);
             request.getSession()
                     .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.MrrtReportTemplate.imported");
         }

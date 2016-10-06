@@ -14,6 +14,9 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 import java.io.IOException;
@@ -21,6 +24,7 @@ import java.io.InputStream;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -35,11 +39,17 @@ import org.openmrs.test.BaseContextMockTest;
 import org.openmrs.web.WebConstants;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
+/**
+ * Tests {@link RadiologyDashboardReportTemplatesTabController}.
+ */
 public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseContextMockTest {
     
+    
+    private final static String MOCK_TEMPLATE_CONTENT = "<html>my template</html>";
     
     @Mock
     private MrrtReportTemplateService mrrtReportTemplateService;
@@ -48,17 +58,17 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
     private RadiologyDashboardReportTemplatesTabController radiologyDashboardReportTemplatesTabController =
             new RadiologyDashboardReportTemplatesTabController();
     
-    MultipartFile mockTemplateFile;
+    InputStream inputStream;
     
-    InputStream mockInputStream;
+    MockMultipartFile multipartFile;
     
     MockHttpServletRequest request;
     
     @Before
-    public void setUp() {
+    public void setUp() throws IOException {
         
-        mockTemplateFile = mock(MultipartFile.class);
-        mockInputStream = mock(InputStream.class);
+        inputStream = IOUtils.toInputStream(MOCK_TEMPLATE_CONTENT);
+        multipartFile = new MockMultipartFile("mrrtReportTemplate", "mrrtReportTemplate.html", "html", inputStream);
         request = new MockHttpServletRequest();
     }
     
@@ -77,10 +87,12 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
         
         ModelAndView modelAndView = radiologyDashboardReportTemplatesTabController.getRadiologyReportTemplatesTab(request);
         
+        verifyZeroInteractions(mrrtReportTemplateService);
+        
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is(RadiologyDashboardReportTemplatesTabController.RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW));
-        assertThat((String) mockSession.getAttribute(RadiologyWebConstants.RADIOLOGY_DASHBOARD_TAB_SESSION_ATTRIBUTE),
+        assertThat(mockSession.getAttribute(RadiologyWebConstants.RADIOLOGY_DASHBOARD_TAB_SESSION_ATTRIBUTE),
             is(RadiologyDashboardReportTemplatesTabController.RADIOLOGY_REPORT_TEMPLATES_TAB_REQUEST_MAPPING));
     }
     
@@ -91,9 +103,12 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
     @Test
     public void uploadReportTemplate_shouldGiveSuccessMessageWhenImportWasSuccessful() throws Exception {
         
-        when(mockTemplateFile.getInputStream()).thenReturn(mockInputStream);
         ModelAndView modelAndView =
-                radiologyDashboardReportTemplatesTabController.uploadReportTemplate(request, mockTemplateFile);
+                radiologyDashboardReportTemplatesTabController.uploadReportTemplate(request, multipartFile);
+        
+        verify(mrrtReportTemplateService).importMrrtReportTemplate(MOCK_TEMPLATE_CONTENT);
+        verifyNoMoreInteractions(mrrtReportTemplateService);
+        
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is(RadiologyDashboardReportTemplatesTabController.RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW));
@@ -109,9 +124,12 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
     @Test
     public void uploadReportTemplate_shouldGiveErrorMessageWhenTemplateFileIsEmpty() throws Exception {
         
-        when(mockTemplateFile.isEmpty()).thenReturn(true);
-        ModelAndView modelAndView =
-                radiologyDashboardReportTemplatesTabController.uploadReportTemplate(request, mockTemplateFile);
+        MultipartFile emptyFile = mock(MultipartFile.class);
+        when(emptyFile.isEmpty()).thenReturn(true);
+        
+        ModelAndView modelAndView = radiologyDashboardReportTemplatesTabController.uploadReportTemplate(request, emptyFile);
+        
+        verifyZeroInteractions(mrrtReportTemplateService);
         
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
@@ -130,25 +148,26 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
     public void uploadReportTemplate_shouldSetErrorMessageInSessionWhenMrrtReportTemplateValidationExceptionIsThrown()
             throws Exception {
         
-        when(mockTemplateFile.getInputStream()).thenReturn(mockInputStream);
-        when(mockTemplateFile.getOriginalFilename()).thenReturn("mockTemplateFile");
-        
         ValidationResult validationResult = new ValidationResult();
         validationResult.addError(new ValidationError("Missing header", "err.missing.header"));
         MrrtReportTemplateValidationException mrrtReportTemplateValidationException =
                 new MrrtReportTemplateValidationException(validationResult);
         doThrow(mrrtReportTemplateValidationException).when(mrrtReportTemplateService)
-                .importMrrtReportTemplate(mockInputStream);
+                .importMrrtReportTemplate(MOCK_TEMPLATE_CONTENT);
         
         ModelAndView modelAndView =
-                radiologyDashboardReportTemplatesTabController.uploadReportTemplate(request, mockTemplateFile);
+                radiologyDashboardReportTemplatesTabController.uploadReportTemplate(request, multipartFile);
+        
+        verify(mrrtReportTemplateService).importMrrtReportTemplate(MOCK_TEMPLATE_CONTENT);
+        verifyNoMoreInteractions(mrrtReportTemplateService);
+        
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is(RadiologyDashboardReportTemplatesTabController.RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW));
         String errorMessage = (String) request.getSession()
                 .getAttribute(WebConstants.OPENMRS_ERROR_ATTR);
         assertNotNull(errorMessage);
-        assertThat(errorMessage, is("Failed to import mockTemplateFile"));
+        assertThat(errorMessage, is("Failed to import mrrtReportTemplate.html"));
         assertThat(modelAndView.getModelMap()
                 .get("mrrtReportTemplateValidationErrors"),
             is(validationResult.getErrors()));
@@ -161,19 +180,22 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
     @Test
     public void uploadReportTemplate_shouldSetErrorMessageInSessionWhenApiExceptionIsThrown() throws Exception {
         
-        when(mockTemplateFile.getInputStream()).thenReturn(mockInputStream);
-        when(mockTemplateFile.getOriginalFilename()).thenReturn("mockTemplateFile");
         doThrow(new APIException("Cannot import the same template twice.")).when(mrrtReportTemplateService)
-                .importMrrtReportTemplate(mockInputStream);
+                .importMrrtReportTemplate(MOCK_TEMPLATE_CONTENT);
+        
         ModelAndView modelAndView =
-                radiologyDashboardReportTemplatesTabController.uploadReportTemplate(request, mockTemplateFile);
+                radiologyDashboardReportTemplatesTabController.uploadReportTemplate(request, multipartFile);
+        
+        verify(mrrtReportTemplateService).importMrrtReportTemplate(MOCK_TEMPLATE_CONTENT);
+        verifyNoMoreInteractions(mrrtReportTemplateService);
+        
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is(RadiologyDashboardReportTemplatesTabController.RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW));
         String errorMessage = (String) request.getSession()
                 .getAttribute(WebConstants.OPENMRS_ERROR_ATTR);
         assertNotNull(errorMessage);
-        assertThat(errorMessage, is("Failed to import mockTemplateFile => Cannot import the same template twice."));
+        assertThat(errorMessage, is("Failed to import mrrtReportTemplate.html => Cannot import the same template twice."));
     }
     
     /**
@@ -183,18 +205,21 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
     @Test
     public void uploadReportTemplate_shouldSetErrorMessageInSessionWhenIoExceptionIsThrown() throws Exception {
         
-        when(mockTemplateFile.getInputStream()).thenReturn(mockInputStream);
-        when(mockTemplateFile.getOriginalFilename()).thenReturn("mockTemplateFile");
         doThrow(new IOException("File could not be read.")).when(mrrtReportTemplateService)
-                .importMrrtReportTemplate(mockInputStream);
+                .importMrrtReportTemplate(MOCK_TEMPLATE_CONTENT);
+        
         ModelAndView modelAndView =
-                radiologyDashboardReportTemplatesTabController.uploadReportTemplate(request, mockTemplateFile);
+                radiologyDashboardReportTemplatesTabController.uploadReportTemplate(request, multipartFile);
+        
+        verify(mrrtReportTemplateService).importMrrtReportTemplate(MOCK_TEMPLATE_CONTENT);
+        verifyNoMoreInteractions(mrrtReportTemplateService);
+        
         assertNotNull(modelAndView);
         assertThat(modelAndView.getViewName(),
             is(RadiologyDashboardReportTemplatesTabController.RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW));
         String errorMessage = (String) request.getSession()
                 .getAttribute(WebConstants.OPENMRS_ERROR_ATTR);
         assertNotNull(errorMessage);
-        assertThat(errorMessage, is("Failed to import mockTemplateFile => File could not be read."));
+        assertThat(errorMessage, is("Failed to import mrrtReportTemplate.html => File could not be read."));
     }
 }

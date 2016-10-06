@@ -17,7 +17,9 @@ import static org.junit.Assert.assertThat;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -71,17 +73,53 @@ public class MrrtReportTemplateFileParserComponentTest extends BaseModuleContext
     }
     
     /**
-     * @see MrrtReportTemplateFileParser#parse()
+     * Get a files content as string.
+     *
+     * @param path the path to get the file content from
+     * @return the file content
+     */
+    private String getFileContent(String path) throws IOException {
+        
+        File file = getFile(path);
+        return getString(file);
+    }
+    
+    /**
+     * Get a file from the test resources.
+     *
+     * @param path the path to get the file from
+     * @return the file on given path
+     */
+    private File getFile(String path) {
+        return new File(getClass().getClassLoader()
+                .getResource(path)
+                .getFile());
+    }
+    
+    /**
+     * Get a file from the test resources.
+     *
+     * @param file the file to get the content from
+     * @return the file content
+     */
+    private String getString(File file) throws IOException {
+        String content = null;
+        try (InputStream in = new FileInputStream(file)) {
+            content = IOUtils.toString(in);
+        }
+        return content;
+    }
+    
+    /**
+     * @see MrrtReportTemplateFileParser#parse(String)
      * @verifies return an mrrt template object if file is valid
      */
     @Test
     public void parse_shouldReturnAnMrrtTemplateObjectIfFileIsValid() throws Exception {
-        File file = new File(getClass().getClassLoader()
-                .getResource("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html")
-                .getFile());
         
-        FileInputStream in = new FileInputStream(file);
-        MrrtReportTemplate template = parser.parse(in);
+        String templateContent = getFileContent("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html");
+        
+        MrrtReportTemplate template = parser.parse(templateContent);
         
         assertNotNull(template);
         assertThat(template.getCharset(), is(CHARSET));
@@ -99,18 +137,15 @@ public class MrrtReportTemplateFileParserComponentTest extends BaseModuleContext
     }
     
     /**
-     * @see MrrtReportTemplateFileParser#parse(java.io.InputStream)
+     * @see MrrtReportTemplateFileParser#parse(String)
      * @verifies store terms element in template object if they match a concept reference term in openmrs
      */
     @Test
     public void parse_shouldStoreTermsElementInTemplateObjectIfTheyMatchAconceptReferenceTermInOpenmrs() throws IOException {
         
-        File file = new File(getClass().getClassLoader()
-                .getResource("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html")
-                .getFile());
+        String templateContent = getFileContent("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html");
         
-        FileInputStream in = new FileInputStream(file);
-        MrrtReportTemplate template = parser.parse(in);
+        MrrtReportTemplate template = parser.parse(templateContent);
         
         assertNotNull(template.getTerms());
         assertThat(template.getTerms()
@@ -127,36 +162,31 @@ public class MrrtReportTemplateFileParserComponentTest extends BaseModuleContext
     }
     
     /**
-     * @see MrrtReportTemplateFileParser#parse(java.io.InputStream)
+     * @see MrrtReportTemplateFileParser#parse(String)
      * @verifies skip terms element in template file if no corresponding concept reference term was found
      */
     @Test
     public void parse_skipTermElementsInTemplateFileIfNoCorrespondingConceptReferenceTermWasFound() throws Exception {
         
-        File file = new File(getClass().getClassLoader()
-                .getResource(
-                    "mrrttemplates/ihe/connectathon/2015/CTChestAbdomen-missingReferenceTermsForTemplateAttributesTermElements.html")
-                .getFile());
+        String templateContent = getFileContent(
+            "mrrttemplates/ihe/connectathon/2015/CTChestAbdomen-missingReferenceTermsForTemplateAttributesTermElements.html");
         
-        FileInputStream in = new FileInputStream(file);
-        MrrtReportTemplate template = parser.parse(in);
+        MrrtReportTemplate template = parser.parse(templateContent);
         
         assertNull(template.getTerms());
     }
     
     /**
-     * @see MrrtReportTemplateFileParser#parse(java.io.InputStream)
+     * @see MrrtReportTemplateFileParser#parse(String)
      * @verifies ignore case when searching for a matching concept source
      */
     @Test
     public void parse_shouldIgnoreCaseWhenSearchingForAMatchingConceptSource() throws Exception {
         
-        File file = new File(getClass().getClassLoader()
-                .getResource("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen-schemeIsInLowerCase.html")
-                .getFile());
+        String templateContent =
+                getFileContent("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen-schemeIsInLowerCase.html");
         
-        FileInputStream in = new FileInputStream(file);
-        MrrtReportTemplate template = parser.parse(in);
+        MrrtReportTemplate template = parser.parse(templateContent);
         
         assertNotNull(template.getTerms());
         assertThat(template.getTerms()

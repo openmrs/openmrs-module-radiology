@@ -20,10 +20,12 @@ import static org.mockito.Mockito.when;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -85,6 +87,56 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     @Before
     public void setUp() throws Exception {
         executeDataSet(TEST_DATASET);
+    }
+    
+    /**
+     * Get a files content as string.
+     *
+     * @param path the path to get the file content from
+     * @return the file content
+     */
+    private String getFileContent(String path) throws IOException {
+        
+        File file = getFile(path);
+        return getString(file);
+    }
+    
+    /**
+     * Get a file from the test resources.
+     *
+     * @param path the path to get the file from
+     * @return the file on given path
+     */
+    private File getFile(String path) {
+        return new File(getClass().getClassLoader()
+                .getResource(path)
+                .getFile());
+    }
+    
+    /**
+     * Get a file from the test resources.
+     *
+     * @param file the file to get the content from
+     * @return the file content
+     */
+    private String getString(File file) throws IOException {
+        String content = null;
+        try (InputStream in = new FileInputStream(file)) {
+            content = IOUtils.toString(in);
+        }
+        return content;
+    }
+    
+    /**
+     * Sets up the global property defining the MRRT template directory using junits temporary folder.
+     *
+     * @throws IOException
+     */
+    private void setUpTemporaryFolder() throws IOException {
+        
+        File tempFolder = temporaryFolder.newFolder("/mrrt_templates");
+        administrationService.setGlobalProperty(RadiologyConstants.GP_MRRT_REPORT_TEMPLATE_DIR,
+            tempFolder.getAbsolutePath());
     }
     
     /**
@@ -203,7 +255,7 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     
     /**
     * @see MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
-    * @verifies throw illigal argument exception if given null
+    * @verifies throw illegal argument exception if given null
     */
     @Test
     public void purgeMrrtReportTemplate_shouldThrowIlligalArgumentExceptionIfGivenNull() throws Exception {
@@ -258,45 +310,47 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#importMrrtReportTemplate(InputStream)
-    * @verifies create mrrt report template in the database with metadata from input stream
-    */
+     * @verifies create mrrt report template in the database and on the file system
+     * @see MrrtReportTemplateService#importMrrtReportTemplate(String)
+     */
     @Test
-    public void importMrrtReportTemplate_shouldCreateMrrtReportTemplateInTheDatabaseWithMetadataFromInputStream()
-            throws Exception {
-        File file = new File(getClass().getClassLoader()
-                .getResource("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html")
-                .getFile());
-        FileInputStream in = new FileInputStream(file);
-        File tempFolder = temporaryFolder.newFolder("/mrrt_templates");
-        administrationService.setGlobalProperty(RadiologyConstants.GP_MRRT_REPORT_TEMPLATE_DIR,
-            tempFolder.getAbsolutePath());
-        mrrtReportTemplateService.importMrrtReportTemplate(in);
+    public void importMrrtReportTemplate_shouldCreateMrrtReportTemplateInTheDatabaseAndOnTheFileSystem() throws Exception {
+        
+        setUpTemporaryFolder();
+        
+        String sourcePath = "mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html";
+        String template = getFileContent(sourcePath);
+        
+        mrrtReportTemplateService.importMrrtReportTemplate(template);
+        
         MrrtReportTemplate saved = mrrtReportTemplateService.getMrrtReportTemplateByIdentifier(TEMPLATE_IDENTIFIER);
         assertNotNull(saved);
         assertThat(saved.getDcTermsIdentifier(), is(TEMPLATE_IDENTIFIER));
-    }
-    
-    /**
-    * @see MrrtReportTemplateService#importMrrtReportTemplate(InputStream)
-    * @verifies create report template file in report template home directory
-    */
-    @Test
-    public void importMrrtReportTemplate_shouldCreateReportTemplateFileInReportTemplateHomeDirectory() throws Exception {
-        File file = new File(getClass().getClassLoader()
-                .getResource("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html")
-                .getFile());
-        FileInputStream in = new FileInputStream(file);
-        File tempFolder = temporaryFolder.newFolder("/mrrt_templates");
-        administrationService.setGlobalProperty(RadiologyConstants.GP_MRRT_REPORT_TEMPLATE_DIR,
-            tempFolder.getAbsolutePath());
-        mrrtReportTemplateService.importMrrtReportTemplate(in);
-        MrrtReportTemplate saved = mrrtReportTemplateService.getMrrtReportTemplateByIdentifier(TEMPLATE_IDENTIFIER);
+        
         File templateHome = radiologyProperties.getReportTemplateHome();
         File templatePath = new File(saved.getPath());
         assertThat(templatePath.getParentFile()
                 .getName(),
             is(templateHome.getName()));
+        assertTrue(FileUtils.contentEquals(getFile(sourcePath), templatePath.getAbsoluteFile()));
+    }
+    
+    /**
+     * @verifies not create an mrrt report template in the database and store the template as file if given template is invalid
+     * @see MrrtReportTemplateService#importMrrtReportTemplate(String)
+     */
+    @Test
+    public void
+            importMrrtReportTemplate_shouldNotCreateAnMrrtReportTemplateInTheDatabaseAndStoreTheTemplateAsFileIfGivenTemplateIsInvalid()
+                    throws Exception {
+        
+        setUpTemporaryFolder();
+        
+        String template = getFileContent(
+            "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-noMetaElementWithCharsetAttribute.html");
+        
+        expectedException.expect(APIException.class);
+        mrrtReportTemplateService.importMrrtReportTemplate(template);
     }
     
     /**
@@ -377,12 +431,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     public void saveMrrtReportTemplate_shouldSaveTemplateObjectWithTermsIfMatchingConceptReferenceTermWasFound()
             throws Exception {
         
-        File file = new File(getClass().getClassLoader()
-                .getResource("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html")
-                .getFile());
+        String templateString = getFileContent("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html");
         
-        FileInputStream in = new FileInputStream(file);
-        MrrtReportTemplate template = parser.parse(in);
+        MrrtReportTemplate template = parser.parse(templateString);
         
         MrrtReportTemplate saved = mrrtReportTemplateService.saveMrrtReportTemplate(template);
         assertNotNull(saved);

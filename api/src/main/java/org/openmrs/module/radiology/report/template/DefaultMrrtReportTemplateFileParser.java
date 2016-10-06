@@ -10,8 +10,6 @@
 package org.openmrs.module.radiology.report.template;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashSet;
@@ -33,7 +31,6 @@ import org.openmrs.ConceptSource;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
-import org.openmrs.util.OpenmrsUtil;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -72,14 +69,14 @@ class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParse
     }
     
     /**
-     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateFileParser#parse(InputStream)
+     * @see MrrtReportTemplateFileParser#parse(String)
      */
     @Override
-    public MrrtReportTemplate parse(InputStream in) throws IOException {
+    public MrrtReportTemplate parse(String mrrtTemplate) throws IOException {
         
-        File templateFile = getTemplateAsFile(in);
-        validator.validate(templateFile);
-        final Document doc = Jsoup.parse(templateFile, null, "");
+        validator.validate(mrrtTemplate);
+        
+        final Document doc = Jsoup.parse(mrrtTemplate, "");
         final MrrtReportTemplate result = new MrrtReportTemplate();
         initializeTemplate(result, doc);
         try {
@@ -91,15 +88,6 @@ class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParse
             throw new APIException("radiology.report.template.parser.error", null, e);
         }
         return result;
-    }
-    
-    private final File getTemplateAsFile(InputStream in) throws IOException {
-        final File tmpFile = File.createTempFile(java.util.UUID.randomUUID()
-                .toString(),
-            java.util.UUID.randomUUID()
-                    .toString());
-        OpenmrsUtil.copyFile(in, new FileOutputStream(tmpFile));
-        return tmpFile;
     }
     
     private final void initializeTemplate(MrrtReportTemplate template, Document doc) {
@@ -153,28 +141,31 @@ class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParse
         
         final DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         final DocumentBuilder builder = factory.newDocumentBuilder();
-        final org.w3c.dom.Document scriptPartAsDocument = builder.parse(new ByteArrayInputStream(script.getBytes()));
-        scriptPartAsDocument.getDocumentElement()
-                .normalize();
-        final NodeList terms = scriptPartAsDocument.getElementsByTagName("term");
-        final ConceptService conceptService = Context.getService(ConceptService.class);
-        final Set<ConceptReferenceTerm> referenceTerms = new HashSet<>();
-        
-        for (int i = 0; i < terms.getLength(); i++) {
-            final org.w3c.dom.Element termElement = (org.w3c.dom.Element) terms.item(i);
-            final org.w3c.dom.Element codeElement = (org.w3c.dom.Element) termElement.getElementsByTagName("code")
-                    .item(0);
-            final ConceptSource conceptSource = getConceptSourceByName(codeElement.getAttribute("scheme"), conceptService);
-            if (conceptSource != null) {
-                final ConceptReferenceTerm referenceTerm =
-                        conceptService.getConceptReferenceTermByCode(codeElement.getAttribute("value"), conceptSource);
-                if (referenceTerm != null) {
-                    referenceTerms.add(referenceTerm);
+        try (InputStream in = new ByteArrayInputStream(script.getBytes())) {
+            final org.w3c.dom.Document scriptPartAsDocument = builder.parse(in);
+            scriptPartAsDocument.getDocumentElement()
+                    .normalize();
+            final NodeList terms = scriptPartAsDocument.getElementsByTagName("term");
+            final ConceptService conceptService = Context.getService(ConceptService.class);
+            final Set<ConceptReferenceTerm> referenceTerms = new HashSet<>();
+            
+            for (int i = 0; i < terms.getLength(); i++) {
+                final org.w3c.dom.Element termElement = (org.w3c.dom.Element) terms.item(i);
+                final org.w3c.dom.Element codeElement = (org.w3c.dom.Element) termElement.getElementsByTagName("code")
+                        .item(0);
+                final ConceptSource conceptSource =
+                        getConceptSourceByName(codeElement.getAttribute("scheme"), conceptService);
+                if (conceptSource != null) {
+                    final ConceptReferenceTerm referenceTerm =
+                            conceptService.getConceptReferenceTermByCode(codeElement.getAttribute("value"), conceptSource);
+                    if (referenceTerm != null) {
+                        referenceTerms.add(referenceTerm);
+                    }
                 }
             }
-        }
-        if (!referenceTerms.isEmpty()) {
-            template.setTerms(referenceTerms);
+            if (!referenceTerms.isEmpty()) {
+                template.setTerms(referenceTerms);
+            }
         }
     }
     

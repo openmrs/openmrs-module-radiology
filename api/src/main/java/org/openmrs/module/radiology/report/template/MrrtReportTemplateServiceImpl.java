@@ -10,18 +10,15 @@
 package org.openmrs.module.radiology.report.template;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
+import org.apache.commons.io.FileUtils;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.RadiologyProperties;
-import org.openmrs.util.OpenmrsUtil;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
@@ -47,23 +44,20 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
     }
     
     /**
-     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateService#importMrrtReportTemplate(InputStream)
+     * @see MrrtReportTemplateService#importMrrtReportTemplate(String)
      */
     @Override
     @Transactional
-    public void importMrrtReportTemplate(InputStream in) throws IOException {
-        final File tmp = File.createTempFile(java.util.UUID.randomUUID()
-                .toString(),
-            java.util.UUID.randomUUID()
-                    .toString());
-        OpenmrsUtil.copyFile(in, new FileOutputStream(tmp));
-        final MrrtReportTemplate template = parser.parse(new FileInputStream(tmp));
-        final File destinationFile = new File(radiologyProperties.getReportTemplateHome(), java.util.UUID.randomUUID()
+    public void importMrrtReportTemplate(String mrrtTemplate) throws IOException {
+        
+        final MrrtReportTemplate template = parser.parse(mrrtTemplate);
+        
+        final File destination = new File(radiologyProperties.getReportTemplateHome(), java.util.UUID.randomUUID()
                 .toString());
-        template.setPath(destinationFile.getAbsolutePath());
+        FileUtils.writeStringToFile(destination, mrrtTemplate);
+        
+        template.setPath(destination.getAbsolutePath());
         saveMrrtReportTemplate(template);
-        OpenmrsUtil.copyFile(new FileInputStream(tmp), new FileOutputStream(destinationFile));
-        in.close();
     }
     
     /**
