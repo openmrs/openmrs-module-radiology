@@ -48,7 +48,7 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
      */
     @Override
     @Transactional
-    public void importMrrtReportTemplate(String mrrtTemplate) throws IOException {
+    public MrrtReportTemplate importMrrtReportTemplate(String mrrtTemplate) throws IOException {
         
         final MrrtReportTemplate template = parser.parse(mrrtTemplate);
         
@@ -57,7 +57,7 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
         FileUtils.writeStringToFile(destination, mrrtTemplate);
         
         template.setPath(destination.getAbsolutePath());
-        saveMrrtReportTemplate(template);
+        return saveMrrtReportTemplate(template);
     }
     
     /**

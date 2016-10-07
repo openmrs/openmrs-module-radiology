@@ -321,9 +321,8 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
         String sourcePath = "mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html";
         String template = getFileContent(sourcePath);
         
-        mrrtReportTemplateService.importMrrtReportTemplate(template);
+        MrrtReportTemplate saved = mrrtReportTemplateService.importMrrtReportTemplate(template);
         
-        MrrtReportTemplate saved = mrrtReportTemplateService.getMrrtReportTemplateByIdentifier(TEMPLATE_IDENTIFIER);
         assertNotNull(saved);
         assertThat(saved.getDcTermsIdentifier(), is(TEMPLATE_IDENTIFIER));
         

@@ -48,13 +48,14 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      * Calls {@link #saveMrrtReportTemplate(MrrtReportTemplate)} to store an {@code MrrtReportTemplate} in the database.
      * 
      * @param mrrtTemplate the mrrt template to be imported
+     * @return the saved mrrt template
      * @throws IOException if one is thrown during parsing, validation or if FileUtils.writeStringToFile throws one
      * @throws APIException if importing an invalid template
      * @should create mrrt report template in the database and on the file system
      * @should not create an mrrt report template in the database and store the template as file if given template is invalid
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_REPORT_TEMPLATES)
-    public void importMrrtReportTemplate(String mrrtTemplate) throws IOException;
+    public MrrtReportTemplate importMrrtReportTemplate(String mrrtTemplate) throws IOException;
     
     /**
      * Delete an {@code MrrtReportTemplate} from the database.
