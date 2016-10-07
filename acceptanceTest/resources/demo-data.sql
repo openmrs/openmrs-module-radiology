@@ -152,6 +152,8 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Delete Radi
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Edit Radiology Reports');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Care Settings');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Concepts');
+INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Concept Sources');
+INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Concept Reference Terms');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Encounter Roles');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Encounters');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Orders');
