@@ -11,6 +11,7 @@ package org.openmrs.module.radiology.report.template;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -18,6 +19,7 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
@@ -47,12 +49,12 @@ public class XsdMrrtReportTemplateValidator implements MrrtReportTemplateValidat
     }
     
     /**
-     * @see org.openmrs.module.radiology.report.template.MrrtReportTemplateValidator#validate(File)
+     * @see MrrtReportTemplateValidator#validate(String)
      */
     @Override
-    public void validate(File templateFile) throws IOException {
+    public void validate(String mrrtTemplate) throws IOException {
         
-        final Document document = Jsoup.parse(templateFile, null, "");
+        final Document document = Jsoup.parse(mrrtTemplate, "");
         final Elements metatags = document.getElementsByTag("meta");
         ValidationResult metaTagsValidationResult = metaTagsValidationEngine.run(metatags);
         metaTagsValidationResult.assertOk();
@@ -60,10 +62,10 @@ public class XsdMrrtReportTemplateValidator implements MrrtReportTemplateValidat
         final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
         final Schema schema;
         final Validator validator;
-        try {
+        try (InputStream in = IOUtils.toInputStream(mrrtTemplate)) {
             schema = factory.newSchema(getSchemaFile());
             validator = schema.newValidator();
-            validator.validate(new StreamSource(templateFile));
+            validator.validate(new StreamSource(in));
         }
         catch (SAXException e) {
             log.error(e.getMessage(), e);

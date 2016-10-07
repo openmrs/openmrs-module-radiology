@@ -10,7 +10,6 @@
 package org.openmrs.module.radiology.report.template;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.List;
 
 import org.openmrs.annotation.Authorized;
@@ -43,15 +42,19 @@ public interface MrrtReportTemplateService extends OpenmrsService {
     
     /**
      * Import an {@code MrrtReportTemplate} into the system.
+     * <p>
+     *     This means metadata like title, description, date, license, creator, ... is stored in an {@code MrrtReportTemplate} in the database with a link to the template file which is stored on the filesystem.
+     * </p>
+     * Calls {@link #saveMrrtReportTemplate(MrrtReportTemplate)} to store an {@code MrrtReportTemplate} in the database.
      * 
-     * @param in the input stream of the mrrt template file
-     * @throws IOException if OpenmrsUtil.copyFile throws one
-     * @throws APIException if importing an invalid template file
-     * @should create mrrt report template in the database with metadata from input stream
-     * @should create report template file in report template home directory
+     * @param mrrtTemplate the mrrt template to be imported
+     * @throws IOException if one is thrown during parsing, validation or if FileUtils.writeStringToFile throws one
+     * @throws APIException if importing an invalid template
+     * @should create mrrt report template in the database and on the file system
+     * @should not create an mrrt report template in the database and store the template as file if given template is invalid
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_REPORT_TEMPLATES)
-    public void importMrrtReportTemplate(InputStream in) throws IOException;
+    public void importMrrtReportTemplate(String mrrtTemplate) throws IOException;
     
     /**
      * Delete an {@code MrrtReportTemplate} from the database.
