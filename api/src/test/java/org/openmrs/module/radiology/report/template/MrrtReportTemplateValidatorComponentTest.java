@@ -25,7 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 /**
  * Tests {@link MrrtReportTemplateValidator}.
  */
-public class MrrtReportTemplateValidatorTest extends BaseModuleContextSensitiveTest {
+public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextSensitiveTest {
     
     
     @Autowired
