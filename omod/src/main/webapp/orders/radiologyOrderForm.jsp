@@ -20,22 +20,14 @@
     <%@ include file="radiologyOrderDisplaySegment.jsp"%>
     <c:if test="${radiologyOrder.completed}">
       <!--  Show form for radiology report -->
-      <openmrs:hasPrivilege privilege="Add Radiology Reports">
-        <openmrs:hasPrivilege privilege="Delete Radiology Reports">
-          <openmrs:hasPrivilege privilege="Edit Radiology Reports">
-            <openmrs:hasPrivilege privilege="Get Radiology Reports">
-              <%@ include file="radiologyReportSegment.jsp"%>
-            </openmrs:hasPrivilege>
-          </openmrs:hasPrivilege>
-        </openmrs:hasPrivilege>
+      <openmrs:hasPrivilege hasAll="true" privilege="Add Radiology Reports,Delete Radiology Reports,Edit Radiology Reports,Get Radiology Reports">
+        <%@ include file="radiologyReportSegment.jsp"%>
       </openmrs:hasPrivilege>
     </c:if>
     <c:if test="${radiologyOrder.discontinuationAllowed}">
       <!--  Show form to discontinue an active non in progress/completed RadiologyOrder -->
-      <openmrs:hasPrivilege privilege="Delete Radiology Orders">
-        <openmrs:hasPrivilege privilege="Edit Orders">
-          <%@ include file="radiologyOrderDiscontinuationSegment.jsp"%>
-        </openmrs:hasPrivilege>
+      <openmrs:hasPrivilege hasAll="true" privilege="Delete Radiology Orders,Edit Orders">
+        <%@ include file="radiologyOrderDiscontinuationSegment.jsp"%>
       </openmrs:hasPrivilege>
     </c:if>
   </c:when>
