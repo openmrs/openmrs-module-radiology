@@ -49,6 +49,7 @@ public interface MrrtReportTemplateValidator {
      * @should throw api exception if template attributes element has more than one coded content element
      * @should throw api exception if html element does not have a body element
      * @should throw api exception if html element has more than one body element 
+     * @should catch all violation errors and throw an mrrt report template exception
      */
     public void validate(String mrrtTemplate) throws IOException;
 }
