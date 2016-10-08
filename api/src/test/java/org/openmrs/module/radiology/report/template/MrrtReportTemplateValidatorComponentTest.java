@@ -9,6 +9,10 @@
  */
 package org.openmrs.module.radiology.report.template;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.fail;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -381,5 +385,26 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         
         expectedException.expect(APIException.class);
         validator.validate(templateContent);
+    }
+    
+    /**
+     * @see MrrtReportTemplateValidator#validate(String)
+     * @verifies catch all violation errors and throw an mrrt report template exception
+     */
+    @Test
+    public void validate_catchAllViolationErrorsAndThrowAnMrrtReportTemplateException() throws Exception {
+        
+        String templateContent = getFileContent(
+            "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-missingCharsetTitleTemplateAttributesBodyElements.html");
+        try {
+            validator.validate(templateContent);
+            fail("Expected an MrrtReportTemplateValidationException to be thrown");
+        }
+        catch (MrrtReportTemplateValidationException e) {
+            assertThat(e.getValidationResult()
+                    .getErrors()
+                    .size(),
+                is(4));
+        }
     }
 }
