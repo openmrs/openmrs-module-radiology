@@ -30,9 +30,10 @@ import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.api.APIException;
+import org.openmrs.module.radiology.report.template.MrrtReportTemplate;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
-import org.openmrs.module.radiology.report.template.ValidationError;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateValidationException;
+import org.openmrs.module.radiology.report.template.ValidationError;
 import org.openmrs.module.radiology.report.template.ValidationResult;
 import org.openmrs.module.radiology.web.RadiologyWebConstants;
 import org.openmrs.test.BaseContextMockTest;
@@ -74,8 +75,9 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
     
     /**
      * @see RadiologyDashboardReportTemplatesTabController#getRadiologyReportTemplatesTab(HttpServletRequest)
-     * @verifies return model and view of the radiology report templates tab page and set tab session attribute to radiology
-     *           reports tab page
+     * @verifies return model and view of the radiology report templates tab
+     *           page and set tab session attribute to radiology reports tab
+     *           page
      */
     @Test
     public void
@@ -141,8 +143,10 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
     }
     
     /**
-     * @verifies set error message in session when mrrt report template validation exception is thrown
-     * @see RadiologyDashboardReportTemplatesTabController#uploadReportTemplate(HttpServletRequest, MultipartFile)
+     * @verifies set error message in session when mrrt report template
+     *           validation exception is thrown
+     * @see RadiologyDashboardReportTemplatesTabController#uploadReportTemplate(HttpServletRequest,
+     *      MultipartFile)
      */
     @Test
     public void uploadReportTemplate_shouldSetErrorMessageInSessionWhenMrrtReportTemplateValidationExceptionIsThrown()
@@ -221,5 +225,57 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
                 .getAttribute(WebConstants.OPENMRS_ERROR_ATTR);
         assertNotNull(errorMessage);
         assertThat(errorMessage, is("Failed to import mrrtReportTemplate.html => File could not be read."));
+    }
+    
+    /**
+     * @see RadiologyDashboardReportTemplatesTabController#deleteMrrtReportTemplate(HttpServletRequest,
+     *      org.openmrs.module.radiology.report.template.MrrtReportTemplate)
+     * @verifies return a model and view of the radiology dashboard report
+     *           templates page with a status message
+     */
+    @Test
+    public void
+            deleteMrrtReportTemplate_shouldReturnAModelAndViewOfTheRadiologyDashboardReportTemplatesPageWithAStatusMessage() {
+        
+        MockHttpSession mockSession = new MockHttpSession();
+        MrrtReportTemplate mockTemplate = mock(MrrtReportTemplate.class);
+        request.setSession(mockSession);
+        
+        ModelAndView modelAndView =
+                radiologyDashboardReportTemplatesTabController.deleteMrrtReportTemplate(request, mockTemplate);
+        
+        verify(mrrtReportTemplateService).purgeMrrtReportTemplate(mockTemplate);
+        verifyNoMoreInteractions(mrrtReportTemplateService);
+        assertNotNull(modelAndView);
+        assertThat(modelAndView.getViewName(),
+            is(RadiologyDashboardReportTemplatesTabController.RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW));
+        assertThat(mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("radiology.MrrtReportTemplate.deleted"));
+    }
+    
+    /**
+     * @see RadiologyDashboardReportTemplatesTabController#deleteMrrtReportTemplate(HttpServletRequest,
+     *      MrrtReportTemplate)
+     * @verifies catch api exception and set error message in session
+     */
+    @Test
+    public void deleteMrrtReportTemplate_shouldCatchApiExceptionAndSetErrorMessageInSession() throws Exception {
+        
+        MrrtReportTemplate mockTemplate = mock(MrrtReportTemplate.class);
+        doThrow(new APIException("File could not be deleted.")).when(mrrtReportTemplateService)
+                .purgeMrrtReportTemplate(mockTemplate);
+        
+        ModelAndView modelAndView =
+                radiologyDashboardReportTemplatesTabController.deleteMrrtReportTemplate(request, mockTemplate);
+        
+        verify(mrrtReportTemplateService).purgeMrrtReportTemplate(mockTemplate);
+        verifyNoMoreInteractions(mrrtReportTemplateService);
+        
+        assertNotNull(modelAndView);
+        assertThat(modelAndView.getViewName(),
+            is(RadiologyDashboardReportTemplatesTabController.RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW));
+        String errorMessage = (String) request.getSession()
+                .getAttribute(WebConstants.OPENMRS_ERROR_ATTR);
+        assertNotNull(errorMessage);
+        assertThat(errorMessage, is("Failed to delete template file => File could not be deleted."));
     }
 }

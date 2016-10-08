@@ -130,7 +130,10 @@
                                                     full, meta) {
                                               return '<a href="${pageContext.request.contextPath}/module/radiology/mrrtReportTemplate.form?templateId='
                                                       + full.uuid
-                                                      + '"><i class="fa fa-eye fa-lg"></i></a>';
+                                                      + '"><i class="fa fa-eye fa-lg"></i></a>&nbsp;'
+                                                      + '<openmrs:hasPrivilege privilege="Delete Radiology Report Templates"><a href="${pageContext.request.contextPath}/module/radiology/radiologyDashboardReportTemplatesTab.htm?templateId='
+                                                      + full.uuid
+                                                      + '"><i class="fa fa-trash fa-lg"></i></a></openmrs:hasPrivilege>';
                                             }
                                           }],
                                     });
