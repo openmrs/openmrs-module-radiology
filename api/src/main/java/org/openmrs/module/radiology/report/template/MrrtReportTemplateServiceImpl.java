@@ -11,9 +11,15 @@ package org.openmrs.module.radiology.report.template;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.openmrs.api.APIException;
@@ -24,6 +30,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtReportTemplateService {
     
+    
+    private static final Log log = LogFactory.getLog(MrrtReportTemplateServiceImpl.class);
     
     private MrrtReportTemplateFileParser parser;
     
@@ -86,6 +94,16 @@ class MrrtReportTemplateServiceImpl extends BaseOpenmrsService implements MrrtRe
             throw new IllegalArgumentException("template cannot be null");
         }
         mrrtReportTemplateDAO.purgeMrrtReportTemplate(template);
+        Path templatePath = Paths.get(template.getPath());
+        try {
+            Files.delete(templatePath);
+        }
+        catch (NoSuchFileException noSuchFileException) {
+            log.debug("Tried to delete " + template.getPath() + " , but wasnt found.");
+        }
+        catch (IOException ioException) {
+            throw new APIException("radiology.MrrtReportTemplate.delete.error.fs", null, ioException);
+        }
     }
     
     /**

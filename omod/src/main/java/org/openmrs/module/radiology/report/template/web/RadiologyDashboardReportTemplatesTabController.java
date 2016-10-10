@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 import org.openmrs.api.APIException;
+import org.openmrs.module.radiology.report.template.MrrtReportTemplate;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateValidationException;
 import org.openmrs.module.radiology.web.RadiologyWebConstants;
@@ -110,5 +111,32 @@ public class RadiologyDashboardReportTemplatesTabController {
         }
         
         return modelAndView;
+    }
+    
+    /**
+     * Handles request for deleting {@code MrrtReportTemplate}
+     * 
+     * @param request the HttpServletRequest to delete MrrtReportTemplates
+     * @param mrrtReportTemplate the MrrtReportTemplate to be deleted
+     * @return model and view of the radiology dashboard report templates page with success or failure message in session
+     *         attribute
+     * @should return a model and view of the radiology dashboard report templates page with a status message
+     * @should catch api exception and set error message in session 
+     */
+    @RequestMapping(method = RequestMethod.GET, params = "templateId")
+    public ModelAndView deleteMrrtReportTemplate(HttpServletRequest request,
+            @RequestParam("templateId") MrrtReportTemplate mrrtReportTemplate) {
+        
+        try {
+            mrrtReportTemplateService.purgeMrrtReportTemplate(mrrtReportTemplate);
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_MSG_ATTR, "radiology.MrrtReportTemplate.deleted");
+        }
+        catch (APIException ex) {
+            request.getSession()
+                    .setAttribute(WebConstants.OPENMRS_ERROR_ATTR,
+                        "Failed to delete template file" + " => " + ex.getMessage());
+        }
+        return new ModelAndView(RADIOLOGY_REPORT_TEMPLATES_TAB_VIEW);
     }
 }

@@ -240,17 +240,28 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     
     /**
     * @see MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
-    * @verifies delete report from database
+    * @verifies delete report template from database and also delete template file from the system
     */
     @Test
-    public void purgeMrrtReportTemplate_shouldDeleteReportFromDatabase() throws Exception {
-        MrrtReportTemplate template = mrrtReportTemplateService.getMrrtReportTemplate(EXISTING_TEMPLATE_ID);
+    public void purgeMrrtReportTemplate_shouldDeleteReportTemplateFromDatabaseAndAlsoDeleteTemplateFileFromTheSystem()
+            throws Exception {
         
-        assertNotNull(template);
-        mrrtReportTemplateService.purgeMrrtReportTemplate(template);
-        
-        MrrtReportTemplate deleted = mrrtReportTemplateService.getMrrtReportTemplate(EXISTING_TEMPLATE_ID);
-        assertNull(deleted);
+        setUpTemporaryFolder();
+        MrrtReportTemplate template = new MrrtReportTemplate();
+        File templateFile = new File(radiologyProperties.getReportTemplateHome(), java.util.UUID.randomUUID()
+                .toString());
+        templateFile.createNewFile();
+        template.setDcTermsTitle("sample title");
+        template.setDcTermsDescription("sample description");
+        template.setDcTermsIdentifier("identifier3");
+        template.setPath(templateFile.getAbsolutePath());
+        MrrtReportTemplate saved = mrrtReportTemplateService.saveMrrtReportTemplate(template);
+        assertNotNull(saved.getId());
+        File savedFile = new File(saved.getPath());
+        assertThat(savedFile.exists(), is(true));
+        mrrtReportTemplateService.purgeMrrtReportTemplate(saved);
+        assertNull(mrrtReportTemplateService.getMrrtReportTemplate(saved.getId()));
+        assertThat(savedFile.exists(), is(false));
     }
     
     /**
@@ -262,6 +273,19 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("template cannot be null");
         mrrtReportTemplateService.purgeMrrtReportTemplate(null);
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
+     * @verifies catch file not found exception when the file been deleted is missing
+     */
+    @Test
+    public void purgeMrrtReportTemplate_shouldCatchFileNotFoundExceptionWhenTheFileBeenDeletedIsMissing() {
+        
+        MrrtReportTemplate template = mrrtReportTemplateService.getMrrtReportTemplate(1);
+        assertNotNull(template);
+        assertThat(new File(template.getPath()).exists(), is(false));
+        mrrtReportTemplateService.purgeMrrtReportTemplate(template);
     }
     
     /**
@@ -441,6 +465,11 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
             is(1));
     }
     
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplate(Integer)
+     * @verifies properly retrieve mrrt report templates with concept reference terms
+     */
+    @Test
     public void getMrrtReportTemplate_shouldProperlyRetrieveMrrtReportTemplatesWithConceptReferenceTerms() {
         
         MrrtReportTemplate template = mrrtReportTemplateService.getMrrtReportTemplate(1);

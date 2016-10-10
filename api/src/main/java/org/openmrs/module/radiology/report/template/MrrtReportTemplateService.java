@@ -62,8 +62,9 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      *
      * @param template the mrrt report template that is been deleted
      * @throws IllegalArgumentException if given null
-     * @should delete report from database
+     * @should delete report template from database and also delete template file from the system
      * @should throw illegal argument exception if given null
+     * @should catch file not found exception when the file been deleted is missing
      */
     @Authorized(RadiologyPrivileges.DELETE_RADIOLOGY_REPORT_TEMPLATES)
     public void purgeMrrtReportTemplate(MrrtReportTemplate template);
