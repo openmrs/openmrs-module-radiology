@@ -12,8 +12,8 @@ package org.openmrs.module.radiology.report.template.web.search;
 import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertThat;
-import static org.mockito.Mockito.when;
 import static org.mockito.Matchers.any;
+import static org.mockito.Mockito.when;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -52,9 +52,11 @@ public class MrrtReportTemplateSearchHandlerTest {
     
     private static final String NON_EXISTING_TITLE = "Invalid";
     
-    private static final String BLANK_TITLE = "";
-    
     private static final String TITLE_QUERY = "Cardiac MRI";
+    
+    private static final String PUBLISHER_QUERY = "IHE CAT Publisher";
+    
+    private static final String NON_EXISTING_PUBLISHER = "Non existing publisher";
     
     @Mock
     RestService RestService;
@@ -71,6 +73,10 @@ public class MrrtReportTemplateSearchHandlerTest {
     
     List<MrrtReportTemplate> mrrtReportTemplates;
     
+    MockHttpServletRequest request;
+    
+    RequestContext requestContext;
+    
     @Before
     public void setUp() {
         mrrtReportTemplate1.setDcTermsTitle(MRRT_REPORT_TEMPLATE1_TITLE);
@@ -81,6 +87,10 @@ public class MrrtReportTemplateSearchHandlerTest {
         
         PowerMockito.mockStatic(RestUtil.class);
         PowerMockito.mockStatic(Context.class);
+        
+        request = new MockHttpServletRequest();
+        requestContext = new RequestContext();
+        requestContext.setRequest(request);
     }
     
     /**
@@ -89,10 +99,7 @@ public class MrrtReportTemplateSearchHandlerTest {
     */
     @Test
     public void search_shouldReturnEmptySearchResultIfTitleDoesNotExist() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
         request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_TITLE, NON_EXISTING_TITLE);
-        RequestContext requestContext = new RequestContext();
-        requestContext.setRequest(request);
         
         PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
         assertThat(pageableResult, is(instanceOf(EmptySearchResult.class)));
@@ -104,14 +111,37 @@ public class MrrtReportTemplateSearchHandlerTest {
      */
     @Test
     public void search_shouldReturnAllReportTemplatesThatMatchGivenTitle() throws Exception {
-        MockHttpServletRequest request = new MockHttpServletRequest();
         request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_TITLE, TITLE_QUERY);
-        RequestContext requestContext = new RequestContext();
-        requestContext.setRequest(request);
         when(mrrtReportTemplateService.getMrrtReportTemplates(any(MrrtReportTemplateSearchCriteria.class)))
                 .thenReturn(mrrtReportTemplates);
         
         PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
         assertThat(pageableResult, is(instanceOf(NeedsPaging.class)));
+    }
+    
+    /**
+     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
+     * @verifies return all report templates by given publisher
+     */
+    @Test
+    public void search_shouldReturnAllReportTemplatesByGivenPublisher() throws Exception {
+        request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_PUBLISHER, PUBLISHER_QUERY);
+        when(mrrtReportTemplateService.getMrrtReportTemplates(any(MrrtReportTemplateSearchCriteria.class)))
+                .thenReturn(mrrtReportTemplates);
+        
+        PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
+        assertThat(pageableResult, is(instanceOf(NeedsPaging.class)));
+    }
+    
+    /**
+     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
+     * @verifies return empty search result if publisher does not exist
+     */
+    @Test
+    public void search_shouldReturnEmptySearchResultIfPublisherDoesNotExist() throws Exception {
+        request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_PUBLISHER, NON_EXISTING_PUBLISHER);
+        
+        PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
+        assertThat(pageableResult, is(instanceOf(EmptySearchResult.class)));
     }
 }

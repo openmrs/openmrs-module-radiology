@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -71,8 +72,6 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     
     private static final int NON_EXISTING_TEMPLATE_ID = 23;
     
-    private static final String EXISTING_UUID = "aa551445-def0-4f93-9047-95f0a9afbdce";
-    
     private static final String NON_EXISTING_UUID = "invalid uuid";
     
     private static final String EXISTING_TEMPLATE_TITLE = "title1";
@@ -80,6 +79,12 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     private static final String NON_EXISTING_TEMPLATE_TITLE = "invalid";
     
     private static final String TEMPLATE_IDENTIFIER = "1.3.6.1.4.1.21367.13.199.1015";
+    
+    private static final String NON_EXISTING_PUBLISHER = "Non existing publisher";
+    
+    private static final String UUID_FOR_TEMPLATE_ONE = "aa551445-def0-4f93-9047-95f0a9afbdce";
+    
+    private static final String UUID_FOR_TEMPLATE_TWO = "59273e52-33b1-4fcb-8c1f-9b670bb11259";
     
     @Autowired
     private MrrtReportTemplateService mrrtReportTemplateService;
@@ -179,11 +184,11 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     */
     @Test
     public void getMrrtReportTemplateByUuid_shouldFindObjectGivenExistingUuid() {
-        MrrtReportTemplate valid = mrrtReportTemplateService.getMrrtReportTemplateByUuid(EXISTING_UUID);
+        MrrtReportTemplate valid = mrrtReportTemplateService.getMrrtReportTemplateByUuid(UUID_FOR_TEMPLATE_ONE);
         
         assertNotNull(valid);
         assertThat(valid.getTemplateId(), is(EXISTING_TEMPLATE_ID));
-        assertThat(valid.getUuid(), is(EXISTING_UUID));
+        assertThat(valid.getUuid(), is(UUID_FOR_TEMPLATE_ONE));
     }
     
     /**
@@ -417,6 +422,55 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("mrrtReportTemplateSearchCriteria cannot be null");
         mrrtReportTemplateService.getMrrtReportTemplates(null);
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
+     * @verifies return all mrrt report templates that match given publisher anywhere in dcterms publisher insensitive to case
+     */
+    @Test
+    public void
+            getMrrtReportTemplates_shouldReturnAllMrrtReportTemplatesThatMatchGivenPublisherAnywhereInDctermsPublisherInsensitiveToCase()
+                    throws Exception {
+        
+        MrrtReportTemplateSearchCriteria searchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withPublisher("cat")
+                .build();
+        
+        List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        List<String> uuids = new ArrayList<>();
+        for (MrrtReportTemplate template : templates) {
+            uuids.add(template.getUuid());
+        }
+        assertNotNull(templates);
+        assertThat(templates.size(), is(2));
+        assertThat(uuids.contains(UUID_FOR_TEMPLATE_ONE), is(true));
+        assertThat(uuids.contains(UUID_FOR_TEMPLATE_TWO), is(true));
+        
+        searchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withPublisher("IHE CAT Publisher")
+                .build();
+        templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        uuids = new ArrayList<>();
+        for (MrrtReportTemplate template : templates) {
+            uuids.add(template.getUuid());
+        }
+        assertNotNull(templates);
+        assertThat(templates.size(), is(1));
+        assertThat(uuids.contains(UUID_FOR_TEMPLATE_ONE), is(true));
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
+     * @verifies return an empty list if no match for publisher was found
+     */
+    @Test
+    public void getMrrtRepdortTemplates_shouldReturnAnEmptyListIfNoMatchForPublisherWasFound() throws Exception {
+        
+        MrrtReportTemplateSearchCriteria searchCriteria =
+                new MrrtReportTemplateSearchCriteria.Builder().withPublisher(NON_EXISTING_PUBLISHER)
+                        .build();
+        List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        assertNotNull(templates);
+        assertTrue(templates.isEmpty());
     }
     
     /**

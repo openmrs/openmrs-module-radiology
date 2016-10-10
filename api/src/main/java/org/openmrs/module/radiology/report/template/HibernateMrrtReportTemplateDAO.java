@@ -80,6 +80,9 @@ class HibernateMrrtReportTemplateDAO implements MrrtReportTemplateDAO {
         if (searchCriteria.getTitle() != null) {
             crit.add(Restrictions.ilike("dcTermsTitle", searchCriteria.getTitle() + "%", MatchMode.ANYWHERE));
         }
+        if (searchCriteria.getPublisher() != null) {
+            crit.add(Restrictions.ilike("dcTermsPublisher", searchCriteria.getPublisher() + "%", MatchMode.ANYWHERE));
+        }
         final List<MrrtReportTemplate> result = (List<MrrtReportTemplate>) crit.list();
         return result == null ? new ArrayList<>() : result;
     }

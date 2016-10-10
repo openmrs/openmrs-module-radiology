@@ -35,4 +35,18 @@ public class MrrtReportTemplateSearchCriteriaTest {
         
         assertThat(mrrtReportTemplateSearchCriteria.getTitle(), is(title));
     }
+    
+    /**
+     * @see MrrtReportTemplateSearchCriteria.Builder#build()
+     * @verifies create an mrrt report template search criteria instance with publisher if publisher is set
+     */
+    @Test
+    public void build_shouldCreateAnMrrtReportTemplateSearchCriteriaInstanceWithPublisherIfPublisherIsSet()
+            throws Exception {
+        
+        String publisher = "IHE CAT Publisher";
+        mrrtReportTemplateSearchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withPublisher(publisher)
+                .build();
+        assertThat(mrrtReportTemplateSearchCriteria.getPublisher(), is(publisher));
+    }
 }

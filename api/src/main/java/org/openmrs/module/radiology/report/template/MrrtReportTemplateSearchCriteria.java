@@ -17,6 +17,8 @@ public class MrrtReportTemplateSearchCriteria {
     
     private final String title;
     
+    private final String publisher;
+    
     /**
      * @return the title of the mrrt report template
      */
@@ -25,10 +27,20 @@ public class MrrtReportTemplateSearchCriteria {
         return title;
     }
     
+    /**
+     * @return the publisher of the mrrt report template
+     */
+    public String getPublisher() {
+        
+        return publisher;
+    }
+    
     public static class Builder {
         
         
         private String title;
+        
+        private String publisher;
         
         /**
          * @param title the title of the mrrt report template
@@ -41,10 +53,21 @@ public class MrrtReportTemplateSearchCriteria {
         }
         
         /**
+         * @param publisher the publisher of the mrrt report template
+         * @return this builder instance
+         */
+        public Builder withPublisher(String publisher) {
+            
+            this.publisher = publisher;
+            return this;
+        }
+        
+        /**
          * Creates an {@code MrrtReportTemplateSearchCriteria} with properties of this builder instance.
          * 
          * @return a new search criteria instance
          * @should create an mrrt report template search criteria instance with title if title is set
+         * @should create an mrrt report template search criteria instance with publisher if publisher is set
          */
         public MrrtReportTemplateSearchCriteria build() {
             
@@ -55,5 +78,6 @@ public class MrrtReportTemplateSearchCriteria {
     private MrrtReportTemplateSearchCriteria(Builder builder) {
         
         this.title = builder.title;
+        this.publisher = builder.publisher;
     }
 }

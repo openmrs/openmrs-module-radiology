@@ -36,14 +36,15 @@ public class MrrtReportTemplateSearchHandler implements SearchHandler {
     
     public static final String REQUEST_PARAM_TITLE = "title";
     
+    public static final String REQUEST_PARAM_PUBLISHER = "publisher";
+    
     public static final String REQUEST_PARAM_TOTAL_COUNT = "totalCount";
     
     @Autowired
     private MrrtReportTemplateService mrrtReportTemplateService;
     
     SearchQuery searchQuery = new SearchQuery.Builder("Allows you to search for MrrtReportTemplate's by title")
-            .withRequiredParameters(REQUEST_PARAM_TITLE)
-            .withOptionalParameters(REQUEST_PARAM_TOTAL_COUNT)
+            .withOptionalParameters(new String[] { REQUEST_PARAM_TITLE, REQUEST_PARAM_PUBLISHER, REQUEST_PARAM_TOTAL_COUNT })
             .build();
     
     private final SearchConfig searchConfig = new SearchConfig("default", RestConstants.VERSION_1 + "/mrrtreporttemplate",
@@ -62,13 +63,17 @@ public class MrrtReportTemplateSearchHandler implements SearchHandler {
      * @should return all report templates that match given title
      * @should return empty search result if title does not exist
      * @should return all mrrt templates that match given title and totalCount if requested
+     * @should return all report templates by given publisher
+     * @should return empty search result if publisher does not exist
      */
     @Override
     public PageableResult search(RequestContext context) throws ResponseException {
         
         final String templateTitle = context.getParameter("title");
+        final String publisher = context.getParameter("publisher");
         final MrrtReportTemplateSearchCriteria searchCriteria =
                 new MrrtReportTemplateSearchCriteria.Builder().withTitle(templateTitle)
+                        .withPublisher(publisher)
                         .build();
         
         final List<MrrtReportTemplate> result = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
