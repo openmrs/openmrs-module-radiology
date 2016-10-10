@@ -12,8 +12,6 @@ package org.openmrs.module.radiology.report.template;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.xml.XMLConstants;
 import javax.xml.transform.stream.StreamSource;
@@ -74,19 +72,19 @@ public class XsdMrrtReportTemplateValidator implements MrrtReportTemplateValidat
                 @Override
                 public void warning(SAXParseException exception) throws SAXException {
                     log.debug(exception.getMessage(), exception);
-                    validationResult.addError(cleanErrorMessage(exception), "");
+                    validationResult.addError(exception.getMessage(), "");
                 }
                 
                 @Override
                 public void error(SAXParseException exception) throws SAXException {
                     log.debug(exception.getMessage(), exception);
-                    validationResult.addError(cleanErrorMessage(exception), "");
+                    validationResult.addError(exception.getMessage(), "");
                 }
                 
                 @Override
                 public void fatalError(SAXParseException exception) throws SAXException {
                     log.debug(exception.getMessage(), exception);
-                    validationResult.addError(cleanErrorMessage(exception), "");
+                    validationResult.addError(exception.getMessage(), "");
                 }
             });
             validator.validate(new StreamSource(in));
@@ -102,11 +100,5 @@ public class XsdMrrtReportTemplateValidator implements MrrtReportTemplateValidat
         return new File(getClass().getClassLoader()
                 .getResource(MRRT_REPORT_TEMPLATE_SCHEMA_FILE)
                 .getFile());
-    }
-    
-    private String cleanErrorMessage(SAXParseException exception) {
-        final Pattern pattern = Pattern.compile("cvc-complex-type\\.2\\.4\\.[a-zA-Z]:");
-        final Matcher matcher = pattern.matcher(exception.getMessage());
-        return matcher.replaceAll("");
     }
 }
