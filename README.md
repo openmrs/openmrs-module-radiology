@@ -180,8 +180,10 @@ The API and UI are not yet stable and subject to frequent changes.
 The module depends on [OpenMRS Version 2.0.0](https://github.com/openmrs/openmrs-core) so it cannot
 run on any version lower than that.
 
-The module depends on [OpenMRS Legacy UI](https://github.com/openmrs/openmrs-module-legacyui)
-for its UI.
+The module currently depends on [OpenMRS Legacy UI](https://github.com/openmrs/openmrs-module-legacyui)
+which provides the UI but it is [planned](https://issues.openmrs.org/browse/RAD-341)
+to extract the UI into a separate module so this module only provides the Java and
+REST API without forcing a specific UI onto anyone.
 
 ## Community
 
