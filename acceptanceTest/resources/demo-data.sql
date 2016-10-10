@@ -149,6 +149,7 @@ INSERT INTO `role_privilege` VALUES ('Radiology: Performing physician','View Ord
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Add Radiology Reports');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Add Radiology Report Templates');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Delete Radiology Reports');
+INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Delete Radiology Report Templates');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Edit Radiology Reports');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Care Settings');
 INSERT INTO `role_privilege` VALUES ('Radiology: Reading physician','Get Concepts');
