@@ -116,8 +116,10 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      * @return the mrrt report templates matching the given criteria
      * @throws IllegalArgumentException if given null
      * @should return all mrrt report templates that match given title search query if title is specified
-     * @should return an empty list of no match for title was found
+     * @should return an empty list if no match for title was found
      * @should throw illegal argument exception if given null
+     * @should return all mrrt report templates that match given publisher anywhere in dcterms publisher insensitive to case
+     * @should return an empty list if no match for publisher was found
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
     public List<MrrtReportTemplate>

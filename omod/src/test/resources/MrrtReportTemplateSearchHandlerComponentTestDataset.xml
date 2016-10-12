@@ -12,5 +12,5 @@
 -->
 <dataset>
 	<radiology_report_template template_id="1" charset="UTF-8" path="test/test1.html" dcterms_title="Cardiac MRI: Adenosine Stress Protocol" dcterms_description="description1" dcterms_language="en" dcterms_identifier="org/radrep/0001" creator="1" date_created="2015-02-02 12:26:35.0" uuid="2379d290-96f7-408a-bbae-270387e3b92e"/>
-	<radiology_report_template template_id="2" charset="UTF-8" path="test/test2.html" dcterms_title="Cardiac MRI: Function and Viability" dcterms_description="description2" dcterms_language="en" dcterms_identifier="org/radrep/0002" creator="1" date_created="2015-02-03 13:17:15.0" uuid="59273e52-33b1-4fcb-8c1f-9b670bb11259"/>
+	<radiology_report_template template_id="2" charset="UTF-8" path="test/test2.html" dcterms_title="Cardiac MRI: Function and Viability" dcterms_description="description2" dcterms_language="en" dcterms_identifier="org/radrep/0002" dcterms_publisher="IHE CAT Publisher" creator="1" date_created="2015-02-03 13:17:15.0" uuid="59273e52-33b1-4fcb-8c1f-9b670bb11259"/>
 </dataset>
