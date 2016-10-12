@@ -78,7 +78,6 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      * @should get template with given id
      * @should return null if no match was found
      * @should throw illegal argument exception if given null
-     * @should properly retrieve mrrt report templates with concept reference terms
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
     public MrrtReportTemplate getMrrtReportTemplate(Integer id);

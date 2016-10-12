@@ -150,12 +150,11 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     */
     @Test
     public void getMrrtReportTemplate_shouldGetTemplateWithGivenId() throws Exception {
-        MrrtReportTemplate existingTemplate = mrrtReportTemplateService.getMrrtReportTemplate(EXISTING_TEMPLATE_ID);
         
-        assertNotNull(existingTemplate);
-        assertEquals(existingTemplate.getCharset(), "UTF-8");
-        assertEquals(existingTemplate.getDcTermsTitle(), "title1");
-        assertEquals(existingTemplate.getDcTermsLanguage(), "en");
+        MrrtReportTemplate template = mrrtReportTemplateService.getMrrtReportTemplate(EXISTING_TEMPLATE_ID);
+        
+        assertNotNull(template);
+        assertThat(template.getId(), is(EXISTING_TEMPLATE_ID));
     }
     
     /**
@@ -519,27 +518,5 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
         assertThat(saved.getTerms()
                 .size(),
             is(1));
-    }
-    
-    /**
-     * @see MrrtReportTemplateService#getMrrtReportTemplate(Integer)
-     * @verifies properly retrieve mrrt report templates with concept reference terms
-     */
-    @Test
-    public void getMrrtReportTemplate_shouldProperlyRetrieveMrrtReportTemplatesWithConceptReferenceTerms() {
-        
-        MrrtReportTemplate template = mrrtReportTemplateService.getMrrtReportTemplate(1);
-        assertNotNull(template);
-        assertThat(template.getTerms()
-                .size(),
-            is(1));
-        ConceptSource conceptSource = Context.getConceptService()
-                .getConceptSourceByName("RADLEX");
-        ConceptReferenceTerm referenceTerm = Context.getConceptService()
-                .getConceptReferenceTermByCode("RID10321", conceptSource);
-        
-        assertThat(template.getTerms()
-                .contains(referenceTerm),
-            is(true));
     }
 }
