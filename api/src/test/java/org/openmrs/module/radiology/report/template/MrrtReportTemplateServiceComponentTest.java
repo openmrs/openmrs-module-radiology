@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.radiology.report.template;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -22,7 +23,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -433,29 +433,31 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
             getMrrtReportTemplates_shouldReturnAllMrrtReportTemplatesThatMatchGivenPublisherAnywhereInDctermsPublisherInsensitiveToCase()
                     throws Exception {
         
-        MrrtReportTemplateSearchCriteria searchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withPublisher("cat")
-                .build();
+        String partialPublisherString = "cat";
+        MrrtReportTemplateSearchCriteria searchCriteria =
+                new MrrtReportTemplateSearchCriteria.Builder().withPublisher(partialPublisherString)
+                        .build();
         
         List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
-        List<String> uuids = new ArrayList<>();
-        for (MrrtReportTemplate template : templates) {
-            uuids.add(template.getUuid());
-        }
+        
         assertNotNull(templates);
         assertThat(templates.size(), is(2));
-        assertThat(uuids.contains(UUID_FOR_TEMPLATE_ONE), is(true));
-        assertThat(uuids.contains(UUID_FOR_TEMPLATE_TWO), is(true));
+        for (MrrtReportTemplate template : templates) {
+            assertThat(template.getDcTermsPublisher()
+                    .toLowerCase(),
+                containsString(partialPublisherString));
+        }
         
-        searchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withPublisher("IHE CAT Publisher")
+        String exactPublisherString = "IHE CAT Publisher";
+        searchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withPublisher(exactPublisherString)
                 .build();
         templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
-        uuids = new ArrayList<>();
-        for (MrrtReportTemplate template : templates) {
-            uuids.add(template.getUuid());
-        }
+        
         assertNotNull(templates);
         assertThat(templates.size(), is(1));
-        assertThat(uuids.contains(UUID_FOR_TEMPLATE_ONE), is(true));
+        for (MrrtReportTemplate template : templates) {
+            assertThat(template.getDcTermsPublisher(), is(exactPublisherString));
+        }
     }
     
     /**
