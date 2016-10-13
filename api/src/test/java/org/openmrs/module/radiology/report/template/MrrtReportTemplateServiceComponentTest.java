@@ -97,7 +97,8 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     /**
      * Get a files content as string.
      *
-     * @param path the path to get the file content from
+     * @param path
+     *            the path to get the file content from
      * @return the file content
      */
     private String getFileContent(String path) throws IOException {
@@ -109,7 +110,8 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     /**
      * Get a file from the test resources.
      *
-     * @param path the path to get the file from
+     * @param path
+     *            the path to get the file from
      * @return the file on given path
      */
     private File getFile(String path) {
@@ -121,7 +123,8 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     /**
      * Get a file from the test resources.
      *
-     * @param file the file to get the content from
+     * @param file
+     *            the file to get the content from
      * @return the file content
      */
     private String getString(File file) throws IOException {
@@ -133,7 +136,8 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-     * Sets up the global property defining the MRRT template directory using junits temporary folder.
+     * Sets up the global property defining the MRRT template directory using
+     * junits temporary folder.
      *
      * @throws IOException
      */
@@ -145,9 +149,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplate(Integer)
-    * @verifies get template with given id
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplate(Integer)
+     * @verifies get template with given id
+     */
     @Test
     public void getMrrtReportTemplate_shouldGetTemplateWithGivenId() throws Exception {
         
@@ -158,18 +162,18 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplate(Integer)
-    * @verifies return null if no match was found
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplate(Integer)
+     * @verifies return null if no match was found
+     */
     @Test
     public void getMrrtReportTemplate_shouldReturnNullIfNoMatchWasFound() throws Exception {
         assertNull(mrrtReportTemplateService.getMrrtReportTemplate(NON_EXISTING_TEMPLATE_ID));
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplate(Integer)
-    * @verifies throw illegal argument exception if given null
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplate(Integer)
+     * @verifies throw illegal argument exception if given null
+     */
     @Test
     public void getMrrtReportTemplate_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
         expectedException.expect(IllegalArgumentException.class);
@@ -178,9 +182,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
-    * @verifies find object given existing uuid
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
+     * @verifies find object given existing uuid
+     */
     @Test
     public void getMrrtReportTemplateByUuid_shouldFindObjectGivenExistingUuid() {
         MrrtReportTemplate valid = mrrtReportTemplateService.getMrrtReportTemplateByUuid(UUID_FOR_TEMPLATE_ONE);
@@ -200,9 +204,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
-    * @verifies throw illegal argument exception if given null
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplateByUuid(String)
+     * @verifies throw illegal argument exception if given null
+     */
     @Test
     public void getMrrtReportTemplateByUuid_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
         expectedException.expect(IllegalArgumentException.class);
@@ -211,9 +215,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplateByIdentifier(String)
-    * @verifies find object given valid identifier
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplateByIdentifier(String)
+     * @verifies find object given valid identifier
+     */
     @Test
     public void getMrrtReportTemplateByIdentifier_shouldFindObjectWithGivenIdentifier() throws Exception {
         MrrtReportTemplate template = mrrtReportTemplateService.getMrrtReportTemplateByIdentifier("identifier1");
@@ -223,18 +227,18 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplateByIdentifier(String)
-    * @verifies return null if no object found with give identifier
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplateByIdentifier(String)
+     * @verifies return null if no object found with give identifier
+     */
     @Test
     public void getMrrtReportTemplateByIdentifier_shouldReturnNullIfNoObjectFoundWithGivenIdentifier() throws Exception {
         assertNull(mrrtReportTemplateService.getMrrtReportTemplateByIdentifier("invalid identifier"));
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplateByIdentifier(String)
-    * @verifies throw illegal argument exception if given null
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplateByIdentifier(String)
+     * @verifies throw illegal argument exception if given null
+     */
     @Test
     public void getMrrtReportTemplateByIdentifier_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
         expectedException.expect(IllegalArgumentException.class);
@@ -243,9 +247,10 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
-    * @verifies delete report template from database and also delete template file from the system
-    */
+     * @see MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
+     * @verifies delete report template from database and also delete template
+     *           file from the system
+     */
     @Test
     public void purgeMrrtReportTemplate_shouldDeleteReportTemplateFromDatabaseAndAlsoDeleteTemplateFileFromTheSystem()
             throws Exception {
@@ -269,9 +274,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
-    * @verifies throw illegal argument exception if given null
-    */
+     * @see MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
+     * @verifies throw illegal argument exception if given null
+     */
     @Test
     public void purgeMrrtReportTemplate_shouldThrowIlligalArgumentExceptionIfGivenNull() throws Exception {
         expectedException.expect(IllegalArgumentException.class);
@@ -281,7 +286,8 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     
     /**
      * @see MrrtReportTemplateService#purgeMrrtReportTemplate(MrrtReportTemplate)
-     * @verifies catch file not found exception when the file been deleted is missing
+     * @verifies catch file not found exception when the file been deleted is
+     *           missing
      */
     @Test
     public void purgeMrrtReportTemplate_shouldCatchFileNotFoundExceptionWhenTheFileBeenDeletedIsMissing() {
@@ -293,9 +299,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
-    * @verifies save given template
-    */
+     * @see MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
+     * @verifies save given template
+     */
     @Test
     public void saveMrrtReportTemplate_shouldSaveGivenTemplate() throws Exception {
         MrrtReportTemplate template = new MrrtReportTemplate();
@@ -314,9 +320,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
-    * @verifies throw api exception if saving template that already exists
-    */
+     * @see MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
+     * @verifies throw api exception if saving template that already exists
+     */
     @Test
     public void saveMrrtReportTemplate_shouldThrowApiExceptionIfSavingTemplateThatAlreadyExists() throws Exception {
         MrrtReportTemplate existing = mrrtReportTemplateService.getMrrtReportTemplate(EXISTING_TEMPLATE_ID);
@@ -327,9 +333,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
-    * @verifies throw illegal argument exception if given null
-    */
+     * @see MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
+     * @verifies throw illegal argument exception if given null
+     */
     @Test
     public void saveMrrtReportTemplate_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
         expectedException.expect(IllegalArgumentException.class);
@@ -338,7 +344,8 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-     * @verifies create mrrt report template in the database and on the file system
+     * @verifies create mrrt report template in the database and on the file
+     *           system
      * @see MrrtReportTemplateService#importMrrtReportTemplate(String)
      */
     @Test
@@ -363,7 +370,8 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-     * @verifies not create an mrrt report template in the database and store the template as file if given template is invalid
+     * @verifies not create an mrrt report template in the database and store
+     *           the template as file if given template is invalid
      * @see MrrtReportTemplateService#importMrrtReportTemplate(String)
      */
     @Test
@@ -381,25 +389,33 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
-    * @verifies return all mrrt report templates that match given title search query if title is specified
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
+     * @verifies return all mrrt report templates that match given title search
+     *           query if title is specified and order by title in ascending
+     *           order
+     */
     @Test
     public void getMrrtReportTemplates_shouldReturnAllMrrtReportTemplatesThatMatchGivenTitleSearchQueryIfTitleIsSpecified()
             throws Exception {
         
-        MrrtReportTemplateSearchCriteria searchCriteria =
-                new MrrtReportTemplateSearchCriteria.Builder().withTitle(EXISTING_TEMPLATE_TITLE)
-                        .build();
+        MrrtReportTemplateSearchCriteria searchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withTitle("title")
+                .build();
+        
         List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
         assertNotNull(templates);
-        assertThat(templates.size(), is(1));
+        assertThat(templates.size(), is(2));
+        assertThat(templates.get(0)
+                .getDcTermsTitle(),
+            is("title1"));
+        assertThat(templates.get(1)
+                .getDcTermsTitle(),
+            is("title2"));
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
-    * @verifies return an empty list of no match for title was found
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
+     * @verifies return an empty list of no match for title was found
+     */
     @Test
     public void getMrrtRepdortTemplates_shouldReturnAnEmptyListOfNoMatchForTitleWasFound() throws Exception {
         
@@ -412,9 +428,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
-    * @verifies throw illegal argument exception of given null
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
+     * @verifies throw illegal argument exception of given null
+     */
     @Test
     public void getMrrtReportTemplates_shouldThrowIllegalArgumentExceptionOfGivenNull() throws Exception {
         
@@ -425,7 +441,8 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     
     /**
      * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
-     * @verifies return all mrrt report templates that match given publisher anywhere in dcterms publisher insensitive to case
+     * @verifies return all mrrt report templates that match given publisher
+     *           anywhere in dcterms publisher insensitive to case
      */
     @Test
     public void
@@ -475,9 +492,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplateHtmlBody(MrrtReportTemplate)
-    * @verifies return the body content of the mrrt report template file
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplateHtmlBody(MrrtReportTemplate)
+     * @verifies return the body content of the mrrt report template file
+     */
     @Test
     public void getMrrtReportTemplateHtmlBody_shouldReturnTheBodyContentOfTheMrrtReportTemplateFile() throws Exception {
         File tmpTemplateFile = temporaryFolder.newFile();
@@ -491,9 +508,9 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     }
     
     /**
-    * @see MrrtReportTemplateService#getMrrtReportTemplateHtmlBody(MrrtReportTemplate)
-    * @verifies throw illegal argument exception if given null
-    */
+     * @see MrrtReportTemplateService#getMrrtReportTemplateHtmlBody(MrrtReportTemplate)
+     * @verifies throw illegal argument exception if given null
+     */
     @Test
     public void getMrrtReportTemplateHtmlBody_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
         expectedException.expect(IllegalArgumentException.class);
@@ -503,7 +520,8 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     
     /**
      * @see MrrtReportTemplateService#saveMrrtReportTemplate(MrrtReportTemplate)
-     * @verifies save template object with terms if matching concept reference term was found
+     * @verifies save template object with terms if matching concept reference
+     *           term was found
      */
     @Test
     public void saveMrrtReportTemplate_shouldSaveTemplateObjectWithTermsIfMatchingConceptReferenceTermWasFound()

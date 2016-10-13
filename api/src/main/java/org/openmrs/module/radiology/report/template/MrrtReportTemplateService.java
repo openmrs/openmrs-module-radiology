@@ -114,7 +114,7 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      * @param mrrtReportTemplateSearchCriteria the object containing search parameters
      * @return the mrrt report templates matching the given criteria
      * @throws IllegalArgumentException if given null
-     * @should return all mrrt report templates that match given title search query if title is specified
+     * @should return all mrrt report templates that match given title search query if title is specified and order by title in ascending order
      * @should return an empty list if no match for title was found
      * @should throw illegal argument exception if given null
      * @should return all mrrt report templates that match given publisher anywhere in dcterms publisher insensitive to case

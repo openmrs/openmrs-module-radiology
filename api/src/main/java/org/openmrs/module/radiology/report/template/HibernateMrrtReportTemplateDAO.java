@@ -10,6 +10,8 @@
 package org.openmrs.module.radiology.report.template;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.hibernate.Criteria;
@@ -84,6 +86,13 @@ class HibernateMrrtReportTemplateDAO implements MrrtReportTemplateDAO {
             crit.add(Restrictions.ilike("dcTermsPublisher", searchCriteria.getPublisher() + "%", MatchMode.ANYWHERE));
         }
         final List<MrrtReportTemplate> result = (List<MrrtReportTemplate>) crit.list();
+        
+        if (searchCriteria.getTitle() != null) {
+            Collections.sort(result,
+                (MrrtReportTemplate mrrtReportTemplate1, MrrtReportTemplate mrrtReportTemplate2) -> mrrtReportTemplate1
+                        .getDcTermsTitle()
+                        .compareTo(mrrtReportTemplate2.getDcTermsTitle()));
+        }
         return result == null ? new ArrayList<>() : result;
     }
     
