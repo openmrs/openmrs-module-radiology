@@ -110,6 +110,7 @@ public interface MrrtReportTemplateService extends OpenmrsService {
     
     /**
      * Get all {@code MrrtReportTemplate's} matching a variety of (nullable) criteria.
+     * Returns results ordered by dcTermsTitle. 
      * 
      * @param mrrtReportTemplateSearchCriteria the object containing search parameters
      * @return the mrrt report templates matching the given criteria
