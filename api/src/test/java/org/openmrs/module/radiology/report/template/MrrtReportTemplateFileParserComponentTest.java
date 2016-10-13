@@ -18,6 +18,8 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import org.apache.commons.io.IOUtils;
 import org.junit.Before;
@@ -120,6 +122,7 @@ public class MrrtReportTemplateFileParserComponentTest extends BaseModuleContext
         String templateContent = getFileContent("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html");
         
         MrrtReportTemplate template = parser.parse(templateContent);
+        Date dcTermsDate = new SimpleDateFormat(MrrtReportTemplateConstants.DATE_FORMAT).parse(TEST_DCTERMS_DATE);
         
         assertNotNull(template);
         assertThat(template.getCharset(), is(CHARSET));
@@ -132,7 +135,7 @@ public class MrrtReportTemplateFileParserComponentTest extends BaseModuleContext
         assertThat(template.getDcTermsPublisher(), is(TEST_DCTERMS_PUBLISHER));
         assertThat(template.getDcTermsRights(), is(TEST_DCTERMS_RIGHTS));
         assertThat(template.getDcTermsLicense(), is(TEST_DCTERMS_LICENSE));
-        assertThat(template.getDcTermsDate(), is(TEST_DCTERMS_DATE));
+        assertThat(template.getDcTermsDate(), is(dcTermsDate));
         assertThat(template.getDcTermsCreator(), is(TEST_DCTERMS_CREATOR));
     }
     

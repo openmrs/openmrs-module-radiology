@@ -9,10 +9,15 @@
  */
 package org.openmrs.module.radiology.report.template;
 
-import org.jsoup.select.Elements;
-
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 /**
  * Validates <meta> tags of an Mrrt Report Template.
@@ -23,6 +28,8 @@ class MetaTagsValidationEngine implements ValidationEngine<Elements> {
     static String SELECTOR_QUERY_META_ATTRIBUTE_CHARSET = "meta[charset]";
     
     static String SELECTOR_QUERY_META_ATTRIBUTE_NAME = "meta[name]";
+    
+    static String SELECTOR_QUERY_META_ATTRIBUTE_DATE = "meta[name=dcterms.date]";
     
     private List<ValidationRule<Elements>> rules;
     
@@ -35,6 +42,9 @@ class MetaTagsValidationEngine implements ValidationEngine<Elements> {
             new ElementsExpressionValidationRule("At least one 'meta' element encoding dublin core attributes expected",
                     "radiology.MrrtReportTemplate.validation.error.meta.dublinCore.missing",
                     SELECTOR_QUERY_META_ATTRIBUTE_NAME, subject -> subject.isEmpty()));
+        rules.add(new ElementsExpressionValidationRule("dcterms.date element should be a valid date",
+                "radiology.MrrtReportTemplate.validation.error.date.invalid", SELECTOR_QUERY_META_ATTRIBUTE_DATE,
+                subject -> isDateInvalid(subject)));
     }
     
     /**
@@ -52,5 +62,20 @@ class MetaTagsValidationEngine implements ValidationEngine<Elements> {
             rule.check(validationResult, subject);
         }
         return validationResult;
+    }
+    
+    private final boolean isDateInvalid(Elements elements) {
+        boolean result = false;
+        if (elements.isEmpty()) {
+            return result;
+        }
+        Element dcTermsDateElement = elements.get(0);
+        try {
+            new SimpleDateFormat(MrrtReportTemplateConstants.DATE_FORMAT).parse(dcTermsDateElement.attr("content"));
+        }
+        catch (ParseException ex) {
+            result = true;
+        }
+        return result;
     }
 }
