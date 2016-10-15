@@ -1,8 +1,8 @@
 <%@ include file="/WEB-INF/template/include.jsp"%>
 <%@ include file="/WEB-INF/view/module/radiology/template/includeDatatables.jsp"%>
-<openmrs:htmlInclude file="/moduleResources/radiology/scripts/moment/moment-with-locales.min.js" />
+<openmrs:htmlInclude file="/moduleResources/radiology/vendor/moment/min/moment-with-locales.min.js" />
 <openmrs:htmlInclude file="/moduleResources/radiology/css/radiology.css" />
-<openmrs:htmlInclude file="/moduleResources/radiology/scripts/radiology.js" />
+<openmrs:htmlInclude file="/moduleResources/radiology/js/radiology.js" />
 
 <script type="text/javascript">
   // configure current locale as momentjs default, fall back to "en" if locale not found

@@ -148,6 +148,9 @@
 							<exclude>build/</exclude>
 							<exclude>bin/</exclude>
 							<exclude>dist/</exclude>
+							<exclude>bower_components/</exclude>
+							<exclude>node/</exclude>
+							<exclude>node_modules/</exclude>
 						</excludes>
 					</configuration>
 					<executions>

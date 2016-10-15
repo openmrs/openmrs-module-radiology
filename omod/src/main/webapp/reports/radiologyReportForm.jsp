@@ -3,8 +3,8 @@
 <%@ include file="/WEB-INF/template/header.jsp"%>
 <c:set var="INCLUDE_TIME_ADJUSTMENT" value="true" />
 <%@ include file="/WEB-INF/view/module/radiology/template/includeScripts.jsp"%>
-<openmrs:htmlInclude file="/moduleResources/radiology/scripts/tinymce/tinymce.min.js" />
-<openmrs:htmlInclude file="/moduleResources/radiology/fonts/font-awesome/css/font-awesome.min.css" />
+<openmrs:htmlInclude file="/moduleResources/radiology/vendor/tinymce/tinymce.min.js" />
+<openmrs:htmlInclude file="/moduleResources/radiology/vendor/font-awesome/css/font-awesome.min.css" />
 
 <script type="text/javascript">
   var $j = jQuery.noConflict();
