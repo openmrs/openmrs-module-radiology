@@ -15,6 +15,7 @@ import java.util.List;
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.MatchMode;
+import org.hibernate.criterion.Order;
 import org.hibernate.criterion.Restrictions;
 
 /**
@@ -76,6 +77,7 @@ class HibernateMrrtReportTemplateDAO implements MrrtReportTemplateDAO {
         
         final Criteria crit = sessionFactory.getCurrentSession()
                 .createCriteria(MrrtReportTemplate.class);
+        crit.addOrder(Order.asc("dcTermsTitle"));
         
         if (searchCriteria.getTitle() != null) {
             crit.add(Restrictions.ilike("dcTermsTitle", searchCriteria.getTitle() + "%", MatchMode.ANYWHERE));

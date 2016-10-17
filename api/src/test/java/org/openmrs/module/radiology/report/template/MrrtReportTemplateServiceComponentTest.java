@@ -74,7 +74,7 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     
     private static final String NON_EXISTING_UUID = "invalid uuid";
     
-    private static final String EXISTING_TEMPLATE_TITLE = "title1";
+    private static final String EXISTING_TEMPLATE_TITLE = "CT";
     
     private static final String NON_EXISTING_TEMPLATE_TITLE = "invalid";
     
@@ -393,7 +393,14 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
                         .build();
         List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
         assertNotNull(templates);
-        assertThat(templates.size(), is(1));
+        assertThat(templates.size(), is(2));
+        assertThat(templates.get(0)
+                .getDcTermsTitle(),
+            is("CT Cardiac Bypass Graft"));
+        assertThat(templates.get(1)
+                .getDcTermsTitle(),
+            is("CT Chest Pulmonary Embolism"));
+        
     }
     
     /**
