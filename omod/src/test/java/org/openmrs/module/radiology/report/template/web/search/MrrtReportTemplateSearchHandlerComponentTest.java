@@ -48,6 +48,10 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
     
     private static final String NON_EXISTING_PUBLISHER = "Non existing publisher";
     
+    private static final String LICENSE_QUERY = "General Public License";
+    
+    private static final String NON_EXISTING_LICENSE = "Non existing license";
+    
     @Autowired
     MrrtReportTemplateService mrrtReportTemplateService;
     
@@ -171,6 +175,44 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
         MockHttpServletRequest mockRequest = request(RequestMethod.GET, getURI());
         mockRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_PUBLISHER, NON_EXISTING_PUBLISHER);
         
+        SimpleObject resultMrrtReportTemplate = deserialize(handle(mockRequest));
+        
+        assertNotNull(resultMrrtReportTemplate);
+        List<Object> hits = (List<Object>) resultMrrtReportTemplate.get("results");
+        assertThat(hits.size(), is(0));
+    }
+    
+    /**
+     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
+     * @verifies return all report templates that match given license
+     */
+    @Test
+    public void search_shouldReturnAllReportTemplatesThatMatchGivenLicense() throws Exception {
+        MockHttpServletRequest mrrtReportTemplateRequest = request(RequestMethod.GET, getURI());
+        mrrtReportTemplateRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_LICENSE, LICENSE_QUERY);
+        SimpleObject resultMrrtReportTemplate = deserialize(handle(mrrtReportTemplateRequest));
+        
+        assertNotNull(resultMrrtReportTemplate);
+        List<Object> hits = (List<Object>) resultMrrtReportTemplate.get("results");
+        MrrtReportTemplateSearchCriteria searchCriteria =
+                new MrrtReportTemplateSearchCriteria.Builder().withLicense(LICENSE_QUERY)
+                        .build();
+        assertThat(hits.size(), is(1));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "uuid"),
+            is(mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria)
+                    .get(0)
+                    .getUuid()));
+        assertNull(PropertyUtils.getProperty(resultMrrtReportTemplate, "totalCount"));
+    }
+    
+    /**
+     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
+     * @verifies return empty search result if license does not exist
+     */
+    @Test
+    public void search_shouldReturnEmptySearchResultIfLicenseDoesNotExist() throws Exception {
+        MockHttpServletRequest mockRequest = request(RequestMethod.GET, getURI());
+        mockRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_LICENSE, NON_EXISTING_LICENSE);
         SimpleObject resultMrrtReportTemplate = deserialize(handle(mockRequest));
         
         assertNotNull(resultMrrtReportTemplate);

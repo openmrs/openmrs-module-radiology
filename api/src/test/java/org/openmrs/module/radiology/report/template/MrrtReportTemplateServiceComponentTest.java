@@ -10,6 +10,7 @@
 package org.openmrs.module.radiology.report.template;
 
 import static org.hamcrest.CoreMatchers.containsString;
+import static org.hamcrest.CoreMatchers.hasItem;
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -23,6 +24,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
@@ -77,6 +79,10 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     private static final String EXISTING_TEMPLATE_TITLE = "CT";
     
     private static final String NON_EXISTING_TEMPLATE_TITLE = "invalid";
+    
+    private static final String EXISTING_TEMPLATE_LICENSE = "General Public License";
+    
+    private static final String NON_EXISTING_TEMPLATE_LICENSE = "Non existing license";
     
     private static final String TEMPLATE_IDENTIFIER = "1.3.6.1.4.1.21367.13.199.1015";
     
@@ -477,6 +483,52 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
                 new MrrtReportTemplateSearchCriteria.Builder().withPublisher(NON_EXISTING_PUBLISHER)
                         .build();
         List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        assertNotNull(templates);
+        assertTrue(templates.isEmpty());
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
+     * @verifies return all mrrt report templates that match given license anywhere in dcterms license insensitive to case
+     */
+    @Test
+    public void
+            getMrrtReportTemplates_shouldReturnAllMrrtReportTemplatesThatMatchGivenLicenseAnywhereInDctermsLicenseInsensitiveToCase()
+                    throws Exception {
+        MrrtReportTemplateSearchCriteria searchCriteria =
+                new MrrtReportTemplateSearchCriteria.Builder().withLicense(EXISTING_TEMPLATE_LICENSE)
+                        .build();
+        List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        
+        assertNotNull(templates);
+        assertThat(templates.size(), is(1));
+        assertThat(templates.get(0)
+                .getDcTermsLicense(),
+            is(EXISTING_TEMPLATE_LICENSE));
+        
+        searchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withLicense("public")
+                .build();
+        templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        List<String> licenses = new ArrayList<>();
+        templates.forEach(template -> licenses.add(template.getDcTermsLicense()));
+        
+        assertNotNull(licenses);
+        assertThat(licenses.size(), is(2));
+        assertThat(licenses, hasItem("Mozilla Public License"));
+        assertThat(licenses, hasItem("General Public License"));
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
+     * @verifies return an empty list if no match for license was found
+     */
+    @Test
+    public void getMrrtReportTemplates_shouldReturnAnEmptyListIfNoMatchForLicenseWasFound() throws Exception {
+        MrrtReportTemplateSearchCriteria searchCriteria =
+                new MrrtReportTemplateSearchCriteria.Builder().withLicense(NON_EXISTING_TEMPLATE_LICENSE)
+                        .build();
+        List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        
         assertNotNull(templates);
         assertTrue(templates.isEmpty());
     }
