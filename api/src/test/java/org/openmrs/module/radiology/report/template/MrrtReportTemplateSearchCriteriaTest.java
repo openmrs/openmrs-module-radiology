@@ -49,4 +49,16 @@ public class MrrtReportTemplateSearchCriteriaTest {
                 .build();
         assertThat(mrrtReportTemplateSearchCriteria.getPublisher(), is(publisher));
     }
+    
+    /**
+     * @see MrrtReportTemplateSearchCriteria.Builder#build()
+     * @verifies create an mrrt report template search criteria instance with license if license is set
+     */
+    @Test
+    public void build_shouldCreateAnMrrtReportTemplateSearchCriteriaInstanceWithLicenseIfLicenseIsSet() throws Exception {
+        String license = "Mozilla Public License";
+        mrrtReportTemplateSearchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withLicense(license)
+                .build();
+        assertThat(mrrtReportTemplateSearchCriteria.getLicense(), is(license));
+    }
 }

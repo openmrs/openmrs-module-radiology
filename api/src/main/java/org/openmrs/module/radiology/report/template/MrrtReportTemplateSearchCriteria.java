@@ -19,6 +19,8 @@ public class MrrtReportTemplateSearchCriteria {
     
     private final String publisher;
     
+    private final String license;
+    
     /**
      * @return the title of the mrrt report template
      */
@@ -35,12 +37,21 @@ public class MrrtReportTemplateSearchCriteria {
         return publisher;
     }
     
+    /**
+     * @return the license of the mrrt report template
+     */
+    public String getLicense() {
+        return license;
+    }
+    
     public static class Builder {
         
         
         private String title;
         
         private String publisher;
+        
+        private String license;
         
         /**
          * @param title the title of the mrrt report template
@@ -63,14 +74,23 @@ public class MrrtReportTemplateSearchCriteria {
         }
         
         /**
+         * @param license the license of the mrrt report template
+         * @return this builder instance
+         */
+        public Builder withLicense(String license) {
+            this.license = license;
+            return this;
+        }
+        
+        /**
          * Creates an {@code MrrtReportTemplateSearchCriteria} with properties of this builder instance.
          * 
          * @return a new search criteria instance
          * @should create an mrrt report template search criteria instance with title if title is set
          * @should create an mrrt report template search criteria instance with publisher if publisher is set
+         * @should create an mrrt report template search criteria instance with license if license is set
          */
         public MrrtReportTemplateSearchCriteria build() {
-            
             return new MrrtReportTemplateSearchCriteria(this);
         }
     }
@@ -79,5 +99,6 @@ public class MrrtReportTemplateSearchCriteria {
         
         this.title = builder.title;
         this.publisher = builder.publisher;
+        this.license = builder.license;
     }
 }
