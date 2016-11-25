@@ -84,6 +84,10 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     
     private static final String NON_EXISTING_TEMPLATE_LICENSE = "Non existing license";
     
+    private static final String EXISTING_TEMPLATE_CREATOR = "creator1";
+    
+    private static final String NON_EXISTING_TEMPLATE_CREATOR = "Non existing creator";
+    
     private static final String TEMPLATE_IDENTIFIER = "1.3.6.1.4.1.21367.13.199.1015";
     
     private static final String NON_EXISTING_PUBLISHER = "Non existing publisher";
@@ -526,6 +530,52 @@ public class MrrtReportTemplateServiceComponentTest extends BaseModuleContextSen
     public void getMrrtReportTemplates_shouldReturnAnEmptyListIfNoMatchForLicenseWasFound() throws Exception {
         MrrtReportTemplateSearchCriteria searchCriteria =
                 new MrrtReportTemplateSearchCriteria.Builder().withLicense(NON_EXISTING_TEMPLATE_LICENSE)
+                        .build();
+        List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        
+        assertNotNull(templates);
+        assertTrue(templates.isEmpty());
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
+     * @verifies return all mrrt report templates that match given creator anywhere in dcterms creator insensitive to case
+     */
+    @Test
+    public void
+            getMrrtReportTemplates_shouldReturnAllMrrtReportTemplatesThatMatchGivenCreatorAnywhereInDctermsCreatorInsensitiveToCase()
+                    throws Exception {
+        MrrtReportTemplateSearchCriteria searchCriteria =
+                new MrrtReportTemplateSearchCriteria.Builder().withCreator(EXISTING_TEMPLATE_CREATOR)
+                        .build();
+        List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        
+        assertNotNull(templates);
+        assertThat(templates.size(), is(1));
+        assertThat(templates.get(0)
+                .getDcTermsCreator(),
+            is(EXISTING_TEMPLATE_CREATOR));
+        
+        searchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withCreator("CREATOR")
+                .build();
+        templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
+        List<String> creators = new ArrayList<>();
+        templates.forEach(template -> creators.add(template.getDcTermsCreator()));
+        
+        assertNotNull(creators);
+        assertThat(creators.size(), is(2));
+        assertThat(creators, hasItem("creator1"));
+        assertThat(creators, hasItem("creator2"));
+    }
+    
+    /**
+     * @see MrrtReportTemplateService#getMrrtReportTemplates(MrrtReportTemplateSearchCriteria)
+     * @verifies return an empty list if no match for creator was found
+     */
+    @Test
+    public void getMrrtReportTemplates_shouldReturnAnEmptyListIfNoMatchForCreatorWasFound() throws Exception {
+        MrrtReportTemplateSearchCriteria searchCriteria =
+                new MrrtReportTemplateSearchCriteria.Builder().withCreator(NON_EXISTING_TEMPLATE_CREATOR)
                         .build();
         List<MrrtReportTemplate> templates = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);
         

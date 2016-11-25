@@ -21,6 +21,8 @@ public class MrrtReportTemplateSearchCriteria {
     
     private final String license;
     
+    private final String creator;
+    
     /**
      * @return the title of the mrrt report template
      */
@@ -44,6 +46,13 @@ public class MrrtReportTemplateSearchCriteria {
         return license;
     }
     
+    /**
+     * @return the creator of the mrrt report template
+     */
+    public String getCreator() {
+        return creator;
+    }
+    
     public static class Builder {
         
         
@@ -52,6 +61,8 @@ public class MrrtReportTemplateSearchCriteria {
         private String publisher;
         
         private String license;
+        
+        private String creator;
         
         /**
          * @param title the title of the mrrt report template
@@ -83,12 +94,22 @@ public class MrrtReportTemplateSearchCriteria {
         }
         
         /**
+         * @param creator the creator of the mrrt report template
+         * @return this builder instance
+         */
+        public Builder withCreator(String creator) {
+            this.creator = creator;
+            return this;
+        }
+        
+        /**
          * Creates an {@code MrrtReportTemplateSearchCriteria} with properties of this builder instance.
          * 
          * @return a new search criteria instance
          * @should create an mrrt report template search criteria instance with title if title is set
          * @should create an mrrt report template search criteria instance with publisher if publisher is set
          * @should create an mrrt report template search criteria instance with license if license is set
+         * @should create an mrrt report template search criteria instance with creator if creator is set
          */
         public MrrtReportTemplateSearchCriteria build() {
             return new MrrtReportTemplateSearchCriteria(this);
@@ -100,5 +121,6 @@ public class MrrtReportTemplateSearchCriteria {
         this.title = builder.title;
         this.publisher = builder.publisher;
         this.license = builder.license;
+        this.creator = builder.creator;
     }
 }

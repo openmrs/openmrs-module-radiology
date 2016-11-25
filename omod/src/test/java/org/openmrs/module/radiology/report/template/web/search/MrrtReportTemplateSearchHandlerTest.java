@@ -62,6 +62,10 @@ public class MrrtReportTemplateSearchHandlerTest {
     
     private static final String NON_EXISTING_LICENSE = "Non existing license";
     
+    private static final String CREATOR_QUERY = "creator1";
+    
+    private static final String NON_EXISTING_CREATOR = "Non existing creator";
+    
     @Mock
     RestService RestService;
     
@@ -170,6 +174,32 @@ public class MrrtReportTemplateSearchHandlerTest {
     @Test
     public void search_shouldReturnEmptySearchResultIfLicenseDoesNotExist() throws Exception {
         request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_LICENSE, NON_EXISTING_LICENSE);
+        
+        PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
+        assertThat(pageableResult, is(instanceOf(EmptySearchResult.class)));
+    }
+    
+    /**
+     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
+     * @verifies return all report templates that match given creator
+     */
+    @Test
+    public void search_shouldReturnAllReportTemplatesThatMatchGivenCreator() throws Exception {
+        request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_CREATOR, CREATOR_QUERY);
+        when(mrrtReportTemplateService.getMrrtReportTemplates(any(MrrtReportTemplateSearchCriteria.class)))
+                .thenReturn(mrrtReportTemplates);
+        
+        PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
+        assertThat(pageableResult, is(instanceOf(NeedsPaging.class)));
+    }
+    
+    /**
+     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
+     * @verifies return empty search result if creator does not exist
+     */
+    @Test
+    public void search_shouldReturnEmptySearchResultIfCreatorDoesNotExist() throws Exception {
+        request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_CREATOR, NON_EXISTING_CREATOR);
         
         PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
         assertThat(pageableResult, is(instanceOf(EmptySearchResult.class)));

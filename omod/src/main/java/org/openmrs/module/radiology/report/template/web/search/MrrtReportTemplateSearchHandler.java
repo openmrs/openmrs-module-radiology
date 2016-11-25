@@ -42,12 +42,14 @@ public class MrrtReportTemplateSearchHandler implements SearchHandler {
     
     public static final String REQUEST_PARAM_LICENSE = "license";
     
+    public static final String REQUEST_PARAM_CREATOR = "creator";
+    
     @Autowired
     private MrrtReportTemplateService mrrtReportTemplateService;
     
     SearchQuery searchQuery = new SearchQuery.Builder("Allows you to search for MrrtReportTemplate's by title")
             .withOptionalParameters(new String[] { REQUEST_PARAM_TITLE, REQUEST_PARAM_PUBLISHER, REQUEST_PARAM_LICENSE,
-                    REQUEST_PARAM_TOTAL_COUNT })
+                    REQUEST_PARAM_CREATOR, REQUEST_PARAM_TOTAL_COUNT })
             .build();
     
     private final SearchConfig searchConfig = new SearchConfig("default", RestConstants.VERSION_1 + "/mrrtreporttemplate",
@@ -70,6 +72,8 @@ public class MrrtReportTemplateSearchHandler implements SearchHandler {
      * @should return empty search result if publisher does not exist
      * @should return all report templates that match given license
      * @should return empty search result if license does not exist
+     * @should return all report templates that match given creator
+     * @should return empty search result if creator does not exist
      */
     @Override
     public PageableResult search(RequestContext context) throws ResponseException {
@@ -77,10 +81,13 @@ public class MrrtReportTemplateSearchHandler implements SearchHandler {
         final String templateTitle = context.getParameter("title");
         final String publisher = context.getParameter("publisher");
         final String templateLicense = context.getParameter("license");
+        final String templateCreator = context.getParameter("creator");
+        
         final MrrtReportTemplateSearchCriteria searchCriteria =
                 new MrrtReportTemplateSearchCriteria.Builder().withTitle(templateTitle)
                         .withPublisher(publisher)
                         .withLicense(templateLicense)
+                        .withCreator(templateCreator)
                         .build();
         
         final List<MrrtReportTemplate> result = mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria);

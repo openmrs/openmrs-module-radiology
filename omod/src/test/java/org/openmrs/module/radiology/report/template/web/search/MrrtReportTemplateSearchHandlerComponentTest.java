@@ -52,6 +52,10 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
     
     private static final String NON_EXISTING_LICENSE = "Non existing license";
     
+    private static final String CREATOR_QUERY = "creator1";
+    
+    private static final String NON_EXISTING_CREATOR = "Non existing creator";
+    
     @Autowired
     MrrtReportTemplateService mrrtReportTemplateService;
     
@@ -213,6 +217,44 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
     public void search_shouldReturnEmptySearchResultIfLicenseDoesNotExist() throws Exception {
         MockHttpServletRequest mockRequest = request(RequestMethod.GET, getURI());
         mockRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_LICENSE, NON_EXISTING_LICENSE);
+        SimpleObject resultMrrtReportTemplate = deserialize(handle(mockRequest));
+        
+        assertNotNull(resultMrrtReportTemplate);
+        List<Object> hits = (List<Object>) resultMrrtReportTemplate.get("results");
+        assertThat(hits.size(), is(0));
+    }
+    
+    /**
+     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
+     * @verifies return all report templates that match given creator
+     */
+    @Test
+    public void search_shouldReturnAllReportTemplatesThatMatchGivenCreator() throws Exception {
+        MockHttpServletRequest mrrtReportTemplateRequest = request(RequestMethod.GET, getURI());
+        mrrtReportTemplateRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_CREATOR, CREATOR_QUERY);
+        SimpleObject resultMrrtReportTemplate = deserialize(handle(mrrtReportTemplateRequest));
+        
+        assertNotNull(resultMrrtReportTemplate);
+        List<Object> hits = (List<Object>) resultMrrtReportTemplate.get("results");
+        MrrtReportTemplateSearchCriteria searchCriteria =
+                new MrrtReportTemplateSearchCriteria.Builder().withCreator(CREATOR_QUERY)
+                        .build();
+        assertThat(hits.size(), is(1));
+        assertThat(PropertyUtils.getProperty(hits.get(0), "uuid"),
+            is(mrrtReportTemplateService.getMrrtReportTemplates(searchCriteria)
+                    .get(0)
+                    .getUuid()));
+        assertNull(PropertyUtils.getProperty(resultMrrtReportTemplate, "totalCount"));
+    }
+    
+    /**
+     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
+     * @verifies return empty search result if creator does not exist
+     */
+    @Test
+    public void search_shouldReturnEmptySearchResultIfCreatorDoesNotExist() throws Exception {
+        MockHttpServletRequest mockRequest = request(RequestMethod.GET, getURI());
+        mockRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_CREATOR, NON_EXISTING_CREATOR);
         SimpleObject resultMrrtReportTemplate = deserialize(handle(mockRequest));
         
         assertNotNull(resultMrrtReportTemplate);
