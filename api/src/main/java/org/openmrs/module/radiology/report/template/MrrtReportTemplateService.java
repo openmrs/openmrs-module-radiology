@@ -122,6 +122,8 @@ public interface MrrtReportTemplateService extends OpenmrsService {
      * @should return an empty list if no match for publisher was found
      * @should return all mrrt report templates that match given license anywhere in dcterms license insensitive to case
      * @should return an empty list if no match for license was found
+     * @should return all mrrt report templates that match given creator anywhere in dcterms creator insensitive to case
+     * @should return an empty list if no match for creator was found
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORT_TEMPLATES)
     public List<MrrtReportTemplate>

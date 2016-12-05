@@ -61,4 +61,16 @@ public class MrrtReportTemplateSearchCriteriaTest {
                 .build();
         assertThat(mrrtReportTemplateSearchCriteria.getLicense(), is(license));
     }
+    
+    /**
+     * @see MrrtReportTemplateSearchCriteria.Builder#build()
+     * @verifies create an mrrt report template search criteria instance with creator if creator is set
+     */
+    @Test
+    public void build_shouldCreateAnMrrtReportTemplateSearchCriteriaInstanceWithCreatorIfCreatorIsSet() throws Exception {
+        String creator = "creator1";
+        mrrtReportTemplateSearchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withCreator(creator)
+                .build();
+        assertThat(mrrtReportTemplateSearchCriteria.getCreator(), is(creator));
+    }
 }
