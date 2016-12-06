@@ -11,7 +11,8 @@
     "gulp-uglify": "~2.0.0",
     "gulp-clean-css" : "~2.0.13",
     "run-sequence": "~1.2.2",
-    "gulp-rename": "~1.2.2"
+    "gulp-rename": "~1.2.2",
+    "gulp-sourcemaps": "~2.0.0"
   },
   "scripts": {
     "prebuild": "npm install",

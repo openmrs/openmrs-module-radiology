@@ -421,10 +421,27 @@
 						<goals>
 							<goal>gulp</goal>
 						</goals>
+						<configuration>
+							<arguments>${gulp.task}</arguments>
+						</configuration>
 						<phase>generate-resources</phase>
 					</execution>
 				</executions>
 			</plugin>
 		</plugins>
 	</build>
+
+	<profiles>
+		<profile>
+			<id>development</id>
+			<activation>
+				<property>
+					<name>dev</name>
+				</property>
+			</activation>
+			<properties>
+				<gulp.task>dev</gulp.task>
+			</properties>
+		</profile>
+	</profiles>
 </project>
