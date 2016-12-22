@@ -35,22 +35,18 @@ import org.hibernate.cfg.Environment;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.openmrs.Encounter;
 import org.openmrs.Order;
 import org.openmrs.Order.Urgency;
 import org.openmrs.Patient;
 import org.openmrs.Provider;
-import org.openmrs.api.APIException;
 import org.openmrs.api.AdministrationService;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.EncounterService;
 import org.openmrs.api.PatientService;
 import org.openmrs.api.ProviderService;
 import org.openmrs.api.context.Context;
-import org.openmrs.module.radiology.dicom.code.PerformedProcedureStepStatus;
 import org.openmrs.module.radiology.study.RadiologyStudy;
 import org.openmrs.parameter.EncounterSearchCriteriaBuilder;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
@@ -106,9 +102,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     
     @Autowired
     private RadiologyOrderService radiologyOrderService;
-    
-    @Rule
-    public ExpectedException expectedException = ExpectedException.none();
     
     /**
      * Overriding following method is necessary to enable MVCC which is disabled by default in DB h2
@@ -234,47 +227,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
-     * @verifies throw illegal argument exception given null
-     */
-    @Test
-    public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenNull() throws Exception {
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyOrder cannot be null");
-        radiologyOrderService.placeRadiologyOrder(null);
-    }
-    
-    /**
-     * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
-     * @verifies throw illegal argument exception if given radiology order has no study
-     */
-    @Test
-    public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderHasNoStudy() throws Exception {
-        
-        RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
-        radiologyOrder.setStudy(null);
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyOrder.study cannot be null");
-        radiologyOrderService.placeRadiologyOrder(radiologyOrder);
-    }
-    
-    /**
-     * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
-     * @verifies throw api exception on saving an existing radiology order
-     */
-    @Test
-    public void placeRadiologyOrder_shouldThrowApiExceptionOnSavingAnExistingRadiologyOrder() throws Exception {
-        
-        RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
-        
-        expectedException.expect(APIException.class);
-        expectedException.expectMessage("Order.cannot.edit.existing");
-        radiologyOrderService.placeRadiologyOrder(radiologyOrder);
-    }
-    
-    /**
      * @see AccessionNumberGenerator#getNewAccessionNumber()
      * @verifies always return a unique accession number when called multiple times
      */
@@ -367,115 +319,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
-     * @verifies throw illegal argument exception if given radiology order is null
-     */
-    @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderIsNull() throws Exception {
-        
-        RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
-        String discontinueReason = "Wrong Procedure";
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyOrder cannot be null");
-        radiologyOrderService.discontinueRadiologyOrder(null, radiologyOrder.getOrderer(), discontinueReason);
-    }
-    
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
-     * @verifies throw illegal argument exception if given radiology order with orderId null
-     */
-    @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderWithOrderIdNull()
-            throws Exception {
-        
-        RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
-        String discontinueReason = "Wrong Procedure";
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyOrder.orderId cannot be null, can only discontinue existing order");
-        radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueReason);
-    }
-    
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
-     * @verifies throw illegal argument exception if given orderer is null
-     */
-    @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenOrdererIsNull() throws Exception {
-        
-        RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
-        radiologyOrder.getStudy()
-                .setPerformedStatus(null);
-        String discontinueReason = "Wrong Procedure";
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("orderer cannot be null");
-        radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, null, discontinueReason);
-    }
-    
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
-     * @verifies throw api exception if given radiology order is discontinued
-     */
-    @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderIsDiscontinued()
-            throws Exception {
-        
-        RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
-        radiologyOrder.getStudy()
-                .setPerformedStatus(null);
-        String discontinueReason = "Wrong Procedure";
-        
-        Order discontinuationOrder = radiologyOrderService.discontinueRadiologyOrder(radiologyOrder,
-            radiologyOrder.getOrderer(), discontinueReason);
-        
-        assertNotNull(discontinuationOrder);
-        assertThat(discontinuationOrder.getAction(), is(Order.Action.DISCONTINUE));
-        
-        expectedException.expect(APIException.class);
-        expectedException.expectMessage("RadiologyOrder.cannot.discontinue.discontinued");
-        radiologyOrderService.discontinueRadiologyOrder((RadiologyOrder) discontinuationOrder.getPreviousOrder(),
-            radiologyOrder.getOrderer(), discontinueReason);
-    }
-    
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
-     * @verifies throw api exception if given radiology order is in progress
-     */
-    @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderIsInProgress()
-            throws Exception {
-        
-        RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
-        radiologyOrder.getStudy()
-                .setPerformedStatus(PerformedProcedureStepStatus.IN_PROGRESS);
-        String discontinueReason = "Wrong Procedure";
-        
-        expectedException.expect(APIException.class);
-        expectedException.expectMessage("RadiologyOrder.cannot.discontinue.inProgressOrcompleted");
-        radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueReason);
-    }
-    
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
-     * @verifies throw api exception if given radiology order is completed
-     */
-    @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderIsCompleted()
-            throws Exception {
-        
-        RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
-        radiologyOrder.getStudy()
-                .setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
-        String discontinueReason = "Wrong Procedure";
-        
-        expectedException.expect(APIException.class);
-        expectedException.expectMessage("RadiologyOrder.cannot.discontinue.inProgressOrcompleted");
-        radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, radiologyOrder.getOrderer(), discontinueReason);
-    }
-    
-    /**
      * @see RadiologyOrderService#getRadiologyOrder(Integer)
      * @verifies return radiology order matching given order id
      */
@@ -499,18 +342,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     }
     
     /**
-     * @see RadiologyOrderService#getRadiologyOrder(Integer)
-     * @verifies throw illegal argument exception if given null
-     */
-    @Test
-    public void getRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenNull() {
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("orderId cannot be null");
-        radiologyOrderService.getRadiologyOrder(null);
-    }
-    
-    /**
      * @see RadiologyOrderService#getRadiologyOrderByUuid(String)
      * @verifies return radiology order matching given uuid
      */
@@ -531,18 +362,6 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
     public void getRadiologyOrderByUuid_shouldReturnNullIfNoMatchIsFound() throws Exception {
         
         assertNull(radiologyOrderService.getRadiologyOrderByUuid(NON_EXISTING_RADIOLOGY_ORDER_UUID));
-    }
-    
-    /**
-     * @see RadiologyOrderService#getRadiologyOrderByUuid(String)
-     * @verifies throw illegal argument exception if given null
-     */
-    @Test
-    public void getRadiologyOrderByUuid_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("uuid cannot be null");
-        radiologyOrderService.getRadiologyOrderByUuid(null);
     }
     
     /**
@@ -822,17 +641,5 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertThat(radiologyOrders.get(0)
                 .getOrderId(),
             is(2006));
-    }
-    
-    /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies throw illegal argument exception if given null
-     */
-    @Test
-    public void getRadiologyOrders_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
-        
-        expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("radiologyOrderSearchCriteria cannot be null");
-        radiologyOrderService.getRadiologyOrders(null);
     }
 }
