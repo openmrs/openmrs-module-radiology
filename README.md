@@ -177,6 +177,14 @@ This module is not yet officially released to the [openmrs modules](https://modu
 
 The API and UI are not yet stable and subject to frequent changes.
 
+:exclamation: ATTENTION :exclamation: radiology orders created via the module will not be sent to the PACS
+as HL7 order messages. This has previously been done in a hacky/synchronous way which was not fit for
+production and only messy code which had to be removed. A message queue which takes care of sending HL7
+order messages to the PACS once orders are created is needed. Such a queue would retry sending the order message
+in case the PACS is currently down. Unfortunately, OpenMRS does not provide such a message queue for outgoing HL7 messages.
+This is THE big missing piece in the puzzle of the radiology module which until
+now has been bridged with communication servers such as mirth.
+
 The module depends on [OpenMRS Version 2.0.0](https://github.com/openmrs/openmrs-core) so it cannot
 run on any version lower than that.
 
