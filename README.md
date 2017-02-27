@@ -1,6 +1,6 @@
 # openmrs-module-radiology
 
-[![Build Status](https://secure.travis-ci.org/openmrs/openmrs-module-radiology.png?branch=master)](https://travis-ci.org/openmrs/openmrs-module-radiology) [![Coverage Status](https://coveralls.io/repos/openmrs/openmrs-module-radiology/badge.svg?branch=master&service=github)](https://coveralls.io/github/openmrs/openmrs-module-radiology?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/grade/5e0137f0c916494eaa3ba7de43149ef7)](https://www.codacy.com/app/teleivo/openmrs-module-radiology_2) [![Dependency Status](https://www.versioneye.com/user/projects/57a194fb3d8eb6002f560778/badge.svg?style=flat)](https://www.versioneye.com/user/projects/57a194fb3d8eb6002f560778)
+[![Build Status](https://travis-ci.org/openmrs/openmrs-module-radiology.svg?branch=master)](https://travis-ci.org/openmrs/openmrs-module-radiology) [![Coverage Status](https://coveralls.io/repos/openmrs/openmrs-module-radiology/badge.svg?branch=master&service=github)](https://coveralls.io/github/openmrs/openmrs-module-radiology?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/grade/5e0137f0c916494eaa3ba7de43149ef7)](https://www.codacy.com/app/teleivo/openmrs-module-radiology_2) [![Dependency Status](https://www.versioneye.com/user/projects/57a194fb3d8eb6002f560778/badge.svg?style=flat)](https://www.versioneye.com/user/projects/57a194fb3d8eb6002f560778)
 
 ####Table of Contents
 
