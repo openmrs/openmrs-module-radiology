@@ -9,6 +9,7 @@
  */
 package org.openmrs.module.radiology.report.template;
 
+import java.util.Date;
 import java.util.Set;
 
 import org.openmrs.BaseOpenmrsData;
@@ -44,7 +45,7 @@ public class MrrtReportTemplate extends BaseOpenmrsData {
     
     private String dcTermsLicense;
     
-    private String dcTermsDate;
+    private Date dcTermsDate;
     
     private String dcTermsCreator;
     
@@ -148,11 +149,19 @@ public class MrrtReportTemplate extends BaseOpenmrsData {
         this.dcTermsLicense = dcTermsLicense;
     }
     
-    public String getDcTermsDate() {
-        return dcTermsDate;
+    /**
+     * Get dcterms date property of an MRRT report template.
+     *
+     * @return Date date property of the MRRT report template or null if no date was set
+     */
+    public Date getDcTermsDate() {
+        if (dcTermsDate == null) {
+            return dcTermsDate;
+        }
+        return new Date(dcTermsDate.getTime());
     }
     
-    public void setDcTermsDate(String dcTermsDate) {
+    public void setDcTermsDate(Date dcTermsDate) {
         this.dcTermsDate = dcTermsDate;
     }
     

@@ -33,7 +33,7 @@
 		<property name="dcTermsPublisher" column="dcterms_publisher" type="java.lang.String"/>
 		<property name="dcTermsRights" column="dcterms_rights" type="java.lang.String"/>
 		<property name="dcTermsLicense" column="dcterms_license" type="java.lang.String"/>
-		<property name="dcTermsDate" column="dcterms_date" type="java.lang.String"/>
+		<property name="dcTermsDate" column="dcterms_date" type="java.util.Date"/>
 		<property name="dcTermsCreator" column="dcterms_creator" type="java.lang.String"/>
 		
 		<!-- bi-directional many-to-many association to ConceptReferenceTerm -->

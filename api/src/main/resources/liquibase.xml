@@ -568,4 +568,8 @@
 			<column name="uuid" value="d9015276-b7b1-45f1-ad72-323896e75a52" />
 		</insert>
 	</changeSet>
+	<changeSet id="radiology-46" author="ivange94">
+		<comment>Change the datatype of dcterms_date from varchar(32) to date</comment>
+		<modifyDataType tableName="radiology_report_template" columnName="dcterms_date" newDataType="datetime"/>
+	</changeSet>
 </databaseChangeLog>

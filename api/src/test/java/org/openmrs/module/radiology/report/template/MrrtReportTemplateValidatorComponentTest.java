@@ -407,4 +407,17 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
                 is(4));
         }
     }
+    
+    /**
+     * @see MrrtReportTemplateValidator#validate(String)
+     * @verifies throw an mrrt report template exception if dcterms date of template file is not valid
+     */
+    @Test
+    public void validate_shouldThrowAnMrrtReportTemplateExceptionIfDctermsDateOfTemplateFileIsNotValid() throws Exception {
+        
+        String templateContent = getFileContent(
+            "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-dcTermsDateIsNotAValidDateObject.html");
+        expectedException.expect(MrrtReportTemplateValidationException.class);
+        validator.validate(templateContent);
+    }
 }

@@ -12,6 +12,8 @@ package org.openmrs.module.radiology.report.template;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -78,7 +80,12 @@ class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParse
         
         final Document doc = Jsoup.parse(mrrtTemplate, "");
         final MrrtReportTemplate result = new MrrtReportTemplate();
-        initializeTemplate(result, doc);
+        try {
+            initializeTemplate(result, doc);
+        }
+        catch (ParseException e) {
+            throw new APIException("radiology.report.template.parser.error", null, e);
+        }
         try {
             addTermsToTemplate(result, doc.getElementsByTag("script")
                     .get(0)
@@ -90,7 +97,7 @@ class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParse
         return result;
     }
     
-    private final void initializeTemplate(MrrtReportTemplate template, Document doc) {
+    private final void initializeTemplate(MrrtReportTemplate template, Document doc) throws ParseException {
         final Elements metaTags = doc.getElementsByTag("meta");
         
         template.setPath(doc.baseUri());
@@ -125,7 +132,7 @@ class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParse
                     template.setDcTermsLicense(content);
                     break;
                 case DCTERMS_DATE:
-                    template.setDcTermsDate(content);
+                    parseDcTermsDate(template, content);
                     break;
                 case DCTERMS_CREATOR:
                     template.setDcTermsCreator(content);
@@ -179,5 +186,9 @@ class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParse
             }
         }
         return null;
+    }
+    
+    private final void parseDcTermsDate(MrrtReportTemplate template, String content) throws ParseException {
+        template.setDcTermsDate(new SimpleDateFormat(MrrtReportTemplateConstants.DATE_FORMAT).parse(content));
     }
 }
