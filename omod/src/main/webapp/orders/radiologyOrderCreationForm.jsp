@@ -16,13 +16,7 @@
 <script type="text/javascript">
   var $j = jQuery.noConflict();
 
-  function onQuestionSelect(concept) {
-    $j("#conceptDescription").html(concept.description);
-  }
 
-  function onReasonSelect(concept) {
-    $j("#reasonDescription").html(concept.description);
-  }
   
   $j(document).ready(
           function() {
@@ -132,7 +126,7 @@
               initialValue="${status.editor.value.conceptId}" onSelectFunction="onQuestionSelect"
               includeClasses="${radiologyConceptClassNames}" />
           </spring:bind> <form:errors path="concept" cssClass="error" />
-          <div class="description" id="conceptDescription"></div></td>
+         
       </tr>
       <tr>
         <td><spring:message code="radiology.radiologyOrder.orderReason" /></td>
@@ -141,7 +135,7 @@
               initialValue="${status.editor.value.conceptId}" onSelectFunction="onReasonSelect" 
               includeClasses="${radiologyOrderReasonConceptClassNames}" />
           </spring:bind> <form:errors path="orderReason" cssClass="error" />
-          <div class="description" id="reasonDescription"></div></td>
+          
       </tr>
       <tr>
         <td><spring:message code="radiology.radiologyOrder.orderReasonNonCoded" /></td>
