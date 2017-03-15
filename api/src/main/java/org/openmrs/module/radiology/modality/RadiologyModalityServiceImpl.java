@@ -9,20 +9,20 @@
  */
 package org.openmrs.module.radiology.modality;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
 import org.openmrs.api.context.Context;
 import org.openmrs.api.impl.BaseOpenmrsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
-import org.apache.commons.lang3.StringUtils;
-
-import java.util.List;
 
 @Transactional(readOnly = true)
 class RadiologyModalityServiceImpl extends BaseOpenmrsService implements RadiologyModalityService {
     
     
-    private static final Log log = LogFactory.getLog(RadiologyModalityServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(RadiologyModalityServiceImpl.class);
     
     private RadiologyModalityDAO radiologyModalityDAO;
     

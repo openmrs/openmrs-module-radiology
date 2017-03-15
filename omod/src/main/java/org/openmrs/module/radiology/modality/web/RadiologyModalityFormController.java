@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.radiology.modality.web;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.modality.RadiologyModality;
 import org.openmrs.module.radiology.modality.RadiologyModalityService;
@@ -22,8 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
 
 /**
  * Controller for the form handling entry, display, discontinuation of {@code RadiologyModality's}.

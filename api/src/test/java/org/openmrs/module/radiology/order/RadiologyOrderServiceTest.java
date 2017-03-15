@@ -9,6 +9,8 @@
  */
 package org.openmrs.module.radiology.order;
 
+import static org.mockito.Mockito.when;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -16,8 +18,6 @@ import org.mockito.Mock;
 import org.openmrs.Provider;
 import org.openmrs.api.APIException;
 import org.openmrs.test.BaseContextMockTest;
-
-import static org.mockito.Mockito.when;
 
 /**
  * Tests {@link RadiologyOrderService}

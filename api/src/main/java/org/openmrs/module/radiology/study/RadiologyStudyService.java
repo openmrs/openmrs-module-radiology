@@ -10,6 +10,7 @@
 package org.openmrs.module.radiology.study;
 
 import org.openmrs.annotation.Authorized;
+import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.RadiologyPrivileges;
 

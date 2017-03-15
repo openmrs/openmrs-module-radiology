@@ -9,10 +9,10 @@
  */
 package org.openmrs.module.radiology.report.template;
 
-import org.jsoup.select.Elements;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.jsoup.select.Elements;
 
 /**
  * Validates <meta> tags of an Mrrt Report Template.

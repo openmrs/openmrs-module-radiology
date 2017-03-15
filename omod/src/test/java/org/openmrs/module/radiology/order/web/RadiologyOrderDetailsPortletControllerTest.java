@@ -18,9 +18,9 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.junit.Rule;
+import javax.servlet.http.HttpServletRequest;
+
 import org.junit.Test;
-import org.junit.rules.ExpectedException;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.module.radiology.dicom.DicomWebViewer;

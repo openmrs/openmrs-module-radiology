@@ -9,18 +9,16 @@
  */
 package org.openmrs.module.radiology.report;
 
+import static org.mockito.Mockito.when;
+
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.runners.MockitoJUnitRunner;
 import org.openmrs.api.APIException;
 import org.openmrs.module.radiology.order.RadiologyOrder;
 import org.openmrs.test.BaseContextMockTest;
-
-import static org.mockito.Mockito.when;
 
 /**
  *  Tests {@link RadiologyReportService}
