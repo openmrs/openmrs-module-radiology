@@ -72,7 +72,9 @@
 		<module name="AvoidStarImport" />
 		<module name="RedundantImport" />
 		<module name="UnusedImports"/>
-		<module name="IllegalImport" />
+		<module name="IllegalImport">
+			<property name="illegalPkgs" value="sun, org.apache.commons.logging" />
+		</module>
 		<module name="PackageName" />
 		<module name="TypeName">
 			<property name="format" value="^[A-Z][a-zA-Z0-9]*$" />

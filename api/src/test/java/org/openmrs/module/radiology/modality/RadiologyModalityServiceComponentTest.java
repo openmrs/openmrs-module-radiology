@@ -9,6 +9,14 @@
  */
 package org.openmrs.module.radiology.modality;
 
+import static org.hamcrest.CoreMatchers.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
+import java.util.List;
+
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -16,16 +24,7 @@ import org.junit.rules.ExpectedException;
 import org.openmrs.api.APIException;
 import org.openmrs.api.context.Context;
 import org.openmrs.test.BaseModuleContextSensitiveTest;
-import org.openmrs.test.SkipBaseSetup;
 import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
-
-import static org.hamcrest.CoreMatchers.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Tests {@link RadiologyModalityService}.

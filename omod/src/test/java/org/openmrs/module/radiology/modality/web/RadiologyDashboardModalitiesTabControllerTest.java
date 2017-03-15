@@ -9,17 +9,17 @@
  */
 package org.openmrs.module.radiology.modality.web;
 
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThat;
+
+import javax.servlet.http.HttpServletRequest;
+
 import org.junit.Test;
 import org.openmrs.module.radiology.web.RadiologyWebConstants;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-
-import static org.hamcrest.core.Is.is;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertThat;
 
 /**
  * Tests {@link RadiologyDashboardModalitiesTabController}.

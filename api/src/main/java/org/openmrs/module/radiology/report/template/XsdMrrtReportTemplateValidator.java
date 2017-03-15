@@ -20,12 +20,12 @@ import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.select.Elements;
 import org.openmrs.api.APIException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.xml.sax.ErrorHandler;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
@@ -36,7 +36,7 @@ import org.xml.sax.SAXParseException;
 public class XsdMrrtReportTemplateValidator implements MrrtReportTemplateValidator {
     
     
-    private static final Log log = LogFactory.getLog(XsdMrrtReportTemplateValidator.class);
+    private static final Logger log = LoggerFactory.getLogger(XsdMrrtReportTemplateValidator.class);
     
     private static final String MRRT_REPORT_TEMPLATE_SCHEMA_FILE = "MrrtReportTemplateSchema.xsd";
     

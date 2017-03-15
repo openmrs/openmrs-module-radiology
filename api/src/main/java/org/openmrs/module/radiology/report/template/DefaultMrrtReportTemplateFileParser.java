@@ -20,8 +20,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -31,6 +29,8 @@ import org.openmrs.ConceptSource;
 import org.openmrs.api.APIException;
 import org.openmrs.api.ConceptService;
 import org.openmrs.api.context.Context;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
@@ -40,7 +40,7 @@ import org.xml.sax.SAXException;
 class DefaultMrrtReportTemplateFileParser implements MrrtReportTemplateFileParser {
     
     
-    private static final Log log = LogFactory.getLog(DefaultMrrtReportTemplateFileParser.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultMrrtReportTemplateFileParser.class);
     
     private static final String DCTERMS_TITLE = "dcterms.title";
     

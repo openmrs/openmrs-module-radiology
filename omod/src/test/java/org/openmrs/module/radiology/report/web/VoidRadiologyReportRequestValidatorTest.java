@@ -9,15 +9,15 @@
  */
 package org.openmrs.module.radiology.report.web;
 
+import static org.hamcrest.Matchers.is;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertThat;
+import static org.junit.Assert.assertTrue;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
-
-import static org.hamcrest.Matchers.is;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 
 /**
  * Tests {@link VoidRadiologyReportRequest}.

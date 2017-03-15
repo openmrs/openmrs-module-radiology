@@ -10,19 +10,19 @@
 package org.openmrs.module.radiology.study;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.RadiologyProperties;
 import org.openmrs.module.radiology.dicom.DicomUidGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyStudyService {
     
     
-    private static final Log log = LogFactory.getLog(RadiologyStudyServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(RadiologyStudyServiceImpl.class);
     
     private RadiologyStudyDAO radiologyStudyDAO;
     

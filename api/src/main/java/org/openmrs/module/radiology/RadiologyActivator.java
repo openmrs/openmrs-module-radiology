@@ -9,9 +9,9 @@
  */
 package org.openmrs.module.radiology;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.module.BaseModuleActivator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * This class contains the logic that is run every time this module is either started or shutdown
@@ -20,7 +20,7 @@ import org.openmrs.module.BaseModuleActivator;
 public class RadiologyActivator extends BaseModuleActivator {
     
     
-    private static final Log log = LogFactory.getLog(RadiologyActivator.class);
+    private static final Logger log = LoggerFactory.getLogger(RadiologyActivator.class);
     
     @Override
     public void willStart() {

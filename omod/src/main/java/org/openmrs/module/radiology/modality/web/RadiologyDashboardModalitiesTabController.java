@@ -9,17 +9,13 @@
  */
 package org.openmrs.module.radiology.modality.web;
 
-import org.openmrs.module.radiology.report.RadiologyReportStatus;
+import javax.servlet.http.HttpServletRequest;
+
 import org.openmrs.module.radiology.web.RadiologyWebConstants;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
-
-import javax.servlet.http.HttpServletRequest;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Controller for the dashboard tab containing {@code RadiologyModality's}.

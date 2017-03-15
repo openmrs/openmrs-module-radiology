@@ -9,13 +9,12 @@
  */
 package org.openmrs.module.radiology.modality;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.hibernate.Criteria;
 import org.hibernate.SessionFactory;
 import org.hibernate.criterion.Restrictions;
-import org.openmrs.module.radiology.report.template.MrrtReportTemplate;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * Hibernate specific RadiologyModality related functions. This class should not be used directly. All

@@ -13,18 +13,18 @@ import java.util.Date;
 import java.util.List;
 
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.openmrs.api.APIException;
 import org.openmrs.api.impl.BaseOpenmrsService;
 import org.openmrs.module.radiology.order.RadiologyOrder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.transaction.annotation.Transactional;
 
 @Transactional(readOnly = true)
 class RadiologyReportServiceImpl extends BaseOpenmrsService implements RadiologyReportService {
     
     
-    private static final Log log = LogFactory.getLog(RadiologyReportServiceImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(RadiologyReportServiceImpl.class);
     
     private RadiologyReportDAO radiologyReportDAO;
     

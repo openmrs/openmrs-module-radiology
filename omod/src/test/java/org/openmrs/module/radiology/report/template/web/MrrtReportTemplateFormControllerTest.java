@@ -27,7 +27,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplate;
 import org.openmrs.module.radiology.report.template.MrrtReportTemplateService;
-import org.openmrs.module.radiology.report.template.web.MrrtReportTemplateFormController;
 import org.openmrs.test.BaseContextMockTest;
 import org.openmrs.web.WebConstants;
 import org.springframework.mock.web.MockHttpServletRequest;

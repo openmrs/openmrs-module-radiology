@@ -9,9 +9,9 @@
  */
 package org.openmrs.module.radiology.report.template;
 
-import org.jsoup.select.Elements;
-
 import java.util.function.Predicate;
+
+import org.jsoup.select.Elements;
 
 /**
  * Checks a condition on a subset of elements matching a selector.

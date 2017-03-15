@@ -9,9 +9,9 @@
  */
 package org.openmrs.module.radiology.report.template;
 
-import org.openmrs.api.APIException;
-
 import java.io.IOException;
+
+import org.openmrs.api.APIException;
 
 /**
  * Validates an mrrt report template according to the IHE Management of Radiology Report Templates (MRRT).

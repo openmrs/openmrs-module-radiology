@@ -9,12 +9,13 @@
  */
 package org.openmrs.module.radiology.web.extension.html;
 
+import static org.openmrs.module.radiology.order.web.RadiologyDashboardOrdersTabController.RADIOLOGY_ORDERS_TAB_REQUEST_MAPPING;
+
 import java.util.HashMap;
 import java.util.Map;
 
 import org.openmrs.module.Extension;
 import org.openmrs.module.web.extension.AdministrationSectionExt;
-import static org.openmrs.module.radiology.order.web.RadiologyDashboardOrdersTabController.RADIOLOGY_ORDERS_TAB_REQUEST_MAPPING;
 
 public class AdminList extends AdministrationSectionExt {
     

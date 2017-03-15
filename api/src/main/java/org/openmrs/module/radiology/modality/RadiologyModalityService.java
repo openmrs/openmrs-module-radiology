@@ -9,12 +9,12 @@
  */
 package org.openmrs.module.radiology.modality;
 
+import java.util.List;
+
 import org.openmrs.annotation.Authorized;
 import org.openmrs.api.APIException;
 import org.openmrs.api.OpenmrsService;
 import org.openmrs.module.radiology.RadiologyPrivileges;
-
-import java.util.List;
 
 /**
  * Service layer for {@code RadiologyModality}.
