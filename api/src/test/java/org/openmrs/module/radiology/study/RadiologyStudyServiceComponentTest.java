@@ -84,10 +84,9 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyStudyService#saveRadiologyStudy(RadiologyStudy)
-     * @verifies create new radiology study from given radiology study
      */
     @Test
-    public void saveRadiologyStudy_shouldCreateNewRadiologyStudyFromGivenRadiologyStudy() throws Exception {
+    public void shouldCreateNewRadiologyStudyFromGivenRadiologyStudy() throws Exception {
         
         RadiologyStudy radiologyStudy = getUnsavedStudy();
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_ID_WITHOUT_STUDY);
@@ -116,10 +115,9 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyStudyService#saveRadiologyStudy(RadiologyStudy)
-     * @verifies throw illegal argument exception if given null
      */
     @Test
-    public void saveRadiologyStudy_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+    public void shouldFailToSaveStudyIfGivenNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyStudy cannot be null");
@@ -128,10 +126,9 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyStudyService#saveRadiologyStudy(RadiologyStudy)
-     * @verifies throw api exception on saving an existing radiology study
      */
     @Test
-    public void saveRadiologyStudy_shouldThrowApiExceptionOnSavingAnExistingRadiologyStudy() throws Exception {
+    public void shouldThrowApiExceptionOnSavingAnExistingRadiologyStudy() throws Exception {
         
         RadiologyStudy existingStudy = radiologyStudyService.getRadiologyStudy(EXISTING_STUDY_ID);
         
@@ -142,10 +139,9 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyStudyService#getRadiologyStudy(Integer)
-     * @verifies should return radiology study matching given study id
      */
     @Test
-    public void getRadiologyStudy_shouldReturnRadiologyStudyMatchingGivenStudyId() throws Exception {
+    public void shouldReturnRadiologyStudyMatchingGivenStudyId() throws Exception {
         
         RadiologyStudy radiologyStudy = radiologyStudyService.getRadiologyStudy(EXISTING_STUDY_ID);
         
@@ -155,7 +151,6 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyStudyService#getRadiologyStudy(Integer)
-     * @verifies return null if no match was found
      */
     @Test
     public void getRadiologyStudy_shouldReturnNullIfNoMatchWasFound() throws Exception {
@@ -165,10 +160,9 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyStudyService#getRadiologyStudy(Integer)
-     * @verifies throw illegal argument exception if given null
      */
     @Test
-    public void getRadiologyStudy_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+    public void shouldFailToGetStudyByIdIfGivenNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("studyId cannot be null");
@@ -177,10 +171,9 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyStudyService#getRadiologyStudyByUuid(String)
-     * @verifies return radiology study matching given uuid
      */
     @Test
-    public void getRadiologyStudyByUuid_shouldReturnRadiologyStudyMatchingGivenUuid() throws Exception {
+    public void shouldReturnRadiologyStudyMatchingGivenUuid() throws Exception {
         
         RadiologyStudy radiologyStudy = radiologyStudyService.getRadiologyStudyByUuid(EXISTING_STUDY_UUID);
         
@@ -190,20 +183,18 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyStudyService#getRadiologyStudyByUuid(String)
-     * @verifies return null if no match was found
      */
     @Test
-    public void getRadiologyStudyByUuid_shouldReturnNullIfNoMatchWasFound() throws Exception {
+    public void shouldReturnNullIfNoMatchWasFound() throws Exception {
         
         assertNull(radiologyStudyService.getRadiologyStudyByUuid(NON_EXISTING_STUDY_UUID));
     }
     
     /**
      * @see RadiologyStudyService#getRadiologyStudyByUuid(String)
-     * @verifies throw illegal argument exception if given null
      */
     @Test
-    public void getRadiologyStudyByUuid_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+    public void shouldFailToGetStudyByUuidIfGivenNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("uuid cannot be null");
@@ -212,11 +203,9 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyStudyService#getRadiologyStudyByStudyInstanceUid(String)
-     * @verifies return radiology study exactly matching given study instance uid
      */
     @Test
-    public void getRadiologyStudyByStudyInstanceUid_shouldReturnRadiologyStudyExactlyMatchingGivenStudyInstanceUid()
-            throws Exception {
+    public void shouldReturnRadiologyStudyExactlyMatchingGivenStudyInstanceUid() throws Exception {
         
         RadiologyStudy radiologyStudy =
                 radiologyStudyService.getRadiologyStudyByStudyInstanceUid(EXISTING_STUDY_INSTANCE_UID);
@@ -227,20 +216,18 @@ public class RadiologyStudyServiceComponentTest extends BaseModuleContextSensiti
     
     /**
      * @see RadiologyStudyService#getRadiologyStudyByStudyInstanceUid(String)
-     * @verifies return null if no match was found
      */
     @Test
-    public void getRadiologyStudyByStudyInstanceUid_shouldReturnNullIfNoMatchIsFound() throws Exception {
+    public void shouldReturnNullIfNoMatchIsFound() throws Exception {
         
         assertNull(radiologyStudyService.getRadiologyStudyByStudyInstanceUid(NON_EXISTING_STUDY_INSTANCE_UID));
     }
     
     /**
      * @see RadiologyStudyService#getRadiologyStudyByStudyInstanceUid(String)
-     * @verifies throw illegal argument exception if given null
      */
     @Test
-    public void getRadiologyStudyByStudyInstanceUid_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+    public void shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("studyInstanceUid cannot be null");

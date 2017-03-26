@@ -16,7 +16,6 @@ import static org.junit.Assert.assertThat;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
-import org.openmrs.test.Verifies;
 
 /**
  * Tests {@link PerformedProcedureStepStatus}
@@ -31,9 +30,7 @@ public class PerformedProcedureStepStatusTest {
      * @see PerformedProcedureStepStatus#getNameOrUnknown(PerformedProcedureStepStatus)
      */
     @Test
-    @Verifies(value = "should return name given performed procedure step status",
-            method = "getNameOrUnknown(PerformedProcedureStepStatus)")
-    public void getNameOrUnknown_shouldReturnDisplayNameGivenPerformedProcedureStepStatus() {
+    public void shouldReturnDisplayNameGivenPerformedProcedureStepStatus() {
         assertThat(PerformedProcedureStepStatus.getNameOrUnknown(PerformedProcedureStepStatus.IN_PROGRESS),
             is("IN_PROGRESS"));
         assertThat(PerformedProcedureStepStatus.getNameOrUnknown(PerformedProcedureStepStatus.DISCONTINUED),
@@ -45,8 +42,7 @@ public class PerformedProcedureStepStatusTest {
      * @see PerformedProcedureStepStatus#getNameOrUnknown(PerformedProcedureStepStatus)
      */
     @Test
-    @Verifies(value = "should return unknown given null", method = "getNameOrUnknown(PerformedProcedureStepStatus)")
-    public void getNameOrUnknown_shouldReturnUnknownGivenNull() {
+    public void shouldReturnUnknownGivenNull() {
         assertThat(PerformedProcedureStepStatus.getNameOrUnknown(null), is("UNKNOWN"));
     }
     
@@ -54,9 +50,7 @@ public class PerformedProcedureStepStatusTest {
      * @see PerformedProcedureStepStatus#getMatchForDisplayName(String)
      */
     @Test
-    @Verifies(value = "should return performed procedure step status given display name",
-            method = "getMatchForDisplayName(String)")
-    public void getMatchForDisplayName_shouldReturnPerformedProcedureStepStatusGivenDisplayName() {
+    public void shouldReturnPerformedProcedureStepStatusGivenDisplayName() {
         assertThat(PerformedProcedureStepStatus.getMatchForDisplayName("IN PROGRESS"),
             is(PerformedProcedureStepStatus.IN_PROGRESS));
         assertThat(PerformedProcedureStepStatus.getMatchForDisplayName("in progress"),
@@ -83,8 +77,7 @@ public class PerformedProcedureStepStatusTest {
      * @see PerformedProcedureStepStatus#getMatchForDisplayName(String)
      */
     @Test
-    @Verifies(value = "should return null given undefined display name", method = "getMatchForDisplayName(String)")
-    public void getMatchForDisplayName_shouldReturnNullGivenUndefinedDisplayName() {
+    public void shouldReturnNullGivenUndefinedDisplayName() {
         assertNull(PerformedProcedureStepStatus.getMatchForDisplayName("NON EXISTING FANTASY PERFORMEDSTATUS"));
     }
     
@@ -92,8 +85,7 @@ public class PerformedProcedureStepStatusTest {
      * @see PerformedProcedureStepStatus#getMatchForDisplayName(String)
      */
     @Test
-    @Verifies(value = "should throw IllegalArgumentException given null", method = "getMatchForDisplayName(String)")
-    public void getMatchForDisplayName_shouldThrowIllegalArgumentExceptionGivenNull() {
+    public void shouldFailGivenNull() {
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("displayName is required");
         PerformedProcedureStepStatus.getMatchForDisplayName(null);

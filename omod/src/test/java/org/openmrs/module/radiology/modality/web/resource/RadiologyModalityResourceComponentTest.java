@@ -99,11 +99,10 @@ public class RadiologyModalityResourceComponentTest
     }
     
     /**
-     * @verifies return radiology modalities including retired ones if include all is true
      * @see RadiologyModalityResource#doGetAll(RequestContext)
      */
     @Test
-    public void doGetAll_shouldReturnRadiologyModalitiesIncludingRetiredOnesIfIncludeAllIsTrue() throws Exception {
+    public void shouldReturnRadiologyModalitiesIncludingRetiredOnesIfIncludeAllIsTrue() throws Exception {
         
         RadiologyModalityResource radiologyModalityResource = getResource();
         
@@ -116,11 +115,10 @@ public class RadiologyModalityResourceComponentTest
     }
     
     /**
-     * @verifies return radiology modalities excluding retired ones if include all is false
      * @see RadiologyModalityResource#doGetAll(RequestContext)
      */
     @Test
-    public void doGetAll_shouldReturnRadiologyModalitiesExcludingRetiredOnesIfIncludeAllIsFalse() throws Exception {
+    public void shouldReturnRadiologyModalitiesExcludingRetiredOnesIfIncludeAllIsFalse() throws Exception {
         
         RadiologyModalityResource radiologyModalityResource = getResource();
         

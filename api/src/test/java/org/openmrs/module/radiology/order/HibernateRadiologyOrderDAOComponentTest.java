@@ -56,14 +56,9 @@ public class HibernateRadiologyOrderDAOComponentTest extends BaseModuleContextSe
         hibernateRadiologyOrderDAO.setSessionFactory(sessionFactory);
     }
     
-    /**
-     * @see HibernateRadiologyOrderDAO#getNextAccessionNumberSeedSequenceValue()
-     * @verifies return the next accession number seed stored as global property radiology next accession number and
-     *           increment the global property value
-     */
     @Test
     public void
-            getNextAccessionNumberSeedSequenceValue_shouldReturnTheNextAccessionNumberSeedStoredAsGlobalPropertyRadiologyNextAccessionNumberAndIncrementTheGlobalPropertyValue()
+            shouldReturnTheNextAccessionNumberSeedStoredAsGlobalPropertyRadiologyNextAccessionNumberAndIncrementTheGlobalPropertyValue()
                     throws Exception {
         
         GlobalProperty nextAccessionNumberGlobalProperty =
@@ -79,29 +74,17 @@ public class HibernateRadiologyOrderDAOComponentTest extends BaseModuleContextSe
         }
     }
     
-    /**
-     * @see HibernateRadiologyOrderDAO#getNextAccessionNumberSeedSequenceValue()
-     * @verifies throw an api exception if global property radiology next accession number seed is missing
-     */
     @Test
-    public void
-            getNextAccessionNumberSeedSequenceValue_shouldThrowAnApiExceptionIfGlobalPropertyRadiologyNextAccessionNumberSeedIsMissing()
-                    throws Exception {
+    public void shouldFailIfGlobalPropertyRadiologyNextAccessionNumberSeedIsMissing() throws Exception {
         
         expectedException.expect(APIException.class);
         expectedException.expectMessage(globalPropertyMissing);
         hibernateRadiologyOrderDAO.getNextAccessionNumberSeedSequenceValue();
     }
     
-    /**
-     * @see HibernateRadiologyOrderDAO#getNextAccessionNumberSeedSequenceValue()
-     * @verifies throw an api exception if global property radiology next accession number seed value is empty or only
-     *           contains whitespaces
-     */
     @Test
-    public void
-            getNextAccessionNumberSeedSequenceValue_shouldThrowAnApiExceptionIfGlobalPropertyRadiologyNextAccessionNumberSeedValueIsEmptyOrOnlyContainsWhitespaces()
-                    throws Exception {
+    public void shouldFailIfGlobalPropertyRadiologyNextAccessionNumberSeedValueIsEmptyOrOnlyContainsWhitespaces()
+            throws Exception {
         
         GlobalProperty nextAccessionNumberGlobalProperty =
                 new GlobalProperty(RadiologyConstants.GP_NEXT_ACCESSION_NUMBER_SEED);
@@ -121,15 +104,8 @@ public class HibernateRadiologyOrderDAOComponentTest extends BaseModuleContextSe
         }
     }
     
-    /**
-     * @see HibernateRadiologyOrderDAO#getNextAccessionNumberSeedSequenceValue()
-     * @verifies throw an api exception if global property radiology next accession number seed value value cannot be parsed
-     *           to long
-     */
     @Test
-    public void
-            getNextAccessionNumberSeedSequenceValue_shouldThrowAnApiExceptionIfGlobalPropertyRadiologyNextAccessionNumberSeedValueValueCannotBeParsedToLong()
-                    throws Exception {
+    public void shouldFailIfGlobalPropertyRadiologyNextAccessionNumberSeedValueValueCannotBeParsedToLong() throws Exception {
         
         GlobalProperty nextAccessionNumberGlobalProperty =
                 new GlobalProperty(RadiologyConstants.GP_NEXT_ACCESSION_NUMBER_SEED);

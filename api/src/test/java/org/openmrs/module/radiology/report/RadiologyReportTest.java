@@ -67,12 +67,8 @@ public class RadiologyReportTest {
         radiologyReport = new RadiologyReport(radiologyOrder);
     }
     
-    /**
-     * @see RadiologyReport#RadiologyReport(RadiologyOrder)
-     * @verifies set radiology order to given radiology order and report status to claimed
-     */
     @Test
-    public void RadiologyReport_shouldSetRadiologyOrderToGivenRadiologyOrderAndReportStatusToClaimed() throws Exception {
+    public void shouldSetRadiologyOrderToGivenRadiologyOrderAndReportStatusToClaimed() throws Exception {
         
         radiologyReport = new RadiologyReport(radiologyOrder);
         
@@ -80,12 +76,8 @@ public class RadiologyReportTest {
         assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.DRAFT));
     }
     
-    /**
-     * @see RadiologyReport#RadiologyReport(RadiologyOrder)
-     * @verifies throw an illegal argument exception if given radiology order is not completed
-     */
     @Test
-    public void RadiologyReport_shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNotCompleted() throws Exception {
+    public void shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNotCompleted() throws Exception {
         
         radiologyOrder.setStudy(new RadiologyStudy());
         
@@ -94,12 +86,8 @@ public class RadiologyReportTest {
         radiologyReport = new RadiologyReport(radiologyOrder);
     }
     
-    /**
-     * @see RadiologyReport#RadiologyReport(RadiologyOrder)
-     * @verifies throw an illegal argument exception if given radiology order is null
-     */
     @Test
-    public void RadiologyReport_shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNull() throws Exception {
+    public void shouldThrowAnIllegalArgumentExceptionIfGivenRadiologyOrderIsNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyOrder cannot be null");

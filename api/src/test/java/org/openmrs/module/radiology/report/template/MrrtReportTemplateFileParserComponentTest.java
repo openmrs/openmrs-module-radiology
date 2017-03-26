@@ -110,12 +110,8 @@ public class MrrtReportTemplateFileParserComponentTest extends BaseModuleContext
         return content;
     }
     
-    /**
-     * @see MrrtReportTemplateFileParser#parse(String)
-     * @verifies return an mrrt template object if file is valid
-     */
     @Test
-    public void parse_shouldReturnAnMrrtTemplateObjectIfFileIsValid() throws Exception {
+    public void shouldReturnAnMrrtTemplateObjectIfFileIsValid() throws Exception {
         
         String templateContent = getFileContent("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html");
         
@@ -136,12 +132,8 @@ public class MrrtReportTemplateFileParserComponentTest extends BaseModuleContext
         assertThat(template.getDcTermsCreator(), is(TEST_DCTERMS_CREATOR));
     }
     
-    /**
-     * @see MrrtReportTemplateFileParser#parse(String)
-     * @verifies store terms element in template object if they match a concept reference term in openmrs
-     */
     @Test
-    public void parse_shouldStoreTermsElementInTemplateObjectIfTheyMatchAconceptReferenceTermInOpenmrs() throws IOException {
+    public void shouldStoreTermsElementInTemplateObjectIfTheyMatchAconceptReferenceTermInOpenmrs() throws IOException {
         
         String templateContent = getFileContent("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html");
         
@@ -161,12 +153,8 @@ public class MrrtReportTemplateFileParserComponentTest extends BaseModuleContext
             is(true));
     }
     
-    /**
-     * @see MrrtReportTemplateFileParser#parse(String)
-     * @verifies skip terms element in template file if no corresponding concept reference term was found
-     */
     @Test
-    public void parse_skipTermElementsInTemplateFileIfNoCorrespondingConceptReferenceTermWasFound() throws Exception {
+    public void skipTermElementsInTemplateFileIfNoCorrespondingConceptReferenceTermWasFound() throws Exception {
         
         String templateContent = getFileContent(
             "mrrttemplates/ihe/connectathon/2015/CTChestAbdomen-missingReferenceTermsForTemplateAttributesTermElements.html");
@@ -176,12 +164,8 @@ public class MrrtReportTemplateFileParserComponentTest extends BaseModuleContext
         assertNull(template.getTerms());
     }
     
-    /**
-     * @see MrrtReportTemplateFileParser#parse(String)
-     * @verifies ignore case when searching for a matching concept source
-     */
     @Test
-    public void parse_shouldIgnoreCaseWhenSearchingForAMatchingConceptSource() throws Exception {
+    public void shouldIgnoreCaseWhenSearchingForAMatchingConceptSource() throws Exception {
         
         String templateContent =
                 getFileContent("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen-schemeIsInLowerCase.html");

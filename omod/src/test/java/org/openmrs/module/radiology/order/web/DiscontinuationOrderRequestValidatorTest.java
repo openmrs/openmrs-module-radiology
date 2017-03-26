@@ -40,32 +40,20 @@ public class DiscontinuationOrderRequestValidatorTest {
         discontinuationOrderRequest.setReasonNonCoded("Wrong Procedure");
     }
     
-    /**
-     * @see DiscontinuationOrderRequestValidator#supports(Class)
-     * @verifies return true only for discontinuation order request objects
-     */
     @Test
-    public void supports_shouldReturnTrueOnlyForDiscontinuationOrderRequestObjects() throws Exception {
+    public void shouldReturnTrueOnlyForDiscontinuationOrderRequestObjects() throws Exception {
         
         assertTrue(discontinuationOrderRequestValidator.supports(DiscontinuationOrderRequest.class));
     }
     
-    /**
-     * @see DiscontinuationOrderRequestValidator#supports(Class)
-     * @verifies return false for other object types
-     */
     @Test
-    public void supports_shouldReturnFalseForOtherObjectTypes() throws Exception {
+    public void shouldReturnFalseForOtherObjectTypes() throws Exception {
         
         assertFalse(discontinuationOrderRequestValidator.supports(Object.class));
     }
     
-    /**
-     * @see DiscontinuationOrderRequestValidator#validate(Object, Errors)
-     * @verifies fail validation if discontinuation order request is null
-     */
     @Test
-    public void validate_shouldFailValidationIfDiscontinuationOrderRequestIsNull() throws Exception {
+    public void shouldFailValidationIfDiscontinuationOrderRequestIsNull() throws Exception {
         
         Errors errors = new BindException(discontinuationOrderRequest, "discontinuationOrderRequest");
         discontinuationOrderRequestValidator.validate(null, errors);
@@ -79,12 +67,8 @@ public class DiscontinuationOrderRequestValidatorTest {
             is("error.general"));
     }
     
-    /**
-     * @see DiscontinuationOrderRequestValidator#validate(Object, Errors)
-     * @verifies fail validation if orderer is null or empty or whitespaces only
-     */
     @Test
-    public void validate_shouldFailValidationIfOrdererIsNull() throws Exception {
+    public void shouldFailValidationIfOrdererIsNull() throws Exception {
         
         discontinuationOrderRequest.setOrderer(null);
         
@@ -99,12 +83,8 @@ public class DiscontinuationOrderRequestValidatorTest {
         assertFalse(errors.hasFieldErrors("reasonNonCoded"));
     }
     
-    /**
-     * @see DiscontinuationOrderRequestValidator#validate(Object, Errors)
-     * @verifies fail validation if reason non coded is null or empty or whitespaces only
-     */
     @Test
-    public void validate_shouldFailValidationIfOrderReasonNonCodedIsNull() throws Exception {
+    public void shouldFailValidationIfOrderReasonNonCodedIsNull() throws Exception {
         
         discontinuationOrderRequest.setReasonNonCoded(null);
         
@@ -143,12 +123,8 @@ public class DiscontinuationOrderRequestValidatorTest {
         assertTrue(errors.hasFieldErrors("reasonNonCoded"));
     }
     
-    /**
-     * @see DiscontinuationOrderRequestValidator#validate(Object, Errors)
-     * @verifies pass validation if all fields are correct
-     */
     @Test
-    public void validate_shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
+    public void shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
         
         Errors errors = new BindException(discontinuationOrderRequest, "discontinuationOrderRequest");
         discontinuationOrderRequestValidator.validate(discontinuationOrderRequest, errors);

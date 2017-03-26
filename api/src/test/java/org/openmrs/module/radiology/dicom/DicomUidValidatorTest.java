@@ -30,7 +30,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isValid(String)
-     * @verifies return false given null
      */
     @Test
     public void isValid_shouldReturnFalseGivenNull() throws Exception {
@@ -40,7 +39,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isValid(String)
-     * @verifies return false given empty string
      */
     @Test
     public void isValid_shouldReturnFalseGivenEmptyString() throws Exception {
@@ -50,7 +48,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isValid(String)
-     * @verifies return false for uid longer than 64 characters
      */
     @Test
     public void isValid_shouldReturnFalseForUidLongerThan64Characters() throws Exception {
@@ -63,7 +60,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isValid(String)
-     * @verifies return false for uid containing characters other than 0-9 and dot separator
      */
     @Test
     public void isValid_shouldReturnFalseForUidContainingCharactersOtherThan09AndDotSeparator() throws Exception {
@@ -77,7 +73,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isValid(String)
-     * @verifies return false for uid containing non-significant leading zeros
      */
     @Test
     public void isValid_shouldReturnFalseForUidContainingNonsignificantLeadingZeros() throws Exception {
@@ -88,7 +83,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isValid(String)
-     * @verifies return false for uid with trailing dot character
      */
     @Test
     public void isValid_shouldReturnFalseForUidWithTrailingDotCharacter() throws Exception {
@@ -99,7 +93,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isValid(String)
-     * @verifies return false for uid with characters other than 0-2 as first component
      */
     @Test
     public void isValid_shouldReturnFalseForUidWithCharactersOtherThan02AsFirstComponent() throws Exception {
@@ -113,7 +106,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isValid(String)
-     * @verifies return true for valid uid
      */
     @Test
     public void isValid_shouldReturnTrueForValidUid() throws Exception {
@@ -135,7 +127,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isLengthValid(String)
-     * @verifies return false given null
      */
     @Test
     public void isLengthValid_shouldReturnFalseGivenNull() throws Exception {
@@ -145,7 +136,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isLengthValid(String)
-     * @verifies return false given empty string
      */
     @Test
     public void isLengthValid_shouldReturnFalseGivenEmptyString() throws Exception {
@@ -155,7 +145,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isLengthValid(String)
-     * @verifies return false for uid length bigger than 64
      */
     @Test
     public void isLengthValid_shouldReturnFalseForUidLengthBiggerThan64() throws Exception {
@@ -168,7 +157,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isLengthValid(String)
-     * @verifies return true for uid length smaller or equal to 64
      */
     @Test
     public void isLengthValid_shouldReturnTrueForUidLengthSmallerOrEqualTo64() throws Exception {
@@ -186,7 +174,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isPatternValid(String)
-     * @verifies return false given null
      */
     @Test
     public void isPatternValid_shouldReturnFalseGivenNull() throws Exception {
@@ -196,7 +183,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isPatternValid(String)
-     * @verifies return false given empty string
      */
     @Test
     public void isPatternValid_shouldReturnFalseGivenEmptyString() throws Exception {
@@ -206,7 +192,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isPatternValid(String)
-     * @verifies return false for uid containing characters other than 0-9 and dot separator
      */
     @Test
     public void isPatternValid_shouldReturnFalseForUidContainingCharactersOtherThan09AndDotSeparator() throws Exception {
@@ -221,7 +206,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isPatternValid(String)
-     * @verifies return false for uid containing non-significant leading zeros
      */
     @Test
     public void isPatternValid_shouldReturnFalseForUidContainingNonsignificantLeadingZeros() throws Exception {
@@ -232,7 +216,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isPatternValid(String)
-     * @verifies return false for uid with trailing dot character
      */
     @Test
     public void isPatternValid_shouldReturnFalseForUidWithTrailingDotCharacter() throws Exception {
@@ -243,7 +226,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isPatternValid(String)
-     * @verifies return false for uid with characters other than 0-2 as first component
      */
     @Test
     public void isPatternValid_shouldReturnFalseForUidWithCharactersOtherThan02AsFirstComponent() throws Exception {
@@ -257,7 +239,6 @@ public class DicomUidValidatorTest {
     
     /**
      * @see DicomUidValidator#isPatternValid(String)
-     * @verifies return true for valid uid
      */
     @Test
     public void isPatternValid_shouldReturnTrueForValidUid() throws Exception {

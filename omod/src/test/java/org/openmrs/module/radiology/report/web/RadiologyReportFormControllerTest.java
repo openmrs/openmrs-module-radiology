@@ -54,13 +54,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
     @InjectMocks
     private RadiologyReportFormController radiologyReportFormController = new RadiologyReportFormController();
     
-    /**
-     * @see RadiologyReportFormController#createRadiologyReport(RadiologyOrder)
-     * @verifies create a new radiology report for given radiology order and redirect to its radiology report form
-     */
     @Test
-    public void
-            createRadiologyReport_shouldCreateANewRadiologyReportForGivenRadiologyOrderAndRedirectToItsRadiologyReportForm() {
+    public void shouldCreateANewRadiologyReportForGivenRadiologyOrderAndRedirectToItsRadiologyReportForm() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
@@ -78,12 +73,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
             is("redirect:/module/radiology/radiologyReport.form?reportId=" + mockRadiologyReport.getId()));
     }
     
-    /**
-     * @see RadiologyReportFormController#getRadiologyReportFormWithExistingRadiologyReport(RadiologyReport)
-     * @verifies populate model and view with given radiology report
-     */
     @Test
-    public void getRadiologyReportFormWithExistingRadiologyReport_shouldPopulateModelAndViewWithGivenRadiologyReport() {
+    public void shouldPopulateModelAndViewWithGivenRadiologyReport() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
@@ -109,14 +100,9 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         assertNotNull(voidRadiologyReportRequest);
     }
     
-    /**
-     * @see RadiologyReportFormController#saveRadiologyReportDraft(HttpServletRequest,RadiologyReport)
-     * @verifies save given radiology report and set http session attribute openmrs message to report draft saved and redirect
-     *         to its report form
-     */
     @Test
     public void
-            saveRadiologyReportDraft_shouldSaveGivenRadiologyReportAndSetHttpSessionAttributeOpenmrsMessageToReportDraftSavedAndRedirectToItsReportForm() {
+            shouldSaveGivenRadiologyReportAndSetHttpSessionAttributeOpenmrsMessageToReportDraftSavedAndRedirectToItsReportForm() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
@@ -138,14 +124,9 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
             is("radiology.RadiologyReport.savedDraft"));
     }
     
-    /**
-     * @see RadiologyReportFormController#saveRadiologyReportDraft(HttpServletRequest,RadiologyReport)
-     * @verifies not redirect and set session attribute with openmrs error if api exception is thrown by save radiology report draft
-     */
     @Test
-    public void
-            saveRadiologyReportDraft_shouldNotRedirectAndSetSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownBySaveRadiologyReportDraft()
-                    throws Exception {
+    public void shouldNotRedirectAndSetSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownBySaveRadiologyReportDraft()
+            throws Exception {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
@@ -186,7 +167,6 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
     
     /**
      * @see RadiologyReportFormController#voidRadiologyReport(HttpServletRequest, RadiologyReport, VoidRadiologyReportRequest, BindingResult)
-     * @verifies void given radiology report and set http session attribute openmrs message to report voided and redirect
      *         to its report form
      */
     @Test
@@ -217,12 +197,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("radiology.RadiologyReport.voided"));
     }
     
-    /**
-     * @see RadiologyReportFormController#voidRadiologyReport(HttpServletRequest, RadiologyReport, VoidRadiologyReportRequest, BindingResult)
-     * @verifies not void and not redirect given invalid void radiology report request
-     */
     @Test
-    public void voidRadiologyReport_shouldNotVoidAndNotRedirectGivenInvalidRadiologyReportRequest() {
+    public void shouldNotVoidAndNotRedirectGivenInvalidRadiologyReportRequest() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
@@ -256,14 +232,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         assertThat(radiologyReport, is(mockRadiologyReport));
     }
     
-    /**
-     * @see RadiologyReportFormController#voidRadiologyReport(HttpServletRequest, RadiologyReport, VoidRadiologyReportRequest, BindingResult)
-     * @verifies not redirect and set session attribute with openmrs error if api exception is thrown by void radiology
-     *         report
-     */
     @Test
-    public void
-            voidRadiologyReport_shouldNotRedirectAndSetHttpSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownByVoidRadiologyReport() {
+    public void shouldNotRedirectAndSetHttpSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownByVoidRadiologyReport() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
@@ -303,15 +273,9 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
             is("RadiologyReport.cannot.void.completed"));
     }
     
-    /**
-     * @see RadiologyReportFormController#completeRadiologyReport(HttpServletRequest, RadiologyReport,
-     *      BindingResult)
-     * @verifies complete given radiology report if valid and set http session attribute openmrs message to report completed and redirect
-     *         to its report form
-     */
     @Test
     public void
-            completeRadiologyReport_shouldCompleteGivenRadiologyReportIfValidAndSetHttpSessionAttributeOpenmrsMessageToReportCompletedAndRedirectToItsReportForm() {
+            shouldCompleteGivenRadiologyReportIfValidAndSetHttpSessionAttributeOpenmrsMessageToReportCompletedAndRedirectToItsReportForm() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
@@ -340,13 +304,8 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
             is("radiology.RadiologyReport.completed"));
     }
     
-    /**
-     * @see RadiologyReportFormController#completeRadiologyReport(HttpServletRequest, RadiologyReport,
-     *      BindingResult)
-     * @verifies not complete and redirect given invalid radiology report
-     */
     @Test
-    public void completeRadiologyReport_shouldNotCompleteGivenRadiologyReportIfItIsNotValid() {
+    public void shouldNotCompleteGivenRadiologyReportIfItIsNotValid() {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();
@@ -385,15 +344,9 @@ public class RadiologyReportFormControllerTest extends BaseContextMockTest {
         assertNotNull(voidRadiologyReportRequest);
     }
     
-    /**
-     * @see RadiologyReportFormController#completeRadiologyReport(HttpServletRequest, RadiologyReport,
-     *      BindingResult)
-     * @verifies not redirect and set session attribute with openmrs error if api exception is thrown by complete radiology report
-     */
     @Test
-    public void
-            completeRadiologyReport_shouldNotRedirectAndSetSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownByCompleteRadiologyReport()
-                    throws Exception {
+    public void shouldNotRedirectAndSetSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownByCompleteRadiologyReport()
+            throws Exception {
         
         // given
         RadiologyReport mockRadiologyReport = RadiologyTestData.getMockRadiologyReport1();

@@ -18,8 +18,6 @@ import static org.mockito.Mockito.when;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.junit.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
@@ -53,13 +51,9 @@ public class RadiologyOrderDetailsPortletControllerTest extends BaseContextMockT
     private RadiologyOrderDetailsPortletController radiologyOrderDetailsPortletController =
             new RadiologyOrderDetailsPortletController();
     
-    /**
-     * @see RadiologyOrderDetailsPortletController#populateModel(HttpServletRequest,Map)
-     * @verifies populate model with radiology order if given order uuid model entry matches a radiology order and dicom viewer url if radiology order is completed
-     */
     @Test
     public void
-            populateModel_shouldPopulateModelWithRadiologyOrderIfGivenOrderUuidModelEntryMatchesARadiologyOrderAndDicomViewerUrlIfRadiologyOrderIsCompleted()
+            shouldPopulateModelWithRadiologyOrderIfGivenOrderUuidModelEntryMatchesARadiologyOrderAndDicomViewerUrlIfRadiologyOrderIsCompleted()
                     throws Exception {
         
         RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
@@ -85,13 +79,9 @@ public class RadiologyOrderDetailsPortletControllerTest extends BaseContextMockT
         assertThat(dicomViewerUrl, is(DICOM_VIEWER_URL));
     }
     
-    /**
-     * @see RadiologyOrderDetailsPortletController#populateModel(HttpServletRequest,Map)
-     * @verifies populate model with radiology order if given order uuid model entry matches a radiology order and no dicom viewer url if radiology order is not completed
-     */
     @Test
     public void
-            populateModel_shouldPopulateModelWithRadiologyOrderIfGivenOrderUuidModelEntryMatchesARadiologyOrderAndNoDicomViewerUrlIfRadiologyOrderIsNotCompleted()
+            shouldPopulateModelWithRadiologyOrderIfGivenOrderUuidModelEntryMatchesARadiologyOrderAndNoDicomViewerUrlIfRadiologyOrderIsNotCompleted()
                     throws Exception {
         
         RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
@@ -117,13 +107,8 @@ public class RadiologyOrderDetailsPortletControllerTest extends BaseContextMockT
         assertThat(model, not(hasKey("dicomViewerUrl")));
     }
     
-    /**
-     * @see RadiologyOrderDetailsPortletController#populateModel(HttpServletRequest,Map)
-     * @verifies not populate model with radiology order and dicom viewer url if no radiology order was found
-     */
     @Test
-    public void populateModel_shouldNotPopulateModelWithRadiologyOrderAndDicomViewerUrlIfNoRadiologyOrderWasFound()
-            throws Exception {
+    public void shouldNotPopulateModelWithRadiologyOrderAndDicomViewerUrlIfNoRadiologyOrderWasFound() throws Exception {
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         MockHttpSession mockSession = new MockHttpSession();
@@ -140,13 +125,8 @@ public class RadiologyOrderDetailsPortletControllerTest extends BaseContextMockT
         assertThat(model, not(hasKey("dicomViewerUrl")));
     }
     
-    /**
-     * @see RadiologyOrderDetailsPortletController#populateModel(HttpServletRequest,Map)
-     * @verifies not populate model with radiology order and dicom viewer url if model has no entry for order uuid
-     */
     @Test
-    public void populateModel_shouldNotPopulateModelWithRadiologyOrderAndDicomViewerUrlIfModelHasNoEntryForOrderUuid()
-            throws Exception {
+    public void shouldNotPopulateModelWithRadiologyOrderAndDicomViewerUrlIfModelHasNoEntryForOrderUuid() throws Exception {
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         MockHttpSession mockSession = new MockHttpSession();

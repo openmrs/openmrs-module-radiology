@@ -45,13 +45,11 @@ public class DicomWebViewerTest extends BaseContextMockTest {
         when(radiologyProperties.getDicomWebViewerBaseUrl()).thenReturn("/weasis-pacs-connector/viewer");
     }
     
-    /**
-     * @see DicomWebViewer#getDicomViewerUrl(RadiologyStudy)
-     * @verifies return a url to open dicom images of the given study in the configured dicom viewer
-     */
     @Test
-    public void getDicomViewerUrl_shouldReturnAUrlToOpenDicomImagesOfTheGivenStudyInTheConfiguredDicomViewer() {
+    public void shouldReturnAUrlToOpenDicomImagesOfTheGivenStudyInTheConfiguredDicomViewer() {
+        
         RadiologyStudy radiologyStudy = getMockStudy();
+        
         assertThat(dicomviewer.getDicomViewerUrl(radiologyStudy),
             is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=" + radiologyStudy.getStudyInstanceUid()));
     }
@@ -64,12 +62,8 @@ public class DicomWebViewerTest extends BaseContextMockTest {
         return mockStudy;
     }
     
-    /**
-     * @see DicomWebViewer#getDicomViewerUrl(RadiologyStudy)
-     * @verifies add query param server name to url if local server name is not blank
-     */
     @Test
-    public void getDicomViewerUrl_shouldAddQueryParamServerNameToUrlIfLocalServerNameIsNotBlank() {
+    public void shouldAddQueryParamServerNameToUrlIfLocalServerNameIsNotBlank() {
         
         when(radiologyProperties.getDicomWebViewerBaseUrl()).thenReturn("/oviyam2/viewer.html");
         when(radiologyProperties.getDicomWebViewerLocalServerName()).thenReturn("oviyamlocal");
@@ -80,24 +74,17 @@ public class DicomWebViewerTest extends BaseContextMockTest {
                 + radiologyStudy.getStudyInstanceUid() + "&serverName=oviyamlocal"));
     }
     
-    /**
-     * @see DicomWebViewer#getDicomViewerUrl(RadiologyStudy)
-     * @verifies throw an illegal argument exception given null
-     */
     @Test
-    public void getDicomViewerUrl_shouldThrowAnIllegalArgumentExceptionGivenNull() throws Exception {
+    public void shouldFailGivenNull() throws Exception {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage(is("study cannot be null"));
         dicomviewer.getDicomViewerUrl(null);
     }
     
-    /**
-     * @see DicomWebViewer#getDicomViewerUrl(RadiologyStudy)
-     * @verifies throw an illegal argument exception given study with studyInstanceUid null
-     */
     @Test
-    public void getDicomViewerUrl_shouldThrowAnIllegalArgumentExceptionGivenAStudyWithStudyInstanceUidNull()
-            throws Exception {
+    public void shouldFailGivenAStudyWithStudyInstanceUidNull() throws Exception {
+        
         RadiologyStudy radiologyStudy = new RadiologyStudy();
         
         expectedException.expect(IllegalArgumentException.class);

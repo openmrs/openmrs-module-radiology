@@ -140,12 +140,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         this.deleteAllData();
     }
     
-    /**
-     * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
-     * @verifies create new radiology order and study from given radiology order
-     */
     @Test
-    public void placeRadiologyOrder_shouldCreateNewRadiologyOrderAndStudyGivenRadiologyOrder() throws Exception {
+    public void shouldCreateNewRadiologyOrderAndStudyGivenRadiologyOrder() throws Exception {
         
         RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
         
@@ -186,12 +182,9 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         return radiologyOrder;
     }
     
-    /**
-     * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
-     * @verifies create radiology order encounter
-     */
     @Test
-    public void placeRadiologyOrder_shouldCreateRadiologyOrderEncounter() throws Exception {
+    public void shouldCreateRadiologyOrderEncounterWhenSavingARadiologyOrder() throws Exception {
+        
         RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
         
         EncounterSearchCriteriaBuilder encounterSearchCriteria =
@@ -210,12 +203,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertThat(matchingEncounters.size(), is(1));
     }
     
-    /**
-     * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
-     * @verifies set the radiology order accession number
-     */
     @Test
-    public void placeRadiologyOrder_shouldSetTheRadiologyOrderAccessionNumber() throws Exception {
+    public void shouldSetTheRadiologyOrderAccessionNumberWhenSavingARadiologyOrder() throws Exception {
         
         RadiologyOrder radiologyOrder = getUnsavedRadiologyOrder();
         radiologyOrder.setAccessionNumber(null);
@@ -226,12 +215,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertNotNull(radiologyOrder.getAccessionNumber());
     }
     
-    /**
-     * @see AccessionNumberGenerator#getNewAccessionNumber()
-     * @verifies always return a unique accession number when called multiple times
-     */
     @Test
-    public void getNewAccessionNumber_shouldAlwaysReturnAUniqueAccessionNumberWhenCalledMultipleTimes() throws Exception {
+    public void shouldAlwaysReturnAUniqueAccessionNumberWhenCalledMultipleTimes() throws Exception {
         
         int N = 50;
         final Set<String> uniqueAccessionNumbers = new HashSet<String>(N);
@@ -265,15 +250,9 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         Assert.assertEquals(N, uniqueAccessionNumbers.size());
     }
     
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
-     * @verifies create discontinuation order which discontinues given radiology order that is not
-     *           in progress or completed
-     */
     @Test
-    public void
-            discontinueRadiologyOrder_shouldCreateDiscontinuationOrderWhichDiscontinuesGivenRadiologyOrderThatIsNotInProgressOrCompleted()
-                    throws Exception {
+    public void shouldCreateDiscontinuationOrderWhichDiscontinuesGivenRadiologyOrderThatIsNotInProgressOrCompleted()
+            throws Exception {
         
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
         radiologyOrder.getStudy()
@@ -290,12 +269,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertThat(radiologyOrder.isActive(), is(false));
     }
     
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
-     * @verifies create radiology order encounter
-     */
     @Test
-    public void discontinueRadiologyOrder_shouldCreateRadiologyOrderEncounter() throws Exception {
+    public void shouldCreateRadiologyOrderEncounter() throws Exception {
         
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
         radiologyOrder.getStudy()
@@ -318,12 +293,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertThat(matchingEncounters, hasItem(discontinuationOrder.getEncounter()));
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrder(Integer)
-     * @verifies return radiology order matching given order id
-     */
     @Test
-    public void getRadiologyOrder_shouldReturnRadiologyOrderMatchingGivenOrderId() {
+    public void shouldReturnRadiologyOrderMatchingGivenOrderId() {
         
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
         
@@ -331,22 +302,14 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertThat(radiologyOrder.getOrderId(), is(EXISTING_RADIOLOGY_ORDER_ID));
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrder(Integer)
-     * @verifies return null if no match was found
-     */
     @Test
-    public void getRadiologyOrder_shouldReturnNullIfNoMatchIsFound() {
+    public void shouldReturnNullIfNoMatchIsFoundGivenOrderId() {
         
         assertNull(radiologyOrderService.getRadiologyOrder(NON_EXISTING_RADIOLOGY_ORDER_ID));
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrderByUuid(String)
-     * @verifies return radiology order matching given uuid
-     */
     @Test
-    public void getRadiologyOrderByUuid_shouldReturnRadiologyOrderMatchingGivenUuid() throws Exception {
+    public void shouldReturnRadiologyOrderMatchingGivenUuid() throws Exception {
         
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrderByUuid(EXISTING_RADIOLOGY_ORDER_UUID);
         
@@ -354,22 +317,14 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertThat(radiologyOrder.getUuid(), is(EXISTING_RADIOLOGY_ORDER_UUID));
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrderByUuid(String)
-     * @verifies return null if no match was found
-     */
     @Test
-    public void getRadiologyOrderByUuid_shouldReturnNullIfNoMatchIsFound() throws Exception {
+    public void shouldReturnNullIfNoMatchIsFoundForGivenUuid() throws Exception {
         
         assertNull(radiologyOrderService.getRadiologyOrderByUuid(NON_EXISTING_RADIOLOGY_ORDER_UUID));
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies return all radiology orders for given patient if patient is specified
-     */
     @Test
-    public void getRadiologyOrders_shouldReturnAllRadiologyOrdersForGivenPatientIfPatientIsSpecified() throws Exception {
+    public void shouldReturnAllRadiologyOrdersForGivenPatientIfPatientIsSpecified() throws Exception {
         
         Patient patient = patientService.getPatient(PATIENT_ID_WITH_TWO_RADIOLOGY_ORDERS);
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
@@ -383,13 +338,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         }
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies return all radiology orders (including voided) matching the search query if include voided is set
-     */
     @Test
-    public void getRadiologyOrders_shouldReturnAllRadiologyOrdersIncludingVoidedMatchingTheSearchQueryIfIncludeVoidedIsSet()
-            throws Exception {
+    public void shouldReturnAllRadiologyOrdersIncludingVoidedMatchingTheSearchQueryIfIncludeVoidedIsSet() throws Exception {
         
         Patient patient = patientService.getPatient(PATIENT_ID_WITH_ONE_VOIDED_AND_TWO_NON_VOIDED_RADIOLOGY_ORDERS);
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
@@ -404,12 +354,8 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         assertThat(radiologyOrders, hasItem(Matchers.<RadiologyOrder> hasProperty("voided", is(true))));
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies return all radiology orders for given urgency
-     */
     @Test
-    public void getRadiologyOrders_shouldReturnAllRadiologyOrdersForGivenUrgency() throws Exception {
+    public void shouldReturnAllRadiologyOrdersForGivenUrgency() throws Exception {
         
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
                 new RadiologyOrderSearchCriteria.Builder().withUrgency(Urgency.STAT)
@@ -422,15 +368,9 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         }
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies return all radiology orders with effective order start date in given date range if to date and from date are
-     *           specified
-     */
     @Test
-    public void
-            getRadiologyOrders_shouldReturnAllRadiologyOrdersWithEffectiveOrderStartDateInGivenDateRangeIfToDateAndFromDateAreSpecified()
-                    throws Exception {
+    public void shouldReturnAllRadiologyOrdersWithEffectiveOrderStartDateInGivenDateRangeIfToDateAndFromDateAreSpecified()
+            throws Exception {
         
         Patient patient = patientService.getPatient(70024);
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -443,8 +383,10 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
                         .fromEffectiveStartDate(fromDate)
                         .toEffectiveStartDate(toDate)
                         .build();
+        
         List<RadiologyOrder> radiologyOrders =
                 radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteriaDateRange);
+        
         assertThat(radiologyOrders.size(), is(3));
         assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(2009)));
         assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20012)));
@@ -465,15 +407,9 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         }
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies return all radiology orders with effective order start date after or equal to from date if only from date is
-     *           specified
-     */
     @Test
-    public void
-            getRadiologyOrders_shouldReturnAllRadiologyOrdersWithEffectiveOrderStartDateAfterOrEqualToFromDateIfOnlyFromDateIsSpecified()
-                    throws Exception {
+    public void shouldReturnAllRadiologyOrdersWithEffectiveOrderStartDateAfterOrEqualToFromDateIfOnlyFromDateIsSpecified()
+            throws Exception {
         
         Patient patient = patientService.getPatient(70024);
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -484,8 +420,10 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
                         .withPatient(patient)
                         .fromEffectiveStartDate(fromDate)
                         .build();
+        
         List<RadiologyOrder> radiologyOrders =
                 radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteriaDateRange);
+        
         assertThat(radiologyOrders.size(), is(6));
         assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(2009)));
         assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(20010)));
@@ -505,15 +443,9 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         }
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies return all radiology orders with effective order start date before or equal to to date if only to date is
-     *           specified
-     */
     @Test
-    public void
-            getRadiologyOrders_shouldReturnAllRadiologyOrdersWithEffectiveOrderStartDateBeforeOrEqualToToDateIfOnlyToDateIsSpecified()
-                    throws Exception {
+    public void shouldReturnAllRadiologyOrdersWithEffectiveOrderStartDateBeforeOrEqualToToDateIfOnlyToDateIsSpecified()
+            throws Exception {
         
         Patient patient = patientService.getPatient(70024);
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -524,8 +456,10 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
                         .withPatient(patient)
                         .toEffectiveStartDate(toDate)
                         .build();
+        
         List<RadiologyOrder> radiologyOrders =
                 radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteriaDateRange);
+        
         assertThat(radiologyOrders.size(), is(6));
         assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(2008)));
         assertThat(radiologyOrders, hasItem(radiologyOrderService.getRadiologyOrder(2009)));
@@ -545,12 +479,9 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         }
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies return empty list if from date after to date
-     */
     @Test
-    public void getRadiologyOrders_shouldReturnEmptyListIfFromDateAfterToDate() throws Exception {
+    public void shouldReturnEmptyListIfFromDateAfterToDate() throws Exception {
+        
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date fromDate = format.parse("2016-06-30");
         Date toDate = format.parse("2016-05-29");
@@ -560,15 +491,13 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
                         .build();
         
         List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        
         assertTrue(radiologyOrders.isEmpty());
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies return empty search result if no effective order start is in date range
-     */
     @Test
-    public void getRadiologyOrders_shouldReturnEmptySearchResultIfNoEffectiveOrderStartIsInDateRange() throws Exception {
+    public void shouldReturnEmptySearchResultIfNoEffectiveOrderStartIsInDateRange() throws Exception {
+        
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteriaDateRange =
                 new RadiologyOrderSearchCriteria.Builder().fromEffectiveStartDate(format.parse("2016-06-06"))
@@ -577,34 +506,27 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
         
         List<RadiologyOrder> radiologyOrdersWithDateRange =
                 radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteriaDateRange);
+        
         assertTrue(radiologyOrdersWithDateRange.isEmpty());
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies return all radiology orders for given accession number if accession number is specified
-     */
     @Test
-    public void getRadiologyOrders_shouldReturnAllRadiologyOrdersForGivenAccessionNumberIfAccessionNumberIsSpecified()
-            throws Exception {
+    public void shouldReturnAllRadiologyOrdersForGivenAccessionNumberIfAccessionNumberIsSpecified() throws Exception {
         
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
                 new RadiologyOrderSearchCriteria.Builder().withAccessionNumber(EXISTING_RADIOLOGY_ORDER_ACCESSION_NUMBER)
                         .build();
         
         List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        
         assertThat(radiologyOrders.size(), is(1));
         assertThat(radiologyOrders.get(0)
                 .getAccessionNumber(),
             is(EXISTING_RADIOLOGY_ORDER_ACCESSION_NUMBER));
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies return all radiology orders for given orderer
-     */
     @Test
-    public void getRadiologyOrders_shouldReturnAllRadiologyOrdersForGivenOrderer() throws Exception {
+    public void shouldReturnAllRadiologyOrdersForGivenOrderer() throws Exception {
         
         Provider orderer = providerService.getProvider(PROVIDER_ID_WITH_TWO_ASSIGNED_RADIOLOGY_ORDERS);
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
@@ -612,18 +534,16 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
                         .build();
         
         List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        
         assertThat(radiologyOrders.size(), is(2));
         for (RadiologyOrder radiologyOrder : radiologyOrders) {
             assertThat(radiologyOrder.getOrderer(), is(orderer));
         }
     }
     
-    /**
-    * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-    * @verifies return all radiology orders for given urgency and orderer
-    */
     @Test
-    public void getRadiologyOrders_shouldReturnAllRadiologyOrdersForGivenUrgencyAndOrderer() throws Exception {
+    public void shouldReturnAllRadiologyOrdersForGivenUrgencyAndOrderer() throws Exception {
+        
         Provider orderer = providerService.getProvider(PROVIDER_ID_WITH_TWO_ASSIGNED_RADIOLOGY_ORDERS);
         RadiologyOrderSearchCriteria radiologyOrderSearchCriteria =
                 new RadiologyOrderSearchCriteria.Builder().withOrderer(orderer)
@@ -631,6 +551,7 @@ public class RadiologyOrderServiceComponentTest extends BaseModuleContextSensiti
                         .build();
         
         List<RadiologyOrder> radiologyOrders = radiologyOrderService.getRadiologyOrders(radiologyOrderSearchCriteria);
+        
         assertThat(radiologyOrders.size(), is(1));
         assertThat(radiologyOrders.get(0)
                 .getOrderer(),

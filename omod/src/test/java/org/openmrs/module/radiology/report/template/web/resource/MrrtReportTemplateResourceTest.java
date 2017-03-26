@@ -30,7 +30,6 @@ import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentat
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.NamedRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
-import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs2_0.RestConstants2_0;
@@ -66,13 +65,8 @@ public class MrrtReportTemplateResourceTest {
                 .thenReturn(mrrtReportTemplate);
     }
     
-    /**
-    * @see MrrtReportTemplateResource#getRepresentationDescription(Representation)
-    * @verifies return default representation given instance of defaultrepresentation
-    */
     @Test
-    public void getRepresentationDescription_shouldReturnDefaultRepresentationGivenInstanceOfDefaultrepresentation()
-            throws Exception {
+    public void shouldReturnDefaultRepresentationGivenInstanceOfDefaultrepresentation() throws Exception {
         DefaultRepresentation defaultRepresentation = new DefaultRepresentation();
         
         DelegatingResourceDescription resourceDescription =
@@ -83,13 +77,8 @@ public class MrrtReportTemplateResourceTest {
                 "dcTermsCreator", "dcTermsRights", "terms", "display"));
     }
     
-    /**
-    * @see MrrtReportTemplateResource#getRepresentationDescription(Representation)
-    * @verifies return full representation given instance of fullrepresentation
-    */
     @Test
-    public void getRepresentationDescription_shouldReturnFullRepresentationGivenInstanceOfFullrepresentation()
-            throws Exception {
+    public void shouldReturnFullRepresentationGivenInstanceOfFullrepresentation() throws Exception {
         FullRepresentation fullRepresentation = new FullRepresentation();
         
         DelegatingResourceDescription resourceDescription =
@@ -101,12 +90,9 @@ public class MrrtReportTemplateResourceTest {
                 "dcTermsDate", "terms", "display"));
     }
     
-    /**
-    * @see MrrtReportTemplateResource#getRepresentationDescription(Representation)
-    * @verifies return null for representation other then default or full
-    */
     @Test
-    public void getRepresentationDescription_shouldReturnNullForRepresentationOtherThenDefaultOrFull() throws Exception {
+    public void shouldReturnNullForRepresentationOtherThenDefaultOrFull() throws Exception {
+        
         CustomRepresentation customRepresentation = new CustomRepresentation("some");
         
         assertThat(mrrtReportTemplateResource.getRepresentationDescription(customRepresentation), is(nullValue()));
@@ -123,69 +109,51 @@ public class MrrtReportTemplateResourceTest {
         
     }
     
-    /**
-    * @see MrrtReportTemplateResource#getResourceVersion()
-    * @verifies return supported resource version
-    */
     @Test
-    public void getResourceVersion_shouldReturnSupportedResourceVersion() throws Exception {
+    public void shouldReturnSupportedResourceVersion() throws Exception {
+        
         assertThat(mrrtReportTemplateResource.getResourceVersion(), is(RestConstants2_0.RESOURCE_VERSION));
     }
     
-    /**
-    * @see MrrtReportTemplateResource#getByUniqueId(String)
-    * @verifies return radiology order given its uuid
-    */
     @Test
-    public void getByUniqueId_shouldReturnRadiologyOrderGivenItsUuid() throws Exception {
+    public void shouldReturnRadiologyOrderGivenItsUuid() throws Exception {
+        
         assertNotNull(mrrtReportTemplateResource.getByUniqueId(MRRT_REPORT_TEMPLATE_UUID));
     }
     
-    /**
-    * @see MrrtReportTemplateResource#getDisplayString(MrrtReportTemplate)
-    * @verifies return templateIdentifier
-    */
     @Test
-    public void getDisplayString_shouldReturnTemplateIdentifiertitleOfGivenMrrtReportTemplate() throws Exception {
+    public void shouldReturnTemplateIdentifiertitleOfGivenMrrtReportTemplate() throws Exception {
+        
         mrrtReportTemplate.setDcTermsIdentifier("org/radrep/0001");
+        
         assertThat(mrrtReportTemplateResource.getDisplayString(mrrtReportTemplate), is("org/radrep/0001"));
     }
     
-    /**
-     * @see MrrtReportTemplateResource#delete(MrrtReportTemplate,String,RequestContext)
-     * @verifies throw ResourceDoesNotSupportOperationException
-     */
     @Test(expected = ResourceDoesNotSupportOperationException.class)
-    public void delete_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+    public void shouldFailToDeleteTemplate() throws Exception {
+        
         RequestContext requestContext = new RequestContext();
+        
         mrrtReportTemplateResource.delete(mrrtReportTemplate, "wrong template", requestContext);
     }
     
-    /**
-     * @see MrrtReportTemplateResource#newDelegate()
-     * @verifies throw ResourceDoesNotSupportOperationException
-     */
     @Test(expected = ResourceDoesNotSupportOperationException.class)
-    public void newDelegate_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+    public void shouldFailToInstantiateNewDelegate() throws Exception {
+        
         mrrtReportTemplateResource.newDelegate();
     }
     
-    /**
-     * @see MrrtReportTemplateResource#purge(MrrtReportTemplate,RequestContext)
-     * @verifies throw ResourceDoesNotSupportOperationException
-     */
     @Test(expected = ResourceDoesNotSupportOperationException.class)
-    public void purge_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+    public void shouldFailToPurgeTemplate() throws Exception {
+        
         RequestContext requestContext = new RequestContext();
+        
         mrrtReportTemplateResource.purge(mrrtReportTemplate, requestContext);
     }
     
-    /**
-     * @see MrrtReportTemplateResource#save(MrrtReportTemplate)
-     * @verifies throw ResourceDoesNotSupportOperationException
-     */
     @Test(expected = ResourceDoesNotSupportOperationException.class)
-    public void save_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+    public void shouldFailToSaveTemplate() throws Exception {
+        
         mrrtReportTemplateResource.save(mrrtReportTemplate);
     }
 }

@@ -16,8 +16,6 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.junit.Test;
 import org.openmrs.Order.Urgency;
 import org.openmrs.module.radiology.report.web.RadiologyDashboardReportsTabController;
@@ -32,14 +30,9 @@ public class RadiologyDashboardOrdersTabControllerTest {
     private RadiologyDashboardOrdersTabController radiologyDashboardOrdersTabController =
             new RadiologyDashboardOrdersTabController();
     
-    /**
-     * @see RadiologyDashboardOrdersTabController#getRadiologyOrdersTab(HttpServletRequest,String)
-     * @verifies return model and view of the radiology orders tab page and set tab session attribute to radiology orders tab
-     *           page if not already set
-     */
     @Test
     public void
-            getRadiologyOrdersTab_shouldReturnModelAndViewOfTheRadiologyOrdersTabPageAndSetTabSessionAttributeToRadiologyOrdersTabPageIfNotAlreadySet()
+            shouldReturnModelAndViewOfTheRadiologyOrdersTabPageAndSetTabSessionAttributeToRadiologyOrdersTabPageIfNotAlreadySet()
                     throws Exception {
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
@@ -54,13 +47,8 @@ public class RadiologyDashboardOrdersTabControllerTest {
             is(RadiologyDashboardOrdersTabController.RADIOLOGY_ORDERS_TAB_REQUEST_MAPPING));
     }
     
-    /**
-     * @see RadiologyDashboardOrdersTabController#getRadiologyOrdersTab(HttpServletRequest,String)
-     * @verifies redirect to dashboard tab page given from tab session attribute if switch tab is not set
-     */
     @Test
-    public void getRadiologyOrdersTab_shouldRedirectToDashboardTabPageGivenFromTabSessionAttributeIfSwitchTabIsNotSet()
-            throws Exception {
+    public void shouldRedirectToDashboardTabPageGivenFromTabSessionAttributeIfSwitchTabIsNotSet() throws Exception {
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         MockHttpSession mockSession = new MockHttpSession();
@@ -77,13 +65,9 @@ public class RadiologyDashboardOrdersTabControllerTest {
             is(RadiologyDashboardReportsTabController.RADIOLOGY_REPORTS_TAB_REQUEST_MAPPING));
     }
     
-    /**
-     * @see RadiologyDashboardOrdersTabController#getRadiologyOrdersTab(HttpServletRequest,String)
-     * @verifies not redirect to dashboard tab page given from tab session attribute and set tab session attribute to radiology orders tab page if switch tab is set
-     */
     @Test
     public void
-            getRadiologyOrdersTab_shouldNotRedirectToDashboardTabPageGivenFromTabSessionAttributeAndSetTabSessionAttributeToRadiologyOrdersTabPageIfSwitchTabIsSet()
+            shouldNotRedirectToDashboardTabPageGivenFromTabSessionAttributeAndSetTabSessionAttributeToRadiologyOrdersTabPageIfSwitchTabIsSet()
                     throws Exception {
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
@@ -100,13 +84,8 @@ public class RadiologyDashboardOrdersTabControllerTest {
             is(RadiologyDashboardOrdersTabController.RADIOLOGY_ORDERS_TAB_REQUEST_MAPPING));
     }
     
-    /**
-     * @see RadiologyDashboardOrdersTabController#getUrgenciesList()
-     * @verifies return a map containing all urgency values and an entry to select all urgencies
-     */
     @Test
-    public void getUrgenciesList_shouldReturnAMapContainingAllUrgencyValuesAndAnEntryToSelectAllUrgencies()
-            throws Exception {
+    public void shouldReturnAMapContainingAllUrgencyValuesAndAnEntryToSelectAllUrgencies() throws Exception {
         
         Map<String, String> urgencies = radiologyDashboardOrdersTabController.getUrgenciesList();
         

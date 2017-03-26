@@ -45,73 +45,66 @@ public class RadiologyReportEditorComponentTest extends BaseModuleContextSensiti
         executeDataSet(TEST_DATASET);
     }
     
-    /**
-    * @see RadiologyReportEditor#setAsText(String)
-    * @verifies set value to radiology report whos id matches given text
-    */
     @Test
-    public void setAsText_shouldSetValueToRadiologyReportWhosIdMatchesGivenText() throws Exception {
+    public void shouldSetValueToRadiologyReportWhosIdMatchesGivenText() throws Exception {
+        
         RadiologyReportEditor editor = new RadiologyReportEditor();
+        
         editor.setAsText("1");
+        
         assertThat(editor.getValue(), is(notNullValue()));
         assertThat((RadiologyReport) editor.getValue(), is(radiologyReportService.getRadiologyReport(1)));
     }
     
-    /**
-    * @see RadiologyReportEditor#setAsText(String)
-    * @verifies set value to radiology report whos uuid matches given text
-    */
     @Test
-    public void setAsText_shouldSetValueToRadiologyReportWhosUuidMatchesGivenText() throws Exception {
+    public void shouldSetValueToRadiologyReportWhosUuidMatchesGivenText() throws Exception {
+        
         RadiologyReportEditor editor = new RadiologyReportEditor();
+        
         editor.setAsText(EXISTING_RADIOLOGY_REPORT_UUID);
+        
         assertThat(editor.getValue(), is(notNullValue()));
         assertThat((RadiologyReport) editor.getValue(),
             is(radiologyReportService.getRadiologyReportByUuid(EXISTING_RADIOLOGY_REPORT_UUID)));
     }
     
-    /**
-    * @see RadiologyReportEditor#setAsText(String)
-    * @verifies throw illegal argument exception for radiology report not found
-    */
     @Test
-    public void setAsText_shouldThrowIllegalArgumentExceptionForRadiologyReportNotFound() throws Exception {
+    public void shouldFailIfRadiologyReportNotFound() throws Exception {
+        
         RadiologyReportEditor editor = new RadiologyReportEditor();
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("RadiologyReport not found: ");
         editor.setAsText(NON_EXISTING_RADIOLOGY_REPORT_UUID);
     }
     
-    /**
-    * @see RadiologyReportEditor#setAsText(String)
-    * @verifies return null for empty text
-    */
     @Test
-    public void setAsText_shouldReturnNullForEmptyText() throws Exception {
+    public void shouldReturnNullForEmptyText() throws Exception {
+        
         RadiologyReportEditor editor = new RadiologyReportEditor();
+        
         editor.setAsText("");
+        
         assertThat(editor.getValue(), is(nullValue()));
     }
     
-    /**
-    * @see RadiologyReportEditor#getAsText()
-    * @verifies return empty string if value does not contain a radiology report
-    */
     @Test
-    public void getAsText_shouldReturnEmptyStringIfValueDoesNotContainARadiologyReport() throws Exception {
+    public void shouldReturnEmptyStringIfValueDoesNotContainARadiologyReport() throws Exception {
+        
         RadiologyReportEditor editor = new RadiologyReportEditor();
+        
         editor.setAsText("");
+        
         assertThat(editor.getAsText(), is(""));
     }
     
-    /**
-    * @see RadiologyReportEditor#getAsText()
-    * @verifies return radiology report id if value does contain a radiology report
-    */
     @Test
-    public void getAsText_shouldReturnRadiologyReportIdIfValueDoesContainARadiologyReport() throws Exception {
+    public void shouldReturnRadiologyReportIdIfValueDoesContainARadiologyReport() throws Exception {
+        
         RadiologyReportEditor editor = new RadiologyReportEditor();
+        
         editor.setAsText("1");
+        
         assertThat(editor.getAsText(), is("1"));
     }
 }

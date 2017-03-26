@@ -16,8 +16,6 @@ import static org.junit.Assert.assertThat;
 
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.junit.Test;
 import org.openmrs.module.radiology.report.RadiologyReportStatus;
 import org.openmrs.module.radiology.web.RadiologyWebConstants;
@@ -31,15 +29,9 @@ public class RadiologyDashboardReportsTabControllerTest {
     private RadiologyDashboardReportsTabController radiologyDashboardReportsTabController =
             new RadiologyDashboardReportsTabController();
     
-    /**
-     * @see RadiologyDashboardReportsTabController#getRadiologyReportsTab(HttpServletRequest)
-     * @verifies return model and view of the radiology reports tab page and set tab session attribute to radiology reports
-     *           tab page
-     */
     @Test
-    public void
-            getRadiologyReportsTab_shouldReturnModelAndViewOfTheRadiologyReportsTabPageAndSetTabSessionAttributeToRadiologyReportsTabPage()
-                    throws Exception {
+    public void shouldReturnModelAndViewOfTheRadiologyReportsTabPageAndSetTabSessionAttributeToRadiologyReportsTabPage()
+            throws Exception {
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         MockHttpSession mockSession = new MockHttpSession();
@@ -53,13 +45,8 @@ public class RadiologyDashboardReportsTabControllerTest {
             is(RadiologyDashboardReportsTabController.RADIOLOGY_REPORTS_TAB_REQUEST_MAPPING));
     }
     
-    /**
-     * @see RadiologyDashboardReportsTabController#getReportStatusList()
-     * @verifies return a map containing all report status values and an entry to select all report statuses
-     */
     @Test
-    public void getReportStatusList_shouldReturnAMapContainingAllReportStatusValuesAndAnEntryToSelectAllReportStatuses()
-            throws Exception {
+    public void shouldReturnAMapContainingAllReportStatusValuesAndAnEntryToSelectAllReportStatuses() throws Exception {
         
         Map<String, String> reportStatuses = radiologyDashboardReportsTabController.getReportStatusList();
         

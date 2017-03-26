@@ -58,27 +58,20 @@ public class RadiologyModalityServiceComponentTest extends BaseModuleContextSens
         executeDataSet(TEST_DATASET);
     }
     
-    /**
-     * @verifies create a new radiology modality
-     * @see RadiologyModalityService#saveRadiologyModality(RadiologyModality)
-     */
     @Test
-    public void saveRadiologyModality_shouldCreateANewRadiologyModality() throws Exception {
+    public void shouldCreateANewRadiologyModality() throws Exception {
         
         RadiologyModality radiologyModality = new RadiologyModality();
         radiologyModality.setAeTitle("US10");
         radiologyModality.setName("Exzelsior YTO234");
         
         radiologyModalityService.saveRadiologyModality(radiologyModality);
+        
         assertNotNull(radiologyModality.getModalityId());
     }
     
-    /**
-     * @verifies update an existing radiology modality
-     * @see RadiologyModalityService#saveRadiologyModality(RadiologyModality)
-     */
     @Test
-    public void saveRadiologyModality_shouldUpdateAnExistingRadiologyModality() throws Exception {
+    public void shouldUpdateAnExistingRadiologyModality() throws Exception {
         
         RadiologyModality radiologyModality = new RadiologyModality();
         radiologyModality.setAeTitle("US10");
@@ -98,24 +91,16 @@ public class RadiologyModalityServiceComponentTest extends BaseModuleContextSens
         assertThat(radiologyModality.getAeTitle(), is("US20"));
     }
     
-    /**
-     * @see RadiologyModalityService#saveRadiologyModality(RadiologyModality)
-     * @verifies throw illegal argument exception if given radiology modality is null
-     */
     @Test
-    public void saveRadiologyModality_shouldThrowIllegalArgumentExceptionIfGivenRadiologyModalityIsNull() throws Exception {
+    public void shouldFailToSaveRadiologyModalityIfGivenNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyModality cannot be null");
         radiologyModalityService.saveRadiologyModality(null);
     }
     
-    /**
-     * @see RadiologyModalityService#saveRadiologyModality(RadiologyModality)
-     * @verifies throw api exception if radiology modality is not valid
-     */
     @Test
-    public void saveRadiologyModality_shouldThrowAPIExceptionIfRadiologyModalityIsNotValid() throws Exception {
+    public void shouldFailToSaveRadiologyModalityIfGivenModalityIsNotValid() throws Exception {
         
         RadiologyModality radiologyModality = new RadiologyModality();
         
@@ -130,12 +115,8 @@ public class RadiologyModalityServiceComponentTest extends BaseModuleContextSens
         radiologyModalityService.saveRadiologyModality(radiologyModality);
     }
     
-    /**
-     * @verifies retire an existing radiology modality
-     * @see RadiologyModalityService#retireRadiologyModality(RadiologyModality, String)
-     */
     @Test
-    public void retireRadiologyModality_shouldRetireAnExistingRadiologyModality() throws Exception {
+    public void shouldRetireAnExistingRadiologyModality() throws Exception {
         
         RadiologyModality radiologyModality =
                 radiologyModalityService.getRadiologyModalityByUuid(EXISTING_RADIOLOGY_MODALITY_UUID);
@@ -153,26 +134,16 @@ public class RadiologyModalityServiceComponentTest extends BaseModuleContextSens
         assertNotNull(radiologyModality.getDateRetired());
     }
     
-    /**
-     * @verifies throw illegal argument exception if given radiology modality is null
-     * @see RadiologyModalityService#retireRadiologyModality(RadiologyModality, String)
-     */
     @Test
-    public void retireRadiologyModality_shouldThrowIllegalArgumentExceptionIfGivenRadiologyModalityIsNull()
-            throws Exception {
+    public void shouldThrowIllegalArgumentExceptionIfGivenRadiologyModalityIsNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyModality cannot be null");
         radiologyModalityService.retireRadiologyModality(null, "fo fun");
     }
     
-    /**
-     * @verifies throw illegal argument exception if given reason is null or contains only whitespaces
-     * @see RadiologyModalityService#retireRadiologyModality(RadiologyModality, String)
-     */
     @Test
-    public void retireRadiologyModality_shouldThrowIllegalArgumentExceptionIfGivenReasonIsNullOrContainsOnlyWhitespaces()
-            throws Exception {
+    public void shouldThrowIllegalArgumentExceptionIfGivenReasonIsNullOrContainsOnlyWhitespaces() throws Exception {
         
         RadiologyModality radiologyModality =
                 radiologyModalityService.getRadiologyModalityByUuid(EXISTING_RADIOLOGY_MODALITY_UUID);
@@ -182,101 +153,68 @@ public class RadiologyModalityServiceComponentTest extends BaseModuleContextSens
         radiologyModalityService.retireRadiologyModality(radiologyModality, null);
     }
     
-    /**
-     * @see RadiologyModalityService#getRadiologyModality(Integer)
-     * @verifies return radiology modality matching given modality id
-     */
     @Test
-    public void getRadiologyModality_shouldReturnRadiologyModalityMatchingGivenModalityId() throws Exception {
+    public void shouldReturnRadiologyModalityMatchingGivenModalityId() throws Exception {
         
         RadiologyModality radiologyModality = radiologyModalityService.getRadiologyModality(EXISTING_RADIOLOGY_MODALITY_ID);
         assertThat(radiologyModality.getId(), is(EXISTING_RADIOLOGY_MODALITY_ID));
     }
     
-    /**
-     * @see RadiologyModalityService#getRadiologyModality(Integer)
-     * @verifies return null if no match was found
-     */
     @Test
-    public void getRadiologyStudy_shouldReturnNullIfNoMatchWasFound() throws Exception {
+    public void shouldReturnNullIfNoMatchWasFoundForGivenModalityId() throws Exception {
         
         assertNull(radiologyModalityService.getRadiologyModality(NON_EXISTING_RADIOLOGY_MODALITY_ID));
     }
     
-    /**
-     * @see RadiologyModalityService#getRadiologyModality(Integer)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void getRadiologyModality_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+    public void shouldFailToGetModalityByIdIfGivenNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("id cannot be null");
         radiologyModalityService.getRadiologyModality(null);
     }
     
-    /**
-     * @see RadiologyModalityService#getRadiologyModalityByUuid(String)
-     * @verifies return radiology modality matching given uuid
-     */
     @Test
-    public void getRadiologyModalityByUuid_shouldReturnRadiologyModalityMatchingGivenUuid() throws Exception {
+    public void shouldReturnRadiologyModalityMatchingGivenUuid() throws Exception {
         
         RadiologyModality radiologyModality =
                 radiologyModalityService.getRadiologyModalityByUuid(EXISTING_RADIOLOGY_MODALITY_UUID);
+        
         assertThat(radiologyModality.getUuid(), is(EXISTING_RADIOLOGY_MODALITY_UUID));
     }
     
-    /**
-     * @see RadiologyModalityService#getRadiologyModalityByUuid(String)
-     * @verifies return null if no match was found
-     */
     @Test
-    public void getRadiologyModalityByUuid_shouldReturnNullIfNoMatchWasFound() throws Exception {
+    public void shouldReturnNullIfNoMatchWasFoundForGivenModalityUuid() throws Exception {
         
         assertNull(radiologyModalityService.getRadiologyModalityByUuid(NON_EXISTING_RADIOLOGY_MODALITY_UUID));
     }
     
-    /**
-     * @see RadiologyModalityService#getRadiologyModalityByUuid(String)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void getRadiologyModalityByUuid_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+    public void shouldFailToGetModalityByUuidIfGivenNull() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("uuid cannot be null");
         radiologyModalityService.getRadiologyModalityByUuid(null);
     }
     
-    /**
-     * @verifies return radiology modalities including retired ones if given true
-     * @see RadiologyModalityService#getRadiologyModalities(boolean)
-     */
     @Test
-    public void getRadiologyModalities_shouldReturnRadiologyModalitiesIncludingRetiredOnesIfGivenTrue() throws Exception {
+    public void shouldReturnRadiologyModalitiesIncludingRetiredOnesIfGivenTrue() throws Exception {
         
         List<RadiologyModality> radiologyModalities = radiologyModalityService.getRadiologyModalities(true);
+        
         assertThat(radiologyModalities.size(), is(TOTAL_MODALITIES));
     }
     
-    /**
-     * @verifies return radiology modalities excluding retired ones if given false
-     * @see RadiologyModalityService#getRadiologyModalities(boolean)
-     */
     @Test
-    public void getRadiologyModalities_shouldReturnRadiologyModalitiesExcludingRetiredOnesIfGivenFalse() throws Exception {
+    public void shouldReturnRadiologyModalitiesExcludingRetiredOnesIfGivenFalse() throws Exception {
         
         List<RadiologyModality> radiologyModalities = radiologyModalityService.getRadiologyModalities(false);
+        
         assertThat(radiologyModalities.size(), is(TOTAL_MODALITIES_NON_RETIRED));
     }
     
-    /**
-     * @verifies return empty list if no match was found
-     * @see RadiologyModalityService#getRadiologyModalities(boolean)
-     */
     @Test
-    public void getRadiologyModalities_shouldReturnEmptyListIfNoMatchWasFound() throws Exception {
+    public void shouldReturnEmptyListIfNoMatchWasFound() throws Exception {
         
         getConnection().createStatement()
                 .execute("DELETE FROM radiology_modality;");

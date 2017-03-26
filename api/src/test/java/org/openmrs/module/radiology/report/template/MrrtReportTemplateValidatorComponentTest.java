@@ -76,24 +76,16 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         return content;
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies pass if template template follows mrrt standards
-     */
     @Test
-    public void validate_shouldPassIfTemplateTemplateFileFollowsMrrtStandards() throws Exception {
+    public void shouldPassIfTemplateTemplateFileFollowsMrrtStandards() throws Exception {
         
         String templateContent = getFileContent("mrrttemplates/ihe/connectathon/2015/CTChestAbdomen.html");
         
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if template does not have an html element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfTemplateDoesNotHaveAnHtmlElement() throws Exception {
+    public void shouldFailIfTemplateDoesNotHaveAnHtmlElement() throws Exception {
         
         String templateContent =
                 getFileContent("mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-missingHtmlElement.html");
@@ -102,12 +94,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if template has more than one html element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfTemplateHasMoreThanOneHtmlElement() throws Exception {
+    public void shouldFailIfTemplateHasMoreThanOneHtmlElement() throws Exception {
         
         String templateContent =
                 getFileContent("mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-multipleHtmlElements.html");
@@ -116,12 +104,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if html element does not have a head element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfHtmlElementDoesNotHaveAHeadElement() throws Exception {
+    public void shouldFailIfHtmlElementDoesNotHaveAHeadElement() throws Exception {
         
         String templateContent =
                 getFileContent("mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-noHeadElementFound.html");
@@ -130,12 +114,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if html element has more than one head element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfHtmlElementHasMoreThanOneHeadElement() throws Exception {
+    public void shouldFailIfHtmlElementHasMoreThanOneHeadElement() throws Exception {
         
         String templateContent =
                 getFileContent("mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-multipleHeadElements.html");
@@ -144,12 +124,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if head element does not have a title element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfHeadElementDoesNotHaveATitleElement() throws Exception {
+    public void shouldFailIfHeadElementDoesNotHaveATitleElement() throws Exception {
         
         String templateContent =
                 getFileContent("mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-noTitleElement.html");
@@ -158,12 +134,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if head element has more than one title element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfHeadElementHasMoreThanOneTitleElement() throws Exception {
+    public void shouldFailIfHeadElementHasMoreThanOneTitleElement() throws Exception {
         
         String templateContent =
                 getFileContent("mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-multipleTitleElements.html");
@@ -172,12 +144,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if head element does not have a meta element with charset attribute
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfHeadElementDoesNotHaveAMetaElementWithCharsetAttribute() throws Exception {
+    public void shouldFailIfHeadElementDoesNotHaveAMetaElementWithCharsetAttribute() throws Exception {
         
         String templateContent = getFileContent(
             "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-noMetaElementWithCharsetAttribute.html");
@@ -186,13 +154,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if head element has more than one meta element with charset attribute
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfHeadElementHasMoreThanOneMetaElementWithCharsetAttribute()
-            throws Exception {
+    public void shouldFailIfHeadElementHasMoreThanOneMetaElementWithCharsetAttribute() throws Exception {
         
         String templateContent = getFileContent(
             "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-multipleMetaElementsWithCharsetAttribute.html");
@@ -201,13 +164,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if head element does not have one or more meta elements denoting dublin core attributes
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfHeadElementDoesNotHaveOneOrMoreMetaElementsDenotingDublinCoreAttributes()
-            throws Exception {
+    public void shouldFailIfHeadElementDoesNotHaveOneOrMoreMetaElementsDenotingDublinCoreAttributes() throws Exception {
         
         String templateContent = getFileContent(
             "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-noMetaElementDenotingDublinCoreAttributes.html");
@@ -216,12 +174,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if head element does not have script element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfHeadElementDoesNotHaveScriptElement() throws Exception {
+    public void shouldFailIfHeadElementDoesNotHaveScriptElement() throws Exception {
         
         String templateContent =
                 getFileContent("mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-noScriptElement.html");
@@ -230,12 +184,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if head element has more than one script element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfHeadElementHasMoreThanOneScriptElement() throws Exception {
+    public void shouldFailIfHeadElementHasMoreThanOneScriptElement() throws Exception {
         
         String templateContent =
                 getFileContent("mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-multipleScriptElements.html");
@@ -244,12 +194,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if script element does not have a template attributes element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfScriptElementDoesNotHaveATemplateAttributesElement() throws Exception {
+    public void shouldFailIfScriptElementDoesNotHaveATemplateAttributesElement() throws Exception {
         
         String templateContent = getFileContent(
             "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-noTemplateAttributesElement.html");
@@ -258,12 +204,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if script element has more than one template attributes element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfScriptElementHasMoreThanOneTemplateAttributesElement() throws Exception {
+    public void shouldFailIfScriptElementHasMoreThanOneTemplateAttributesElement() throws Exception {
         
         String templateContent = getFileContent(
             "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-multipleTemplateAttributesElement.html");
@@ -272,13 +214,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if coding schemes element does not have at least one coding scheme element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfCodingSchemesElementDoesNotHaveAtLeastOneCodingSchemeElement()
-            throws Exception {
+    public void shouldFailIfCodingSchemesElementDoesNotHaveAtLeastOneCodingSchemeElement() throws Exception {
         
         String templateContent = getFileContent(
             "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-codingSchemesShouldHaveAtLeastOneCodingSchemeElement.html");
@@ -287,12 +224,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if term element does not have a code element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfTermElementDoesNotHaveACodeElement() throws Exception {
+    public void shouldFailIfTermElementDoesNotHaveACodeElement() throws Exception {
         
         String templateContent = getFileContent(
             "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-termElementShouldHaveOneCodeElement.html");
@@ -301,12 +234,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if term element has more than one code element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfTermElementHasMoreThanOneCodeElement() throws Exception {
+    public void shouldFailIfTermElementHasMoreThanOneCodeElement() throws Exception {
         
         String templateContent = getFileContent(
             "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-multipleCodeElementsInTermElement.html");
@@ -315,12 +244,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if code element lacks one of meaning scheme or value attribute
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfCodeElementLacksOneOfMeaningSchemeOrValueAttribute() throws Exception {
+    public void shouldFailIfCodeElementLacksOneOfMeaningSchemeOrValueAttribute() throws Exception {
         
         String templateContent = getFileContent(
             "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-missingAttributesInCodeElement.html");
@@ -329,13 +254,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if template attributes element does not have a coded content element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfTemplateAttributesElementDoesNotHaveACodedContentElement()
-            throws Exception {
+    public void shouldFailIfTemplateAttributesElementDoesNotHaveACodedContentElement() throws Exception {
         
         String templateContent = getFileContent(
             "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-missingAttributesInCodeElement.html");
@@ -344,13 +264,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if template attributes element has more than one coded content element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfTemplateAttributesElementHasMoreThanOneCodedContentElement()
-            throws Exception {
+    public void shouldFailIfTemplateAttributesElementHasMoreThanOneCodedContentElement() throws Exception {
         
         String templateContent =
                 getFileContent("mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-multipleCodedContent.html");
@@ -359,12 +274,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if html element does not have a body element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfHtmlElementDoesNotHaveABodyElement() throws Exception {
+    public void shouldFailIfHtmlElementDoesNotHaveABodyElement() throws Exception {
         
         String templateContent =
                 getFileContent("mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-noBodyElement.html");
@@ -373,12 +284,8 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies throw api exception if html element has more than one body element
-     */
     @Test
-    public void validate_shouldThrowApiExceptionIfHtmlElementHasMoreThanOneBodyElement() throws Exception {
+    public void shouldFailIfHtmlElementHasMoreThanOneBodyElement() throws Exception {
         
         String templateContent =
                 getFileContent("mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-multipleBodyElement.html");
@@ -387,15 +294,12 @@ public class MrrtReportTemplateValidatorComponentTest extends BaseModuleContextS
         validator.validate(templateContent);
     }
     
-    /**
-     * @see MrrtReportTemplateValidator#validate(String)
-     * @verifies catch all violation errors and throw an mrrt report template exception
-     */
     @Test
-    public void validate_catchAllViolationErrorsAndThrowAnMrrtReportTemplateException() throws Exception {
+    public void catchAllViolationErrorsAndThrowAnMrrtReportTemplateException() throws Exception {
         
         String templateContent = getFileContent(
             "mrrttemplates/ihe/connectathon/2015/invalidMrrtReportTemplate-missingCharsetTitleTemplateAttributesBodyElements.html");
+        
         try {
             validator.validate(templateContent);
             fail("Expected an MrrtReportTemplateValidationException to be thrown");

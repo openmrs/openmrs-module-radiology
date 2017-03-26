@@ -45,73 +45,61 @@ public class RadiologyStudyEditorComponentTest extends BaseModuleContextSensitiv
         executeDataSet(TEST_DATASET);
     }
     
-    /**
-    * @see RadiologyStudyEditor#setAsText(String)
-    * @verifies set value to radiology study whos id matches given text
-    */
     @Test
-    public void setAsText_shouldSetValueToRadiologyStudyWhosIdMatchesGivenText() throws Exception {
+    public void shouldSetValueToRadiologyStudyWhosIdMatchesGivenText() throws Exception {
+        
         RadiologyStudyEditor editor = new RadiologyStudyEditor();
         editor.setAsText("1");
+        
         assertThat(editor.getValue(), is(notNullValue()));
         assertThat((RadiologyStudy) editor.getValue(), is(radiologyStudyService.getRadiologyStudy(1)));
     }
     
-    /**
-    * @see RadiologyStudyEditor#setAsText(String)
-    * @verifies set value to radiology study whos uuid matches given text
-    */
     @Test
-    public void setAsText_shouldSetValueToRadiologyStudyWhosUuidMatchesGivenText() throws Exception {
+    public void shouldSetValueToRadiologyStudyWhosUuidMatchesGivenText() throws Exception {
+        
         RadiologyStudyEditor editor = new RadiologyStudyEditor();
         editor.setAsText(EXISTING_RADIOLOGY_STUDY_UUID);
+        
         assertThat(editor.getValue(), is(notNullValue()));
         assertThat((RadiologyStudy) editor.getValue(),
             is(radiologyStudyService.getRadiologyStudyByUuid(EXISTING_RADIOLOGY_STUDY_UUID)));
     }
     
-    /**
-    * @see RadiologyStudyEditor#setAsText(String)
-    * @verifies throw illegal argument exception for radiology study not found
-    */
     @Test
-    public void setAsText_shouldThrowIllegalArgumentExceptionForRadiologyStudyNotFound() throws Exception {
+    public void shouldFailIfRadiologyStudyNotFound() throws Exception {
+        
         RadiologyStudyEditor editor = new RadiologyStudyEditor();
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("RadiologyStudy not found: ");
         editor.setAsText(NON_EXISTING_RADIOLOGY_STUDY_UUID);
     }
     
-    /**
-    * @see RadiologyStudyEditor#setAsText(String)
-    * @verifies return null for empty text
-    */
     @Test
-    public void setAsText_shouldReturnNullForEmptyText() throws Exception {
+    public void shouldReturnNullForEmptyText() throws Exception {
+        
         RadiologyStudyEditor editor = new RadiologyStudyEditor();
         editor.setAsText("");
+        
         assertThat(editor.getValue(), is(nullValue()));
     }
     
-    /**
-    * @see RadiologyStudyEditor#getAsText()
-    * @verifies return empty string if value does not contain a radiology study
-    */
     @Test
-    public void getAsText_shouldReturnEmptyStringIfValueDoesNotContainARadiologyStudy() throws Exception {
+    public void shouldReturnEmptyStringIfValueDoesNotContainARadiologyStudy() throws Exception {
+        
         RadiologyStudyEditor editor = new RadiologyStudyEditor();
         editor.setAsText("");
+        
         assertThat(editor.getAsText(), is(""));
     }
     
-    /**
-    * @see RadiologyStudyEditor#getAsText()
-    * @verifies return radiology study id if value does contain a radiology study
-    */
     @Test
-    public void getAsText_shouldReturnRadiologyStudyIdIfValueDoesContainARadiologyStudy() throws Exception {
+    public void shouldReturnRadiologyStudyIdIfValueDoesContainARadiologyStudy() throws Exception {
+        
         RadiologyStudyEditor editor = new RadiologyStudyEditor();
         editor.setAsText("1");
+        
         assertThat(editor.getAsText(), is("1"));
     }
 }

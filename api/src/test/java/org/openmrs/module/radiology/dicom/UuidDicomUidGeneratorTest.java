@@ -35,35 +35,24 @@ public class UuidDicomUidGeneratorTest {
     
     UuidDicomUidGenerator dicomUidGenerator = new UuidDicomUidGenerator();
     
-    /**
-     * @see DicomUidGenerator#getMaxRootLength()
-     * @verifies return maximum allowed root length
-     */
     @Test
-    public void getMaxRootLength_shouldReturnMaximumAllowedRootLength() throws Exception {
+    public void shouldReturnMaximumAllowedRootLength() throws Exception {
         
         assertThat(dicomUidGenerator.getMaxRootLength(), is(24));
     }
     
-    /**
-     * @see DicomUidGenerator#getNewDicomUid(String)
-     * @verifies return a valid uid prefixed with root
-     */
     @Test
-    public void getNewDicomUid_shouldReturnAValidUidPrefixedWithRoot() throws Exception {
+    public void shouldReturnAValidUidPrefixedWithRoot() throws Exception {
         
         String root = "1.2.5.6.7.1220";
         
         String uid = dicomUidGenerator.getNewDicomUid(root);
+        
         assertThat(uid, startsWith(root));
     }
     
-    /**
-     * @see DicomUidGenerator#getNewDicomUid(String)
-     * @verifies always return unique uids when called multiple times
-     */
     @Test
-    public void getNewDicomUid_shouldAlwaysReturnUniqueUidsWhenCalledMultipleTimes() throws Exception {
+    public void shouldAlwaysReturnUniqueUidsWhenCalledMultipleTimes() throws Exception {
         
         String root = "1.2.5.6.7.1220";
         
@@ -77,69 +66,48 @@ public class UuidDicomUidGeneratorTest {
         assertThat(uniqueStudyInstanceUids.size(), is(N));
     }
     
-    /**
-     * @see DicomUidGenerator#getNewDicomUid(String)
-     * @verifies return a uid not exceeding 64 characters
-     */
     @Test
-    public void getNewDicomUid_shouldReturnAUidNotExceeding64Characters() throws Exception {
+    public void shouldReturnAUidNotExceeding64Characters() throws Exception {
         
         String uid = dicomUidGenerator.getNewDicomUid("1.2.5.6.7.1220");
+        
         assertThat(uid.length(), is(not(greaterThan(64))));
     }
     
-    /**
-     * @see DicomUidGenerator#getNewDicomUid(String)
-     * @verifies return a uid composed only of characters 0-9 separated by a dot
-     */
     @Test
-    public void getNewDicomUid_shouldReturnAUidComposedOnlyOfCharacters09SeparatedByADot() throws Exception {
+    public void shouldReturnAUidComposedOnlyOfCharacters09SeparatedByADot() throws Exception {
         
         String uid = dicomUidGenerator.getNewDicomUid("1.2.5.6.7.1220");
+        
         assertTrue(DicomUidValidator.isPatternValid(uid));
     }
     
-    /**
-     * @see DicomUidGenerator#getNewDicomUid(String)
-     * @verifies return a uid with no non-significant leading zeros
-     */
     @Test
-    public void getNewDicomUid_shouldReturnAUidWithNoNonsignificantLeadingZeros() throws Exception {
+    public void shouldReturnAUidWithNoNonsignificantLeadingZeros() throws Exception {
         
         String uid = dicomUidGenerator.getNewDicomUid("1.2.5.6.7.1220");
+        
         assertTrue(DicomUidValidator.isPatternValid(uid));
     }
     
-    /**
-     * @see DicomUidGenerator#getNewDicomUid(String)
-     * @verifies throw a null pointer exception if root is null
-     */
     @Test
-    public void getNewDicomUid_shouldThrowANullPointerExceptionIfRootIsNull() throws Exception {
+    public void shouldFailIfRootIsNull() throws Exception {
         
         expectedException.expect(NullPointerException.class);
         expectedException.expectMessage("root is required");
         dicomUidGenerator.getNewDicomUid(null);
     }
     
-    /**
-     * @see DicomUidGenerator#getNewDicomUid(String)
-     * @verifies throw an illegal argument exception if root is empty
-     */
     @Test
-    public void getNewDicomUid_shouldThrowAnIllegalArgumentExceptionIfRootIsEmpty() throws Exception {
+    public void shouldFailIfRootIsEmpty() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("root is an invalid DICOM UID");
         dicomUidGenerator.getNewDicomUid("  ");
     }
     
-    /**
-     * @see DicomUidGenerator#getNewDicomUid(String)
-     * @verifies throw an illegal argument exception if root is not a valid UID
-     */
     @Test
-    public void getNewDicomUid_shouldThrowAnIllegalArgumentExceptionIfRootIsNotAValidUID() throws Exception {
+    public void shouldFailIfRootIsNotAValidUID() throws Exception {
         
         // test with invalid root pattern but smaller than 64 characters
         String root = "1.2.A.1";
@@ -158,12 +126,8 @@ public class UuidDicomUidGeneratorTest {
         dicomUidGenerator.getNewDicomUid(root);
     }
     
-    /**
-     * @see DicomUidGenerator#getNewDicomUid(String)
-     * @verifies throw an illegal argument exception if root exceeds the maximum length
-     */
     @Test
-    public void getNewDicomUid_shouldThrowAnIllegalArgumentExceptionIfRootExceedsTheMaximumLength() throws Exception {
+    public void shouldFailIfRootExceedsTheMaximumLength() throws Exception {
         
         String root = StringUtils.repeat("1.2", 10);
         

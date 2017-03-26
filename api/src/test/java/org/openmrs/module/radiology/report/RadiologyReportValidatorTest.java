@@ -47,36 +47,27 @@ public class RadiologyReportValidatorTest {
         radiologyReport.setBody("Found a broken bone.");
     }
     
-    /**
-     * @see RadiologyReportValidator#supports(Class)
-     * @verifies return false for other object types
-     */
     @Test
-    public void supports_shouldReturnFalseForOtherObjectTypes() throws Exception {
+    public void shouldReturnFalseForOtherObjectTypes() throws Exception {
         
         RadiologyReportValidator radiologyReportValidator = new RadiologyReportValidator();
+        
         assertFalse(radiologyReportValidator.supports(Object.class));
     }
     
-    /**
-     * @see RadiologyReportValidator#supports(Class)
-     * @verifies return true for radiology report objects
-     */
     @Test
-    public void supports_shouldReturnTrueForRadiologyReportObjects() throws Exception {
+    public void shouldReturnTrueForRadiologyReportObjects() throws Exception {
         
         RadiologyReportValidator radiologyReportValidator = new RadiologyReportValidator();
+        
         assertTrue(radiologyReportValidator.supports(RadiologyReport.class));
     }
     
-    /**
-     * @see RadiologyReportValidator#validate(Object, Errors)
-     * @verifies fail validation if radiology report is null
-     */
     @Test
-    public void validate_shouldFailValidationIfRadiologyReportIsNull() throws Exception {
+    public void shouldFailValidationIfRadiologyReportIsNull() throws Exception {
         
         Errors errors = new BindException(radiologyReport, "radiologyReport");
+        
         new RadiologyReportValidator().validate(null, errors);
         
         assertTrue(errors.hasErrors());
@@ -88,16 +79,13 @@ public class RadiologyReportValidatorTest {
             is("error.general"));
     }
     
-    /**
-     * @see RadiologyReportValidator#validate(Object, Errors)
-     * @verifies fail validation if principal results interpreter is null or empty or whitespaces only
-     */
     @Test
-    public void validate_shouldFailValidationIfPrincipalResultsInterpreterIsNullOrEmptyOrWhitespacesOnly() throws Exception {
+    public void shouldFailValidationIfPrincipalResultsInterpreterIsNullOrEmptyOrWhitespacesOnly() throws Exception {
         
         radiologyReport.setPrincipalResultsInterpreter(null);
         
         Errors errors = new BindException(radiologyReport, "radiologyReport");
+        
         new RadiologyReportValidator().validate(radiologyReport, errors);
         
         assertTrue(errors.hasErrors());
@@ -110,16 +98,12 @@ public class RadiologyReportValidatorTest {
         assertTrue(errors.hasFieldErrors("principalResultsInterpreter"));
     }
     
-    /**
-     * @see RadiologyReportValidator#validate(Object,Errors)
-     * @verifies fail validation if report body is null or empty or whitespaces only
-     */
     @Test
-    public void validate_shouldFailValidationIfReportBodyIsNullOrEmptyOrWhitespacesOnly() throws Exception {
+    public void shouldFailValidationIfReportBodyIsNullOrEmptyOrWhitespacesOnly() throws Exception {
         
         radiologyReport.setBody(null);
-        
         Errors errors = new BindException(radiologyReport, "radiologyReport");
+        
         new RadiologyReportValidator().validate(radiologyReport, errors);
         
         assertTrue(errors.hasErrors());
@@ -160,14 +144,11 @@ public class RadiologyReportValidatorTest {
         assertTrue(errors.hasFieldErrors("body"));
     }
     
-    /**
-     * @see RadiologyReportValidator#validate(Object, Errors)
-     * @verifies pass validation if all fields are correct
-     */
     @Test
-    public void validate_shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
+    public void shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
         
         Errors errors = new BindException(radiologyReport, "radiologyReport");
+        
         new RadiologyReportValidator().validate(radiologyReport, errors);
         
         assertFalse(errors.hasErrors());

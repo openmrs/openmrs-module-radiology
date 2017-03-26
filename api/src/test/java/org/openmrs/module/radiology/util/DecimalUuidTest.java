@@ -43,10 +43,9 @@ public class DecimalUuidTest {
     
     /**
      * @see DecimalUuid#getBigIntegerFromUuid(UUID)
-     * @verifies convert given uuid into a big integer
      */
     @Test
-    public void getBigIntegerFromUUID_shouldTranslateGivenUuidIntoABigInteger() throws Exception {
+    public void shouldTranslateGivenUuidIntoABigInteger() throws Exception {
         
         // Sample UUIDs with corresponding decimal representation (OIDs suffix, after 2.25.) taken from
         // http://www.itu.int/en/ITU-T/asn1/Pages/UUID/generate_uuid.aspx

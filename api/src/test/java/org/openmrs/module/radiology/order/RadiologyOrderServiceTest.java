@@ -40,23 +40,17 @@ public class RadiologyOrderServiceTest extends BaseContextMockTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
     
-    /**
-     * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
-     * @verifies throw illegal argument exception given null
-     */
     @Test
-    public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionGivenNull() {
+    public void shouldFailToSaveRadiologyOrderGivenNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyOrder cannot be null");
         radiologyOrderService.placeRadiologyOrder(null);
     }
     
-    /**
-     * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
-     * @verifies throw illegal argument exception if given radiology order has no study
-     */
     @Test
-    public void placeRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderHasNoStudy() {
+    public void shouldFailToSaveRadiologyOrderIfGivenRadiologyOrderHasNoStudy() {
+        
         when(radiologyOrder.getOrderId()).thenReturn(null);
         
         expectedException.expect(IllegalArgumentException.class);
@@ -64,12 +58,9 @@ public class RadiologyOrderServiceTest extends BaseContextMockTest {
         radiologyOrderService.placeRadiologyOrder(radiologyOrder);
     }
     
-    /**
-     * @see RadiologyOrderService#placeRadiologyOrder(RadiologyOrder)
-     * @verifies throw api exception on saving an existing radiology order
-     */
     @Test
-    public void placeRadiologyOrder_shouldThrowApiExceptionOnSavingAnExistingRadiologyOrder() {
+    public void shouldFailToSaveRadiologyOrderGivenAnExistingOne() {
+        
         when(radiologyOrder.getOrderId()).thenReturn(EXISTING_RADIOLOGY_ORDER_ID);
         
         expectedException.expect(APIException.class);
@@ -77,24 +68,17 @@ public class RadiologyOrderServiceTest extends BaseContextMockTest {
         radiologyOrderService.placeRadiologyOrder(radiologyOrder);
     }
     
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
-     * @verifies throw illegal argument exception if given radiology order is null
-     */
     @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderIsNull() throws Exception {
+    public void shouldFailToDiscontinueRadiologyOrderIfGivenNull() throws Exception {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyOrder cannot be null");
         radiologyOrderService.discontinueRadiologyOrder(null, orderer, DISCONTINUE_REASON);
     }
     
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
-     * @verifies throw illegal argument exception if given radiology order with orderId null
-     */
     @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderWithOrderIdNull()
-            throws Exception {
+    public void shouldFailToDiscontinueRadiologyOrderIfGivenRadiologyOrderWithOrderIdNull() throws Exception {
+        
         when(radiologyOrder.getOrderId()).thenReturn(null);
         
         expectedException.expect(IllegalArgumentException.class);
@@ -102,24 +86,17 @@ public class RadiologyOrderServiceTest extends BaseContextMockTest {
         radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, orderer, DISCONTINUE_REASON);
     }
     
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
-     * @verifies throw illegal argument exception if given orderer is null
-     */
     @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenOrdererIsNull() throws Exception {
+    public void shouldFailToDiscontinueRadiologyOrderIfGivenOrdererIsNull() throws Exception {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("orderer cannot be null");
         radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, null, DISCONTINUE_REASON);
     }
     
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder,Provider,String)
-     * @verifies throw api exception if given radiology order is discontinued
-     */
     @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderIsDiscontinued()
-            throws Exception {
+    public void shouldFailToDiscontinueRadiologyOrderIfGivenRadiologyOrderIsDiscontinued() throws Exception {
+        
         when(radiologyOrder.isDiscontinuedRightNow()).thenReturn(true);
         when(radiologyOrder.getOrderer()).thenReturn(orderer);
         
@@ -128,13 +105,9 @@ public class RadiologyOrderServiceTest extends BaseContextMockTest {
         radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, orderer, DISCONTINUE_REASON);
     }
     
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
-     * @verifies throw api exception if given radiology order is in progress
-     */
     @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderIsInProgress()
-            throws Exception {
+    public void shouldFailToDiscontinueRadiologyOrderIfGivenRadiologyOrderIsInProgress() throws Exception {
+        
         when(radiologyOrder.getOrderer()).thenReturn(orderer);
         when(radiologyOrder.isInProgress()).thenReturn(true);
         
@@ -143,13 +116,9 @@ public class RadiologyOrderServiceTest extends BaseContextMockTest {
         radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, orderer, DISCONTINUE_REASON);
     }
     
-    /**
-     * @see RadiologyOrderService#discontinueRadiologyOrder(RadiologyOrder, Provider, String)
-     * @verifies throw api exception if given radiology order is completed
-     */
     @Test
-    public void discontinueRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenRadiologyOrderIsCompleted()
-            throws Exception {
+    public void shouldFailToDiscontinueRadiologyOrderIfGivenRadiologyOrderIsCompleted() throws Exception {
+        
         when(radiologyOrder.getOrderer()).thenReturn(orderer);
         when(radiologyOrder.isCompleted()).thenReturn(true);
         
@@ -158,34 +127,25 @@ public class RadiologyOrderServiceTest extends BaseContextMockTest {
         radiologyOrderService.discontinueRadiologyOrder(radiologyOrder, orderer, DISCONTINUE_REASON);
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrder(Integer)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void getRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenNull() {
+    public void shouldFailToGetRadiologyOrderByIdIfGivenNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("orderId cannot be null");
         radiologyOrderService.getRadiologyOrder(null);
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrderByUuid(String)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void getRadiologyOrderByUuid_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+    public void shouldFailToGetRadiologyOrderByUuidIfGivenNull() throws Exception {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("uuid cannot be null");
         radiologyOrderService.getRadiologyOrderByUuid(null);
     }
     
-    /**
-     * @see RadiologyOrderService#getRadiologyOrders(RadiologyOrderSearchCriteria)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void getRadiologyOrders_shouldThrowIllegalArgumentExceptionIfGivenNull() throws Exception {
+    public void shouldFailToGetRadiologyOrdersIfGivenNull() throws Exception {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyOrderSearchCriteria cannot be null");
         radiologyOrderService.getRadiologyOrders(null);

@@ -61,12 +61,8 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
         radiologyModality.setAeTitle("CT01");
     }
     
-    /**
-     * @verifies populate model and view with new radiology modality
-     * @see RadiologyModalityFormController#getRadiologyModality()
-     */
     @Test
-    public void getRadiologyModality_shouldPopulateModelAndViewWithNewRadiologyModality() throws Exception {
+    public void shouldPopulateModelAndViewWithNewRadiologyModality() throws Exception {
         
         ModelAndView modelAndView = radiologyModalityFormController.getRadiologyModality();
         
@@ -79,12 +75,8 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
         assertNull(modality.getModalityId());
     }
     
-    /**
-     * @verifies populate model and view with given radiology modality
-     * @see RadiologyModalityFormController#getRadiologyModality(org.openmrs.module.radiology.modality.RadiologyModality)
-     */
     @Test
-    public void getRadiologyModality_shouldPopulateModelAndViewWithGivenRadiologyModality() throws Exception {
+    public void shouldPopulateModelAndViewWithGivenRadiologyModality() throws Exception {
         
         ModelAndView modelAndView = radiologyModalityFormController.getRadiologyModality(radiologyModality);
         
@@ -97,10 +89,6 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
         assertThat(modality, is(radiologyModality));
     }
     
-    /**
-     * @verifies save given radiology modality if valid and set http session attribute openmrs message to modality saved and redirect to the new radiology modality
-     * @see RadiologyModalityFormController#saveRadiologyModality(javax.servlet.http.HttpServletRequest, org.openmrs.module.radiology.modality.RadiologyModality, org.springframework.validation.BindingResult)
-     */
     @Test
     public void
             saveRadiologyModality_shouldSaveGivenRadiologyModalityIfValidAndSetHttpSessionAttributeOpenmrsMessageToModalitySavedAndRedirectToTheNewRadiologyModality()
@@ -127,12 +115,8 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
             is("radiology.RadiologyModality.saved"));
     }
     
-    /**
-     * @verifies not save given radiology modality if it is not valid and not redirect
-     * @see RadiologyModalityFormController#saveRadiologyModality(javax.servlet.http.HttpServletRequest, org.openmrs.module.radiology.modality.RadiologyModality, org.springframework.validation.BindingResult)
-     */
     @Test
-    public void saveRadiologyModality_shouldNotSaveGivenRadiologyModalityIfItIsNotValidAndNotRedirect() throws Exception {
+    public void shouldNotSaveGivenRadiologyModalityIfItIsNotValidAndNotRedirect() throws Exception {
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();
         mockRequest.addParameter("saveRadiologyModality", "saveRadiologyModality");
@@ -156,10 +140,6 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
         assertThat(modality, is(radiologyModality));
     }
     
-    /**
-     * @verifies not redirect and set session attribute with openmrs error if api exception is thrown by save radiology modality
-     * @see RadiologyModalityFormController#saveRadiologyModality(javax.servlet.http.HttpServletRequest, org.openmrs.module.radiology.modality.RadiologyModality, org.springframework.validation.BindingResult)
-     */
     @Test
     public void
             saveRadiologyModality_shouldNotRedirectAndSetSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownBySaveRadiologyModality()
@@ -193,10 +173,6 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
         assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR), is("modality related error"));
     }
     
-    /**
-     * @verifies retire given radiology modality if valid and set http session attribute openmrs message to modality retired and redirect to the radiology modality
-     * @see RadiologyModalityFormController#retireRadiologyModality(javax.servlet.http.HttpServletRequest, RadiologyModality, BindingResult)
-     */
     @Test
     public void
             retireRadiologyModality_shouldRetireGivenRadiologyModalityIfValidAndSetHttpSessionAttributeOpenmrsMessageToModalityRetiredAndRedirectToTheRadiologyModality()
@@ -226,13 +202,8 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
             is("radiology.RadiologyModality.retired"));
     }
     
-    /**
-     * @verifies not retire given radiology modality if it is not valid and not redirect
-     * @see RadiologyModalityFormController#retireRadiologyModality(javax.servlet.http.HttpServletRequest, RadiologyModality, BindingResult)
-     */
     @Test
-    public void retireRadiologyModality_shouldNotRetireGivenRadiologyModalityIfItIsNotValidAndNotRedirect()
-            throws Exception {
+    public void shouldNotRetireGivenRadiologyModalityIfItIsNotValidAndNotRedirect() throws Exception {
         
         radiologyModality.setRetireReason(null);
         
@@ -258,10 +229,6 @@ public class RadiologyModalityFormControllerTest extends BaseContextMockTest {
         assertThat(modality, is(radiologyModality));
     }
     
-    /**
-     * @verifies not redirect and set session attribute with openmrs error if api exception is thrown by retire radiology modality
-     * @see RadiologyModalityFormController#retireRadiologyModality(javax.servlet.http.HttpServletRequest, RadiologyModality, BindingResult)
-     */
     @Test
     public void
             retireRadiologyModality_shouldNotRedirectAndSetSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownByRetireRadiologyModality()
