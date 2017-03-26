@@ -26,8 +26,6 @@ import static org.mockito.Mockito.when;
 
 import java.lang.reflect.Method;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -95,13 +93,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         radiologyReportNeedsToBeCreatedMethod.setAccessible(true);
     }
     
-    /**
-     * @see RadiologyOrderFormController#getRadiologyOrderFormWithNewRadiologyOrder()
-     * @verifies populate model and view with new radiology order
-     */
     @Test
-    public void getRadiologyOrderFormWithNewRadiologyOrder_shouldPopulateModelAndViewWithNewRadiologyOrder()
-            throws Exception {
+    public void shouldPopulateModelAndViewWithNewRadiologyOrder() throws Exception {
         
         ModelAndView modelAndView = radiologyOrderFormController.getRadiologyOrderFormWithNewRadiologyOrder();
         
@@ -120,10 +113,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         assertNull(order.getOrderer());
     }
     
-    /**
-     * @see RadiologyOrderFormController#getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient(Patient)
-     * @verifies populate model and view with new radiology order prefilled with given patient
-     */
     @Test
     public void
             getRadiologyOrderFormWithNewRadiologyOrderAndPrefilledPatient_shouldPopulateModelAndViewWithNewRadiologyOrderPrefilledWithGivenPatient()
@@ -157,11 +146,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         assertThat(patientId, is(mockPatient.getPatientId()));
     }
     
-    /**
-     * @see RadiologyOrderFormController#getRadiologyOrderFormWithExistingRadiologyOrder(Order)
-     * @verifies populate model and view with existing radiology order if given order id matches a
-     *           radiology order and no dicom viewer url if order is not completed
-     */
     @Test
     public void
             getRadiologyOrderFormWithExistingRadiologyOrder_shouldPopulateModelAndViewWithExistingRadiologyOrderIfGivenOrderIdMatchesARadiologyOrderAndNoDicomViewerUrlIfOrderIsNotCompleted()
@@ -191,11 +175,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         assertThat(modelAndView.getModelMap(), not(hasKey("dicomViewerUrl")));
     }
     
-    /**
-     * @see RadiologyOrderFormController#getRadiologyOrderFormWithExistingRadiologyOrder(Order)
-     * @verifies populate model and view with existing radiology order if given order id matches a
-     *           radiology order and dicom viewer url if order completed
-     */
     @Test
     public void
             getRadiologyOrderFormWithExistingRadiologyOrder_shouldPopulateModelAndViewWithExistingRadiologyOrderIfGivenOrderIdMatchesARadiologyOrderAndDicomViewerUrlIfOrderCompleted()
@@ -232,11 +211,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
             is("http://localhost:8081/weasis-pacs-connector/viewer?studyUID=1.2.826.0.1.3680043.8.2186.1.1"));
     }
     
-    /**
-     * @see RadiologyOrderFormController#getRadiologyOrderFormWithExistingRadiologyOrder(Order)
-     * @verifies populate model and view with existing order if given order id only matches an order
-     *           and not a radiology order
-     */
     @Test
     public void
             getRadiologyOrderFormWithExistingRadiologyOrder_shouldPopulateModelAndViewWithExistingOrderIfGivenOrderIdOnlyMatchesAnOrderAndNotARadiologyOrder()
@@ -269,11 +243,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         assertThat(modelAndView.getModelMap(), not(hasKey("dicomViewerUrl")));
     }
     
-    /**
-     * @see RadiologyOrderFormController#saveRadiologyOrder(HttpServletRequest, RadiologyOrder, BindingResult)
-     * @verifies save given radiology order if valid and set http session attribute openmrs message to order saved and
-     *           redirect to the new radiology order
-     */
     @Test
     public void
             saveRadiologyOrder_shouldSaveGivenRadiologyOrderIfValidAndSetHttpSessionAttributeOpenmrsMessageToOrderSavedAndRedirectToNewRadiologyOrder()
@@ -304,12 +273,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Order.saved"));
     }
     
-    /**
-     * @see RadiologyOrderFormController#saveRadiologyOrder(HttpServletRequest, RadiologyOrder, BindingResult)
-     * @verifies not save given radiology order if it is not valid and not redirect
-     */
     @Test
-    public void saveRadiologyOrder_shouldNotSaveGivenRadiologyOrderIfItIsNotValidAndNotRedirect() throws Exception {
+    public void shouldNotSaveGivenRadiologyOrderIfItIsNotValidAndNotRedirect() throws Exception {
         
         // given
         RadiologyOrder mockRadiologyOrder = RadiologyTestData.getMockRadiologyOrder1();
@@ -341,10 +306,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         assertThat(radiologyOrder, is(mockRadiologyOrder));
     }
     
-    /**
-     * @see RadiologyOrderFormController#saveRadiologyOrder(HttpServletRequest,RadiologyOrder,BindingResult)
-     * @verifies not redirect and set session attribute with openmrs error if api exception is thrown by place radiology
-     */
     @Test
     public void
             saveRadiologyOrder_shouldNotRedirectAndSetSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownByPlaceRadiology()
@@ -386,13 +347,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_ERROR_ATTR), is("Order.cannot.edit.existing"));
     }
     
-    /**
-     * @see RadiologyOrderFormController#discontinueRadiologyOrder(HttpServletRequest,RadiologyOrder,DiscontinuationOrderRequest,BindingResult)
-     * @verifies discontinue non discontinued radiology order and redirect to discontinuation order
-     */
     @Test
-    public void discontinueRadiologyOrder_shouldDiscontinueNonDiscontinuedRadiologyOrderAndRedirectToDiscontinuationOrder()
-            throws Exception {
+    public void shouldDiscontinueNonDiscontinuedRadiologyOrderAndRedirectToDiscontinuationOrder() throws Exception {
         
         // given
         RadiologyOrder mockRadiologyOrderToDiscontinue = RadiologyTestData.getMockRadiologyOrder1();
@@ -432,10 +388,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         assertThat((String) mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("Order.discontinuedSuccessfully"));
     }
     
-    /**
-     * @see RadiologyOrderFormController#discontinueRadiologyOrder(HttpServletRequest,RadiologyOrder,DiscontinuationOrderRequest,BindingResult)
-     * @verifies not discontinue given radiology order and not redirect if discontinuation order request is not valid
-     */
     @Test
     public void
             discontinueRadiologyOrder_shouldNotDiscontinueGivenRadiologyOrderAndNotRedirectIfDiscontinuationOrderRequestIsNotValid()
@@ -487,11 +439,6 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
         assertThat(radiologyOrder, is(mockRadiologyOrderToDiscontinue));
     }
     
-    /**
-     * @see RadiologyOrderFormController#discontinueRadiologyOrder(HttpServletRequest,RadiologyOrder,DiscontinuationOrderRequest,BindingResult)
-     * @verifies not redirect and set session attribute with openmrs error if api exception is thrown by discontinue
-     *           radiology order
-     */
     @Test
     public void
             discontinueRadiologyOrder_shouldNotRedirectAndSetSessionAttributeWithOpenmrsErrorIfApiExceptionIsThrownByDiscontinueRadiologyOrder()
@@ -547,12 +494,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
             is("Cannot discontinue an order that is already stopped, expired or voided"));
     }
     
-    /**
-     * @see RadiologyOrderFormController#radiologyReportNeedsToBeCreated(ModelAndView,Order)
-     * @verifies return false if order is not a radiology order
-     */
     @Test
-    public void radiologyReportNeedsToBeCreated_shouldReturnFalseIfOrderIsNotARadiologyOrder() throws Exception {
+    public void shouldReturnFalseIfOrderIsNotARadiologyOrder() throws Exception {
         
         // given
         ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);
@@ -578,10 +521,9 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
     
     /**
      * @see RadiologyOrderFormController#radiologyReportNeedsToBeCreated(ModelAndView,Order)
-     * @verifies return false if radiology order is not completed
      */
     @Test
-    public void radiologyReportNeedsToBeCreated_shouldReturnFalseIfRadiologyOrderIsNotCompleted() throws Exception {
+    public void shouldReturnFalseIfRadiologyOrderIsNotCompleted() throws Exception {
         
         // given
         ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);
@@ -599,13 +541,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                 .get("radiologyReportNeedsToBeCreated"));
     }
     
-    /**
-     * @see RadiologyOrderFormController#radiologyReportNeedsToBeCreated(ModelAndView,Order)
-     * @verifies return false if radiology order is completed but has a claimed report
-     */
     @Test
-    public void radiologyReportNeedsToBeCreated_shouldReturnFalseIfRadiologyOrderIsCompletedButHasAClaimedReport()
-            throws Exception {
+    public void shouldReturnFalseIfRadiologyOrderIsCompletedButHasAClaimedReport() throws Exception {
         
         // given
         ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);
@@ -629,13 +566,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                 .get("radiologyReportNeedsToBeCreated"));
     }
     
-    /**
-     * @see RadiologyOrderFormController#radiologyReportNeedsToBeCreated(ModelAndView,Order)
-     * @verifies return false if radiology order is completed but has a completed report
-     */
     @Test
-    public void radiologyReportNeedsToBeCreated_shouldReturnFalseIfRadiologyOrderIsCompletedButHasACompletedReport()
-            throws Exception {
+    public void shouldReturnFalseIfRadiologyOrderIsCompletedButHasACompletedReport() throws Exception {
         
         // given
         ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);
@@ -659,13 +591,8 @@ public class RadiologyOrderFormControllerTest extends BaseContextMockTest {
                 .get("radiologyReportNeedsToBeCreated"));
     }
     
-    /**
-     * @see RadiologyOrderFormController#radiologyReportNeedsToBeCreated(ModelAndView,Order)
-     * @verifies return true if radiology order is completed and has no claimed report
-     */
     @Test
-    public void radiologyReportNeedsToBeCreated_shouldReturnTrueIfRadiologyOrderIsCompletedAndHasNoClaimedReport()
-            throws Exception {
+    public void shouldReturnTrueIfRadiologyOrderIsCompletedAndHasNoClaimedReport() throws Exception {
         
         // given
         ModelAndView modelAndView = new ModelAndView(RadiologyOrderFormController.RADIOLOGY_ORDER_FORM_VIEW);

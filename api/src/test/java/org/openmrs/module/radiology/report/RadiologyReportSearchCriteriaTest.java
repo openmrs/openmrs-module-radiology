@@ -31,17 +31,14 @@ public class RadiologyReportSearchCriteriaTest {
     
     private RadiologyReportSearchCriteria radiologyReportSearchCriteria;
     
-    /**
-     * @see RadiologyReportSearchCriteria.Builder#build()
-     * @verifies create a new radiology report search criteria instance with from and to date specified if date from and date to are set
-     */
     @Test
-    public void build_createANewRadiologyReportSearchCriteriaInstanceWithFromAndToDateSpecifiedIfDateFromAndDateToAreSet()
+    public void createANewRadiologyReportSearchCriteriaInstanceWithFromAndToDateSpecifiedIfDateFromAndDateToAreSet()
             throws Exception {
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date fromDate = format.parse("2016-05-01");
         Date toDate = format.parse("2016-05-01");
+        
         radiologyReportSearchCriteria = new RadiologyReportSearchCriteria.Builder().fromDate(fromDate)
                 .toDate(toDate)
                 .build();
@@ -55,10 +52,6 @@ public class RadiologyReportSearchCriteriaTest {
         assertNull(radiologyReportSearchCriteria.getStatus());
     }
     
-    /**
-     * @see RadiologyReportSearchCriteria.Builder#build()
-     * @verifies create a new radiology report search criteria instance with principal results interpreter specified if principal results interpreter is set
-     */
     @Test
     public void
             build_createANewRadiologyReportSearchCriteriaInstanceWithPrincipalResultsInterpreterSpecifiedIfPrincipalResultsInterpreterIsSet()
@@ -78,10 +71,6 @@ public class RadiologyReportSearchCriteriaTest {
         assertNull(radiologyReportSearchCriteria.getStatus());
     }
     
-    /**
-     * @see RadiologyReportSearchCriteria.Builder#build()
-     * @verifies create a new radiology report search criteria instance with include voided set to true if voided reports should be included
-     */
     @Test
     public void
             build_createANewRadiologyReportSearchCriteriaInstanceWithIncludeDiscontinuedSetToTrueIfDiscontinuedReportsShouldBeIncluded()
@@ -97,10 +86,6 @@ public class RadiologyReportSearchCriteriaTest {
         assertNull(radiologyReportSearchCriteria.getStatus());
     }
     
-    /**
-     * @see RadiologyReportSearchCriteria.Builder#build()
-     * @verifies create a new radiology report search criteria instance with report status specified if status is set to claimed or completed
-     */
     @Test
     public void
             build_createANewRadiologyReportSearchCriteriaInstanceWithReportStatusSpecifiedIfStatusIsSetToClaimedOrCompleted()

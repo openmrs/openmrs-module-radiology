@@ -47,12 +47,8 @@ public class MetaTagsValidationEngineTest {
         dublinElement = new Element(Tag.valueOf("meta"), "", dublinElementAttributes);
     }
     
-    /**
-     * @verifies return validation result with no errors if subject passes all checks
-     * @see MetaTagsValidationEngine#run(org.jsoup.select.Elements)
-     */
     @Test
-    public void run_shouldReturnValidationResultWithNoErrorsIfSubjectPassesAllChecks() throws Exception {
+    public void shouldReturnValidationResultWithNoErrorsIfSubjectPassesAllChecks() throws Exception {
         
         Elements elements = new Elements(charsetElement, dublinElement);
         
@@ -62,13 +58,8 @@ public class MetaTagsValidationEngineTest {
         assertFalse(validationResult.hasErrors());
     }
     
-    /**
-     * @verifies return validation result with error for meta element charset attribute if not present in subject
-     * @see MetaTagsValidationEngine#run(org.jsoup.select.Elements)
-     */
     @Test
-    public void run_shouldReturnValidationResultWithErrorForMetaElementCharsetAttributeIfNotPresentInSubject()
-            throws Exception {
+    public void shouldReturnValidationResultWithErrorForMetaElementCharsetAttributeIfNotPresentInSubject() throws Exception {
         
         Elements elements = new Elements(dublinElement);
         
@@ -82,12 +73,8 @@ public class MetaTagsValidationEngineTest {
             is("radiology.MrrtReportTemplate.validation.error.meta.charset.occurence"));
     }
     
-    /**
-     * @verifies return validation result with error for meta element charset attribute if present more than once in subject
-     * @see MetaTagsValidationEngine#run(org.jsoup.select.Elements)
-     */
     @Test
-    public void run_shouldReturnValidationResultWithErrorForMetaElementCharsetAttributeIfPresentMoreThanOnceInSubject()
+    public void shouldReturnValidationResultWithErrorForMetaElementCharsetAttributeIfPresentMoreThanOnceInSubject()
             throws Exception {
         
         Element otherCharsetElement = new Element(Tag.valueOf("meta"), "", charsetAttributes);
@@ -103,10 +90,6 @@ public class MetaTagsValidationEngineTest {
             is("radiology.MrrtReportTemplate.validation.error.meta.charset.occurence"));
     }
     
-    /**
-     * @verifies return validation result with error for meta element dublin core if no meta element with name attribute is present in subject
-     * @see MetaTagsValidationEngine#run(org.jsoup.select.Elements)
-     */
     @Test
     public void
             run_shouldReturnValidationResultWithErrorForMetaElementDublinCoreIfNoMetaElementWithNameAttributeIsPresentInSubject()

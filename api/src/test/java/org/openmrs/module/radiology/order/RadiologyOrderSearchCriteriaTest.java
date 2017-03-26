@@ -32,14 +32,11 @@ public class RadiologyOrderSearchCriteriaTest {
     
     private RadiologyOrderSearchCriteria radiologyOrderSearchCriteria;
     
-    /**
-     * @see RadiologyOrderSearchCriteria.Builder#build()
-     * @verifies create a new radiology order search criteria instance with patient if patient is set
-     */
     @Test
-    public void build_createANewRadiologyOrderSearchCriteriaInstanceWithPatientIfPatientIsSet() throws Exception {
+    public void createANewRadiologyOrderSearchCriteriaInstanceWithPatientIfPatientIsSet() throws Exception {
         
         Patient patient = new Patient(1);
+        
         radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder().withPatient(patient)
                 .build();
         
@@ -53,10 +50,6 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getOrderer());
     }
     
-    /**
-     * @see RadiologyOrderSearchCriteria.Builder#build()
-     * @verifies create a new radiology order search criteria instance with include voided set to true if voided orders should be included
-     */
     @Test
     public void
             build_createANewRadiologyOrderSearchCriteriaInstanceWithIncludeVoidedSetToTrueIfVoidedOrdersShouldBeIncluded()
@@ -74,12 +67,8 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getOrderer());
     }
     
-    /**
-     * @see RadiologyOrderSearchCriteria.Builder#build()
-     * @verifies create a new radiology order search criteria instance with urgency if urgency is set
-     */
     @Test
-    public void build_createANewRadiologyOrderSearchCriteriaInstanceWithUrgencyIfUrgencyIsSet() throws Exception {
+    public void createANewRadiologyOrderSearchCriteriaInstanceWithUrgencyIfUrgencyIsSet() throws Exception {
         
         radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder().withUrgency(Urgency.ROUTINE)
                 .build();
@@ -94,16 +83,13 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getOrderer());
     }
     
-    /**
-     * @see RadiologyOrderSearchCriteria.Builder#build()
-     * @verifies create a new radiology order search criteria instance with from effective start date if from effective start date is set
-     */
     @Test
-    public void build_createANewRadiologyOrderSearchCriteriaInstanceWithFromEffectiveStartDateIfFromEffectiveStartDateIsSet()
+    public void createANewRadiologyOrderSearchCriteriaInstanceWithFromEffectiveStartDateIfFromEffectiveStartDateIsSet()
             throws Exception {
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date fromEffectiveStartDate = format.parse("2016-05-01");
+        
         radiologyOrderSearchCriteria =
                 new RadiologyOrderSearchCriteria.Builder().fromEffectiveStartDate(fromEffectiveStartDate)
                         .build();
@@ -117,16 +103,13 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getOrderer());
     }
     
-    /**
-     * @see RadiologyOrderSearchCriteria.Builder#build()
-     * @verifies create a new radiology order search criteria instance with to effective start date if to effective start date is set
-     */
     @Test
-    public void build_createANewRadiologyOrderSearchCriteriaInstanceWithToEffectiveStartDateIfToEffectiveStartDateIsSet()
+    public void createANewRadiologyOrderSearchCriteriaInstanceWithToEffectiveStartDateIfToEffectiveStartDateIsSet()
             throws Exception {
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date toEffectiveStartDate = format.parse("2016-05-01");
+        
         radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder().toEffectiveStartDate(toEffectiveStartDate)
                 .build();
         
@@ -139,15 +122,11 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getOrderer());
     }
     
-    /**
-     * @see RadiologyOrderSearchCriteria.Builder#build()
-    * @verifies create a new radiology order search criteria instance with accession number if accession number is set
-    */
     @Test
-    public void build_createANewRadiologyOrderSearchCriteriaInstanceWithAccessionNumberIfAccessionNumberIsSet()
-            throws Exception {
+    public void createANewRadiologyOrderSearchCriteriaInstanceWithAccessionNumberIfAccessionNumberIsSet() throws Exception {
         
         String accessionNumber = "1";
+        
         radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder().withAccessionNumber(accessionNumber)
                 .build();
         
@@ -160,14 +139,11 @@ public class RadiologyOrderSearchCriteriaTest {
         assertNull(radiologyOrderSearchCriteria.getOrderer());
     }
     
-    /**
-     * @see RadiologyOrderSearchCriteria.Builder#build()
-     * @verifies create a new radiology order search criteria instance with orderer if orderer is set
-     */
     @Test
-    public void build_createANewRadiologyOrderSearchCriteriaInstanceWithOrdererIfOrdererIsSet() throws Exception {
+    public void createANewRadiologyOrderSearchCriteriaInstanceWithOrdererIfOrdererIsSet() throws Exception {
         
         Provider orderer = new Provider(1);
+        
         radiologyOrderSearchCriteria = new RadiologyOrderSearchCriteria.Builder().withOrderer(orderer)
                 .build();
         

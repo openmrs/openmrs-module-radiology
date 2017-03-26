@@ -41,23 +41,17 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
     @Rule
     public ExpectedException expectedException = ExpectedException.none();
     
-    /**
-     * @see RadiologyReportService#createRadiologyReport(RadiologyOrder)
-     * @verifies throw illegal argument exception given null
-     */
     @Test
-    public void createRadiologyReport_shouldThrowIllegalArgumentExceptionGivenNull() {
+    public void shouldFailToCreateReportIfGivenNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyOrder cannot be null");
         radiologyReportService.createRadiologyReport(null);
     }
     
-    /**
-     * @see RadiologyReportService#createRadiologyReport(RadiologyOrder)
-     * @verifies throw api exception if given radiology order is not completed
-     */
     @Test
-    public void createRadiologyReport_shouldThrowAPIExceptionIfGivenRadiologyOrderIsNotCompleted() {
+    public void shouldFailToCreateReportIfGivenOrderIsNotCompleted() {
+        
         when(radiologyOrder.isNotCompleted()).thenReturn(true);
         
         expectedException.expect(APIException.class);
@@ -65,12 +59,9 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.createRadiologyReport(radiologyOrder);
     }
     
-    /**
-     * @see RadiologyReportService#createRadiologyReport(RadiologyOrder)
-     * @verifies throw api exception if given order has a claimed radiology report
-     */
     @Test
-    public void createRadiologyReport_shouldThrowAPIExceptionIfGivenOrderHasAClaimedRadiologyReport() {
+    public void shouldFailToCreateReportIfGivenOrderHasAClaimedReport() {
+        
         when(radiologyReportDAO.hasRadiologyOrderClaimedRadiologyReport(radiologyOrder)).thenReturn(true);
         
         expectedException.expect(APIException.class);
@@ -78,12 +69,9 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.createRadiologyReport(radiologyOrder);
     }
     
-    /**
-     * @see RadiologyReportService#createRadiologyReport(RadiologyOrder)
-     * @verifies throw api exception if given order has a completed radiology report
-     */
     @Test
-    public void createRadiologyReport_shouldThrowAPIExceptionIfGivenOrderHasACompletedRadiologyReport() {
+    public void shouldFailToCreateReportIfGivenOrderHasACompletedReport() {
+        
         when(radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyOrder)).thenReturn(true);
         
         expectedException.expect(APIException.class);
@@ -91,23 +79,17 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.createRadiologyReport(radiologyOrder);
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void saveRadiologyReportDraft_shouldThrowIllegalArgumentExceptionGivenNull() {
+    public void shouldFailToSaveReportDraftGivenNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReport cannot be null");
         radiologyReportService.saveRadiologyReportDraft(null);
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
-     * @verifies throw illegal argument exception if given radiology report with reportId null
-     */
     @Test
-    public void saveRadiologyReportDraft_shouldThrowIllegalArgumentExceptionGivenRadiologyReportWithReportIdNull() {
+    public void shouldFailToSaveReportDraftGivenReportWithReportIdNull() {
+        
         when(radiologyReport.getReportId()).thenReturn(null);
         
         expectedException.expect(IllegalArgumentException.class);
@@ -115,12 +97,9 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.saveRadiologyReportDraft(radiologyReport);
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
-     * @verifies throw api exception if radiology report is completed
-     */
     @Test
-    public void saveRadiologyReportDraft_shouldThrowAPIExceptionIfRadiologyReportIsCompleted() {
+    public void shouldFailToSaveReportDraftIfReportIsCompleted() {
+        
         when(radiologyReport.getStatus()).thenReturn(RadiologyReportStatus.COMPLETED);
         
         expectedException.expect(APIException.class);
@@ -128,12 +107,9 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.saveRadiologyReportDraft(radiologyReport);
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
-     * @verifies throw api exception if radiology report is voided
-     */
     @Test
-    public void saveRadiologyReportDraft_shouldThrowAPIExceptionIfRadiologyReportIsVoided() {
+    public void shouldFailToSaveReportDraftIfReportIsVoided() {
+        
         when(radiologyReport.getVoided()).thenReturn(true);
         
         expectedException.expect(APIException.class);
@@ -141,12 +117,9 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.saveRadiologyReportDraft(radiologyReport);
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
-     * @verifies throw api exception if given radiology reports order has a completed radiology report
-     */
     @Test
-    public void saveRadiologyReportDraft_shouldThrowAPIExceptionIfGivenRadiologyReportsOrderHasACompletedRadiologyReport() {
+    public void shouldFailToSaveReportDraftIfGivenReportsOrderHasACompletedReport() {
+        
         when(radiologyReport.getRadiologyOrder()).thenReturn(radiologyOrder);
         when(radiologyReportDAO.hasRadiologyOrderCompletedRadiologyReport(radiologyOrder)).thenReturn(true);
         
@@ -155,23 +128,17 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.saveRadiologyReportDraft(radiologyReport);
     }
     
-    /**
-     * @see RadiologyReportService#voidRadiologyReport(RadiologyReport, String)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void voidRadiologyReport_shouldThrowIllegalArgumentExceptionGivenNull() {
+    public void shouldFailToVoidReportGivenNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReport cannot be null");
         radiologyReportService.voidRadiologyReport(null, null);
     }
     
-    /**
-     * @see RadiologyReportService#voidRadiologyReport(RadiologyReport, String)
-     * @verifies throw illegal argument exception if given radiology report with reportId null
-     */
     @Test
-    public void voidRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenRadiologyReportWithReportIdNull() {
+    public void shouldFailToVoidIfGivenReportWithReportIdNull() {
+        
         when(radiologyReport.getReportId()).thenReturn(null);
         
         expectedException.expect(IllegalArgumentException.class);
@@ -179,12 +146,9 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.voidRadiologyReport(radiologyReport, null);
     }
     
-    /**
-     * @see RadiologyReportService#voidRadiologyReport(RadiologyReport, String)
-     * @verifies throw illegal argument exception if given void reason is null or contains only whitespaces
-     */
     @Test
-    public void voidRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenVoidReasonIsNullOrContainsOnlyWhitespaces() {
+    public void shouldFailToVoidReportIfGivenVoidReasonIsNullOrContainsOnlyWhitespaces() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("voidReason cannot be null or empty");
         radiologyReportService.voidRadiologyReport(radiologyReport, null);
@@ -198,12 +162,9 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.voidRadiologyReport(radiologyReport, "   ");
     }
     
-    /**
-     * @see RadiologyReportService#voidRadiologyReport(RadiologyReport, String)
-     * @verifies throw api exception if radiology report is completed
-     */
     @Test
-    public void voidRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsCompleted() {
+    public void shouldFailToVoidReportIfReportIsCompleted() {
+        
         when(radiologyReport.getStatus()).thenReturn(RadiologyReportStatus.COMPLETED);
         
         expectedException.expect(APIException.class);
@@ -211,23 +172,17 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.voidRadiologyReport(radiologyReport, "some reason");
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
-     * @verifies throw illegal argument exception if given radiology report is null
-     */
     @Test
-    public void saveRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenRadiologyReportIsNull() {
+    public void shouldFailToSaveReportIfGivenNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReport cannot be null");
         radiologyReportService.saveRadiologyReport(null);
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
-     * @verifies throw illegal argument exception if given radiology report with reportId null
-     */
     @Test
-    public void saveRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenRadiologyReportWithReportIdNull() {
+    public void shouldFailToSaveReportIfGivenReportWithReportIdNull() {
+        
         when(radiologyReport.getReportId()).thenReturn(null);
         
         expectedException.expect(IllegalArgumentException.class);
@@ -235,23 +190,17 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.saveRadiologyReport(radiologyReport);
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
-     * @verifies throw illegal argument exception if given radiology report with status null
-     */
     @Test
-    public void saveRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenRadiologyReportWithStatusNull() {
+    public void shouldFailToSaveReportIfGivenReportWithStatusNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReport.status cannot be null");
         radiologyReportService.saveRadiologyReport(radiologyReport);
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
-     * @verifies throw api exception if radiology report is completed
-     */
     @Test
-    public void saveRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsCompleted() {
+    public void shouldFailToSaveReportIfGivenReportIsCompleted() {
+        
         when(radiologyReport.getStatus()).thenReturn(RadiologyReportStatus.COMPLETED);
         
         expectedException.expect(APIException.class);
@@ -259,12 +208,9 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.saveRadiologyReport(radiologyReport);
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
-     * @verifies throw api exception if radiology report is voided
-     */
     @Test
-    public void saveRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsVoided() {
+    public void shouldFailToSaveReportIfGivenReportIsVoided() {
+        
         when(radiologyReport.getStatus()).thenReturn(RadiologyReportStatus.DRAFT);
         when(radiologyReport.getVoided()).thenReturn(true);
         
@@ -273,67 +219,49 @@ public class RadiologyReportServiceTest extends BaseContextMockTest {
         radiologyReportService.saveRadiologyReport(radiologyReport);
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReport(Integer)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void getRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenNull() {
+    public void shouldFailToGetReportByIdIfGivenNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("reportId cannot be null");
         radiologyReportService.getRadiologyReport(null);
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReportByUuid(String)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void getRadiologyReportByUuid_shouldThrowIllegalArgumentExceptionIfGivenNull() {
+    public void shouldFailToGetReportByUuidIfGivenNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReportUuid cannot be null");
         radiologyReportService.getRadiologyReportByUuid(null);
     }
     
-    /**
-     * @see RadiologyReportService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void hasRadiologyOrderClaimedRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenNull() {
+    public void hasOrderClaimedReport_shouldFailIfGivenNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyOrder cannot be null");
         radiologyReportService.hasRadiologyOrderClaimedRadiologyReport(null);
     }
     
-    /**
-     * @see RadiologyReportService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void hasRadiologyOrderCompletedRadiologyReport_shouldThrowIllegalArgumentExceptionIfGivenNull() {
+    public void hasOrderCompletedReport_shouldFailIfGivenNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyOrder cannot be null");
         radiologyReportService.hasRadiologyOrderCompletedRadiologyReport(null);
     }
     
-    /**
-     * @see RadiologyReportService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void getActiveRadiologyReportByRadiologyOrder_shouldThrowIllegalArgumentExceptionIfGivenNull() {
+    public void shouldFailToGetActiveReportByOrderIfGivenNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyOrder cannot be null");
         radiologyReportService.getActiveRadiologyReportByRadiologyOrder(null);
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-     * @verifies throw illegal argument exception if given null
-     */
     @Test
-    public void getRadiologyReports_shouldThrowIllegalArgumentExceptionIfGivenNull() {
+    public void shouldFailToGetReportsIfGivenNull() {
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("radiologyReportSearchCriteria cannot be null");
         radiologyReportService.getRadiologyReports(null);

@@ -25,6 +25,7 @@ import java.beans.PropertyEditorSupport;
  */
 public class RadiologyModalityEditor extends PropertyEditorSupport {
     
+    
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     
     /**

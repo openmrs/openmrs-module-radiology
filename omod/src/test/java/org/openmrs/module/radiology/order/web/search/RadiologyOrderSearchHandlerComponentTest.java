@@ -123,10 +123,9 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return all radiology orders for given accession number
      */
     @Test
-    public void search_shouldReturnAllRadiologyOrdersForGivenAccessionNumber() throws Exception {
+    public void shouldReturnAllRadiologyOrdersForGivenAccessionNumber() throws Exception {
         
         MockHttpServletRequest requestAccessionNumberWithOrder = request(RequestMethod.GET, getURI());
         requestAccessionNumberWithOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_ACCESSION_NUMBER,
@@ -144,10 +143,9 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return empty search result if no radiology order exists for given accession number
      */
     @Test
-    public void search_shouldReturnEmptySearchResultIfNoRadiologyOrderExistsForGivenAccessionNumber() throws Exception {
+    public void shouldReturnEmptySearchResultIfNoRadiologyOrderExistsForGivenAccessionNumber() throws Exception {
         
         MockHttpServletRequest requestAccessionNumberWithNoOrders = request(RequestMethod.GET, getURI());
         requestAccessionNumberWithNoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_ACCESSION_NUMBER,
@@ -162,10 +160,9 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return all radiology orders for given patient
      */
     @Test
-    public void search_shouldReturnAllRadiologyOrdersForGivenPatient() throws Exception {
+    public void shouldReturnAllRadiologyOrdersForGivenPatient() throws Exception {
         
         MockHttpServletRequest requestPatientWithOneOrder = request(RequestMethod.GET, getURI());
         requestPatientWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_WITH_ONE_ORDER);
@@ -200,10 +197,9 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return empty search result if patient cannot be found
      */
     @Test
-    public void search_shouldReturnEmptySearchResultIfPatientCannotBeFound() throws Exception {
+    public void shouldReturnEmptySearchResultIfPatientCannotBeFound() throws Exception {
         
         MockHttpServletRequest requestUnknownPatient = request(RequestMethod.GET, getURI());
         requestUnknownPatient.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, UNKNOWN_PATIENT);
@@ -217,10 +213,9 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return empty search result if patient has no radiology orders
      */
     @Test
-    public void search_shouldReturnEmptySearchResultIfPatientHasNoRadiologyOrders() throws Exception {
+    public void shouldReturnEmptySearchResultIfPatientHasNoRadiologyOrders() throws Exception {
         
         MockHttpServletRequest requestPatientWithNoOrder = request(RequestMethod.GET, getURI());
         requestPatientWithNoOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_WITH_NO_ORDER);
@@ -234,7 +229,6 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return all radiology orders with effective order start date after or equal to from date if only from date is
      *           specified
      */
     @Test
@@ -276,7 +270,6 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return all radiology orders with effective order start date before or equal to to date if only to date is
      *           specified
      */
     @Test
@@ -317,7 +310,6 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return all radiology orders with effective order start date in given date range if to date and from date are
      *           specified
      */
     @Test
@@ -361,10 +353,9 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return empty search result if no effective order start is in date range
      */
     @Test
-    public void search_shouldReturnEmptySearchResultIfNoEffectiveOrderStartIsInDateRange() throws Exception {
+    public void shouldReturnEmptySearchResultIfNoEffectiveOrderStartIsInDateRange() throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
         request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_EFFECTIVE_START_DATE_FROM,
@@ -381,10 +372,9 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return all radiology orders for given urgency
      */
     @Test
-    public void search_shouldReturnAllRadiologyOrdersForGivenUrgency() throws Exception {
+    public void shouldReturnAllRadiologyOrdersForGivenUrgency() throws Exception {
         
         MockHttpServletRequest requestUrgencyWithOneOrder = request(RequestMethod.GET, getURI());
         requestUrgencyWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_URGENCY,
@@ -417,10 +407,9 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return empty search result if no radiology order exists for given urgency
      */
     @Test
-    public void search_shouldReturnEmptySearchResultIfNoRadiologyOrderExistsForGivenUrgency() throws Exception {
+    public void shouldReturnEmptySearchResultIfNoRadiologyOrderExistsForGivenUrgency() throws Exception {
         
         MockHttpServletRequest requestUrgencyWithNoOrders = request(RequestMethod.GET, getURI());
         requestUrgencyWithNoOrders.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_URGENCY, Urgency.STAT.toString());
@@ -435,10 +424,9 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies throw illegal argument exception if urgency doesn't exist
      */
     @Test
-    public void search_shouldThrowIllegalArgumentExceptionIfUrgencyDoesntExist() throws Exception {
+    public void shouldThrowIllegalArgumentExceptionIfUrgencyDoesntExist() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         
@@ -450,10 +438,9 @@ public class RadiologyOrderSearchHandlerComponentTest extends MainResourceContro
     
     /**
      * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return all radiology orders matching the search query and totalCount if requested
      */
     @Test
-    public void search_shouldReturnAllRadiologyOrdersMatchingTheSearchQueryAndTotalCountIfRequested() throws Exception {
+    public void shouldReturnAllRadiologyOrdersMatchingTheSearchQueryAndTotalCountIfRequested() throws Exception {
         
         MockHttpServletRequest requestPatientAndUrgencyWithOneOrder = request(RequestMethod.GET, getURI());
         requestPatientAndUrgencyWithOneOrder.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT,

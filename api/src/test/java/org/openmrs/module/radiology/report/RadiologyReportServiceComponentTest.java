@@ -107,37 +107,29 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         executeDataSet(TEST_DATASET);
     }
     
-    /**
-     * @see RadiologyReportService#createRadiologyReport(RadiologyOrder)
-     * @verifies create a radiology order with report status claimed given a completed radiology
-     *           order
-     */
     @Test
-    public void createRadiologyReport_shouldCreateARadiologyOrderWithReportStatusClaimedGivenACompletedRadiologyOrder()
-            throws Exception {
+    public void shouldCreateAReportWithStatusClaimedGivenACompletedOrder() throws Exception {
         
         RadiologyOrder radiologyOrder = radiologyOrderService.getRadiologyOrder(EXISTING_RADIOLOGY_ORDER_ID);
         radiologyOrder.getStudy()
                 .setPerformedStatus(PerformedProcedureStepStatus.COMPLETED);
         
         RadiologyReport radiologyReport = radiologyReportService.createRadiologyReport(radiologyOrder);
+        
         assertNotNull(radiologyReport);
         assertThat(radiologyReport.getRadiologyOrder(), is(radiologyOrder));
         assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.DRAFT));
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReportDraft(RadiologyReport)
-     * @verifies save existing radiology report to the database and return it
-     */
     @Test
-    public void saveRadiologyReportDraft_shouldSaveExistingRadiologyReportTotTheDatabaseAndReturnIt() throws Exception {
+    public void shouldSaveAReportDraftGivenAnExistingReport() throws Exception {
         
         RadiologyReport existingRadiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
         existingRadiologyReport.setStatus(RadiologyReportStatus.DRAFT);
         existingRadiologyReport.setBody("test - text");
         
         assertNotNull(radiologyReportService.saveRadiologyReportDraft(existingRadiologyReport));
+        
         assertThat(radiologyReportService.saveRadiologyReportDraft(existingRadiologyReport)
                 .getId(),
             is(EXISTING_RADIOLOGY_REPORT_ID));
@@ -146,12 +138,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             is("test - text"));
     }
     
-    /**
-     * @see RadiologyReportService#voidRadiologyReport(RadiologyReport, String)
-     * @verifies void the given radiology report
-     */
     @Test
-    public void voidRadiologyReport_shouldVoidTheGivenRadiologyReport() throws Exception {
+    public void shouldVoidGivenReport() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(DRAFT_RADIOLOGY_REPORT);
         assertFalse(radiologyReport.getVoided());
@@ -160,6 +148,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         assertNull(radiologyReport.getVoidReason());
         
         radiologyReportService.voidRadiologyReport(radiologyReport, "wrong order");
+        
         assertNotNull(radiologyReport);
         assertThat(radiologyReport.getVoided(), is(true));
         assertNotNull(radiologyReport.getDateVoided());
@@ -167,13 +156,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         assertNotNull(radiologyReport.getVoidReason());
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
-     * @verifies set the report date of the radiology report to the day the radiology report was completed
-     */
     @Test
-    public void saveRadiologyReport_shouldSetTheReportDateOfTheRadiologyReportToTheDayTheRadiologyReportWasCompleted()
-            throws Exception {
+    public void shouldSetTheReportDateOfTheReportToTheDayTheRadiologyReportWasCompleted() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(DRAFT_RADIOLOGY_REPORT);
         
@@ -183,12 +167,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         assertNotNull(completedRadiologyReport.getDate());
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
-     * @verifies set the radiology report status to complete
-     */
     @Test
-    public void saveRadiologyReport_shouldSetTheRadiologyReportStatusToComplete() throws Exception {
+    public void shouldSaveGivenDraftReportAndSetItsStatusToComplete() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(DRAFT_RADIOLOGY_REPORT);
         
@@ -198,12 +178,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         assertThat(completedRadiologyReport.getStatus(), is(RadiologyReportStatus.COMPLETED));
     }
     
-    /**
-     * @see RadiologyReportService#saveRadiologyReport(RadiologyReport)
-     * @verifies throw api exception if radiology report is not valid
-     */
     @Test
-    public void saveRadiologyReport_shouldThrowAPIExceptionIfRadiologyReportIsNotValid() throws Exception {
+    public void shouldFailToSaveTheGivenReportIfItIsNotValid() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(DRAFT_RADIOLOGY_REPORT);
         radiologyReport.setPrincipalResultsInterpreter(null);
@@ -220,52 +196,34 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         radiologyReportService.saveRadiologyReport(radiologyReport);
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReport(Integer)
-     * @verifies return radiology report matching given report id
-     */
     @Test
-    public void getRadiologyReport_shouldReturnRadiologyReportMatchingGivenReportId() throws Exception {
+    public void shouldReturnTheReportMatchingGivenReportId() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReport(EXISTING_RADIOLOGY_REPORT_ID);
+        
         assertThat(radiologyReport.getId(), is(EXISTING_RADIOLOGY_REPORT_ID));
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReport(Integer)
-     * @verifies return null if no match was found
-     */
     @Test
-    public void getRadiologyStudy_shouldReturnNullIfNoMatchWasFound() throws Exception {
+    public void shouldReturnNullIfNoMatchWasFoundForGivenReportId() throws Exception {
         
         assertNull(radiologyReportService.getRadiologyReport(NON_EXISTING_RADIOLOGY_REPORT_ID));
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReportByUuid(String)
-     * @verifies return radiology report matching given uuid
-     */
     @Test
-    public void getRadiologyReportByUuid_shouldReturnRadiologyReportMatchingGivenUuid() throws Exception {
+    public void shouldReturnTheReportMatchingGivenUuid() throws Exception {
         
         RadiologyReport radiologyReport = radiologyReportService.getRadiologyReportByUuid(EXISTING_RADIOLOGY_REPORT_UUID);
+        
         assertThat(radiologyReport.getUuid(), is(EXISTING_RADIOLOGY_REPORT_UUID));
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReportByUuid(String)
-     * @verifies return null if no match was found
-     */
     @Test
-    public void getRadiologyReportByUuid_shouldReturnNullIfNoMatchWasFound() throws Exception {
+    public void shouldReturnNullIfNoMatchWasFoundForGivenUuid() throws Exception {
         
         assertNull(radiologyReportService.getRadiologyReportByUuid(NON_EXISTING_RADIOLOGY_REPORT_UUID));
     }
     
-    /**
-     * @see RadiologyReportService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
-     * @should return true if given radiology order has a claimed radiology report that is not voided
-     */
     @Test
     public void
             hasRadiologyOrderClaimedRadiologyReport_shouldReturnTrueIfGivenRadiologyOrderHasAClaimedRadiologyReportThatIsNotVoided()
@@ -275,10 +233,6 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_DRAFT_RADIOLOGY_REPORT)));
     }
     
-    /**
-     * @see RadiologyReportService#hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder)
-     * @should return false if given radiology order has no claimed radiology report that is not voided
-     */
     @Test
     public void
             hasRadiologyOrderClaimedRadiologyReport_shouldReturnFalseIfGivenRadiologyOrderHasNoClaimedRadiologyReportThatIsNotVoided()
@@ -288,39 +242,27 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
             radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_VOIDED_RADIOLOGY_REPORT)));
     }
     
-    /**
-     * @see RadiologyReportService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
-     * @should return true if given radiology order has a completed radiology report
-     */
     @Test
-    public void hasRadiologyOrderCompletedRadiologyReport_shouldReturnTrueIfTheRadiologyOrderHasACompletedRadiologyReport()
-            throws Exception {
+    public void shouldReturnTrueIfTheOrderHasACompletedReport() throws Exception {
         
         boolean hasRadiologyOrderClaimedRadiologyReport = radiologyReportService.hasRadiologyOrderCompletedRadiologyReport(
             radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_COMPLETED_RADIOLOGY_REPORT));
+        
         assertTrue(hasRadiologyOrderClaimedRadiologyReport);
     }
     
-    /**
-     * @see RadiologyReportService#hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder)
-     * @should return false if given radiology order has no completed radiology report
-     */
     @Test
-    public void hasRadiologyOrderCompletedRadiologyReport_shouldReturnFalseIfTheRadiologyOrderHasNoCompletedRadiologyReport()
-            throws Exception {
+    public void shouldReturnFalseIfTheOrderHasNoCompletedReport() throws Exception {
         
         boolean hasRadiologyOrderCompletedRadiologyReport = radiologyReportService.hasRadiologyOrderCompletedRadiologyReport(
             radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_VOIDED_RADIOLOGY_REPORT));
+        
         assertFalse(hasRadiologyOrderCompletedRadiologyReport);
     }
     
-    /**
-     * @see RadiologyReportService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
-     * @verifies return a radiology report if given radiology order is associated with a report with status claimed
-     */
     @Test
     public void
-            getActiveRadiologyReportByRadiologyOrder_shouldReturnARadiologyReportIfGivenRadiologyOrderIsAssociatedWithAReportWithStatusClaimed()
+            getActiveRadiologyReportByRadiologyOrder_shouldReturnAReportIfGivenOrderIsAssociatedWithAReportWithStatusClaimed()
                     throws Exception {
         
         RadiologyReport activeReport = radiologyReportService.getActiveRadiologyReportByRadiologyOrder(
@@ -330,13 +272,9 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         assertThat(activeReport.getStatus(), is(RadiologyReportStatus.DRAFT));
     }
     
-    /**
-     * @see RadiologyReportService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
-     * @verifies return a radiology report if given radiology order is associated with a report with status completed
-     */
     @Test
     public void
-            getActiveRadiologyReportByRadiologyOrder_shouldReturnARadiologyReportIfGivenRadiologyOrderIsAssociatedWithAReportWithStatusCompleted()
+            getActiveRadiologyReportByRadiologyOrder_shouldReturnAReportIfGivenOrderIsAssociatedWithAReportWithStatusCompleted()
                     throws Exception {
         
         RadiologyReport activeReport = radiologyReportService.getActiveRadiologyReportByRadiologyOrder(
@@ -346,28 +284,18 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         assertThat(activeReport.getStatus(), is(RadiologyReportStatus.COMPLETED));
     }
     
-    /**
-     * @see RadiologyReportService#getActiveRadiologyReportByRadiologyOrder(RadiologyOrder)
-     * @verifies return null if given radiology order is only associated with a voided report
-     */
     @Test
     public void
-            getActiveRadiologyReportByRadiologyOrder_shouldReturnNullIfGivenRadiologyOrderIsOnlyAssociatedWithAReportWithStatusDiscontinued()
+            getActiveRadiologyReportByRadiologyOrder_shouldReturnNullIfGivenOrderIsOnlyAssociatedWithAReportWithStatusDiscontinued()
                     throws Exception {
         
         assertNull(radiologyReportService.getActiveRadiologyReportByRadiologyOrder(
             radiologyOrderService.getRadiologyOrder(RADIOLOGY_ORDER_WITH_STUDY_AND_VOIDED_RADIOLOGY_REPORT)));
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-     * @verifies return all radiology reports (including discontinued) matching the search query if include discontinued is
-     *           set
-     */
     @Test
-    public void
-            getRadiologyReports_shouldReturnAllRadiologyReportsIncludingDiscontinuedMatchingTheSearchQueryIfIncludeDiscontinuedIsSet()
-                    throws Exception {
+    public void shouldGetAllReportsIncludingDiscontinuedOnesMatchingTheSearchQueryIfIncludeDiscontinuedIsSet()
+            throws Exception {
         
         Provider principalResultsInterpreter = providerService.getProviderByUuid(PROVIDER_WITH_RADIOLOGY_REPORTS);
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
@@ -376,6 +304,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        
         assertThat(radiologyReports.size(), is(4));
         assertThat(radiologyReports,
             hasItem(Matchers.<RadiologyReport> hasProperty("uuid", is(RADIOLOGY_REPORT_UUID_OF_VOIDED))));
@@ -383,13 +312,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-     * @verifies return all radiology reports within given date range if date to and date from are specified
-     */
     @Test
-    public void getRadiologyReports_shouldReturnAllRadiologyReportsWithinGivenDateRangeIfDateToAndDateFromAreSpecified()
-            throws Exception {
+    public void shouldGetAllReportsWithinGivenDateRangeIfDateToAndDateFromAreSpecified() throws Exception {
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date fromDate = format.parse("2016-05-28");
@@ -400,6 +324,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        
         assertThat(radiologyReports.size(), is(3));
         for (RadiologyReport radiologyReport : radiologyReports) {
             assertTrue(radiologyReport.getDate()
@@ -410,14 +335,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         }
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-     * @verifies return all radiology reports with report date after or equal to from date if only date from was specified
-     */
     @Test
-    public void
-            getRadiologyReports_shouldReturnAllRadiologyReportsWithReportDateAfterOrEqualToFromDateIfOnlyDateFromWasSpecified()
-                    throws Exception {
+    public void shouldGetAllReportsWithReportDateAfterOrEqualToFromDateIfOnlyDateFromWasSpecified() throws Exception {
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date fromDate = format.parse("2016-05-29");
@@ -426,6 +345,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        
         assertThat(radiologyReports.size(), is(2));
         for (RadiologyReport radiologyReport : radiologyReports) {
             assertTrue(radiologyReport.getDate()
@@ -434,14 +354,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         }
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-     * @verifies return all radiology reports with report date before or equal to to date if only date to was specified
-     */
     @Test
-    public void
-            getRadiologyReports_shouldReturnAllRadiologyReportsWithReportDateBeforeOrEqualToToDateIfOnlyDateToWasSpecified()
-                    throws Exception {
+    public void shouldGetAllReportsWithReportDateBeforeOrEqualToToDateIfOnlyDateToWasSpecified() throws Exception {
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date toDate = format.parse("2016-06-30");
@@ -450,6 +364,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        
         assertThat(radiologyReports.size(), is(2));
         for (RadiologyReport radiologyReport : radiologyReports) {
             assertTrue(radiologyReport.getDate()
@@ -458,12 +373,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         }
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-     * @verifies return empty list if from date after to date
-     */
     @Test
-    public void getRadiologyReports_shouldReturnEmptyListIfFromDateAfterToDate() throws Exception {
+    public void shouldNotGetAllReportsButReturnAnEmptyListIfFromDateAfterToDate() throws Exception {
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         Date fromDate = format.parse("2016-06-30");
@@ -474,15 +385,12 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        
         assertTrue(radiologyReports.isEmpty());
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-     * @verifies return empty search result if no report is in date range
-     */
     @Test
-    public void getRadiologyReports_shouldReturnEmptySearchResultIfNoReportIsInDateRange() throws Exception {
+    public void shouldNotGetAllReportsButReturnAnEmptyListIfNoReportIsInDateRange() throws Exception {
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         RadiologyReportSearchCriteria radiologyReportSearchCriteriaDateRange =
@@ -492,16 +400,12 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         
         List<RadiologyReport> radiologyReportsWithDateRange =
                 radiologyReportService.getRadiologyReports(radiologyReportSearchCriteriaDateRange);
-        assertTrue(radiologyReportsWithDateRange.isEmpty());
         
+        assertTrue(radiologyReportsWithDateRange.isEmpty());
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-     * @verifies return all radiology reports for given principal results interpreter
-     */
     @Test
-    public void getRadiologyReports_shouldReturnAllRadiologyReportsForGivenPrincipalResultsInterpreter() throws Exception {
+    public void shouldGetAllReportsForGivenPrincipalResultsInterpreter() throws Exception {
         
         Provider principalResultsInterpreter = providerService.getProviderByUuid(PROVIDER_WITH_RADIOLOGY_REPORTS);
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
@@ -509,6 +413,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        
         assertThat(radiologyReports.size(), is(3));
         for (RadiologyReport radiologyReport : radiologyReports) {
             assertThat(radiologyReport.getPrincipalResultsInterpreter(), is(principalResultsInterpreter));
@@ -516,13 +421,8 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         }
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-     * @verifies return empty search result if no report exists for principal results interpreter
-     */
     @Test
-    public void getRadiologyReports_shouldReturnEmptySearchResultIfNoReportExistsForPrincipalResultsInterpreter()
-            throws Exception {
+    public void shouldNotGetAllReportsButReturnAnEmptyListIfNoReportExistsForPrincipalResultsInterpreter() throws Exception {
         
         Provider principalResultsInterpreter = providerService.getProviderByUuid(PROVIDER_WITHOUT_RADIOLOGY_REPORTS);
         RadiologyReportSearchCriteria radiologyReportSearchCriteriaWithPrincipalResultsInterpreter =
@@ -531,15 +431,12 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         
         List<RadiologyReport> radiologyReportsWithPrincipalResultsInterpreter =
                 radiologyReportService.getRadiologyReports(radiologyReportSearchCriteriaWithPrincipalResultsInterpreter);
+        
         assertTrue(radiologyReportsWithPrincipalResultsInterpreter.isEmpty());
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-     * @verifies return all radiology reports with given status
-     */
     @Test
-    public void getRadiologyReports_shouldReturnAllRadiologyReportsWithGivenStatus() throws Exception {
+    public void shouldGetAllReportsWithGivenStatus() throws Exception {
         
         RadiologyReportSearchCriteria radiologyReportSearchCriteriaWithCompletedStatus =
                 new RadiologyReportSearchCriteria.Builder().withStatus(RadiologyReportStatus.COMPLETED)
@@ -547,6 +444,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         
         List<RadiologyReport> radiologyReportsWithCompletedStatus =
                 radiologyReportService.getRadiologyReports(radiologyReportSearchCriteriaWithCompletedStatus);
+        
         assertThat(radiologyReportsWithCompletedStatus.size(), is(2));
         for (RadiologyReport radiologyReport : radiologyReportsWithCompletedStatus) {
             assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.COMPLETED));
@@ -558,18 +456,15 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
         
         List<RadiologyReport> radiologyReportsWithClaimedStatus =
                 radiologyReportService.getRadiologyReports(radiologyReportSearchCriteriaWithClaimedStatus);
+        
         assertThat(radiologyReportsWithClaimedStatus.size(), is(1));
         for (RadiologyReport radiologyReport : radiologyReportsWithClaimedStatus) {
             assertThat(radiologyReport.getStatus(), is(RadiologyReportStatus.DRAFT));
         }
     }
     
-    /**
-     * @see RadiologyReportService#getRadiologyReports(RadiologyReportSearchCriteria)
-     * @verifies return empty search result if no report exists for given status
-     */
     @Test
-    public void getRadiologyReports_shouldReturnEmptySearchResultIfNoReportExistsForGivenStatus() throws Exception {
+    public void shouldNotGetAllReportsButReturnAnEmptyListIfNoReportExistsForGivenStatus() throws Exception {
         
         DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
         RadiologyReportSearchCriteria radiologyReportSearchCriteria =
@@ -578,6 +473,7 @@ public class RadiologyReportServiceComponentTest extends BaseModuleContextSensit
                         .build();
         
         List<RadiologyReport> radiologyReports = radiologyReportService.getRadiologyReports(radiologyReportSearchCriteria);
+        
         assertTrue(radiologyReports.isEmpty());
     }
 }

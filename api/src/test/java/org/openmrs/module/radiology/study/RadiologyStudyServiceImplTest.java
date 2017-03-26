@@ -58,13 +58,8 @@ public class RadiologyStudyServiceImplTest extends BaseContextMockTest {
         when(dicomUidGenerator.getNewDicomUid(ORG_ROOT_UID)).thenReturn(DICOM_UID_1);
     }
     
-    /**
-     * @see RadiologyStudyServiceImpl#setStudyInstanceUidIfBlank(RadiologyStudy)
-     * @verifies set the study instance uid of given radiology study to a valid dicom uid if null
-     */
     @Test
-    public void setStudyInstanceUidIfBlank_shouldSetTheStudyInstanceUidOfGivenRadiologyStudyToAValidDicomUidIfNull()
-            throws Exception {
+    public void shouldSetTheStudyInstanceUidOfGivenRadiologyStudyToAValidDicomUidIfNull() throws Exception {
         
         RadiologyStudy radiologyStudy = new RadiologyStudy();
         assertNull(radiologyStudy.getStudyInstanceUid());
@@ -75,10 +70,6 @@ public class RadiologyStudyServiceImplTest extends BaseContextMockTest {
         assertThat(radiologyStudy.getStudyInstanceUid(), is(DICOM_UID_1));
     }
     
-    /**
-     * @see RadiologyStudyServiceImpl#setStudyInstanceUidIfBlank(RadiologyStudy)
-     * @verifies set the study instance uid of given radiology study to a valid dicom uid if only containing whitespaces
-     */
     @Test
     public void
             setStudyInstanceUidIfBlank_shouldSetTheStudyInstanceUidOfGivenRadiologyStudyToAValidDicomUidIfOnlyContainingWhitespaces()
@@ -93,10 +84,6 @@ public class RadiologyStudyServiceImplTest extends BaseContextMockTest {
         assertThat(radiologyStudy.getStudyInstanceUid(), is(DICOM_UID_1));
     }
     
-    /**
-     * @see RadiologyStudyServiceImpl#setStudyInstanceUidIfBlank(RadiologyStudy)
-     * @verifies not set the study instance uid of given radiology study if contains non whitespace characters
-     */
     @Test
     public void
             setStudyInstanceUidIfBlank_shouldNotSetTheStudyInstanceUidOfGivenRadiologyStudyIfContainsNonWhitespaceCharacters()

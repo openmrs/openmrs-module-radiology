@@ -38,34 +38,23 @@ public class VoidRadiologyReportRequestValidatorTest {
         voidRadiologyReportRequest.setVoidReason("wrong order selected");
     }
     
-    /**
-     * @see VoidRadiologyReportRequestValidator#supports(Class)
-     * @verifies return true only for void radiology report request objects
-     */
     @Test
-    public void supports_shouldReturnTrueOnlyForVoidRadiologyReportRequestObjects() throws Exception {
+    public void shouldReturnTrueOnlyForVoidRadiologyReportRequestObjects() throws Exception {
         
         assertTrue(voidRadiologyReportRequestValidator.supports(VoidRadiologyReportRequest.class));
     }
     
-    /**
-     * @see VoidRadiologyReportRequestValidator#supports(Class)
-     * @verifies return false for other object types
-     */
     @Test
-    public void supports_shouldReturnFalseForOtherObjectTypes() throws Exception {
+    public void shouldReturnFalseForOtherObjectTypes() throws Exception {
         
         assertFalse(voidRadiologyReportRequestValidator.supports(Object.class));
     }
     
-    /**
-     * @see VoidRadiologyReportRequestValidator#validate(Object, Errors)
-     * @verifies fail validation if void radiology report request is null
-     */
     @Test
-    public void validate_shouldFailValidationIfDiscontinuationOrderRequestIsNull() throws Exception {
+    public void shouldFailValidationIfDiscontinuationOrderRequestIsNull() throws Exception {
         
         Errors errors = new BindException(voidRadiologyReportRequest, "voidRadiologyReportRequest");
+        
         voidRadiologyReportRequestValidator.validate(null, errors);
         
         assertTrue(errors.hasErrors());
@@ -77,12 +66,8 @@ public class VoidRadiologyReportRequestValidatorTest {
             is("error.general"));
     }
     
-    /**
-     * @see VoidRadiologyReportRequestValidator#validate(Object, Errors)
-     * @verifies fail validation if void reason is null or empty or whitespaces only
-     */
     @Test
-    public void validate_shouldFailValidationIfVoidReasonNonCodedIsNull() throws Exception {
+    public void shouldFailValidationIfVoidReasonNonCodedIsNull() throws Exception {
         
         voidRadiologyReportRequest.setVoidReason(null);
         
@@ -118,12 +103,8 @@ public class VoidRadiologyReportRequestValidatorTest {
         assertTrue(errors.hasFieldErrors("voidReason"));
     }
     
-    /**
-     * @see VoidRadiologyReportRequestValidator#validate(Object, Errors)
-     * @verifies pass validation if all fields are correct
-     */
     @Test
-    public void validate_shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
+    public void shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
         
         Errors errors = new BindException(voidRadiologyReportRequest, "voidRadiologyReportRequest");
         voidRadiologyReportRequestValidator.validate(voidRadiologyReportRequest, errors);

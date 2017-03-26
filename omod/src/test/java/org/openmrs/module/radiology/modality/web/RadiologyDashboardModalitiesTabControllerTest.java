@@ -13,8 +13,6 @@ import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertThat;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.junit.Test;
 import org.openmrs.module.radiology.web.RadiologyWebConstants;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -30,13 +28,9 @@ public class RadiologyDashboardModalitiesTabControllerTest {
     private RadiologyDashboardModalitiesTabController radiologyDashboardModalitiesTabController =
             new RadiologyDashboardModalitiesTabController();
     
-    /**
-     * @verifies return model and view of the radiology modalities tab page and set tab session attribute to radiology modalities tab page
-     * @see RadiologyDashboardModalitiesTabController#getRadiologyModalitiesTab(HttpServletRequest)
-     */
     @Test
     public void
-            getRadiologyModalitiesTab_shouldReturnModelAndViewOfTheRadiologyModalitiesTabPageAndSetTabSessionAttributeToRadiologyModalitiesTabPage()
+            shouldReturnModelAndViewOfTheRadiologyModalitiesTabPageAndSetTabSessionAttributeToRadiologyModalitiesTabPage()
                     throws Exception {
         
         MockHttpServletRequest mockRequest = new MockHttpServletRequest();

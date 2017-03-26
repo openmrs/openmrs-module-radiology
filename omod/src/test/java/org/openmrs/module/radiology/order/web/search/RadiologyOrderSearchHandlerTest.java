@@ -97,12 +97,8 @@ public class RadiologyOrderSearchHandlerTest {
         when(restService.getResourceBySupportedClass(Patient.class)).thenReturn(patientResource);
     }
     
-    /**
-     * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return empty search result if patient cannot be found
-     */
     @Test
-    public void search_shouldReturnEmptySearchResultIfPatientCannotBeFound() throws Exception {
+    public void shouldReturnEmptySearchResultIfPatientCannotBeFound() throws Exception {
         
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_UUID_UNKNOWN);
@@ -110,15 +106,12 @@ public class RadiologyOrderSearchHandlerTest {
         requestContext.setRequest(request);
         
         PageableResult pageableResult = radiologyOrderSearchHandler.search(requestContext);
+        
         assertThat(pageableResult, is(instanceOf(EmptySearchResult.class)));
     }
     
-    /**
-     * @see RadiologyOrderSearchHandler#search(RequestContext)
-     * @verifies return empty search result if patient has no radiology orders
-     */
     @Test
-    public void search_shouldReturnEmptySearchResultIfPatientHasNoRadiologyOrders() throws Exception {
+    public void shouldReturnEmptySearchResultIfPatientHasNoRadiologyOrders() throws Exception {
         
         MockHttpServletRequest request = new MockHttpServletRequest();
         request.setParameter(RadiologyOrderSearchHandler.REQUEST_PARAM_PATIENT, PATIENT_UUID_WITHOUT_ORDERS);
@@ -126,6 +119,7 @@ public class RadiologyOrderSearchHandlerTest {
         requestContext.setRequest(request);
         
         PageableResult pageableResult = radiologyOrderSearchHandler.search(requestContext);
+        
         assertThat(pageableResult, is(instanceOf(EmptySearchResult.class)));
     }
 }

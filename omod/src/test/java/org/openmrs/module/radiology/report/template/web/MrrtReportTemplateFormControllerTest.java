@@ -17,8 +17,6 @@ import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -59,10 +57,6 @@ public class MrrtReportTemplateFormControllerTest extends BaseContextMockTest {
         request = new MockHttpServletRequest();
     }
     
-    /**
-     * @see MrrtReportTemplateFormController#displayMrrtReportTemplate(HttpServletRequest,MrrtReportTemplate)
-     * @verifies return the model and view of the report template form page containing template body in model object
-     */
     @Test
     public void
             displayMrrtReportTemplate_shouldReturnTheModelAndViewOfTheReportTemplateFormPageContainingTemplateBodyInModelObject()
@@ -84,10 +78,6 @@ public class MrrtReportTemplateFormControllerTest extends BaseContextMockTest {
         assertThat(templateBodyFromModel, is(templateBody));
     }
     
-    /**
-     * @see MrrtReportTemplateFormController#displayMrrtReportTemplate(HttpServletRequest,MrrtReportTemplate)
-     * @verifies return the model and view of the radiology dashboard page with error message if io exception is thrown
-     */
     @Test
     public void
             displayMrrtReportTemplate_shouldReturnTheModelAndViewOfTheRadiologyDashboardPageWithErrorMessageIfIoExceptionIsThrown()

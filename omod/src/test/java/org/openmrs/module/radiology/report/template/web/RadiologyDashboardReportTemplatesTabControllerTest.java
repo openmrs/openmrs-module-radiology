@@ -73,15 +73,9 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
         request = new MockHttpServletRequest();
     }
     
-    /**
-     * @see RadiologyDashboardReportTemplatesTabController#getRadiologyReportTemplatesTab(HttpServletRequest)
-     * @verifies return model and view of the radiology report templates tab
-     *           page and set tab session attribute to radiology reports tab
-     *           page
-     */
     @Test
     public void
-            getRadiologyReportTemplatesTab_shouldReturnModelAndViewOfTheRadiologyReportTemplatesTabPageAndSetTabSessionAttributeToRadiologyReportsTabPage()
+            shouldReturnModelAndViewOfTheRadiologyReportTemplatesTabPageAndSetTabSessionAttributeToRadiologyReportsTabPage()
                     throws Exception {
         
         MockHttpSession mockSession = new MockHttpSession();
@@ -98,12 +92,8 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
             is(RadiologyDashboardReportTemplatesTabController.RADIOLOGY_REPORT_TEMPLATES_TAB_REQUEST_MAPPING));
     }
     
-    /**
-     * @see RadiologyDashboardReportTemplatesTabController#uploadReportTemplate(HttpServletRequest,MultipartFile)
-     * @verifies give success message when import was successful
-     */
     @Test
-    public void uploadReportTemplate_shouldGiveSuccessMessageWhenImportWasSuccessful() throws Exception {
+    public void shouldGiveSuccessMessageWhenImportWasSuccessful() throws Exception {
         
         ModelAndView modelAndView =
                 radiologyDashboardReportTemplatesTabController.uploadReportTemplate(request, multipartFile);
@@ -121,10 +111,9 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
     
     /**
      * @see RadiologyDashboardReportTemplatesTabController#uploadReportTemplate(HttpServletRequest,MultipartFile)
-     * @verifies give error message when template file is empty
      */
     @Test
-    public void uploadReportTemplate_shouldGiveErrorMessageWhenTemplateFileIsEmpty() throws Exception {
+    public void shouldGiveErrorMessageWhenTemplateFileIsEmpty() throws Exception {
         
         MultipartFile emptyFile = mock(MultipartFile.class);
         when(emptyFile.isEmpty()).thenReturn(true);
@@ -142,15 +131,8 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
         assertThat(message, is("radiology.MrrtReportTemplate.not.imported.empty"));
     }
     
-    /**
-     * @verifies set error message in session when mrrt report template
-     *           validation exception is thrown
-     * @see RadiologyDashboardReportTemplatesTabController#uploadReportTemplate(HttpServletRequest,
-     *      MultipartFile)
-     */
     @Test
-    public void uploadReportTemplate_shouldSetErrorMessageInSessionWhenMrrtReportTemplateValidationExceptionIsThrown()
-            throws Exception {
+    public void shouldSetErrorMessageInSessionWhenMrrtReportTemplateValidationExceptionIsThrown() throws Exception {
         
         ValidationResult validationResult = new ValidationResult();
         validationResult.addError(new ValidationError("Missing header", "err.missing.header"));
@@ -177,12 +159,8 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
             is(validationResult.getErrors()));
     }
     
-    /**
-     * @see RadiologyDashboardReportTemplatesTabController#uploadReportTemplate(HttpServletRequest,MultipartFile)
-     * @verifies set error message in session when api exception is thrown
-     */
     @Test
-    public void uploadReportTemplate_shouldSetErrorMessageInSessionWhenApiExceptionIsThrown() throws Exception {
+    public void shouldSetErrorMessageInSessionWhenApiExceptionIsThrown() throws Exception {
         
         doThrow(new APIException("Cannot import the same template twice.")).when(mrrtReportTemplateService)
                 .importMrrtReportTemplate(MOCK_TEMPLATE_CONTENT);
@@ -202,12 +180,8 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
         assertThat(errorMessage, is("Failed to import mrrtReportTemplate.html => Cannot import the same template twice."));
     }
     
-    /**
-     * @see RadiologyDashboardReportTemplatesTabController#uploadReportTemplate(HttpServletRequest,MultipartFile)
-     * @verifies set error message in session when io exception is thrown
-     */
     @Test
-    public void uploadReportTemplate_shouldSetErrorMessageInSessionWhenIoExceptionIsThrown() throws Exception {
+    public void shouldSetErrorMessageInSessionWhenIoExceptionIsThrown() throws Exception {
         
         doThrow(new IOException("File could not be read.")).when(mrrtReportTemplateService)
                 .importMrrtReportTemplate(MOCK_TEMPLATE_CONTENT);
@@ -227,12 +201,6 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
         assertThat(errorMessage, is("Failed to import mrrtReportTemplate.html => File could not be read."));
     }
     
-    /**
-     * @see RadiologyDashboardReportTemplatesTabController#deleteMrrtReportTemplate(HttpServletRequest,
-     *      org.openmrs.module.radiology.report.template.MrrtReportTemplate)
-     * @verifies return a model and view of the radiology dashboard report
-     *           templates page with a status message
-     */
     @Test
     public void
             deleteMrrtReportTemplate_shouldReturnAModelAndViewOfTheRadiologyDashboardReportTemplatesPageWithAStatusMessage() {
@@ -252,13 +220,8 @@ public class RadiologyDashboardReportTemplatesTabControllerTest extends BaseCont
         assertThat(mockSession.getAttribute(WebConstants.OPENMRS_MSG_ATTR), is("radiology.MrrtReportTemplate.deleted"));
     }
     
-    /**
-     * @see RadiologyDashboardReportTemplatesTabController#deleteMrrtReportTemplate(HttpServletRequest,
-     *      MrrtReportTemplate)
-     * @verifies catch api exception and set error message in session
-     */
     @Test
-    public void deleteMrrtReportTemplate_shouldCatchApiExceptionAndSetErrorMessageInSession() throws Exception {
+    public void shouldCatchApiExceptionAndSetErrorMessageInSession() throws Exception {
         
         MrrtReportTemplate mockTemplate = mock(MrrtReportTemplate.class);
         doThrow(new APIException("File could not be deleted.")).when(mrrtReportTemplateService)

@@ -45,73 +45,66 @@ public class MrrtReportTemplateEditorComponentTest extends BaseModuleContextSens
         executeDataSet(TEST_DATASET);
     }
     
-    /**
-    * @see MrrtReportTemplateEditor#setAsText(String)
-    * @verifies set value to mrrt report template whos id matches given text
-    */
     @Test
-    public void setAsText_shouldSetValueToMrrtReportTemplateWhosIdMatchesGivenText() throws Exception {
+    public void shouldSetValueToMrrtReportTemplateWhosIdMatchesGivenText() throws Exception {
+        
         MrrtReportTemplateEditor editor = new MrrtReportTemplateEditor();
+        
         editor.setAsText("1");
+        
         assertThat(editor.getValue(), is(notNullValue()));
         assertThat((MrrtReportTemplate) editor.getValue(), is(mrrtReportTemplateService.getMrrtReportTemplate(1)));
     }
     
-    /**
-    * @see MrrtReportTemplateEditor#setAsText(String)
-    * @verifies set value to mrrt report template whos uuid matches given text
-    */
     @Test
-    public void setAsText_shouldSetValueToMrrtReportTemplateWhosUuidMatchesGivenText() throws Exception {
+    public void shouldSetValueToMrrtReportTemplateWhosUuidMatchesGivenText() throws Exception {
+        
         MrrtReportTemplateEditor editor = new MrrtReportTemplateEditor();
+        
         editor.setAsText(EXISTING_MRRT_TEMPLATE_UUID);
+        
         assertThat(editor.getValue(), is(notNullValue()));
         assertThat((MrrtReportTemplate) editor.getValue(),
             is(mrrtReportTemplateService.getMrrtReportTemplateByUuid(EXISTING_MRRT_TEMPLATE_UUID)));
     }
     
-    /**
-    * @see MrrtReportTemplateEditor#setAsText(String)
-    * @verifies throw illegal argument exception for mrrt report template not found
-    */
     @Test
-    public void setAsText_shouldThrowIllegalArgumentExceptionForMrrtReportTemplateNotFound() throws Exception {
+    public void shouldThrowIllegalArgumentExceptionForMrrtReportTemplateNotFound() throws Exception {
+        
         MrrtReportTemplateEditor editor = new MrrtReportTemplateEditor();
+        
         expectedException.expect(IllegalArgumentException.class);
         expectedException.expectMessage("MrrtReportTemplate not found: ");
         editor.setAsText(NON_EXISTING_MRRT_TEMPLATE_UUID);
     }
     
-    /**
-    * @see MrrtReportTemplateEditor#setAsText(String)
-    * @verifies return null for empty text
-    */
     @Test
-    public void setAsText_shouldReturnNullForEmptyText() throws Exception {
+    public void shouldReturnNullForEmptyText() throws Exception {
+        
         MrrtReportTemplateEditor editor = new MrrtReportTemplateEditor();
+        
         editor.setAsText("");
+        
         assertThat(editor.getValue(), is(nullValue()));
     }
     
-    /**
-    * @see MrrtReportTemplateEditor#getAsText()
-    * @verifies return empty string if value does not contain a mrrt report template
-    */
     @Test
-    public void getAsText_shouldReturnEmptyStringIfValueDoesNotContainAMrrtReportTemplate() throws Exception {
+    public void shouldReturnEmptyStringIfValueDoesNotContainAMrrtReportTemplate() throws Exception {
+        
         MrrtReportTemplateEditor editor = new MrrtReportTemplateEditor();
+        
         editor.setAsText("");
+        
         assertThat(editor.getAsText(), is(""));
     }
     
-    /**
-    * @see MrrtReportTemplateEditor#getAsText()
-    * @verifies return mrrt report template id if value does contain a mrrt report template
-    */
     @Test
-    public void getAsText_shouldReturnMrrtReportTemplateIdIfValueDoesContainAMrrtReportTemplate() throws Exception {
+    public void shouldReturnMrrtReportTemplateIdIfValueDoesContainAMrrtReportTemplate() throws Exception {
+        
         MrrtReportTemplateEditor editor = new MrrtReportTemplateEditor();
+        
         editor.setAsText("1");
+        
         assertThat(editor.getAsText(), is("1"));
     }
 }

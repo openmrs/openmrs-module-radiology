@@ -101,107 +101,91 @@ public class MrrtReportTemplateSearchHandlerTest {
         requestContext.setRequest(request);
     }
     
-    /**
-    * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-    * @verifies return empty search result if title does not exist
-    */
     @Test
-    public void search_shouldReturnEmptySearchResultIfTitleDoesNotExist() throws Exception {
+    public void shouldReturnEmptySearchResultIfTitleDoesNotExist() throws Exception {
+        
         request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_TITLE, NON_EXISTING_TITLE);
         
         PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
+        
         assertThat(pageableResult, is(instanceOf(EmptySearchResult.class)));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return all report templates that match given title
-     */
     @Test
-    public void search_shouldReturnAllReportTemplatesThatMatchGivenTitle() throws Exception {
+    public void shouldReturnAllReportTemplatesThatMatchGivenTitle() throws Exception {
+        
         request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_TITLE, TITLE_QUERY);
         when(mrrtReportTemplateService.getMrrtReportTemplates(any(MrrtReportTemplateSearchCriteria.class)))
                 .thenReturn(mrrtReportTemplates);
         
         PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
+        
         assertThat(pageableResult, is(instanceOf(NeedsPaging.class)));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return all report templates by given publisher
-     */
     @Test
-    public void search_shouldReturnAllReportTemplatesByGivenPublisher() throws Exception {
+    public void shouldReturnAllReportTemplatesByGivenPublisher() throws Exception {
+        
         request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_PUBLISHER, PUBLISHER_QUERY);
         when(mrrtReportTemplateService.getMrrtReportTemplates(any(MrrtReportTemplateSearchCriteria.class)))
                 .thenReturn(mrrtReportTemplates);
         
         PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
+        
         assertThat(pageableResult, is(instanceOf(NeedsPaging.class)));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return empty search result if publisher does not exist
-     */
     @Test
-    public void search_shouldReturnEmptySearchResultIfPublisherDoesNotExist() throws Exception {
+    public void shouldReturnEmptySearchResultIfPublisherDoesNotExist() throws Exception {
+        
         request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_PUBLISHER, NON_EXISTING_PUBLISHER);
         
         PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
+        
         assertThat(pageableResult, is(instanceOf(EmptySearchResult.class)));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return all report templates that match given license
-     */
     @Test
-    public void search_shouldReturnAllReportTemplatesThatMatchGivenLicense() throws Exception {
+    public void shouldReturnAllReportTemplatesThatMatchGivenLicense() throws Exception {
+        
         request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_LICENSE, LICENSE_QUERY);
         when(mrrtReportTemplateService.getMrrtReportTemplates(any(MrrtReportTemplateSearchCriteria.class)))
                 .thenReturn(mrrtReportTemplates);
         
         PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
+        
         assertThat(pageableResult, is(instanceOf(NeedsPaging.class)));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return empty search result if license does not exist
-     */
     @Test
-    public void search_shouldReturnEmptySearchResultIfLicenseDoesNotExist() throws Exception {
+    public void shouldReturnEmptySearchResultIfLicenseDoesNotExist() throws Exception {
+        
         request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_LICENSE, NON_EXISTING_LICENSE);
         
         PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
+        
         assertThat(pageableResult, is(instanceOf(EmptySearchResult.class)));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return all report templates that match given creator
-     */
     @Test
-    public void search_shouldReturnAllReportTemplatesThatMatchGivenCreator() throws Exception {
+    public void shouldReturnAllReportTemplatesThatMatchGivenCreator() throws Exception {
+        
         request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_CREATOR, CREATOR_QUERY);
         when(mrrtReportTemplateService.getMrrtReportTemplates(any(MrrtReportTemplateSearchCriteria.class)))
                 .thenReturn(mrrtReportTemplates);
         
         PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
+        
         assertThat(pageableResult, is(instanceOf(NeedsPaging.class)));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return empty search result if creator does not exist
-     */
     @Test
-    public void search_shouldReturnEmptySearchResultIfCreatorDoesNotExist() throws Exception {
+    public void shouldReturnEmptySearchResultIfCreatorDoesNotExist() throws Exception {
+        
         request.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_CREATOR, NON_EXISTING_CREATOR);
         
         PageableResult pageableResult = mrrtReportTemplateSearchHandler.search(requestContext);
+        
         assertThat(pageableResult, is(instanceOf(EmptySearchResult.class)));
     }
 }

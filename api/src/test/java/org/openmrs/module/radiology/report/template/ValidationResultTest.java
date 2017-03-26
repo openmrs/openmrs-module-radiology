@@ -45,25 +45,19 @@ public class ValidationResultTest {
         validationResultWithErrors.addError("Missing meta element", "missing.element");
     }
     
-    /**
-     * @verifies create a new validation result initializing errors
-     * @see ValidationResult#ValidationResult()
-     */
     @Test
-    public void ValidationResult_shouldCreateANewValidationResultInitializingErrors() throws Exception {
+    public void shouldCreateANewValidationResultInitializingErrors() throws Exception {
         
         ValidationResult validationResult = new ValidationResult();
+        
         assertThat(validationResult.getErrors(), is(empty()));
     }
     
-    /**
-     * @verifies add new error with given parameters
-     * @see ValidationResult#addError(String, String)
-     */
     @Test
-    public void addError_shouldAddNewErrorWithGivenParameters() throws Exception {
+    public void shouldAddNewErrorWithGivenParameters() throws Exception {
         
         validationResultWithoutErrors.addError("Missing dublin core elements", "missing.dublincore");
+        
         assertThat(validationResultWithoutErrors.getErrors()
                 .size(),
             is(1));
@@ -77,15 +71,13 @@ public class ValidationResultTest {
             is("missing.dublincore"));
     }
     
-    /**
-     * @verifies add given validation error to errors
-     * @see ValidationResult#addError(ValidationError)
-     */
     @Test
-    public void addError_shouldAddGivenValidationErrorToErrors() throws Exception {
+    public void shouldAddGivenValidationErrorToErrors() throws Exception {
         
         ValidationError validationError = new ValidationError("Missing dublin core elements", "missing.dublincore");
+        
         validationResultWithoutErrors.addError(validationError);
+        
         assertThat(validationResultWithoutErrors.getErrors()
                 .size(),
             is(1));
@@ -94,63 +86,39 @@ public class ValidationResultTest {
             is(validationError));
     }
     
-    /**
-     * @verifies throw a validation exception if validation has errors
-     * @see ValidationResult#assertOk()
-     */
     @Test
-    public void assertOk_shouldThrowAValidationExceptionIfValidationHasErrors() throws Exception {
+    public void shouldFailIfValidationHasErrors() throws Exception {
         
         expectedException.expect(MrrtReportTemplateValidationException.class);
         validationResultWithErrors.assertOk();
     }
     
-    /**
-     * @verifies not throw a validation exception if validation has errors
-     * @see ValidationResult#assertOk()
-     */
     @Test
-    public void assertOk_shouldNotThrowAValidationExceptionIfValidationHasErrors() throws Exception {
+    public void shouldNotFailIfValidationHasErrors() throws Exception {
         
         validationResultWithoutErrors.assertOk();
     }
     
-    /**
-     * @verifies return true if validation has errors
-     * @see ValidationResult#hasErrors()
-     */
     @Test
-    public void hasErrors_shouldReturnTrueIfValidationHasErrors() throws Exception {
+    public void shouldReturnTrueIfValidationHasErrors() throws Exception {
         
         assertTrue(validationResultWithErrors.hasErrors());
     }
     
-    /**
-     * @verifies return false if validation has no errors
-     * @see ValidationResult#hasErrors()
-     */
     @Test
-    public void hasErrors_shouldReturnFalseIfValidationHasNoErrors() throws Exception {
+    public void shouldReturnFalseIfValidationHasNoErrors() throws Exception {
         
         assertFalse(validationResultWithoutErrors.hasErrors());
     }
     
-    /**
-     * @verifies return ok if validation has no errors
-     * @see ValidationResult#toString()
-     */
     @Test
-    public void toString_shouldReturnOkIfValidationHasNoErrors() throws Exception {
+    public void shouldReturnOkIfValidationHasNoErrors() throws Exception {
         
         assertThat(validationResultWithoutErrors.toString(), is("OK"));
     }
     
-    /**
-     * @verifies return error strings if validation has errors
-     * @see ValidationResult#toString()
-     */
     @Test
-    public void toString_shouldReturnErrorStringsIfValidationHasErrors() throws Exception {
+    public void shouldReturnErrorStringsIfValidationHasErrors() throws Exception {
         
         assertThat(validationResultWithErrors.toString(), startsWith("Validation failed due to:"));
         assertThat(validationResultWithErrors.toString(), containsString("Missing title element"));

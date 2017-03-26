@@ -90,12 +90,9 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
         deserialize(handle(request(RequestMethod.GET, getURI())));
     }
     
-    /**
-    * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-    * @verifies return empty search result if title does not exist
-    */
     @Test
-    public void search_shouldReturnEmptySearchResultIfTitleDoesNotExist() throws Exception {
+    public void shouldReturnEmptySearchResultIfTitleDoesNotExist() throws Exception {
+        
         MockHttpServletRequest mockRequest = request(RequestMethod.GET, getURI());
         mockRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_TITLE, NON_EXISTING_TITLE);
         
@@ -106,12 +103,9 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
         assertThat(hits.size(), is(0));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return all report templates that match given title
-     */
     @Test
-    public void search_shouldReturnAllReportTemplatesThatMatchGivenTitle() throws Exception {
+    public void shouldReturnAllReportTemplatesThatMatchGivenTitle() throws Exception {
+        
         MockHttpServletRequest mrrtReportTemplateRequest = request(RequestMethod.GET, getURI());
         mrrtReportTemplateRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_TITLE, TITLE_QUERY);
         mrrtReportTemplateRequest.setParameter("v", Representation.FULL.getRepresentation());
@@ -130,12 +124,9 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
         assertNull(PropertyUtils.getProperty(resultMrrtReportTemplate, "totalCount"));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return all mrrt templates that match given title and totalCount if requested
-     */
     @Test
-    public void search_shouldReturnAllMrrtTemplatesThatMatchGivenTitleAndTotalCountIfRequested() throws Exception {
+    public void shouldReturnAllMrrtTemplatesThatMatchGivenTitleAndTotalCountIfRequested() throws Exception {
+        
         MockHttpServletRequest requestMrrtReportTemplate = request(RequestMethod.GET, getURI());
         requestMrrtReportTemplate.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_TITLE, TITLE_QUERY);
         requestMrrtReportTemplate.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_TOTAL_COUNT, "true");
@@ -145,12 +136,8 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
         assertThat(PropertyUtils.getProperty(resultMrrtReportTemplate, "totalCount"), is(2));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return all report templates by given publisher
-     */
     @Test
-    public void search_shouldReturnAllReportTemplatesByGivenPublisher() throws Exception {
+    public void shouldReturnAllReportTemplatesByGivenPublisher() throws Exception {
         
         MockHttpServletRequest mrrtReportTemplateRequest = request(RequestMethod.GET, getURI());
         mrrtReportTemplateRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_PUBLISHER, PUBLISHER_QUERY);
@@ -171,10 +158,9 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
     
     /**
      * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return empty search result if publisher does not exist
      */
     @Test
-    public void search_shouldReturnEmptySearchResultIfPublisherDoesNotExist() throws Exception {
+    public void shouldReturnEmptySearchResultIfPublisherDoesNotExist() throws Exception {
         
         MockHttpServletRequest mockRequest = request(RequestMethod.GET, getURI());
         mockRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_PUBLISHER, NON_EXISTING_PUBLISHER);
@@ -186,12 +172,9 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
         assertThat(hits.size(), is(0));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return all report templates that match given license
-     */
     @Test
-    public void search_shouldReturnAllReportTemplatesThatMatchGivenLicense() throws Exception {
+    public void shouldReturnAllReportTemplatesThatMatchGivenLicense() throws Exception {
+        
         MockHttpServletRequest mrrtReportTemplateRequest = request(RequestMethod.GET, getURI());
         mrrtReportTemplateRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_LICENSE, LICENSE_QUERY);
         SimpleObject resultMrrtReportTemplate = deserialize(handle(mrrtReportTemplateRequest));
@@ -209,12 +192,9 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
         assertNull(PropertyUtils.getProperty(resultMrrtReportTemplate, "totalCount"));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return empty search result if license does not exist
-     */
     @Test
-    public void search_shouldReturnEmptySearchResultIfLicenseDoesNotExist() throws Exception {
+    public void shouldReturnEmptySearchResultIfLicenseDoesNotExist() throws Exception {
+        
         MockHttpServletRequest mockRequest = request(RequestMethod.GET, getURI());
         mockRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_LICENSE, NON_EXISTING_LICENSE);
         SimpleObject resultMrrtReportTemplate = deserialize(handle(mockRequest));
@@ -224,12 +204,9 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
         assertThat(hits.size(), is(0));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return all report templates that match given creator
-     */
     @Test
-    public void search_shouldReturnAllReportTemplatesThatMatchGivenCreator() throws Exception {
+    public void shouldReturnAllReportTemplatesThatMatchGivenCreator() throws Exception {
+        
         MockHttpServletRequest mrrtReportTemplateRequest = request(RequestMethod.GET, getURI());
         mrrtReportTemplateRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_CREATOR, CREATOR_QUERY);
         SimpleObject resultMrrtReportTemplate = deserialize(handle(mrrtReportTemplateRequest));
@@ -247,12 +224,9 @@ public class MrrtReportTemplateSearchHandlerComponentTest extends MainResourceCo
         assertNull(PropertyUtils.getProperty(resultMrrtReportTemplate, "totalCount"));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchHandler#search(RequestContext)
-     * @verifies return empty search result if creator does not exist
-     */
     @Test
-    public void search_shouldReturnEmptySearchResultIfCreatorDoesNotExist() throws Exception {
+    public void shouldReturnEmptySearchResultIfCreatorDoesNotExist() throws Exception {
+        
         MockHttpServletRequest mockRequest = request(RequestMethod.GET, getURI());
         mockRequest.setParameter(MrrtReportTemplateSearchHandler.REQUEST_PARAM_CREATOR, NON_EXISTING_CREATOR);
         SimpleObject resultMrrtReportTemplate = deserialize(handle(mockRequest));

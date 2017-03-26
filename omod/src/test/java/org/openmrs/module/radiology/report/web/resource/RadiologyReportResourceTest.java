@@ -87,13 +87,8 @@ public class RadiologyReportResourceTest {
         when(radiologyReportService.getRadiologyReportByUuid(RADIOLOGY_REPORT_UUID)).thenReturn(radiologyReport);
     }
     
-    /**
-     * @see RadiologyReportResource#getRepresentationDescription(Representation)
-     * @verifies return default representation given instance of defaultrepresentation
-     */
     @Test
-    public void getRepresentationDescription_shouldReturnDefaultRepresentationGivenInstanceOfDefaultrepresentation()
-            throws Exception {
+    public void shouldReturnDefaultRepresentationGivenInstanceOfDefaultrepresentation() throws Exception {
         
         DefaultRepresentation defaultRepresentation = new DefaultRepresentation();
         
@@ -109,13 +104,8 @@ public class RadiologyReportResourceTest {
             is(Representation.REF));
     }
     
-    /**
-     * @see RadiologyReportResource#getRepresentationDescription(Representation)
-     * @verifies return full representation given instance of fullrepresentation
-     */
     @Test
-    public void getRepresentationDescription_shouldReturnFullRepresentationGivenInstanceOfFullrepresentation()
-            throws Exception {
+    public void shouldReturnFullRepresentationGivenInstanceOfFullrepresentation() throws Exception {
         
         FullRepresentation fullRepresentation = new FullRepresentation();
         
@@ -131,12 +121,8 @@ public class RadiologyReportResourceTest {
             is(Representation.REF));
     }
     
-    /**
-     * @see RadiologyReportResource#getRepresentationDescription(Representation)
-     * @verifies return null for representation other then default or full
-     */
     @Test
-    public void getRepresentationDescription_shouldReturnNullForRepresentationOtherThenDefaultOrFull() throws Exception {
+    public void shouldReturnNullForRepresentationOtherThenDefaultOrFull() throws Exception {
         
         CustomRepresentation customRepresentation = new CustomRepresentation("some");
         
@@ -153,81 +139,54 @@ public class RadiologyReportResourceTest {
         assertThat(radiologyReportResource.getRepresentationDescription(refRepresentation), is(nullValue()));
     }
     
-    /**
-     * @see RadiologyReportResource#getResourceVersion()
-     * @verifies return supported resource version
-     */
     @Test
-    public void getResourceVersion_shouldReturnSupportedResourceVersion() throws Exception {
+    public void shouldReturnSupportedResourceVersion() throws Exception {
         
         assertThat(radiologyReportResource.getResourceVersion(), is(RestConstants2_0.RESOURCE_VERSION));
     }
     
-    /**
-     * @see RadiologyReportResource#getByUniqueId(String)
-     * @verifies return radiology report given its uuid
-     */
     @Test
-    public void getByUniqueId_shouldReturnRadiologyReportGivenItsUuid() throws Exception {
+    public void shouldReturnRadiologyReportGivenItsUuid() throws Exception {
         
         assertThat(radiologyReportResource.getByUniqueId(RADIOLOGY_REPORT_UUID)
                 .getUuid(),
             is(RADIOLOGY_REPORT_UUID));
     }
     
-    /**
-     * @see RadiologyReportResource#newDelegate()
-     * @verifies throw ResourceDoesNotSupportOperationException
-     */
     @Test(expected = ResourceDoesNotSupportOperationException.class)
-    public void newDelegate_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+    public void shouldFailToInstantiateANewDelegate() throws Exception {
         
         radiologyReportResource.newDelegate();
     }
     
-    /**
-     * @see RadiologyReportResource#save(RadiologyReport)
-     * @verifies throw ResourceDoesNotSupportOperationException
-     */
     @Test(expected = ResourceDoesNotSupportOperationException.class)
-    public void save_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+    public void shouldFailToSaveAReport() throws Exception {
         
         radiologyReportResource.save(radiologyReport);
     }
     
-    /**
-     * @see RadiologyReportResource#delete(RadiologyReport,String,RequestContext)
-     * @verifies throw ResourceDoesNotSupportOperationException
-     */
     @Test(expected = ResourceDoesNotSupportOperationException.class)
-    public void delete_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+    public void shouldFailToDeleteAReport() throws Exception {
         
         RequestContext requestContext = new RequestContext();
+        
         radiologyReportResource.delete(radiologyReport, "wrong report", requestContext);
     }
     
-    /**
-     * @see RadiologyReportResource#purge(RadiologyReport,RequestContext)
-     * @verifies throw ResourceDoesNotSupportOperationException
-     */
     @Test(expected = ResourceDoesNotSupportOperationException.class)
-    public void purge_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+    public void shouldFailToPurgeAReport() throws Exception {
         
         RequestContext requestContext = new RequestContext();
+        
         radiologyReportResource.purge(radiologyReport, requestContext);
     }
     
-    /**
-     * @see RadiologyReportResource#getDisplayString(RadiologyReport)
-     * @verifies return order number and report status string of given radiologyReport
-     */
     @Test
-    public void getDisplayString_shouldReturnOrderNumberAndReportStatusStringOfGivenRadiologyReport() throws Exception {
+    public void shouldReturnOrderNumberAndReportStatusStringOfGivenRadiologyReport() throws Exception {
         
         radiologyReport.setStatus(RadiologyReportStatus.COMPLETED);
         when(radiologyOrder.getOrderNumber()).thenReturn("ORD-1");
         
         assertThat(radiologyReportResource.getDisplayString(radiologyReport), is("ORD-1, COMPLETED"));
     }
-    
 }

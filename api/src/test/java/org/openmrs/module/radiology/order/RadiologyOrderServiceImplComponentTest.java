@@ -103,12 +103,8 @@ public class RadiologyOrderServiceImplComponentTest extends BaseModuleContextSen
         executeDataSet(TEST_DATASET);
     }
     
-    /**
-     * @see RadiologyOrderServiceImpl#saveRadiologyOrderEncounter(Patient,Provider,Date)
-     * @verifies create radiology order encounter
-     */
     @Test
-    public void saveRadiologyOrderEncounter_shouldCreateRadiologyOrderEncounter() throws Exception {
+    public void shouldCreateRadiologyOrderEncounter() throws Exception {
         // given
         Patient patient = patientService.getPatient(PATIENT_ID_WITH_ONLY_ONE_NON_RADIOLOGY_ORDER);
         Provider provider = providerService.getProviderByUuid(RADIOLOGY_ORDER_PROVIDER_UUID);

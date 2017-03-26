@@ -39,36 +39,27 @@ public class RadiologyModalityValidatorTest extends BaseModuleContextSensitiveTe
         radiologyModality.setName("Medical Corp Excelencium XT5980-Z");
     }
     
-    /**
-     * @see RadiologyModalityValidator#supports(Class)
-     * @verifies return false for other object types
-     */
     @Test
-    public void supports_shouldReturnFalseForOtherObjectTypes() throws Exception {
+    public void shouldReturnFalseForOtherObjectTypes() throws Exception {
         
         RadiologyModalityValidator radiologyModalityValidator = new RadiologyModalityValidator();
+        
         assertFalse(radiologyModalityValidator.supports(Object.class));
     }
     
-    /**
-     * @see RadiologyModalityValidator#supports(Class)
-     * @verifies return true for radiology modality objects
-     */
     @Test
-    public void supports_shouldReturnTrueForRadiologyModalityObjects() throws Exception {
+    public void shouldReturnTrueForRadiologyModalityObjects() throws Exception {
         
         RadiologyModalityValidator radiologyModalityValidator = new RadiologyModalityValidator();
+        
         assertTrue(radiologyModalityValidator.supports(RadiologyModality.class));
     }
     
-    /**
-     * @see RadiologyModalityValidator#validate(Object, Errors)
-     * @verifies fail validation if radiology modality is null
-     */
     @Test
-    public void validate_shouldFailValidationIfRadiologyModalityIsNull() throws Exception {
+    public void shouldFailValidationIfRadiologyModalityIsNull() throws Exception {
         
         Errors errors = new BindException(radiologyModality, "radiologyModality");
+        
         new RadiologyModalityValidator().validate(null, errors);
         
         assertTrue(errors.hasErrors());
@@ -80,16 +71,13 @@ public class RadiologyModalityValidatorTest extends BaseModuleContextSensitiveTe
             is("error.general"));
     }
     
-    /**
-     * @see RadiologyModalityValidator#validate(Object,Errors)
-     * @verifies fail validation if ae title is null or empty or whitespaces only
-     */
     @Test
-    public void validate_shouldFailValidationIfAeTitleIsNullOrEmptyOrWhitespacesOnly() throws Exception {
+    public void shouldFailValidationIfAeTitleIsNullOrEmptyOrWhitespacesOnly() throws Exception {
         
         radiologyModality.setAeTitle(null);
         
         Errors errors = new BindException(radiologyModality, "radiologyModality");
+        
         new RadiologyModalityValidator().validate(radiologyModality, errors);
         
         assertTrue(errors.hasErrors());
@@ -130,12 +118,8 @@ public class RadiologyModalityValidatorTest extends BaseModuleContextSensitiveTe
         assertTrue(errors.hasFieldErrors("aeTitle"));
     }
     
-    /**
-     * @verifies fail validation if name is null or empty or whitespaces only
-     * @see RadiologyModalityValidator#validate(Object, Errors)
-     */
     @Test
-    public void validate_shouldFailValidationIfNameIsNullOrEmptyOrWhitespacesOnly() throws Exception {
+    public void shouldFailValidationIfNameIsNullOrEmptyOrWhitespacesOnly() throws Exception {
         
         radiologyModality.setName(null);
         
@@ -180,13 +164,8 @@ public class RadiologyModalityValidatorTest extends BaseModuleContextSensitiveTe
         assertTrue(errors.hasFieldErrors("name"));
     }
     
-    /**
-     * @verifies fail validation if retire reason is null or empty if retire is true and set retired to false
-     * @see RadiologyModalityValidator#validate(Object, Errors)
-     */
     @Test
-    public void validate_shouldFailValidationIfRetireReasonIsNullOrEmptyIfRetireIsTrueAndSetRetiredToFalse()
-            throws Exception {
+    public void shouldFailValidationIfRetireReasonIsNullOrEmptyIfRetireIsTrueAndSetRetiredToFalse() throws Exception {
         
         radiologyModality.setRetired(true);
         
@@ -203,12 +182,8 @@ public class RadiologyModalityValidatorTest extends BaseModuleContextSensitiveTe
         assertTrue(errors.hasFieldErrors("retireReason"));
     }
     
-    /**
-     * @verifies fail validation if field lengths are not correct
-     * @see RadiologyModalityValidator#validate(Object, Errors)
-     */
     @Test
-    public void validate_shouldFailValidationIfFieldLengthsAreNotCorrect() throws Exception {
+    public void shouldFailValidationIfFieldLengthsAreNotCorrect() throws Exception {
         
         radiologyModality.setAeTitle(StringUtils.repeat("1", 17));
         radiologyModality.setName(StringUtils.repeat("1", 256));
@@ -229,17 +204,13 @@ public class RadiologyModalityValidatorTest extends BaseModuleContextSensitiveTe
         assertTrue(errors.hasFieldErrors("retireReason"));
     }
     
-    /**
-     * @see RadiologyModalityValidator#validate(Object, Errors)
-     * @verifies pass validation if all fields are correct
-     */
     @Test
-    public void validate_shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
+    public void shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
         
         Errors errors = new BindException(radiologyModality, "radiologyModality");
+        
         new RadiologyModalityValidator().validate(radiologyModality, errors);
         
         assertFalse(errors.hasErrors());
     }
-    
 }

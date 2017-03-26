@@ -36,7 +36,6 @@ import org.openmrs.module.webservices.rest.web.representation.DefaultRepresentat
 import org.openmrs.module.webservices.rest.web.representation.FullRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.NamedRepresentation;
 import org.openmrs.module.webservices.rest.web.representation.RefRepresentation;
-import org.openmrs.module.webservices.rest.web.representation.Representation;
 import org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceDescription;
 import org.openmrs.module.webservices.rest.web.response.ResourceDoesNotSupportOperationException;
 import org.openmrs.module.webservices.rest.web.v1_0.resource.openmrs2_0.RestConstants2_0;
@@ -87,23 +86,14 @@ public class RadiologyModalityResourceTest {
         when(radiologyModalityService.saveRadiologyModality(radiologyModality)).thenReturn(radiologyModality);
     }
     
-    /**
-     * @see RadiologyModalityResource#getResourceVersion()
-     * @verifies return supported resource version
-     */
     @Test
-    public void getResourceVersion_shouldReturnSupportedResourceVersion() throws Exception {
+    public void shouldReturnSupportedResourceVersion() throws Exception {
         
         assertThat(radiologyModalityResource.getResourceVersion(), is(RestConstants2_0.RESOURCE_VERSION));
     }
     
-    /**
-     * @see RadiologyModalityResource#getRepresentationDescription(Representation)
-     * @verifies return default representation given instance of defaultrepresentation
-     */
     @Test
-    public void getRepresentationDescription_shouldReturnDefaultRepresentationGivenInstanceOfDefaultrepresentation()
-            throws Exception {
+    public void shouldReturnDefaultRepresentationGivenInstanceOfDefaultrepresentation() throws Exception {
         
         DefaultRepresentation defaultRepresentation = new DefaultRepresentation();
         
@@ -114,13 +104,8 @@ public class RadiologyModalityResourceTest {
             contains("uuid", "display", "aeTitle", "name", "description", "retired"));
     }
     
-    /**
-     * @see RadiologyModalityResource#getRepresentationDescription(Representation)
-     * @verifies return full representation given instance of fullrepresentation
-     */
     @Test
-    public void getRepresentationDescription_shouldReturnFullRepresentationGivenInstanceOfFullrepresentation()
-            throws Exception {
+    public void shouldReturnFullRepresentationGivenInstanceOfFullrepresentation() throws Exception {
         
         FullRepresentation fullRepresentation = new FullRepresentation();
         
@@ -131,12 +116,8 @@ public class RadiologyModalityResourceTest {
             contains("uuid", "display", "aeTitle", "name", "description", "retired", "auditInfo"));
     }
     
-    /**
-     * @see RadiologyModalityResource#getRepresentationDescription(Representation)
-     * @verifies return null for representation other then default or full
-     */
     @Test
-    public void getRepresentationDescription_shouldReturnNullForRepresentationOtherThenDefaultOrFull() throws Exception {
+    public void shouldReturnNullForRepresentationOtherThenDefaultOrFull() throws Exception {
         
         CustomRepresentation customRepresentation = new CustomRepresentation("some");
         
@@ -153,60 +134,41 @@ public class RadiologyModalityResourceTest {
         assertThat(radiologyModalityResource.getRepresentationDescription(refRepresentation), is(nullValue()));
     }
     
-    /**
-     * @verifies return ae title of given radiology modality
-     * @see RadiologyModalityResource#getDisplayString(RadiologyModality)
-     */
     @Test
-    public void getDisplayString_shouldReturnAeTitleOfGivenRadiologyModality() throws Exception {
+    public void shouldReturnAeTitleOfGivenRadiologyModality() throws Exception {
         
         assertThat(radiologyModalityResource.getDisplayString(radiologyModality), is(radiologyModality.getAeTitle()));
     }
     
-    /**
-     * @verifies return radiology modality given its uuid
-     * @see RadiologyModalityResource#getByUniqueId(String)
-     */
     @Test
-    public void getByUniqueId_shouldReturnRadiologyModalityGivenItsUuid() throws Exception {
+    public void shouldReturnRadiologyModalityGivenItsUuid() throws Exception {
         
         assertThat(radiologyModalityResource.getByUniqueId(RADIOLOGY_MODALITY_UUID), is(radiologyModality));
         verify(radiologyModalityService, times(1)).getRadiologyModalityByUuid(RADIOLOGY_MODALITY_UUID);
         verifyNoMoreInteractions(radiologyModalityService);
     }
     
-    /**
-     * @verifies save given radiology modality
-     * @see RadiologyModalityResource#save(RadiologyModality)
-     */
     @Test
-    public void save_shouldSaveGivenRadiologyModality() throws Exception {
+    public void shouldSaveGivenRadiologyModality() throws Exception {
         
         assertThat(radiologyModalityResource.save(radiologyModality), is(radiologyModality));
         verify(radiologyModalityService, times(1)).saveRadiologyModality(radiologyModality);
         verifyNoMoreInteractions(radiologyModalityService);
     }
     
-    /**
-     * @verifies retire given radiology modality
-     * @see RadiologyModalityResource#delete(RadiologyModality, String, RequestContext)
-     */
     @Test
-    public void delete_shouldRetireGivenRadiologyModality() throws Exception {
+    public void shouldRetireGivenRadiologyModality() throws Exception {
         
         radiologyModalityResource.delete(radiologyModality, "out of order", requestContext);
         verify(radiologyModalityService, times(1)).retireRadiologyModality(radiologyModality, "out of order");
         verifyNoMoreInteractions(radiologyModalityService);
     }
     
-    /**
-     * @see RadiologyModalityResource#purge(RadiologyModality,RequestContext)
-     * @verifies throw ResourceDoesNotSupportOperationException
-     */
     @Test(expected = ResourceDoesNotSupportOperationException.class)
-    public void purge_shouldThrowResourceDoesNotSupportOperationException() throws Exception {
+    public void shouldThrowResourceDoesNotSupportOperationException() throws Exception {
         
         RequestContext requestContext = new RequestContext();
+        
         radiologyModalityResource.purge(radiologyModality, requestContext);
     }
 }

@@ -22,55 +22,47 @@ public class MrrtReportTemplateSearchCriteriaTest {
     
     private MrrtReportTemplateSearchCriteria mrrtReportTemplateSearchCriteria;
     
-    /**
-     * @see MrrtReportTemplateSearchCriteria.Builder#build()
-     * @verifies create an mrrt report template search criteria instance with title if title is set
-     */
     @Test
-    public void build_createAnMrrtReportTemplateSearchCriteriaInstanceWithTitleIfTitleIsSet() throws Exception {
+    public void createAnMrrtReportTemplateSearchCriteriaInstanceWithTitleIfTitleIsSet() throws Exception {
         
         String title = "Test MrrtReportTemplate";
+        
         mrrtReportTemplateSearchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withTitle(title)
                 .build();
         
         assertThat(mrrtReportTemplateSearchCriteria.getTitle(), is(title));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchCriteria.Builder#build()
-     * @verifies create an mrrt report template search criteria instance with publisher if publisher is set
-     */
     @Test
-    public void build_shouldCreateAnMrrtReportTemplateSearchCriteriaInstanceWithPublisherIfPublisherIsSet()
-            throws Exception {
+    public void shouldCreateAnMrrtReportTemplateSearchCriteriaInstanceWithPublisherIfPublisherIsSet() throws Exception {
         
         String publisher = "IHE CAT Publisher";
+        
         mrrtReportTemplateSearchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withPublisher(publisher)
                 .build();
+        
         assertThat(mrrtReportTemplateSearchCriteria.getPublisher(), is(publisher));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchCriteria.Builder#build()
-     * @verifies create an mrrt report template search criteria instance with license if license is set
-     */
     @Test
-    public void build_shouldCreateAnMrrtReportTemplateSearchCriteriaInstanceWithLicenseIfLicenseIsSet() throws Exception {
+    public void shouldCreateAnMrrtReportTemplateSearchCriteriaInstanceWithLicenseIfLicenseIsSet() throws Exception {
+        
         String license = "Mozilla Public License";
+        
         mrrtReportTemplateSearchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withLicense(license)
                 .build();
+        
         assertThat(mrrtReportTemplateSearchCriteria.getLicense(), is(license));
     }
     
-    /**
-     * @see MrrtReportTemplateSearchCriteria.Builder#build()
-     * @verifies create an mrrt report template search criteria instance with creator if creator is set
-     */
     @Test
-    public void build_shouldCreateAnMrrtReportTemplateSearchCriteriaInstanceWithCreatorIfCreatorIsSet() throws Exception {
+    public void shouldCreateAnMrrtReportTemplateSearchCriteriaInstanceWithCreatorIfCreatorIsSet() throws Exception {
+        
         String creator = "creator1";
+        
         mrrtReportTemplateSearchCriteria = new MrrtReportTemplateSearchCriteria.Builder().withCreator(creator)
                 .build();
+        
         assertThat(mrrtReportTemplateSearchCriteria.getCreator(), is(creator));
     }
 }

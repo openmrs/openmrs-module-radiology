@@ -117,12 +117,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         deserialize(handle(request(RequestMethod.GET, getURI())));
     }
     
-    /**
-     * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return all radiology reports (including voided) matching the search query if include all is set
-     */
     @Test
-    public void search_shouldReturnAllRadiologyReportsIncludingDiscontinuedMatchingTheSearchQueryIfIncludeAllIsSet()
+    public void shouldReturnAllRadiologyReportsIncludingDiscontinuedMatchingTheSearchQueryIfIncludeAllIsSet()
             throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
@@ -140,12 +136,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertThat(PropertyUtils.getProperty(hits.get(2), "voided"), is(true));
     }
     
-    /**
-     * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return all radiology reports with report date after or equal to from date if only date from was specified
-     */
     @Test
-    public void search_shouldReturnAllRadiologyReportsWithReportDateAfterOrEqualToFromDateIfOnlyDateFromWasSpecified()
+    public void shouldReturnAllRadiologyReportsWithReportDateAfterOrEqualToFromDateIfOnlyDateFromWasSpecified()
             throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
@@ -170,12 +162,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertThat(PropertyUtils.getProperty(hits.get(0), "voided"), is(false));
     }
     
-    /**
-     * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return all radiology reports with report date before or equal to to date if only date to was specified
-     */
     @Test
-    public void search_shouldReturnAllRadiologyReportsWithReportDateBeforeOrEqualToToDateIfOnlyDateToWasSpecified()
+    public void shouldReturnAllRadiologyReportsWithReportDateBeforeOrEqualToToDateIfOnlyDateToWasSpecified()
             throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
@@ -202,11 +190,9 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
     
     /**
      * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return all radiology reports within given date range if date to and date from are specified
      */
     @Test
-    public void search_shouldReturnAllRadiologyReportsWithinGivenDateRangeIfDateToAndDateFromAreSpecified()
-            throws Exception {
+    public void shouldReturnAllRadiologyReportsWithinGivenDateRangeIfDateToAndDateFromAreSpecified() throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
         request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_DATE_FROM, DATE_BEFORE_REPORT_DATES);
@@ -235,12 +221,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertThat(PropertyUtils.getProperty(hits.get(1), "voided"), is(false));
     }
     
-    /**
-     * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return empty search result if no report is in date range
-     */
     @Test
-    public void search_shouldReturnEmptySearchResultIfNoReportIsInDateRange() throws Exception {
+    public void shouldReturnEmptySearchResultIfNoReportIsInDateRange() throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
         request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_DATE_FROM, DATE_AFTER_REPORT_DATES);
@@ -252,12 +234,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertTrue(hits.isEmpty());
     }
     
-    /**
-     * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return all radiology reports for given principal results interpreter
-     */
     @Test
-    public void search_shouldReturnAllRadiologyReportsForGivenPrincipalResultsInterpreter() throws Exception {
+    public void shouldReturnAllRadiologyReportsForGivenPrincipalResultsInterpreter() throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
         request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER,
@@ -275,10 +253,9 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
     
     /**
      * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return empty search result if no report exists for principal results interpreter
      */
     @Test
-    public void search_shouldReturnEmptySearchResultIfNoReportExistsForPrincipalResultsInterpreter() throws Exception {
+    public void shouldReturnEmptySearchResultIfNoReportExistsForPrincipalResultsInterpreter() throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
         request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER,
@@ -291,12 +268,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertTrue(hits.isEmpty());
     }
     
-    /**
-     * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return empty search result if principal results interpreter cannot be found
-     */
     @Test
-    public void search_shouldReturnEmptySearchResultIfPrincipalResultsInterpreterCannotBeFound() throws Exception {
+    public void shouldReturnEmptySearchResultIfPrincipalResultsInterpreterCannotBeFound() throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
         request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_PRINCIPAL_RESULT_INTERPRETER, "wrong_uuid");
@@ -308,12 +281,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertTrue(hits.isEmpty());
     }
     
-    /**
-     * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return all radiology reports with given status
-     */
     @Test
-    public void search_shouldReturnAllRadiologyReportsWithGivenStatus() throws Exception {
+    public void shouldReturnAllRadiologyReportsWithGivenStatus() throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
         request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_STATUS, "COMPLETED");
@@ -328,12 +297,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertThat(PropertyUtils.getProperty(hits.get(1), "status"), is(RadiologyReportStatus.COMPLETED.toString()));
     }
     
-    /**
-     * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return empty search result if no report exists for given status
-     */
     @Test
-    public void search_shouldReturnEmptySearchResultIfNoReportExistsForGivenStatus() throws Exception {
+    public void shouldReturnEmptySearchResultIfNoReportExistsForGivenStatus() throws Exception {
         
         MockHttpServletRequest request = request(RequestMethod.GET, getURI());
         request.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_STATUS, "DRAFT");
@@ -345,12 +310,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         assertTrue(hits.isEmpty());
     }
     
-    /**
-     * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies throw illegal argument exception if report status doesn't exist
-     */
     @Test
-    public void search_shouldThrowIllegalArgumentExceptionIfReportStatusDoesntExist() throws Exception {
+    public void shouldThrowIllegalArgumentExceptionIfReportStatusDoesntExist() throws Exception {
         
         expectedException.expect(IllegalArgumentException.class);
         
@@ -360,12 +321,8 @@ public class RadiologyReportSearchHandlerComponentTest extends MainResourceContr
         deserialize(handle(request));
     }
     
-    /**
-     * @see RadiologyReportSearchHandler#search(RequestContext)
-     * @verifies return all radiology reports matching the search query and totalCount if requested
-     */
     @Test
-    public void search_shouldReturnAllRadiologyReportsMatchingTheSearchQueryAndTotalCountIfRequested() throws Exception {
+    public void shouldReturnAllRadiologyReportsMatchingTheSearchQueryAndTotalCountIfRequested() throws Exception {
         
         MockHttpServletRequest requestDateRangeWithOneReport = request(RequestMethod.GET, getURI());
         requestDateRangeWithOneReport.setParameter(RadiologyReportSearchHandler.REQUEST_PARAM_DATE_FROM,

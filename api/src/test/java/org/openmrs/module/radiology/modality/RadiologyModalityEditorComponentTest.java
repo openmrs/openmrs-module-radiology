@@ -47,10 +47,9 @@ public class RadiologyModalityEditorComponentTest extends BaseModuleContextSensi
     
     /**
     * @see RadiologyModalityEditor#setAsText(String)
-    * @verifies set value to radiology modality whos id matches given text
     */
     @Test
-    public void setAsText_shouldSetValueToRadiologyModalityWhosIdMatchesGivenText() throws Exception {
+    public void shouldSetValueToRadiologyModalityWhosIdMatchesGivenText() throws Exception {
         RadiologyModalityEditor editor = new RadiologyModalityEditor();
         editor.setAsText("1");
         assertThat(editor.getValue(), is(notNullValue()));
@@ -59,10 +58,9 @@ public class RadiologyModalityEditorComponentTest extends BaseModuleContextSensi
     
     /**
     * @see RadiologyModalityEditor#setAsText(String)
-    * @verifies set value to radiology modality whos uuid matches given text
     */
     @Test
-    public void setAsText_shouldSetValueToRadiologyModalityWhosUuidMatchesGivenText() throws Exception {
+    public void shouldSetValueToRadiologyModalityWhosUuidMatchesGivenText() throws Exception {
         RadiologyModalityEditor editor = new RadiologyModalityEditor();
         editor.setAsText(EXISTING_RADIOLOGY_MODALITY_UUID);
         assertThat(editor.getValue(), is(notNullValue()));
@@ -72,10 +70,9 @@ public class RadiologyModalityEditorComponentTest extends BaseModuleContextSensi
     
     /**
     * @see RadiologyModalityEditor#setAsText(String)
-    * @verifies throw illegal argument exception for radiology modality not found
     */
     @Test
-    public void setAsText_shouldThrowIllegalArgumentExceptionForRadiologyModalityNotFound() throws Exception {
+    public void shouldFailIfRadiologyModalityNotFound() throws Exception {
         
         RadiologyModalityEditor editor = new RadiologyModalityEditor();
         expectedException.expect(IllegalArgumentException.class);
@@ -85,10 +82,9 @@ public class RadiologyModalityEditorComponentTest extends BaseModuleContextSensi
     
     /**
     * @see RadiologyModalityEditor#setAsText(String)
-    * @verifies return null for empty text
     */
     @Test
-    public void setAsText_shouldReturnNullForEmptyText() throws Exception {
+    public void shouldReturnNullForEmptyText() throws Exception {
         
         RadiologyModalityEditor editor = new RadiologyModalityEditor();
         editor.setAsText("");
@@ -97,10 +93,9 @@ public class RadiologyModalityEditorComponentTest extends BaseModuleContextSensi
     
     /**
     * @see RadiologyModalityEditor#getAsText()
-    * @verifies return empty string if value does not contain a radiology modality
     */
     @Test
-    public void getAsText_shouldReturnEmptyStringIfValueDoesNotContainARadiologyModality() throws Exception {
+    public void shouldReturnEmptyStringIfValueDoesNotContainARadiologyModality() throws Exception {
         
         RadiologyModalityEditor editor = new RadiologyModalityEditor();
         editor.setAsText("");
@@ -109,10 +104,9 @@ public class RadiologyModalityEditorComponentTest extends BaseModuleContextSensi
     
     /**
     * @see RadiologyModalityEditor#getAsText()
-    * @verifies return radiology modality id if value does contain a radiology modality
     */
     @Test
-    public void getAsText_shouldReturnRadiologyModalityIdIfValueDoesContainARadiologyModality() throws Exception {
+    public void shouldReturnRadiologyModalityIdIfValueDoesContainARadiologyModality() throws Exception {
         
         RadiologyModalityEditor editor = new RadiologyModalityEditor();
         editor.setAsText("1");
