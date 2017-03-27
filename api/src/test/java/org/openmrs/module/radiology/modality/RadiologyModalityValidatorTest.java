@@ -13,6 +13,8 @@ import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.openmrs.module.radiology.test.ValidatorAssertions.assertSingleGeneralError;
+import static org.openmrs.module.radiology.test.ValidatorAssertions.assertSingleNullErrorInField;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,20 +31,25 @@ import liquibase.util.StringUtils;
 public class RadiologyModalityValidatorTest extends BaseModuleContextSensitiveTest {
     
     
-    RadiologyModality radiologyModality;
+    private RadiologyModalityValidator radiologyModalityValidator;
+    
+    private RadiologyModality radiologyModality;
+    
+    private Errors errors;
     
     @Before
     public void setUp() {
+        radiologyModalityValidator = new RadiologyModalityValidator();
         
         radiologyModality = new RadiologyModality();
         radiologyModality.setAeTitle("CT01");
         radiologyModality.setName("Medical Corp Excelencium XT5980-Z");
+        
+        errors = new BindException(radiologyModality, "radiologyModality");
     }
     
     @Test
     public void shouldReturnFalseForOtherObjectTypes() throws Exception {
-        
-        RadiologyModalityValidator radiologyModalityValidator = new RadiologyModalityValidator();
         
         assertFalse(radiologyModalityValidator.supports(Object.class));
     }
@@ -50,118 +57,75 @@ public class RadiologyModalityValidatorTest extends BaseModuleContextSensitiveTe
     @Test
     public void shouldReturnTrueForRadiologyModalityObjects() throws Exception {
         
-        RadiologyModalityValidator radiologyModalityValidator = new RadiologyModalityValidator();
-        
         assertTrue(radiologyModalityValidator.supports(RadiologyModality.class));
     }
     
     @Test
     public void shouldFailValidationIfRadiologyModalityIsNull() throws Exception {
         
-        Errors errors = new BindException(radiologyModality, "radiologyModality");
+        radiologyModalityValidator.validate(null, errors);
         
-        new RadiologyModalityValidator().validate(null, errors);
-        
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.general"));
+        assertSingleGeneralError(errors);
     }
     
     @Test
-    public void shouldFailValidationIfAeTitleIsNullOrEmptyOrWhitespacesOnly() throws Exception {
+    public void shouldFailValidationIfAeTitleIsNull() throws Exception {
         
         radiologyModality.setAeTitle(null);
         
-        Errors errors = new BindException(radiologyModality, "radiologyModality");
+        radiologyModalityValidator.validate(radiologyModality, errors);
         
-        new RadiologyModalityValidator().validate(radiologyModality, errors);
-        
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.null"));
-        assertTrue(errors.hasFieldErrors("aeTitle"));
-        
-        radiologyModality.setAeTitle("");
-        
-        errors = new BindException(radiologyModality, "radiologyModality");
-        new RadiologyModalityValidator().validate(radiologyModality, errors);
-        
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.null"));
-        assertTrue(errors.hasFieldErrors("aeTitle"));
-        
-        radiologyModality.setAeTitle("  ");
-        
-        errors = new BindException(radiologyModality, "radiologyModality");
-        new RadiologyModalityValidator().validate(radiologyModality, errors);
-        
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.null"));
-        assertTrue(errors.hasFieldErrors("aeTitle"));
+        assertSingleNullErrorInField(errors, "aeTitle");
     }
     
     @Test
-    public void shouldFailValidationIfNameIsNullOrEmptyOrWhitespacesOnly() throws Exception {
+    public void shouldFailValidationIfAeTitleIsEmpty() throws Exception {
+        
+        radiologyModality.setAeTitle("");
+        
+        radiologyModalityValidator.validate(radiologyModality, errors);
+        
+        assertSingleNullErrorInField(errors, "aeTitle");
+    }
+    
+    @Test
+    public void shouldFailValidationIfAeTitleIsWhitespacesOnly() throws Exception {
+        
+        radiologyModality.setAeTitle("  ");
+        
+        radiologyModalityValidator.validate(radiologyModality, errors);
+        
+        assertSingleNullErrorInField(errors, "aeTitle");
+    }
+    
+    @Test
+    public void shouldFailValidationIfNameIsNull() throws Exception {
         
         radiologyModality.setName(null);
         
-        Errors errors = new BindException(radiologyModality, "radiologyModality");
-        new RadiologyModalityValidator().validate(radiologyModality, errors);
+        radiologyModalityValidator.validate(radiologyModality, errors);
         
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.null"));
-        assertTrue(errors.hasFieldErrors("name"));
+        assertSingleNullErrorInField(errors, "name");
+    }
+    
+    @Test
+    public void shouldFailValidationIfNameIsEmpty() throws Exception {
         
         radiologyModality.setName("");
         
-        errors = new BindException(radiologyModality, "radiologyModality");
-        new RadiologyModalityValidator().validate(radiologyModality, errors);
+        radiologyModalityValidator.validate(radiologyModality, errors);
         
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.null"));
-        assertTrue(errors.hasFieldErrors("name"));
+        assertSingleNullErrorInField(errors, "name");
+    }
+    
+    @Test
+    public void shouldFailValidationIfNameIsWhitespacesOnly() throws Exception {
         
         radiologyModality.setName("  ");
         
-        errors = new BindException(radiologyModality, "radiologyModality");
-        new RadiologyModalityValidator().validate(radiologyModality, errors);
+        radiologyModalityValidator.validate(radiologyModality, errors);
         
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.null"));
-        assertTrue(errors.hasFieldErrors("name"));
+        assertSingleNullErrorInField(errors, "name");
     }
     
     @Test
@@ -169,17 +133,9 @@ public class RadiologyModalityValidatorTest extends BaseModuleContextSensitiveTe
         
         radiologyModality.setRetired(true);
         
-        Errors errors = new BindException(radiologyModality, "radiologyModality");
-        new RadiologyModalityValidator().validate(radiologyModality, errors);
+        radiologyModalityValidator.validate(radiologyModality, errors);
         
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.null"));
-        assertTrue(errors.hasFieldErrors("retireReason"));
+        assertSingleNullErrorInField(errors, "retireReason");
     }
     
     @Test
@@ -190,8 +146,7 @@ public class RadiologyModalityValidatorTest extends BaseModuleContextSensitiveTe
         radiologyModality.setDescription(StringUtils.repeat("1", 256));
         radiologyModality.setRetireReason(StringUtils.repeat("1", 256));
         
-        Errors errors = new BindException(radiologyModality, "radiologyModality");
-        new RadiologyModalityValidator().validate(radiologyModality, errors);
+        radiologyModalityValidator.validate(radiologyModality, errors);
         
         assertTrue(errors.hasErrors());
         ObjectError err = (errors.getAllErrors()).get(0);
@@ -207,9 +162,7 @@ public class RadiologyModalityValidatorTest extends BaseModuleContextSensitiveTe
     @Test
     public void shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
         
-        Errors errors = new BindException(radiologyModality, "radiologyModality");
-        
-        new RadiologyModalityValidator().validate(radiologyModality, errors);
+        radiologyModalityValidator.validate(radiologyModality, errors);
         
         assertFalse(errors.hasErrors());
     }

@@ -9,14 +9,16 @@
  */
 package org.openmrs.module.radiology.order;
 
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.openmrs.module.radiology.test.ValidatorAssertions.assertSingleErrorInField;
+import static org.openmrs.module.radiology.test.ValidatorAssertions.assertSingleGeneralError;
+import static org.openmrs.module.radiology.test.ValidatorAssertions.assertSingleNullErrorInField;
 
 import java.util.Calendar;
 import java.util.Date;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.openmrs.Concept;
 import org.openmrs.Patient;
@@ -26,17 +28,30 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.Errors;
 
 /**
- * Tests methods on the {@link RadiologyOrderValidator} class.
+ * Tests {@link RadiologyOrderValidator}.
  */
 public class RadiologyOrderValidatorTest {
     
     
+    private RadiologyOrderValidator radiologyOrderValidator;
+    
+    private RadiologyOrder radiologyOrder;
+    
+    private Errors errors;
+    
+    @Before
+    public void setUp() {
+        radiologyOrderValidator = new RadiologyOrderValidator();
+        
+        radiologyOrder = getValidRadiologyOrder();
+        
+        errors = new BindException(radiologyOrder, "radiologyOrder");
+    }
+    
     /**
-     * helper method to create a valid RadiologyOrder
-     * 
-     * @return [RadiologyOrder] radiologyOrder, passes validation
+     * Creates a valid RadiologyOrder.
      */
-    public RadiologyOrder getValidRadiologyOrder() {
+    private RadiologyOrder getValidRadiologyOrder() {
         
         RadiologyOrder radiologyOrder = new RadiologyOrder();
         radiologyOrder.setOrderer(new Provider());
@@ -54,57 +69,44 @@ public class RadiologyOrderValidatorTest {
     @Test
     public void shouldReturnFalseForOtherObjectTypes() throws Exception {
         
-        RadiologyOrderValidator radiologyReportValidator = new RadiologyOrderValidator();
-        
-        assertFalse(radiologyReportValidator.supports(Object.class));
+        assertFalse(radiologyOrderValidator.supports(Object.class));
     }
     
     @Test
     public void shouldReturnTrueForRadiologyOrderObjects() throws Exception {
         
-        RadiologyOrderValidator radiologyReportValidator = new RadiologyOrderValidator();
-        
-        assertTrue(radiologyReportValidator.supports(RadiologyOrder.class));
+        assertTrue(radiologyOrderValidator.supports(RadiologyOrder.class));
     }
     
     @Test
     public void shouldFailValidationIfActionIsNull() throws Exception {
         
-        RadiologyOrder radiologyOrder = getValidRadiologyOrder();
         radiologyOrder.setAction(null);
-        Errors errors = new BindException(radiologyOrder, "radiologyOrder");
         
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
+        radiologyOrderValidator.validate(radiologyOrder, errors);
         
-        assertTrue(errors.hasFieldErrors("action"));
+        assertSingleNullErrorInField(errors, "action");
     }
     
     @Test
     public void shouldFailValidationIfConceptIsNull() throws Exception {
         
-        RadiologyOrder radiologyOrder = getValidRadiologyOrder();
         radiologyOrder.setConcept(null);
-        Errors errors = new BindException(radiologyOrder, "radiologyOrder");
         
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
+        radiologyOrderValidator.validate(radiologyOrder, errors);
         
-        assertFalse(errors.hasFieldErrors("discontinued"));
-        assertTrue(errors.hasFieldErrors("concept"));
-        assertFalse(errors.hasFieldErrors("patient"));
-        assertFalse(errors.hasFieldErrors("orderer"));
+        assertSingleErrorInField(errors, "concept", "Concept.noConceptSelected");
     }
     
     @Test
     public void shouldFailValidationIfDateActivatedAfterAutoExpireDate() throws Exception {
         
-        RadiologyOrder radiologyOrder = getValidRadiologyOrder();
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1);
         radiologyOrder.setDateActivated(new Date());
         radiologyOrder.setAutoExpireDate(cal.getTime());
         
-        Errors errors = new BindException(radiologyOrder, "radiologyOrder");
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
+        radiologyOrderValidator.validate(radiologyOrder, errors);
         
         assertTrue(errors.hasFieldErrors("dateActivated"));
         assertTrue(errors.hasFieldErrors("autoExpireDate"));
@@ -113,14 +115,12 @@ public class RadiologyOrderValidatorTest {
     @Test
     public void shouldFailValidationIfDateActivatedAfterDateStopped() throws Exception {
         
-        RadiologyOrder radiologyOrder = getValidRadiologyOrder();
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_MONTH, cal.get(Calendar.DAY_OF_MONTH) - 1);
         radiologyOrder.setDateActivated(new Date());
         OrderUtilTest.setDateStopped(radiologyOrder, cal.getTime());
-        Errors errors = new BindException(radiologyOrder, "radiologyOrder");
         
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
+        radiologyOrderValidator.validate(radiologyOrder, errors);
         
         assertTrue(errors.hasFieldErrors("dateActivated"));
         assertTrue(errors.hasFieldErrors("dateStopped"));
@@ -129,134 +129,112 @@ public class RadiologyOrderValidatorTest {
     @Test
     public void shouldFailValidationIfOrdererIsNull() throws Exception {
         
-        RadiologyOrder radiologyOrder = getValidRadiologyOrder();
         radiologyOrder.setOrderer(null);
-        Errors errors = new BindException(radiologyOrder, "radiologyOrder");
         
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
+        radiologyOrderValidator.validate(radiologyOrder, errors);
         
-        assertFalse(errors.hasFieldErrors("discontinued"));
-        assertFalse(errors.hasFieldErrors("concept"));
-        assertTrue(errors.hasFieldErrors("orderer"));
-        assertFalse(errors.hasFieldErrors("patient"));
+        assertSingleNullErrorInField(errors, "orderer");
     }
     
     @Test
     public void shouldFailValidationIfPatientIsNull() throws Exception {
         
-        RadiologyOrder radiologyOrder = getValidRadiologyOrder();
         radiologyOrder.setPatient(null);
-        Errors errors = new BindException(radiologyOrder, "radiologyOrder");
         
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
+        radiologyOrderValidator.validate(radiologyOrder, errors);
         
-        assertFalse(errors.hasFieldErrors("discontinued"));
-        assertFalse(errors.hasFieldErrors("concept"));
-        assertTrue(errors.hasFieldErrors("patient"));
-        assertFalse(errors.hasFieldErrors("orderer"));
+        assertSingleNullErrorInField(errors, "patient");
     }
     
     @Test
     public void shouldFailValidationIfRadiologyOrderIsNull() throws Exception {
         
-        Errors errors = new BindException(new RadiologyOrder(), "radiologyOrder");
+        radiologyOrderValidator.validate(null, errors);
         
-        new RadiologyOrderValidator().validate(null, errors);
-        
-        assertTrue(errors.hasErrors());
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.general"));
+        assertSingleGeneralError(errors);
     }
     
     @Test
     public void shouldFailValidationIfScheduledDateIsNullWhenUrgencyIsOnScheduledDate() throws Exception {
         
-        RadiologyOrder radiologyOrder = getValidRadiologyOrder();
-        
-        radiologyOrder.setUrgency(RadiologyOrder.Urgency.ON_SCHEDULED_DATE);
         radiologyOrder.setScheduledDate(null);
-        Errors errors = new BindException(radiologyOrder, "radiologyOrder");
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
-        assertTrue(errors.hasFieldErrors("scheduledDate"));
+        radiologyOrder.setUrgency(RadiologyOrder.Urgency.ON_SCHEDULED_DATE);
         
-        radiologyOrder.setScheduledDate(new Date());
-        radiologyOrder.setUrgency(RadiologyOrder.Urgency.STAT);
-        errors = new BindException(radiologyOrder, "radiologyOrder");
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
-        assertFalse(errors.hasFieldErrors("scheduledDate"));
+        radiologyOrderValidator.validate(radiologyOrder, errors);
+        
+        assertSingleErrorInField(errors, "scheduledDate", "Order.error.scheduledDateNullForOnScheduledDateUrgency");
     }
     
     @Test
-    public void shouldFailValidationIfScheduledDateIsSetAndUrgencyIsNotSetToOnScheduledDate() throws Exception {
+    public void shouldFailValidationIfScheduledDateIsSetAndUrgencyIsStat() throws Exception {
         
-        RadiologyOrder radiologyOrder = getValidRadiologyOrder();
+        radiologyOrder.setScheduledDate(new Date());
+        radiologyOrder.setUrgency(RadiologyOrder.Urgency.STAT);
+        
+        radiologyOrderValidator.validate(radiologyOrder, errors);
+        
+        assertSingleErrorInField(errors, "urgency", "Order.error.urgencyNotOnScheduledDate");
+    }
+    
+    @Test
+    public void shouldFailValidationIfScheduledDateIsSetAndUrgencyIsRoutine() throws Exception {
         
         radiologyOrder.setScheduledDate(new Date());
         radiologyOrder.setUrgency(RadiologyOrder.Urgency.ROUTINE);
-        Errors errors = new BindException(radiologyOrder, "radiologyOrder");
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
-        assertTrue(errors.hasFieldErrors("urgency"));
+        
+        radiologyOrderValidator.validate(radiologyOrder, errors);
+        
+        assertSingleErrorInField(errors, "urgency", "Order.error.urgencyNotOnScheduledDate");
+    }
+    
+    @Test
+    public void shouldNotFailValidationIfScheduledDateIsSetAndUrgencyIsOnScheduledDate() throws Exception {
         
         radiologyOrder.setScheduledDate(new Date());
         radiologyOrder.setUrgency(RadiologyOrder.Urgency.ON_SCHEDULED_DATE);
-        errors = new BindException(radiologyOrder, "radiologyOrder");
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
+        
+        radiologyOrderValidator.validate(radiologyOrder, errors);
+        
+        assertFalse(errors.hasErrors());
         assertFalse(errors.hasFieldErrors("urgency"));
     }
     
     @Test
     public void shouldFailValidationIfUrgencyIsNull() throws Exception {
         
-        RadiologyOrder radiologyOrder = getValidRadiologyOrder();
         radiologyOrder.setUrgency(null);
-        Errors errors = new BindException(radiologyOrder, "radiologyOrder");
         
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
+        radiologyOrderValidator.validate(radiologyOrder, errors);
         
-        assertTrue(errors.hasFieldErrors("urgency"));
+        assertSingleNullErrorInField(errors, "urgency");
     }
     
     @Test
     public void shouldFailValidationIfVoidedIsNull() throws Exception {
         
-        RadiologyOrder radiologyOrder = getValidRadiologyOrder();
         radiologyOrder.setVoided(null);
-        Errors errors = new BindException(radiologyOrder, "radiologyOrder");
         
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
+        radiologyOrderValidator.validate(radiologyOrder, errors);
         
-        assertFalse(errors.hasFieldErrors("discontinued"));
-        assertTrue(errors.hasFieldErrors("voided"));
-        assertFalse(errors.hasFieldErrors("concept"));
-        assertFalse(errors.hasFieldErrors("patient"));
-        assertFalse(errors.hasFieldErrors("orderer"));
+        assertSingleNullErrorInField(errors, "voided");
     }
     
     @Test
     public void shouldNotAllowAFutureDateActivated() throws Exception {
         
-        RadiologyOrder radiologyOrder = getValidRadiologyOrder();
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.HOUR_OF_DAY, 1);
         radiologyOrder.setDateActivated(cal.getTime());
-        Errors errors = new BindException(radiologyOrder, "radiologyOrder");
         
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
+        radiologyOrderValidator.validate(radiologyOrder, errors);
         
-        assertTrue(errors.hasFieldErrors("dateActivated"));
-        assertThat(errors.getFieldError("dateActivated")
-                .getCode(),
-            is("Order.error.dateActivatedInFuture"));
+        assertSingleErrorInField(errors, "dateActivated", "Order.error.dateActivatedInFuture");
     }
     
     @Test
     public void shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
         
-        RadiologyOrder radiologyOrder = getValidRadiologyOrder();
-        Errors errors = new BindException(radiologyOrder, "radiologyOrder");
-        
-        new RadiologyOrderValidator().validate(radiologyOrder, errors);
+        radiologyOrderValidator.validate(radiologyOrder, errors);
         
         assertFalse(errors.hasErrors());
     }
