@@ -9,10 +9,10 @@
  */
 package org.openmrs.module.radiology.report;
 
-import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
 import static org.junit.Assert.assertTrue;
+import static org.openmrs.module.radiology.test.ValidatorAssertions.assertSingleGeneralError;
+import static org.openmrs.module.radiology.test.ValidatorAssertions.assertSingleNullErrorInField;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -29,14 +29,19 @@ import org.springframework.validation.Errors;
 public class RadiologyReportValidatorTest {
     
     
-    RadiologyOrder radiologyOrder;
+    private RadiologyReportValidator radiologyReportValidator;
     
-    RadiologyStudy radiologyStudy;
+    private RadiologyOrder radiologyOrder;
     
-    RadiologyReport radiologyReport;
+    private RadiologyStudy radiologyStudy;
+    
+    private RadiologyReport radiologyReport;
+    
+    private Errors errors;
     
     @Before
     public void setUp() {
+        radiologyReportValidator = new RadiologyReportValidator();
         
         radiologyOrder = new RadiologyOrder();
         radiologyStudy = new RadiologyStudy();
@@ -45,12 +50,12 @@ public class RadiologyReportValidatorTest {
         radiologyReport = new RadiologyReport(radiologyOrder);
         radiologyReport.setPrincipalResultsInterpreter(new Provider());
         radiologyReport.setBody("Found a broken bone.");
+        
+        errors = new BindException(radiologyReport, "radiologyReport");
     }
     
     @Test
     public void shouldReturnFalseForOtherObjectTypes() throws Exception {
-        
-        RadiologyReportValidator radiologyReportValidator = new RadiologyReportValidator();
         
         assertFalse(radiologyReportValidator.supports(Object.class));
     }
@@ -58,98 +63,61 @@ public class RadiologyReportValidatorTest {
     @Test
     public void shouldReturnTrueForRadiologyReportObjects() throws Exception {
         
-        RadiologyReportValidator radiologyReportValidator = new RadiologyReportValidator();
-        
         assertTrue(radiologyReportValidator.supports(RadiologyReport.class));
     }
     
     @Test
     public void shouldFailValidationIfRadiologyReportIsNull() throws Exception {
         
-        Errors errors = new BindException(radiologyReport, "radiologyReport");
+        radiologyReportValidator.validate(null, errors);
         
-        new RadiologyReportValidator().validate(null, errors);
-        
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.general"));
+        assertSingleGeneralError(errors);
     }
     
     @Test
-    public void shouldFailValidationIfPrincipalResultsInterpreterIsNullOrEmptyOrWhitespacesOnly() throws Exception {
+    public void shouldFailValidationIfPrincipalResultsInterpreterIsNull() throws Exception {
         
         radiologyReport.setPrincipalResultsInterpreter(null);
         
-        Errors errors = new BindException(radiologyReport, "radiologyReport");
+        radiologyReportValidator.validate(radiologyReport, errors);
         
-        new RadiologyReportValidator().validate(radiologyReport, errors);
-        
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.null"));
-        assertTrue(errors.hasFieldErrors("principalResultsInterpreter"));
+        assertSingleNullErrorInField(errors, "principalResultsInterpreter");
     }
     
     @Test
-    public void shouldFailValidationIfReportBodyIsNullOrEmptyOrWhitespacesOnly() throws Exception {
+    public void shouldFailValidationIfReportBodyIsNull() throws Exception {
         
         radiologyReport.setBody(null);
-        Errors errors = new BindException(radiologyReport, "radiologyReport");
         
-        new RadiologyReportValidator().validate(radiologyReport, errors);
+        radiologyReportValidator.validate(radiologyReport, errors);
         
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.null"));
-        assertTrue(errors.hasFieldErrors("body"));
+        assertSingleNullErrorInField(errors, "body");
+    }
+    
+    @Test
+    public void shouldFailValidationIfReportBodyIsEmpty() throws Exception {
         
         radiologyReport.setBody("");
         
-        errors = new BindException(radiologyReport, "radiologyReport");
-        new RadiologyReportValidator().validate(radiologyReport, errors);
+        radiologyReportValidator.validate(radiologyReport, errors);
         
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.null"));
-        assertTrue(errors.hasFieldErrors("body"));
+        assertSingleNullErrorInField(errors, "body");
+    }
+    
+    @Test
+    public void shouldFailValidationIfReportBodyIsWhitespacesOnly() throws Exception {
         
         radiologyReport.setBody("  ");
         
-        errors = new BindException(radiologyReport, "radiologyReport");
-        new RadiologyReportValidator().validate(radiologyReport, errors);
+        radiologyReportValidator.validate(radiologyReport, errors);
         
-        assertTrue(errors.hasErrors());
-        assertThat(errors.getAllErrors()
-                .size(),
-            is(1));
-        assertThat((errors.getAllErrors()).get(0)
-                .getCode(),
-            is("error.null"));
-        assertTrue(errors.hasFieldErrors("body"));
+        assertSingleNullErrorInField(errors, "body");
     }
     
     @Test
     public void shouldPassValidationIfAllFieldsAreCorrect() throws Exception {
         
-        Errors errors = new BindException(radiologyReport, "radiologyReport");
-        
-        new RadiologyReportValidator().validate(radiologyReport, errors);
+        radiologyReportValidator.validate(radiologyReport, errors);
         
         assertFalse(errors.hasErrors());
     }
