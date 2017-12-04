@@ -192,15 +192,90 @@
 	<!--Required Global Properties -->
 
 	<!-- Internationalization -->
-	<!-- All message codes should start with moduleId.* -->
-
+	<!-- All message codes should start with ${project.parent.artifactId}. -->
 	<messages>
 		<lang>en</lang>
 		<file>messages.properties</file>
 	</messages>
 	<messages>
+		<lang>fr</lang>
+		<file>messages_fr.properties</file>
+	</messages>
+	<messages>
 		<lang>es</lang>
 		<file>messages_es.properties</file>
+	</messages>
+	<messages>
+		<lang>ht</lang>
+		<file>messages_ht.properties</file>
+	</messages>
+	<messages>
+		<lang>pt</lang>
+		<file>messages_pt.properties</file>
+	</messages>
+	<messages>
+		<lang>de</lang>
+		<file>messages_de.properties</file>
+	</messages>
+	<messages>
+		<lang>de</lang>
+		<file>messages_de.properties</file>
+	</messages>
+	<messages>
+		<lang>fa</lang>
+		<file>messages_fa.properties</file>
+	</messages>
+	<messages>
+		<lang>si</lang>
+		<file>messages_si.properties</file>
+	</messages>
+	<messages>
+		<lang>hi</lang>
+		<file>messages_hi.properties</file>
+	</messages>
+	<messages>
+		<lang>ar</lang>
+		<file>messages_ar.properties</file>
+	</messages>
+	<messages>
+		<lang>pl</lang>
+		<file>messages_pl.properties</file>
+	</messages>
+	<messages>
+		<lang>it</lang>
+		<file>messages_it.properties</file>
+	</messages>
+	<messages>
+		<lang>el</lang>
+		<file>messages_el.properties</file>
+	</messages>
+	<messages>
+		<lang>ru</lang>
+		<file>messages_ru.properties</file>
+	</messages>
+	<messages>
+		<lang>lt</lang>
+		<file>messages_lt.properties</file>
+	</messages>
+	<messages>
+		<lang>hy</lang>
+		<file>messages_hy.properties</file>
+	</messages>
+	<messages>
+		<lang>te</lang>
+		<file>messages_te.properties</file>
+	</messages>
+	<messages>
+		<lang>sw</lang>
+		<file>messages_sw.properties</file>
+	</messages>
+	<messages>
+		<lang>ku</lang>
+		<file>messages_ku.properties</file>
+	</messages>
+	<messages>
+		<lang>id_ID</lang>
+		<file>messages_id_ID.properties</file>
 	</messages>
 	<!-- /Internationalization -->
 
