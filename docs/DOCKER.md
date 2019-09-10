@@ -19,7 +19,7 @@ The Docker image of the Radiology Module is
 * built on top of a [Docker image for OpenMRS](https://hub.docker.com/r/teleivo/openmrs-platform/)
 * linked to a [Docker image for the database](https://hub.docker.com/r/teleivo/openmrs-platform-mysql/)
 
-If you want to get into the details please look at the omod/pom.xml
+If you want to get into the details please look at the `omod/pom.xml`
 
 ## Create Image
 
@@ -94,7 +94,7 @@ docker ps
 
 ### Run Container with Custom Args
 
-Check out the `properties` secion in the `omod/pom.xml`. There you can find
+Check out the `properties` section in the `omod/pom.xml`. There you can find
 maven properties that are exposed. The properties values can be overriden on
 the command line. This enables you to change for example the
 
@@ -121,7 +121,7 @@ This will only stop and remove the containers created via the Docker plugin.
 ### Remove Volumes
 
 The database image is based on the Docker MySQL image which uses Docker volumes
-for storing the persistent data. You might need to remove the volume your self.
+for storing the persistent data. You might need to remove the volume yourself.
 
 After you started the Radiology Module using the Docker plugin you can check
 that there is a new volume with:
