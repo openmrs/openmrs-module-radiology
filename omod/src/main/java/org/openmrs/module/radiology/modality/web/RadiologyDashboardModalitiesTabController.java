@@ -34,7 +34,7 @@ public class RadiologyDashboardModalitiesTabController {
      * Handles get requests for radiology modalities tab page.
      * 
      * @return model and view of the radiology modalities tab page
-     * @should return model and view of the radiology modalities tab page and set tab session attribute to radiology modalities tab page
+     * <strong>Should</strong> return model and view of the radiology modalities tab page and set tab session attribute to radiology modalities tab page
      */
     @RequestMapping(method = RequestMethod.GET)
     protected ModelAndView getRadiologyModalitiesTab(HttpServletRequest request) {

@@ -58,8 +58,8 @@ public class RadiologyProperties {
      * 
      * @return dicom uid org root
      * @throws IllegalStateException if global property for dicom uid org root cannot be found
-     * @should return dicom uid org root
-     * @should throw illegal state exception if global property for dicom uid org root cannot be found
+     * <strong>Should</strong> return dicom uid org root
+     * <strong>Should</strong> throw illegal state exception if global property for dicom uid org root cannot be found
      */
     public String getDicomUIDOrgRoot() {
         return getGlobalProperty(RadiologyConstants.GP_DICOM_UID_ORG_ROOT, true);
@@ -70,8 +70,8 @@ public class RadiologyProperties {
      * 
      * @return DICOM web viewer address
      * @throws IllegalStateException if global property for dicom web viewer address cannot be found
-     * @should return dicom web viewer address
-     * @should throw illegal state exception if global property for dicom web viewer address cannot
+     * <strong>Should</strong> return dicom web viewer address
+     * <strong>Should</strong> throw illegal state exception if global property for dicom web viewer address cannot
      *         be found
      */
     public String getDicomWebViewerAddress() {
@@ -83,8 +83,8 @@ public class RadiologyProperties {
      * 
      * @return DICOM web viewer port
      * @throws IllegalStateException if global property for dicom web viewer port cannot be found
-     * @should return dicom web viewer port
-     * @should throw illegal state exception if global property for dicom web viewer port cannot be
+     * <strong>Should</strong> return dicom web viewer port
+     * <strong>Should</strong> throw illegal state exception if global property for dicom web viewer port cannot be
      *         found
      */
     public String getDicomWebViewerPort() {
@@ -97,8 +97,8 @@ public class RadiologyProperties {
      * @return DICOM web viewer base url
      * @throws IllegalStateException if global property for dicom web viewer base url cannot be
      *         found
-     * @should return dicom web viewer base url
-     * @should throw illegal state exception if global property for dicom web viewer base url cannot
+     * <strong>Should</strong> return dicom web viewer base url
+     * <strong>Should</strong> throw illegal state exception if global property for dicom web viewer base url cannot
      *         be found
      */
     public String getDicomWebViewerBaseUrl() {
@@ -109,7 +109,7 @@ public class RadiologyProperties {
      * Return DICOM web viewer local server name.
      * 
      * @return DICOM web viewer local server name
-     * @should return dicom web viewer local server name
+     * <strong>Should</strong> return dicom web viewer local server name
      */
     public String getDicomWebViewerLocalServerName() {
         return getGlobalProperty(RadiologyConstants.GP_DICOM_WEB_VIEWER_LOCAL_SERVER_NAME, false);
@@ -119,10 +119,10 @@ public class RadiologyProperties {
      * Get CareSetting for RadiologyOrder's
      * 
      * @return CareSetting for radiology orders
-     * @should return radiology care setting
-     * @should throw illegal state exception if global property for radiology care setting cannot be
+     * <strong>Should</strong> return radiology care setting
+     * <strong>Should</strong> throw illegal state exception if global property for radiology care setting cannot be
      *         found
-     * @should throw illegal state exception if radiology care setting cannot be found
+     * <strong>Should</strong> throw illegal state exception if radiology care setting cannot be found
      */
     public CareSetting getRadiologyCareSetting() {
         final CareSetting result =
@@ -138,8 +138,8 @@ public class RadiologyProperties {
      * Test order type for radiology order
      * 
      * @return test order type for radiology order
-     * @should return order type for radiology test orders
-     * @should throw illegal state exception for non existing radiology test order type
+     * <strong>Should</strong> return order type for radiology test orders
+     * <strong>Should</strong> throw illegal state exception for non existing radiology test order type
      */
     public OrderType getRadiologyTestOrderType() {
         return orderService.getOrderTypeByUuid(getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_TEST_ORDER_TYPE, true));
@@ -149,8 +149,8 @@ public class RadiologyProperties {
      * Get EncounterType for RadiologyOrder's
      * 
      * @return EncounterType for radiology orders
-     * @should return encounter type for radiology orders
-     * @should throw illegal state exception for non existing radiology encounter type
+     * <strong>Should</strong> return encounter type for radiology orders
+     * <strong>Should</strong> throw illegal state exception for non existing radiology encounter type
      */
     public EncounterType getRadiologyOrderEncounterType() {
         return encounterService
@@ -161,8 +161,8 @@ public class RadiologyProperties {
      * Get EncounterRole for the ordering provider
      * 
      * @return EncounterRole for ordering provider
-     * @should return encounter role for ordering provider
-     * @should throw illegal state exception for non existing ordering provider encounter role
+     * <strong>Should</strong> return encounter role for ordering provider
+     * <strong>Should</strong> throw illegal state exception for non existing ordering provider encounter role
      */
     public EncounterRole getRadiologyOrderingProviderEncounterRole() {
         return encounterService.getEncounterRoleByUuid(
@@ -173,8 +173,8 @@ public class RadiologyProperties {
      * Get VisitType for RadiologyOrder's
      * 
      * @return visitType for radiology orders
-     * @should return visit type for radiology orders
-     * @should throw illegal state exception for non existing radiology visit type
+     * <strong>Should</strong> return visit type for radiology orders
+     * <strong>Should</strong> throw illegal state exception for non existing radiology visit type
      */
     public VisitType getRadiologyVisitType() {
         return visitService.getVisitTypeByUuid(getGlobalProperty(RadiologyConstants.GP_RADIOLOGY_VISIT_TYPE, true));
@@ -189,14 +189,14 @@ public class RadiologyProperties {
      * @throws IllegalStateException if global property radiologyConceptClasses is badly formatted
      * @throws IllegalStateException if global property radiologyConceptClasses contains a UUID not found among concept
      *         classes
-     * @should throw illegal state exception if global property radiology concept classes is null
-     * @should throw illegal state exception if global property radiology concept classes is an empty
+     * <strong>Should</strong> throw illegal state exception if global property radiology concept classes is null
+     * <strong>Should</strong> throw illegal state exception if global property radiology concept classes is an empty
      *         string
-     * @should throw illegal state exception if global property radiology concept classes is badly
+     * <strong>Should</strong> throw illegal state exception if global property radiology concept classes is badly
      *         formatted
-     * @should throw illegal state exception if global property radiology concept classes contains a
+     * <strong>Should</strong> throw illegal state exception if global property radiology concept classes contains a
      *         UUID not found among concept classes
-     * @should return comma separated list of concept class names configured via concept class UUIDs
+     * <strong>Should</strong> return comma separated list of concept class names configured via concept class UUIDs
      *         in global property radiology concept classes
      */
     public String getRadiologyConceptClassNames() {
@@ -231,16 +231,16 @@ public class RadiologyProperties {
      * @throws IllegalStateException if global property radiologyOrderReasonConceptClasses is badly formatted
      * @throws IllegalStateException if global property radiologyOrderReasonConceptClasses contains a UUID not found among
      *         concept classes
-     * @should throw illegal state exception if global property radiology order reason concept classes is badly formatted
-     * @should throw illegal state exception if global property radiology order reason concept classes contains a UUID not
+     * <strong>Should</strong> throw illegal state exception if global property radiology order reason concept classes is badly formatted
+     * <strong>Should</strong> throw illegal state exception if global property radiology order reason concept classes contains a UUID not
      *         found among concept classes
-     * @should return the name of the diagnosis concept class if global property radiology order reason concept classes is
+     * <strong>Should</strong> return the name of the diagnosis concept class if global property radiology order reason concept classes is
      *         null
-     * @should return the name of the diagnosis concept class if global property radiology order reason concept classes is an
+     * <strong>Should</strong> return the name of the diagnosis concept class if global property radiology order reason concept classes is an
      *         empty string
-     * @should return an empty string if global property radiology order reason concept classes is null or an empty string
+     * <strong>Should</strong> return an empty string if global property radiology order reason concept classes is null or an empty string
      *         and no diagnosis concept class is present
-     * @should return comma separated list of concept class names configured via concept class UUIDs in global property
+     * <strong>Should</strong> return comma separated list of concept class names configured via concept class UUIDs in global property
      *         radiology order reason concept classes
      */
     public String getRadiologyOrderReasonConceptClassNames() {
@@ -283,9 +283,9 @@ public class RadiologyProperties {
      * @param required indicates if the global property must be configured
      * @return value of global property for given name
      * @throws IllegalStateException if global property cannot be found
-     * @should return global property given valid global property name
-     * @should return null given non required and non configured global property
-     * @should throw illegal state exception given required non configured global property
+     * <strong>Should</strong> return global property given valid global property name
+     * <strong>Should</strong> return null given non required and non configured global property
+     * <strong>Should</strong> throw illegal state exception given required non configured global property
      */
     private String getGlobalProperty(String globalPropertyName, boolean required) {
         final String result = administrationService.getGlobalProperty(globalPropertyName);
@@ -300,9 +300,9 @@ public class RadiologyProperties {
      * 
      * @return templates folder
      * @throws IllegalStateException if global property cannot be found
-     * @should create a directory under the openmrs application data directory if GP value is relative
-     * @should creates a directory at GP value if it is an absolute path
-     * @should throw illegal state exception if global property cannot be found
+     * <strong>Should</strong> create a directory under the openmrs application data directory if GP value is relative
+     * <strong>Should</strong> creates a directory at GP value if it is an absolute path
+     * <strong>Should</strong> throw illegal state exception if global property cannot be found
      */
     public File getReportTemplateHome() {
         

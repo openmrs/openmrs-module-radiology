@@ -31,8 +31,8 @@ public class RadiologyReportValidator implements Validator {
      * Determines if the command object being submitted is a valid type
      *
      * @see org.springframework.validation.Validator#supports(java.lang.Class)
-     * @should return true for radiology report objects
-     * @should return false for other object types
+     * <strong>Should</strong> return true for radiology report objects
+     * <strong>Should</strong> return false for other object types
      */
     @Override
     public boolean supports(Class clazz) {
@@ -43,10 +43,10 @@ public class RadiologyReportValidator implements Validator {
      * Checks the form object for any inconsistencies/errors
      *
      * @see org.springframework.validation.Validator#validate(Object, Errors)
-     * @should fail validation if radiology report is null
-     * @should fail validation if principal results interpreter is null or empty or whitespaces only
-     * @should fail validation if report body is null or empty or whitespaces only
-     * @should pass validation if all fields are correct
+     * <strong>Should</strong> fail validation if radiology report is null
+     * <strong>Should</strong> fail validation if principal results interpreter is null or empty or whitespaces only
+     * <strong>Should</strong> fail validation if report body is null or empty or whitespaces only
+     * <strong>Should</strong> pass validation if all fields are correct
      */
     @Override
     public void validate(Object obj, Errors errors) {

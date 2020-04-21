@@ -33,12 +33,12 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @throws IllegalArgumentException if global property DICOM UID org root is not a valid UID
      * @throws IllegalArgumentException if global property DICOM UID org root exceeds the maximum length
      * @throws APIException on saving an existing radiology study
-     * @should create new radiology study from given radiology study
-     * @should set the study instance uid of given radiology study to a valid dicom uid if null
-     * @should set the study instance uid of given radiology study to a valid dicom uid if only containing whitespaces
-     * @should not set the study instance uid of given radiology study if contains non whitespace characters
-     * @should throw illegal argument exception if given null
-     * @should throw api exception on saving an existing radiology study
+     * <strong>Should</strong> create new radiology study from given radiology study
+     * <strong>Should</strong> set the study instance uid of given radiology study to a valid dicom uid if null
+     * <strong>Should</strong> set the study instance uid of given radiology study to a valid dicom uid if only containing whitespaces
+     * <strong>Should</strong> not set the study instance uid of given radiology study if contains non whitespace characters
+     * <strong>Should</strong> throw illegal argument exception if given null
+     * <strong>Should</strong> throw api exception on saving an existing radiology study
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_STUDIES)
     public RadiologyStudy saveRadiologyStudy(RadiologyStudy radiologyStudy);
@@ -49,9 +49,9 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @param studyId the study id of the wanted study
      * @return the radiology study matching given study id
      * @throws IllegalArgumentException if given null
-     * @should return radiology study matching given study id
-     * @should return null if no match was found
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return radiology study matching given study id
+     * <strong>Should</strong> return null if no match was found
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_STUDIES)
     public RadiologyStudy getRadiologyStudy(Integer studyId);
@@ -62,9 +62,9 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @param uuid the uuid of the radiology study
      * @return the radiology study matching given uuid
      * @throws IllegalArgumentException if given null
-     * @should return radiology study matching given uuid
-     * @should return null if no match was found
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return radiology study matching given uuid
+     * <strong>Should</strong> return null if no match was found
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_STUDIES)
     public RadiologyStudy getRadiologyStudyByUuid(String uuid);
@@ -75,9 +75,9 @@ public interface RadiologyStudyService extends OpenmrsService {
      * @param studyInstanceUid the study instance uid of wanted radiology study
      * @return the radiology study exactly matching given study instance uid
      * @throws IllegalArgumentException if given null
-     * @should return radiology study exactly matching given study instance uid
-     * @should return null if no match was found
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return radiology study exactly matching given study instance uid
+     * <strong>Should</strong> return null if no match was found
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_STUDIES)
     public RadiologyStudy getRadiologyStudyByStudyInstanceUid(String studyInstanceUid);

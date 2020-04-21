@@ -32,7 +32,7 @@ public class ValidationResult {
     
     /**
      * Creates a new instance of {@link ValidationResult}.
-     * @should create a new validation result initializing errors
+     * <strong>Should</strong> create a new validation result initializing errors
      */
     public ValidationResult() {
         errors = new ArrayList<>();
@@ -43,7 +43,7 @@ public class ValidationResult {
      *
      * @param description the error description
      * @param messageCode the message code of the error
-     * @should add new error with given parameters
+     * <strong>Should</strong> add new error with given parameters
      */
     public void addError(String description, String messageCode) {
         ValidationError error = new ValidationError(description, messageCode);
@@ -54,7 +54,7 @@ public class ValidationResult {
      * Add an error to this validation result.
      *
      * @param validationError the validation error
-     * @should add given validation error to errors
+     * <strong>Should</strong> add given validation error to errors
      */
     public void addError(ValidationError validationError) {
         errors.add(validationError);
@@ -64,8 +64,8 @@ public class ValidationResult {
      * Assert that this validation result has no errors and throw an exception if it does.
      *
      * @see MrrtReportTemplateValidationException
-     * @should throw a validation exception if validation has errors
-     * @should not throw a validation exception if validation has errors
+     * <strong>Should</strong> throw a validation exception if validation has errors
+     * <strong>Should</strong> not throw a validation exception if validation has errors
      */
     public void assertOk() {
         if (hasErrors()) {
@@ -77,8 +77,8 @@ public class ValidationResult {
      * Check if this validation result has errors.
      *
      * @return true if this result has errors and false otherwise
-     * @should return true if validation has errors
-     * @should return false if validation has no errors
+     * <strong>Should</strong> return true if validation has errors
+     * <strong>Should</strong> return false if validation has no errors
      */
     public boolean hasErrors() {
         return !errors.isEmpty();
@@ -86,8 +86,8 @@ public class ValidationResult {
     
     /**
      * @see Object#toString()
-     * @should return ok if validation has no errors
-     * @should return error strings if validation has errors
+     * <strong>Should</strong> return ok if validation has no errors
+     * <strong>Should</strong> return error strings if validation has errors
      */
     @Override
     public String toString() {

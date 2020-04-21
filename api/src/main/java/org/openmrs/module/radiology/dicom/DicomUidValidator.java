@@ -41,14 +41,14 @@ public class DicomUidValidator {
      * 
      * @param uid DICOM UID to be validated
      * @return true if uid is a valid dicom uid and false otherwise
-     * @should return false given null
-     * @should return false given empty string
-     * @should return false for uid longer than 64 characters
-     * @should return false for uid containing characters other than 0-9 and dot separator
-     * @should return false for uid containing non-significant leading zeros
-     * @should return false for uid with trailing dot character
-     * @should return false for uid with characters other than 0-2 as first component
-     * @should return true for valid uid
+     * <strong>Should</strong> return false given null
+     * <strong>Should</strong> return false given empty string
+     * <strong>Should</strong> return false for uid longer than 64 characters
+     * <strong>Should</strong> return false for uid containing characters other than 0-9 and dot separator
+     * <strong>Should</strong> return false for uid containing non-significant leading zeros
+     * <strong>Should</strong> return false for uid with trailing dot character
+     * <strong>Should</strong> return false for uid with characters other than 0-2 as first component
+     * <strong>Should</strong> return true for valid uid
      */
     public static boolean isValid(String uid) {
         
@@ -60,10 +60,10 @@ public class DicomUidValidator {
      * 
      * @param uid DICOM UID to be validated
      * @return true if uid length is smaller or equal than 64 and false otherwise
-     * @should return false given null
-     * @should return false given empty string
-     * @should return false for uid length bigger than 64
-     * @should return true for uid length smaller or equal to 64
+     * <strong>Should</strong> return false given null
+     * <strong>Should</strong> return false given empty string
+     * <strong>Should</strong> return false for uid length bigger than 64
+     * <strong>Should</strong> return true for uid length smaller or equal to 64
      */
     public static boolean isLengthValid(String uid) {
         
@@ -79,13 +79,13 @@ public class DicomUidValidator {
      * 
      * @param uid DICOM UID to be validated
      * @return true if uid pattern is valid and false otherwise
-     * @should return false given null
-     * @should return false given empty string
-     * @should return false for uid containing characters other than 0-9 and dot separator
-     * @should return false for uid containing non-significant leading zeros
-     * @should return false for uid with trailing dot character
-     * @should return false for uid with characters other than 0-2 as first component
-     * @should return true for valid uid
+     * <strong>Should</strong> return false given null
+     * <strong>Should</strong> return false given empty string
+     * <strong>Should</strong> return false for uid containing characters other than 0-9 and dot separator
+     * <strong>Should</strong> return false for uid containing non-significant leading zeros
+     * <strong>Should</strong> return false for uid with trailing dot character
+     * <strong>Should</strong> return false for uid with characters other than 0-2 as first component
+     * <strong>Should</strong> return true for valid uid
      */
     public static boolean isPatternValid(String uid) {
         

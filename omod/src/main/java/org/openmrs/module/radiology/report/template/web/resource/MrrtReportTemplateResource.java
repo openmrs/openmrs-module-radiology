@@ -37,9 +37,9 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource#getRepresentationDescription(org.openmrs.module.webservices.rest.web.representation.Representation)
-     * @should return default representation given instance of defaultrepresentation
-     * @should return full representation given instance of fullrepresentation
-     * @should return null for representation other then default or full
+     * <strong>Should</strong> return default representation given instance of defaultrepresentation
+     * <strong>Should</strong> return full representation given instance of fullrepresentation
+     * <strong>Should</strong> return null for representation other then default or full
      */
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
@@ -94,7 +94,7 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getByUniqueId(java.lang.String)
-     * @should return radiology order given its uuid
+     * <strong>Should</strong> return radiology order given its uuid
      */
     @Override
     public MrrtReportTemplate getByUniqueId(String uuid) {
@@ -107,7 +107,7 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
      *
      * @param mrrtReportTemplate MrrtReportTemplate of which display string shall be returned
      * @return templateIdentifier/title of given mrrtReportTemplate
-     * @should return templateIdentifier
+     * <strong>Should</strong> return templateIdentifier
      */
     @PropertyGetter("display")
     public String getDisplayString(MrrtReportTemplate mrrtReportTemplate) {
@@ -117,7 +117,7 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#delete(java.lang.Object,
      *      java.lang.String, org.openmrs.module.webservices.rest.web.RequestContext)
-     * @should throw ResourceDoesNotSupportOperationException
+     * <strong>Should</strong> throw ResourceDoesNotSupportOperationException
      */
     @Override
     protected void delete(MrrtReportTemplate mrrtReportTemplate, String s, RequestContext requestContext)
@@ -128,7 +128,7 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#purge(java.lang.Object,
      *      org.openmrs.module.webservices.rest.web.RequestContext)
-     * @should throw ResourceDoesNotSupportOperationException
+     * <strong>Should</strong> throw ResourceDoesNotSupportOperationException
      */
     @Override
     public void purge(MrrtReportTemplate mrrtReportTemplate, RequestContext requestContext)
@@ -138,7 +138,7 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#newDelegate()
-     * @should throw ResourceDoesNotSupportOperationException
+     * <strong>Should</strong> throw ResourceDoesNotSupportOperationException
      */
     @Override
     public MrrtReportTemplate newDelegate() throws ResourceDoesNotSupportOperationException {
@@ -147,7 +147,7 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceHandler#save(java.lang.Object)
-     * @should throw ResourceDoesNotSupportOperationException
+     * <strong>Should</strong> throw ResourceDoesNotSupportOperationException
      */
     @Override
     public MrrtReportTemplate save(MrrtReportTemplate mrrtReportTemplate) {
@@ -156,7 +156,7 @@ public class MrrtReportTemplateResource extends DataDelegatingCrudResource<MrrtR
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getResourceVersion()
-     * @should return supported resource version
+     * <strong>Should</strong> return supported resource version
      */
     @Override
     public String getResourceVersion() {

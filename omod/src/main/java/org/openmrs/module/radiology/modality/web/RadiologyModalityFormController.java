@@ -47,7 +47,7 @@ public class RadiologyModalityFormController {
      * Handles requests for a new {@code RadiologyModality}.
      * 
      * @return model and view containing new radiology modality
-     * @should populate model and view with new radiology modality
+     * <strong>Should</strong> populate model and view with new radiology modality
      */
     @RequestMapping(method = RequestMethod.GET)
     protected ModelAndView getRadiologyModality() {
@@ -62,7 +62,7 @@ public class RadiologyModalityFormController {
      * 
      * @param radiologyModality the existing radiology modality which should be returned
      * @return model and view containing radiology modality
-     * @should populate model and view with given radiology modality
+     * <strong>Should</strong> populate model and view with given radiology modality
      */
     @RequestMapping(method = RequestMethod.GET, params = "modalityId")
     protected ModelAndView getRadiologyModality(@RequestParam("modalityId") RadiologyModality radiologyModality) {
@@ -80,10 +80,10 @@ public class RadiologyModalityFormController {
      * @param resultRadiologyModality the binding result for given radiology modality
      * @return the model and view for the radiology modality form containing binding result errors if given radiology modality is
      *         not valid
-     * @should save given radiology modality if valid and set http session attribute openmrs message to modality saved and redirect
+     * <strong>Should</strong> save given radiology modality if valid and set http session attribute openmrs message to modality saved and redirect
      *         to the new radiology modality
-     * @should not save given radiology modality if it is not valid and not redirect
-     * @should not redirect and set session attribute with openmrs error if api exception is thrown by save radiology modality
+     * <strong>Should</strong> not save given radiology modality if it is not valid and not redirect
+     * <strong>Should</strong> not redirect and set session attribute with openmrs error if api exception is thrown by save radiology modality
      */
     @RequestMapping(method = RequestMethod.POST, params = "saveRadiologyModality")
     protected ModelAndView saveRadiologyModality(HttpServletRequest request,
@@ -122,10 +122,10 @@ public class RadiologyModalityFormController {
      * @param resultRadiologyModality the binding result for given radiology modality
      * @return the model and view for the radiology modality form containing binding result errors if given radiology modality is
      *         not valid
-     * @should retire given radiology modality if valid and set http session attribute openmrs message to modality retired and redirect
+     * <strong>Should</strong> retire given radiology modality if valid and set http session attribute openmrs message to modality retired and redirect
      *         to the radiology modality
-     * @should not retire given radiology modality if it is not valid and not redirect
-     * @should not redirect and set session attribute with openmrs error if api exception is thrown by retire radiology modality
+     * <strong>Should</strong> not retire given radiology modality if it is not valid and not redirect
+     * <strong>Should</strong> not redirect and set session attribute with openmrs error if api exception is thrown by retire radiology modality
      */
     @RequestMapping(method = RequestMethod.POST, params = "retireRadiologyModality")
     protected ModelAndView retireRadiologyModality(HttpServletRequest request,

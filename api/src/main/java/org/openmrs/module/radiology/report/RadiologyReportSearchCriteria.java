@@ -148,10 +148,10 @@ public class RadiologyReportSearchCriteria {
          * Create an {@link RadiologyReportSearchCriteria} with the properties of this builder instance.
          * 
          * @return a new search criteria instance
-         * @should create a new radiology report search criteria instance with from and to date specified if date from and date to are set
-         * @should create a new radiology report search criteria instance with principal results interpreter specified if principal results interpreter is set
-         * @should create a new radiology report search criteria instance with include voided set to true if voided reports should be included
-         * @should create a new radiology report search criteria instance with report status specified if status is set to claimed or completed
+         * <strong>Should</strong> create a new radiology report search criteria instance with from and to date specified if date from and date to are set
+         * <strong>Should</strong> create a new radiology report search criteria instance with principal results interpreter specified if principal results interpreter is set
+         * <strong>Should</strong> create a new radiology report search criteria instance with include voided set to true if voided reports should be included
+         * <strong>Should</strong> create a new radiology report search criteria instance with report status specified if status is set to claimed or completed
          */
         public RadiologyReportSearchCriteria build() {
             

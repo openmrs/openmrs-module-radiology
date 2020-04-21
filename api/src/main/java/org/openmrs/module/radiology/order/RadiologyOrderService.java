@@ -31,7 +31,7 @@ public interface RadiologyOrderService extends OpenmrsService {
      * 
      * @return the accession number seed
      * @throws APIException
-     * @should return the next accession number seed
+     * <strong>Should</strong> return the next accession number seed
      */
     public Long getNextAccessionNumberSeedSequenceValue();
     
@@ -44,12 +44,12 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @throws IllegalArgumentException if radiologyOrder is null
      * @throws IllegalArgumentException if radiologyOrder.study is null
      * @throws APIException on saving an existing radiology order
-     * @should create new radiology order and study from given radiology order
-     * @should create radiology order encounter
-     * @should set the radiology order accession number
-     * @should throw illegal argument exception given null
-     * @should throw illegal argument exception if given radiology order has no study
-     * @should throw api exception on saving an existing radiology order
+     * <strong>Should</strong> create new radiology order and study from given radiology order
+     * <strong>Should</strong> create radiology order encounter
+     * <strong>Should</strong> set the radiology order accession number
+     * <strong>Should</strong> throw illegal argument exception given null
+     * <strong>Should</strong> throw illegal argument exception if given radiology order has no study
+     * <strong>Should</strong> throw api exception on saving an existing radiology order
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_ORDERS)
     public RadiologyOrder placeRadiologyOrder(RadiologyOrder radiologyOrder);
@@ -68,14 +68,14 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @throws APIException if radiology order is discontinued
      * @throws APIException if radiology order is in progress
      * @throws APIException if radiology order is completed
-     * @should create discontinuation order which discontinues given radiology order that is not in progress or completed
-     * @should create radiology order encounter
-     * @should throw illegal argument exception if given radiology order is null
-     * @should throw illegal argument exception if given radiology order with orderId null
-     * @should throw illegal argument exception if given orderer is null
-     * @should throw api exception if given radiology order is discontinued
-     * @should throw api exception if given radiology order is in progress
-     * @should throw api exception if given radiology order is completed
+     * <strong>Should</strong> create discontinuation order which discontinues given radiology order that is not in progress or completed
+     * <strong>Should</strong> create radiology order encounter
+     * <strong>Should</strong> throw illegal argument exception if given radiology order is null
+     * <strong>Should</strong> throw illegal argument exception if given radiology order with orderId null
+     * <strong>Should</strong> throw illegal argument exception if given orderer is null
+     * <strong>Should</strong> throw api exception if given radiology order is discontinued
+     * <strong>Should</strong> throw api exception if given radiology order is in progress
+     * <strong>Should</strong> throw api exception if given radiology order is completed
      */
     @Authorized({ RadiologyPrivileges.DELETE_RADIOLOGY_ORDERS })
     public Order discontinueRadiologyOrder(RadiologyOrder radiologyOrder, Provider orderer, String discontinueReason)
@@ -87,9 +87,9 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @param orderId the order id of wanted radiology order
      * @return the radiology order matching given order id
      * @throws IllegalArgumentException if given null
-     * @should return radiology order matching given order id
-     * @should return null if no match was found
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return radiology order matching given order id
+     * <strong>Should</strong> return null if no match was found
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized({ RadiologyPrivileges.GET_RADIOLOGY_ORDERS })
     public RadiologyOrder getRadiologyOrder(Integer orderId);
@@ -100,9 +100,9 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @param uuid the uuid of the radiology order
      * @return the radiology order matching given uuid
      * @throws IllegalArgumentException if given null
-     * @should return radiology order matching given uuid
-     * @should return null if no match was found
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return radiology order matching given uuid
+     * <strong>Should</strong> return null if no match was found
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_ORDERS)
     public RadiologyOrder getRadiologyOrderByUuid(String uuid);
@@ -114,21 +114,21 @@ public interface RadiologyOrderService extends OpenmrsService {
      * @param radiologyOrderSearchCriteria the object containing search parameters
      * @return the radiology orders matching given criteria
      * @throws IllegalArgumentException if given null
-     * @should return all radiology orders for given patient if patient is specified
-     * @should return all radiology orders (including voided) matching the search query if include voided is set
-     * @should return all radiology orders for given urgency
-     * @should return all radiology orders with effective order start date in given date range if to date and from date are
+     * <strong>Should</strong> return all radiology orders for given patient if patient is specified
+     * <strong>Should</strong> return all radiology orders (including voided) matching the search query if include voided is set
+     * <strong>Should</strong> return all radiology orders for given urgency
+     * <strong>Should</strong> return all radiology orders with effective order start date in given date range if to date and from date are
      *         specified
-     * @should return all radiology orders with effective order start date after or equal to from date if only from date is
+     * <strong>Should</strong> return all radiology orders with effective order start date after or equal to from date if only from date is
      *         specified
-     * @should return all radiology orders with effective order start date before or equal to to date if only to date is
+     * <strong>Should</strong> return all radiology orders with effective order start date before or equal to to date if only to date is
      *         specified
-     * @should return empty list if from date after to date
-     * @should return empty search result if no effective order start is in date range
-     * @should return all radiology orders for given accession number if accession number is specified
-     * @should return all radiology orders for given orderer
-     * @should return all radiology orders for given urgency and orderer
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return empty list if from date after to date
+     * <strong>Should</strong> return empty search result if no effective order start is in date range
+     * <strong>Should</strong> return all radiology orders for given accession number if accession number is specified
+     * <strong>Should</strong> return all radiology orders for given orderer
+     * <strong>Should</strong> return all radiology orders for given urgency and orderer
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_ORDERS)
     public List<RadiologyOrder> getRadiologyOrders(RadiologyOrderSearchCriteria radiologyOrderSearchCriteria);

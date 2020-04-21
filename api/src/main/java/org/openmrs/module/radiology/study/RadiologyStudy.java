@@ -63,9 +63,9 @@ public class RadiologyStudy extends BaseOpenmrsData {
      * Returns true when this RadiologyStudy's performedStatus is in progress and false otherwise.
      * 
      * @return true on performedStatus in progress and false otherwise
-     * @should return false if performed status is null
-     * @should return false if performed status is not in progress
-     * @should return true if performed status is in progress
+     * <strong>Should</strong> return false if performed status is null
+     * <strong>Should</strong> return false if performed status is not in progress
+     * <strong>Should</strong> return true if performed status is in progress
      */
     public boolean isInProgress() {
         return performedStatus == PerformedProcedureStepStatus.IN_PROGRESS;
@@ -75,9 +75,9 @@ public class RadiologyStudy extends BaseOpenmrsData {
      * Returns true when this RadiologyStudy's performedStatus is completed and false otherwise.
      * 
      * @return true on performedStatus completed and false otherwise
-     * @should return false if performedStatus is null
-     * @should return false if performedStatus is not completed
-     * @should return true if performedStatus is completed
+     * <strong>Should</strong> return false if performedStatus is null
+     * <strong>Should</strong> return false if performedStatus is not completed
+     * <strong>Should</strong> return true if performedStatus is completed
      */
     public boolean isCompleted() {
         return performedStatus == PerformedProcedureStepStatus.COMPLETED;
@@ -87,8 +87,8 @@ public class RadiologyStudy extends BaseOpenmrsData {
      * Returns true when this Study's performedStatus is null and false otherwise.
      *
      * @return true on performedStatus null and false otherwise
-     * @should return true if performedStatus is null
-     * @should return false if performedStatus is not null
+     * <strong>Should</strong> return true if performedStatus is null
+     * <strong>Should</strong> return false if performedStatus is not null
      */
     public boolean isScheduleable() {
         return performedStatus == null;
@@ -129,8 +129,8 @@ public class RadiologyStudy extends BaseOpenmrsData {
     /**
      * @see Object#toString()
      * @return String of Study
-     * @should return string of study with null for members that are null
-     * @should return string of study
+     * <strong>Should</strong> return string of study with null for members that are null
+     * <strong>Should</strong> return string of study
      */
     @Override
     public String toString() {

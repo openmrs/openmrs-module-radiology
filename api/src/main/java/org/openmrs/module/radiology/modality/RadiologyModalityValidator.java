@@ -37,8 +37,8 @@ public class RadiologyModalityValidator implements Validator {
      * Determines if the command object being submitted is a valid type.
      *
      * @see Validator#supports(Class)
-     * @should return true for radiology modality objects
-     * @should return false for other object types
+     * <strong>Should</strong> return true for radiology modality objects
+     * <strong>Should</strong> return false for other object types
      */
     @Override
     public boolean supports(Class clazz) {
@@ -49,12 +49,12 @@ public class RadiologyModalityValidator implements Validator {
      * Checks the form object for any inconsistencies/errors.
      *
      * @see Validator#validate(Object, Errors)
-     * @should fail validation if radiology modality is null
-     * @should fail validation if ae title is null or empty or whitespaces only
-     * @should fail validation if name is null or empty or whitespaces only
-     * @should fail validation if retire reason is null or empty if retire is true and set retired to false
-     * @should fail validation if field lengths are not correct
-     * @should pass validation if all fields are correct
+     * <strong>Should</strong> fail validation if radiology modality is null
+     * <strong>Should</strong> fail validation if ae title is null or empty or whitespaces only
+     * <strong>Should</strong> fail validation if name is null or empty or whitespaces only
+     * <strong>Should</strong> fail validation if retire reason is null or empty if retire is true and set retired to false
+     * <strong>Should</strong> fail validation if field lengths are not correct
+     * <strong>Should</strong> pass validation if all fields are correct
      */
     @Override
     public void validate(Object obj, Errors errors) {

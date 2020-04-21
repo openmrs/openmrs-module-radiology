@@ -39,10 +39,10 @@ class MetaTagsValidationEngine implements ValidationEngine<Elements> {
     
     /**
      * @see org.openmrs.module.radiology.report.template.ValidationEngine#run(Object)
-     * @should return validation result with no errors if subject passes all checks
-     * @should return validation result with error for meta element charset attribute if not present in subject
-     * @should return validation result with error for meta element charset attribute if present more than once in subject
-     * @should return validation result with error for meta element dublin core if no meta element with name attribute is present in subject
+     * <strong>Should</strong> return validation result with no errors if subject passes all checks
+     * <strong>Should</strong> return validation result with error for meta element charset attribute if not present in subject
+     * <strong>Should</strong> return validation result with error for meta element charset attribute if present more than once in subject
+     * <strong>Should</strong> return validation result with error for meta element dublin core if no meta element with name attribute is present in subject
      */
     @Override
     public ValidationResult run(Elements subject) {

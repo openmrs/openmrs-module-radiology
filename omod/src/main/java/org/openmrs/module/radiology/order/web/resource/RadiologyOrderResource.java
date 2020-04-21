@@ -34,9 +34,9 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource#getRepresentationDescription(org.openmrs.module.webservices.rest.web.representation.Representation)
-     * @should return default representation given instance of defaultrepresentation
-     * @should return full representation given instance of fullrepresentation
-     * @should return null for representation other then default or full
+     * <strong>Should</strong> return default representation given instance of defaultrepresentation
+     * <strong>Should</strong> return full representation given instance of fullrepresentation
+     * <strong>Should</strong> return null for representation other then default or full
      */
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
@@ -97,7 +97,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getResourceVersion()
-     * @should return supported resource version
+     * <strong>Should</strong> return supported resource version
      */
     @Override
     public String getResourceVersion() {
@@ -107,7 +107,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getByUniqueId(java.lang.String)
-     * @should return radiology order given its uuid
+     * <strong>Should</strong> return radiology order given its uuid
      */
     @Override
     public RadiologyOrder getByUniqueId(String uniqueId) {
@@ -121,8 +121,8 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
      * 
      * @param radiologyOrder the radiology order of which the display string shall be returned
      * @return the accession number and the concept name of given radiology order
-     * @should return accession number and concept name of given radiology order
-     * @should return no concept string if given radiologyOrders concept is null
+     * <strong>Should</strong> return accession number and concept name of given radiology order
+     * <strong>Should</strong> return no concept string if given radiologyOrders concept is null
      */
     @PropertyGetter("display")
     public String getDisplayString(RadiologyOrder radiologyOrder) {
@@ -138,7 +138,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#newDelegate()
-     * @should throw ResourceDoesNotSupportOperationException
+     * <strong>Should</strong> throw ResourceDoesNotSupportOperationException
      */
     @Override
     public RadiologyOrder newDelegate() throws ResourceDoesNotSupportOperationException {
@@ -148,7 +148,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingResourceHandler#save(java.lang.Object)
-     * @should throw ResourceDoesNotSupportOperationException
+     * <strong>Should</strong> throw ResourceDoesNotSupportOperationException
      */
     @Override
     public RadiologyOrder save(RadiologyOrder delegate) throws ResourceDoesNotSupportOperationException {
@@ -159,7 +159,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#delete(java.lang.Object,
      *      java.lang.String, org.openmrs.module.webservices.rest.web.RequestContext)
-     * @should throw ResourceDoesNotSupportOperationException
+     * <strong>Should</strong> throw ResourceDoesNotSupportOperationException
      */
     @Override
     protected void delete(RadiologyOrder delegate, String reason, RequestContext context)
@@ -171,7 +171,7 @@ public class RadiologyOrderResource extends DataDelegatingCrudResource<Radiology
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#purge(java.lang.Object,
      *      org.openmrs.module.webservices.rest.web.RequestContext)
-     * @should throw ResourceDoesNotSupportOperationException
+     * <strong>Should</strong> throw ResourceDoesNotSupportOperationException
      */
     @Override
     public void purge(RadiologyOrder delegate, RequestContext context) throws ResourceDoesNotSupportOperationException {

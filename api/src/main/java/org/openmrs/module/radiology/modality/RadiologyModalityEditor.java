@@ -29,10 +29,10 @@ public class RadiologyModalityEditor extends PropertyEditorSupport {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     
     /**
-     * @should set value to radiology modality whos id matches given text
-     * @should set value to radiology modality whos uuid matches given text
-     * @should throw illegal argument exception for radiology modality not found
-     * @should return null for empty text
+     * <strong>Should</strong> set value to radiology modality whos id matches given text
+     * <strong>Should</strong> set value to radiology modality whos uuid matches given text
+     * <strong>Should</strong> throw illegal argument exception for radiology modality not found
+     * <strong>Should</strong> return null for empty text
      *
      * @see PropertyEditorSupport#setAsText(String)
      */
@@ -56,8 +56,8 @@ public class RadiologyModalityEditor extends PropertyEditorSupport {
     }
     
     /**
-     * @should return empty string if value does not contain a radiology modality
-     * @should return radiology modality id if value does contain a radiology modality
+     * <strong>Should</strong> return empty string if value does not contain a radiology modality
+     * <strong>Should</strong> return radiology modality id if value does contain a radiology modality
      *
      * @see PropertyEditorSupport#getAsText()
      */

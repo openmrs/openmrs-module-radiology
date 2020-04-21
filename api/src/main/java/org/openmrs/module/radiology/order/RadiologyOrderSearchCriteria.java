@@ -193,13 +193,13 @@ public class RadiologyOrderSearchCriteria {
          * Create an {@link RadiologyOrderSearchCriteria} with the properties of this builder instance.
          * 
          * @return a new search criteria instance
-         * @should create a new radiology order search criteria instance with patient if patient is set
-         * @should create a new radiology order search criteria instance with include voided set to true if voided orders should be included
-         * @should create a new radiology order search criteria instance with urgency if urgency is set
-         * @should create a new radiology order search criteria instance with from effective start date if from effective start date is set
-         * @should create a new radiology order search criteria instance with to effective start date if to effective start date is set
-         * @should create a new radiology order search criteria instance with accession number if accession number is set
-         * @should create a new radiology order search criteria instance with orderer if orderer is set
+         * <strong>Should</strong> create a new radiology order search criteria instance with patient if patient is set
+         * <strong>Should</strong> create a new radiology order search criteria instance with include voided set to true if voided orders should be included
+         * <strong>Should</strong> create a new radiology order search criteria instance with urgency if urgency is set
+         * <strong>Should</strong> create a new radiology order search criteria instance with from effective start date if from effective start date is set
+         * <strong>Should</strong> create a new radiology order search criteria instance with to effective start date if to effective start date is set
+         * <strong>Should</strong> create a new radiology order search criteria instance with accession number if accession number is set
+         * <strong>Should</strong> create a new radiology order search criteria instance with orderer if orderer is set
          */
         public RadiologyOrderSearchCriteria build() {
             
