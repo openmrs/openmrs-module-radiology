@@ -1,5 +1,5 @@
 [main]
-host = https://www.transifex.com
+host = https://www.transifex.com/
 
 [OpenMRS.radiology-module]
 source_file = api/src/main/resources/messages.properties
