@@ -46,8 +46,8 @@ public class MrrtReportTemplateFormController {
      * @param mrrtReportTemplate
      *            the MrrtReportTemplate being requested
      * @return modelAndView of the report template form page containing the body content of template inside a model object
-     * @should return the model and view of the report template form page containing template body in model object
-     * @should return the model and view of the radiology dashboard page with error message if io exception is thrown
+     * <strong>Should</strong> return the model and view of the report template form page containing template body in model object
+     * <strong>Should</strong> return the model and view of the radiology dashboard page with error message if io exception is thrown
      */
     @RequestMapping(method = RequestMethod.GET, params = "templateId")
     public ModelAndView displayMrrtReportTemplate(HttpServletRequest request,

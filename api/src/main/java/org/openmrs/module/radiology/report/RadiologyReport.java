@@ -47,9 +47,9 @@ public class RadiologyReport extends BaseOpenmrsData {
      * @param radiologyOrder the radiology order which is being/was reported
      * @throws IllegalArgumentException if given radiology order is null
      * @throws IllegalArgumentException if given radiology order is not completed
-     * @should set radiology order to given radiology order and report status to claimed
-     * @should throw an illegal argument exception if given radiology order is null
-     * @should throw an illegal argument exception if given radiology order is not completed
+     * <strong>Should</strong> set radiology order to given radiology order and report status to claimed
+     * <strong>Should</strong> throw an illegal argument exception if given radiology order is null
+     * <strong>Should</strong> throw an illegal argument exception if given radiology order is not completed
      */
     public RadiologyReport(RadiologyOrder radiologyOrder) {
         

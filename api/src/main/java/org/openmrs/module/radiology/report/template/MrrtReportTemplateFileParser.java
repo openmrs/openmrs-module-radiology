@@ -23,10 +23,10 @@ public interface MrrtReportTemplateFileParser {
      * @param mrrtTemplate the mrrt template to parse
      * @return the mrrt report template
      * @throws IOException if one is thrown during validation
-     * @should return an mrrt template object if given template is valid
-     * @should store terms element in template object if they match a concept reference term in openmrs
-     * @should skip terms element in template file if no corresponding concept reference term was found
-     * @should ignore case when searching for a matching concept source
+     * <strong>Should</strong> return an mrrt template object if given template is valid
+     * <strong>Should</strong> store terms element in template object if they match a concept reference term in openmrs
+     * <strong>Should</strong> skip terms element in template file if no corresponding concept reference term was found
+     * <strong>Should</strong> ignore case when searching for a matching concept source
      */
     public MrrtReportTemplate parse(String mrrtTemplate) throws IOException;
 }

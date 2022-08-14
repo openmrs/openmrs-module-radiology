@@ -30,8 +30,8 @@ public class DiscontinuationOrderRequestValidator implements Validator {
      * Determines if the command object being submitted is a valid type
      *
      * @see org.springframework.validation.Validator#supports(java.lang.Class)
-     * @should return true only for discontinuation order request objects
-     * @should return false for other object types
+     * <strong>Should</strong> return true only for discontinuation order request objects
+     * <strong>Should</strong> return false for other object types
      */
     @Override
     public boolean supports(Class clazz) {
@@ -42,10 +42,10 @@ public class DiscontinuationOrderRequestValidator implements Validator {
      * Checks the form object for any inconsistencies/errors
      *
      * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-     * @should fail validation if discontinuation order request is null
-     * @should fail validation if orderer is null or empty or whitespaces only
-     * @should fail validation if reason non coded is null or empty or whitespaces only
-     * @should pass validation if all fields are correct
+     * <strong>Should</strong> fail validation if discontinuation order request is null
+     * <strong>Should</strong> fail validation if orderer is null or empty or whitespaces only
+     * <strong>Should</strong> fail validation if reason non coded is null or empty or whitespaces only
+     * <strong>Should</strong> pass validation if all fields are correct
      */
     @Override
     public void validate(Object obj, Errors errors) {

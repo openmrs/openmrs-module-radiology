@@ -36,8 +36,8 @@ public class RadiologyOrderValidator implements Validator {
      * Determines if the command object being submitted is a valid type
      *
      * @see org.springframework.validation.Validator#supports(java.lang.Class)
-     * @should return true for RadiologyOrder objects
-     * @should return false for other object types
+     * <strong>Should</strong> return true for RadiologyOrder objects
+     * <strong>Should</strong> return false for other object types
      */
     public boolean supports(Class clazz) {
         return RadiologyOrder.class.isAssignableFrom(clazz);
@@ -47,19 +47,19 @@ public class RadiologyOrderValidator implements Validator {
      * Checks the form object for any inconsistencies/errors
      *
      * @see org.springframework.validation.Validator#validate(java.lang.Object, org.springframework.validation.Errors)
-     * @should fail validation if radiologyOrder is null
-     * @should fail validation if voided is null
-     * @should fail validation if concept is null
-     * @should fail validation if patient is null
-     * @should fail validation if orderer is null
-     * @should fail validation if urgency is null
-     * @should fail validation if action is null
-     * @should fail validation if dateActivated after dateStopped
-     * @should fail validation if dateActivated after autoExpireDate
-     * @should fail validation if scheduledDate is set and urgency is not set as ON_SCHEDULED_DATE
-     * @should fail validation if scheduledDate is null when urgency is ON_SCHEDULED_DATE
-     * @should pass validation if all fields are correct
-     * @should not allow a future dateActivated
+     * <strong>Should</strong> fail validation if radiologyOrder is null
+     * <strong>Should</strong> fail validation if voided is null
+     * <strong>Should</strong> fail validation if concept is null
+     * <strong>Should</strong> fail validation if patient is null
+     * <strong>Should</strong> fail validation if orderer is null
+     * <strong>Should</strong> fail validation if urgency is null
+     * <strong>Should</strong> fail validation if action is null
+     * <strong>Should</strong> fail validation if dateActivated after dateStopped
+     * <strong>Should</strong> fail validation if dateActivated after autoExpireDate
+     * <strong>Should</strong> fail validation if scheduledDate is set and urgency is not set as ON_SCHEDULED_DATE
+     * <strong>Should</strong> fail validation if scheduledDate is null when urgency is ON_SCHEDULED_DATE
+     * <strong>Should</strong> pass validation if all fields are correct
+     * <strong>Should</strong> not allow a future dateActivated
      */
     public void validate(Object obj, Errors errors) {
         final RadiologyOrder radiologyOrder = (RadiologyOrder) obj;

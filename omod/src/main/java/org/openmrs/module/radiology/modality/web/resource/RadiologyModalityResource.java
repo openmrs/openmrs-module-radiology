@@ -36,7 +36,7 @@ public class RadiologyModalityResource extends MetadataDelegatingCrudResource<Ra
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getResourceVersion()
-     * @should return supported resource version
+     * <strong>Should</strong> return supported resource version
      */
     @Override
     public String getResourceVersion() {
@@ -46,9 +46,9 @@ public class RadiologyModalityResource extends MetadataDelegatingCrudResource<Ra
     
     /**
     * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource#getRepresentationDescription(org.openmrs.module.webservices.rest.web.representation.Representation)
-     * @should return default representation given instance of defaultrepresentation
-     * @should return full representation given instance of fullrepresentation
-     * @should return null for representation other then default or full
+     * <strong>Should</strong> return default representation given instance of defaultrepresentation
+     * <strong>Should</strong> return full representation given instance of fullrepresentation
+     * <strong>Should</strong> return null for representation other then default or full
      */
     @Override
     public DelegatingResourceDescription getRepresentationDescription(Representation rep) {
@@ -87,7 +87,7 @@ public class RadiologyModalityResource extends MetadataDelegatingCrudResource<Ra
      *
      * @param delegate the radiology modality of which the display string shall be returned
      * @return the ae title of given radiology order
-     * @should return ae title of given radiology modality
+     * <strong>Should</strong> return ae title of given radiology modality
      */
     @PropertyGetter("display")
     public String getDisplayString(RadiologyModality delegate) {
@@ -96,7 +96,7 @@ public class RadiologyModalityResource extends MetadataDelegatingCrudResource<Ra
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#getByUniqueId(String)
-     * @should return radiology modality given its uuid
+     * <strong>Should</strong> return radiology modality given its uuid
      */
     @Override
     public RadiologyModality getByUniqueId(String uniqueId) {
@@ -114,7 +114,7 @@ public class RadiologyModalityResource extends MetadataDelegatingCrudResource<Ra
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#save(Object)
-     * @should save given radiology modality
+     * <strong>Should</strong> save given radiology modality
      */
     @Override
     public RadiologyModality save(RadiologyModality delegate) {
@@ -124,7 +124,7 @@ public class RadiologyModalityResource extends MetadataDelegatingCrudResource<Ra
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#delete(Object, String, RequestContext)
-     * @should retire given radiology modality
+     * <strong>Should</strong> retire given radiology modality
      */
     @Override
     public void delete(RadiologyModality delegate, String reason, RequestContext context) throws ResponseException {
@@ -134,7 +134,7 @@ public class RadiologyModalityResource extends MetadataDelegatingCrudResource<Ra
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.BaseDelegatingResource#purge(Object, RequestContext)
-     * @should throw ResourceDoesNotSupportOperationException
+     * <strong>Should</strong> throw ResourceDoesNotSupportOperationException
      */
     @Override
     public void purge(RadiologyModality delegate, RequestContext context) throws ResponseException {
@@ -143,8 +143,8 @@ public class RadiologyModalityResource extends MetadataDelegatingCrudResource<Ra
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.impl.DelegatingCrudResource#doGetAll(RequestContext)
-     * @should return radiology modalities including retired ones if include all is true
-     * @should return radiology modalities excluding retired ones if include all is false
+     * <strong>Should</strong> return radiology modalities including retired ones if include all is true
+     * <strong>Should</strong> return radiology modalities excluding retired ones if include all is false
      */
     @Override
     protected NeedsPaging<RadiologyModality> doGetAll(RequestContext context) {

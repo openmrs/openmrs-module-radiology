@@ -23,7 +23,7 @@ public interface DicomUidGenerator {
      * Allows users of the {@code DicomUidGenerator} to validate their {@code root's} length before using this generator.
      * 
      * @return maximum allowed root length
-     * @should return maximum allowed root length
+     * <strong>Should</strong> return maximum allowed root length
      */
     public int getMaxRootLength();
     
@@ -37,15 +37,15 @@ public interface DicomUidGenerator {
      * @throws IllegalArgumentException if root is empty
      * @throws IllegalArgumentException if the root is not a valid UID
      * @throws IllegalArgumentException if the root exceeds the maximum length
-     * @should return a valid uid prefixed with root
-     * @should always return unique uids when called multiple times
-     * @should return a uid not exceeding 64 characters
-     * @should return a uid composed only of characters 0-9 separated by a dot
-     * @should return a uid with no non-significant leading zeros
-     * @should throw a null pointer exception if root is null
-     * @should throw an illegal argument exception if root is empty
-     * @should throw an illegal argument exception if root is not a valid UID
-     * @should throw an illegal argument exception if root exceeds the maximum length
+     * <strong>Should</strong> return a valid uid prefixed with root
+     * <strong>Should</strong> always return unique uids when called multiple times
+     * <strong>Should</strong> return a uid not exceeding 64 characters
+     * <strong>Should</strong> return a uid composed only of characters 0-9 separated by a dot
+     * <strong>Should</strong> return a uid with no non-significant leading zeros
+     * <strong>Should</strong> throw a null pointer exception if root is null
+     * <strong>Should</strong> throw an illegal argument exception if root is empty
+     * <strong>Should</strong> throw an illegal argument exception if root is not a valid UID
+     * <strong>Should</strong> throw an illegal argument exception if root exceeds the maximum length
      */
     public String getNewDicomUid(String root);
 }

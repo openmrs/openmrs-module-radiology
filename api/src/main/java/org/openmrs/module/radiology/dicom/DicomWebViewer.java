@@ -33,10 +33,10 @@ public class DicomWebViewer {
      * @param radiologyStudy RadiologyStudy for which DICOM web viewer URL should be created
      * @throws IllegalArgumentException given null
      * @throws IllegalArgumentException given a study with studyInstanceUid null
-     * @should return a url to open dicom images of the given study in the configured dicom viewer
-     * @should add query param server name to url if local server name is not blank
-     * @should throw an illegal argument exception given null
-     * @should throw an illegal argument exception given study with studyInstanceUid null
+     * <strong>Should</strong> return a url to open dicom images of the given study in the configured dicom viewer
+     * <strong>Should</strong> add query param server name to url if local server name is not blank
+     * <strong>Should</strong> throw an illegal argument exception given null
+     * <strong>Should</strong> throw an illegal argument exception given study with studyInstanceUid null
      */
     public String getDicomViewerUrl(RadiologyStudy radiologyStudy) {
         if (radiologyStudy == null) {

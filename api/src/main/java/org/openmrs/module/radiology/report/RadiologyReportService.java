@@ -47,11 +47,11 @@ public interface RadiologyReportService extends OpenmrsService {
      * @throws APIException if RadiologyStudy of given radiologyOrder is not completed
      * @throws APIException if given radiologyOrder has a claimed RadiologyReport
      * @throws APIException if given radiologyOrder has a completed RadiologyReport
-     * @should create a radiology order with report status claimed given a completed radiology order
-     * @should throw illegal argument exception if given null
-     * @should throw api exception if given radiology order is not completed
-     * @should throw api exception if given order has a claimed radiology report
-     * @should throw api exception if given order has a completed radiology report
+     * <strong>Should</strong> create a radiology order with report status claimed given a completed radiology order
+     * <strong>Should</strong> throw illegal argument exception if given null
+     * <strong>Should</strong> throw api exception if given radiology order is not completed
+     * <strong>Should</strong> throw api exception if given order has a claimed radiology report
+     * <strong>Should</strong> throw api exception if given order has a completed radiology report
      */
     @Authorized(RadiologyPrivileges.ADD_RADIOLOGY_REPORTS)
     public RadiologyReport createRadiologyReport(RadiologyOrder radiologyOrder);
@@ -68,12 +68,12 @@ public interface RadiologyReportService extends OpenmrsService {
      * @throws APIException if radiologyReport is completed
      * @throws APIException if radiologyReport is voided
      * @throws APIException if radiologyReport.radiologyOrder has a completed RadiologyReport
-     * @should save existing radiology report to the database and return it
-     * @should throw illegal argument exception if given null
-     * @should throw illegal argument exception if given radiology report with reportId null
-     * @should throw api exception if radiology report is completed
-     * @should throw api exception if radiology report is voided
-     * @should throw api exception if given radiology reports order has a completed radiology report
+     * <strong>Should</strong> save existing radiology report to the database and return it
+     * <strong>Should</strong> throw illegal argument exception if given null
+     * <strong>Should</strong> throw illegal argument exception if given radiology report with reportId null
+     * <strong>Should</strong> throw api exception if radiology report is completed
+     * <strong>Should</strong> throw api exception if radiology report is voided
+     * <strong>Should</strong> throw api exception if given radiology reports order has a completed radiology report
      */
     @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
     public RadiologyReport saveRadiologyReportDraft(RadiologyReport radiologyReport);
@@ -88,11 +88,11 @@ public interface RadiologyReportService extends OpenmrsService {
      * @throws IllegalArgumentException if radiologyReport reportId is null
      * @throws IllegalArgumentException if voidReason is null or contains only whitespaces
      * @throws APIException if radiologyReport is completed
-     * @should void the given radiology report
-     * @should throw illegal argument exception if given radiology report is null
-     * @should throw illegal argument exception if given radiology report with reportId null
-     * @should throw illegal argument exception if given void reason is null or contains only whitespaces
-     * @should throw api exception if radiology report is completed
+     * <strong>Should</strong> void the given radiology report
+     * <strong>Should</strong> throw illegal argument exception if given radiology report is null
+     * <strong>Should</strong> throw illegal argument exception if given radiology report with reportId null
+     * <strong>Should</strong> throw illegal argument exception if given void reason is null or contains only whitespaces
+     * <strong>Should</strong> throw api exception if radiology report is completed
      */
     @Authorized(RadiologyPrivileges.DELETE_RADIOLOGY_REPORTS)
     public RadiologyReport voidRadiologyReport(RadiologyReport radiologyReport, String voidReason);
@@ -108,14 +108,14 @@ public interface RadiologyReportService extends OpenmrsService {
      * @throws APIException if radiologyReport is completed
      * @throws APIException if radiologyReport is voided
      * @throws APIException if radiologyReport is not valid
-     * @should set the report date of the radiology report to the day the radiology report was completed
-     * @should set the radiology report status to complete
-     * @should throw illegal argument exception if given radiology report is null
-     * @should throw illegal argument exception if given radiology report with reportId null
-     * @should throw illegal argument exception if given radiology report with status null
-     * @should throw api exception if radiology report is completed
-     * @should throw api exception if radiology report is voided
-     * @should throw api exception if radiology report is not valid
+     * <strong>Should</strong> set the report date of the radiology report to the day the radiology report was completed
+     * <strong>Should</strong> set the radiology report status to complete
+     * <strong>Should</strong> throw illegal argument exception if given radiology report is null
+     * <strong>Should</strong> throw illegal argument exception if given radiology report with reportId null
+     * <strong>Should</strong> throw illegal argument exception if given radiology report with status null
+     * <strong>Should</strong> throw api exception if radiology report is completed
+     * <strong>Should</strong> throw api exception if radiology report is voided
+     * <strong>Should</strong> throw api exception if radiology report is not valid
      */
     @Authorized(RadiologyPrivileges.EDIT_RADIOLOGY_REPORTS)
     public RadiologyReport saveRadiologyReport(RadiologyReport radiologyReport);
@@ -126,9 +126,9 @@ public interface RadiologyReportService extends OpenmrsService {
      * @param reportId the report id of the wanted radiology report
      * @return the radiology report matching given report id
      * @throws IllegalArgumentException if given null
-     * @should return radiology report matching given report id
-     * @should return null if no match was found
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return radiology report matching given report id
+     * <strong>Should</strong> return null if no match was found
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
     public RadiologyReport getRadiologyReport(Integer reportId);
@@ -139,9 +139,9 @@ public interface RadiologyReportService extends OpenmrsService {
      * @param uuid the uuid of the radiology report
      * @return the radiology report matching given uuid
      * @throws IllegalArgumentException if given null
-     * @should return radiology report matching given uuid
-     * @should return null if no match was found
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return radiology report matching given uuid
+     * <strong>Should</strong> return null if no match was found
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
     public RadiologyReport getRadiologyReportByUuid(String uuid);
@@ -152,9 +152,9 @@ public interface RadiologyReportService extends OpenmrsService {
      * @param radiologyOrder the radiology order which should be checked for a claimed report
      * @return true if the radiology order has a claimed report and false otherwise
      * @throws IllegalArgumentException if given null
-     * @should return true if given radiology order has a claimed radiology report that is not voided
-     * @should return false if given radiology order has no claimed radiology report that is not voided
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return true if given radiology order has a claimed radiology report that is not voided
+     * <strong>Should</strong> return false if given radiology order has no claimed radiology report that is not voided
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
     public boolean hasRadiologyOrderClaimedRadiologyReport(RadiologyOrder radiologyOrder);
@@ -165,9 +165,9 @@ public interface RadiologyReportService extends OpenmrsService {
      * @param radiologyOrder the radiology order which should be checked for a completed report
      * @return true if the radiology order has a completed report and false otherwise
      * @throws IllegalArgumentException if given null
-     * @should return true if given radiology order has a completed radiology report
-     * @should return false if given radiology order has no completed radiology report
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return true if given radiology order has a completed radiology report
+     * <strong>Should</strong> return false if given radiology order has no completed radiology report
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
     public boolean hasRadiologyOrderCompletedRadiologyReport(RadiologyOrder radiologyOrder);
@@ -178,10 +178,10 @@ public interface RadiologyReportService extends OpenmrsService {
      * @param radiologyOrder the radiology order for which an active report should be returned
      * @return the active radiology report associated with given radiology order
      * @throws IllegalArgumentException if given null
-     * @should return a radiology report if given radiology order is associated with a report with status claimed
-     * @should return a radiology report if given radiology order is associated with a report with status completed
-     * @should return null if given radiology order is only associated with a voided report
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return a radiology report if given radiology order is associated with a report with status claimed
+     * <strong>Should</strong> return a radiology report if given radiology order is associated with a report with status completed
+     * <strong>Should</strong> return null if given radiology order is only associated with a voided report
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
     public RadiologyReport getActiveRadiologyReportByRadiologyOrder(RadiologyOrder radiologyOrder);
@@ -193,17 +193,17 @@ public interface RadiologyReportService extends OpenmrsService {
      * @param radiologyReportSearchCriteria the object containing search parameters
      * @return the radiology reports matching given criteria ordered by increasing report date
      * @throws IllegalArgumentException if given null
-     * @should return all radiology reports (including voided) matching the search query if include voided is set
-     * @should return all radiology reports within given date range if date to and date from are specified
-     * @should return all radiology reports with report date after or equal to from date if only date from is specified
-     * @should return all radiology reports with report date before or equal to to date if only date to is specified
-     * @should return empty list if from date after to date
-     * @should return empty search result if no report is in date range
-     * @should return all radiology reports for given principal results interpreter
-     * @should return empty search result if no report exists for principal results interpreter
-     * @should return all radiology reports with given status
-     * @should return empty search result if no report exists for given status
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return all radiology reports (including voided) matching the search query if include voided is set
+     * <strong>Should</strong> return all radiology reports within given date range if date to and date from are specified
+     * <strong>Should</strong> return all radiology reports with report date after or equal to from date if only date from is specified
+     * <strong>Should</strong> return all radiology reports with report date before or equal to to date if only date to is specified
+     * <strong>Should</strong> return empty list if from date after to date
+     * <strong>Should</strong> return empty search result if no report is in date range
+     * <strong>Should</strong> return all radiology reports for given principal results interpreter
+     * <strong>Should</strong> return empty search result if no report exists for principal results interpreter
+     * <strong>Should</strong> return all radiology reports with given status
+     * <strong>Should</strong> return empty search result if no report exists for given status
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_REPORTS)
     public List<RadiologyReport> getRadiologyReports(RadiologyReportSearchCriteria radiologyReportSearchCriteria);

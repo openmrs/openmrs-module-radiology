@@ -106,10 +106,10 @@ public class MrrtReportTemplateSearchCriteria {
          * Creates an {@code MrrtReportTemplateSearchCriteria} with properties of this builder instance.
          * 
          * @return a new search criteria instance
-         * @should create an mrrt report template search criteria instance with title if title is set
-         * @should create an mrrt report template search criteria instance with publisher if publisher is set
-         * @should create an mrrt report template search criteria instance with license if license is set
-         * @should create an mrrt report template search criteria instance with creator if creator is set
+         * <strong>Should</strong> create an mrrt report template search criteria instance with title if title is set
+         * <strong>Should</strong> create an mrrt report template search criteria instance with publisher if publisher is set
+         * <strong>Should</strong> create an mrrt report template search criteria instance with license if license is set
+         * <strong>Should</strong> create an mrrt report template search criteria instance with creator if creator is set
          */
         public MrrtReportTemplateSearchCriteria build() {
             return new MrrtReportTemplateSearchCriteria(this);

@@ -39,12 +39,12 @@ public class RadiologyOrderDetailsPortletController extends PortletController {
     /**
      * @see org.openmrs.web.controller.PortletController#populateModel(javax.servlet.http.HttpServletRequest,
      *      java.util.Map)
-     * @should populate model with radiology order if given order uuid model entry matches a radiology order and dicom viewer
+     * <strong>Should</strong> populate model with radiology order if given order uuid model entry matches a radiology order and dicom viewer
      *         url if radiology order is completed
-     * @should populate model with radiology order if given order uuid model entry matches a radiology order and no dicom
+     * <strong>Should</strong> populate model with radiology order if given order uuid model entry matches a radiology order and no dicom
      *         viewer url if radiology order is not completed
-     * @should not populate model with radiology order and dicom viewer url if no radiology order was found
-     * @should not populate model with radiology order and dicom viewer url if model has no entry for order uuid
+     * <strong>Should</strong> not populate model with radiology order and dicom viewer url if no radiology order was found
+     * <strong>Should</strong> not populate model with radiology order and dicom viewer url if model has no entry for order uuid
      */
     @Override
     protected void populateModel(HttpServletRequest request, Map<String, Object> model) {

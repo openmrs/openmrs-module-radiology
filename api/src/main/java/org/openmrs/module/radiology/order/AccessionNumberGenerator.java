@@ -20,7 +20,7 @@ public interface AccessionNumberGenerator {
      * therefore implementations need to be thread safe.
      * 
      * @return the new accession number
-     * @should always return a unique accession number when called multiple times
+     * <strong>Should</strong> always return a unique accession number when called multiple times
      */
     public String getNewAccessionNumber();
 }

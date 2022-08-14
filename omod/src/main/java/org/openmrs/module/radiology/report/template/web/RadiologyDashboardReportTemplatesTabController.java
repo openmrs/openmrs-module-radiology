@@ -49,7 +49,7 @@ public class RadiologyDashboardReportTemplatesTabController {
      * Handles get requests for radiology report templates tab.
      * 
      * @return model and view of the radiology report templates tab page
-     * @should return model and view of the radiology report templates tab page and set tab session attribute to radiology reports tab page
+     * <strong>Should</strong> return model and view of the radiology report templates tab page and set tab session attribute to radiology reports tab page
      */
     @RequestMapping(method = RequestMethod.GET)
     protected ModelAndView getRadiologyReportTemplatesTab(HttpServletRequest request) {
@@ -69,11 +69,11 @@ public class RadiologyDashboardReportTemplatesTabController {
      * @return model and view of the radiology dashboard report templates page with success or failure message in session
      *         attribute
      * @throws IOException when templateFile could not be read or is invalid
-     * @should give error message when template file is empty
-     * @should set error message in session when mrrt report template validation exception is thrown
-     * @should set error message in session when api exception is thrown
-     * @should set error message in session when io exception is thrown
-     * @should give success message when import was successful
+     * <strong>Should</strong> give error message when template file is empty
+     * <strong>Should</strong> set error message in session when mrrt report template validation exception is thrown
+     * <strong>Should</strong> set error message in session when api exception is thrown
+     * <strong>Should</strong> set error message in session when io exception is thrown
+     * <strong>Should</strong> give success message when import was successful
      */
     @RequestMapping(method = RequestMethod.POST, params = "uploadReportTemplate")
     protected ModelAndView uploadReportTemplate(HttpServletRequest request, @RequestParam MultipartFile templateFile)
@@ -120,8 +120,8 @@ public class RadiologyDashboardReportTemplatesTabController {
      * @param mrrtReportTemplate the MrrtReportTemplate to be deleted
      * @return model and view of the radiology dashboard report templates page with success or failure message in session
      *         attribute
-     * @should return a model and view of the radiology dashboard report templates page with a status message
-     * @should catch api exception and set error message in session 
+     * <strong>Should</strong> return a model and view of the radiology dashboard report templates page with a status message
+     * <strong>Should</strong> catch api exception and set error message in session 
      */
     @RequestMapping(method = RequestMethod.GET, params = "templateId")
     public ModelAndView deleteMrrtReportTemplate(HttpServletRequest request,

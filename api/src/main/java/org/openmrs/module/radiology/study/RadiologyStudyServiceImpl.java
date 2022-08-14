@@ -69,9 +69,9 @@ class RadiologyStudyServiceImpl extends BaseOpenmrsService implements RadiologyS
      * @throws IllegalArgumentException if global property DICOM UID org root is empty
      * @throws IllegalArgumentException if global property DICOM UID org root is not a valid UID
      * @throws IllegalArgumentException if global property DICOM UID org root exceeds the maximum length
-     * @should set the study instance uid of given radiology study to a valid dicom uid if null
-     * @should set the study instance uid of given radiology study to a valid dicom uid if only containing whitespaces
-     * @should not set the study instance uid of given radiology study if contains non whitespace characters
+     * <strong>Should</strong> set the study instance uid of given radiology study to a valid dicom uid if null
+     * <strong>Should</strong> set the study instance uid of given radiology study to a valid dicom uid if only containing whitespaces
+     * <strong>Should</strong> not set the study instance uid of given radiology study if contains non whitespace characters
      */
     private void setStudyInstanceUidIfBlank(RadiologyStudy radiologyStudy) {
         

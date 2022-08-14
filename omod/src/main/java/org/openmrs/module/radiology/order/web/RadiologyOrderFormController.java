@@ -85,7 +85,7 @@ public class RadiologyOrderFormController {
      * Handles requests for a new {@code RadiologyOrder}.
      * 
      * @return model and view containing new radiology order
-     * @should populate model and view with new radiology order
+     * <strong>Should</strong> populate model and view with new radiology order
      */
     @RequestMapping(method = RequestMethod.GET)
     protected ModelAndView getRadiologyOrderFormWithNewRadiologyOrder() {
@@ -105,7 +105,7 @@ public class RadiologyOrderFormController {
      * @param patient the existing patient which should be associated with a new radiology order
      *        returned in the model and view
      * @return model and view containing new radiology order
-     * @should populate model and view with new radiology order prefilled with given patient
+     * <strong>Should</strong> populate model and view with new radiology order prefilled with given patient
      */
     @RequestMapping(method = RequestMethod.GET, params = "patientId")
     protected ModelAndView
@@ -124,11 +124,11 @@ public class RadiologyOrderFormController {
      * 
      * @param order the order of an existing radiology order which should be returned
      * @return model and view containing radiology order
-     * @should populate model and view with existing radiology order if given order id matches a
+     * <strong>Should</strong> populate model and view with existing radiology order if given order id matches a
      *         radiology order and no dicom viewer url if order is not completed
-     * @should populate model and view with existing radiology order if given order id matches a
+     * <strong>Should</strong> populate model and view with existing radiology order if given order id matches a
      *         radiology order and dicom viewer url if order completed
-     * @should populate model and view with existing order if given order id only matches an order
+     * <strong>Should</strong> populate model and view with existing order if given order id only matches an order
      *         and not a radiology order
      */
     @RequestMapping(method = RequestMethod.GET, params = "orderId")
@@ -162,10 +162,10 @@ public class RadiologyOrderFormController {
      * @param resultRadiologyOrder the binding result for given radiology order
      * @return the model and view for the radiology order form containing binding result errors if given radiology order is
      *         not valid
-     * @should save given radiology order if valid and set http session attribute openmrs message to order saved and redirect
+     * <strong>Should</strong> save given radiology order if valid and set http session attribute openmrs message to order saved and redirect
      *         to the new radiology order
-     * @should not save given radiology order if it is not valid and not redirect
-     * @should not redirect and set session attribute with openmrs error if api exception is thrown by place radiology
+     * <strong>Should</strong> not save given radiology order if it is not valid and not redirect
+     * <strong>Should</strong> not redirect and set session attribute with openmrs error if api exception is thrown by place radiology
      *         order
      */
     @RequestMapping(method = RequestMethod.POST, params = "saveRadiologyOrder")
@@ -208,9 +208,9 @@ public class RadiologyOrderFormController {
      * @param resultDiscontinuationOrderRequest the binding result for given discontinuation order request
      * @return the model and view populated with discontinuation order
      * @throws Exception
-     * @should discontinue non discontinued radiology order and redirect to discontinuation order
-     * @should not discontinue given radiology order and not redirect if discontinuation order request is not valid
-     * @should not redirect and set session attribute with openmrs error if api exception is thrown by discontinue radiology
+     * <strong>Should</strong> discontinue non discontinued radiology order and redirect to discontinuation order
+     * <strong>Should</strong> not discontinue given radiology order and not redirect if discontinuation order request is not valid
+     * <strong>Should</strong> not redirect and set session attribute with openmrs error if api exception is thrown by discontinue radiology
      *         order
      */
     @RequestMapping(method = RequestMethod.POST, params = "discontinueOrder")
@@ -253,11 +253,11 @@ public class RadiologyOrderFormController {
      * @param modelAndView the model and view to which an object indicating if a report needs to be created is added
      * @param order the order to be checked for the need of a radiology report
      * @return true if a radiology report needs to be created and false otherwise
-     * @should return false if order is not a radiology order
-     * @should return false if radiology order is not completed
-     * @should return false if radiology order is completed but has a claimed report
-     * @should return false if radiology order is completed but has a completed report
-     * @should return true if radiology order is completed and has no claimed report
+     * <strong>Should</strong> return false if order is not a radiology order
+     * <strong>Should</strong> return false if radiology order is not completed
+     * <strong>Should</strong> return false if radiology order is completed but has a claimed report
+     * <strong>Should</strong> return false if radiology order is completed but has a completed report
+     * <strong>Should</strong> return true if radiology order is completed and has no claimed report
      */
     private boolean radiologyReportNeedsToBeCreated(ModelAndView modelAndView, Order order) {
         
