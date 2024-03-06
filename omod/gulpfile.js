@@ -1,83 +1,212 @@
-var gulp = require('gulp');
-var mainBowerFiles = require('main-bower-files');
-var uglify = require('gulp-uglify');
-var cleanCSS = require('gulp-clean-css')
-var runSequence = require('run-sequence');
-var rename = require('gulp-rename');
-var sourcemaps = require('gulp-sourcemaps');
+#!/usr/bin/env node
 
-var vendorPath = 'target/classes/web/module/resources/vendor';
+'use strict';
+var gutil = require('gulp-util');
+var prettyTime = require('pretty-hrtime');
+var chalk = require('chalk');
+var semver = require('semver');
+var archy = require('archy');
+var Liftoff = require('liftoff');
+var tildify = require('tildify');
+var interpret = require('interpret');
+var v8flags = require('v8flags');
+var completion = require('../lib/completion');
+var argv = require('minimist')(process.argv.slice(2));
+var taskTree = require('../lib/taskTree');
 
-// Copy javascript files to vendor folder and uglify them
-gulp.task('lib-js-files', function() {
-    gulp.src(mainBowerFiles('**/*.js'), {
-            base: 'bower_components'
-        })
-        .pipe(uglify())
-        .pipe(rename({extname: '.min.js'}))
-        .pipe(gulp.dest(vendorPath));
+// Set env var for ORIGINAL cwd
+// before anything touches it
+process.env.INIT_CWD = process.cwd();
+
+var cli = new Liftoff({
+  name: 'gulp',
+  completions: completion,
+  extensions: interpret.jsVariants,
+  v8flags: v8flags,
 });
 
-// Copy css files to vendor folder and minify them
-gulp.task('lib-css-files', function() {
-    gulp.src(mainBowerFiles('**/*.css'), {
-            base: 'bower_components'
-        })
-        .pipe(cleanCSS())
-        .pipe(rename({extname: '.min.css'}))
-        .pipe(gulp.dest(vendorPath));
-    gulp.src('bower_components/tinymce/skins/lightgray/*.min.css')
-        .pipe(gulp.dest(vendorPath+'/tinymce/skins/lightgray'));
+// Exit with 0 or 1
+var failed = false;
+process.once('exit', function(code) {
+  if (code === 0 && failed) {
+    process.exit(1);
+  }
 });
 
-// Copy javascript files to vendor folder, uglify them and create sourcemaps
-gulp.task('lib-js-files-with-sourcemaps', function() {
-    gulp.src(mainBowerFiles('**/*.js'), {
-            base: 'bower_components'
-        })
-        .pipe(sourcemaps.init())
-        .pipe(uglify())
-        .pipe(rename({extname: '.min.js'}))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(vendorPath));
+// Parse those args m8
+var cliPackage = require('../package');
+var versionFlag = argv.v || argv.version;
+var tasksFlag = argv.T || argv.tasks;
+var tasks = argv._;
+var toRun = tasks.length ? tasks : ['default'];
+
+// This is a hold-over until we have a better logging system
+// with log levels
+var simpleTasksFlag = argv['tasks-simple'];
+var shouldLog = !argv.silent && !simpleTasksFlag;
+
+if (!shouldLog) {
+  gutil.log = function() {};
+}
+
+cli.on('require', function(name) {
+  gutil.log('Requiring external module', chalk.magenta(name));
 });
 
-// Copy css files to vendor folder, minify them and create sourcemaps
-gulp.task('lib-css-files-with-sourcemaps', function() {
-    gulp.src(mainBowerFiles('**/*.css'), {
-            base: 'bower_components'
-        })
-        .pipe(sourcemaps.init())
-        .pipe(cleanCSS())
-        .pipe(rename({extname: '.min.css'}))
-        .pipe(sourcemaps.write('.'))
-        .pipe(gulp.dest(vendorPath));
-    gulp.src('bower_components/tinymce/skins/lightgray/*.min.css')
-        .pipe(gulp.dest(vendorPath+'/tinymce/skins/lightgray'));
+cli.on('requireFail', function(name) {
+  gutil.log(chalk.red('Failed to load external module'), chalk.magenta(name));
 });
 
-// Copy gif files to vendor folder
-gulp.task('lib-gif-files', function() {
-    gulp.src(mainBowerFiles('**/*.gif'), {
-            base: 'bower_components'
-        })
-        .pipe(gulp.dest(vendorPath));
+cli.on('respawn', function(flags, child) {
+  var nodeFlags = chalk.magenta(flags.join(', '));
+  var pid = chalk.magenta(child.pid);
+  gutil.log('Node flags detected:', nodeFlags);
+  gutil.log('Respawned to PID:', pid);
 });
 
-// Copy fonts to vendor folder
-gulp.task('lib-font-files', function() {
-    gulp.src(mainBowerFiles('**/*.{otf,eot,svg,ttf,woff,woff2}'), {
-            base: 'bower_components'
-        })
-        .pipe(gulp.dest(vendorPath));
-});
+cli.launch({
+  cwd: argv.cwd,
+  configPath: argv.gulpfile,
+  require: argv.require,
+  completion: argv.completion,
+}, handleArguments);
 
-// Default Task
-gulp.task('default', function() {
-    runSequence('lib-js-files', 'lib-css-files', 'lib-font-files', 'lib-gif-files');
-});
+// The actual logic
+function handleArguments(env) {
+  if (versionFlag && tasks.length === 0) {
+    gutil.log('CLI version', cliPackage.version);
+    if (env.modulePackage && typeof env.modulePackage.version !== 'undefined') {
+      gutil.log('Local version', env.modulePackage.version);
+    }
+    process.exit(0);
+  }
 
-// Development Task
-gulp.task('dev', function() {
-    runSequence('lib-js-files-with-sourcemaps', 'lib-css-files-with-sourcemaps', 'lib-font-files', 'lib-gif-files');
-});
+  if (!env.modulePath) {
+    gutil.log(
+      chalk.red('Local gulp not found in'),
+      chalk.magenta(tildify(env.cwd))
+    );
+    gutil.log(chalk.red('Try running: npm install gulp'));
+    process.exit(1);
+  }
+
+  if (!env.configPath) {
+    gutil.log(chalk.red('No gulpfile found'));
+    process.exit(1);
+  }
+
+  // Check for semver difference between cli and local installation
+  if (semver.gt(cliPackage.version, env.modulePackage.version)) {
+    gutil.log(chalk.red('Warning: gulp version mismatch:'));
+    gutil.log(chalk.red('Global gulp is', cliPackage.version));
+    gutil.log(chalk.red('Local gulp is', env.modulePackage.version));
+  }
+
+  // Chdir before requiring gulpfile to make sure
+  // we let them chdir as needed
+  if (process.cwd() !== env.cwd) {
+    process.chdir(env.cwd);
+    gutil.log(
+      'Working directory changed to',
+      chalk.magenta(tildify(env.cwd))
+    );
+  }
+
+  // This is what actually loads up the gulpfile
+  require(env.configPath);
+  gutil.log('Using gulpfile', chalk.magenta(tildify(env.configPath)));
+
+  var gulpInst = require(env.modulePath);
+  logEvents(gulpInst);
+
+  process.nextTick(function() {
+    if (simpleTasksFlag) {
+      return logTasksSimple(env, gulpInst);
+    }
+    if (tasksFlag) {
+      return logTasks(env, gulpInst);
+    }
+    gulpInst.start.apply(gulpInst, toRun);
+  });
+}
+
+function logTasks(env, localGulp) {
+  var tree = taskTree(localGulp.tasks);
+  tree.label = 'Tasks for ' + chalk.magenta(tildify(env.configPath));
+  archy(tree)
+    .split('\n')
+    .forEach(function(v) {
+      if (v.trim().length === 0) {
+        return;
+      }
+      gutil.log(v);
+    });
+}
+
+function logTasksSimple(env, localGulp) {
+  console.log(Object.keys(localGulp.tasks)
+    .join('\n')
+    .trim());
+}
+
+// Format orchestrator errors
+function formatError(e) {
+  if (!e.err) {
+    return e.message;
+  }
+
+  // PluginError
+  if (typeof e.err.showStack === 'boolean') {
+    return e.err.toString();
+  }
+
+  // Normal error
+  if (e.err.stack) {
+    return e.err.stack;
+  }
+
+  // Unknown (string, number, etc.)
+  return new Error(String(e.err)).stack;
+}
+
+// Wire up logging events
+function logEvents(gulpInst) {
+
+  // Total hack due to poor error management in orchestrator
+  gulpInst.on('err', function() {
+    failed = true;
+  });
+
+  gulpInst.on('task_start', function(e) {
+    // TODO: batch these
+    // so when 5 tasks start at once it only logs one time with all 5
+    gutil.log('Starting', '\'' + chalk.cyan(e.task) + '\'...');
+  });
+
+  gulpInst.on('task_stop', function(e) {
+    var time = prettyTime(e.hrDuration);
+    gutil.log(
+      'Finished', '\'' + chalk.cyan(e.task) + '\'',
+      'after', chalk.magenta(time)
+    );
+  });
+
+  gulpInst.on('task_err', function(e) {
+    var msg = formatError(e);
+    var time = prettyTime(e.hrDuration);
+    gutil.log(
+      '\'' + chalk.cyan(e.task) + '\'',
+      chalk.red('errored after'),
+      chalk.magenta(time)
+    );
+    gutil.log(msg);
+  });
+
+  gulpInst.on('task_not_found', function(err) {
+    gutil.log(
+      chalk.red('Task \'' + err.task + '\' is not in your gulpfile')
+    );
+    gutil.log('Please check the documentation for proper gulpfile formatting');
+    process.exit(1);
+  });
+}
