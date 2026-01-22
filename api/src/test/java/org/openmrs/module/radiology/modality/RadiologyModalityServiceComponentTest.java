@@ -149,7 +149,8 @@ public class RadiologyModalityServiceComponentTest extends BaseModuleContextSens
                 radiologyModalityService.getRadiologyModalityByUuid(EXISTING_RADIOLOGY_MODALITY_UUID);
         
         expectedException.expect(IllegalArgumentException.class);
-        expectedException.expectMessage("Reason for deletion cannot be empty");
+        expectedException.expectMessage(Context.getMessageSourceService()
+                .getMessage("general.voidReason.empty"));
         radiologyModalityService.retireRadiologyModality(radiologyModality, null);
     }
     
