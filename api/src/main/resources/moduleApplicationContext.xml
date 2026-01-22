@@ -62,7 +62,7 @@
 		<property name="moduleService">
 			<list merge="true">
 				<value>org.openmrs.module.radiology.order.RadiologyOrderService</value>
-				<ref local="radiologyOrderService" />
+				<ref bean="radiologyOrderService" />
 			</list>
 		</property>
 	</bean>
@@ -97,7 +97,7 @@
 		<property name="moduleService">
 			<list merge="true">
 				<value>org.openmrs.module.radiology.modality.RadiologyModalityService</value>
-				<ref local="radiologyModalityService" />
+				<ref bean="radiologyModalityService" />
 			</list>
 		</property>
 	</bean>
@@ -137,7 +137,7 @@
 		<property name="moduleService">
 			<list merge="true">
 				<value>org.openmrs.module.radiology.study.RadiologyStudyService</value>
-				<ref local="radiologyStudyService" />
+				<ref bean="radiologyStudyService" />
 			</list>
 		</property>
 	</bean>
@@ -172,7 +172,7 @@
 		<property name="moduleService">
 			<list merge="true">
 				<value>org.openmrs.module.radiology.report.RadiologyReportService</value>
-				<ref local="radiologyReportService" />
+				<ref bean="radiologyReportService" />
 			</list>
 		</property>
 	</bean>
@@ -209,7 +209,7 @@
 		<property name="moduleService">
 			<list merge="true">
 				<value>org.openmrs.module.radiology.report.template.MrrtReportTemplateService</value>
-				<ref local="mrrtReportTemplateService" />
+				<ref bean="mrrtReportTemplateService" />
 			</list>
 		</property>
 	</bean>
