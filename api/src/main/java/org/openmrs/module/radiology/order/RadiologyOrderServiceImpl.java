@@ -102,7 +102,7 @@ class RadiologyOrderServiceImpl extends BaseOpenmrsService implements RadiologyO
      * @param provider the encounter provider
      * @param encounterDateTime the encounter date
      * @return radiology order encounter for given parameters
-     * @should create radiology order encounter
+     * <strong>Should</strong> create radiology order encounter
      */
     private Encounter saveRadiologyOrderEncounter(Patient patient, Provider provider, Date encounterDateTime) {
         final Encounter radiologyOrderEncounter = new Encounter();

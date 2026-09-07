@@ -27,8 +27,8 @@ public enum PerformedProcedureStepStatus {
      * @param performedProcedureStepStatus PerformedProcedureStepStatus for which the name is
      *        returned
      * @return name of given PerformedProcedureStepStatus
-     * @should return name given performed procedure step status
-     * @should return unknown given null
+     * <strong>Should</strong> return name given performed procedure step status
+     * <strong>Should</strong> return unknown given null
      */
     public static String getNameOrUnknown(PerformedProcedureStepStatus performedProcedureStepStatus) {
         if (performedProcedureStepStatus == null) {
@@ -44,9 +44,9 @@ public enum PerformedProcedureStepStatus {
      * @param displayName name defined by DICOM standard for which the PerformedProcedureStepStatus is returned
      * @return PerformedProcedureStepStatus PerformedProcedureStepStatus matching given displayName
      * @throws IllegalArgumentException
-     * @should return performed procedure step status given display name
-     * @should return null given undefined display name
-     * @should throw IllegalArgumentException given null
+     * <strong>Should</strong> return performed procedure step status given display name
+     * <strong>Should</strong> return null given undefined display name
+     * <strong>Should</strong> throw IllegalArgumentException given null
      */
     public static PerformedProcedureStepStatus getMatchForDisplayName(String displayName) throws IllegalArgumentException {
         if (displayName == null) {

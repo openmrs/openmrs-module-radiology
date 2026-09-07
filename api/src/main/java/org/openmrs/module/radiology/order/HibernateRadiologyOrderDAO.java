@@ -49,12 +49,12 @@ class HibernateRadiologyOrderDAO implements RadiologyOrderDAO {
      * @throws APIException if global property radiology.nextAccessionNumberSeed is missing
      * @throws APIException if global property radiology.nextAccessionNumberSeed value is empty or only contains whitespaces
      * @throws APIException if global property radiology.nextAccessionNumberSeed value cannot be parsed to Long
-     * @should return the next accession number seed stored as global property radiology next accession number and increment
+     * <strong>Should</strong> return the next accession number seed stored as global property radiology next accession number and increment
      *         the global property value
-     * @should throw an api exception if global property radiology next accession number seed is missing
-     * @should throw an api exception if global property radiology next accession number seed value is empty or only contains
+     * <strong>Should</strong> throw an api exception if global property radiology next accession number seed is missing
+     * <strong>Should</strong> throw an api exception if global property radiology next accession number seed value is empty or only contains
      *         whitespaces
-     * @should throw an api exception if global property radiology next accession number seed value value cannot be parsed to
+     * <strong>Should</strong> throw an api exception if global property radiology next accession number seed value value cannot be parsed to
      *         long
      */
     @Override

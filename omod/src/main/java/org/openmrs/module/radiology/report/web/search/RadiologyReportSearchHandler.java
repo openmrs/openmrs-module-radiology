@@ -79,18 +79,18 @@ public class RadiologyReportSearchHandler implements SearchHandler {
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search(RequestContext)
      * @throws IllegalArgumentException if report status doesn't exist
-     * @should return all radiology reports (including voided) matching the search query if include all is set
-     * @should return all radiology reports within given date range if date to and date from are specified
-     * @should return all radiology reports with report date after or equal to from date if only date from is specified
-     * @should return all radiology reports with report date before or equal to to date if only date to is specified
-     * @should return empty search result if no report is in date range
-     * @should return all radiology reports for given principal results interpreter
-     * @should return empty search result if no report exists for principal results interpreter
-     * @should return empty search result if principal results interpreter cannot be found
-     * @should return all radiology reports with given status
-     * @should return empty search result if no report exists for given status
-     * @should throw illegal argument exception if report status doesn't exist
-     * @should return all radiology reports matching the search query and totalCount if requested
+     * <strong>Should</strong> return all radiology reports (including voided) matching the search query if include all is set
+     * <strong>Should</strong> return all radiology reports within given date range if date to and date from are specified
+     * <strong>Should</strong> return all radiology reports with report date after or equal to from date if only date from is specified
+     * <strong>Should</strong> return all radiology reports with report date before or equal to to date if only date to is specified
+     * <strong>Should</strong> return empty search result if no report is in date range
+     * <strong>Should</strong> return all radiology reports for given principal results interpreter
+     * <strong>Should</strong> return empty search result if no report exists for principal results interpreter
+     * <strong>Should</strong> return empty search result if principal results interpreter cannot be found
+     * <strong>Should</strong> return all radiology reports with given status
+     * <strong>Should</strong> return empty search result if no report exists for given status
+     * <strong>Should</strong> throw illegal argument exception if report status doesn't exist
+     * <strong>Should</strong> return all radiology reports matching the search query and totalCount if requested
      */
     @Override
     public PageableResult search(RequestContext context) throws ResponseException {

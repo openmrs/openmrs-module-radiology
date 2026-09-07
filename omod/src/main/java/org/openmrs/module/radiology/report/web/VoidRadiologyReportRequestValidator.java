@@ -30,8 +30,8 @@ public class VoidRadiologyReportRequestValidator implements Validator {
      * Determines if the command object being submitted is a valid type
      *
      * @see Validator#supports(Class)
-     * @should return true only for void radiology report request objects
-     * @should return false for other object types
+     * <strong>Should</strong> return true only for void radiology report request objects
+     * <strong>Should</strong> return false for other object types
      */
     @Override
     public boolean supports(Class clazz) {
@@ -42,8 +42,8 @@ public class VoidRadiologyReportRequestValidator implements Validator {
      * Checks the form object for any inconsistencies/errors
      *
      * @see Validator#validate(Object, Errors)
-     * @should fail validation if void reason is null or empty or whitespaces only
-     * @should pass validation if all fields are correct
+     * <strong>Should</strong> fail validation if void reason is null or empty or whitespaces only
+     * <strong>Should</strong> pass validation if all fields are correct
      */
     @Override
     public void validate(Object obj, Errors errors) {

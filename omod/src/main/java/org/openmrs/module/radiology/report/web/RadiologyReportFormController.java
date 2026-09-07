@@ -65,7 +65,7 @@ public class RadiologyReportFormController {
      * 
      * @param radiologyOrder the radiology order for which a radiology report will be created
      * @return the model and view redirecting to the newly created radiology report
-     * @should create a new radiology report for given radiology order and redirect to its radiology report form
+     * <strong>Should</strong> create a new radiology report for given radiology order and redirect to its radiology report form
      */
     @RequestMapping(method = RequestMethod.GET, params = "orderId")
     protected ModelAndView createRadiologyReport(@RequestParam("orderId") RadiologyOrder radiologyOrder) {
@@ -80,7 +80,7 @@ public class RadiologyReportFormController {
      * 
      * @param radiologyReport the radiology report which is requested
      * @return the model and view containing radiology report for given radiology report id
-     * @should populate model and view with given radiology report
+     * <strong>Should</strong> populate model and view with given radiology report
      */
     @RequestMapping(method = RequestMethod.GET, params = "reportId")
     protected ModelAndView
@@ -98,9 +98,9 @@ public class RadiologyReportFormController {
      * @param request the http servlet request
      * @param radiologyReport the radiology report to be saved
      * @return the model and view containing saved radiology report draft
-     * @should save given radiology report and set http session attribute openmrs message to report draft saved and redirect
+     * <strong>Should</strong> save given radiology report and set http session attribute openmrs message to report draft saved and redirect
      *         to its report form
-     * @should not redirect and set session attribute with openmrs error if api exception is thrown by save radiology
+     * <strong>Should</strong> not redirect and set session attribute with openmrs error if api exception is thrown by save radiology
      *         report draft
      */
     @RequestMapping(method = RequestMethod.POST, params = "saveRadiologyReportDraft")
@@ -136,10 +136,10 @@ public class RadiologyReportFormController {
      * @param bindingResult the binding result for the void radiology report request
      * @return the model and view with redirect to report form if voiding was successful, otherwise the
      *         model and view contains binding result errors
-     * @should void given radiology report and set http session attribute openmrs message to report voided and redirect
+     * <strong>Should</strong> void given radiology report and set http session attribute openmrs message to report voided and redirect
      *         to its report form
-     * @should not void and not redirect given invalid void radiology report request
-     * @should not redirect and set session attribute with openmrs error if api exception is thrown by void radiology
+     * <strong>Should</strong> not void and not redirect given invalid void radiology report request
+     * <strong>Should</strong> not redirect and set session attribute with openmrs error if api exception is thrown by void radiology
      *         report
      */
     @RequestMapping(method = RequestMethod.POST, params = "voidRadiologyReport")
@@ -179,10 +179,10 @@ public class RadiologyReportFormController {
      * @param bindingResult the binding result for the radiology report
      * @return the model and view with redirect to report form if complete was successful, otherwise the
      *         model and view contains binding result errors
-     * @should complete given radiology report if valid and set http session attribute openmrs message to report completed and redirect
+     * <strong>Should</strong> complete given radiology report if valid and set http session attribute openmrs message to report completed and redirect
      *         to its report form
-     * @should not complete and redirect given invalid radiology report
-     * @should not redirect and set session attribute with openmrs error if api exception is thrown by complete radiology
+     * <strong>Should</strong> not complete and redirect given invalid radiology report
+     * <strong>Should</strong> not redirect and set session attribute with openmrs error if api exception is thrown by complete radiology
      *         report
      */
     @RequestMapping(method = RequestMethod.POST, params = "completeRadiologyReport")

@@ -27,29 +27,29 @@ public interface MrrtReportTemplateValidator {
      * @param mrrtTemplate the mrrt report template to be validated
      * @throws IOException
      * @throws APIException if the mrrt template fails validation
-     * @should pass if template template follows mrrt standards
-     * @should throw api exception if template does not have an html element
-     * @should throw api exception if template has more than one html element
-     * @should throw api exception if html element does not have a head element
-     * @should throw api exception if html element has more than one head element
-     * @should throw api exception if head element does not have a title element
-     * @should throw api exception if head element has more than one title element
-     * @should throw api exception if head element does not have a meta element with charset attribute
-     * @should throw api exception if head element has more than one meta element with charset attribute
-     * @should throw api exception if head element does not have one or more meta elements denoting dublin core attributes
-     * @should throw api exception if head element does not have script element
-     * @should throw api exception if head element has more than one script element
-     * @should throw api exception if script element does not have a template attributes element
-     * @should throw api exception if script element has more than one template attributes element
-     * @should throw api exception if coding schemes element does not have at least one coding scheme element
-     * @should throw api exception if term element does not have a code element
-     * @should throw api exception if term element has more than one code element
-     * @should throw api exception if code element lacks one of meaning scheme or value attribute
-     * @should throw api exception if template attributes element does not have a coded content element
-     * @should throw api exception if template attributes element has more than one coded content element
-     * @should throw api exception if html element does not have a body element
-     * @should throw api exception if html element has more than one body element 
-     * @should catch all violation errors and throw an mrrt report template exception
+     * <strong>Should</strong> pass if template template follows mrrt standards
+     * <strong>Should</strong> throw api exception if template does not have an html element
+     * <strong>Should</strong> throw api exception if template has more than one html element
+     * <strong>Should</strong> throw api exception if html element does not have a head element
+     * <strong>Should</strong> throw api exception if html element has more than one head element
+     * <strong>Should</strong> throw api exception if head element does not have a title element
+     * <strong>Should</strong> throw api exception if head element has more than one title element
+     * <strong>Should</strong> throw api exception if head element does not have a meta element with charset attribute
+     * <strong>Should</strong> throw api exception if head element has more than one meta element with charset attribute
+     * <strong>Should</strong> throw api exception if head element does not have one or more meta elements denoting dublin core attributes
+     * <strong>Should</strong> throw api exception if head element does not have script element
+     * <strong>Should</strong> throw api exception if head element has more than one script element
+     * <strong>Should</strong> throw api exception if script element does not have a template attributes element
+     * <strong>Should</strong> throw api exception if script element has more than one template attributes element
+     * <strong>Should</strong> throw api exception if coding schemes element does not have at least one coding scheme element
+     * <strong>Should</strong> throw api exception if term element does not have a code element
+     * <strong>Should</strong> throw api exception if term element has more than one code element
+     * <strong>Should</strong> throw api exception if code element lacks one of meaning scheme or value attribute
+     * <strong>Should</strong> throw api exception if template attributes element does not have a coded content element
+     * <strong>Should</strong> throw api exception if template attributes element has more than one coded content element
+     * <strong>Should</strong> throw api exception if html element does not have a body element
+     * <strong>Should</strong> throw api exception if html element has more than one body element 
+     * <strong>Should</strong> catch all violation errors and throw an mrrt report template exception
      */
     public void validate(String mrrtTemplate) throws IOException;
 }

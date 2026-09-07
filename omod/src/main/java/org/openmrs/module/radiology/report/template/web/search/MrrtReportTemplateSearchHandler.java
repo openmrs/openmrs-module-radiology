@@ -65,15 +65,15 @@ public class MrrtReportTemplateSearchHandler implements SearchHandler {
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#getSearchConfig()
-     * @should return all report templates that match given title
-     * @should return empty search result if title does not exist
-     * @should return all mrrt templates that match given title and totalCount if requested
-     * @should return all report templates by given publisher
-     * @should return empty search result if publisher does not exist
-     * @should return all report templates that match given license
-     * @should return empty search result if license does not exist
-     * @should return all report templates that match given creator
-     * @should return empty search result if creator does not exist
+     * <strong>Should</strong> return all report templates that match given title
+     * <strong>Should</strong> return empty search result if title does not exist
+     * <strong>Should</strong> return all mrrt templates that match given title and totalCount if requested
+     * <strong>Should</strong> return all report templates by given publisher
+     * <strong>Should</strong> return empty search result if publisher does not exist
+     * <strong>Should</strong> return all report templates that match given license
+     * <strong>Should</strong> return empty search result if license does not exist
+     * <strong>Should</strong> return all report templates that match given creator
+     * <strong>Should</strong> return empty search result if creator does not exist
      */
     @Override
     public PageableResult search(RequestContext context) throws ResponseException {

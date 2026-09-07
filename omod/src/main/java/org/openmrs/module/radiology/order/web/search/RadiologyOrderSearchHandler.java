@@ -77,19 +77,19 @@ public class RadiologyOrderSearchHandler implements SearchHandler {
     
     /**
      * @see org.openmrs.module.webservices.rest.web.resource.api.SearchHandler#search(RequestContext)
-     * @should return all radiology orders for given accession number
-     * @should return empty search result if no radiology order exists for given accession number
-     * @should return all radiology orders for given patient
-     * @should return empty search result if patient cannot be found
-     * @should return empty search result if patient has no radiology orders
-     * @should return all radiology orders with effective order start date in given date range if to date and from date are specified
-     * @should return all radiology orders with effective order start date after or equal to from date if only from date is specified
-     * @should return all radiology orders with effective order start date before or equal to to date if only to date is specified
-     * @should return empty search result if no effective order start is in date range
-     * @should return all radiology orders for given urgency
-     * @should return empty search result if no radiology order exists for given urgency
-     * @should throw illegal argument exception if urgency doesn't exist
-     * @should return all radiology orders matching the search query and totalCount if
+     * <strong>Should</strong> return all radiology orders for given accession number
+     * <strong>Should</strong> return empty search result if no radiology order exists for given accession number
+     * <strong>Should</strong> return all radiology orders for given patient
+     * <strong>Should</strong> return empty search result if patient cannot be found
+     * <strong>Should</strong> return empty search result if patient has no radiology orders
+     * <strong>Should</strong> return all radiology orders with effective order start date in given date range if to date and from date are specified
+     * <strong>Should</strong> return all radiology orders with effective order start date after or equal to from date if only from date is specified
+     * <strong>Should</strong> return all radiology orders with effective order start date before or equal to to date if only to date is specified
+     * <strong>Should</strong> return empty search result if no effective order start is in date range
+     * <strong>Should</strong> return all radiology orders for given urgency
+     * <strong>Should</strong> return empty search result if no radiology order exists for given urgency
+     * <strong>Should</strong> throw illegal argument exception if urgency doesn't exist
+     * <strong>Should</strong> return all radiology orders matching the search query and totalCount if
      *         requested
      */
     @Override

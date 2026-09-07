@@ -31,10 +31,10 @@ public interface RadiologyModalityService extends OpenmrsService {
      * @return the saved radiology modality
      * @throws IllegalArgumentException if radiologyModality is null
      * @throws APIException if radiologyModality is not valid
-     * @should create a new radiology modality
-     * @should update an existing radiology modality
-     * @should throw illegal argument exception if given radiology modality is null
-     * @should throw api exception if radiology modality is not valid
+     * <strong>Should</strong> create a new radiology modality
+     * <strong>Should</strong> update an existing radiology modality
+     * <strong>Should</strong> throw illegal argument exception if given radiology modality is null
+     * <strong>Should</strong> throw api exception if radiology modality is not valid
      */
     @Authorized(RadiologyPrivileges.MANAGE_RADIOLOGY_MODALITIES)
     public RadiologyModality saveRadiologyModality(RadiologyModality radiologyModality);
@@ -48,9 +48,9 @@ public interface RadiologyModalityService extends OpenmrsService {
      * @return the retired radiology modality
      * @throws IllegalArgumentException if radiologyModality is null
      * @throws IllegalArgumentException if reason is null or contains only whitespaces
-     * @should retire an existing radiology modality
-     * @should throw illegal argument exception if given radiology modality is null
-     * @should throw illegal argument exception if given reason is null or contains only whitespaces
+     * <strong>Should</strong> retire an existing radiology modality
+     * <strong>Should</strong> throw illegal argument exception if given radiology modality is null
+     * <strong>Should</strong> throw illegal argument exception if given reason is null or contains only whitespaces
      */
     @Authorized(RadiologyPrivileges.MANAGE_RADIOLOGY_MODALITIES)
     public RadiologyModality retireRadiologyModality(RadiologyModality radiologyModality, String reason);
@@ -61,9 +61,9 @@ public interface RadiologyModalityService extends OpenmrsService {
      * @param id the modality id of the wanted radiology modality
      * @return the radiology modality matching given id
      * @throws IllegalArgumentException if given null
-     * @should return radiology modality matching given id
-     * @should return null if no match was found
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return radiology modality matching given id
+     * <strong>Should</strong> return null if no match was found
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_MODALITIES)
     public RadiologyModality getRadiologyModality(Integer id);
@@ -74,9 +74,9 @@ public interface RadiologyModalityService extends OpenmrsService {
      * @param uuid the uuid of the radiology modality
      * @return the radiology modality matching given uuid
      * @throws IllegalArgumentException if given null
-     * @should return radiology modality matching given uuid
-     * @should return null if no match was found
-     * @should throw illegal argument exception if given null
+     * <strong>Should</strong> return radiology modality matching given uuid
+     * <strong>Should</strong> return null if no match was found
+     * <strong>Should</strong> throw illegal argument exception if given null
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_MODALITIES)
     public RadiologyModality getRadiologyModalityByUuid(String uuid);
@@ -87,9 +87,9 @@ public interface RadiologyModalityService extends OpenmrsService {
      * @param includeRetired specifies if retired modalities should also be returned
      *
      * @return the radiology modalities
-     * @should return radiology modalities including retired ones if given true
-     * @should return radiology modalities excluding retired ones if given false
-     * @should return empty list if no match was found
+     * <strong>Should</strong> return radiology modalities including retired ones if given true
+     * <strong>Should</strong> return radiology modalities excluding retired ones if given false
+     * <strong>Should</strong> return empty list if no match was found
      */
     @Authorized(RadiologyPrivileges.GET_RADIOLOGY_MODALITIES)
     public List<RadiologyModality> getRadiologyModalities(boolean includeRetired);

@@ -38,7 +38,7 @@ public class RadiologyDashboardReportsTabController {
      * Handles get requests for radiology reports tab page.
      * 
      * @return model and view of the radiology reports tab page
-     * @should return model and view of the radiology reports tab page and set tab session attribute to radiology reports tab page
+     * <strong>Should</strong> return model and view of the radiology reports tab page and set tab session attribute to radiology reports tab page
      */
     @RequestMapping(method = RequestMethod.GET)
     protected ModelAndView getRadiologyReportsTab(HttpServletRequest request) {
@@ -54,7 +54,7 @@ public class RadiologyDashboardReportsTabController {
      * Returns entries for report status select element to filter radiology reports.
      * 
      * @return a map containing all report status values and an entry to select all report statuses
-     * @should return a map containing all report status values and an entry to select all report statuses
+     * <strong>Should</strong> return a map containing all report status values and an entry to select all report statuses
      */
     @ModelAttribute("reportStatuses")
     protected Map<String, String> getReportStatusList() {

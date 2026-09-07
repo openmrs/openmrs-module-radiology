@@ -40,9 +40,9 @@ public class RadiologyDashboardOrdersTabController {
      * Handles get requests for radiology orders tab page.
      * 
      * @return model and view of the radiology orders tab page
-     * @should return model and view of the radiology orders tab page and set tab session attribute to radiology orders tab page if not already set
-     * @should not redirect to dashboard tab page given from tab session attribute and set tab session attribute to radiology orders tab page if switch tab is set
-     * @should redirect to dashboard tab page given from tab session attribute if switch tab is not set
+     * <strong>Should</strong> return model and view of the radiology orders tab page and set tab session attribute to radiology orders tab page if not already set
+     * <strong>Should</strong> not redirect to dashboard tab page given from tab session attribute and set tab session attribute to radiology orders tab page if switch tab is set
+     * <strong>Should</strong> redirect to dashboard tab page given from tab session attribute if switch tab is not set
      */
     @RequestMapping(method = RequestMethod.GET)
     protected ModelAndView getRadiologyOrdersTab(HttpServletRequest request,
@@ -69,7 +69,7 @@ public class RadiologyDashboardOrdersTabController {
      * Returns entries for urgency select element to filter radiology orders.
      * 
      * @return a map containing all urgency values and an entry to select all urgencies
-     * @should return a map containing all urgency values and an entry to select all urgencies
+     * <strong>Should</strong> return a map containing all urgency values and an entry to select all urgencies
      */
     @ModelAttribute("urgencies")
     protected Map<String, String> getUrgenciesList() {

@@ -137,7 +137,7 @@
 		<module name="TypecastParenPad" />
 		<module name="AtclauseOrder">
 			<property name="tagOrder"
-				value="@param, @return, @throws, @deprecated, @should" />
+				value="@param, @return, @throws, @deprecated, <strong>Should</strong>" />
 			<property name="target"
 				value="CLASS_DEF, INTERFACE_DEF, ENUM_DEF, METHOD_DEF, CTOR_DEF, VARIABLE_DEF" />
 		</module>

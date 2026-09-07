@@ -29,9 +29,9 @@ public class RadiologyOrder extends TestOrder {
      * between RadiologyOrder and RadiologyStudy in sync.
      *
      * @param radiologyStudy study which should be associated with this radiology order
-     * @should set the study attribute to given study
-     * @should set the radiology order of given study to this radiology order
-     * @should not fail given null
+     * <strong>Should</strong> set the study attribute to given study
+     * <strong>Should</strong> set the radiology order of given study to this radiology order
+     * <strong>Should</strong> not fail given null
      */
     public void setStudy(RadiologyStudy radiologyStudy) {
         if (radiologyStudy != null) {
@@ -44,9 +44,9 @@ public class RadiologyOrder extends TestOrder {
      * Returns true if study is in progress and false otherwise.
      * 
      * @return true if study is in progress and false otherwise
-     * @should return false if associated study is null
-     * @should return false if associated study is not in progress
-     * @should return true if associated study is in progress
+     * <strong>Should</strong> return false if associated study is null
+     * <strong>Should</strong> return false if associated study is not in progress
+     * <strong>Should</strong> return true if associated study is in progress
      */
     public boolean isInProgress() {
         
@@ -61,9 +61,9 @@ public class RadiologyOrder extends TestOrder {
      * Returns true if study is not in progress and false otherwise.
      * 
      * @return true if study is not in progress and false otherwise
-     * @should return true if associated study is null
-     * @should return true if associated study is not in progress
-     * @should return false if associated study in progress
+     * <strong>Should</strong> return true if associated study is null
+     * <strong>Should</strong> return true if associated study is not in progress
+     * <strong>Should</strong> return false if associated study in progress
      */
     public boolean isNotInProgress() {
         
@@ -74,9 +74,9 @@ public class RadiologyOrder extends TestOrder {
      * Returns true when this RadiologyOrder has a completed RadiologyStudy and false otherwise.
      * 
      * @return true if order has completed study and false otherwise
-     * @should return false if associated study is null
-     * @should return false if associated study is not completed
-     * @should return true if associated study is completed
+     * <strong>Should</strong> return false if associated study is null
+     * <strong>Should</strong> return false if associated study is not completed
+     * <strong>Should</strong> return true if associated study is completed
      */
     public boolean isCompleted() {
         
@@ -91,9 +91,9 @@ public class RadiologyOrder extends TestOrder {
      * Returns true when this RadiologyOrder does not have a completed RadiologyStudy and false otherwise.
      * 
      * @return true if order has no completed study and false otherwise
-     * @should return true if associated study is null
-     * @should return true if associated study is not completed
-     * @should return false if associated study is completed
+     * <strong>Should</strong> return true if associated study is null
+     * <strong>Should</strong> return true if associated study is not completed
+     * <strong>Should</strong> return false if associated study is completed
      */
     public boolean isNotCompleted() {
         
@@ -104,10 +104,10 @@ public class RadiologyOrder extends TestOrder {
      * Returns true when this RadiologyOrder can be discontinued and false otherwise.
      * 
      * @return true if radiology order can be discontinued and false otherwise
-     * @should return false if radiology order is discontinued right now
-     * @should return false if radiology order is in progress
-     * @should return false if radiology order is completed
-     * @should return true if radiology order is not discontinued right now and not in progress and not completed
+     * <strong>Should</strong> return false if radiology order is discontinued right now
+     * <strong>Should</strong> return false if radiology order is in progress
+     * <strong>Should</strong> return false if radiology order is completed
+     * <strong>Should</strong> return true if radiology order is not discontinued right now and not in progress and not completed
      */
     public boolean isDiscontinuationAllowed() {
         

@@ -31,10 +31,10 @@ public class MrrtReportTemplateEditor extends PropertyEditorSupport {
     private final Logger log = LoggerFactory.getLogger(this.getClass());
     
     /**
-     * @should set value to mrrt report template whos id matches given text
-     * @should set value to mrrt report template whos uuid matches given text
-     * @should throw illegal argument exception for mrrt report template not found
-     * @should return null for empty text
+     * <strong>Should</strong> set value to mrrt report template whos id matches given text
+     * <strong>Should</strong> set value to mrrt report template whos uuid matches given text
+     * <strong>Should</strong> throw illegal argument exception for mrrt report template not found
+     * <strong>Should</strong> return null for empty text
      *
      * @see java.beans.PropertyEditorSupport#setAsText(java.lang.String)
      */
@@ -58,8 +58,8 @@ public class MrrtReportTemplateEditor extends PropertyEditorSupport {
     }
     
     /**
-     * @should return empty string if value does not contain a mrrt report template
-     * @should return mrrt report template id if value does contain a mrrt report template
+     * <strong>Should</strong> return empty string if value does not contain a mrrt report template
+     * <strong>Should</strong> return mrrt report template id if value does contain a mrrt report template
      *
      * @see java.beans.PropertyEditorSupport#getAsText()
      */

@@ -48,7 +48,7 @@ public class DecimalUuid {
      * 
      * @param uuid UUID to translate into BigInteger
      * @return big integer representation of uuid
-     * @should translate given uuid into a big integer
+     * <strong>Should</strong> translate given uuid into a big integer
      */
     private static BigInteger getBigIntegerFromUuid(UUID uuid) {
         
